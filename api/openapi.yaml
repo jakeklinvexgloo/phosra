@@ -1,0 +1,816 @@
+openapi: 3.1.0
+info:
+  title: GuardianGate API
+  description: Universal Parental Controls API - Define once, push everywhere
+  version: 1.0.0
+  contact:
+    name: GuardianGate
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local development
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        code:
+          type: integer
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    TokenPair:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+
+    Family:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    FamilyMember:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        family_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [owner, parent, guardian]
+        joined_at:
+          type: string
+          format: date-time
+
+    Child:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        family_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        avatar_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ChildPolicy:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        child_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, paused, draft]
+        priority:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    PolicyRule:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        policy_id:
+          type: string
+          format: uuid
+        category:
+          type: string
+          enum:
+            - content_rating
+            - content_block_title
+            - content_allow_title
+            - content_allowlist_mode
+            - content_descriptor_block
+            - time_daily_limit
+            - time_scheduled_hours
+            - time_per_app_limit
+            - time_downtime
+            - purchase_approval
+            - purchase_spending_cap
+            - purchase_block_iap
+            - social_contacts
+            - social_chat_control
+            - social_multiplayer
+            - web_safesearch
+            - web_category_block
+            - web_custom_allowlist
+            - web_custom_blocklist
+            - web_filter_level
+            - privacy_location
+            - privacy_profile_visibility
+            - privacy_data_sharing
+            - privacy_account_creation
+            - monitoring_activity
+            - monitoring_alerts
+        enabled:
+          type: boolean
+        config:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    Provider:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+          enum: [dns, streaming, gaming, device, browser]
+        tier:
+          type: string
+          enum: [live, partial, stub]
+        description:
+          type: string
+        auth_type:
+          type: string
+          enum: [api_key, oauth2, manual]
+        capabilities:
+          type: array
+          items:
+            type: string
+
+    ProviderConnection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        family_id:
+          type: string
+          format: uuid
+        provider_id:
+          type: string
+        status:
+          type: string
+          enum: [connected, disconnected, error]
+        last_sync_at:
+          type: string
+          format: date-time
+        last_sync_status:
+          type: string
+        connected_at:
+          type: string
+          format: date-time
+
+    SyncJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        child_id:
+          type: string
+          format: uuid
+        policy_id:
+          type: string
+          format: uuid
+        trigger_type:
+          type: string
+          enum: [manual, auto, webhook]
+        status:
+          type: string
+          enum: [pending, running, completed, failed, partial]
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    SyncJobResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        sync_job_id:
+          type: string
+          format: uuid
+        provider_id:
+          type: string
+        status:
+          type: string
+        rules_applied:
+          type: integer
+        rules_skipped:
+          type: integer
+        rules_failed:
+          type: integer
+        error_message:
+          type: string
+        details:
+          type: object
+
+    RatingSystem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+        media_type:
+          type: string
+
+    Rating:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        system_id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        min_age:
+          type: integer
+        restrictive_idx:
+          type: integer
+
+    AgeRatings:
+      type: object
+      properties:
+        age:
+          type: integer
+        ratings:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/Rating"
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new account
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, name]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                name:
+                  type: string
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  tokens:
+                    $ref: "#/components/schemas/TokenPair"
+        "409":
+          description: Email already registered
+
+  /auth/login:
+    post:
+      summary: Login
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  tokens:
+                    $ref: "#/components/schemas/TokenPair"
+        "401":
+          description: Invalid credentials
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        "200":
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPair"
+
+  /auth/logout:
+    post:
+      summary: Logout (revoke refresh tokens)
+      tags: [Auth]
+      responses:
+        "204":
+          description: Logged out
+
+  /auth/me:
+    get:
+      summary: Get current user
+      tags: [Auth]
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /families:
+    get:
+      summary: List user's families
+      tags: [Families]
+      responses:
+        "200":
+          description: Family list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Family"
+    post:
+      summary: Create a family
+      tags: [Families]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+      responses:
+        "201":
+          description: Family created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Family"
+
+  /families/{familyID}:
+    parameters:
+      - name: familyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get family
+      tags: [Families]
+      responses:
+        "200":
+          description: Family details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Family"
+    put:
+      summary: Update family
+      tags: [Families]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        "200":
+          description: Updated
+    delete:
+      summary: Delete family
+      tags: [Families]
+      responses:
+        "204":
+          description: Deleted
+
+  /families/{familyID}/children:
+    parameters:
+      - name: familyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List children in family
+      tags: [Children]
+      responses:
+        "200":
+          description: Children list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Child"
+    post:
+      summary: Add child to family
+      tags: [Children]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, birth_date]
+              properties:
+                name:
+                  type: string
+                birth_date:
+                  type: string
+                  format: date
+      responses:
+        "201":
+          description: Child added
+
+  /children/{childID}:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get child
+      tags: [Children]
+      responses:
+        "200":
+          description: Child details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Child"
+    put:
+      summary: Update child
+      tags: [Children]
+      responses:
+        "200":
+          description: Updated
+    delete:
+      summary: Delete child
+      tags: [Children]
+      responses:
+        "204":
+          description: Deleted
+
+  /children/{childID}/age-ratings:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get age-appropriate ratings for child
+      tags: [Children]
+      responses:
+        "200":
+          description: Age ratings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgeRatings"
+
+  /children/{childID}/policies:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List child's policies
+      tags: [Policies]
+      responses:
+        "200":
+          description: Policy list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ChildPolicy"
+    post:
+      summary: Create policy for child
+      tags: [Policies]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+      responses:
+        "201":
+          description: Policy created
+
+  /policies/{policyID}/activate:
+    post:
+      summary: Activate policy
+      tags: [Policies]
+      parameters:
+        - name: policyID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Policy activated
+
+  /policies/{policyID}/pause:
+    post:
+      summary: Pause policy
+      tags: [Policies]
+      parameters:
+        - name: policyID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Policy paused
+
+  /policies/{policyID}/generate-from-age:
+    post:
+      summary: Auto-generate rules based on child's age
+      tags: [Policies]
+      parameters:
+        - name: policyID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Rules generated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PolicyRule"
+
+  /policies/{policyID}/rules:
+    parameters:
+      - name: policyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List policy rules
+      tags: [Policy Rules]
+      responses:
+        "200":
+          description: Rule list
+    post:
+      summary: Create rule
+      tags: [Policy Rules]
+      responses:
+        "201":
+          description: Rule created
+
+  /providers:
+    get:
+      summary: List all providers
+      tags: [Providers]
+      security: []
+      responses:
+        "200":
+          description: Provider list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Provider"
+
+  /connections:
+    post:
+      summary: Connect to a provider
+      tags: [Connections]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [family_id, provider_id, credentials]
+              properties:
+                family_id:
+                  type: string
+                  format: uuid
+                provider_id:
+                  type: string
+                credentials:
+                  type: string
+      responses:
+        "201":
+          description: Connected
+
+  /children/{childID}/sync:
+    post:
+      summary: Trigger sync for child across all providers
+      tags: [Sync]
+      parameters:
+        - name: childID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "202":
+          description: Sync triggered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncJob"
+
+  /sync/jobs/{jobID}:
+    get:
+      summary: Get sync job status
+      tags: [Sync]
+      parameters:
+        - name: jobID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Job status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncJob"
+
+  /sync/jobs/{jobID}/results:
+    get:
+      summary: Get sync job results per provider
+      tags: [Sync]
+      parameters:
+        - name: jobID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Job results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SyncJobResult"
+
+  /ratings/systems:
+    get:
+      summary: List rating systems
+      tags: [Ratings]
+      security: []
+      responses:
+        "200":
+          description: Rating systems
+
+  /ratings/by-age:
+    get:
+      summary: Get ratings for a specific age
+      tags: [Ratings]
+      security: []
+      parameters:
+        - name: age
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Age-appropriate ratings

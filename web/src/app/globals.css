@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 20% 98%;       /* stone-50 warm off-white */
+    --foreground: 240 10% 3.9%;     /* zinc-950 */
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --primary: 239 84% 67%;         /* indigo-500 #6366F1 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4.8% 95.9%;    /* zinc-100 */
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;  /* zinc-500 */
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 76% 36%;         /* green-600 */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;          /* amber-500 */
+    --warning-foreground: 0 0% 100%;
+    --border: 240 5.9% 90%;         /* zinc-200 */
+    --input: 240 5.9% 90%;
+    --ring: 239 84% 67%;
+    --radius: 0.5rem;
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-border: 240 5.9% 90%;
+    --surface: 240 4.8% 95.9%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;     /* zinc-950 */
+    --foreground: 0 0% 98%;         /* zinc-50 */
+    --card: 240 10% 6%;             /* ~zinc-900 */
+    --card-foreground: 0 0% 98%;
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 3.7% 15.9%;    /* zinc-800 */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;  /* zinc-400 */
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 142 76% 46%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 0 0% 100%;
+    --border: 240 3.7% 15.9%;       /* zinc-800 */
+    --input: 240 3.7% 15.9%;
+    --ring: 239 84% 67%;
+    --sidebar: 240 10% 5%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --surface: 240 5.9% 10%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+  }
+  .dark .glass {
+    @apply bg-zinc-900/70 border-zinc-700/30;
+  }
+
+  .gradient-primary {
+    @apply bg-gradient-to-br from-indigo-500 to-purple-600;
+  }
+
+  .gradient-card-children {
+    @apply bg-gradient-to-br from-indigo-500/10 to-purple-500/10;
+  }
+  .dark .gradient-card-children {
+    @apply from-indigo-500/20 to-purple-500/20;
+  }
+
+  .gradient-card-providers {
+    @apply bg-gradient-to-br from-emerald-500/10 to-teal-500/10;
+  }
+  .dark .gradient-card-providers {
+    @apply from-emerald-500/20 to-teal-500/20;
+  }
+
+  .gradient-card-health {
+    @apply bg-gradient-to-br from-amber-500/10 to-orange-500/10;
+  }
+  .dark .gradient-card-health {
+    @apply from-amber-500/20 to-orange-500/20;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block;
+  }
+  .status-dot-pulse {
+    @apply animate-pulse;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
