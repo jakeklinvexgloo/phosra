@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Shield, Menu, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 
 const NAV_LINKS = [
   { href: "#features", label: "Features" },
@@ -19,9 +19,8 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <Shield className="w-6 h-6 text-brand-green" strokeWidth={1.5} />
-            <span className="text-[18px] font-semibold text-foreground tracking-tight">Phosra</span>
+          <Link href="/" className="flex items-center">
+            <img src="/logo.svg" alt="Phosra" className="h-6" />
           </Link>
 
           {/* Desktop nav links */}

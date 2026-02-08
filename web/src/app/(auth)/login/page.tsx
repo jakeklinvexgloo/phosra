@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useSignIn, useSignUp } from "@clerk/nextjs"
 import { AnimatePresence, motion } from "framer-motion"
-import { Shield, Users, Code, Terminal, ChevronRight } from "lucide-react"
+import { Users, Code, Terminal, ChevronRight } from "lucide-react"
 
 type Mode = "signin" | "register-role" | "register-form" | "verify-email"
 type Role = "parent" | "platform" | "developer"
@@ -143,9 +143,8 @@ export default function LoginPage() {
       {/* Left panel — dark branded panel */}
       <div className="hidden lg:flex w-[40%] bg-[#111111] flex-col justify-center px-12 xl:px-16">
         <div className="max-w-md">
-          <div className="flex items-center gap-3 mb-12">
-            <Shield className="w-8 h-8 text-[hsl(157,100%,42%)]" strokeWidth={1.5} />
-            <span className="text-white text-xl font-semibold tracking-tight">Phosra</span>
+          <div className="flex items-center mb-12">
+            <img src="/logo-white.svg" alt="Phosra" className="h-8" />
           </div>
 
           <h1 className="text-white text-4xl xl:text-[44px] font-bold leading-tight mb-6">
@@ -177,9 +176,8 @@ export default function LoginPage() {
       <div className="flex-1 bg-[#F8F8F8] flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-lg">
           {/* Mobile logo */}
-          <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <Shield className="w-6 h-6 text-[hsl(157,100%,42%)]" strokeWidth={1.5} />
-            <span className="text-foreground text-lg font-semibold tracking-tight">Phosra</span>
+          <div className="flex items-center mb-8 lg:hidden">
+            <img src="/logo.svg" alt="Phosra" className="h-6" />
           </div>
 
           <div className="bg-white rounded-sm p-8 sm:p-10" style={{ boxShadow: "rgba(18,18,18,0.08) 0px 8px 16px" }}>

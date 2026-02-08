@@ -104,9 +104,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       }`}>
         {/* Sidebar header */}
         <div className="h-16 lg:h-24 flex items-center justify-between gap-2.5 px-6 border-b border-border">
-          <div className="flex items-center gap-2.5">
-            <Shield className="w-6 h-6 text-brand-green" />
-            <span className="text-[18px] font-semibold text-foreground">Phosra</span>
+          <div className="flex items-center">
+            <img src="/logo.svg" alt="Phosra" className="h-6" />
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -181,9 +180,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             />
           </div>
           {/* Mobile logo (shown when sidebar is hidden) */}
-          <div className="flex items-center gap-2 sm:hidden">
-            <Shield className="w-5 h-5 text-brand-green" />
-            <span className="text-base font-semibold text-foreground">Phosra</span>
+          <div className="flex items-center sm:hidden">
+            <img src="/logo.svg" alt="Phosra" className="h-5" />
           </div>
         </div>
 

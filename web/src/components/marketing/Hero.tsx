@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Shield, Clock, Globe, Wifi, Monitor, Smartphone, Tv, Gamepad2, BookOpen } from "lucide-react"
+import { Clock, Globe, Wifi, Monitor, Smartphone, Tv, Gamepad2, BookOpen } from "lucide-react"
 
 const PLATFORM_NAMES = [
   "NextDNS", "CleanBrowsing", "Android", "Microsoft", "Apple",
@@ -48,7 +48,7 @@ export function Hero() {
               {/* Policy card */}
               <div className="bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-lg p-6 max-w-sm mx-auto lg:ml-auto">
                 <div className="flex items-center gap-2 mb-5">
-                  <Shield className="w-5 h-5 text-brand-green" />
+                  <img src="/favicon.svg" alt="" className="w-5 h-5" />
                   <span className="text-sm font-semibold text-white">Emma&apos;s Policy</span>
                   <span className="ml-auto text-[10px] bg-brand-green/20 text-brand-green px-2 py-0.5 rounded font-medium">Active</span>
                 </div>

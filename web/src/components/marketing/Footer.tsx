@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { Shield } from "lucide-react"
 
 const FOOTER_SECTIONS = [
   {
@@ -67,9 +66,8 @@ export function Footer() {
         </div>
 
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <Shield className="w-5 h-5 text-brand-green" strokeWidth={1.5} />
-            <span className="text-sm font-semibold text-white">Phosra</span>
+          <div className="flex items-center">
+            <img src="/logo-white.svg" alt="Phosra" className="h-5" />
           </div>
           <p className="text-xs text-white/40">&copy; {new Date().getFullYear()} Phosra. All rights reserved.</p>
         </div>

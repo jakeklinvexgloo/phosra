@@ -1,0 +1,16 @@
+{
+  "name": "Phosra",
+  "short_name": "Phosra",
+  "description": "The universal parental controls API. One policy for your family, enforced across every platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#00D47E",
+  "icons": [
+    {
+      "src": "/mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
