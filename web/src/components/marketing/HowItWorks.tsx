@@ -18,9 +18,9 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-16">
+    <section className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Three steps to total protection
           </h2>
@@ -36,7 +36,7 @@ export function HowItWorks() {
           {STEPS.map((step) => (
             <div key={step.number} className="relative text-center">
               {/* Number badge */}
-              <div className="w-20 h-20 rounded-full bg-brand-green/10 flex items-center justify-center mx-auto mb-6 relative z-10">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-brand-green/10 flex items-center justify-center mx-auto mb-4 sm:mb-6 relative z-10">
                 <span className="text-2xl font-bold text-brand-green">{step.number}</span>
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">{step.title}</h3>

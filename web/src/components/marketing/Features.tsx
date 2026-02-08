@@ -35,9 +35,9 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section id="features" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-16">
+    <section id="features" className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Everything you need to protect your family
           </h2>
@@ -52,7 +52,7 @@ export function Features() {
             return (
               <div
                 key={feature.title}
-                className="group plaid-card p-8 hover:shadow-[rgba(18,18,18,0.14)_0px_12px_24px] transition-shadow duration-300"
+                className="group plaid-card p-5 sm:p-8 hover:shadow-[rgba(18,18,18,0.14)_0px_12px_24px] transition-shadow duration-300"
               >
                 <div className={`w-10 h-10 rounded-sm flex items-center justify-center mb-5 ${feature.color}`}>
                   <Icon className="w-5 h-5" />

@@ -2,8 +2,8 @@ import Link from "next/link"
 
 export function CTASection() {
   return (
-    <section className="py-20 bg-brand-green">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+    <section className="py-14 sm:py-20 bg-brand-green">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
           Start protecting your family today
         </h2>

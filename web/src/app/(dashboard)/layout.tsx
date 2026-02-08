@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import { LogOut, Shield, Home, Zap, BookOpen, Globe, Users, Settings, Search, ChevronRight, MessageSquare } from "lucide-react"
+import { LogOut, Shield, Home, Zap, BookOpen, Globe, Users, Settings, Search, ChevronRight, MessageSquare, Menu, X } from "lucide-react"
 import { useUser, useClerk } from "@clerk/nextjs"
 
 interface NavItem {
@@ -55,6 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { user, isLoaded, isSignedIn } = useUser()
   const { signOut } = useClerk()
   const [isSandbox, setIsSandbox] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     const sandbox = localStorage.getItem("sandbox-session")
@@ -66,6 +67,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.push("/login")
     }
   }, [isLoaded, isSignedIn, router])
+
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [pathname])
 
   if (!isSandbox && (!isLoaded || !isSignedIn)) {
     return (
@@ -84,12 +90,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Fixed sidebar */}
-      <aside className="fixed top-0 left-0 bottom-0 w-[320px] border-r border-border bg-sidebar flex flex-col z-30">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`fixed top-0 left-0 bottom-0 w-[280px] lg:w-[320px] border-r border-border bg-sidebar flex flex-col z-50 lg:z-30 transition-transform duration-200 ease-in-out ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      }`}>
         {/* Sidebar header */}
-        <div className="h-24 flex items-center gap-2.5 px-6 border-b border-border">
-          <Shield className="w-6 h-6 text-brand-green" />
-          <span className="text-[18px] font-semibold text-foreground">Phosra</span>
+        <div className="h-16 lg:h-24 flex items-center justify-between gap-2.5 px-6 border-b border-border">
+          <div className="flex items-center gap-2.5">
+            <Shield className="w-6 h-6 text-brand-green" />
+            <span className="text-[18px] font-semibold text-foreground">Phosra</span>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-1 text-muted-foreground hover:text-foreground"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Navigation */}
@@ -139,19 +163,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* Top bar */}
-      <header className="fixed top-0 left-[320px] right-0 h-24 border-b border-border bg-white z-20 flex items-center justify-between px-8">
-        {/* Search */}
-        <div className="relative w-80">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2.5 border border-input rounded-sm text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground"
-          />
+      <header className="fixed top-0 left-0 lg:left-[320px] right-0 h-16 lg:h-24 border-b border-border bg-white z-20 flex items-center justify-between px-4 lg:px-8">
+        {/* Mobile hamburger + Search */}
+        <div className="flex items-center gap-3 flex-1">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="lg:hidden p-2 -ml-2 text-foreground"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <div className="relative w-full max-w-xs lg:max-w-sm hidden sm:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full pl-10 pr-4 py-2.5 border border-input rounded-sm text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground"
+            />
+          </div>
+          {/* Mobile logo (shown when sidebar is hidden) */}
+          <div className="flex items-center gap-2 sm:hidden">
+            <Shield className="w-5 h-5 text-brand-green" />
+            <span className="text-base font-semibold text-foreground">Phosra</span>
+          </div>
         </div>
 
         {/* User info */}
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-3 lg:gap-5">
           <div className="flex items-center gap-2.5">
             {!isSandbox && user?.imageUrl ? (
               <img src={user.imageUrl} alt="" className="w-8 h-8 rounded-full" />
@@ -160,7 +197,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
-            <span className="text-sm text-foreground font-medium">{displayName}</span>
+            <span className="text-sm text-foreground font-medium hidden sm:inline">{displayName}</span>
             {isSandbox && <span className="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">DEV</span>}
           </div>
           <button
@@ -175,19 +212,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            Sign out
+            <span className="hidden sm:inline">Sign out</span>
           </button>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="ml-[320px] pt-24">
+      <main className="lg:ml-[320px] pt-16 lg:pt-24">
         {pathname.startsWith("/dashboard/playground") ? (
           <div>{children}</div>
         ) : (
           <div className={pathname.startsWith("/dashboard/docs")
-            ? "px-8 py-10"
-            : "max-w-[960px] px-12 py-10"}>
+            ? "px-4 sm:px-6 lg:px-8 py-6 sm:py-10"
+            : "max-w-[960px] px-4 sm:px-8 lg:px-12 py-6 sm:py-10"}>
             {children}
           </div>
         )}

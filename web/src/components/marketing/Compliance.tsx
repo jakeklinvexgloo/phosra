@@ -14,9 +14,9 @@ const LAWS = [
 
 export function Compliance() {
   return (
-    <section id="compliance" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-12">
+    <section id="compliance" className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Built for the laws that protect children
           </h2>
@@ -29,7 +29,7 @@ export function Compliance() {
           {LAWS.map((law) => (
             <div
               key={law.name}
-              className="group relative px-4 py-2.5 bg-[#FAFAFA] border border-border rounded-sm text-sm font-medium text-foreground hover:border-brand-green hover:bg-brand-green/5 transition-colors cursor-default"
+              className="group relative px-3 sm:px-4 py-2 sm:py-2.5 bg-[#FAFAFA] border border-border rounded-sm text-xs sm:text-sm font-medium text-foreground hover:border-brand-green hover:bg-brand-green/5 transition-colors cursor-default"
             >
               {law.name}
               {/* Tooltip */}

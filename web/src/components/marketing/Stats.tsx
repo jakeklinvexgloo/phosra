@@ -58,9 +58,9 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 
 export function Stats() {
   return (
-    <section className="py-24 bg-[#FAFAFA]">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-16">
+    <section className="py-16 sm:py-24 bg-[#FAFAFA]">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Built for the laws that matter
           </h2>
@@ -69,10 +69,10 @@ export function Stats() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {STATS.map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-5xl font-bold text-foreground mb-2">
+              <div className="text-4xl sm:text-5xl font-bold text-foreground mb-2">
                 <AnimatedCounter value={stat.value} suffix={stat.suffix} />
               </div>
               <div className="text-sm font-semibold text-foreground mb-1">{stat.label}</div>

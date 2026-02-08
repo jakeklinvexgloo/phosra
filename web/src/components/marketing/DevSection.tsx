@@ -12,9 +12,9 @@ const CODE_SNIPPET = `curl -X POST https://api.phosra.com/v1/setup/quick \\
 
 export function DevSection() {
   return (
-    <section id="developers" className="py-24 bg-[#FAFAFA]">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <section id="developers" className="py-16 sm:py-24 bg-[#FAFAFA]">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left — text */}
           <div>
             <p className="text-sm font-semibold text-brand-green mb-3 tracking-wide uppercase">For Developers</p>
@@ -53,7 +53,7 @@ export function DevSection() {
                 <span className="text-[11px] text-slate-400 font-mono">/v1/setup/quick</span>
               </div>
               {/* Code */}
-              <pre className="p-5 overflow-x-auto text-[13px] leading-6 font-mono">
+              <pre className="p-3 sm:p-5 overflow-x-auto text-[11px] sm:text-[13px] leading-5 sm:leading-6 font-mono">
                 <code>
                   <span className="text-slate-400">curl</span>{" "}
                   <span className="text-sky-400">-X POST</span>{" "}

@@ -81,7 +81,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
       {/* Header — only shown on public /docs page */}
       {!hideHeader && (
         <header className="bg-card border-b border-border sticky top-0 z-10">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground">PCSS v1.0</h1>
               <p className="text-sm text-muted-foreground mt-1">
@@ -101,7 +101,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
       )}
 
       {/* Tab bar */}
-      <div className="max-w-7xl mx-auto px-6 pt-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
         <div className="relative flex border-b border-border">
           {(["specification", "recipes"] as const).map(t => (
             <button key={t} onClick={() => setDocsTab(t)}
@@ -138,8 +138,8 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
         <div className="space-y-12">
           {/* Preamble */}
           <section id="preamble">
-            <div className="bg-accent/5 border border-accent/20 rounded p-8">
-              <h2 className="text-2xl font-bold text-foreground mb-4">Phosra Child Safety Standard (PCSS) v1.0</h2>
+            <div className="bg-accent/5 border border-accent/20 rounded p-4 sm:p-8">
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4">Phosra Child Safety Standard (PCSS) v1.0</h2>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                 This document defines the <strong className="text-foreground">Phosra Child Safety Standard (PCSS)</strong>, a mandatory regulatory framework
                 for technology platforms that serve minors. All regulated platforms <Keyword>MUST</Keyword> implement this standard
@@ -155,7 +155,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
                 This standard is administered by Phosra in coordination with government child safety authorities.
                 Non-compliance may result in regulatory action as defined in Section 10.
               </p>
-              <div className="mt-6 flex gap-4">
+              <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-brand-green">35</p>
                   <p className="text-xs text-muted-foreground">Policy Categories</p>
@@ -185,7 +185,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
                 &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be
                 interpreted as described in <a href="https://www.rfc-editor.org/rfc/rfc2119" className="text-brand-green hover:underline" target="_blank" rel="noopener noreferrer">RFC 2119</a>.
               </p>
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div className="bg-muted/50 p-3 rounded"><Keyword>MUST</Keyword> / <Keyword>REQUIRED</Keyword> / <Keyword>SHALL</Keyword> — Absolute requirement</div>
                 <div className="bg-muted/50 p-3 rounded"><Keyword>SHOULD</Keyword> / <Keyword>RECOMMENDED</Keyword> — Strong recommendation, may be deviated from with justification</div>
                 <div className="bg-muted/50 p-3 rounded"><Keyword>MAY</Keyword> / <Keyword>OPTIONAL</Keyword> — Truly optional behavior</div>
@@ -230,7 +230,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
                 The family data model <Keyword>SHALL</Keyword> support multiple guardians per family unit with role-based access control.
                 Child profiles <Keyword>MUST</Keyword> include birth date for age-based policy computation.
               </p>
-              <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                 <div className="bg-muted/30 rounded p-4">
                   <h4 className="font-medium text-foreground mb-1">Owner</h4>
                   <p className="text-xs text-muted-foreground">Full administrative control. <Keyword>MAY</Keyword> delete the family unit.</p>
@@ -294,12 +294,12 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
               <div className="space-y-3">
                 {NEW_CATEGORIES.map((cat) => (
                   <div key={cat.name} className="bg-muted/30 rounded p-4">
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
                       <div>
                         <code className="text-sm font-mono text-brand-green font-medium">{cat.name}</code>
                         <p className="text-xs text-muted-foreground mt-1">{cat.desc}</p>
                       </div>
-                      <div className="flex flex-wrap gap-1 flex-shrink-0">
+                      <div className="flex flex-wrap gap-1 sm:flex-shrink-0">
                         {cat.laws.split(", ").map(law => (
                           <span key={law} className="px-1.5 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded text-[10px] font-medium border border-amber-500/20 whitespace-nowrap">
                             {law}
@@ -566,8 +566,8 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                 The following timeline governs the transition to mandatory PCSS compliance for all regulated platforms.
               </p>
               <div className="space-y-4">
-                <div className="flex gap-4 items-start">
-                  <div className="w-24 flex-shrink-0 text-right">
+                <div className="flex gap-3 sm:gap-4 items-start">
+                  <div className="w-16 sm:w-24 flex-shrink-0 sm:text-right">
                     <span className="text-xs font-bold text-brand-green bg-accent/10 px-2 py-1 rounded">Phase 1</span>
                   </div>
                   <div>
@@ -575,8 +575,8 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                     <p className="text-xs text-muted-foreground">Platforms <Keyword>MAY</Keyword> register and begin compliance integration. Early adopters receive Compliant certification.</p>
                   </div>
                 </div>
-                <div className="flex gap-4 items-start">
-                  <div className="w-24 flex-shrink-0 text-right">
+                <div className="flex gap-3 sm:gap-4 items-start">
+                  <div className="w-16 sm:w-24 flex-shrink-0 sm:text-right">
                     <span className="text-xs font-bold text-warning bg-warning/10 px-2 py-1 rounded">Phase 2</span>
                   </div>
                   <div>
@@ -584,8 +584,8 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                     <p className="text-xs text-muted-foreground">All platforms serving minors <Keyword>MUST</Keyword> register with the PCSS platform registry. Pending Compliance status assigned.</p>
                   </div>
                 </div>
-                <div className="flex gap-4 items-start">
-                  <div className="w-24 flex-shrink-0 text-right">
+                <div className="flex gap-3 sm:gap-4 items-start">
+                  <div className="w-16 sm:w-24 flex-shrink-0 sm:text-right">
                     <span className="text-xs font-bold text-destructive bg-destructive/10 px-2 py-1 rounded">Phase 3</span>
                   </div>
                   <div>
@@ -608,7 +608,7 @@ signature = HMAC-SHA256(webhook_secret, request_body)
               </p>
 
               {/* Toolbar */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
                 <input
                   type="text"
                   placeholder="Search categories..."
@@ -616,12 +616,14 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                   onChange={e => setCategoryFilter(e.target.value)}
                   className="flex-1 bg-muted/50 border border-border rounded px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/50"
                 />
-                <button onClick={expandAll} className="px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 border border-border rounded hover:bg-muted transition-colors">
-                  Expand All
-                </button>
-                <button onClick={collapseAll} className="px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 border border-border rounded hover:bg-muted transition-colors">
-                  Collapse All
-                </button>
+                <div className="flex gap-2">
+                  <button onClick={expandAll} className="flex-1 sm:flex-none px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 border border-border rounded hover:bg-muted transition-colors">
+                    Expand All
+                  </button>
+                  <button onClick={collapseAll} className="flex-1 sm:flex-none px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 border border-border rounded hover:bg-muted transition-colors">
+                    Collapse All
+                  </button>
+                </div>
               </div>
 
               {/* Category Groups */}
@@ -632,10 +634,10 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                   return (
                     <div key={group.key} id={`cat-group-${group.key}`}>
                       {/* Group Header */}
-                      <div className="flex items-center gap-3 mb-3">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
                         <h3 className="text-lg font-bold text-foreground">{group.label}</h3>
                         <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full border border-border">{group.categories.length} categories</span>
-                        <span className="text-xs text-muted-foreground">{group.description}</span>
+                        <span className="text-xs text-muted-foreground hidden sm:inline">{group.description}</span>
                       </div>
 
                       {/* Category Cards */}
@@ -648,21 +650,21 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                               {/* Collapsed Row */}
                               <button
                                 onClick={() => toggleCategory(cat.id)}
-                                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-muted/30 transition-colors"
+                                className="w-full flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-3 px-3 sm:px-4 py-3 text-left hover:bg-muted/30 transition-colors"
                               >
                                 <span className="text-xs font-mono text-muted-foreground w-7 flex-shrink-0">#{globalIndex}</span>
-                                <code className="text-sm font-mono text-brand-green font-medium flex-shrink-0">{cat.id}</code>
-                                <span className="text-sm text-foreground font-medium">{cat.name}</span>
-                                <span className="text-xs text-muted-foreground truncate flex-1">{cat.description.slice(0, 80)}...</span>
+                                <code className="text-xs sm:text-sm font-mono text-brand-green font-medium flex-shrink-0">{cat.id}</code>
+                                <span className="text-xs sm:text-sm text-foreground font-medium">{cat.name}</span>
+                                <span className="text-xs text-muted-foreground truncate flex-1 hidden md:inline">{cat.description.slice(0, 80)}...</span>
                                 {cat.laws.length > 0 && (
-                                  <div className="flex gap-1 flex-shrink-0">
+                                  <div className="hidden sm:flex gap-1 flex-shrink-0">
                                     {cat.laws.slice(0, 2).map(law => (
                                       <span key={law} className="px-1.5 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded text-[10px] font-medium border border-amber-500/20 whitespace-nowrap">{law}</span>
                                     ))}
                                     {cat.laws.length > 2 && <span className="px-1.5 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded text-[10px] font-medium border border-amber-500/20">+{cat.laws.length - 2}</span>}
                                   </div>
                                 )}
-                                <svg className={`w-4 h-4 text-muted-foreground transition-transform flex-shrink-0 ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                <svg className={`w-4 h-4 text-muted-foreground transition-transform flex-shrink-0 ml-auto ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                               </button>
 
                               {/* Expanded Detail Panel */}
@@ -684,8 +686,8 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                                   {/* Configuration Schema */}
                                   <div>
                                     <h4 className="text-sm font-semibold text-foreground mb-2">Configuration Schema</h4>
-                                    <div className="bg-card rounded border border-border overflow-hidden">
-                                      <table className="w-full text-xs">
+                                    <div className="bg-card rounded border border-border overflow-x-auto">
+                                      <table className="w-full text-xs min-w-[500px]">
                                         <thead><tr className="bg-muted/50"><th className="px-3 py-2 text-left text-muted-foreground">Field</th><th className="px-3 py-2 text-left text-muted-foreground">Type</th><th className="px-3 py-2 text-center text-muted-foreground">Required</th><th className="px-3 py-2 text-left text-muted-foreground">Default</th><th className="px-3 py-2 text-left text-muted-foreground">Constraints</th></tr></thead>
                                         <tbody className="divide-y divide-border">
                                           {cat.fields.map(f => (
@@ -775,13 +777,13 @@ Content-Type: application/json
                 Overview of which category groups are supported by each platform adapter. <span className="text-emerald-500">&#10003;</span> = Full support,{" "}
                 <span className="text-amber-500">&#9681;</span> = Partial support, <span className="text-zinc-400">&mdash;</span> = No support.
               </p>
-              <div className="bg-card rounded border border-border overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="bg-card rounded border border-border overflow-x-auto -mx-4 sm:mx-0">
+                <table className="w-full text-sm min-w-[700px]">
                   <thead>
                     <tr className="bg-muted/50">
-                      <th className="px-4 py-3 text-left text-xs text-muted-foreground">Category Group</th>
+                      <th className="px-3 sm:px-4 py-3 text-left text-xs text-muted-foreground sticky left-0 bg-muted/50 z-10">Category Group</th>
                       {PLATFORM_NAMES.map(name => (
-                        <th key={name} className="px-4 py-3 text-center text-xs text-muted-foreground">{name}</th>
+                        <th key={name} className="px-2 sm:px-4 py-3 text-center text-xs text-muted-foreground whitespace-nowrap">{name}</th>
                       ))}
                     </tr>
                   </thead>
@@ -816,9 +818,9 @@ Content-Type: application/json
             <section id="age-ratings">
               <h2 className="text-xl font-bold text-foreground mb-4">Age-to-Rating Standard</h2>
               <p className="text-sm text-muted-foreground mb-4">Platforms <Keyword>MUST</Keyword> use the following age-to-rating mappings when computing content restrictions. Used by <code className="bg-muted px-1 rounded text-xs text-foreground">GET /ratings/by-age</code> and <code className="bg-muted px-1 rounded text-xs text-foreground">POST /policies/:id/generate-from-age</code>.</p>
-              <div className="bg-card rounded border border-border overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead><tr className="bg-muted/50"><th className="px-4 py-3 text-left text-xs text-muted-foreground">Age</th><th className="px-4 py-3 text-center text-xs text-muted-foreground">MPAA</th><th className="px-4 py-3 text-center text-xs text-muted-foreground">TV</th><th className="px-4 py-3 text-center text-xs text-muted-foreground">ESRB</th><th className="px-4 py-3 text-center text-xs text-muted-foreground">PEGI</th><th className="px-4 py-3 text-center text-xs text-muted-foreground">CSM</th></tr></thead>
+              <div className="bg-card rounded border border-border overflow-x-auto -mx-4 sm:mx-0">
+                <table className="w-full text-sm min-w-[500px]">
+                  <thead><tr className="bg-muted/50"><th className="px-3 sm:px-4 py-3 text-left text-xs text-muted-foreground">Age</th><th className="px-3 sm:px-4 py-3 text-center text-xs text-muted-foreground">MPAA</th><th className="px-3 sm:px-4 py-3 text-center text-xs text-muted-foreground">TV</th><th className="px-3 sm:px-4 py-3 text-center text-xs text-muted-foreground">ESRB</th><th className="px-3 sm:px-4 py-3 text-center text-xs text-muted-foreground">PEGI</th><th className="px-3 sm:px-4 py-3 text-center text-xs text-muted-foreground">CSM</th></tr></thead>
                   <tbody className="divide-y divide-border">
                     {AGE_RATING_TABLE.map((row) => (
                       <tr key={row.range} className="hover:bg-muted/30 transition-colors">
@@ -904,9 +906,9 @@ Content-Type: application/json
                       {/* Collapsed Row */}
                       <button
                         onClick={() => toggleLegislation(leg.id)}
-                        className="w-full text-left px-4 py-3 hover:bg-muted/30 transition-colors"
+                        className="w-full text-left px-3 sm:px-4 py-3 hover:bg-muted/30 transition-colors"
                       >
-                        <div className="flex items-start gap-3">
+                        <div className="flex items-start gap-2 sm:gap-3">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className="text-sm font-semibold text-foreground">{leg.law}</span>
@@ -918,7 +920,7 @@ Content-Type: application/json
                             <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{leg.summary}</p>
                           </div>
                           <div className="flex items-center gap-2 flex-shrink-0 pt-0.5">
-                            <div className="flex flex-wrap gap-1 justify-end">
+                            <div className="hidden sm:flex flex-wrap gap-1 justify-end">
                               {leg.categories.map(cat => (
                                 <code key={cat} className="text-[10px] bg-accent/5 text-brand-green px-1.5 py-0.5 rounded font-mono whitespace-nowrap">{cat}</code>
                               ))}
@@ -1047,22 +1049,22 @@ Content-Type: application/json
                   <div key={recipe.id} id={`recipe-${recipe.id}`} className="bg-card rounded border border-border overflow-hidden">
                     <button
                       onClick={() => toggleRecipe(recipe.id)}
-                      className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-muted/30 transition-colors"
+                      className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-3 sm:py-4 text-left hover:bg-muted/30 transition-colors"
                     >
                       <span className="text-xl flex-shrink-0">{recipe.icon}</span>
                       <span className="text-xs text-muted-foreground font-mono flex-shrink-0">#{index + 1}</span>
-                      <span className="font-semibold text-foreground text-sm">{recipe.title}</span>
-                      <span className="text-xs text-muted-foreground hidden sm:inline truncate">{recipe.summary}</span>
-                      <div className="flex gap-1.5 ml-auto flex-shrink-0">
+                      <span className="font-semibold text-foreground text-sm truncate">{recipe.title}</span>
+                      <span className="text-xs text-muted-foreground hidden lg:inline truncate">{recipe.summary}</span>
+                      <div className="hidden sm:flex gap-1.5 ml-auto flex-shrink-0">
                         {recipe.tags.map(tag => (
                           <span key={tag} className="px-2 py-0.5 rounded text-[10px] font-medium bg-accent/5 text-brand-green border border-accent/10">{tag}</span>
                         ))}
                       </div>
-                      <svg className={`w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                      <svg className={`w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform ml-auto sm:ml-0 ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                     </button>
 
                     {isExpanded && (
-                      <div className="border-t border-border bg-muted/10 px-5 py-5 space-y-6">
+                      <div className="border-t border-border bg-muted/10 px-3 sm:px-5 py-4 sm:py-5 space-y-5 sm:space-y-6">
                         {/* Scenario */}
                         <div className="bg-accent/5 border border-accent/20 rounded p-4">
                           <h4 className="text-xs font-semibold text-brand-green uppercase tracking-wider mb-2">Scenario</h4>
@@ -1104,18 +1106,18 @@ Content-Type: application/json
                                   </div>
                                 </div>
                                 {step.requestBody && (
-                                  <div className="mt-3 ml-9">
+                                  <div className="mt-3 sm:ml-9">
                                     <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Request</p>
                                     <pre className="bg-zinc-900 text-blue-400 rounded p-3 text-xs font-mono overflow-x-auto whitespace-pre">{step.requestBody}</pre>
                                   </div>
                                 )}
                                 {step.responseBody && (
-                                  <div className="mt-3 ml-9">
+                                  <div className="mt-3 sm:ml-9">
                                     <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Response</p>
                                     <pre className="bg-zinc-900 text-green-400 rounded p-3 text-xs font-mono overflow-x-auto whitespace-pre">{step.responseBody}</pre>
                                   </div>
                                 )}
-                                <div className="mt-3 ml-9 flex items-start gap-2">
+                                <div className="mt-3 sm:ml-9 flex items-start gap-2">
                                   <span className="text-muted-foreground mt-0.5">&rarr;</span>
                                   <p className="text-xs text-muted-foreground italic leading-relaxed">{step.whatHappens}</p>
                                 </div>

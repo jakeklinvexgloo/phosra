@@ -15,7 +15,7 @@ export function Hero() {
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#111111] via-[#111111] to-[#0a3d2a] opacity-100" />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20 lg:pt-40 lg:pb-28">
+      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-16 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-28">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left — text */}
           <div>
@@ -43,10 +43,10 @@ export function Hero() {
           </div>
 
           {/* Right — visual mockup */}
-          <div className="hidden lg:block">
+          <div className="mt-10 lg:mt-0">
             <div className="relative">
               {/* Policy card */}
-              <div className="bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-lg p-6 max-w-sm ml-auto">
+              <div className="bg-white/[0.06] backdrop-blur-sm border border-white/10 rounded-lg p-6 max-w-sm mx-auto lg:ml-auto">
                 <div className="flex items-center gap-2 mb-5">
                   <Shield className="w-5 h-5 text-brand-green" />
                   <span className="text-sm font-semibold text-white">Emma&apos;s Policy</span>
@@ -91,7 +91,7 @@ export function Hero() {
         </div>
 
         {/* Platform logo bar */}
-        <div className="mt-16 pt-10 border-t border-white/10">
+        <div className="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-white/10">
           <p className="text-xs text-white/30 text-center mb-6 tracking-wide uppercase">Supports 15+ platforms</p>
           <div className="relative overflow-hidden">
             <div className="flex animate-scroll gap-10">
