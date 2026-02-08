@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import { LogOut, Shield, Home, Zap, BookOpen, Globe, Users, Settings, Search, ChevronRight, MessageSquare, Menu, X } from "lucide-react"
+import { LogOut, Shield, Home, Zap, BookOpen, Globe, Users, Settings, Search, ChevronRight, MessageSquare, Menu, X, Rocket } from "lucide-react"
 import { useUser, useClerk } from "@clerk/nextjs"
 
 interface NavItem {
@@ -45,6 +45,7 @@ const navGroups: NavGroup[] = [
     label: "Settings & Account",
     items: [
       { href: "/dashboard/settings", label: "Settings", icon: Settings },
+      { href: "/dashboard/deploy", label: "Deploy", icon: Rocket },
     ],
   },
 ]
