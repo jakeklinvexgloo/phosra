@@ -2,13 +2,33 @@ package router
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/guardiangate/api/internal/handler"
 	"github.com/guardiangate/api/internal/handler/middleware"
+	"github.com/guardiangate/api/internal/repository"
 )
+
+type options struct {
+	sandboxMode bool
+	corsOrigins string
+}
+
+// Option configures the router.
+type Option func(*options)
+
+// WithSandboxMode enables sandbox authentication (no Clerk, session-based users).
+func WithSandboxMode() Option {
+	return func(o *options) { o.sandboxMode = true }
+}
+
+// WithCORSOrigins sets the allowed CORS origins (comma-separated).
+func WithCORSOrigins(origins string) Option {
+	return func(o *options) { o.corsOrigins = origins }
+}
 
 type Handlers struct {
 	Auth        *handler.AuthHandler
@@ -21,9 +41,14 @@ type Handlers struct {
 	Webhook     *handler.WebhookHandler
 	Report      *handler.ReportHandler
 	Setup       *handler.SetupHandler
+	Feedback    *handler.FeedbackHandler
 }
 
-func New(h Handlers, jwtSecret []byte, rateLimitRPS int) http.Handler {
+func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts ...Option) http.Handler {
+	o := &options{}
+	for _, opt := range opts {
+		opt(o)
+	}
 	r := chi.NewRouter()
 
 	// Global middleware
@@ -31,8 +56,12 @@ func New(h Handlers, jwtSecret []byte, rateLimitRPS int) http.Handler {
 	r.Use(chimiddleware.RealIP)
 	r.Use(middleware.Logging)
 	r.Use(chimiddleware.Recoverer)
+	corsOrigins := []string{"http://localhost:3000"}
+	if o.corsOrigins != "" {
+		corsOrigins = strings.Split(o.corsOrigins, ",")
+	}
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000", "https://*.guardiangate.io"},
+		AllowedOrigins:   corsOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		ExposedHeaders:   []string{"Link"},
@@ -53,10 +82,6 @@ func New(h Handlers, jwtSecret []byte, rateLimitRPS int) http.Handler {
 	r.Route("/api/v1", func(r chi.Router) {
 		// Public routes
 		r.Group(func(r chi.Router) {
-			r.Post("/auth/register", h.Auth.Register)
-			r.Post("/auth/login", h.Auth.Login)
-			r.Post("/auth/refresh", h.Auth.Refresh)
-
 			// Public rating lookups
 			r.Get("/ratings/systems", h.Rating.GetSystems)
 			r.Get("/ratings/systems/{systemID}", h.Rating.GetBySystem)
@@ -73,11 +98,19 @@ func New(h Handlers, jwtSecret []byte, rateLimitRPS int) http.Handler {
 			// OAuth callbacks
 			r.Get("/platforms/{platformID}/oauth/authorize", h.Platform.OAuthAuthorize)
 			r.Get("/platforms/{platformID}/oauth/callback", h.Platform.OAuthCallback)
+
+			// UI Feedback (public: reviewers submit without auth)
+			r.Post("/feedback", h.Feedback.Create)
+			r.Get("/feedback", h.Feedback.List)
 		})
 
 		// Protected routes
 		r.Group(func(r chi.Router) {
-			r.Use(middleware.JWTAuth(jwtSecret))
+			if o.sandboxMode {
+				r.Use(middleware.SandboxAuth(userRepo))
+			} else {
+				r.Use(middleware.ClerkAuth(userRepo))
+			}
 
 			// Auth
 			r.Post("/auth/logout", h.Auth.Logout)
@@ -167,6 +200,9 @@ func New(h Handlers, jwtSecret []byte, rateLimitRPS int) http.Handler {
 				r.Get("/results", h.Enforcement.GetJobResults)
 				r.Post("/retry", h.Enforcement.RetryJob)
 			})
+
+			// UI Feedback (protected: only owner can change status)
+			r.Patch("/feedback/{feedbackID}/status", h.Feedback.UpdateStatus)
 
 			// Webhooks
 			r.Post("/webhooks", h.Webhook.Create)

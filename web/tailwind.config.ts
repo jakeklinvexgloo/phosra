@@ -1,13 +1,12 @@
 import type { Config } from "tailwindcss"
 
 const config: Config = {
-  darkMode: ["class"],
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     container: {
       center: true,
       padding: "2rem",
-      screens: { "2xl": "1400px" },
+      screens: { "2xl": "1200px" },
     },
     extend: {
       colors: {
@@ -30,6 +29,25 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
         },
         surface: "hsl(var(--surface))",
+        paragraph: "hsl(var(--paragraph))",
+        heading: "hsl(var(--heading))",
+        brand: {
+          green: "hsl(var(--brand-green))",
+        },
+      },
+      fontSize: {
+        "h1": ["50px", { lineHeight: "60px", fontWeight: "700" }],
+        "h2": ["30px", { lineHeight: "38px", fontWeight: "700" }],
+        "h3": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+        "h4": ["24px", { lineHeight: "32px", fontWeight: "400" }],
+        "h1-inner": ["36px", { lineHeight: "48px", fontWeight: "700" }],
+      },
+      boxShadow: {
+        "plaid-card": "rgba(18,18,18,0.08) 0px 8px 16px",
+        "plaid-card-hover": "rgba(18,18,18,0.14) 0px 12px 24px",
+      },
+      width: {
+        "sidebar": "320px",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -37,23 +55,13 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
-        "slide-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        "fade-in": {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        "scale-in": {
-          from: { opacity: "0", transform: "scale(0.95)" },
-          to: { opacity: "1", transform: "scale(1)" },
+        scroll: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
         },
       },
       animation: {
-        "slide-up": "slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-        "fade-in": "fade-in 0.2s ease-out",
-        "scale-in": "scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        scroll: "scroll 30s linear infinite",
       },
     },
   },

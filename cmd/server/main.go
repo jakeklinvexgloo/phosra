@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/clerk/clerk-sdk-go/v2"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -33,6 +34,9 @@ func main() {
 
 	cfg := config.Load()
 
+	// Initialize Clerk
+	clerk.SetKey(cfg.ClerkSecretKey)
+
 	// Set log level
 	level, err := zerolog.ParseLevel(cfg.LogLevel)
 	if err == nil {
@@ -50,7 +54,6 @@ func main() {
 
 	// Repositories
 	userRepo := &postgres.UserRepo{DB: db}
-	refreshTokenRepo := &postgres.RefreshTokenRepo{DB: db}
 	familyRepo := &postgres.FamilyRepo{DB: db}
 	memberRepo := &postgres.FamilyMemberRepo{DB: db}
 	childRepo := &postgres.ChildRepo{DB: db}
@@ -63,6 +66,7 @@ func main() {
 	enforcementResultRepo := &postgres.EnforcementResultRepo{DB: db}
 	webhookRepo := &postgres.WebhookRepo{DB: db}
 	webhookDeliveryRepo := &postgres.WebhookDeliveryRepo{DB: db}
+	feedbackRepo := postgres.NewFeedbackRepo(db)
 
 	// Platform registry
 	registry := provider.NewRegistry()
@@ -75,7 +79,7 @@ func main() {
 	log.Info().Int("platforms", len(registry.List())).Msg("registered platform adapters")
 
 	// Services
-	authSvc := service.NewAuthService(userRepo, refreshTokenRepo, cfg.JWTSecret, cfg.AccessTokenTTL, cfg.RefreshTokenTTL)
+	authSvc := service.NewAuthService(userRepo)
 	familySvc := service.NewFamilyService(familyRepo, memberRepo)
 	childSvc := service.NewChildService(childRepo, familyRepo, memberRepo, ratingRepo)
 	policySvc := service.NewPolicyService(policyRepo, ruleRepo, childRepo, memberRepo, ratingRepo)
@@ -98,10 +102,20 @@ func main() {
 		Webhook:     handler.NewWebhookHandler(webhookSvc),
 		Report:      handler.NewReportHandler(reportSvc),
 		Setup:       handler.NewSetupHandler(setupSvc),
+		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 	}
 
 	// Router
-	r := router.New(handlers, []byte(cfg.JWTSecret), cfg.RateLimitRPS)
+	var routerOpts []router.Option
+	if cfg.SandboxMode {
+		routerOpts = append(routerOpts, router.WithSandboxMode())
+		log.Info().Msg("sandbox mode enabled — using session-based auth (no Clerk)")
+	}
+	if cfg.CORSOrigins != "" {
+		routerOpts = append(routerOpts, router.WithCORSOrigins(cfg.CORSOrigins))
+		log.Info().Str("origins", cfg.CORSOrigins).Msg("CORS origins configured")
+	}
+	r := router.New(handlers, userRepo, cfg.RateLimitRPS, routerOpts...)
 
 	// Server
 	srv := &http.Server{

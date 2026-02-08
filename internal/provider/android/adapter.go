@@ -88,7 +88,7 @@ func (a *Adapter) EnforcePolicy(ctx context.Context, req provider.EnforcementReq
 		return nil, fmt.Errorf("enterprise_id required in extra_params")
 	}
 
-	policyName := fmt.Sprintf("guardiangate-%s", req.ChildName)
+	policyName := fmt.Sprintf("phosra-%s", req.ChildName)
 	url := fmt.Sprintf("%s/enterprises/%s/policies/%s", baseURL, enterprise, policyName)
 
 	body, _ := json.Marshal(androidPolicy)
@@ -189,7 +189,7 @@ func (a *Adapter) RevokePolicy(ctx context.Context, auth provider.AuthConfig) er
 	if enterprise == "" {
 		return nil
 	}
-	url := fmt.Sprintf("%s/enterprises/%s/policies/guardiangate-default", baseURL, enterprise)
+	url := fmt.Sprintf("%s/enterprises/%s/policies/phosra-default", baseURL, enterprise)
 	req, _ := http.NewRequestWithContext(ctx, http.MethodDelete, url, nil)
 	req.Header.Set("Authorization", "Bearer "+auth.AccessToken)
 	resp, err := a.httpClient.Do(req)

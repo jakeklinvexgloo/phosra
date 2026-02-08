@@ -2,19 +2,9 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
-import { Users, ShieldCheck, Activity, Plus } from "lucide-react"
+import { Users, ShieldCheck, Activity, Plus, ArrowRight, Zap, Globe, BookOpen } from "lucide-react"
 import { api } from "@/lib/api"
 import type { Family, FamilyOverview } from "@/lib/types"
-
-const staggerContainer = {
-  animate: { transition: { staggerChildren: 0.06 } },
-}
-
-const cardItem = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
-}
 
 export default function DashboardHome() {
   const [families, setFamilies] = useState<Family[]>([])
@@ -47,91 +37,86 @@ export default function DashboardHome() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl font-bold text-foreground">Dashboard</h2>
-        <button
-          onClick={() => setShowCreate(true)}
-          className="flex items-center gap-2 gradient-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition shadow-lg shadow-indigo-500/25"
-        >
-          <Plus className="w-4 h-4" />
-          New Family
-        </button>
+      {/* Hero */}
+      <div className="mb-10">
+        <h1 className="text-h1 text-foreground">Welcome to Phosra</h1>
+        <p className="text-lg text-muted-foreground mt-3 max-w-xl">
+          Define parental controls once, push them everywhere. Protect your children across every platform and device.
+        </p>
       </div>
 
-      {showCreate && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-card rounded-xl shadow-sm border border-border/50 p-6 mb-6"
-        >
-          <h3 className="text-lg font-medium text-foreground mb-4">Create Family</h3>
-          <div className="flex gap-3">
-            <input
-              type="text"
-              placeholder="Family name"
-              value={newFamilyName}
-              onChange={(e) => setNewFamilyName(e.target.value)}
-              className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
-            />
-            <button onClick={createFamily} className="gradient-primary text-white px-4 py-2 rounded-lg text-sm">Create</button>
-            <button onClick={() => setShowCreate(false)} className="px-4 py-2 rounded-lg text-sm border border-border text-foreground hover:bg-muted/50">Cancel</button>
-          </div>
-        </motion.div>
-      )}
-
       {families.length === 0 ? (
-        <div className="text-center py-20">
-          <div className="bg-card rounded-xl shadow-sm border border-border/50 p-10 max-w-md mx-auto">
-            <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-6">
-              <ShieldCheck className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">Set Up Your First Child</h3>
-            <p className="text-muted-foreground mb-6">
-              Protect your child across every platform in under a minute. Our guided setup creates age-appropriate rules automatically.
-            </p>
-            <Link
-              href="/dashboard/setup"
-              className="inline-flex items-center gap-2 gradient-primary text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition shadow-lg shadow-indigo-500/25"
-            >
-              <Plus className="w-4 h-4" />
-              Quick Setup
+        <>
+          {/* Quick-start cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <Link href="/dashboard/setup" className="plaid-card block group">
+              <Zap className="w-6 h-6 text-brand-green mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-1">Quick Setup</h3>
+              <p className="text-sm text-muted-foreground mb-4">Set up age-appropriate protection in under a minute.</p>
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
+                Get started <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
+            <Link href="/dashboard/platforms" className="plaid-card block group">
+              <Globe className="w-6 h-6 text-brand-green mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-1">Platforms</h3>
+              <p className="text-sm text-muted-foreground mb-4">View regulated platforms and verify compliance status.</p>
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
+                View platforms <ArrowRight className="w-4 h-4" />
+              </span>
+            </Link>
+            <Link href="/dashboard/docs" className="plaid-card block group">
+              <BookOpen className="w-6 h-6 text-brand-green mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-1">API Reference</h3>
+              <p className="text-sm text-muted-foreground mb-4">Read the PCSS v1.0 specification and integration guide.</p>
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-foreground group-hover:gap-2 transition-all">
+                Read docs <ArrowRight className="w-4 h-4" />
+              </span>
             </Link>
           </div>
-        </div>
+
+          <button
+            onClick={() => setShowCreate(true)}
+            className="flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition"
+          >
+            <Plus className="w-4 h-4" />
+            Create Family
+          </button>
+        </>
       ) : (
         <>
-          {overview && (
-            <motion.div
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-h3 text-foreground">Overview</h2>
+            <button
+              onClick={() => setShowCreate(true)}
+              className="flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition"
             >
-              <motion.div variants={cardItem} className="bg-card rounded-xl shadow-sm border border-border/50 p-6 gradient-card-children card-hover">
+              <Plus className="w-4 h-4" />
+              New Family
+            </button>
+          </div>
+
+          {overview && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="plaid-card">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-500/10 dark:bg-indigo-500/20 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-indigo-500" />
-                  </div>
+                  <Users className="w-5 h-5 text-brand-green" />
                   <p className="text-sm text-muted-foreground">Children</p>
                 </div>
-                <p className="text-4xl font-bold tabular-nums text-foreground">{overview.children?.length || 0}</p>
-              </motion.div>
+                <p className="text-3xl font-bold tabular-nums text-foreground">{overview.children?.length || 0}</p>
+              </div>
 
-              <motion.div variants={cardItem} className="bg-card rounded-xl shadow-sm border border-border/50 p-6 gradient-card-providers card-hover">
+              <div className="plaid-card">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/20 flex items-center justify-center">
-                    <ShieldCheck className="w-5 h-5 text-emerald-500" />
-                  </div>
+                  <ShieldCheck className="w-5 h-5 text-success" />
                   <p className="text-sm text-muted-foreground">Compliant Platforms</p>
                 </div>
-                <p className="text-4xl font-bold tabular-nums text-foreground">{overview.total_platforms}</p>
-              </motion.div>
+                <p className="text-3xl font-bold tabular-nums text-foreground">{overview.total_platforms}</p>
+              </div>
 
-              <motion.div variants={cardItem} className="bg-card rounded-xl shadow-sm border border-border/50 p-6 gradient-card-health card-hover">
+              <div className="plaid-card">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center">
-                    <Activity className="w-5 h-5 text-amber-500" />
-                  </div>
+                  <Activity className="w-5 h-5 text-warning" />
                   <p className="text-sm text-muted-foreground">Enforcement Health</p>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
@@ -140,14 +125,14 @@ export default function DashboardHome() {
                     {healthStatus[overview.enforcement_health]?.label || overview.enforcement_health}
                   </span>
                 </div>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           )}
 
           <div className="mb-6 flex justify-end">
             <Link
               href="/dashboard/setup"
-              className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-medium transition"
+              className="flex items-center gap-2 text-sm text-foreground hover:opacity-80 font-medium transition"
             >
               <Plus className="w-4 h-4" />
               Quick Setup Another Child
@@ -155,14 +140,9 @@ export default function DashboardHome() {
           </div>
 
           {overview?.children && overview.children.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-card rounded-xl shadow-sm border border-border/50"
-            >
+            <div className="plaid-card !p-0 overflow-hidden">
               <div className="px-6 py-4 border-b border-border">
-                <h3 className="text-lg font-medium text-foreground">Children</h3>
+                <h3 className="text-sm font-semibold text-foreground">Children</h3>
               </div>
               <div className="divide-y divide-border">
                 {overview.children.map((c) => {
@@ -186,9 +166,30 @@ export default function DashboardHome() {
                   )
                 })}
               </div>
-            </motion.div>
+            </div>
           )}
         </>
+      )}
+
+      {showCreate && (
+        <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50" onClick={() => setShowCreate(false)}>
+          <div className="plaid-card w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-foreground mb-4">Create Family</h3>
+            <div className="flex gap-3">
+              <input
+                type="text"
+                placeholder="Family name"
+                value={newFamilyName}
+                onChange={(e) => setNewFamilyName(e.target.value)}
+                className="plaid-input"
+              />
+            </div>
+            <div className="flex gap-3 mt-4">
+              <button onClick={createFamily} className="bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition">Create</button>
+              <button onClick={() => setShowCreate(false)} className="px-5 py-2.5 rounded-full text-sm border border-foreground text-foreground hover:bg-muted transition">Cancel</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

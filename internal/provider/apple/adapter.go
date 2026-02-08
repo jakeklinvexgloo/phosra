@@ -57,7 +57,7 @@ func (a *Adapter) EnforcePolicy(ctx context.Context, req provider.EnforcementReq
 				"1. Download the generated .mobileconfig profile",
 				"2. AirDrop or email the profile to the target device",
 				"3. On the device, go to Settings > General > VPN & Device Management",
-				"4. Tap the GuardianGate profile and install it",
+				"4. Tap the Phosra profile and install it",
 				"5. Enter the device passcode when prompted",
 			},
 		},

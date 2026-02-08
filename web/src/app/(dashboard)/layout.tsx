@@ -3,180 +3,194 @@
 import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { Home, Users, ShieldCheck, Gavel, Settings, LogOut, Sun, Moon, Monitor, Shield, Zap } from "lucide-react"
-import { isAuthenticated, logout } from "@/lib/auth"
-import { api } from "@/lib/api"
-import { useTheme } from "@/lib/theme"
-import type { User } from "@/lib/types"
+import { LogOut, Shield, Home, Zap, BookOpen, Globe, Users, Settings, Search, ChevronRight, MessageSquare } from "lucide-react"
+import { useUser, useClerk } from "@clerk/nextjs"
 
-const navItems = [
-  { href: "/dashboard", label: "Home", icon: Home },
-  { href: "/dashboard/children", label: "Children", icon: Users },
-  { href: "/dashboard/platforms", label: "Platforms", icon: ShieldCheck },
-  { href: "/dashboard/enforcement", label: "Enforcement", icon: Gavel },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
-]
-
-const pageTransition = {
-  initial: { opacity: 0, y: 8 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } },
-  exit: { opacity: 0, y: -8, transition: { duration: 0.15 } },
+interface NavItem {
+  href: string
+  label: string
+  icon: typeof Home
+  exact?: boolean
+  external?: boolean
 }
+
+interface NavGroup {
+  label?: string
+  items: NavItem[]
+}
+
+const navGroups: NavGroup[] = [
+  {
+    items: [
+      { href: "/dashboard", label: "Home", icon: Home, exact: true },
+      { href: "/dashboard/setup", label: "Quick Setup", icon: Zap },
+      { href: "/dashboard/docs", label: "API Docs", icon: BookOpen },
+      { href: "/dashboard/playground", label: "Playground", icon: MessageSquare },
+    ],
+  },
+  {
+    label: "Platform Compliance",
+    items: [
+      { href: "/dashboard/platforms", label: "Platforms", icon: Globe },
+      { href: "/dashboard/enforcement", label: "Enforcement", icon: Shield },
+    ],
+  },
+  {
+    label: "Family Management",
+    items: [
+      { href: "/dashboard/children", label: "Children", icon: Users },
+    ],
+  },
+  {
+    label: "Settings & Account",
+    items: [
+      { href: "/dashboard/settings", label: "Settings", icon: Settings },
+    ],
+  },
+]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
-  const { theme, setTheme } = useTheme()
-  const [user, setUser] = useState<User | null>(null)
+  const { user, isLoaded, isSignedIn } = useUser()
+  const { signOut } = useClerk()
+  const [isSandbox, setIsSandbox] = useState(false)
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/")
+    const sandbox = localStorage.getItem("sandbox-session")
+    if (sandbox) {
+      setIsSandbox(true)
       return
     }
-    api.me().then(setUser).catch(() => router.push("/"))
-  }, [router])
+    if (isLoaded && !isSignedIn) {
+      router.push("/login")
+    }
+  }, [isLoaded, isSignedIn, router])
 
-  if (!user) {
+  if (!isSandbox && (!isLoaded || !isSignedIn)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
-  const themeOptions = [
-    { value: "light" as const, icon: Sun, label: "Light" },
-    { value: "dark" as const, icon: Moon, label: "Dark" },
-    { value: "system" as const, icon: Monitor, label: "System" },
-  ]
+  const displayName = isSandbox ? "Dev User" : (user?.firstName || user?.emailAddresses?.[0]?.emailAddress || "User")
+
+  const isActive = (href: string, exact?: boolean) => {
+    if (exact) return pathname === href
+    return pathname.startsWith(href)
+  }
 
   return (
-    <div className="min-h-screen flex bg-background">
-      <aside className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col">
-        {/* Logo block with glass accent */}
-        <div className="p-6 border-b border-sidebar-border">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground">GuardianGate</h1>
-              <p className="text-xs text-muted-foreground">Child Safety Standard</p>
-            </div>
-          </div>
+    <div className="min-h-screen bg-background">
+      {/* Fixed sidebar */}
+      <aside className="fixed top-0 left-0 bottom-0 w-[320px] border-r border-border bg-sidebar flex flex-col z-30">
+        {/* Sidebar header */}
+        <div className="h-24 flex items-center gap-2.5 px-6 border-b border-border">
+          <Shield className="w-6 h-6 text-brand-green" />
+          <span className="text-[18px] font-semibold text-foreground">Phosra</span>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href
-            const Icon = item.icon
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                  isActive
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="nav-indicator"
-                    className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-full bg-primary"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <Icon className="w-5 h-5" />
-                {item.label}
-              </Link>
-            )
-          })}
-
-          <div className="pt-3">
-            <Link
-              href="/dashboard/setup"
-              className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                pathname === "/dashboard/setup"
-                  ? "bg-primary/10 text-primary font-medium"
-                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-              }`}
-            >
-              {pathname === "/dashboard/setup" && (
-                <motion.div
-                  layoutId="nav-indicator"
-                  className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-full bg-primary"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3">
+          {navGroups.map((group, gi) => (
+            <div key={gi} className={gi > 0 ? "mt-6" : ""}>
+              {group.label && (
+                <p className="section-header px-3 mb-2">{group.label}</p>
               )}
-              <Zap className="w-5 h-5" />
-              Quick Setup
-            </Link>
-          </div>
+              <div className="space-y-0.5">
+                {group.items.map((item) => {
+                  const Icon = item.icon
+                  const active = isActive(item.href, item.exact)
+                  if (item.external) {
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        target="_blank"
+                        className="flex items-center gap-3 px-3 py-2 rounded text-[14px] text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                      >
+                        <Icon className="w-[18px] h-[18px]" />
+                        {item.label}
+                        <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-40" />
+                      </Link>
+                    )
+                  }
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center gap-3 px-3 py-2 rounded text-[14px] transition-colors ${
+                        active
+                          ? "text-foreground font-medium bg-muted border-l-2 border-foreground -ml-px"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <Icon className={`w-[18px] h-[18px] ${active ? "text-brand-green" : ""}`} />
+                      {item.label}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
+      </aside>
 
-        {/* Theme toggle */}
-        <div className="px-4 pb-3">
-          <div className="flex items-center rounded-lg bg-muted/50 p-1">
-            {themeOptions.map((opt) => {
-              const Icon = opt.icon
-              const isActive = theme === opt.value
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => setTheme(opt.value)}
-                  className={`relative flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-xs transition-colors ${
-                    isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                  }`}
-                  title={opt.label}
-                >
-                  {isActive && (
-                    <motion.div
-                      layoutId="theme-indicator"
-                      className="absolute inset-0 rounded-md bg-card shadow-sm"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-1">
-                    <Icon className="w-3.5 h-3.5" />
-                  </span>
-                </button>
-              )
-            })}
-          </div>
+      {/* Top bar */}
+      <header className="fixed top-0 left-[320px] right-0 h-24 border-b border-border bg-white z-20 flex items-center justify-between px-8">
+        {/* Search */}
+        <div className="relative w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full pl-10 pr-4 py-2.5 border border-input rounded-sm text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground"
+          />
         </div>
 
-        {/* User section */}
-        <div className="p-4 border-t border-sidebar-border">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-medium">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{user.name}</p>
-              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-            </div>
+        {/* User info */}
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2.5">
+            {!isSandbox && user?.imageUrl ? (
+              <img src={user.imageUrl} alt="" className="w-8 h-8 rounded-full" />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center text-brand-green text-sm font-semibold">
+                {displayName.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <span className="text-sm text-foreground font-medium">{displayName}</span>
+            {isSandbox && <span className="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">DEV</span>}
           </div>
           <button
-            onClick={() => { api.logout().catch(() => {}); logout() }}
-            className="mt-3 w-full flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors text-left"
+            onClick={() => {
+              if (isSandbox) {
+                localStorage.removeItem("sandbox-session")
+                router.push("/login")
+              } else {
+                signOut({ redirectUrl: "/login" })
+              }
+            }}
+            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className="w-4 h-4" />
             Sign out
           </button>
         </div>
-      </aside>
+      </header>
 
-      <main className="flex-1 overflow-auto">
-        <div className="p-8">
-          <AnimatePresence mode="wait">
-            <motion.div key={pathname} {...pageTransition}>
-              {children}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+      {/* Main content */}
+      <main className="ml-[320px] pt-24">
+        {pathname.startsWith("/dashboard/playground") ? (
+          <div>{children}</div>
+        ) : (
+          <div className={pathname.startsWith("/dashboard/docs")
+            ? "px-8 py-10"
+            : "max-w-[960px] px-12 py-10"}>
+            {children}
+          </div>
+        )}
       </main>
     </div>
   )

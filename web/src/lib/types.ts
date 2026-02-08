@@ -221,6 +221,22 @@ export interface FamilyOverview {
   recent_enforcements: EnforcementJob[]
 }
 
+export interface UIFeedback {
+  id: string
+  page_route: string
+  css_selector: string
+  component_hint?: string
+  comment: string
+  reviewer_name: string
+  status: "open" | "approved" | "dismissed" | "fixed"
+  viewport_width?: number
+  viewport_height?: number
+  click_x?: number
+  click_y?: number
+  created_at: string
+  resolved_at?: string
+}
+
 export type Strictness = "recommended" | "strict" | "relaxed"
 
 export interface QuickSetupRequest {

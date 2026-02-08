@@ -10,6 +10,7 @@ import (
 // User represents an authenticated account.
 type User struct {
 	ID           uuid.UUID  `json:"id"`
+	ClerkID      string     `json:"clerk_id,omitempty"`
 	Email        string     `json:"email"`
 	PasswordHash string     `json:"-"`
 	Name         string     `json:"name"`
@@ -327,6 +328,23 @@ type Webhook struct {
 	Active    bool      `json:"active"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+// UIFeedback stores visual feedback from reviewers on the running UI.
+type UIFeedback struct {
+	ID             uuid.UUID  `json:"id"`
+	PageRoute      string     `json:"page_route"`
+	CSSSelector    string     `json:"css_selector"`
+	ComponentHint  *string    `json:"component_hint,omitempty"`
+	Comment        string     `json:"comment"`
+	ReviewerName   string     `json:"reviewer_name"`
+	Status         string     `json:"status"`
+	ViewportWidth  *int       `json:"viewport_width,omitempty"`
+	ViewportHeight *int       `json:"viewport_height,omitempty"`
+	ClickX         *int       `json:"click_x,omitempty"`
+	ClickY         *int       `json:"click_y,omitempty"`
+	CreatedAt      time.Time  `json:"created_at"`
+	ResolvedAt     *time.Time `json:"resolved_at,omitempty"`
 }
 
 // WebhookDelivery tracks webhook delivery attempts.

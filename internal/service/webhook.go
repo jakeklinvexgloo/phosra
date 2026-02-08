@@ -163,8 +163,8 @@ func (s *WebhookService) deliver(ctx context.Context, wh *domain.Webhook, event 
 		return delivery, err
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-GuardianGate-Signature", signature)
-	req.Header.Set("X-GuardianGate-Event", event)
+	req.Header.Set("X-Phosra-Signature", signature)
+	req.Header.Set("X-Phosra-Event", event)
 
 	resp, err := s.httpClient.Do(req)
 	if err != nil {

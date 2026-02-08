@@ -175,8 +175,8 @@ func (h *FamilyHandler) ListMembers(w http.ResponseWriter, r *http.Request) {
 func handleServiceError(w http.ResponseWriter, err error) {
 	switch err {
 	case service.ErrFamilyNotFound, service.ErrChildNotFound, service.ErrPolicyNotFound,
-		service.ErrRuleNotFound, service.ErrProviderNotFound, service.ErrConnectionNotFound,
-		service.ErrSyncJobNotFound, service.ErrWebhookNotFound, service.ErrUserNotFound,
+		service.ErrRuleNotFound, service.ErrPlatformNotFound, service.ErrComplianceLinkNotFound,
+		service.ErrEnforcementJobNotFound, service.ErrWebhookNotFound, service.ErrUserNotFound,
 		service.ErrRatingNotFound:
 		httputil.Error(w, http.StatusNotFound, err.Error())
 	case service.ErrNotFamilyMember:
@@ -185,10 +185,6 @@ func handleServiceError(w http.ResponseWriter, err error) {
 		httputil.Error(w, http.StatusForbidden, err.Error())
 	case service.ErrNoActivePolicy:
 		httputil.Error(w, http.StatusBadRequest, err.Error())
-	case service.ErrEmailTaken:
-		httputil.Error(w, http.StatusConflict, err.Error())
-	case service.ErrInvalidCredentials:
-		httputil.Error(w, http.StatusUnauthorized, err.Error())
 	default:
 		httputil.Error(w, http.StatusInternalServerError, "internal server error")
 	}

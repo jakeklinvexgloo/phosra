@@ -18,10 +18,20 @@ ALTER TABLE enforcement_results RENAME COLUMN sync_job_id TO enforcement_job_id;
 ALTER TABLE enforcement_results RENAME COLUMN connection_id TO compliance_link_id;
 ALTER TABLE enforcement_results RENAME COLUMN provider_id TO platform_id;
 
+-- Widen tier column to accommodate 'provisional' (11 chars > varchar(10))
+ALTER TABLE platforms ALTER COLUMN tier TYPE character varying(20);
+
+-- Drop old check constraint and add new one after data migration
+ALTER TABLE platforms DROP CONSTRAINT providers_tier_check;
+
 -- Update tier values in platforms
 UPDATE platforms SET tier = 'compliant' WHERE tier = 'live';
 UPDATE platforms SET tier = 'provisional' WHERE tier = 'partial';
 UPDATE platforms SET tier = 'pending' WHERE tier = 'stub';
+
+-- Add new check constraint with rebranded values
+ALTER TABLE platforms ADD CONSTRAINT platforms_tier_check
+  CHECK (tier IN ('compliant', 'provisional', 'pending'));
 
 -- Update connection status values in compliance_links
 UPDATE compliance_links SET status = 'verified' WHERE status = 'connected';

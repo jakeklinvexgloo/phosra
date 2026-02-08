@@ -12,18 +12,18 @@ import (
 type ReportService struct {
 	children    repository.ChildRepository
 	policies    repository.PolicyRepository
-	syncJobs    repository.SyncJobRepository
-	syncResults repository.SyncJobResultRepository
-	connections repository.ProviderConnectionRepository
+	syncJobs    repository.EnforcementJobRepository
+	syncResults repository.EnforcementResultRepository
+	connections repository.ComplianceLinkRepository
 	members     repository.FamilyMemberRepository
 }
 
 func NewReportService(
 	children repository.ChildRepository,
 	policies repository.PolicyRepository,
-	syncJobs repository.SyncJobRepository,
-	syncResults repository.SyncJobResultRepository,
-	connections repository.ProviderConnectionRepository,
+	syncJobs repository.EnforcementJobRepository,
+	syncResults repository.EnforcementResultRepository,
+	connections repository.ComplianceLinkRepository,
 	members repository.FamilyMemberRepository,
 ) *ReportService {
 	return &ReportService{
@@ -40,7 +40,7 @@ type FamilyOverview struct {
 	Children       []ChildSummary   `json:"children"`
 	TotalProviders int              `json:"total_providers"`
 	SyncHealth     string           `json:"sync_health"` // healthy, warning, error
-	RecentSyncs    []domain.SyncJob `json:"recent_syncs"`
+	RecentSyncs    []domain.EnforcementJob `json:"recent_syncs"`
 }
 
 type ChildSummary struct {
@@ -82,9 +82,9 @@ func (s *ReportService) FamilyOverviewReport(ctx context.Context, userID, family
 		if len(jobs) > 0 {
 			summary.LastSyncAt = jobs[0].CompletedAt
 			summary.SyncStatus = string(jobs[0].Status)
-			if jobs[0].Status == domain.SyncFailed {
+			if jobs[0].Status == domain.EnforcementFailed {
 				overview.SyncHealth = "error"
-			} else if jobs[0].Status == domain.SyncPartial && overview.SyncHealth != "error" {
+			} else if jobs[0].Status == domain.EnforcementPartial && overview.SyncHealth != "error" {
 				overview.SyncHealth = "warning"
 			}
 		}

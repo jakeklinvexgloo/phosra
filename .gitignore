@@ -21,3 +21,18 @@ web/out/
 .idea/
 .vscode/
 .claude/
+
+# Playwright MCP logs
+.playwright-mcp/
+
+# Screenshots (development artifacts)
+*.png
+*.jpeg
+
+# Go compiled binary
+/server
+
+# Test results
+web/test-results/
+web/playwright-report/
+web/tsconfig.tsbuildinfo

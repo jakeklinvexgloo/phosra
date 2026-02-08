@@ -1,10 +1,2 @@
-export function isAuthenticated(): boolean {
-  if (typeof window === "undefined") return false
-  return !!localStorage.getItem("access_token")
-}
-
-export function logout() {
-  localStorage.removeItem("access_token")
-  localStorage.removeItem("refresh_token")
-  window.location.href = "/"
-}
+// Auth is now handled by Clerk. See useUser() and useClerk() hooks.
+// This file is kept as an empty placeholder to avoid import errors during migration.

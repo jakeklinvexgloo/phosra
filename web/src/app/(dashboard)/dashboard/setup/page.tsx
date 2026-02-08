@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
-import { ChevronRight, ChevronLeft, Check, Clock, Shield, Eye, Wifi, Bell, Ban, MapPin, Sparkles } from "lucide-react"
+import { AnimatePresence, motion } from "framer-motion"
+import { ChevronRight, ChevronLeft, Check, Clock, Shield, Eye, Bell, Ban, MapPin, Sparkles } from "lucide-react"
 import { api } from "@/lib/api"
 import type { Family, QuickSetupResponse, Strictness, Platform, ComplianceLink } from "@/lib/types"
 
@@ -46,7 +46,6 @@ export default function QuickSetupPage() {
 
   const age = birthDate ? computeAge(birthDate) : null
 
-  // Load families on first render
   if (!familiesLoaded) {
     setFamiliesLoaded(true)
     api.listFamilies().then((f) => {
@@ -129,20 +128,20 @@ export default function QuickSetupPage() {
 
   const summaryCards = setupResult
     ? [
-        { icon: Clock, label: "Screen Time", value: `${setupResult.rule_summary.screen_time_minutes} min/day`, color: "text-indigo-500" },
-        { icon: Shield, label: "Content Rating", value: setupResult.rule_summary.content_rating || "N/A", color: "text-emerald-500" },
-        { icon: Eye, label: "Web Filtering", value: setupResult.rule_summary.web_filter_level || "N/A", color: "text-amber-500" },
-        { icon: Bell, label: "Bedtime", value: setupResult.rule_summary.bedtime_hour ? `${setupResult.rule_summary.bedtime_hour}:00` : "N/A", color: "text-purple-500" },
-        { icon: Ban, label: "Ad Blocking", value: "On", color: "text-red-500" },
-        { icon: MapPin, label: "Location Tracking", value: "Off", color: "text-blue-500" },
-        { icon: Sparkles, label: "Algorithmic Feed", value: "Chronological", color: "text-pink-500" },
+        { icon: Clock, label: "Screen Time", value: `${setupResult.rule_summary.screen_time_minutes} min/day` },
+        { icon: Shield, label: "Content Rating", value: setupResult.rule_summary.content_rating || "N/A" },
+        { icon: Eye, label: "Web Filtering", value: setupResult.rule_summary.web_filter_level || "N/A" },
+        { icon: Bell, label: "Bedtime", value: setupResult.rule_summary.bedtime_hour ? `${setupResult.rule_summary.bedtime_hour}:00` : "N/A" },
+        { icon: Ban, label: "Ad Blocking", value: "On" },
+        { icon: MapPin, label: "Location Tracking", value: "Off" },
+        { icon: Sparkles, label: "Algorithmic Feed", value: "Chronological" },
       ]
     : []
 
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-foreground">Quick Setup</h2>
+        <h2 className="text-h2 text-foreground">Quick Setup</h2>
         <p className="text-muted-foreground mt-1">Set up protection for your child in under a minute.</p>
       </div>
 
@@ -152,7 +151,7 @@ export default function QuickSetupPage() {
           <div key={i} className="flex items-center gap-3 flex-1">
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
-                i < step ? "bg-primary text-white" : i === step ? "bg-primary/10 text-primary border-2 border-primary" : "bg-muted text-muted-foreground"
+                i < step ? "bg-foreground text-white" : i === step ? "bg-accent/15 text-brand-green border-2 border-brand-green" : "bg-muted text-muted-foreground"
               }`}
             >
               {i < step ? <Check className="w-4 h-4" /> : i + 1}
@@ -166,13 +165,9 @@ export default function QuickSetupPage() {
       </div>
 
       {error && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-destructive/10 border border-destructive/20 text-destructive rounded-lg px-4 py-3 text-sm mb-6"
-        >
+        <div className="bg-destructive/10 border border-destructive/20 text-destructive rounded px-4 py-3 text-sm mb-6">
           {error}
-        </motion.div>
+        </div>
       )}
 
       <AnimatePresence mode="wait">
@@ -180,12 +175,12 @@ export default function QuickSetupPage() {
         {step === 0 && (
           <motion.div
             key="step-0"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="space-y-6"
           >
-            <div className="bg-card rounded-xl shadow-sm border border-border/50 p-6 space-y-5">
+            <div className="plaid-card space-y-5">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Child&apos;s name</label>
                 <input
@@ -193,7 +188,7 @@ export default function QuickSetupPage() {
                   placeholder="e.g., Emma"
                   value={childName}
                   onChange={(e) => setChildName(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground"
+                  className="plaid-input"
                 />
               </div>
 
@@ -203,16 +198,12 @@ export default function QuickSetupPage() {
                   type="date"
                   value={birthDate}
                   onChange={(e) => setBirthDate(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground"
+                  className="plaid-input"
                 />
                 {age !== null && age >= 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="inline-flex items-center gap-2 mt-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium"
-                  >
+                  <span className="inline-flex items-center gap-2 mt-2 px-3 py-1 bg-accent/10 text-brand-green rounded text-sm font-medium">
                     {age} years old &middot; {ageGroupLabel(age)}
-                  </motion.div>
+                  </span>
                 )}
               </div>
 
@@ -222,7 +213,7 @@ export default function QuickSetupPage() {
                   <select
                     value={selectedFamilyId || ""}
                     onChange={(e) => setSelectedFamilyId(e.target.value || undefined)}
-                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground"
+                    className="plaid-input"
                   >
                     {families.map((f) => (
                       <option key={f.id} value={f.id}>
@@ -241,21 +232,14 @@ export default function QuickSetupPage() {
                     <button
                       key={s}
                       onClick={() => setStrictness(s)}
-                      className={`relative px-4 py-3 rounded-lg border text-sm font-medium transition-colors ${
+                      className={`px-4 py-3 rounded border text-sm font-medium transition-colors ${
                         strictness === s
-                          ? "border-primary text-primary bg-primary/5"
-                          : "border-border text-foreground hover:bg-muted/50"
+                          ? "border-foreground text-foreground bg-muted"
+                          : "border-border text-foreground hover:bg-muted"
                       }`}
                     >
-                      {strictness === s && (
-                        <motion.div
-                          layoutId="strictness"
-                          className="absolute inset-0 rounded-lg border-2 border-primary"
-                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        />
-                      )}
-                      <span className="relative capitalize">{s}</span>
-                      <p className="relative text-xs text-muted-foreground mt-1">
+                      <span className="capitalize">{s}</span>
+                      <p className="text-xs text-muted-foreground mt-1">
                         {s === "recommended" && "Age-appropriate defaults"}
                         {s === "strict" && "Tighter limits & more blocking"}
                         {s === "relaxed" && "Lighter touch, more freedom"}
@@ -270,7 +254,7 @@ export default function QuickSetupPage() {
               <button
                 onClick={handleStep1Next}
                 disabled={loading || !childName || !birthDate}
-                className="flex items-center gap-2 gradient-primary text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+                className="flex items-center gap-2 bg-foreground text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition disabled:opacity-50"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -289,14 +273,14 @@ export default function QuickSetupPage() {
         {step === 1 && setupResult && (
           <motion.div
             key="step-1"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="space-y-6"
           >
-            <div className="bg-primary/5 border border-primary/20 rounded-xl p-6">
+            <div className="bg-accent/5 border border-accent/20 rounded p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+                <div className="w-10 h-10 rounded-full bg-accent/15 flex items-center justify-center text-brand-green font-bold text-lg">
                   {setupResult.child.name.charAt(0)}
                 </div>
                 <div>
@@ -312,28 +296,23 @@ export default function QuickSetupPage() {
               {summaryCards.map((card) => {
                 const Icon = card.icon
                 return (
-                  <motion.div
-                    key={card.label}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-card rounded-xl shadow-sm border border-border/50 p-4"
-                  >
-                    <Icon className={`w-5 h-5 ${card.color} mb-2`} />
+                  <div key={card.label} className="plaid-card">
+                    <Icon className="w-5 h-5 text-brand-green mb-2" />
                     <p className="text-xs text-muted-foreground">{card.label}</p>
                     <p className="text-sm font-medium text-foreground capitalize">{card.value}</p>
-                  </motion.div>
+                  </div>
                 )
               })}
             </div>
 
             {setupResult.max_ratings && Object.keys(setupResult.max_ratings).length > 0 && (
-              <div className="bg-card rounded-xl shadow-sm border border-border/50 p-6">
+              <div className="plaid-card">
                 <h4 className="text-sm font-medium text-foreground mb-3">Max Content Ratings</h4>
                 <div className="flex flex-wrap gap-3">
                   {Object.entries(setupResult.max_ratings).map(([system, rating]) => (
-                    <div key={system} className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-lg">
+                    <div key={system} className="flex items-center gap-2 bg-muted px-3 py-1.5 rounded">
                       <span className="text-xs uppercase text-muted-foreground font-medium">{system}</span>
-                      <span className="text-sm font-medium text-primary">{rating}</span>
+                      <span className="text-sm font-medium text-brand-green">{rating}</span>
                     </div>
                   ))}
                 </div>
@@ -351,7 +330,7 @@ export default function QuickSetupPage() {
               <button
                 onClick={handleStep2Next}
                 disabled={loading}
-                className="flex items-center gap-2 gradient-primary text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+                className="flex items-center gap-2 bg-foreground text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition disabled:opacity-50"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -370,12 +349,12 @@ export default function QuickSetupPage() {
         {step === 2 && (
           <motion.div
             key="step-2"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="space-y-6"
           >
-            <div className="bg-card rounded-xl shadow-sm border border-border/50 p-6">
+            <div className="plaid-card">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-medium text-foreground">Verified Platforms</h3>
                 <span className="text-sm text-muted-foreground">
@@ -383,20 +362,18 @@ export default function QuickSetupPage() {
                 </span>
               </div>
               <div className="w-full bg-muted rounded-full h-2 mb-6">
-                <motion.div
-                  className="bg-primary h-2 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: platforms.length > 0 ? `${(verifiedCount / platforms.length) * 100}%` : "0%" }}
-                  transition={{ duration: 0.5 }}
+                <div
+                  className="bg-brand-green h-2 rounded-full transition-all duration-500"
+                  style={{ width: platforms.length > 0 ? `${(verifiedCount / platforms.length) * 100}%` : "0%" }}
                 />
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-0 divide-y divide-border">
                 {platforms.map((platform) => {
                   const link = links.find((l) => l.platform_id === platform.id)
                   const verified = link?.status === "verified"
                   return (
-                    <div key={platform.id} className="flex items-center justify-between py-3 border-b border-border last:border-0">
+                    <div key={platform.id} className="flex items-center justify-between py-3">
                       <div>
                         <p className="font-medium text-foreground text-sm">{platform.name}</p>
                         <p className="text-xs text-muted-foreground">{platform.description}</p>
@@ -414,10 +391,10 @@ export default function QuickSetupPage() {
                               placeholder="API Key"
                               value={apiKey}
                               onChange={(e) => setApiKey(e.target.value)}
-                              className="w-36 rounded border border-border bg-background px-2 py-1 text-xs text-foreground"
+                              className="w-36 rounded border border-input bg-white px-2 py-1 text-xs text-foreground focus:outline-none focus:border-foreground"
                             />
                           )}
-                          <button onClick={() => verifyPlatform(platform.id)} className="gradient-primary text-white px-3 py-1 rounded text-xs">
+                          <button onClick={() => verifyPlatform(platform.id)} className="bg-foreground text-white px-3 py-1 rounded-full text-xs font-medium hover:opacity-90 transition">
                             Verify
                           </button>
                           <button onClick={() => setVerifyingPlatform(null)} className="text-xs text-muted-foreground hover:text-foreground">
@@ -427,7 +404,7 @@ export default function QuickSetupPage() {
                       ) : (
                         <button
                           onClick={() => setVerifyingPlatform(platform.id)}
-                          className="text-xs font-medium text-primary hover:underline"
+                          className="text-xs font-medium text-foreground hover:underline"
                         >
                           Verify Compliance
                         </button>
@@ -456,7 +433,7 @@ export default function QuickSetupPage() {
                 {verifiedCount > 0 && (
                   <button
                     onClick={handleEnforce}
-                    className="flex items-center gap-2 gradient-primary text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition"
+                    className="flex items-center gap-2 bg-foreground text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition"
                   >
                     Enforce Now
                     <ChevronRight className="w-4 h-4" />

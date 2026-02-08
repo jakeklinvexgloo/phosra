@@ -3,51 +3,88 @@ package middleware
 import (
 	"context"
 	"net/http"
-	"strings"
+	"time"
 
+	"github.com/clerk/clerk-sdk-go/v2"
+	clerkhttp "github.com/clerk/clerk-sdk-go/v2/http"
+	clerkuser "github.com/clerk/clerk-sdk-go/v2/user"
 	"github.com/google/uuid"
+	"github.com/guardiangate/api/internal/domain"
+	"github.com/guardiangate/api/internal/repository"
 	"github.com/guardiangate/api/pkg/httputil"
-	"github.com/lestrrat-go/jwx/v2/jwa"
-	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
 type contextKey string
 
 const UserIDKey contextKey = "user_id"
 
-func JWTAuth(secret []byte) func(http.Handler) http.Handler {
+// ClerkAuth validates Clerk session tokens and resolves the Clerk user ID
+// to a local UUID. If the user doesn't exist locally, it creates one (just-in-time sync).
+func ClerkAuth(userRepo repository.UserRepository) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			authHeader := r.Header.Get("Authorization")
-			if authHeader == "" {
-				httputil.Error(w, http.StatusUnauthorized, "missing authorization header")
-				return
-			}
+		return clerkhttp.WithHeaderAuthorization()(
+			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				claims, ok := clerk.SessionClaimsFromContext(r.Context())
+				if !ok {
+					httputil.Error(w, http.StatusUnauthorized, "unauthorized")
+					return
+				}
 
-			parts := strings.SplitN(authHeader, " ", 2)
-			if len(parts) != 2 || !strings.EqualFold(parts[0], "bearer") {
-				httputil.Error(w, http.StatusUnauthorized, "invalid authorization format")
-				return
-			}
+				clerkID := claims.Subject
 
-			token, err := jwt.Parse([]byte(parts[1]), jwt.WithKey(jwa.HS256, secret))
-			if err != nil {
-				httputil.Error(w, http.StatusUnauthorized, "invalid or expired token")
-				return
-			}
+				// Look up local user by Clerk ID
+				user, err := userRepo.GetByClerkID(r.Context(), clerkID)
+				if err != nil {
+					httputil.Error(w, http.StatusInternalServerError, "failed to look up user")
+					return
+				}
 
-			userID, err := uuid.Parse(token.Subject())
-			if err != nil {
-				httputil.Error(w, http.StatusUnauthorized, "invalid token subject")
-				return
-			}
+				// Just-in-time user creation if no local mapping exists
+				if user == nil {
+					clerkUsr, clerkErr := clerkuser.Get(r.Context(), clerkID)
+					if clerkErr != nil {
+						httputil.Error(w, http.StatusInternalServerError, "failed to fetch user from Clerk")
+						return
+					}
 
-			ctx := context.WithValue(r.Context(), UserIDKey, userID)
-			next.ServeHTTP(w, r.WithContext(ctx))
-		})
+					emailAddr := ""
+					if len(clerkUsr.EmailAddresses) > 0 {
+						emailAddr = clerkUsr.EmailAddresses[0].EmailAddress
+					}
+					name := ""
+					if clerkUsr.FirstName != nil {
+						name = *clerkUsr.FirstName
+					}
+					if clerkUsr.LastName != nil {
+						if name != "" {
+							name += " "
+						}
+						name += *clerkUsr.LastName
+					}
+
+					now := time.Now()
+					user = &domain.User{
+						ID:        uuid.New(),
+						ClerkID:   clerkID,
+						Email:     emailAddr,
+						Name:      name,
+						CreatedAt: now,
+						UpdatedAt: now,
+					}
+					if createErr := userRepo.Create(r.Context(), user); createErr != nil {
+						httputil.Error(w, http.StatusInternalServerError, "failed to create user")
+						return
+					}
+				}
+
+				ctx := context.WithValue(r.Context(), UserIDKey, user.ID)
+				next.ServeHTTP(w, r.WithContext(ctx))
+			}),
+		)
 	}
 }
 
+// GetUserID extracts the local user UUID from context (same signature as before).
 func GetUserID(ctx context.Context) uuid.UUID {
 	id, _ := ctx.Value(UserIDKey).(uuid.UUID)
 	return id

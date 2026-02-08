@@ -1,27 +1,17 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import { RefreshCw } from "lucide-react"
 import { api } from "@/lib/api"
-import type { Family, Child, ComplianceLink, EnforcementJob, EnforcementResult } from "@/lib/types"
+import type { Child, ComplianceLink, EnforcementJob, EnforcementResult } from "@/lib/types"
 
 const statusConfig: Record<string, { dot: string; text: string; label: string }> = {
   completed: { dot: "bg-success", text: "text-success", label: "Enforced" },
   failed: { dot: "bg-destructive", text: "text-destructive", label: "Failed" },
   partial: { dot: "bg-warning", text: "text-warning", label: "Partial" },
-  running: { dot: "bg-primary status-dot-pulse", text: "text-primary", label: "Running" },
+  running: { dot: "bg-foreground status-dot-pulse", text: "text-foreground", label: "Running" },
   pending: { dot: "bg-muted-foreground/50", text: "text-muted-foreground", label: "Pending" },
   unknown: { dot: "bg-muted-foreground/30", text: "text-muted-foreground", label: "Unknown" },
-}
-
-const staggerContainer = {
-  animate: { transition: { staggerChildren: 0.06 } },
-}
-
-const rowItem = {
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
 }
 
 export default function EnforcementPage() {
@@ -60,7 +50,7 @@ export default function EnforcementPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-foreground mb-2">Enforcement Status</h2>
+      <h2 className="text-h2 text-foreground mb-2">Enforcement Status</h2>
       <p className="text-sm text-muted-foreground mb-8">Policy enforcement status across all verified platforms and protected children.</p>
 
       {children.length === 0 || links.length === 0 ? (
@@ -68,20 +58,20 @@ export default function EnforcementPage() {
           <p>Add children and verify platform compliance to see enforcement status.</p>
         </div>
       ) : (
-        <div className="bg-card rounded-xl shadow-sm border border-border/50 overflow-hidden">
+        <div className="plaid-card !p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-muted/50">
-                  <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Child</th>
+                <tr className="bg-muted">
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Child</th>
                   {links.map(link => (
-                    <th key={link.id} className="px-6 py-3 text-center text-xs font-medium text-muted-foreground uppercase">{link.platform_id}</th>
+                    <th key={link.id} className="px-6 py-3 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wide">{link.platform_id}</th>
                   ))}
                 </tr>
               </thead>
-              <motion.tbody variants={staggerContainer} initial="initial" animate="animate" className="divide-y divide-border">
+              <tbody className="divide-y divide-border">
                 {children.map(child => (
-                  <motion.tr key={child.id} variants={rowItem} className="hover:bg-muted/30 transition-colors">
+                  <tr key={child.id} className="hover:bg-muted/30 transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-foreground">{child.name}</td>
                     {links.map(link => {
                       const status = getStatus(child.id, link.platform_id)
@@ -111,58 +101,51 @@ export default function EnforcementPage() {
                             <span className={`status-dot ${s.dot}`} />
                             <span className={`text-xs ${s.text}`}>{s.label}</span>
                           </button>
-                          <AnimatePresence>
-                            {isExpanded && (
-                              <motion.div
-                                initial={{ opacity: 0, y: -4 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -4 }}
-                                className="absolute z-10 left-1/2 -translate-x-1/2 top-full mt-1 bg-card rounded-lg shadow-lg border border-border p-3 text-left w-56"
-                              >
-                                {results ? (
-                                  results.filter(r => r.platform_id === link.platform_id).length > 0 ? (
-                                    results.filter(r => r.platform_id === link.platform_id).map(result => (
-                                      <div key={result.id} className="text-xs space-y-1">
-                                        <p className="text-foreground font-medium">Applied: {result.rules_applied} | Skipped: {result.rules_skipped} | Failed: {result.rules_failed}</p>
-                                        {result.error_message && (
-                                          <p className="text-destructive">{result.error_message}</p>
-                                        )}
-                                      </div>
-                                    ))
-                                  ) : (
-                                    <p className="text-xs text-muted-foreground">No results for this platform.</p>
-                                  )
+                          {isExpanded && (
+                            <div className="absolute z-10 left-1/2 -translate-x-1/2 top-full mt-1 bg-white rounded shadow-plaid-card p-3 text-left w-56">
+                              {results ? (
+                                results.filter(r => r.platform_id === link.platform_id).length > 0 ? (
+                                  results.filter(r => r.platform_id === link.platform_id).map(result => (
+                                    <div key={result.id} className="text-xs space-y-1">
+                                      <p className="text-foreground font-medium">Applied: {result.rules_applied} | Skipped: {result.rules_skipped} | Failed: {result.rules_failed}</p>
+                                      {result.error_message && (
+                                        <p className="text-destructive">{result.error_message}</p>
+                                      )}
+                                    </div>
+                                  ))
                                 ) : (
-                                  <p className="text-xs text-muted-foreground">Loading...</p>
-                                )}
-                                {status === "failed" && latestJob && (
-                                  <button
-                                    onClick={async (e) => {
-                                      e.stopPropagation()
-                                      setRetrying(cellKey)
-                                      try {
-                                        await api.retryEnforcementJob(latestJob.id)
-                                        const jobs = await api.listChildEnforcementJobs(child.id).catch(() => [])
-                                        setEnforcementJobs(prev => ({ ...prev, [child.id]: jobs || [] }))
-                                      } catch { /* empty */ }
-                                      setRetrying(null)
-                                    }}
-                                    disabled={retrying === cellKey}
-                                    className="mt-2 flex items-center gap-1 text-xs text-primary hover:underline disabled:opacity-50"
-                                  >
-                                    <RefreshCw className={`w-3 h-3 ${retrying === cellKey ? "animate-spin" : ""}`} />
-                                    Retry
-                                  </button>
-                                )}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
+                                  <p className="text-xs text-muted-foreground">No results for this platform.</p>
+                                )
+                              ) : (
+                                <p className="text-xs text-muted-foreground">Loading...</p>
+                              )}
+                              {status === "failed" && latestJob && (
+                                <button
+                                  onClick={async (e) => {
+                                    e.stopPropagation()
+                                    setRetrying(cellKey)
+                                    try {
+                                      await api.retryEnforcementJob(latestJob.id)
+                                      const jobs = await api.listChildEnforcementJobs(child.id).catch(() => [])
+                                      setEnforcementJobs(prev => ({ ...prev, [child.id]: jobs || [] }))
+                                    } catch { /* empty */ }
+                                    setRetrying(null)
+                                  }}
+                                  disabled={retrying === cellKey}
+                                  className="mt-2 flex items-center gap-1 text-xs text-foreground hover:underline disabled:opacity-50"
+                                >
+                                  <RefreshCw className={`w-3 h-3 ${retrying === cellKey ? "animate-spin" : ""}`} />
+                                  Retry
+                                </button>
+                              )}
+                            </div>
+                          )}
                         </td>
                       )
                     })}
-                  </motion.tr>
+                  </tr>
                 ))}
-              </motion.tbody>
+              </tbody>
             </table>
           </div>
         </div>

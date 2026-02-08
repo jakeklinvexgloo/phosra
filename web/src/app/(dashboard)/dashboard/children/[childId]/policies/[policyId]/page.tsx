@@ -44,7 +44,7 @@ export default function PolicyEditorPage() {
   if (!policy) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -52,7 +52,7 @@ export default function PolicyEditorPage() {
   return (
     <div>
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-foreground">{policy.name}</h2>
+        <h2 className="text-h2 text-foreground">{policy.name}</h2>
         <p className="text-muted-foreground">Policy Editor - Configure rules for each category</p>
       </div>
 
@@ -64,17 +64,10 @@ export default function PolicyEditorPage() {
               <button
                 key={key}
                 onClick={() => setActiveGroup(key)}
-                className={`relative w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                  activeGroup === key ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                  activeGroup === key ? "text-foreground font-medium border-l-2 border-foreground bg-muted" : "text-muted-foreground hover:text-foreground border-l-2 border-transparent"
                 }`}
               >
-                {activeGroup === key && (
-                  <motion.div
-                    layoutId="rule-group-indicator"
-                    className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-full bg-primary"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
                 {group.label}
                 <span className="ml-2 text-xs text-muted-foreground">
                   {group.categories.filter(c => getRuleForCategory(c.value)?.enabled).length}/{group.categories.length}
@@ -98,17 +91,17 @@ export default function PolicyEditorPage() {
               {RULE_GROUPS[activeGroup]?.categories.map(({ value, label }) => {
                 const rule = getRuleForCategory(value)
                 return (
-                  <div key={value} className="bg-card rounded-xl shadow-sm border border-border/50 p-6">
+                  <div key={value} className="plaid-card">
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <h3 className="font-medium text-foreground">{label}</h3>
                         <p className="text-xs text-muted-foreground">{value}</p>
                       </div>
-                      {/* Spring-animated toggle */}
+                      {/* Toggle */}
                       <button
                         onClick={() => toggleRule(value)}
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                          rule?.enabled ? "bg-primary" : "bg-muted"
+                          rule?.enabled ? "bg-brand-green" : "bg-muted"
                         }`}
                       >
                         <motion.span
@@ -158,7 +151,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
             step={15}
             value={config.daily_minutes || 120}
             onChange={(e) => onUpdate({ daily_minutes: parseInt(e.target.value) })}
-            className="w-full accent-primary"
+            className="w-full accent-brand-green"
           />
           <p className="text-sm text-muted-foreground mt-1">{config.daily_minutes || 120} minutes ({Math.floor((config.daily_minutes || 120) / 60)}h {(config.daily_minutes || 120) % 60}m)</p>
         </div>
@@ -172,13 +165,13 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
               key={level}
               onClick={() => onUpdate({ level })}
               className={`relative flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                config.level === level ? "border-primary text-primary bg-primary/5" : "border-border text-foreground hover:bg-muted/50"
+                config.level === level ? "border-foreground text-foreground bg-muted" : "border-border text-foreground hover:bg-muted/50"
               }`}
             >
               {config.level === level && (
                 <motion.div
                   layoutId="filter-level"
-                  className="absolute inset-0 rounded-lg border-2 border-primary"
+                  className="absolute inset-0 rounded-lg border-2 border-foreground"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
@@ -210,7 +203,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
                 key={mode}
                 onClick={() => onUpdate({ mode })}
                 className={`relative flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                  config.mode === mode ? "border-primary text-primary bg-primary/5" : "border-border text-foreground hover:bg-muted/50"
+                  config.mode === mode ? "border-foreground text-foreground bg-muted" : "border-border text-foreground hover:bg-muted/50"
                 }`}
               >
                 <span className="relative capitalize">{mode}</span>
@@ -237,7 +230,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
                 type="checkbox"
                 checked={config[item.key] ?? false}
                 onChange={(e) => onUpdate({ ...config, [item.key]: e.target.checked })}
-                className="w-4 h-4 rounded border-border accent-primary"
+                className="w-4 h-4 rounded border-border accent-brand-green"
               />
               <span className="text-sm text-foreground">{item.label}</span>
             </label>
@@ -253,14 +246,14 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
             type="time"
             value={config.start || "20:00"}
             onChange={(e) => onUpdate({ ...config, start: e.target.value })}
-            className="rounded border border-border bg-background px-2 py-1 text-sm text-foreground"
+            className="rounded border border-input bg-background px-2 py-1 text-sm text-foreground"
           />
           <span className="text-muted-foreground">to</span>
           <input
             type="time"
             value={config.end || "07:00"}
             onChange={(e) => onUpdate({ ...config, end: e.target.value })}
-            className="rounded border border-border bg-background px-2 py-1 text-sm text-foreground"
+            className="rounded border border-input bg-background px-2 py-1 text-sm text-foreground"
           />
         </div>
       )
@@ -276,7 +269,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
             step={15}
             value={config.interval_minutes || 30}
             onChange={(e) => onUpdate({ interval_minutes: parseInt(e.target.value) })}
-            className="w-full accent-primary"
+            className="w-full accent-brand-green"
           />
           <div className="flex justify-between text-xs text-muted-foreground mt-1">
             <span>15 min</span>
@@ -294,7 +287,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
               key={mode}
               onClick={() => onUpdate({ mode })}
               className={`relative flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                config.mode === mode ? "border-primary text-primary bg-primary/5" : "border-border text-foreground hover:bg-muted/50"
+                config.mode === mode ? "border-foreground text-foreground bg-muted" : "border-border text-foreground hover:bg-muted/50"
               }`}
             >
               <span className="relative">{mode === "none" ? "No DMs" : mode === "contacts_only" ? "Contacts Only" : "Everyone"}</span>
@@ -318,7 +311,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
                 max={18}
                 value={config.min_age || 13}
                 onChange={(e) => onUpdate({ ...config, min_age: parseInt(e.target.value) })}
-                className="w-20 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+                className="w-20 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
               />
             </div>
           )}
@@ -333,7 +326,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
               type="checkbox"
               checked={config.geolocation_allowed ?? false}
               onChange={(e) => onUpdate({ geolocation_allowed: e.target.checked })}
-              className="w-4 h-4 rounded border-border accent-primary"
+              className="w-4 h-4 rounded border-border accent-brand-green"
             />
             <span className="text-sm text-foreground">Allow geolocation sharing</span>
           </label>
@@ -351,7 +344,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
             max={500}
             value={config.monthly_cap || 0}
             onChange={(e) => onUpdate({ monthly_cap: parseFloat(e.target.value) })}
-            className="w-32 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+            className="w-32 rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground"
           />
         </div>
       )
@@ -363,7 +356,7 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
           {config.max_ratings && Object.entries(config.max_ratings).map(([system, rating]) => (
             <div key={system} className="flex items-center gap-3 mb-2">
               <span className="text-xs uppercase font-medium text-muted-foreground w-12">{system}</span>
-              <span className="text-sm font-medium text-primary">{rating as string}</span>
+              <span className="text-sm font-medium text-brand-green">{rating as string}</span>
             </div>
           ))}
         </div>
@@ -379,14 +372,14 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
                 type="time"
                 value={config.schedule?.[period]?.start || "07:00"}
                 onChange={(e) => onUpdate({ schedule: { ...config.schedule, [period]: { ...config.schedule?.[period], start: e.target.value } } })}
-                className="rounded border border-border bg-background px-2 py-1 text-sm text-foreground"
+                className="rounded border border-input bg-background px-2 py-1 text-sm text-foreground"
               />
               <span className="text-muted-foreground">to</span>
               <input
                 type="time"
                 value={config.schedule?.[period]?.end || "21:00"}
                 onChange={(e) => onUpdate({ schedule: { ...config.schedule, [period]: { ...config.schedule?.[period], end: e.target.value } } })}
-                className="rounded border border-border bg-background px-2 py-1 text-sm text-foreground"
+                className="rounded border border-input bg-background px-2 py-1 text-sm text-foreground"
               />
             </div>
           ))}
@@ -401,13 +394,13 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
               key={mode}
               onClick={() => onUpdate({ mode })}
               className={`relative flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                config.mode === mode ? "border-primary text-primary bg-primary/5" : "border-border text-foreground hover:bg-muted/50"
+                config.mode === mode ? "border-foreground text-foreground bg-muted" : "border-border text-foreground hover:bg-muted/50"
               }`}
             >
               {config.mode === mode && (
                 <motion.div
                   layoutId="chat-mode"
-                  className="absolute inset-0 rounded-lg border-2 border-primary"
+                  className="absolute inset-0 rounded-lg border-2 border-foreground"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
@@ -425,13 +418,13 @@ function RuleConfigEditor({ category, rule, onUpdate }: { category: string; rule
               key={vis}
               onClick={() => onUpdate({ visibility: vis })}
               className={`relative flex-1 px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${
-                config.visibility === vis ? "border-primary text-primary bg-primary/5" : "border-border text-foreground hover:bg-muted/50"
+                config.visibility === vis ? "border-foreground text-foreground bg-muted" : "border-border text-foreground hover:bg-muted/50"
               }`}
             >
               {config.visibility === vis && (
                 <motion.div
                   layoutId="visibility"
-                  className="absolute inset-0 rounded-lg border-2 border-primary"
+                  className="absolute inset-0 rounded-lg border-2 border-foreground"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}

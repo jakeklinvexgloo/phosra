@@ -3,19 +3,15 @@ package config
 import (
 	"os"
 	"strconv"
-	"time"
 )
 
 type Config struct {
-	Port          string
-	DatabaseURL   string
-	JWTSecret     string
-	EncryptionKey string
+	Port           string
+	DatabaseURL    string
+	ClerkSecretKey string
+	EncryptionKey  string
 
-	AccessTokenTTL  time.Duration
-	RefreshTokenTTL time.Duration
-
-	NextDNSAPIKey string
+	NextDNSAPIKey  string
 	NextDNSProfile string
 
 	CleanBrowsingAPIKey string
@@ -27,17 +23,21 @@ type Config struct {
 
 	RateLimitRPS int
 	LogLevel     string
+
+	// CORS
+	CORSOrigins string
+
+	// Sandbox / MCP Playground
+	SandboxMode    bool
+	AnthropicAPIKey string
 }
 
 func Load() *Config {
 	return &Config{
 		Port:          getEnv("PORT", "8080"),
-		DatabaseURL:   getEnv("DATABASE_URL", "postgres://guardiangate:guardiangate_dev@localhost:5432/guardiangate?sslmode=disable"),
-		JWTSecret:     getEnv("JWT_SECRET", "dev-secret-change-in-production"),
-		EncryptionKey: getEnv("ENCRYPTION_KEY", "0123456789abcdef0123456789abcdef"),
-
-		AccessTokenTTL:  getDuration("ACCESS_TOKEN_TTL", 15*time.Minute),
-		RefreshTokenTTL: getDuration("REFRESH_TOKEN_TTL", 7*24*time.Hour),
+		DatabaseURL:    getEnv("DATABASE_URL", "postgres://guardiangate:guardiangate_dev@localhost:5432/guardiangate?sslmode=disable"),
+		ClerkSecretKey: getEnv("CLERK_SECRET_KEY", ""),
+		EncryptionKey:  getEnv("ENCRYPTION_KEY", "0123456789abcdef0123456789abcdef"),
 
 		NextDNSAPIKey:  getEnv("NEXTDNS_API_KEY", ""),
 		NextDNSProfile: getEnv("NEXTDNS_PROFILE", ""),
@@ -51,6 +51,11 @@ func Load() *Config {
 
 		RateLimitRPS: getInt("RATE_LIMIT_RPS", 100),
 		LogLevel:     getEnv("LOG_LEVEL", "info"),
+
+		CORSOrigins: getEnv("CORS_ORIGINS", "http://localhost:3000"),
+
+		SandboxMode:    getBool("SANDBOX_MODE", false),
+		AnthropicAPIKey: getEnv("ANTHROPIC_API_KEY", ""),
 	}
 }
 
@@ -70,11 +75,10 @@ func getInt(key string, fallback int) int {
 	return fallback
 }
 
-func getDuration(key string, fallback time.Duration) time.Duration {
+func getBool(key string, fallback bool) bool {
 	if v := os.Getenv(key); v != "" {
-		if d, err := time.ParseDuration(v); err == nil {
-			return d
-		}
+		return v == "true" || v == "1" || v == "yes"
 	}
 	return fallback
 }
+
