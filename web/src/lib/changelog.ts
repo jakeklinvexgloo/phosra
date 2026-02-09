@@ -84,7 +84,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     version: "1.0.0",
     title: "Phosra v1.0 Launch",
     category: "feature",
-    description: "Initial public release of Phosra (formerly GuardianGate). Universal parental controls API with support for 15+ platforms, 40 policy categories, and 5 age-rating systems.",
+    description: "Initial public release of Phosra (formerly GuardianGate). Universal parental controls API with support for 188+ platforms, 40 policy categories, and 5 age-rating systems.",
     highlights: [
       "REST API with full CRUD for families, children, policies",
       "40 policy categories across content, time, web, social, and purchase",

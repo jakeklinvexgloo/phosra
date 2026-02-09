@@ -367,7 +367,7 @@ export const TOOLS: ToolDefinition[] = [
   {
     name: "list_platforms",
     description:
-      "List all 15 platforms Phosra can integrate with, including their category, compliance tier, auth type, and capabilities.",
+      "List all platforms Phosra can integrate with, including their category, compliance tier, auth type, and capabilities.",
     input_schema: { type: "object", properties: {}, required: [] },
     http: { method: "GET", path: "/platforms" },
   },

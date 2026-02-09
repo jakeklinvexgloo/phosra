@@ -90,7 +90,7 @@ input: {
           phosraFeature: "PCSS Policy Engine",
           ruleCategory: "addictive_design_control",
           description:
-            "Phosra's 26-category rule system covers the full scope of KOSA's duty-of-care requirements, enforcing protective defaults across all connected platforms in a single API call.",
+            "Phosra's 40-category rule system covers the full scope of KOSA's duty-of-care requirements, enforcing protective defaults across all connected platforms in a single API call.",
         },
         {
           regulation: "Default privacy settings",
@@ -130,7 +130,7 @@ input: {
         {
           requirement: "Duty of care implemented for all minor users",
           covered: true,
-          feature: "PCSS Policy Engine with 26 rule categories",
+          feature: "PCSS Policy Engine with 40 rule categories",
         },
         {
           requirement: "Privacy settings default to most restrictive",

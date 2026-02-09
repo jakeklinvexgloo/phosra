@@ -6,7 +6,7 @@ import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildre
 
 const METRICS = [
   { value: "40", label: "Rule Categories" },
-  { value: "15+", label: "Platform Adapters" },
+  { value: "188+", label: "Platform Integrations" },
   { value: "5", label: "Rating Systems" },
   { value: "50+", label: "Compliance Laws" },
 ]
@@ -47,7 +47,7 @@ const STEPS = [
     number: "01",
     icon: Eye,
     title: "Parents set rules",
-    description: "Through your app or the Phosra dashboard, parents define screen time limits, content ratings, web filters, and 35+ other policy categories for each child.",
+    description: "Through your app or the Phosra dashboard, parents define rules across all 40 policy categories — screen time limits, content ratings, web filters, and more — for each child.",
   },
   {
     number: "02",

@@ -43,7 +43,7 @@ const policyFields: FieldDef[] = [
 const policyRuleFields: FieldDef[] = [
   { name: "id", type: "uuid", description: "Rule identifier" },
   { name: "policy_id", type: "uuid", description: "Parent policy identifier" },
-  { name: "category", type: "string", description: "One of 26 rule categories (e.g. web_filtering, screen_time)" },
+  { name: "category", type: "string", description: "One of 40 rule categories (e.g. web_filtering, screen_time)" },
   { name: "enabled", type: "boolean", description: "Whether this rule is active" },
   { name: "config", type: "object", description: "Category-specific configuration (JSONB)" },
   { name: "created_at", type: "datetime", description: "Rule creation timestamp" },
@@ -606,7 +606,7 @@ export const ENDPOINTS: EndpointDef[] = [
     section: "Policies",
     summary: "Auto-generate rules from age",
     description:
-      "Automatically generate a full set of policy rules based on the child's current age. Uses the built-in age-to-setting mapping across all 26 rule categories. Existing rules on the policy are replaced.",
+      "Automatically generate a full set of policy rules based on the child's current age. Uses the built-in age-to-setting mapping across all 40 rule categories. Existing rules on the policy are replaced.",
     responseFields: [
       {
         name: "[]",
@@ -648,7 +648,7 @@ export const ENDPOINTS: EndpointDef[] = [
     path: "/policies/{policyID}/rules",
     section: "Policy Rules",
     summary: "List rules",
-    description: "List all rules in a policy. Rules are returned in category order across all 26 supported categories.",
+    description: "List all rules in a policy. Rules are returned in category order across all 40 supported categories.",
     responseFields: [
       {
         name: "[]",
@@ -681,7 +681,7 @@ export const ENDPOINTS: EndpointDef[] = [
     section: "Policy Rules",
     summary: "Create rule",
     description:
-      "Add a rule to a policy. The category must be one of the 26 supported categories. Config schema varies per category (see Category Reference).",
+      "Add a rule to a policy. The category must be one of the 40 supported categories. Config schema varies per category (see Category Reference).",
     requestFields: [
       {
         name: "category",

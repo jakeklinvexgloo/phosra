@@ -157,7 +157,7 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             {[
-              "Age-appropriate defaults across 15+ platforms",
+              "Age-appropriate defaults across 188+ platforms",
               "One policy, enforced everywhere automatically",
               "Full compliance with KOSA, COPPA 2.0 & more",
             ].map((text) => (

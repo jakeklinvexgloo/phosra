@@ -33,7 +33,7 @@ Organized into 11 groups:
 - PEGI (games, EU): 3, 7, 12, 16, 18
 - Common Sense Media: 2+, 5+, 7+, 10+, 13+, 15+, 17+, 18+
 
-### 15 Platform Adapters
+### 188+ Platform Integrations
 **Live**: NextDNS (DNS filtering), CleanBrowsing (DNS), Android/Family Link (device)
 **Partial**: Microsoft Family Safety (device), Apple MDM (device)
 **Stubs** (simulated enforcement): Netflix, Disney+, Prime Video, YouTube, Hulu, Max, Xbox, PlayStation, Nintendo, Roku

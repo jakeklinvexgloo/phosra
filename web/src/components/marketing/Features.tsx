@@ -137,7 +137,7 @@ function getFeatureBullets(type: "screentime" | "content" | "enforcement"): stri
       ]
     case "enforcement":
       return [
-        "Real-time status across 15+ platforms",
+        "Real-time status across 188+ platforms",
         "Legislative compliance tracking (KOSA, COPPA, EU DSA)",
         "Instant failure alerts with automatic retry",
       ]

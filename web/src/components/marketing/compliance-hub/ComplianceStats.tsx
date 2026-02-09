@@ -12,10 +12,15 @@ interface StatItem {
 }
 
 function useAnimatedCounter(target: number, duration = 1200) {
-  const [count, setCount] = useState(0)
+  // Start at target so SSR and initial paint show the real number
+  const [count, setCount] = useState(target)
+  const [hasAnimated, setHasAnimated] = useState(false)
 
   useEffect(() => {
-    if (target === 0) return
+    if (target === 0 || hasAnimated) return
+    // Reset to 0 then animate up (only on first client mount)
+    setCount(0)
+    setHasAnimated(true)
     const start = performance.now()
     let frame: number
 
@@ -32,7 +37,7 @@ function useAnimatedCounter(target: number, duration = 1200) {
 
     frame = requestAnimationFrame(step)
     return () => cancelAnimationFrame(frame)
-  }, [target, duration])
+  }, [target, duration, hasAnimated])
 
   return count
 }

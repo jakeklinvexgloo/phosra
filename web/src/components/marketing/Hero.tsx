@@ -52,7 +52,7 @@ export function Hero() {
 
             <AnimatedSection delay={0.2}>
               <p className="text-lg sm:text-xl text-white/50 leading-relaxed mb-10 max-w-lg">
-                The infrastructure layer for parental control apps. Bark, Qustodio, and Aura define the policies — Phosra pushes them to Netflix, YouTube, and 15+ platforms.
+                The infrastructure layer for parental control apps. Bark, Qustodio, and Aura define the policies — Phosra pushes them to Netflix, YouTube, and 188+ platforms.
               </p>
             </AnimatedSection>
 
@@ -130,7 +130,7 @@ export function Hero() {
                           </span>
                         ))}
                         <span className="text-[10px] bg-white/[0.04] text-white/30 px-1.5 py-0.5 rounded">
-                          +13
+                          +186
                         </span>
                       </div>
                       <p className="text-[9px] text-white/25 mt-1">enforce rules</p>
@@ -203,7 +203,7 @@ export function Hero() {
         {/* Platform marquee */}
         <div className="mt-14 sm:mt-20 pt-8 sm:pt-10 border-t border-white/[0.06]">
           <p className="text-xs text-white/25 text-center mb-6 tracking-wider uppercase font-medium">
-            Pushes rules to 15+ platforms
+            Pushes rules to 188+ platforms
           </p>
           <div className="relative overflow-hidden">
             {/* Fade edges */}

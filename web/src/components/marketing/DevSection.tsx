@@ -76,7 +76,7 @@ export function DevSection() {
             </div>
 
             <h2 className="font-display text-4xl sm:text-5xl lg:text-[52px] text-white leading-[1.15] mb-6">
-              15 platforms.{" "}
+              188+ platforms.{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
                 One API call.
               </span>

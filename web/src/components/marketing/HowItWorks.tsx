@@ -17,7 +17,7 @@ const STEPS = [
     title: "Connect",
     description:
       "Link your platforms — NextDNS, Android, Apple, and more. One credential per platform, verified and encrypted with AES-256-GCM.",
-    detail: "15+ platform adapters",
+    detail: "188+ platform integrations",
   },
   {
     number: "03",
