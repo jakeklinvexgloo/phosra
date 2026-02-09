@@ -1,5 +1,7 @@
 import { authkitMiddleware } from "@workos-inc/authkit-nextjs"
 
+export const runtime = "nodejs"
+
 const unauthenticatedPaths = [
   "/",
   "/login(.*)",
