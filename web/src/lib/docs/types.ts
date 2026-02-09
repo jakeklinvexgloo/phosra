@@ -67,7 +67,8 @@ export interface CategoryReference {
   platforms: PlatformInfo[]
 }
 
-export const PLATFORM_NAMES = ["NextDNS", "CleanBrowsing", "Android", "Apple MDM", "Microsoft"] as const
+/** @deprecated Import DOCS_PLATFORM_NAMES from '@/lib/platforms/adapters/to-docs-support' instead */
+export { DOCS_PLATFORM_NAMES as PLATFORM_NAMES } from "@/lib/platforms/adapters/to-docs-support"
 
 export interface DocSection {
   id: string

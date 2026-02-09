@@ -3,10 +3,11 @@
 import Link from "next/link"
 import { Shield, Globe, Scale, Code, ArrowRight, Lock, Zap, Eye, Cpu } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
+import { PLATFORM_STATS } from "@/lib/platforms"
 
 const METRICS = [
-  { value: "40", label: "Rule Categories" },
-  { value: "188+", label: "Platform Integrations" },
+  { value: "45", label: "Rule Categories" },
+  { value: PLATFORM_STATS.marketingTotal, label: "Platform Integrations" },
   { value: "5", label: "Rating Systems" },
   { value: "50+", label: "Compliance Laws" },
 ]
@@ -47,7 +48,7 @@ const STEPS = [
     number: "01",
     icon: Eye,
     title: "Parents set rules",
-    description: "Through your app or the Phosra dashboard, parents define rules across all 40 policy categories — screen time limits, content ratings, web filters, and more — for each child.",
+    description: "Through your app or the Phosra dashboard, parents define rules across all 45 policy categories — screen time limits, content ratings, web filters, and more — for each child.",
   },
   {
     number: "02",

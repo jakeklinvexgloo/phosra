@@ -1,6 +1,7 @@
 "use client"
 
 import { AnimatedSection, FloatingElement } from "./shared"
+import { PLATFORM_STATS } from "@/lib/platforms"
 
 /* ────────────────────────────────────────────────────
  * Full-bleed use-case showcases (replaces feature cards)
@@ -137,7 +138,7 @@ function getFeatureBullets(type: "screentime" | "content" | "enforcement"): stri
       ]
     case "enforcement":
       return [
-        "Real-time status across 188+ platforms",
+        `Real-time status across ${PLATFORM_STATS.marketingTotal} platforms`,
         "Legislative compliance tracking (KOSA, COPPA, EU DSA)",
         "Instant failure alerts with automatic retry",
       ]

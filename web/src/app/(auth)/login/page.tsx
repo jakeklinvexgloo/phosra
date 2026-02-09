@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useSignIn, useSignUp } from "@clerk/nextjs"
 import { AnimatePresence, motion } from "framer-motion"
 import { Users, Code, Terminal, ChevronRight } from "lucide-react"
+import { PLATFORM_STATS } from "@/lib/platforms"
 
 type Mode = "signin" | "register-role" | "register-form" | "verify-email"
 type Role = "parent" | "platform" | "developer"
@@ -157,7 +158,7 @@ export default function LoginPage() {
 
           <div className="space-y-4">
             {[
-              "Age-appropriate defaults across 188+ platforms",
+              `Age-appropriate defaults across ${PLATFORM_STATS.marketingTotal} platforms`,
               "One policy, enforced everywhere automatically",
               "Full compliance with KOSA, COPPA 2.0 & more",
             ].map((text) => (

@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState } from "react"
 import { AnimatedSection, GradientMesh, PhosraBurst } from "./shared"
+import { PLATFORM_STATS } from "@/lib/platforms"
 
 const STATS = [
-  { value: 40, suffix: "", label: "Rule categories", description: "Covering every aspect of child digital safety" },
-  { value: 188, suffix: "+", label: "Platform integrations", description: "YouTube, TikTok, Roblox, and more — all connected" },
-  { value: 5, suffix: "", label: "Rating systems", description: "MPAA, TV, ESRB, PEGI, CSM — mapped automatically" },
-  { value: 50, suffix: "+", label: "Compliance laws", description: "KOSA, COPPA 2.0, EU DSA, and more — built in" },
+  { value: 45, suffix: "", label: "Rule categories", description: "Covering every aspect of child digital safety" },
+  { value: PLATFORM_STATS.total, suffix: "+", label: "Platform integrations", description: "YouTube, TikTok, Roblox, and more \u2014 all connected" },
+  { value: 5, suffix: "", label: "Rating systems", description: "MPAA, TV, ESRB, PEGI, CSM \u2014 mapped automatically" },
+  { value: 50, suffix: "+", label: "Compliance laws", description: "KOSA, COPPA 2.0, EU DSA, and more \u2014 built in" },
 ]
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {

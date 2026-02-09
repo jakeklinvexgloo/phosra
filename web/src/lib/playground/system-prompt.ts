@@ -11,8 +11,8 @@ Phosra is a universal parental controls API: "define once, push everywhere." You
 - Each family has children, each with a birth date used for age-based rule generation
 - Age groups: toddler (≤6), child (7-9), preteen (10-12), teen (13-16), young_adult (17+)
 
-### 40 Policy Rule Categories
-Organized into 11 groups:
+### 45 Policy Rule Categories
+Organized into 12 groups:
 
 **Content Control** (5 rules): content_rating, content_block_title, content_allow_title, content_allowlist_mode, content_descriptor_block
 **Time Management** (4): time_daily_limit, time_scheduled_hours, time_per_app_limit, time_downtime
@@ -20,10 +20,11 @@ Organized into 11 groups:
 **Social & Communication** (3): social_contacts, social_chat_control, social_multiplayer
 **Web Filtering** (5): web_safesearch, web_category_block, web_custom_allowlist, web_custom_blocklist, web_filter_level
 **Privacy Control** (4): privacy_location, privacy_profile_visibility, privacy_data_sharing, privacy_account_creation
-**Monitoring** (2): monitoring_activity, monitoring_alerts
-**Algorithmic Safety** (2): algo_feed_control, addictive_design_control — mandated by KOSA, CA SB 976, EU DSA
-**Notification Control** (2): notification_curfew, usage_timer_notification — per VA SB 854, NY SAFE for Kids
-**Advertising & Data** (5): targeted_ad_block, dm_restriction, age_gate, data_deletion_request, geolocation_opt_in — COPPA 2.0, EU DSA, India DPDPA
+**Monitoring** (3): monitoring_activity, monitoring_alerts, screen_time_report
+**Algorithmic Safety** (3): algo_feed_control, addictive_design_control, algorithmic_audit — mandated by KOSA, CA SB 976, EU DSA
+**Notification Control** (3): notification_curfew, usage_timer_notification, parental_event_notification — per VA SB 854, NY SAFE for Kids, LA Act 456
+**Advertising & Data** (6): targeted_ad_block, dm_restriction, age_gate, data_deletion_request, geolocation_opt_in, commercial_data_ban — COPPA 2.0, EU DSA, India DPDPA
+**Access Control** (3): dm_restriction, age_gate, parental_consent_gate — KOSMA, FL HB 3, COPPA
 **Compliance Expansion** (5): csam_reporting, library_filter_compliance, ai_minor_interaction, social_media_min_age, image_rights_minor — CSAM laws, CIPA, EU AI Act, France SREN
 
 ### 5 Rating Systems
@@ -33,7 +34,7 @@ Organized into 11 groups:
 - PEGI (games, EU): 3, 7, 12, 16, 18
 - Common Sense Media: 2+, 5+, 7+, 10+, 13+, 15+, 17+, 18+
 
-### 188+ Platform Integrations
+### 200+ Platform Integrations
 **Live**: NextDNS (DNS filtering), CleanBrowsing (DNS), Android/Family Link (device)
 **Partial**: Microsoft Family Safety (device), Apple MDM (device)
 **Stubs** (simulated enforcement): Netflix, Disney+, Prime Video, YouTube, Hulu, Max, Xbox, PlayStation, Nintendo, Roku

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import { AnimatedSection, WaveTexture, GradientMesh } from "./shared"
+import { PLATFORM_STATS } from "@/lib/platforms"
 
 const ROTATE_INTERVAL = 5000
 const FADE_DURATION = 250
@@ -76,7 +77,7 @@ export function DevSection() {
             </div>
 
             <h2 className="font-display text-4xl sm:text-5xl lg:text-[52px] text-white leading-[1.15] mb-6">
-              188+ platforms.{" "}
+              {PLATFORM_STATS.marketingTotal} platforms.{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
                 One API call.
               </span>

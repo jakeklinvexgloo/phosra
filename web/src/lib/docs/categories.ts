@@ -1,6 +1,7 @@
 import type { CategoryReference, PlatformInfo } from "./types"
+import { DOCS_PLATFORM_NAMES } from "@/lib/platforms/adapters/to-docs-support"
 
-export { PLATFORM_NAMES } from "./types"
+export { DOCS_PLATFORM_NAMES as PLATFORM_NAMES } from "@/lib/platforms/adapters/to-docs-support"
 
 export const NEW_CATEGORIES = [
   { name: "algo_feed_control", desc: "Control algorithmic feed recommendations; enforce chronological mode for minors", laws: "KOSA, KOSMA, CA SB 976, EU DSA" },
@@ -17,15 +18,17 @@ export const NEW_CATEGORIES = [
   { name: "ai_minor_interaction", desc: "Restrict AI systems that exploit or manipulate children", laws: "EU AI Act" },
   { name: "social_media_min_age", desc: "Enforce hard minimum age ban for social media access", laws: "AU SMMA, UT SMRA" },
   { name: "image_rights_minor", desc: "Protect minors' image rights; restrict unauthorized sharing", laws: "France SREN" },
+  { name: "parental_consent_gate", desc: "Require verifiable parental consent before account creation or data collection", laws: "COPPA, KOSMA, GDPR Art. 8, India DPDPA, 15+ state laws" },
+  { name: "parental_event_notification", desc: "Notify parents when minors create accounts or encounter flagged content", laws: "LA Act 456, OH HB 33" },
+  { name: "screen_time_report", desc: "Generate and deliver screen time usage reports to parents", laws: "VA SB 854, TN HB 1891, MN HF 2" },
+  { name: "commercial_data_ban", desc: "Ban commercial sale, sharing, or profiling of minor data", laws: "NY NYCDPA, COPPA 2.0, India DPDPA, BR LGPD" },
+  { name: "algorithmic_audit", desc: "Require algorithmic transparency reports and independent audits", laws: "KOSA, EU DSA, EU AI Act, UK OSA" },
 ]
 
-export const PLATFORM_NONE: PlatformInfo[] = [
-  { name: "NextDNS", support: "none" },
-  { name: "CleanBrowsing", support: "none" },
-  { name: "Android", support: "none" },
-  { name: "Apple MDM", support: "none" },
-  { name: "Microsoft", support: "none" },
-]
+export const PLATFORM_NONE: PlatformInfo[] = DOCS_PLATFORM_NAMES.map((name) => ({
+  name,
+  support: "none" as const,
+}))
 
 export const CATEGORY_REFERENCE: CategoryReference[] = [
   // ─── Content (1-5) ───
@@ -967,6 +970,117 @@ export const CATEGORY_REFERENCE: CategoryReference[] = [
     ],
     platforms: PLATFORM_NONE,
   },
+  // ─── Legislation-Driven Expansion (41-45) ───
+  {
+    id: "parental_consent_gate",
+    name: "Parental Consent Gate",
+    group: "access_control",
+    description: "Requires verifiable parental consent before a minor can create an account or before any personal data is collected. Distinct from age_gate which checks age \u2014 this rule ensures a parent has explicitly authorized the interaction.",
+    rationale: "Multiple global laws require platforms to obtain verifiable parental consent before collecting data from or providing services to minors. This is the foundational gatekeeper requirement across COPPA, GDPR Article 8, and 20+ state and international laws.",
+    laws: ["COPPA", "KOSMA", "GDPR Art. 8", "India DPDPA", "FL HB 3", "TX SCOPE", "LA Act 456", "OH HB 33"],
+    fields: [
+      { name: "required", type: "boolean", required: true, default: "true", constraints: "true or false", description: "Whether verifiable parental consent is required" },
+      { name: "method", type: "string", required: true, default: "email_plus", constraints: '"email_plus", "id_verification", "credit_card", "knowledge_based"', description: "Consent verification method" },
+      { name: "min_age_threshold", type: "number", required: false, default: "13", constraints: "Range: 0-18", description: "Age below which consent is required" },
+    ],
+    exampleConfig: '{\n  "required": true,\n  "method": "email_plus",\n  "min_age_threshold": 13\n}',
+    ageDefaults: [
+      { range: "0-6", enabled: true, summary: "Required (ID verification)" },
+      { range: "7-9", enabled: true, summary: "Required (email plus)" },
+      { range: "10-12", enabled: true, summary: "Required (email plus)" },
+      { range: "13-16", enabled: false, summary: "Not required (meets age threshold)" },
+      { range: "17+", enabled: false, summary: "Not required" },
+    ],
+    platforms: PLATFORM_NONE,
+  },
+  {
+    id: "parental_event_notification",
+    name: "Parental Event Notification",
+    group: "notifications",
+    description: "Requires platforms to notify parents when specific events occur involving their child, such as account creation, flagged content encounters, or policy violations.",
+    rationale: "Some jurisdictions mandate that platforms proactively inform parents of significant events rather than relying on parents to discover issues. This closes the gap between passive monitoring and active parental awareness.",
+    laws: ["LA Act 456", "OH HB 33"],
+    fields: [
+      { name: "enabled", type: "boolean", required: true, default: "true", constraints: "true or false", description: "Whether parental event notifications are enabled" },
+      { name: "events", type: "string[]", required: true, default: '["account_created", "flagged_content"]', constraints: "Valid: account_created, flagged_content, policy_violation, age_threshold_crossed", description: "Event types that trigger notification" },
+      { name: "channel", type: "string", required: false, default: "email", constraints: '"email", "push", or "sms"', description: "Notification delivery channel" },
+    ],
+    exampleConfig: '{\n  "enabled": true,\n  "events": ["account_created", "flagged_content"],\n  "channel": "email"\n}',
+    ageDefaults: [
+      { range: "0-6", enabled: true, summary: "All events, email + push" },
+      { range: "7-9", enabled: true, summary: "All events, email + push" },
+      { range: "10-12", enabled: true, summary: "All events, email" },
+      { range: "13-16", enabled: true, summary: "Flagged content only, email" },
+      { range: "17+", enabled: false, summary: "Disabled" },
+    ],
+    platforms: PLATFORM_NONE,
+  },
+  {
+    id: "screen_time_report",
+    name: "Screen Time Report",
+    group: "monitoring",
+    description: "Requires platforms to generate and deliver periodic screen time usage reports to parents, showing per-app and total usage metrics over configurable time periods.",
+    rationale: "Several state laws mandate that platforms provide parents with usage reports rather than just raw monitoring data. Reports distill activity into actionable insights, enabling informed parenting decisions about digital habits.",
+    laws: ["VA SB 854", "TN HB 1891", "MN HF 2"],
+    fields: [
+      { name: "enabled", type: "boolean", required: true, default: "true", constraints: "true or false", description: "Whether screen time reports are generated" },
+      { name: "frequency", type: "string", required: true, default: "weekly", constraints: '"daily", "weekly", or "monthly"', description: "How often reports are generated" },
+      { name: "include_per_app", type: "boolean", required: false, default: "true", constraints: "true or false", description: "Whether to include per-app breakdowns" },
+    ],
+    exampleConfig: '{\n  "enabled": true,\n  "frequency": "weekly",\n  "include_per_app": true\n}',
+    ageDefaults: [
+      { range: "0-6", enabled: true, summary: "Daily reports with per-app detail" },
+      { range: "7-9", enabled: true, summary: "Weekly reports with per-app detail" },
+      { range: "10-12", enabled: true, summary: "Weekly reports with per-app detail" },
+      { range: "13-16", enabled: true, summary: "Weekly summary only" },
+      { range: "17+", enabled: false, summary: "Disabled" },
+    ],
+    platforms: PLATFORM_NONE,
+  },
+  {
+    id: "commercial_data_ban",
+    name: "Commercial Data Ban",
+    group: "advertising_data",
+    description: "Prohibits the commercial sale, sharing, or profiling of minor data. Goes beyond targeted_ad_block by banning all commercial use of children's data, not just advertising.",
+    rationale: "Multiple jurisdictions now outright ban the commercial exploitation of children's data, including sale to data brokers, use for profiling, and sharing with third parties for commercial purposes. This is a stronger protection than ad-blocking alone.",
+    laws: ["NY NYCDPA", "COPPA 2.0", "India DPDPA", "BR LGPD"],
+    fields: [
+      { name: "enabled", type: "boolean", required: true, default: "true", constraints: "true or false", description: "Whether the commercial data ban is active" },
+      { name: "ban_sale", type: "boolean", required: true, default: "true", constraints: "true or false", description: "Ban sale of minor data to third parties" },
+      { name: "ban_profiling", type: "boolean", required: true, default: "true", constraints: "true or false", description: "Ban behavioral profiling of minors" },
+    ],
+    exampleConfig: '{\n  "enabled": true,\n  "ban_sale": true,\n  "ban_profiling": true\n}',
+    ageDefaults: [
+      { range: "0-6", enabled: true, summary: "Full ban (sale + profiling)" },
+      { range: "7-9", enabled: true, summary: "Full ban (sale + profiling)" },
+      { range: "10-12", enabled: true, summary: "Full ban (sale + profiling)" },
+      { range: "13-16", enabled: true, summary: "Full ban (sale + profiling)" },
+      { range: "17+", enabled: true, summary: "Sale banned, profiling opt-in" },
+    ],
+    platforms: PLATFORM_NONE,
+  },
+  {
+    id: "algorithmic_audit",
+    name: "Algorithmic Audit",
+    group: "algorithmic_safety",
+    description: "Requires platforms to produce algorithmic transparency reports and undergo independent audits assessing the impact of recommendation algorithms on minors.",
+    rationale: "Algorithmic systems that curate content for children operate as black boxes. Multiple laws now require transparency about how algorithms affect minors, including risk assessments, bias audits, and public reporting on algorithmic harms.",
+    laws: ["KOSA", "EU DSA", "EU AI Act", "UK OSA"],
+    fields: [
+      { name: "enabled", type: "boolean", required: true, default: "true", constraints: "true or false", description: "Whether algorithmic audit requirements are active" },
+      { name: "transparency_report", type: "boolean", required: true, default: "true", constraints: "true or false", description: "Require periodic transparency reports" },
+      { name: "third_party_audit", type: "boolean", required: false, default: "false", constraints: "true or false", description: "Require independent third-party audit" },
+    ],
+    exampleConfig: '{\n  "enabled": true,\n  "transparency_report": true,\n  "third_party_audit": false\n}',
+    ageDefaults: [
+      { range: "0-6", enabled: true, summary: "Full audit + transparency" },
+      { range: "7-9", enabled: true, summary: "Full audit + transparency" },
+      { range: "10-12", enabled: true, summary: "Transparency report required" },
+      { range: "13-16", enabled: true, summary: "Transparency report required" },
+      { range: "17+", enabled: true, summary: "Transparency report only" },
+    ],
+    platforms: PLATFORM_NONE,
+  },
 ]
 
 export const CATEGORY_GROUPS = [
@@ -976,10 +1090,10 @@ export const CATEGORY_GROUPS = [
   { key: "social", label: "Social", description: "Manage contacts, chat, and multiplayer interactions", categories: ["social_contacts", "social_chat_control", "social_multiplayer"] },
   { key: "web", label: "Web", description: "Filter web content, enforce safe search, and manage blocklists", categories: ["web_safesearch", "web_category_block", "web_custom_allowlist", "web_custom_blocklist", "web_filter_level"] },
   { key: "privacy", label: "Privacy", description: "Control location sharing, profile visibility, and data sharing", categories: ["privacy_location", "privacy_profile_visibility", "privacy_data_sharing", "privacy_account_creation"] },
-  { key: "monitoring", label: "Monitoring", description: "Track activity and configure real-time alerts for parents", categories: ["monitoring_activity", "monitoring_alerts"] },
-  { key: "algorithmic_safety", label: "Algorithmic Safety", description: "Control algorithmic feeds and disable addictive design patterns", categories: ["algo_feed_control", "addictive_design_control"] },
-  { key: "notifications", label: "Notifications", description: "Manage notification curfews and usage timer reminders", categories: ["notification_curfew", "usage_timer_notification"] },
-  { key: "advertising_data", label: "Advertising & Data", description: "Block targeted ads, enable data deletion, and control geolocation", categories: ["targeted_ad_block", "data_deletion_request", "geolocation_opt_in"] },
-  { key: "access_control", label: "Access Control", description: "Manage DM restrictions and age verification gates", categories: ["dm_restriction", "age_gate"] },
+  { key: "monitoring", label: "Monitoring", description: "Track activity and configure real-time alerts for parents", categories: ["monitoring_activity", "monitoring_alerts", "screen_time_report"] },
+  { key: "algorithmic_safety", label: "Algorithmic Safety", description: "Control algorithmic feeds and disable addictive design patterns", categories: ["algo_feed_control", "addictive_design_control", "algorithmic_audit"] },
+  { key: "notifications", label: "Notifications", description: "Manage notification curfews and usage timer reminders", categories: ["notification_curfew", "usage_timer_notification", "parental_event_notification"] },
+  { key: "advertising_data", label: "Advertising & Data", description: "Block targeted ads, enable data deletion, and control geolocation", categories: ["targeted_ad_block", "data_deletion_request", "geolocation_opt_in", "commercial_data_ban"] },
+  { key: "access_control", label: "Access Control", description: "Manage DM restrictions and age verification gates", categories: ["dm_restriction", "age_gate", "parental_consent_gate"] },
   { key: "compliance_expansion", label: "Compliance Expansion", description: "Extended rule categories for global regulatory compliance", categories: ["csam_reporting", "library_filter_compliance", "ai_minor_interaction", "social_media_min_age", "image_rights_minor"] },
 ]

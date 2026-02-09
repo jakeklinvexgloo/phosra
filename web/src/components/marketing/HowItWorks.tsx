@@ -3,6 +3,7 @@
 import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { AnimatedSection, WaveTexture } from "./shared"
+import { PLATFORM_STATS } from "@/lib/platforms"
 
 const STEPS = [
   {
@@ -17,7 +18,7 @@ const STEPS = [
     title: "Connect",
     description:
       "Link your platforms — NextDNS, Android, Apple, and more. One credential per platform, verified and encrypted with AES-256-GCM.",
-    detail: "188+ platform integrations",
+    detail: `${PLATFORM_STATS.marketingTotal} platform integrations`,
   },
   {
     number: "03",
