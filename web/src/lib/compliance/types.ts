@@ -142,31 +142,36 @@ export const JURISDICTION_META: Record<
 
 export const STATUS_META: Record<
   LawStatus,
-  { label: string; bgColor: string; textColor: string }
+  { label: string; bgColor: string; textColor: string; dotColor: string }
 > = {
   enacted: {
     label: "Enacted",
     bgColor: "bg-brand-green/10",
     textColor: "text-brand-green",
+    dotColor: "bg-brand-green",
   },
   passed: {
     label: "Passed",
     bgColor: "bg-amber-500/10",
     textColor: "text-amber-600",
+    dotColor: "bg-amber-500",
   },
   pending: {
     label: "Pending",
     bgColor: "bg-zinc-500/10",
     textColor: "text-zinc-500",
+    dotColor: "bg-zinc-400",
   },
   proposed: {
     label: "Proposed",
     bgColor: "bg-slate-500/10",
     textColor: "text-slate-500",
+    dotColor: "bg-slate-400",
   },
   injunction: {
     label: "Injunction",
     bgColor: "bg-red-500/10",
     textColor: "text-red-500",
+    dotColor: "bg-red-500",
   },
 }

@@ -8,6 +8,7 @@ interface AnimatedSectionProps {
   className?: string
   delay?: number
   direction?: "up" | "left" | "right" | "none"
+  initiallyVisible?: boolean
 }
 
 const directionMap = {
@@ -22,9 +23,23 @@ export function AnimatedSection({
   className,
   delay = 0,
   direction = "up",
+  initiallyVisible = false,
 }: AnimatedSectionProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-80px" })
+
+  if (initiallyVisible) {
+    return (
+      <motion.div
+        initial={{ opacity: 0.8 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay, ease: "easeOut" }}
+        className={className}
+      >
+        {children}
+      </motion.div>
+    )
+  }
 
   return (
     <motion.div

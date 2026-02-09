@@ -9,6 +9,8 @@ interface ComplianceHeroProps {
   stage: string
   stageColor: "enacted" | "passed" | "pending"
   description: string
+  coverageCount?: number
+  coverageTotal?: number
 }
 
 const stageBadgeColors: Record<ComplianceHeroProps["stageColor"], string> = {
@@ -24,7 +26,12 @@ export function ComplianceHero({
   stage,
   stageColor,
   description,
+  coverageCount,
+  coverageTotal,
 }: ComplianceHeroProps) {
+  const hasCoverage =
+    coverageCount != null && coverageTotal != null && coverageTotal > 0
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">
       {/* Brand watermark */}
@@ -55,6 +62,28 @@ export function ComplianceHero({
         <p className="text-base sm:text-lg text-white/60 mt-4 max-w-2xl leading-relaxed">
           {description}
         </p>
+
+        {/* Coverage bar */}
+        {hasCoverage && (
+          <div className="mt-6 max-w-sm">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-xs text-white/50 font-medium">
+                Compliance Coverage
+              </span>
+              <span className="text-xs text-white/70 font-semibold tabular-nums">
+                {coverageCount}/{coverageTotal}
+              </span>
+            </div>
+            <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-brand-green transition-all"
+                style={{
+                  width: `${(coverageCount! / coverageTotal!) * 100}%`,
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )

@@ -5,75 +5,50 @@ import Link from "next/link"
 import { ArrowRight, BookOpen } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import { ComplianceStats } from "@/components/marketing/compliance-hub/ComplianceStats"
-import { JurisdictionTabs } from "@/components/marketing/compliance-hub/JurisdictionTabs"
 import { ComplianceSearch } from "@/components/marketing/compliance-hub/ComplianceSearch"
 import { StatusFilter } from "@/components/marketing/compliance-hub/StatusFilter"
 import { LawCard } from "@/components/marketing/compliance-hub/LawCard"
+import { JurisdictionGroup } from "@/components/marketing/compliance-hub/JurisdictionGroup"
 import {
   LAW_REGISTRY,
   searchLaws,
-  getLawsByJurisdiction,
-  getLawsByStatus,
 } from "@/lib/compliance/index"
-import type { Jurisdiction, LawStatus, LawEntry } from "@/lib/compliance/index"
+import { JURISDICTION_META } from "@/lib/compliance/types"
+import { DISPLAY_GROUPS } from "@/lib/compliance/country-flags"
+import type { LawStatus, LawEntry } from "@/lib/compliance/index"
 
 export default function ComplianceHubPage() {
-  const [jurisdictionFilter, setJurisdictionFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
 
-  // Compute jurisdiction tab counts
-  const jurisdictionCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: LAW_REGISTRY.length }
+  const isSearchActive = searchQuery.trim().length > 0
 
-    // Individual jurisdiction groups
-    const groups: Jurisdiction[] = [
-      "us-federal",
-      "us-state",
-      "asia-pacific",
-      "americas",
-      "middle-east-africa",
-    ]
-    for (const g of groups) {
-      counts[g] = getLawsByJurisdiction(g).length
-    }
-
-    // EU & UK combined tab
-    counts["eu-uk"] =
-      getLawsByJurisdiction("eu").length + getLawsByJurisdiction("uk").length
-
-    return counts
-  }, [])
-
-  // Filter laws based on all three filters
+  // Filter laws based on search + status
   const filteredLaws = useMemo(() => {
     let laws: LawEntry[] = LAW_REGISTRY
 
-    // Search filter
     if (searchQuery.trim()) {
       laws = searchLaws(searchQuery)
     }
 
-    // Jurisdiction filter
-    if (jurisdictionFilter !== "all") {
-      if (jurisdictionFilter === "eu-uk") {
-        laws = laws.filter(
-          (l) => l.jurisdictionGroup === "eu" || l.jurisdictionGroup === "uk"
-        )
-      } else {
-        laws = laws.filter(
-          (l) => l.jurisdictionGroup === jurisdictionFilter
-        )
-      }
-    }
-
-    // Status filter
     if (statusFilter !== "all") {
       laws = laws.filter((l) => l.status === statusFilter)
     }
 
     return laws
-  }, [searchQuery, jurisdictionFilter, statusFilter])
+  }, [searchQuery, statusFilter])
+
+  // Group filtered laws by jurisdiction
+  const groupedLaws = useMemo(() => {
+    const groups: Record<string, LawEntry[]> = {}
+    for (const law of filteredLaws) {
+      if (!groups[law.jurisdictionGroup]) {
+        groups[law.jurisdictionGroup] = []
+      }
+      groups[law.jurisdictionGroup].push(law)
+    }
+    return groups
+  }, [filteredLaws])
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query)
@@ -122,12 +97,7 @@ export default function ComplianceHubPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 space-y-4">
           <ComplianceSearch onSearch={handleSearch} />
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <JurisdictionTabs
-              active={jurisdictionFilter}
-              onSelect={setJurisdictionFilter}
-              counts={jurisdictionCounts}
-            />
+          <div className="flex items-center justify-end">
             <StatusFilter
               active={statusFilter}
               onSelect={setStatusFilter}
@@ -136,15 +106,34 @@ export default function ComplianceHubPage() {
         </div>
       </section>
 
-      {/* Law Cards Grid */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14">
-        {filteredLaws.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredLaws.map((law, i) => (
-              <LawCard key={law.id} law={law} index={i} />
-            ))}
-          </div>
-        ) : (
+      {/* Grouped Law Sections */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 py-10 sm:py-14 space-y-6">
+        {DISPLAY_GROUPS.map((group) => {
+          const laws = groupedLaws[group.jurisdictionGroup]
+          if (!laws || laws.length === 0) return null
+
+          const jMeta = JURISDICTION_META[group.jurisdictionGroup]
+
+          return (
+            <JurisdictionGroup
+              key={group.jurisdictionGroup}
+              flag={group.flag}
+              label={group.label}
+              count={laws.length}
+              borderColor={jMeta.borderColor}
+              defaultOpen={group.defaultOpen}
+              forceOpen={isSearchActive}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {laws.map((law, i) => (
+                  <LawCard key={law.id} law={law} index={i} />
+                ))}
+              </div>
+            </JurisdictionGroup>
+          )
+        })}
+
+        {filteredLaws.length === 0 && (
           <div className="text-center py-20">
             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
               <BookOpen className="w-7 h-7 text-muted-foreground" />

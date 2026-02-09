@@ -6,6 +6,7 @@ import { AnimatedSection } from "@/components/marketing/shared"
 import { ComplianceHero } from "@/components/marketing/compliance-page/ComplianceHero"
 import { ComplianceChecklist } from "@/components/marketing/compliance-page/ComplianceChecklist"
 import { PhosraFeatureCard } from "@/components/marketing/compliance-page/PhosraFeatureCard"
+import { ComplianceSidebarTOC } from "@/components/marketing/compliance-page/ComplianceSidebarTOC"
 import { StandardLawPage } from "@/components/marketing/compliance-page/StandardLawPage"
 import type { LawEntry } from "@/lib/compliance/types"
 import { getLawById } from "@/lib/compliance"
@@ -38,6 +39,14 @@ interface ComplianceLawTemplateProps {
   law: LawEntry
 }
 
+const DETAILED_TOC = [
+  { id: "overview", label: "Overview" },
+  { id: "key-provisions", label: "Key Provisions" },
+  { id: "how-phosra-helps", label: "How Phosra Helps" },
+  { id: "checklist", label: "Checklist" },
+  { id: "related-laws", label: "Related Laws" },
+]
+
 export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
   const stageColor = mapStageColor(law.status)
   const relatedLaws = getRelatedLaws(law)
@@ -57,6 +66,9 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
   const { provisions, phosraFeatures, checklist, customSections } =
     law.detailedPage
 
+  const covered = checklist.filter((c) => c.covered).length
+  const total = checklist.length
+
   return (
     <div>
       {/* Hero */}
@@ -67,92 +79,97 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
         stage={law.statusLabel}
         stageColor={stageColor}
         description={law.summary}
+        coverageCount={covered}
+        coverageTotal={total}
       />
 
-      {/* What [Law] Requires — Provisions Grid */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
-        <AnimatedSection>
-          <div className="mb-10">
-            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
-              What {law.shortName} Requires
-            </p>
-            <h2 className="text-2xl sm:text-3xl font-display text-foreground">
-              Key provisions of {law.fullName}
-            </h2>
-          </div>
-        </AnimatedSection>
+      {/* Main content with sidebar TOC */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-8">
+        <div className="lg:grid lg:grid-cols-[200px_1fr] lg:gap-10 py-16 sm:py-20">
+          {/* Sidebar TOC */}
+          <ComplianceSidebarTOC items={DETAILED_TOC} />
 
-        <div className="grid sm:grid-cols-2 gap-6">
-          {provisions.map((provision, i) => (
-            <AnimatedSection key={provision.title} delay={i * 0.08}>
-              <div className="plaid-card h-full">
-                <div className="flex items-center gap-2 mb-2">
-                  <BookOpen className="w-4 h-4 text-brand-green flex-shrink-0" />
-                  <h3 className="font-semibold text-foreground text-sm">
-                    {provision.title}
-                  </h3>
+          {/* Content */}
+          <div>
+            {/* What [Law] Requires — Provisions Grid */}
+            <section id="overview">
+              <AnimatedSection initiallyVisible>
+                <div className="mb-10">
+                  <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
+                    What {law.shortName} Requires
+                  </p>
+                  <h2 className="text-2xl sm:text-3xl font-display text-foreground">
+                    Key provisions of {law.fullName}
+                  </h2>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {provision.description}
-                </p>
-              </div>
-            </AnimatedSection>
-          ))}
-        </div>
-      </section>
-
-      {/* Custom Sections (e.g., COPPA comparison table, DSA GDPR cards) */}
-      {customSections?.map((section) => (
-        <CustomSection key={section.id} section={section} law={law} />
-      ))}
-
-      {/* How Phosra Helps — Feature Cards */}
-      <section className="bg-muted/30 border-y border-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
-          <AnimatedSection>
-            <div className="mb-10">
-              <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
-                How Phosra Helps
-              </p>
-              <h2 className="text-2xl sm:text-3xl font-display text-foreground">
-                {law.shortName} provisions mapped to Phosra features
-              </h2>
-              <p className="text-muted-foreground mt-3 max-w-2xl">
-                Each {law.shortName} requirement is addressed by a specific
-                Phosra capability. Integrate once, and your platform is covered.
-              </p>
-            </div>
-          </AnimatedSection>
-
-          <div className="grid sm:grid-cols-2 gap-6">
-            {phosraFeatures.map((feature, i) => (
-              <AnimatedSection key={feature.regulation} delay={i * 0.08}>
-                <PhosraFeatureCard {...feature} />
               </AnimatedSection>
+
+              <div id="key-provisions" className="grid sm:grid-cols-2 gap-6">
+                {provisions.map((provision) => (
+                  <div key={provision.title} className="plaid-card h-full">
+                    <div className="flex items-center gap-2 mb-2">
+                      <BookOpen className="w-4 h-4 text-brand-green flex-shrink-0" />
+                      <h3 className="font-semibold text-foreground text-sm">
+                        {provision.title}
+                      </h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {provision.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Custom Sections */}
+            {customSections?.map((section) => (
+              <CustomSection key={section.id} section={section} law={law} />
             ))}
+
+            {/* How Phosra Helps — Feature Cards */}
+            <section id="how-phosra-helps" className="mt-16 sm:mt-20">
+              <AnimatedSection initiallyVisible>
+                <div className="mb-10">
+                  <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
+                    How Phosra Helps
+                  </p>
+                  <h2 className="text-2xl sm:text-3xl font-display text-foreground">
+                    {law.shortName} provisions mapped to Phosra features
+                  </h2>
+                  <p className="text-muted-foreground mt-3 max-w-2xl">
+                    Each {law.shortName} requirement is addressed by a specific
+                    Phosra capability. Integrate once, and your platform is covered.
+                  </p>
+                </div>
+              </AnimatedSection>
+
+              <div className="grid sm:grid-cols-2 gap-6">
+                {phosraFeatures.map((feature) => (
+                  <PhosraFeatureCard key={feature.regulation} {...feature} />
+                ))}
+              </div>
+            </section>
+
+            {/* Compliance Checklist */}
+            <section id="checklist" className="mt-16 sm:mt-20">
+              <AnimatedSection initiallyVisible>
+                <div className="mb-10">
+                  <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
+                    Coverage Assessment
+                  </p>
+                  <h2 className="text-2xl sm:text-3xl font-display text-foreground">
+                    {law.shortName} compliance checklist
+                  </h2>
+                </div>
+              </AnimatedSection>
+
+              <div className="max-w-3xl">
+                <ComplianceChecklist items={checklist} />
+              </div>
+            </section>
           </div>
         </div>
-      </section>
-
-      {/* Compliance Checklist */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
-        <AnimatedSection>
-          <div className="mb-10">
-            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
-              Coverage Assessment
-            </p>
-            <h2 className="text-2xl sm:text-3xl font-display text-foreground">
-              {law.shortName} compliance checklist
-            </h2>
-          </div>
-        </AnimatedSection>
-
-        <AnimatedSection delay={0.1}>
-          <div className="max-w-3xl">
-            <ComplianceChecklist items={checklist} />
-          </div>
-        </AnimatedSection>
-      </section>
+      </div>
 
       {/* CTA */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">
@@ -186,8 +203,8 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
 
       {/* Related Laws */}
       {relatedLaws.length > 0 && (
-        <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
-          <AnimatedSection>
+        <section id="related-laws" className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+          <AnimatedSection initiallyVisible>
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
               Related Legislation
             </h3>
@@ -224,106 +241,64 @@ function CustomSection({
   // COPPA comparison table
   if (section.content === "comparison-table") {
     return (
-      <section className="bg-muted/30 border-y border-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
-          <AnimatedSection>
-            <div className="mb-10">
-              <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
-                What Changed
-              </p>
-              <h2 className="text-2xl sm:text-3xl font-display text-foreground">
-                {section.title}
-              </h2>
-            </div>
-          </AnimatedSection>
+      <section className="mt-16 sm:mt-20 bg-muted/30 -mx-4 sm:-mx-8 px-4 sm:px-8 py-16 sm:py-20 border-y border-border">
+        <div className="mb-10">
+          <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
+            What Changed
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-display text-foreground">
+            {section.title}
+          </h2>
+        </div>
 
-          <AnimatedSection delay={0.1}>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 pr-6 font-semibold text-foreground">
-                      Provision
-                    </th>
-                    <th className="text-left py-3 pr-6 font-semibold text-foreground">
-                      Original COPPA (1998)
-                    </th>
-                    <th className="text-left py-3 font-semibold text-foreground">
-                      COPPA 2.0
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  <tr>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Age coverage
-                    </td>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Under 13
-                    </td>
-                    <td className="py-3 text-foreground font-medium">
-                      Under 17
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Targeted ads
-                    </td>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Consent required
-                    </td>
-                    <td className="py-3 text-foreground font-medium">
-                      Banned entirely
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Data deletion
-                    </td>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      On parent request
-                    </td>
-                    <td className="py-3 text-foreground font-medium">
-                      Eraser button required
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Data minimization
-                    </td>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Not specified
-                    </td>
-                    <td className="py-3 text-foreground font-medium">
-                      Mandatory
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Enforcement
-                    </td>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      FTC general authority
-                    </td>
-                    <td className="py-3 text-foreground font-medium">
-                      Dedicated FTC division
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Penalties
-                    </td>
-                    <td className="py-3 pr-6 text-muted-foreground">
-                      Up to $50k per violation
-                    </td>
-                    <td className="py-3 text-foreground font-medium">
-                      Substantially increased
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </AnimatedSection>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-3 pr-6 font-semibold text-foreground">
+                  Provision
+                </th>
+                <th className="text-left py-3 pr-6 font-semibold text-foreground">
+                  Original COPPA (1998)
+                </th>
+                <th className="text-left py-3 font-semibold text-foreground">
+                  COPPA 2.0
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              <tr>
+                <td className="py-3 pr-6 text-muted-foreground">Age coverage</td>
+                <td className="py-3 pr-6 text-muted-foreground">Under 13</td>
+                <td className="py-3 text-foreground font-medium">Under 17</td>
+              </tr>
+              <tr>
+                <td className="py-3 pr-6 text-muted-foreground">Targeted ads</td>
+                <td className="py-3 pr-6 text-muted-foreground">Consent required</td>
+                <td className="py-3 text-foreground font-medium">Banned entirely</td>
+              </tr>
+              <tr>
+                <td className="py-3 pr-6 text-muted-foreground">Data deletion</td>
+                <td className="py-3 pr-6 text-muted-foreground">On parent request</td>
+                <td className="py-3 text-foreground font-medium">Eraser button required</td>
+              </tr>
+              <tr>
+                <td className="py-3 pr-6 text-muted-foreground">Data minimization</td>
+                <td className="py-3 pr-6 text-muted-foreground">Not specified</td>
+                <td className="py-3 text-foreground font-medium">Mandatory</td>
+              </tr>
+              <tr>
+                <td className="py-3 pr-6 text-muted-foreground">Enforcement</td>
+                <td className="py-3 pr-6 text-muted-foreground">FTC general authority</td>
+                <td className="py-3 text-foreground font-medium">Dedicated FTC division</td>
+              </tr>
+              <tr>
+                <td className="py-3 pr-6 text-muted-foreground">Penalties</td>
+                <td className="py-3 pr-6 text-muted-foreground">Up to $50k per violation</td>
+                <td className="py-3 text-foreground font-medium">Substantially increased</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
     )
@@ -355,41 +330,34 @@ function CustomSection({
     ]
 
     return (
-      <section className="bg-muted/30 border-y border-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
-          <AnimatedSection>
-            <div className="mb-10">
-              <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
-                Regulatory Landscape
-              </p>
-              <h2 className="text-2xl sm:text-3xl font-display text-foreground">
-                {section.title}
-              </h2>
-            </div>
-          </AnimatedSection>
+      <section className="mt-16 sm:mt-20 bg-muted/30 -mx-4 sm:-mx-8 px-4 sm:px-8 py-16 sm:py-20 border-y border-border">
+        <div className="mb-10">
+          <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
+            Regulatory Landscape
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-display text-foreground">
+            {section.title}
+          </h2>
+        </div>
 
-          <div className="grid sm:grid-cols-2 gap-6">
-            {cards.map((card, i) => (
-              <AnimatedSection key={card.title} delay={(i + 1) * 0.08}>
-                <div className="plaid-card h-full">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Shield className="w-5 h-5 text-brand-green" />
-                    <h3 className="font-semibold text-foreground">
-                      {card.title}
-                    </h3>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {card.description}
-                  </p>
-                </div>
-              </AnimatedSection>
-            ))}
-          </div>
+        <div className="grid sm:grid-cols-2 gap-6">
+          {cards.map((card) => (
+            <div key={card.title} className="plaid-card h-full">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="w-5 h-5 text-brand-green" />
+                <h3 className="font-semibold text-foreground">
+                  {card.title}
+                </h3>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {card.description}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
     )
   }
 
-  // Generic fallback for future custom sections
   return null
 }
