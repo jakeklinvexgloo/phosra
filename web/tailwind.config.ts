@@ -78,6 +78,10 @@ const config: Config = {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
         },
+        "scroll-right": {
+          "0%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" },
+        },
         "slow-spin": {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
@@ -86,11 +90,22 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
         },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 30px -8px rgba(0,212,126,0.15)" },
+          "50%": { boxShadow: "0 0 50px -8px rgba(0,212,126,0.35)" },
+        },
+        "dash-flow": {
+          "0%": { strokeDashoffset: "0" },
+          "100%": { strokeDashoffset: "-20" },
+        },
       },
       animation: {
         scroll: "scroll 30s linear infinite",
+        "scroll-right": "scroll-right 30s linear infinite",
         "slow-spin": "slow-spin 60s linear infinite",
         float: "float 6s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        "dash-flow": "dash-flow 2s linear infinite",
       },
     },
   },

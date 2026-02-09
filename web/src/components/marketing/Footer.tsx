@@ -24,20 +24,20 @@ const FOOTER_SECTIONS = [
   {
     title: "Compliance",
     links: [
-      { label: "KOSA", href: "#compliance" },
-      { label: "COPPA 2.0", href: "#compliance" },
-      { label: "EU DSA", href: "#compliance" },
+      { label: "KOSA", href: "/compliance/kosa" },
+      { label: "COPPA 2.0", href: "/compliance/coppa" },
+      { label: "EU DSA", href: "/compliance/dsa" },
       { label: "Platform Standards", href: "/platforms" },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "About", href: "#" },
+      { label: "About", href: "/about" },
       { label: "Pricing", href: "/pricing" },
-      { label: "Contact", href: "#" },
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
+      { label: "Contact", href: "/contact" },
+      { label: "Privacy", href: "/privacy" },
+      { label: "Terms", href: "/terms" },
     ],
   },
 ]
