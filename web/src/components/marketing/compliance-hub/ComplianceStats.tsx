@@ -12,22 +12,16 @@ interface StatItem {
 }
 
 function useAnimatedCounter(target: number, duration = 1200) {
-  // Start at target so SSR and initial paint show the real number
-  const [count, setCount] = useState(target)
-  const [hasAnimated, setHasAnimated] = useState(false)
+  const [count, setCount] = useState(0)
 
   useEffect(() => {
-    if (target === 0 || hasAnimated) return
-    // Reset to 0 then animate up (only on first client mount)
-    setCount(0)
-    setHasAnimated(true)
+    if (target === 0) return
     const start = performance.now()
     let frame: number
 
     function step(now: number) {
       const elapsed = now - start
       const progress = Math.min(elapsed / duration, 1)
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3)
       setCount(Math.round(eased * target))
       if (progress < 1) {
@@ -37,7 +31,7 @@ function useAnimatedCounter(target: number, duration = 1200) {
 
     frame = requestAnimationFrame(step)
     return () => cancelAnimationFrame(frame)
-  }, [target, duration, hasAnimated])
+  }, [target, duration])
 
   return count
 }
@@ -60,7 +54,12 @@ function StatCard({ label, target, suffix = "", icon }: StatItem) {
 }
 
 export function ComplianceStats() {
-  const stats = getRegistryStats()
+  const [stats, setStats] = useState({ totalLaws: 0, totalJurisdictions: 0, totalCategories: 0, enacted: 0 })
+
+  useEffect(() => {
+    const s = getRegistryStats()
+    setStats(s)
+  }, [])
 
   const items: StatItem[] = [
     { label: "Laws Tracked", target: stats.totalLaws, suffix: "+", icon: <Globe className="w-5 h-5" /> },
