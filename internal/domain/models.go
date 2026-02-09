@@ -208,9 +208,16 @@ const (
 	RuleAIMinorInteraction      RuleCategory = "ai_minor_interaction"
 	RuleSocialMediaMinAge       RuleCategory = "social_media_min_age"
 	RuleImageRightsMinor        RuleCategory = "image_rights_minor"
+
+	// Legislation-driven expansion (2025)
+	RuleParentalConsentGate       RuleCategory = "parental_consent_gate"
+	RuleParentalEventNotification RuleCategory = "parental_event_notification"
+	RuleScreenTimeReport          RuleCategory = "screen_time_report"
+	RuleCommercialDataBan         RuleCategory = "commercial_data_ban"
+	RuleAlgorithmicAudit          RuleCategory = "algorithmic_audit"
 )
 
-// AllRuleCategories returns all 40 rule categories.
+// AllRuleCategories returns all 45 rule categories.
 func AllRuleCategories() []RuleCategory {
 	return []RuleCategory{
 		RuleContentRating, RuleContentBlockTitle, RuleContentAllowTitle,
@@ -229,6 +236,8 @@ func AllRuleCategories() []RuleCategory {
 		RuleDataDeletionRequest, RuleGeolocationOptIn,
 		RuleCSAMReporting, RuleLibraryFilterCompliance, RuleAIMinorInteraction,
 		RuleSocialMediaMinAge, RuleImageRightsMinor,
+		RuleParentalConsentGate, RuleParentalEventNotification, RuleScreenTimeReport,
+		RuleCommercialDataBan, RuleAlgorithmicAudit,
 	}
 }
 

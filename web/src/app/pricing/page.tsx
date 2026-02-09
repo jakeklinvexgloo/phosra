@@ -14,7 +14,7 @@ const TIERS = [
     ctaStyle: "border border-foreground text-foreground hover:bg-muted",
     features: [
       "Up to 5 children",
-      "All 40 policy categories",
+      "All 45 policy categories",
       "3 platform integrations",
       "Content rating enforcement",
       "Time limits & scheduled hours",
@@ -86,7 +86,7 @@ const FAQ = [
 
 const COMPARISON = [
   { feature: "Children profiles", family: "Up to 5", developer: "Unlimited", enterprise: "Unlimited" },
-  { feature: "Policy categories", family: "40", developer: "40", enterprise: "40 + custom" },
+  { feature: "Policy categories", family: "45", developer: "45", enterprise: "45 + custom" },
   { feature: "Platform integrations", family: "3", developer: "Unlimited", enterprise: "Unlimited" },
   { feature: "REST API access", family: "\u2014", developer: "\u2713", enterprise: "\u2713" },
   { feature: "MCP tools", family: "\u2014", developer: "\u2713", enterprise: "\u2713" },

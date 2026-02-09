@@ -137,7 +137,7 @@ export function Ecosystem() {
               { value: TOTAL_COUNT, suffix: "+", label: "Total integrations" },
               { value: CATEGORY_COUNT, suffix: "", label: "Platform categories" },
               { value: 50, suffix: "+", label: "Compliance laws" },
-              { value: 40, suffix: "", label: "Rule categories" },
+              { value: 45, suffix: "", label: "Rule categories" },
             ].map((stat) => (
               <div
                 key={stat.label}

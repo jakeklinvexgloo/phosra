@@ -308,7 +308,7 @@ export const TOOLS: ToolDefinition[] = [
   {
     name: "create_rule",
     description:
-      "Create a new rule in a policy. Category must be one of the 40 supported categories. Config is a JSON object specific to the category.",
+      "Create a new rule in a policy. Category must be one of the 45 supported categories. Config is a JSON object specific to the category.",
     input_schema: {
       type: "object",
       properties: {

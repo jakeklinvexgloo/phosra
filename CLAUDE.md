@@ -4,7 +4,7 @@
 
 - **Frontend:** Next.js app in `web/` (TypeScript, React, Tailwind CSS)
 - **Backend:** Go API server in `cmd/server/`, domain logic in `internal/`
-- **Migrations:** SQL files in `migrations/` (001-013)
+- **Migrations:** SQL files in `migrations/` (001-014)
 
 ## Compliance Data Architecture
 
@@ -56,12 +56,12 @@ cd .. && go build ./...               # Backend build
 
 ### Rule Categories
 
-40 total rule categories defined in `internal/domain/models.go`. The 5 newest:
-- `csam_reporting` — CSAM detection/reporting
-- `library_filter_compliance` — CIPA E-rate filtering
-- `ai_minor_interaction` — EU AI Act restrictions
-- `social_media_min_age` — Hard minimum age ban
-- `image_rights_minor` — France SREN image rights
+45 total rule categories defined in `internal/domain/models.go`. The 5 newest:
+- `parental_consent_gate` — Verifiable parental consent before account/data collection
+- `parental_event_notification` — Notify parents of account creation/flagged content
+- `screen_time_report` — Platform-generated usage reports for parents
+- `commercial_data_ban` — Ban commercial sale/sharing of minor data
+- `algorithmic_audit` — Algorithmic transparency and audit requirements
 
 ### Automated Monitoring
 

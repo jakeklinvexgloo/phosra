@@ -7,7 +7,7 @@ export const RECIPES: Recipe[] = [
     summary: "Maria protects her 7-year-old with standard protections across NextDNS and Android",
     icon: "\u{1F680}",
     tags: ["Quick Setup", "NextDNS", "Android"],
-    scenario: "Maria just downloaded the Phosra app. Her daughter Sofia is 7 years old. Maria wants standard age-appropriate protection without manually configuring 40 categories. She has a NextDNS account for home WiFi filtering and an Android tablet for Sofia.",
+    scenario: "Maria just downloaded the Phosra app. Her daughter Sofia is 7 years old. Maria wants standard age-appropriate protection without manually configuring 45 categories. She has a NextDNS account for home WiFi filtering and an Android tablet for Sofia.",
     actors: ["Parent App", "Phosra API", "NextDNS", "Android"],
     flowDiagram: `Parent App          Phosra API        NextDNS        Android
     |                       |                   |              |
@@ -119,7 +119,7 @@ export const RECIPES: Recipe[] = [
         whatHappens: "Each platform receives only the rules it can enforce. NextDNS gets 8 DNS-level rules (web filter, safe search, blocked domains). Android gets 18 rules including content ratings, screen time, and app restrictions."
       }
     ],
-    keyTeachingPoint: "Quick Setup reduces 40 categories to a single API call. Each platform only receives the rules it can actually enforce \u2014 define once, push everywhere."
+    keyTeachingPoint: "Quick Setup reduces 45 categories to a single API call. Each platform only receives the rules it can actually enforce \u2014 define once, push everywhere."
   },
   {
     id: "app-integration",
@@ -432,7 +432,7 @@ export const RECIPES: Recipe[] = [
         whatHappens: "All platforms receive updated rules. Android now allows T-rated games and supervised social media. NextDNS unblocks social media domains that were previously filtered."
       }
     ],
-    keyTeachingPoint: "Age is computed dynamically, not stored. When a child's age crosses a threshold, generate-from-age recalculates all 40 categories and shows exactly what changed."
+    keyTeachingPoint: "Age is computed dynamically, not stored. When a child's age crosses a threshold, generate-from-age recalculates all 45 categories and shows exactly what changed."
   },
   {
     id: "multi-child",
