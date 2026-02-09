@@ -1,0 +1,26 @@
+-- Migration 014: Legislation-Driven Rule Category Expansion (2025)
+--
+-- Adds 5 new rule categories to close gaps identified by analyzing 56 laws
+-- in the compliance registry against existing categories.
+--
+-- The rule_category column uses VARCHAR without CHECK constraints,
+-- so no schema change is needed — this migration documents the new values.
+--
+-- New categories:
+--   1. parental_consent_gate       (Access Control)    — Verifiable parental consent before account creation or data collection
+--   2. parental_event_notification (Notifications)     — Notify parents when minors create accounts or encounter flagged content
+--   3. screen_time_report          (Monitoring)        — Generate and deliver screen time usage reports to parents
+--   4. commercial_data_ban         (Advertising & Data)— Ban commercial sale, sharing, or profiling of minor data
+--   5. algorithmic_audit           (Algorithmic Safety) — Require algorithmic transparency reports and independent audits
+--
+-- Total rule categories: 45 (was 40)
+--
+-- Law coverage:
+--   parental_consent_gate:       23 laws (COPPA, KOSMA, GDPR Art. 8, India DPDPA, 15+ state laws)
+--   parental_event_notification:  2 laws (LA Act 456, OH HB 33)
+--   screen_time_report:           4 laws (VA SB 854, TN HB 1891, MN HF 2, TX SCOPE)
+--   commercial_data_ban:          6 laws (NY NYCDPA, COPPA 2.0, PA Online Safety, BR LGPD, CL PDP, ID GR 17)
+--   algorithmic_audit:           10 laws (KOSA, EU DSA, EU AI Act, UK OSA, CA Bill C-63, PA Online Safety, MD Kids Code, GDPR Art. 8, ID GR 17, IE OSMRA)
+
+-- No-op: column type is VARCHAR, no constraint to alter
+SELECT 1;
