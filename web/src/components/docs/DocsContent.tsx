@@ -147,7 +147,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
                 to achieve and maintain compliance certification.
               </p>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                PCSS establishes a universal policy framework spanning 35 safety categories across 11 domains: Content, Time, Purchase,
+                PCSS establishes a universal policy framework spanning 40 safety categories across 11 domains: Content, Time, Purchase,
                 Social, Web, Privacy, Monitoring, Algorithmic Safety, Notifications, Advertising &amp; Data, and Access Control.
                 Platforms <Keyword>SHALL</Keyword> expose compliance endpoints that accept policy
                 enforcement requests from the Phosra Enforcement Engine.
@@ -158,7 +158,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
               </p>
               <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-brand-green">35</p>
+                  <p className="text-2xl font-bold text-brand-green">40</p>
                   <p className="text-xs text-muted-foreground">Policy Categories</p>
                 </div>
                 <div className="text-center">
@@ -262,7 +262,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
             <h2 className="text-xl font-bold text-foreground mb-4">3. Safety Policies</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
-                Safety policies define protection rules for each child. Each policy contains rules across 35 categories spanning 11 domains.
+                Safety policies define protection rules for each child. Each policy contains rules across 40 categories spanning 11 domains.
                 Platforms <Keyword>MUST</Keyword> implement enforcement for all categories they claim capability in.
                 Rules are stored as JSONB with category-specific schemas.
               </p>
@@ -284,12 +284,12 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
             </div>
           </section>
 
-          {/* Section 3.1: 35 Mandatory Policy Categories */}
+          {/* Section 3.1: 40 Mandatory Policy Categories */}
           <section id="policy-categories">
-            <h2 className="text-xl font-bold text-foreground mb-4">3.1 35 Mandatory Policy Categories</h2>
+            <h2 className="text-xl font-bold text-foreground mb-4">3.1 40 Mandatory Policy Categories</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
-                PCSS v1.0 defines 35 policy categories across 11 domains. The 9 new legislation-driven categories
+                PCSS v1.0 defines 40 policy categories across 11 domains. The 15 new legislation-driven categories
                 are backed by specific child safety laws and <Keyword>MUST</Keyword> be enforced by all compliant platforms.
               </p>
               <div className="space-y-3">
@@ -313,7 +313,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
               </div>
               <div className="mt-4 bg-accent/5 border border-accent/20 rounded p-4">
                 <p className="text-sm text-foreground">
-                  See the <a href="#rule-categories" className="text-brand-green font-medium hover:underline">complete API reference below</a> for full JSON schemas, field constraints, age-based defaults, platform support, and code examples for all 35 categories.
+                  See the <a href="#rule-categories" className="text-brand-green font-medium hover:underline">complete API reference below</a> for full JSON schemas, field constraints, age-based defaults, platform support, and code examples for all 40 categories.
                 </p>
               </div>
             </div>
@@ -399,7 +399,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
                 The Quick Setup API provides a single-call onboarding flow that creates a family (if needed), registers a child,
-                generates all 35 age-appropriate policy rules, and activates the policy. This endpoint <Keyword>SHOULD</Keyword> be
+                generates all 40 age-appropriate policy rules, and activates the policy. This endpoint <Keyword>SHOULD</Keyword> be
                 the primary entry point for parent-facing applications.
               </p>
               <div className="bg-muted/30 rounded p-4">
@@ -601,9 +601,9 @@ signature = HMAC-SHA256(webhook_secret, request_body)
           {/* Reference sections */}
           <div className="space-y-12">
             <section id="rule-categories">
-              <h2 className="text-xl font-bold text-foreground mb-4">35 Mandatory Policy Categories</h2>
+              <h2 className="text-xl font-bold text-foreground mb-4">40 Mandatory Policy Categories</h2>
               <p className="text-sm text-muted-foreground mb-4">
-                Complete API reference for all 35 policy categories. Each entry includes the JSON configuration schema,
+                Complete API reference for all 40 policy categories. Each entry includes the JSON configuration schema,
                 field constraints, age-based defaults, platform support, and usage examples. Platforms claiming capability
                 in a category <Keyword>MUST</Keyword> implement enforcement for all rules within that category.
               </p>
@@ -1017,7 +1017,7 @@ Content-Type: application/json
                   <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
                     <li>Family (if not already created)</li>
                     <li>Child profile with age computation</li>
-                    <li>Active safety policy with ~20-25 enabled rules across all 35 categories</li>
+                    <li>Active safety policy with ~20-25 enabled rules across all 40 categories</li>
                     <li>Age-appropriate content ratings across 5 rating systems</li>
                     <li>Legislation-compliant rules for algorithmic safety, notifications, advertising, and data privacy</li>
                   </ul>

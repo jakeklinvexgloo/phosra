@@ -188,7 +188,7 @@ export function DocsSidebar() {
                 : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
             }`}
           >
-            35 Policy Categories
+            40 Policy Categories
           </button>
           <button
             onClick={() => handleNavigate("ratings")}

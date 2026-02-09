@@ -11,8 +11,8 @@ Phosra is a universal parental controls API: "define once, push everywhere." You
 - Each family has children, each with a birth date used for age-based rule generation
 - Age groups: toddler (≤6), child (7-9), preteen (10-12), teen (13-16), young_adult (17+)
 
-### 35 Policy Rule Categories
-Organized into 10 groups:
+### 40 Policy Rule Categories
+Organized into 11 groups:
 
 **Content Control** (5 rules): content_rating, content_block_title, content_allow_title, content_allowlist_mode, content_descriptor_block
 **Time Management** (4): time_daily_limit, time_scheduled_hours, time_per_app_limit, time_downtime
@@ -24,6 +24,7 @@ Organized into 10 groups:
 **Algorithmic Safety** (2): algo_feed_control, addictive_design_control — mandated by KOSA, CA SB 976, EU DSA
 **Notification Control** (2): notification_curfew, usage_timer_notification — per VA SB 854, NY SAFE for Kids
 **Advertising & Data** (5): targeted_ad_block, dm_restriction, age_gate, data_deletion_request, geolocation_opt_in — COPPA 2.0, EU DSA, India DPDPA
+**Compliance Expansion** (5): csam_reporting, library_filter_compliance, ai_minor_interaction, social_media_min_age, image_rights_minor — CSAM laws, CIPA, EU AI Act, France SREN
 
 ### 5 Rating Systems
 - MPAA (movies): G, PG, PG-13, R, NC-17

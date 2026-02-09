@@ -5,10 +5,10 @@ import { Shield, Globe, Scale, Code, ArrowRight, Lock, Zap, Eye, Cpu } from "luc
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 
 const METRICS = [
-  { value: "35+", label: "Rule Categories" },
-  { value: "500+", label: "Platform Integrations" },
+  { value: "40", label: "Rule Categories" },
+  { value: "15+", label: "Platform Adapters" },
   { value: "5", label: "Rating Systems" },
-  { value: "11+", label: "Compliance Laws" },
+  { value: "50+", label: "Compliance Laws" },
 ]
 
 const VALUES = [
@@ -25,7 +25,7 @@ const VALUES = [
   {
     icon: Scale,
     title: "Compliance Built In",
-    description: "KOSA, COPPA 2.0, EU DSA, and 8 more child safety laws mapped to policy categories automatically. Stay compliant as regulations evolve.",
+    description: "KOSA, COPPA 2.0, EU DSA, and 49 more child safety laws mapped to policy categories automatically. Stay compliant as regulations evolve.",
   },
   {
     icon: Code,
@@ -47,7 +47,7 @@ const STEPS = [
     number: "01",
     icon: Eye,
     title: "Parents set rules",
-    description: "Through your app or the Phosra dashboard, parents define screen time limits, content ratings, web filters, and 30+ other policy categories for each child.",
+    description: "Through your app or the Phosra dashboard, parents define screen time limits, content ratings, web filters, and 35+ other policy categories for each child.",
   },
   {
     number: "02",
