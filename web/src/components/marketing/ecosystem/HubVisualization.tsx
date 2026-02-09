@@ -26,7 +26,7 @@ function CategoryPill({
     <div
       className={`flex items-center justify-between gap-3 px-4 py-2.5 bg-white border border-border rounded-sm shadow-sm ${borderSide} ${accentBorder}`}
     >
-      <span className="text-xs font-semibold text-foreground">{category}</span>
+      <span className="text-xs font-bold text-foreground">{category}</span>
       <span className={`text-[10px] font-bold tabular-nums ${accentClass.split(" ")[0]}`}>
         {count}
       </span>
@@ -106,11 +106,11 @@ export function HubVisualization({ sources, targets }: HubVisualizationProps) {
               {/* Hub node */}
               <div className="relative flex flex-col items-center gap-2 px-8 py-7 bg-[#111111] rounded-2xl border border-white/10 shadow-2xl">
                 <PhosraBurst size={56} color="#00D47E" opacity={0.9} animate />
-                <span className="text-white text-xs font-bold tracking-wide mt-1">PHOSRA API</span>
+                <span className="text-white text-xs font-bold font-display tracking-wide mt-1">PHOSRA API</span>
                 <div className="flex flex-col items-center gap-0.5 mt-1.5">
-                  <span className="text-[8px] text-white/35 uppercase tracking-wider">Regulatory Intelligence</span>
-                  <span className="text-[8px] text-white/35 uppercase tracking-wider">Policy Resolution</span>
-                  <span className="text-[8px] text-white/35 uppercase tracking-wider">Universal Enforcement</span>
+                  <span className="text-[9px] text-white/35 uppercase tracking-wider">Regulatory Intelligence</span>
+                  <span className="text-[9px] text-white/35 uppercase tracking-wider">Policy Resolution</span>
+                  <span className="text-[9px] text-white/35 uppercase tracking-wider">Universal Enforcement</span>
                 </div>
               </div>
             </div>
@@ -170,8 +170,8 @@ export function HubVisualization({ sources, targets }: HubVisualizationProps) {
             <div className="relative flex items-center gap-3 px-6 py-4 bg-[#111111] rounded-xl border border-white/10 shadow-xl">
               <PhosraBurst size={36} color="#00D47E" opacity={0.9} animate />
               <div>
-                <span className="text-white text-xs font-bold">PHOSRA API</span>
-                <p className="text-[8px] text-white/35 uppercase tracking-wider mt-0.5">Universal Enforcement</p>
+                <span className="text-white text-xs font-bold font-display">PHOSRA API</span>
+                <p className="text-[9px] text-white/35 uppercase tracking-wider mt-0.5">Universal Enforcement</p>
               </div>
             </div>
           </div>

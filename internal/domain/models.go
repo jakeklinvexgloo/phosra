@@ -143,7 +143,7 @@ type ChildPolicy struct {
 	UpdatedAt time.Time    `json:"updated_at"`
 }
 
-// RuleCategory enumerates all 26 rule types.
+// RuleCategory enumerates all 40 rule types.
 type RuleCategory string
 
 const (
@@ -201,9 +201,16 @@ const (
 	RuleAgeGate                 RuleCategory = "age_gate"
 	RuleDataDeletionRequest     RuleCategory = "data_deletion_request"
 	RuleGeolocationOptIn        RuleCategory = "geolocation_opt_in"
+
+	// Compliance expansion rules
+	RuleCSAMReporting           RuleCategory = "csam_reporting"
+	RuleLibraryFilterCompliance RuleCategory = "library_filter_compliance"
+	RuleAIMinorInteraction      RuleCategory = "ai_minor_interaction"
+	RuleSocialMediaMinAge       RuleCategory = "social_media_min_age"
+	RuleImageRightsMinor        RuleCategory = "image_rights_minor"
 )
 
-// AllRuleCategories returns all 35 rule categories.
+// AllRuleCategories returns all 40 rule categories.
 func AllRuleCategories() []RuleCategory {
 	return []RuleCategory{
 		RuleContentRating, RuleContentBlockTitle, RuleContentAllowTitle,
@@ -220,6 +227,8 @@ func AllRuleCategories() []RuleCategory {
 		RuleNotificationCurfew, RuleUsageTimerNotification,
 		RuleTargetedAdBlock, RuleDMRestriction, RuleAgeGate,
 		RuleDataDeletionRequest, RuleGeolocationOptIn,
+		RuleCSAMReporting, RuleLibraryFilterCompliance, RuleAIMinorInteraction,
+		RuleSocialMediaMinAge, RuleImageRightsMinor,
 	}
 }
 

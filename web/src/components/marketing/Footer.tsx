@@ -24,10 +24,12 @@ const FOOTER_SECTIONS = [
   {
     title: "Compliance",
     links: [
+      { label: "Compliance Hub", href: "/compliance" },
       { label: "KOSA", href: "/compliance/kosa" },
-      { label: "COPPA 2.0", href: "/compliance/coppa" },
-      { label: "EU DSA", href: "/compliance/dsa" },
-      { label: "Platform Standards", href: "/platforms" },
+      { label: "COPPA 2.0", href: "/compliance/coppa-2" },
+      { label: "EU DSA", href: "/compliance/eu-dsa" },
+      { label: "UK Online Safety", href: "/compliance/uk-osa" },
+      { label: "All 50+ Laws →", href: "/compliance" },
     ],
   },
   {

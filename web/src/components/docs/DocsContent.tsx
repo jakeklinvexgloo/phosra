@@ -3,8 +3,9 @@
 import { useState } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { LEGISLATION_REFERENCE } from "@/lib/docs/legislation"
 import { NEW_CATEGORIES, CATEGORY_REFERENCE, CATEGORY_GROUPS } from "@/lib/docs/categories"
+import { LegislationSection } from "@/components/docs/LegislationSection"
+import { LEGISLATION_REFERENCE } from "@/lib/compliance/adapters/to-legislation"
 import { AGE_DEFAULTS_TABLE, AGE_RATING_TABLE } from "@/lib/docs/ratings"
 import { RECIPES } from "@/lib/docs/recipes"
 import { ENDPOINTS, getEndpointsBySection } from "@/lib/docs/endpoints"
@@ -34,8 +35,8 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
   const [docsTab, setDocsTab] = useState<"specification" | "recipes">("specification")
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
   const [categoryFilter, setCategoryFilter] = useState("")
-  const [expandedLegislation, setExpandedLegislation] = useState<Set<string>>(new Set())
   const [expandedRecipes, setExpandedRecipes] = useState<Set<string>>(new Set())
+  const [expandedLegislation, setExpandedLegislation] = useState<Set<string>>(new Set())
 
   const toggleRecipe = (id: string) => {
     setExpandedRecipes(prev => {
