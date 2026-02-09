@@ -42,9 +42,7 @@ function StatCard({ label, target, suffix = "", icon }: StatItem) {
 
   return (
     <div className="glass-card text-center py-6 px-4">
-      {/* Gradient accent line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-brand-green/0 via-brand-green/40 to-brand-green/0" />
-      <div className="flex justify-center mb-3 text-brand-green">
+      <div className="flex justify-center mb-3 text-white/40">
         {icon}
       </div>
       <p className="text-3xl sm:text-4xl font-display text-white">

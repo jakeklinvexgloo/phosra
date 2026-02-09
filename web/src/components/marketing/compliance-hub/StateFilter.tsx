@@ -14,7 +14,7 @@ export function StateFilter({ states, active, onSelect }: StateFilterProps) {
         onClick={() => onSelect(null)}
         className={`px-2.5 py-1 text-xs font-medium rounded-full transition-colors ${
           active === null
-            ? "bg-amber-500/10 text-amber-600"
+            ? "bg-foreground text-background"
             : "bg-muted text-muted-foreground hover:text-foreground"
         }`}
       >
@@ -27,7 +27,7 @@ export function StateFilter({ states, active, onSelect }: StateFilterProps) {
           onClick={() => onSelect(state)}
           className={`px-2.5 py-1 text-xs font-medium rounded-full transition-colors ${
             active === state
-              ? "bg-amber-500/10 text-amber-600"
+              ? "bg-foreground text-background"
               : "bg-muted text-muted-foreground hover:text-foreground"
           }`}
         >

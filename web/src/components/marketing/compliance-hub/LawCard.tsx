@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { JURISDICTION_META, STATUS_META } from "@/lib/compliance/types"
+import { STATUS_META } from "@/lib/compliance/types"
 import { getCountryFlag } from "@/lib/compliance/country-flags"
 import type { LawEntry } from "@/lib/compliance/types"
 
@@ -12,7 +12,6 @@ interface LawCardProps {
 }
 
 export function LawCard({ law }: LawCardProps) {
-  const jMeta = JURISDICTION_META[law.jurisdictionGroup]
   const sMeta = STATUS_META[law.status]
   const flag = getCountryFlag(law.country)
 
@@ -26,10 +25,8 @@ export function LawCard({ law }: LawCardProps) {
     <Link
       href={`/compliance/${law.id}`}
       className="relative block p-5 rounded-xl border border-border bg-card
-        shadow-sm hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-200 group overflow-hidden"
+        hover:shadow-md hover:border-foreground/20 transition-all duration-200 group overflow-hidden"
     >
-      {/* Top accent bar */}
-      <div className={`absolute top-0 left-0 right-0 h-[3px] ${jMeta.accentColor}`} />
 
       {/* Guide badge */}
       {law.detailedPage && (
@@ -66,7 +63,7 @@ export function LawCard({ law }: LawCardProps) {
 
         {hasCoverage && (
           <div className="flex items-center gap-1.5">
-            <div className="w-20 h-1.5 rounded-full bg-muted overflow-hidden">
+            <div className="w-20 h-1.5 rounded-full bg-foreground/10 overflow-hidden">
               <div
                 className="h-full rounded-full bg-brand-green transition-all"
                 style={{ width: `${coveragePct}%` }}

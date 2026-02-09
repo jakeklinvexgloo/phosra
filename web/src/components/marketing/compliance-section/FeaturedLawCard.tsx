@@ -85,7 +85,7 @@ export function FeaturedLawCard({ law }: FeaturedLawCardProps) {
 
   return (
     <div
-      className={`plaid-card border-l-4 ${jMeta.borderColor} overflow-hidden`}
+      className="plaid-card border-l-2 border-l-foreground/20 overflow-hidden"
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-3">

@@ -1,7 +1,5 @@
 "use client"
 
-import { STATUS_META } from "@/lib/compliance/types"
-import type { LawStatus } from "@/lib/compliance/types"
 
 interface StatusFilterProps {
   active: string
@@ -21,7 +19,7 @@ export function StatusFilter({ active, onSelect }: StatusFilterProps) {
     <div className="flex flex-wrap gap-2">
       {PILLS.map((pill) => {
         const isActive = active === pill.id
-        const meta = pill.id !== "all" ? STATUS_META[pill.id as LawStatus] : null
+        const isStatusPill = pill.id !== "all"
 
         return (
           <button
@@ -30,10 +28,10 @@ export function StatusFilter({ active, onSelect }: StatusFilterProps) {
             className={`
               px-3 py-1.5 text-xs font-medium rounded-full transition-colors
               ${
-                isActive && meta
-                  ? `${meta.bgColor} ${meta.textColor}`
+                isActive && isStatusPill
+                  ? "bg-foreground/10 text-foreground font-medium"
                   : isActive
-                    ? "bg-brand-green/10 text-brand-green"
+                    ? "bg-foreground text-background"
                     : "bg-muted text-muted-foreground hover:text-foreground"
               }
             `}

@@ -3,7 +3,6 @@
 import { useState, type ReactNode } from "react"
 import { ChevronDown } from "lucide-react"
 import type { LawEntry } from "@/lib/compliance/types"
-import { STATUS_META } from "@/lib/compliance/types"
 
 interface JurisdictionGroupProps {
   flag: string
@@ -43,7 +42,7 @@ export function JurisdictionGroup({
     : null
 
   return (
-    <div className={`border-l-4 ${borderColor} rounded-lg bg-card border border-border overflow-hidden`}>
+    <div className="border-l-2 border-l-foreground/20 rounded-lg bg-card border border-border overflow-hidden">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -59,19 +58,19 @@ export function JurisdictionGroup({
             <div className="hidden sm:flex items-center gap-1 ml-1">
               {statusCounts.enacted > 0 && (
                 <span className="flex items-center gap-0.5">
-                  <span className={`w-1.5 h-1.5 rounded-full ${STATUS_META.enacted.dotColor}`} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-foreground" />
                   <span className="text-[10px] text-muted-foreground">{statusCounts.enacted}</span>
                 </span>
               )}
               {statusCounts.passed > 0 && (
                 <span className="flex items-center gap-0.5">
-                  <span className={`w-1.5 h-1.5 rounded-full ${STATUS_META.passed.dotColor}`} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-foreground/40" />
                   <span className="text-[10px] text-muted-foreground">{statusCounts.passed}</span>
                 </span>
               )}
               {statusCounts.pending > 0 && (
                 <span className="flex items-center gap-0.5">
-                  <span className={`w-1.5 h-1.5 rounded-full ${STATUS_META.pending.dotColor}`} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-foreground/20" />
                   <span className="text-[10px] text-muted-foreground">{statusCounts.pending}</span>
                 </span>
               )}

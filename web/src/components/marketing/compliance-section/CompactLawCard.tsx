@@ -16,7 +16,7 @@ export function CompactLawCard({ law }: CompactLawCardProps) {
   return (
     <Link
       href={`/compliance/${law.id}`}
-      className={`block plaid-card border-l-4 ${jMeta.borderColor} hover:border-brand-green/50 transition-colors group`}
+      className="block plaid-card border-l-2 border-l-foreground/20 hover:border-foreground/40 transition-colors group"
     >
       <div className="flex items-start justify-between mb-2">
         <h3 className="text-sm font-semibold text-foreground">

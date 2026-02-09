@@ -88,8 +88,7 @@ export default function ComplianceHubPage() {
                 Compliance Hub
               </p>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display text-white leading-tight">
-                <span className="bg-gradient-to-r from-brand-green to-[#26A8C9] bg-clip-text text-transparent">Global</span>{" "}
-                Child Safety Compliance Hub
+                Global Child Safety Compliance Hub
               </h1>
               <p className="text-base sm:text-lg text-white/60 mt-6 leading-relaxed">
                 The most comprehensive database of child online safety
