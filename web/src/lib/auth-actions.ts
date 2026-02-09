@@ -13,6 +13,6 @@ export async function signIn() {
 }
 
 export async function signUp() {
-  const url = await getSignUpUrl()
+  const url = await getSignUpUrl({ prompt: "consent" })
   redirect(url)
 }
