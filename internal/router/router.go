@@ -115,7 +115,7 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 			if o.sandboxMode {
 				r.Use(middleware.SandboxAuth(userRepo))
 			} else {
-				r.Use(middleware.WorkOSAuth(o.workosClientID, userRepo))
+				r.Use(middleware.HybridAuth(o.workosClientID, userRepo))
 			}
 
 			// Auth

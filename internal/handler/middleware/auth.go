@@ -115,6 +115,25 @@ func WorkOSAuth(clientID string, userRepo repository.UserRepository) func(http.H
 	}
 }
 
+// HybridAuth routes sandbox-* tokens to SandboxAuth and all other tokens
+// to WorkOSAuth. This allows the MCP Playground to work in production
+// without enabling full sandbox mode.
+func HybridAuth(clientID string, userRepo repository.UserRepository) func(http.Handler) http.Handler {
+	sandboxMw := SandboxAuth(userRepo)
+	workosMw := WorkOSAuth(clientID, userRepo)
+
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			auth := r.Header.Get("Authorization")
+			if strings.HasPrefix(auth, "Bearer sandbox-") || r.Header.Get("X-Sandbox-Session") != "" {
+				sandboxMw(next).ServeHTTP(w, r)
+				return
+			}
+			workosMw(next).ServeHTTP(w, r)
+		})
+	}
+}
+
 // GetUserID extracts the local user UUID from context.
 func GetUserID(ctx context.Context) uuid.UUID {
 	id, _ := ctx.Value(UserIDKey).(uuid.UUID)
