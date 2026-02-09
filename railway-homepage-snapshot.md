@@ -1,0 +1,1666 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "VercelLogotype" [ref=e5] [cursor=pointer]:
+        - /url: /home
+        - img "VercelLogotype" [ref=e6]
+      - navigation "Main" [ref=e9]:
+        - list [ref=e11]:
+          - listitem [ref=e12]:
+            - button "Products" [ref=e13] [cursor=pointer]:
+              - text: Products
+              - generic:
+                - img
+            - generic:
+              - list:
+                - listitem:
+                  - heading [level=5]:
+                    - link:
+                      - /url: /ai
+                      - text: AI Cloud
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: https://v0.app
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: v0
+                          - paragraph: Build applications with AI
+                    - listitem:
+                      - link:
+                        - /url: https://sdk.vercel.ai/
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: AI SDK
+                          - paragraph: The AI Toolkit for TypeScript
+                    - listitem:
+                      - link:
+                        - /url: /ai-gateway
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: AI Gateway
+                          - paragraph: One endpoint, all your models
+                    - listitem:
+                      - link:
+                        - /url: /agent
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Vercel Agent
+                          - paragraph: An agent that knows your stack
+                    - listitem:
+                      - link:
+                        - /url: /sandbox
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Sandbox
+                          - paragraph: AI workflows in live environments
+                - listitem:
+                  - heading [level=5]: Core Platform
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /products/previews
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: CI/CD
+                          - paragraph: Helping teams ship 6× faster
+                    - listitem:
+                      - link:
+                        - /url: /products/rendering
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Content Delivery
+                          - paragraph: Fast, scalable, and reliable
+                    - listitem:
+                      - link:
+                        - /url: /fluid
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Fluid Compute
+                          - paragraph: Servers, in serverless form
+                    - listitem:
+                      - link:
+                        - /url: /products/observability
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Observability
+                          - paragraph: Trace every step
+                - listitem:
+                  - heading [level=5]:
+                    - link:
+                      - /url: /security
+                      - text: Security
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /security/bot-management
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Bot Management
+                          - paragraph: Scalable bot protection
+                    - listitem:
+                      - link:
+                        - /url: /botid
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: BotID
+                          - paragraph: Invisible CAPTCHA
+                    - listitem:
+                      - link:
+                        - /url: /security
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Platform Security
+                          - paragraph: DDoS Protection, Firewall
+                    - listitem:
+                      - link:
+                        - /url: /security/web-application-firewall
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Web Application Firewall
+                          - paragraph: Granular, custom protection
+          - listitem [ref=e14]:
+            - button "Resources" [ref=e15] [cursor=pointer]:
+              - text: Resources
+              - generic:
+                - img
+            - generic:
+              - list:
+                - listitem:
+                  - heading [level=5]: Company
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /customers
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Customers
+                          - paragraph: Trusted by the best teams
+                    - listitem:
+                      - link:
+                        - /url: /blog
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Blog
+                          - paragraph: The latest posts and changes
+                    - listitem:
+                      - link:
+                        - /url: /changelog
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Changelog
+                          - paragraph: See what shipped
+                    - listitem:
+                      - link:
+                        - /url: /press
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Press
+                          - paragraph: Read the latest news
+                    - listitem:
+                      - link:
+                        - /url: /events
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Events
+                          - paragraph: Join us at an event
+                - listitem:
+                  - heading [level=5]: Learn
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /docs
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Docs
+                          - paragraph: Vercel documentation
+                    - listitem:
+                      - link:
+                        - /url: /academy
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Academy
+                          - paragraph: Linear courses to level up
+                    - listitem:
+                      - link:
+                        - /url: /kb
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Knowledge Base
+                          - paragraph: Find help quickly
+                    - listitem:
+                      - link:
+                        - /url: https://community.vercel.com/
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Community
+                          - paragraph: Join the conversation
+                - listitem:
+                  - heading [level=5]: Open Source
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /frameworks/nextjs
+                        - generic:
+                          - generic:
+                            - img
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Next.js
+                          - paragraph: The native Next.js platform
+                    - listitem:
+                      - link:
+                        - /url: https://nuxt.com/
+                        - generic:
+                          - generic:
+                            - img
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Nuxt
+                          - paragraph: The progressive web framework
+                    - listitem:
+                      - link:
+                        - /url: https://svelte.dev/
+                        - generic:
+                          - generic:
+                            - img
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Svelte
+                          - paragraph: The web’s efficient UI framework
+                    - listitem:
+                      - link:
+                        - /url: /solutions/turborepo
+                        - generic:
+                          - generic:
+                            - img
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Turborepo
+                          - paragraph: Speed with Enterprise scale
+          - listitem [ref=e16]:
+            - button "Solutions" [ref=e17] [cursor=pointer]:
+              - text: Solutions
+              - generic:
+                - img
+            - generic:
+              - list:
+                - listitem:
+                  - heading [level=5]: Use Cases
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /ai
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: AI Apps
+                          - paragraph: Deploy at the speed of AI
+                    - listitem:
+                      - link:
+                        - /url: /solutions/composable-commerce
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Composable Commerce
+                          - paragraph: Power storefronts that convert
+                    - listitem:
+                      - link:
+                        - /url: /solutions/marketing-sites
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Marketing Sites
+                          - paragraph: Launch campaigns fast
+                    - listitem:
+                      - link:
+                        - /url: /solutions/multi-tenant-saas
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Multi-tenant Platforms
+                          - paragraph: Scale apps with one codebase
+                    - listitem:
+                      - link:
+                        - /url: /solutions/web-apps
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Web Apps
+                          - paragraph: Ship features, not infrastructure
+                - listitem:
+                  - heading [level=5]: Tools
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /marketplace
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Marketplace
+                          - paragraph: Extend and automate workflows
+                    - listitem:
+                      - link:
+                        - /url: /templates
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Templates
+                          - paragraph: Jumpstart app development
+                    - listitem:
+                      - link:
+                        - /url: /partners/solution-partners
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Partner Finder
+                          - paragraph: Get help from solution partners
+                - listitem:
+                  - heading [level=5]: Users
+                  - list:
+                    - listitem:
+                      - link:
+                        - /url: /solutions/platform-engineering
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Platform Engineers
+                          - paragraph: Automate away repetition
+                    - listitem:
+                      - link:
+                        - /url: /solutions/design-engineering
+                        - generic:
+                          - generic:
+                            - img
+                        - generic:
+                          - generic: Design Engineers
+                          - paragraph: Deploy for every idea
+          - listitem [ref=e18]:
+            - link "Enterprise" [ref=e19] [cursor=pointer]:
+              - /url: /enterprise
+          - listitem [ref=e20]:
+            - link "Pricing" [ref=e21] [cursor=pointer]:
+              - /url: /pricing
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - link "Log In" [ref=e24] [cursor=pointer]:
+          - /url: /login
+          - generic [ref=e25]: Log In
+        - link "Contact" [ref=e26] [cursor=pointer]:
+          - /url: /contact/sales
+          - generic [ref=e27]: Contact
+      - generic [ref=e28]:
+        - link [ref=e29] [cursor=pointer]:
+          - /url: /signup
+          - generic [ref=e30]: Sign Up
+        - link "Sign Up" [ref=e31] [cursor=pointer]:
+          - /url: /signup
+          - generic [ref=e33]: Sign Up
+  - main [ref=e34]:
+    - generic [ref=e37]:
+      - generic [ref=e42]:
+        - heading "Find a plan to power your apps." [level=1] [ref=e43]
+        - paragraph [ref=e44]: Vercel supports teams of all sizes, with pricing that scales.
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e52]:
+            - generic [ref=e54]: Hobby
+            - generic [ref=e55]:
+              - paragraph [ref=e56]: The perfect starting place for your web app or personal project.
+              - paragraph [ref=e57]: Free forever.
+            - generic [ref=e58]:
+              - generic [ref=e59]:
+                - img [ref=e61]
+                - generic [ref=e63]: Import your repo, deploy in seconds
+              - generic [ref=e64]:
+                - img [ref=e66]
+                - generic [ref=e68]: Automatic CI/CD
+              - generic [ref=e69]:
+                - img [ref=e71]
+                - generic [ref=e73]: Web Application Firewall
+              - generic [ref=e74]:
+                - img [ref=e76]
+                - generic [ref=e78]: Global, automated CDN
+              - generic [ref=e79]:
+                - img [ref=e81]
+                - generic [ref=e83]: Fluid compute
+              - generic [ref=e84]:
+                - img [ref=e86]
+                - generic [ref=e88]: DDoS Mitigation
+              - generic [ref=e89]:
+                - img [ref=e91]
+                - generic [ref=e93]: Traffic & performance insights
+          - link "Start Deploying" [ref=e95] [cursor=pointer]:
+            - /url: /new
+            - generic [ref=e97]: Start Deploying
+            - img [ref=e99]
+        - generic [ref=e101]:
+          - paragraph [ref=e103]: Popular
+          - generic [ref=e105]:
+            - generic [ref=e107]: Pro
+            - generic [ref=e108]:
+              - paragraph [ref=e109]: Everything you need to build and scale your app.
+              - paragraph [ref=e110]: $20/mo + additional usage
+            - generic [ref=e111]:
+              - generic [ref=e113]: "All Hobby features, plus:"
+              - generic [ref=e114]:
+                - img [ref=e116]
+                - generic [ref=e118]: $20 of included usage credit
+              - generic [ref=e119]:
+                - img [ref=e121]
+                - generic [ref=e123]: Advanced spend management
+              - generic [ref=e124]:
+                - img [ref=e126]
+                - generic [ref=e128]: Team collaboration & free viewer seats
+              - generic [ref=e129]:
+                - img [ref=e131]
+                - generic [ref=e133]: Faster builds + no queues
+              - generic [ref=e134]:
+                - img [ref=e136]
+                - generic [ref=e138]: Cold start prevention
+              - generic [ref=e139]:
+                - img [ref=e141]
+                - generic [ref=e143]: Enterprise add-ons
+          - generic [ref=e145]:
+            - link [ref=e146] [cursor=pointer]:
+              - /url: /signup?plan=pro&next=/dashboard
+              - generic [ref=e148]: Start a free trial
+              - img [ref=e150]
+            - link "Start a free trial" [ref=e152] [cursor=pointer]:
+              - /url: /signup?plan=pro&next=/dashboard
+              - generic [ref=e154]: Start a free trial
+              - img [ref=e156]
+        - generic [ref=e158]:
+          - generic [ref=e160]:
+            - generic [ref=e162]: Enterprise
+            - generic [ref=e163]:
+              - paragraph [ref=e164]: Critical security, performance, observability, platform SLAs, and support.
+              - paragraph
+            - generic [ref=e165]:
+              - generic [ref=e167]: "All Pro features, plus:"
+              - generic [ref=e168]:
+                - img [ref=e170]
+                - generic [ref=e172]: Guest & Team access controls
+              - generic [ref=e173]:
+                - img [ref=e175]
+                - generic [ref=e177]: SCIM & Directory Sync
+              - generic [ref=e178]:
+                - img [ref=e180]
+                - generic [ref=e182]: Managed WAF Rulesets
+              - generic [ref=e183]:
+                - img [ref=e185]
+                - generic [ref=e187]: Multi-region compute & failover
+              - generic [ref=e188]:
+                - img [ref=e190]
+                - generic [ref=e192]: 99.99% SLA
+              - generic [ref=e193]:
+                - img [ref=e195]
+                - generic [ref=e197]: Advanced Support
+          - generic [ref=e198]:
+            - link "Get a demo" [ref=e199] [cursor=pointer]:
+              - /url: https://vercel.com/contact/sales/pricing
+              - generic [ref=e201]: Get a demo
+              - img [ref=e203]
+            - link "Request Trial" [ref=e205] [cursor=pointer]:
+              - /url: /contact/sales/enterprise-trial
+              - generic [ref=e207]: Request Trial
+      - generic [ref=e210]:
+        - paragraph [ref=e212]: Get started with v0. Generate quality UI, and ship applications end-to-end.
+        - link "Start building with v0" [ref=e213] [cursor=pointer]:
+          - /url: https://v0.dev
+          - generic [ref=e215]:
+            - text: Start building with v0
+            - img [ref=e216]
+    - generic [ref=e221]:
+      - generic [ref=e223]:
+        - generic [ref=e225]: Features
+        - generic [ref=e226]:
+          - generic [ref=e227]: Hobby
+          - link "Start Deploying" [ref=e228] [cursor=pointer]:
+            - /url: /new
+            - generic [ref=e230]: Start Deploying
+        - generic [ref=e231]:
+          - generic [ref=e232]: Pro
+          - link "Start a free trial" [ref=e233] [cursor=pointer]:
+            - /url: /signup?plan=pro&next=/dashboard
+            - generic [ref=e235]: Start a free trial
+        - generic [ref=e236]:
+          - generic [ref=e237]: Enterprise
+          - link "Get a demo" [ref=e238] [cursor=pointer]:
+            - /url: https://vercel.com/contact/sales/pricing
+            - generic [ref=e240]: Get a demo
+      - generic:
+        - tablist:
+          - tab "Hobby" [selected]
+          - tab "Pro"
+          - tab "Enterprise"
+        - link "Start Deploying":
+          - /url: /new
+          - generic:
+            - generic: Start Deploying
+      - generic [ref=e242]:
+        - paragraph [ref=e243]: Managed Infrastructure
+        - generic [ref=e244]:
+          - img [ref=e246]
+          - heading "Vercel Delivery Network" [level=3] [ref=e248]
+        - paragraph [ref=e250]: Ultra-fast, secure by default global application delivery.
+      - generic [ref=e251]:
+        - heading "Vercel Network" [level=3] [ref=e254]
+        - paragraph [ref=e260]: Global Points of Presence
+        - img [ref=e262]
+        - img [ref=e265]
+        - img [ref=e268]
+        - paragraph [ref=e272]: Vercel Regions
+        - img [ref=e274]
+        - img [ref=e277]
+        - img [ref=e280]
+        - paragraph [ref=e284]: Automatic Routing
+        - img [ref=e286]
+        - img [ref=e289]
+        - img [ref=e292]
+        - paragraph [ref=e296]: HTTPS Certificates
+        - img [ref=e298]
+        - img [ref=e301]
+        - img [ref=e304]
+        - paragraph [ref=e308]: TLS/SSL Encryption
+        - img [ref=e310]
+        - img [ref=e313]
+        - img [ref=e316]
+        - paragraph [ref=e320]: Traffic Load Balancing
+        - img [ref=e322]
+        - img [ref=e325]
+        - img [ref=e328]
+        - paragraph [ref=e332]: Private Inter-Region Network
+        - img [ref=e334]
+        - img [ref=e337]
+        - img [ref=e340]
+        - paragraph [ref=e344]: Automatic Region Failover
+        - img [ref=e346]
+        - img [ref=e349]
+        - img [ref=e352]
+      - generic [ref=e354]:
+        - heading "Configurable Routing" [level=3] [ref=e357]
+        - paragraph [ref=e363]: Reverse Proxy
+        - img [ref=e365]
+        - img [ref=e368]
+        - img [ref=e371]
+        - paragraph [ref=e375]: Rewrites
+        - img [ref=e377]
+        - img [ref=e380]
+        - img [ref=e383]
+        - paragraph [ref=e387]: Redirects
+        - img [ref=e389]
+        - img [ref=e392]
+        - img [ref=e395]
+        - paragraph [ref=e399]: Middleware Support
+        - img [ref=e401]
+        - img [ref=e404]
+        - img [ref=e407]
+      - generic [ref=e409]:
+        - link "Edge Requests" [ref=e410] [cursor=pointer]:
+          - /url: https://vercel.com/docs/pricing/networking#edge-requests
+          - heading "Edge Requests" [level=3] [ref=e412]:
+            - text: Edge Requests
+            - img [ref=e414]
+        - generic [ref=e419]: 1M / month included
+        - generic [ref=e421]:
+          - generic [ref=e422]: 10M / month included (up to $32 in value)
+          - generic [ref=e423]: then starting at $2 per 1M
+        - generic [ref=e426]: Custom
+      - generic [ref=e427]:
+        - link "Fast Data Transfer" [ref=e428] [cursor=pointer]:
+          - /url: https://vercel.com/docs/pricing/networking#fast-data-transfer
+          - heading "Fast Data Transfer" [level=3] [ref=e430]:
+            - text: Fast Data Transfer
+            - img [ref=e432]
+        - generic [ref=e437]: 100 GB / month included
+        - generic [ref=e439]:
+          - generic [ref=e440]: 1TB / month included (up to $350 in value)
+          - generic [ref=e441]: then starting at $0.15 per GB
+        - generic [ref=e444]: Custom
+      - link "Regional pricing" [ref=e449] [cursor=pointer]:
+        - /url: https://vercel.com/docs/pricing/regional-pricing
+        - text: Regional pricing
+        - img [ref=e450]
+      - generic [ref=e454]:
+        - paragraph [ref=e455]: Managed Infrastructure
+        - generic [ref=e456]:
+          - img [ref=e458]
+          - heading "Vercel Firewall" [level=3] [ref=e460]
+        - paragraph [ref=e462]: Customizable security to protect your applications.
+      - generic [ref=e463]:
+        - heading "Web Application Firewall" [level=3] [ref=e466]:
+          - text: Web Application Firewall
+          - img [ref=e468]
+        - paragraph [ref=e476]: Custom Firewall Rules
+        - paragraph [ref=e479]: Up to 3
+        - paragraph [ref=e482]: Up to 40
+        - paragraph [ref=e485]: Up to 1,000
+        - paragraph [ref=e488]: IP Blocking
+        - paragraph [ref=e491]: Up to 3
+        - paragraph [ref=e494]: Up to 100
+        - paragraph [ref=e497]: Up to 1,000
+        - paragraph [ref=e500]: System Bypass Rules
+        - generic [ref=e502]: —
+        - paragraph [ref=e505]: Up to 25
+        - paragraph [ref=e508]: Up to 100
+        - paragraph [ref=e511]:
+          - text: Rate Limiting
+          - img [ref=e513]
+        - paragraph [ref=e518]: 1M allowed requests included / month
+        - paragraph [ref=e521]: Starting at $0.50 per 1M allowed requests
+        - paragraph [ref=e524]: Custom
+        - paragraph [ref=e527]: OWASP Core Ruleset (managed)
+        - generic [ref=e529]: —
+        - generic [ref=e531]: —
+        - paragraph [ref=e534]: Custom
+      - generic [ref=e535]:
+        - heading "Bot Management" [level=3] [ref=e538]
+        - paragraph [ref=e544]: Automated DDoS Mitigation
+        - img [ref=e546]
+        - img [ref=e549]
+        - img [ref=e552]
+        - paragraph [ref=e556]: AI Bots (managed ruleset)
+        - img [ref=e558]
+        - img [ref=e561]
+        - img [ref=e564]
+        - paragraph [ref=e568]: Bot Protection (managed ruleset)
+        - img [ref=e570]
+        - img [ref=e573]
+        - img [ref=e576]
+        - paragraph [ref=e580]:
+          - text: BotID
+          - img [ref=e582]
+        - paragraph [ref=e587]: Basic checks included
+        - paragraph [ref=e590]: $1 per 1,000 Deep Analysis checks
+        - paragraph [ref=e593]: Custom
+        - paragraph [ref=e596]: Attack Challenge Mode
+        - img [ref=e598]
+        - img [ref=e601]
+        - img [ref=e604]
+      - link "Regional pricing" [ref=e610] [cursor=pointer]:
+        - /url: https://vercel.com/docs/pricing/regional-pricing
+        - text: Regional pricing
+        - img [ref=e611]
+      - generic [ref=e615]:
+        - paragraph [ref=e616]: Managed Infrastructure
+        - generic [ref=e617]:
+          - img [ref=e619]
+          - heading "Content, Caching & Optimization" [level=3] [ref=e621]
+        - paragraph [ref=e623]: Store and cache content close to your customers.
+      - generic [ref=e624]:
+        - heading "Content Delivery" [level=3] [ref=e627]
+        - paragraph [ref=e633]: Zero-config CDN cache
+        - img [ref=e635]
+        - img [ref=e638]
+        - img [ref=e641]
+        - paragraph [ref=e645]: Automated Compression
+        - img [ref=e647]
+        - img [ref=e650]
+        - img [ref=e653]
+        - paragraph [ref=e657]: Background Revalidation
+        - img [ref=e659]
+        - img [ref=e662]
+        - img [ref=e665]
+        - paragraph [ref=e669]: Stale-While-Revalidate
+        - img [ref=e671]
+        - img [ref=e674]
+        - img [ref=e677]
+      - generic [ref=e679]:
+        - heading "Incremental Static Regeneration (ISR)" [level=3] [ref=e682]:
+          - text: Incremental Static Regeneration (ISR)
+          - img [ref=e684]
+        - paragraph [ref=e692]:
+          - text: ISR Reads
+          - img [ref=e694]
+        - paragraph [ref=e699]: 1M / month included
+        - paragraph [ref=e702]: Starting at $0.40 per 1M
+        - paragraph [ref=e705]: Custom
+        - paragraph [ref=e708]:
+          - text: ISR Writes
+          - img [ref=e710]
+        - paragraph [ref=e715]: 200,000 / month included
+        - paragraph [ref=e718]: Starting at $4 per 1M
+        - paragraph [ref=e721]: Custom
+      - generic [ref=e722]:
+        - heading "Bulk Redirects" [level=3] [ref=e725]
+        - generic [ref=e728]:
+          - paragraph [ref=e729]: 1K included per project
+          - paragraph [ref=e730]: $50 per month per 25K redirects
+        - paragraph [ref=e733]: Custom
+      - generic [ref=e734]:
+        - heading "Blob" [level=3] [ref=e737]:
+          - text: Blob
+          - img [ref=e739]
+        - paragraph [ref=e747]:
+          - text: Storage Size
+          - img [ref=e749]
+        - paragraph [ref=e754]: 1 GB / month included
+        - paragraph [ref=e757]: $0.023 per GB
+        - paragraph [ref=e760]: Custom
+        - paragraph [ref=e763]:
+          - text: Simple Operations
+          - img [ref=e765]
+        - paragraph [ref=e770]: 10,000 / month included
+        - paragraph [ref=e773]: $0.40 per 1M
+        - paragraph [ref=e776]: Custom
+        - paragraph [ref=e779]:
+          - text: Advanced Operations
+          - img [ref=e781]
+        - paragraph [ref=e786]: 2,000 / month included
+        - paragraph [ref=e789]: $5.00 per 1M
+        - paragraph [ref=e792]: Custom
+        - paragraph [ref=e795]:
+          - text: Blob Data Transfer
+          - img [ref=e797]
+        - paragraph [ref=e802]: 10 GB / month included
+        - paragraph [ref=e805]: Starting at $0.05 per GB
+        - paragraph [ref=e808]: Custom
+      - generic [ref=e809]:
+        - heading "Image Optimization" [level=3] [ref=e812]
+        - paragraph [ref=e818]:
+          - text: Image Transformations
+          - img [ref=e820]
+        - paragraph [ref=e825]: 5,000 / month included
+        - paragraph [ref=e828]: Starting at $0.05 per 1K
+        - paragraph [ref=e831]: Custom
+        - paragraph [ref=e834]:
+          - text: Image Cache Reads
+          - img [ref=e836]
+        - paragraph [ref=e841]: 300,000 / month included
+        - paragraph [ref=e844]: Starting at $0.40 per 1M
+        - paragraph [ref=e847]: Custom
+        - paragraph [ref=e850]:
+          - text: Image Cache Writes
+          - img [ref=e852]
+        - paragraph [ref=e857]: 100,000 / month included
+        - paragraph [ref=e860]: Starting at $4.00 per 1M
+        - paragraph [ref=e863]: Custom
+      - generic [ref=e864]:
+        - heading "Edge Config" [level=3] [ref=e867]
+        - paragraph [ref=e873]:
+          - text: Edge Config Reads
+          - img [ref=e875]
+        - paragraph [ref=e880]: 100,000 / month included
+        - paragraph [ref=e883]: Starting at $3.00 per 1M reads
+        - paragraph [ref=e886]: Custom
+        - paragraph [ref=e889]:
+          - text: Edge Config Writes
+          - img [ref=e891]
+        - paragraph [ref=e896]: 100 writes / month included
+        - paragraph [ref=e899]: $5.00 per 500 writes
+        - paragraph [ref=e902]: Custom
+      - generic [ref=e903]:
+        - heading "Microfrontends Support" [level=3] [ref=e906]
+        - img [ref=e908]
+        - img [ref=e911]
+        - img [ref=e914]
+        - paragraph [ref=e918]: Microfrontends
+        - paragraph [ref=e921]: 2 included projects
+        - generic [ref=e923]:
+          - paragraph [ref=e924]: 2 included projects
+          - paragraph [ref=e925]: then $250 per additional project
+        - paragraph [ref=e928]: Custom
+        - paragraph [ref=e931]: Microfrontend Routing
+        - paragraph [ref=e934]: 50K routed requests / month included
+        - paragraph [ref=e937]: $2 per 1M routed requests
+        - paragraph [ref=e940]: Custom
+      - link "Regional pricing" [ref=e945] [cursor=pointer]:
+        - /url: https://vercel.com/docs/pricing/regional-pricing
+        - text: Regional pricing
+        - img [ref=e946]
+      - generic [ref=e950]:
+        - paragraph [ref=e951]: Managed Infrastructure
+        - generic [ref=e952]:
+          - img [ref=e954]
+          - heading "Vercel Compute" [level=3] [ref=e956]
+        - paragraph [ref=e958]:
+          - text: Dynamic, scalable functions to power your framework of choice. Now available with Fluid compute with
+          - link "Active CPU pricing" [ref=e959] [cursor=pointer]:
+            - /url: https://vercel.com/blog/introducing-active-cpu-pricing-for-fluid-compute
+          - text: .
+      - generic [ref=e960]:
+        - heading "Vercel Functions" [level=3] [ref=e963]:
+          - text: Vercel Functions
+          - img [ref=e965]
+        - paragraph [ref=e973]:
+          - text: Active CPU
+          - img [ref=e975]
+        - paragraph [ref=e980]: 4 hours / month included
+        - paragraph [ref=e983]: Starting at $0.128 per hour
+        - paragraph [ref=e986]: Custom
+        - paragraph [ref=e989]:
+          - text: Provisioned Memory
+          - img [ref=e991]
+        - paragraph [ref=e996]: 360 GB-hrs / month included
+        - paragraph [ref=e999]: Starting at $0.0106 per GB-Hour
+        - paragraph [ref=e1002]: Custom
+        - paragraph [ref=e1005]:
+          - text: Invocations
+          - img [ref=e1007]
+        - paragraph [ref=e1012]: 1M / month included
+        - paragraph [ref=e1015]: Starting at $0.60 per 1M
+        - paragraph [ref=e1018]: Custom
+      - generic [ref=e1019]:
+        - heading "Vercel Sandbox" [level=3] [ref=e1022]
+        - paragraph [ref=e1028]:
+          - text: Active CPU
+          - img [ref=e1030]
+        - paragraph [ref=e1035]: 5 hours / month included
+        - paragraph [ref=e1038]: Starting at $0.128 per hour
+        - paragraph [ref=e1041]: Custom
+        - paragraph [ref=e1044]:
+          - text: Provisioned Memory
+          - img [ref=e1046]
+        - paragraph [ref=e1051]: 420 GB-Hours / month included
+        - paragraph [ref=e1054]: Starting at $0.0212 per GB-hr
+        - paragraph [ref=e1057]: Custom
+        - paragraph [ref=e1060]:
+          - text: Creation
+          - img [ref=e1062]
+        - paragraph [ref=e1067]: 5,000 / month included
+        - paragraph [ref=e1070]: Starting at $0.60 per 1M
+        - paragraph [ref=e1073]: Custom
+        - paragraph [ref=e1076]:
+          - text: Network
+          - img [ref=e1078]
+        - paragraph [ref=e1083]: 20 GB / month included
+        - paragraph [ref=e1086]: Starting at $0.15 per GB
+        - paragraph [ref=e1089]: Custom
+        - paragraph [ref=e1092]: Concurrent Sandboxes
+        - paragraph [ref=e1095]: "10"
+        - paragraph [ref=e1098]: "2000"
+        - paragraph [ref=e1101]: Custom
+        - paragraph [ref=e1104]:
+          - text: Sandbox Storage
+          - img [ref=e1106]
+        - paragraph [ref=e1111]: 15 GB
+        - paragraph [ref=e1114]: Starting at $0.08 per GB-month
+        - paragraph [ref=e1117]: Custom
+      - generic [ref=e1118]:
+        - link "Fast Origin Transfer" [ref=e1119] [cursor=pointer]:
+          - /url: https://vercel.com/docs/pricing/networking#fast-origin-transfer
+          - heading "Fast Origin Transfer" [level=3] [ref=e1121]:
+            - text: Fast Origin Transfer
+            - img [ref=e1123]
+        - generic [ref=e1128]: 10 GB / month included
+        - generic [ref=e1131]: Starting at $0.06 per GB
+        - generic [ref=e1134]: Custom
+      - generic [ref=e1135]:
+        - generic [ref=e1137]:
+          - heading "Vercel Workflow" [level=3] [ref=e1138]
+          - generic [ref=e1140]: Beta
+        - paragraph [ref=e1146]: Steps
+        - paragraph [ref=e1149]: 50,000 steps / month included
+        - paragraph [ref=e1152]: $2.50 per 100K
+        - paragraph [ref=e1155]: Custom
+        - paragraph [ref=e1158]: Storage
+        - paragraph [ref=e1161]: 1 GB / month included
+        - paragraph [ref=e1164]: $0.00069 per GB-hour
+        - paragraph [ref=e1167]: Custom
+      - generic [ref=e1168]:
+        - heading "Cron Jobs" [level=3] [ref=e1171]:
+          - text: Cron Jobs
+          - img [ref=e1173]
+        - img [ref=e1177]
+        - img [ref=e1180]
+        - img [ref=e1183]
+      - link "Regional pricing" [ref=e1189] [cursor=pointer]:
+        - /url: https://vercel.com/docs/pricing/regional-pricing
+        - text: Regional pricing
+        - img [ref=e1190]
+      - generic [ref=e1194]:
+        - paragraph [ref=e1195]: AI Cloud
+        - generic [ref=e1196]:
+          - img [ref=e1198]
+          - heading "AI" [level=3] [ref=e1200]
+        - paragraph [ref=e1202]: Build, deploy, and scale AI features with secure inference, durable workflows, and intelligent assistance.
+      - generic [ref=e1203]:
+        - generic [ref=e1205]:
+          - heading "Vercel Agent" [level=3] [ref=e1206]
+          - generic [ref=e1208]: Beta
+        - generic [ref=e1211]:
+          - paragraph [ref=e1212]: $0.30 per action
+          - paragraph [ref=e1213]: + pass-through token cost
+        - paragraph [ref=e1216]: Custom
+        - paragraph [ref=e1219]: Code Review
+        - generic [ref=e1221]: —
+        - img [ref=e1223]
+        - img [ref=e1226]
+        - paragraph [ref=e1230]: Investigations
+        - generic [ref=e1232]: —
+        - img [ref=e1234]
+        - img [ref=e1237]
+      - generic [ref=e1239]:
+        - heading "AI Gateway" [level=3] [ref=e1242]
+        - paragraph [ref=e1248]: Observability
+        - img [ref=e1250]
+        - img [ref=e1253]
+        - img [ref=e1256]
+        - paragraph [ref=e1260]: Image generation
+        - img [ref=e1262]
+        - img [ref=e1265]
+        - img [ref=e1268]
+        - paragraph [ref=e1272]: Bring your own key
+        - img [ref=e1274]
+        - img [ref=e1277]
+        - img [ref=e1280]
+        - paragraph [ref=e1284]: App attribution
+        - img [ref=e1286]
+        - img [ref=e1289]
+        - img [ref=e1292]
+        - paragraph [ref=e1296]: Managed fallback
+        - img [ref=e1298]
+        - img [ref=e1301]
+        - img [ref=e1304]
+        - paragraph [ref=e1308]: Load balancing
+        - img [ref=e1310]
+        - img [ref=e1313]
+        - img [ref=e1316]
+        - paragraph [ref=e1320]: Spend monitoring
+        - img [ref=e1322]
+        - img [ref=e1325]
+        - img [ref=e1328]
+        - paragraph [ref=e1332]: Embedding support
+        - img [ref=e1334]
+        - img [ref=e1337]
+        - img [ref=e1340]
+        - paragraph [ref=e1344]: Automatic retries
+        - img [ref=e1346]
+        - img [ref=e1349]
+        - img [ref=e1352]
+      - generic [ref=e1355]:
+        - paragraph [ref=e1356]: DX Platform
+        - generic [ref=e1357]:
+          - img [ref=e1359]
+          - heading "Build & Deploy" [level=3] [ref=e1361]
+        - paragraph [ref=e1363]: Workflows from code to production.
+      - generic [ref=e1364]:
+        - heading "Builds" [level=3] [ref=e1367]
+        - paragraph [ref=e1373]: Automatic CI/CD
+        - img [ref=e1375]
+        - img [ref=e1378]
+        - img [ref=e1381]
+        - paragraph [ref=e1385]: Environment Variables
+        - img [ref=e1387]
+        - img [ref=e1390]
+        - img [ref=e1393]
+        - paragraph [ref=e1397]: Build Logs
+        - img [ref=e1399]
+        - img [ref=e1402]
+        - img [ref=e1405]
+        - paragraph [ref=e1409]: Remote Cache
+        - img [ref=e1411]
+        - img [ref=e1414]
+        - img [ref=e1417]
+        - paragraph [ref=e1421]: Monorepo Support
+        - img [ref=e1423]
+        - img [ref=e1426]
+        - img [ref=e1429]
+        - paragraph [ref=e1433]: Webhook Triggers
+        - generic [ref=e1435]: —
+        - img [ref=e1437]
+        - img [ref=e1440]
+        - paragraph [ref=e1444]: Custom Environments
+        - generic [ref=e1446]: —
+        - paragraph [ref=e1449]: 1 environment
+        - paragraph [ref=e1452]: 12 environments
+      - generic [ref=e1453]:
+        - heading "Build minutes" [level=3] [ref=e1456]
+        - paragraph [ref=e1462]: Standard machines
+        - generic [ref=e1464]: —
+        - paragraph [ref=e1467]: Starting at $0.014 per minute
+        - paragraph [ref=e1470]: Custom
+        - paragraph [ref=e1473]: Enhanced machines
+        - generic [ref=e1475]: —
+        - paragraph [ref=e1478]: Starting at $0.028 per minute
+        - paragraph [ref=e1481]: Custom
+        - paragraph [ref=e1484]: Turbo machines
+        - generic [ref=e1486]: —
+        - paragraph [ref=e1489]: Starting at $0.126 per minute
+        - paragraph [ref=e1492]: Custom
+      - generic [ref=e1493]:
+        - heading "Deployments" [level=3] [ref=e1496]
+        - paragraph [ref=e1502]: Unlimited Deployments
+        - img [ref=e1504]
+        - img [ref=e1507]
+        - img [ref=e1510]
+        - paragraph [ref=e1514]: Environment Variables
+        - img [ref=e1516]
+        - img [ref=e1519]
+        - img [ref=e1522]
+        - paragraph [ref=e1526]: Instant Rollback
+        - img [ref=e1528]
+        - img [ref=e1531]
+        - img [ref=e1534]
+        - paragraph [ref=e1538]: Multi-tenant support
+        - img [ref=e1540]
+        - img [ref=e1543]
+        - img [ref=e1546]
+        - paragraph [ref=e1550]: Skew Protection
+        - generic [ref=e1552]: —
+        - img [ref=e1554]
+        - img [ref=e1557]
+        - paragraph [ref=e1561]:
+          - text: Rolling Releases
+          - img [ref=e1563]
+        - generic [ref=e1567]: —
+        - paragraph [ref=e1570]: 1 project included
+        - paragraph [ref=e1573]: Custom
+      - generic [ref=e1574]:
+        - heading "Team Seats" [level=3] [ref=e1577]
+        - paragraph [ref=e1583]:
+          - text: Developer seat
+          - img [ref=e1585]
+        - paragraph [ref=e1590]: "1"
+        - paragraph [ref=e1593]: $20 / month
+        - paragraph [ref=e1596]: Custom
+        - paragraph [ref=e1599]:
+          - text: Viewer seat
+          - img [ref=e1601]
+        - generic [ref=e1605]: —
+        - paragraph [ref=e1608]: Unlimited
+        - paragraph [ref=e1611]: Custom
+        - paragraph [ref=e1614]:
+          - text: Billing seat
+          - img [ref=e1616]
+        - generic [ref=e1620]: —
+        - paragraph [ref=e1623]: "1"
+        - paragraph [ref=e1626]: Custom
+      - generic [ref=e1627]:
+        - heading "Vercel Toolbar" [level=3] [ref=e1630]:
+          - text: Vercel Toolbar
+          - img [ref=e1632]
+        - paragraph [ref=e1640]: Comments
+        - img [ref=e1642]
+        - img [ref=e1645]
+        - img [ref=e1648]
+        - paragraph [ref=e1652]: Layout Shift Tool
+        - img [ref=e1654]
+        - img [ref=e1657]
+        - img [ref=e1660]
+        - paragraph [ref=e1664]: Draft Mode
+        - img [ref=e1666]
+        - img [ref=e1669]
+        - img [ref=e1672]
+        - paragraph [ref=e1676]: Productivity Integrations
+        - img [ref=e1678]
+        - img [ref=e1681]
+        - img [ref=e1684]
+        - paragraph [ref=e1688]: Previewers
+        - generic [ref=e1690]: —
+        - paragraph [ref=e1693]: Unlimited
+        - paragraph [ref=e1696]: Unlimited
+        - paragraph [ref=e1699]: Accessibility Audit
+        - img [ref=e1701]
+        - img [ref=e1704]
+        - img [ref=e1707]
+        - paragraph [ref=e1711]: Flags Explorer
+        - paragraph [ref=e1714]: 150 overrides / month
+        - generic [ref=e1716]:
+          - paragraph [ref=e1717]: 150 overrides / month
+          - paragraph [ref=e1718]: then $250 for unlimited
+        - generic [ref=e1720]:
+          - paragraph [ref=e1721]: 150 overrides / month
+          - paragraph [ref=e1722]: then $250 for unlimited
+      - generic [ref=e1724]:
+        - paragraph [ref=e1725]: Managed Infrastructure
+        - generic [ref=e1726]:
+          - img [ref=e1728]
+          - heading "Observability" [level=3] [ref=e1730]
+        - paragraph [ref=e1732]: Frontend observability on Vercel helps you monitor, analyze, and manage your applications.
+      - generic [ref=e1733]:
+        - heading "Usage Dashboard" [level=3] [ref=e1736]:
+          - text: Usage Dashboard
+          - img [ref=e1738]
+        - img [ref=e1742]
+        - img [ref=e1745]
+        - img [ref=e1748]
+      - generic [ref=e1750]:
+        - link "Observability" [ref=e1751] [cursor=pointer]:
+          - /url: https://vercel.com/docs/observability
+          - heading "Observability" [level=3] [ref=e1753]:
+            - text: Observability
+            - img [ref=e1755]
+        - img [ref=e1759]
+        - img [ref=e1762]
+        - img [ref=e1765]
+      - generic [ref=e1767]:
+        - generic [ref=e1769]:
+          - heading "Observability Plus" [level=3] [ref=e1770]
+          - generic [ref=e1772]: Add-on
+        - generic [ref=e1775]:
+          - paragraph [ref=e1776]: $10 / month
+          - paragraph [ref=e1777]: $1.20 per 1M events
+        - paragraph [ref=e1780]: Custom
+        - paragraph [ref=e1783]: Extended retention
+        - generic [ref=e1785]: —
+        - paragraph [ref=e1788]: 30 days
+        - paragraph [ref=e1791]: 30 days
+        - paragraph [ref=e1794]: Advanced metrics
+        - generic [ref=e1796]: —
+        - img [ref=e1798]
+        - img [ref=e1801]
+        - paragraph [ref=e1805]: Query engine
+        - generic [ref=e1807]: —
+        - img [ref=e1809]
+        - img [ref=e1812]
+        - paragraph [ref=e1816]: AI query prompting
+        - generic [ref=e1818]: —
+        - img [ref=e1820]
+        - img [ref=e1823]
+      - generic [ref=e1825]:
+        - link "Speed Insights" [ref=e1826] [cursor=pointer]:
+          - /url: https://vercel.com/docs/speed-insights
+          - heading "Speed Insights" [level=3] [ref=e1828]:
+            - text: Speed Insights
+            - img [ref=e1830]
+        - generic [ref=e1835]: 10,000 events / month included
+        - generic [ref=e1837]:
+          - generic [ref=e1838]: $10 / project / month
+          - generic [ref=e1839]: $0.65 per 10,000 events
+        - generic [ref=e1842]: Custom
+      - generic [ref=e1843]:
+        - link "Web Analytics" [ref=e1844] [cursor=pointer]:
+          - /url: https://vercel.com/docs/analytics
+          - heading "Web Analytics" [level=3] [ref=e1846]:
+            - text: Web Analytics
+            - img [ref=e1848]
+        - generic [ref=e1853]: 50,000 events / month included
+        - generic [ref=e1856]: $3 per 100,000 events
+        - generic [ref=e1859]: Custom
+      - generic [ref=e1860]:
+        - generic [ref=e1862]:
+          - heading "Web Analytics Plus" [level=3] [ref=e1863]
+          - generic [ref=e1865]: Add-on
+        - paragraph [ref=e1869]: $10 / month
+        - img [ref=e1871]
+        - paragraph [ref=e1875]: Reporting windows
+        - generic [ref=e1876]:
+          - generic:
+            - paragraph
+        - paragraph [ref=e1879]: Additional 12 months (24 total)
+        - paragraph [ref=e1882]: 24 months
+        - paragraph [ref=e1885]: UTM Parameters
+        - generic [ref=e1886]:
+          - generic:
+            - paragraph
+        - img [ref=e1888]
+        - img [ref=e1891]
+      - generic [ref=e1893]:
+        - link "Runtime Logs" [ref=e1894] [cursor=pointer]:
+          - /url: https://vercel.com/docs/observability/runtime-logs
+          - heading "Runtime Logs" [level=3] [ref=e1896]:
+            - text: Runtime Logs
+            - img [ref=e1898]
+        - generic [ref=e1903]: 1 hour of logs
+        - generic [ref=e1905]:
+          - generic [ref=e1906]: 1 day of logs
+          - generic [ref=e1907]: 30 days with Observability Plus
+        - generic [ref=e1909]:
+          - generic [ref=e1910]: 3 days of logs
+          - generic [ref=e1911]: 30 days with Observability Plus
+      - generic [ref=e1912]:
+        - link "Session Tracing" [ref=e1913] [cursor=pointer]:
+          - /url: https://vercel.com/docs/session-tracing
+          - heading "Session Tracing" [level=3] [ref=e1915]:
+            - text: Session Tracing
+            - img [ref=e1917]
+        - generic [ref=e1922]: 1 hour of traces
+        - generic [ref=e1925]: 1 day of traces
+        - generic [ref=e1928]: 3 days of traces
+      - generic [ref=e1929]:
+        - link "Log Drains" [ref=e1930] [cursor=pointer]:
+          - /url: https://vercel.com/docs/observability/log-drains
+          - heading "Log Drains" [level=3] [ref=e1932]:
+            - text: Log Drains
+            - img [ref=e1934]
+        - generic [ref=e1938]: —
+        - generic [ref=e1941]: $0.50 per 1 GB
+        - generic [ref=e1944]: Custom
+      - link "Regional pricing" [ref=e1949] [cursor=pointer]:
+        - /url: https://vercel.com/docs/pricing/regional-pricing
+        - text: Regional pricing
+        - img [ref=e1950]
+      - generic [ref=e1954]:
+        - paragraph [ref=e1955]: Security & Privacy
+        - generic [ref=e1956]:
+          - img [ref=e1958]
+          - heading "Access & Deployment Security" [level=3] [ref=e1960]
+        - paragraph [ref=e1962]: Vercel protects your projects across access, application, and infrastructure security.
+      - generic [ref=e1963]:
+        - heading "OAuth Sign-in" [level=3] [ref=e1966]
+        - img [ref=e1968]
+        - img [ref=e1971]
+        - img [ref=e1974]
+        - paragraph [ref=e1978]: GitHub
+        - img [ref=e1980]
+        - img [ref=e1983]
+        - img [ref=e1986]
+        - paragraph [ref=e1990]: Google
+        - img [ref=e1992]
+        - img [ref=e1995]
+        - img [ref=e1998]
+        - paragraph [ref=e2002]: GitLab
+        - img [ref=e2004]
+        - img [ref=e2007]
+        - img [ref=e2010]
+        - paragraph [ref=e2014]: Bitbucket
+        - img [ref=e2016]
+        - img [ref=e2019]
+        - img [ref=e2022]
+      - generic [ref=e2024]:
+        - heading "Access Security" [level=3] [ref=e2027]
+        - paragraph [ref=e2033]:
+          - text: Multi-Factor Authentication (MFA)
+          - img [ref=e2035]
+        - img [ref=e2039]
+        - img [ref=e2042]
+        - img [ref=e2045]
+        - paragraph [ref=e2049]:
+          - text: Role-Based Access Control
+          - img [ref=e2051]
+        - generic [ref=e2055]: —
+        - paragraph [ref=e2058]: Team level
+        - paragraph [ref=e2061]: Team & project level
+        - paragraph [ref=e2064]:
+          - text: Audit Logs
+          - img [ref=e2066]
+        - generic [ref=e2070]: —
+        - generic [ref=e2072]: —
+        - img [ref=e2074]
+        - paragraph [ref=e2078]:
+          - text: SAML Single Sign-On (SSO)
+          - img [ref=e2080]
+        - generic [ref=e2084]: —
+        - paragraph [ref=e2087]: $300 / month
+        - img [ref=e2089]
+        - paragraph [ref=e2093]:
+          - text: Directory Sync (SCIM)
+          - img [ref=e2095]
+        - generic [ref=e2099]: —
+        - generic [ref=e2101]: —
+        - img [ref=e2103]
+      - generic [ref=e2105]:
+        - heading "Advanced Deployment Protection" [level=3] [ref=e2108]:
+          - text: Advanced Deployment Protection
+          - img [ref=e2110]
+        - generic [ref=e2114]: —
+        - generic [ref=e2117]: $150 / month
+        - img [ref=e2119]
+      - generic [ref=e2121]:
+        - heading "SSO Protected Previews" [level=3] [ref=e2124]:
+          - text: SSO Protected Previews
+          - img [ref=e2126]
+        - generic [ref=e2130]: —
+        - generic [ref=e2132]: —
+        - img [ref=e2134]
+      - generic [ref=e2136]:
+        - link "Static IPs (shared pool)" [ref=e2137] [cursor=pointer]:
+          - /url: https://vercel.com/docs/connectivity/static-ips
+          - heading "Static IPs (shared pool)" [level=3] [ref=e2139]:
+            - text: Static IPs (shared pool)
+            - img [ref=e2141]
+        - generic [ref=e2145]: —
+        - generic [ref=e2147]:
+          - generic [ref=e2148]: $100 / project / month
+          - generic [ref=e2149]: Starting at $0.15 per GB
+        - generic [ref=e2152]: Custom
+      - generic [ref=e2153]:
+        - link "Secure Compute" [ref=e2154] [cursor=pointer]:
+          - /url: https://vercel.com/docs/connectivity/secure-compute
+          - heading "Secure Compute" [level=3] [ref=e2156]:
+            - text: Secure Compute
+            - img [ref=e2158]
+        - generic [ref=e2162]: —
+        - generic [ref=e2164]: —
+        - generic [ref=e2167]: Custom
+      - generic [ref=e2169]:
+        - paragraph [ref=e2170]: Security & Privacy
+        - generic [ref=e2171]:
+          - img [ref=e2173]
+          - heading "Compliance" [level=3] [ref=e2175]
+        - paragraph [ref=e2177]: Built-in support for global security and data protection standards. Security collateral available for Pro and Enterprise plans.
+      - generic [ref=e2178]:
+        - heading "Compliance" [level=3] [ref=e2181]
+        - paragraph [ref=e2187]:
+          - text: SOC 2 Type 2
+          - img [ref=e2189]
+        - img [ref=e2193]
+        - img [ref=e2196]
+        - img [ref=e2199]
+        - paragraph [ref=e2203]:
+          - text: PCI DSS
+          - img [ref=e2205]
+        - img [ref=e2209]
+        - img [ref=e2212]
+        - img [ref=e2215]
+        - paragraph [ref=e2219]:
+          - text: ISO 27001
+          - img [ref=e2221]
+        - img [ref=e2225]
+        - img [ref=e2228]
+        - img [ref=e2231]
+        - paragraph [ref=e2235]:
+          - text: EU-U.S. DPF
+          - img [ref=e2237]
+        - img [ref=e2241]
+        - img [ref=e2244]
+        - img [ref=e2247]
+        - paragraph [ref=e2251]:
+          - text: HIPAA BAA
+          - img [ref=e2253]
+        - generic [ref=e2257]: —
+        - paragraph [ref=e2260]: $350 / month
+        - paragraph [ref=e2263]: Custom
+        - paragraph [ref=e2266]:
+          - text: TISAX
+          - img [ref=e2268]
+        - img [ref=e2272]
+        - img [ref=e2275]
+        - img [ref=e2278]
+        - paragraph [ref=e2282]: Custom Security Questionnaire
+        - generic [ref=e2284]: —
+        - generic [ref=e2286]: —
+        - img [ref=e2288]
+    - generic [ref=e2293]:
+      - generic [ref=e2294]:
+        - generic [ref=e2295]:
+          - img "Certificate of ISO 27001" [ref=e2296]
+          - generic [ref=e2297]:
+            - img [ref=e2298]
+            - generic [ref=e2300]: ISO 27001
+        - generic [ref=e2301]:
+          - img "Certificate of SOC 2" [ref=e2302]
+          - generic [ref=e2303]:
+            - img [ref=e2304]
+            - generic [ref=e2306]: SOC 2
+        - generic [ref=e2307]:
+          - img "Certificate of PCI DSS" [ref=e2308]
+          - generic [ref=e2309]:
+            - img [ref=e2310]
+            - generic [ref=e2312]: PCI DSS
+        - generic [ref=e2313]:
+          - img "Certificate of HIPAA" [ref=e2314]
+          - generic [ref=e2315]:
+            - img [ref=e2316]
+            - generic [ref=e2318]: HIPAA
+        - generic [ref=e2319]:
+          - img "Certificate of GDPR" [ref=e2320]
+          - generic [ref=e2321]:
+            - img [ref=e2322]
+            - generic [ref=e2324]: GDPR
+        - generic [ref=e2325]:
+          - img "Certificate of DPF" [ref=e2326]
+          - generic [ref=e2327]:
+            - img [ref=e2328]
+            - generic [ref=e2330]: DPF
+      - generic [ref=e2333]:
+        - paragraph [ref=e2335]: Looking for even more scale? Get a trial from the Vercel team.
+        - link "Get an Enterprise Trial" [ref=e2336] [cursor=pointer]:
+          - /url: https://vercel.com/contact/sales/enterprise-trial
+          - generic [ref=e2338]:
+            - text: Get an Enterprise Trial
+            - img [ref=e2339]
+      - generic [ref=e2341]:
+        - heading "Frequently asked questions." [level=3] [ref=e2343]
+        - generic [ref=e2344]:
+          - group [ref=e2345]:
+            - generic "Which Vercel plan is right for me?" [ref=e2346] [cursor=pointer]:
+              - text: Which Vercel plan is right for me?
+              - img [ref=e2348]
+          - group [ref=e2350]:
+            - generic "Do you offer custom invoicing?" [ref=e2351] [cursor=pointer]:
+              - text: Do you offer custom invoicing?
+              - img [ref=e2353]
+          - group [ref=e2355]:
+            - generic "What are the limits for each plan?" [ref=e2356] [cursor=pointer]:
+              - text: What are the limits for each plan?
+              - img [ref=e2358]
+          - group [ref=e2360]:
+            - generic "I went over my included credit. What can I do?" [ref=e2361] [cursor=pointer]:
+              - text: I went over my included credit. What can I do?
+              - img [ref=e2363]
+          - group [ref=e2365]:
+            - generic "Can I buy additional usage?" [ref=e2366] [cursor=pointer]:
+              - text: Can I buy additional usage?
+              - img [ref=e2368]
+          - group [ref=e2370]:
+            - generic "I have a Hobby account, how do I upgrade to a paid plan?" [ref=e2371] [cursor=pointer]:
+              - text: I have a Hobby account, how do I upgrade to a paid plan?
+              - img [ref=e2373]
+          - group [ref=e2375]:
+            - generic "Is there a limit to how many teams I can have?" [ref=e2376] [cursor=pointer]:
+              - text: Is there a limit to how many teams I can have?
+              - img [ref=e2378]
+          - group [ref=e2380]:
+            - generic "How does Vercel calculate usage?" [ref=e2381] [cursor=pointer]:
+              - text: How does Vercel calculate usage?
+              - img [ref=e2383]
+          - group [ref=e2385]:
+            - generic "I want to transfer a domain name to Vercel. Is there a fee?" [ref=e2386] [cursor=pointer]:
+              - text: I want to transfer a domain name to Vercel. Is there a fee?
+              - img [ref=e2388]
+          - group [ref=e2390]:
+            - generic "Do cached responses affect usage?" [ref=e2391] [cursor=pointer]:
+              - text: Do cached responses affect usage?
+              - img [ref=e2393]
+          - group [ref=e2395]:
+            - generic "How can I manage my spend?" [ref=e2396] [cursor=pointer]:
+              - text: How can I manage my spend?
+              - img [ref=e2398]
+      - generic [ref=e2400]:
+        - generic [ref=e2402]:
+          - paragraph [ref=e2404]: Not sure which plan to pick? Discuss Pro or Enterprise needs with us, learn about custom pricing, or get a demo.
+          - link "Schedule a Demo" [ref=e2406] [cursor=pointer]:
+            - /url: https://vercel.com/contact/sales/pricing
+            - generic [ref=e2408]:
+              - text: Schedule a Demo
+              - img [ref=e2409]
+        - generic [ref=e2412]:
+          - paragraph [ref=e2414]: Vercel Enterprise drove 264% ROI. Boost velocity and increase conversions.
+          - link "Read about our ROI study" [ref=e2416] [cursor=pointer]:
+            - /url: /roi
+            - img [ref=e2418]
+            - generic [ref=e2421]: Read about our ROI study
+  - contentinfo [ref=e2422]:
+    - navigation "Vercel Directory" [ref=e2423]:
+      - generic [ref=e2424]:
+        - generic [ref=e2425]:
+          - heading "Products" [level=2] [ref=e2426]
+          - list [ref=e2427]:
+            - listitem [ref=e2428]:
+              - link "AI" [ref=e2429] [cursor=pointer]:
+                - /url: /ai
+            - listitem [ref=e2430]:
+              - link "Enterprise" [ref=e2431] [cursor=pointer]:
+                - /url: /enterprise
+            - listitem [ref=e2432]:
+              - link "Fluid Compute" [ref=e2433] [cursor=pointer]:
+                - /url: /fluid
+            - listitem [ref=e2434]:
+              - link "Next.js" [ref=e2435] [cursor=pointer]:
+                - /url: /solutions/nextjs
+            - listitem [ref=e2436]:
+              - link "Observability" [ref=e2437] [cursor=pointer]:
+                - /url: /products/observability
+            - listitem [ref=e2438]:
+              - link "Previews" [ref=e2439] [cursor=pointer]:
+                - /url: /products/previews
+            - listitem [ref=e2440]:
+              - link "Rendering" [ref=e2441] [cursor=pointer]:
+                - /url: /products/rendering
+            - listitem [ref=e2442]:
+              - link "Security" [ref=e2443] [cursor=pointer]:
+                - /url: /security
+            - listitem [ref=e2444]:
+              - link "Turbo" [ref=e2445] [cursor=pointer]:
+                - /url: /solutions/turborepo
+            - listitem [ref=e2446]:
+              - link "Domains" [ref=e2447] [cursor=pointer]:
+                - /url: /domains
+            - listitem [ref=e2448]:
+              - link "Sandbox" [ref=e2449] [cursor=pointer]:
+                - /url: /sandbox
+            - listitem [ref=e2450]:
+              - link "Workflow" [ref=e2451] [cursor=pointer]:
+                - /url: /workflow
+            - listitem [ref=e2452]:
+              - link "v0" [ref=e2453] [cursor=pointer]:
+                - /url: https://v0.app/
+                - text: v0
+                - img [ref=e2454]
+        - generic [ref=e2456]:
+          - heading "Resources" [level=2] [ref=e2457]
+          - list [ref=e2458]:
+            - listitem [ref=e2459]:
+              - link "Community" [ref=e2460] [cursor=pointer]:
+                - /url: https://community.vercel.com/
+                - text: Community
+                - img [ref=e2461]
+            - listitem [ref=e2463]:
+              - link "Docs" [ref=e2464] [cursor=pointer]:
+                - /url: /docs
+            - listitem [ref=e2465]:
+              - link "Knowledge Base" [ref=e2466] [cursor=pointer]:
+                - /url: /kb
+            - listitem [ref=e2467]:
+              - link "Academy" [ref=e2468] [cursor=pointer]:
+                - /url: /academy
+            - listitem [ref=e2469]:
+              - link "Help" [ref=e2470] [cursor=pointer]:
+                - /url: /help
+            - listitem [ref=e2471]:
+              - link "Integrations" [ref=e2472] [cursor=pointer]:
+                - /url: /integrations
+            - listitem [ref=e2473]:
+              - link "Platforms" [ref=e2474] [cursor=pointer]:
+                - /url: /platforms
+            - listitem [ref=e2475]:
+              - link "Pricing" [ref=e2476] [cursor=pointer]:
+                - /url: /pricing
+            - listitem [ref=e2477]:
+              - link "Resources" [ref=e2478] [cursor=pointer]:
+                - /url: /resources
+            - listitem [ref=e2479]:
+              - link "Solution Partners" [ref=e2480] [cursor=pointer]:
+                - /url: /partners/solution-partners
+            - listitem [ref=e2481]:
+              - link "Startups" [ref=e2482] [cursor=pointer]:
+                - /url: /startups
+            - listitem [ref=e2483]:
+              - link "Templates" [ref=e2484] [cursor=pointer]:
+                - /url: /templates
+            - listitem [ref=e2485]:
+              - button "SDKs by Vercel" [ref=e2486] [cursor=pointer]:
+                - generic [ref=e2488]:
+                  - text: SDKs by Vercel
+                  - img [ref=e2489]
+        - generic [ref=e2491]:
+          - heading "Company" [level=2] [ref=e2492]
+          - list [ref=e2493]:
+            - listitem [ref=e2494]:
+              - link "About" [ref=e2495] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e2496]:
+              - link "Blog" [ref=e2497] [cursor=pointer]:
+                - /url: /blog
+            - listitem [ref=e2498]:
+              - link "Careers" [ref=e2499] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e2500]:
+              - link "Changelog" [ref=e2501] [cursor=pointer]:
+                - /url: /changelog
+            - listitem [ref=e2502]:
+              - link "Contact Us" [ref=e2503] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e2504]:
+              - link "Customers" [ref=e2505] [cursor=pointer]:
+                - /url: /customers
+            - listitem [ref=e2506]:
+              - link "Events" [ref=e2507] [cursor=pointer]:
+                - /url: /events
+            - listitem [ref=e2508]:
+              - link "Partners" [ref=e2509] [cursor=pointer]:
+                - /url: /partners
+            - listitem [ref=e2510]:
+              - link "Shipped" [ref=e2511] [cursor=pointer]:
+                - /url: /shipped
+            - listitem [ref=e2512]:
+              - link "Privacy Policy" [ref=e2513] [cursor=pointer]:
+                - /url: /legal/privacy-policy
+            - listitem [ref=e2514]:
+              - button "Legal" [ref=e2515] [cursor=pointer]:
+                - generic [ref=e2517]:
+                  - text: Legal
+                  - img [ref=e2518]
+        - generic [ref=e2520]:
+          - heading "Social" [level=2] [ref=e2521]
+          - list [ref=e2522]:
+            - listitem [ref=e2523]:
+              - link "GitHub" [ref=e2524] [cursor=pointer]:
+                - /url: https://github.com/vercel
+                - img [ref=e2525]
+                - text: GitHub
+            - listitem [ref=e2527]:
+              - link "LinkedIn" [ref=e2528] [cursor=pointer]:
+                - /url: https://linkedin.com/company/vercel
+                - img [ref=e2529]
+                - text: LinkedIn
+            - listitem [ref=e2531]:
+              - link "Twitter" [ref=e2532] [cursor=pointer]:
+                - /url: https://x.com/vercel
+                - img [ref=e2533]
+                - text: Twitter
+            - listitem [ref=e2535]:
+              - link "YouTube" [ref=e2536] [cursor=pointer]:
+                - /url: https://youtube.com/@VercelHQ
+                - img [ref=e2537]
+                - text: YouTube
+        - link "Vercel logo" [ref=e2539] [cursor=pointer]:
+          - /url: /home
+          - img "Vercel logo" [ref=e2540]
+      - generic [ref=e2542]:
+        - link "Loading status…" [ref=e2543] [cursor=pointer]:
+          - /url: https://vercel-status.com
+          - paragraph [ref=e2546]: Loading status…
+        - group "Select a display theme:" [ref=e2547]:
+          - generic [ref=e2548]: "Select a display theme:"
+          - generic [ref=e2549]:
+            - radio "system" [checked]
+            - generic [ref=e2550] [cursor=pointer]:
+              - generic [ref=e2551]: system
+              - img [ref=e2552]
+          - generic [ref=e2554]:
+            - radio "light"
+            - generic [ref=e2555] [cursor=pointer]:
+              - generic [ref=e2556]: light
+              - img [ref=e2557]
+          - generic [ref=e2559]:
+            - radio "dark"
+            - generic [ref=e2560] [cursor=pointer]:
+              - generic [ref=e2561]: dark
+              - img [ref=e2562]
+  - alert [ref=e2564]
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - img

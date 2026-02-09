@@ -9,9 +9,11 @@ import { FloatingElement } from "./shared/FloatingElement"
 import { AnimatedSection } from "./shared/AnimatedSection"
 
 const PLATFORM_NAMES = [
+  "Bark", "Qustodio", "Aura", "Net Nanny", "Norton Family",
   "NextDNS", "CleanBrowsing", "Android", "Microsoft", "Apple",
   "YouTube", "Netflix", "Roblox", "TikTok", "Instagram",
   "Discord", "Snapchat", "Twitch", "Spotify", "Steam",
+  "Disney+", "Fortnite", "ChatGPT", "Minecraft", "PlayStation",
 ]
 
 export function Hero() {

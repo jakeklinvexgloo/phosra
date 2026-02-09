@@ -5,9 +5,9 @@ import { AnimatedSection, GradientMesh, PhosraBurst } from "./shared"
 
 const STATS = [
   { value: 35, suffix: "", label: "Rule categories", description: "Covering every aspect of child digital safety" },
-  { value: 15, suffix: "+", label: "Platform adapters", description: "And growing — connect any service" },
+  { value: 500, suffix: "+", label: "Platform integrations", description: "YouTube, TikTok, Roblox, and more — all connected" },
   { value: 5, suffix: "", label: "Rating systems", description: "MPAA, TV, ESRB, PEGI, CSM — mapped automatically" },
-  { value: 11, suffix: "+", label: "Compliance laws", description: "KOSA, COPPA 2.0, EU DSA, and more" },
+  { value: 11, suffix: "+", label: "Compliance laws", description: "KOSA, COPPA 2.0, EU DSA, and more — built in" },
 ]
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {

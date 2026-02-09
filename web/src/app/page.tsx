@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/marketing/Navbar"
 import { Hero } from "@/components/marketing/Hero"
 import { Features } from "@/components/marketing/Features"
+import { Ecosystem } from "@/components/marketing/Ecosystem"
 import { Stats } from "@/components/marketing/Stats"
 import { HowItWorks } from "@/components/marketing/HowItWorks"
 import { DevSection } from "@/components/marketing/DevSection"
@@ -15,6 +16,7 @@ export default function MarketingPage() {
       <Hero />
       <Compliance />
       <Features />
+      <Ecosystem />
       <Stats />
       <HowItWorks />
       <DevSection />
