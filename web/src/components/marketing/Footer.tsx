@@ -4,7 +4,7 @@ const FOOTER_SECTIONS = [
   {
     title: "Product",
     links: [
-      { label: "Quick Setup", href: "/dashboard/setup" },
+      { label: "Getting Started", href: "/dashboard/setup" },
       { label: "Platforms", href: "/dashboard/platforms" },
       { label: "Enforcement", href: "/dashboard/enforcement" },
       { label: "Playground", href: "/dashboard/playground" },
@@ -15,7 +15,7 @@ const FOOTER_SECTIONS = [
     title: "Developers",
     links: [
       { label: "API Reference", href: "/dashboard/docs" },
-      { label: "Quick Start", href: "/dashboard/setup" },
+      { label: "Integration Guide", href: "/dashboard/setup" },
       { label: "Playground", href: "/dashboard/playground" },
       { label: "GitHub", href: "https://github.com" },
     ],
@@ -33,6 +33,7 @@ const FOOTER_SECTIONS = [
     title: "Company",
     links: [
       { label: "About", href: "#" },
+      { label: "Partners", href: "#" },
       { label: "Pricing", href: "#" },
       { label: "Contact", href: "#" },
       { label: "Privacy", href: "#" },

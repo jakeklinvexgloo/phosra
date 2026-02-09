@@ -4,9 +4,11 @@ import Link from "next/link"
 import { Clock, Globe, Wifi, Monitor, Smartphone, Tv, Gamepad2, BookOpen } from "lucide-react"
 
 const PLATFORM_NAMES = [
+  "Bark", "Qustodio", "Aura", "Net Nanny", "Norton Family",
   "NextDNS", "CleanBrowsing", "Android", "Microsoft", "Apple",
   "YouTube", "Netflix", "Roblox", "TikTok", "Instagram",
   "Discord", "Snapchat", "Twitch", "Spotify", "Steam",
+  "Disney+", "Fortnite", "ChatGPT", "Minecraft", "PlayStation",
 ]
 
 export function Hero() {
@@ -20,11 +22,11 @@ export function Hero() {
           {/* Left — text */}
           <div>
             <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold text-white leading-[1.1] mb-6">
-              Define once,{" "}
-              <span className="text-brand-green">protect everywhere</span>
+              Set it in your app.{" "}
+              <span className="text-brand-green">Enforced everywhere.</span>
             </h1>
             <p className="text-lg text-white/60 leading-relaxed mb-10 max-w-lg">
-              The universal parental controls API. One policy for your family, enforced across every platform, every device, automatically.
+              Phosra connects parental controls apps like Bark, Qustodio, and Aura to every platform your kids use. One policy, enforced across every device, automatically.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
@@ -92,7 +94,7 @@ export function Hero() {
 
         {/* Platform logo bar */}
         <div className="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-white/10">
-          <p className="text-xs text-white/30 text-center mb-6 tracking-wide uppercase">Supports 15+ platforms</p>
+          <p className="text-xs text-white/30 text-center mb-6 tracking-wide uppercase">Works with your favorite apps and 500+ platforms</p>
           <div className="relative overflow-hidden">
             <div className="flex animate-scroll gap-10">
               {[...PLATFORM_NAMES, ...PLATFORM_NAMES].map((name, i) => (

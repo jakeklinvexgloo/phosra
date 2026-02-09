@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react"
 
 const NAV_LINKS = [
   { href: "#features", label: "Features" },
+  { href: "#ecosystem", label: "Ecosystem" },
   { href: "#developers", label: "Developers" },
   { href: "#compliance", label: "Compliance" },
   { href: "/dashboard/docs", label: "Docs" },

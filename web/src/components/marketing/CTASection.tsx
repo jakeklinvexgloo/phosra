@@ -8,7 +8,7 @@ export function CTASection() {
           Start protecting your family today
         </h2>
         <p className="text-foreground/70 text-base mb-10 max-w-lg mx-auto">
-          Free for families. Pay only when you build.
+          Free for families. Works with the parental controls apps you already use.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Link
@@ -18,10 +18,10 @@ export function CTASection() {
             Create Free Account
           </Link>
           <Link
-            href="#"
+            href="/dashboard/docs"
             className="inline-flex items-center px-8 py-3.5 bg-white text-foreground text-sm font-semibold rounded-sm border border-foreground/10 hover:bg-white/90 transition"
           >
-            Talk to Sales
+            For Developers
           </Link>
         </div>
       </div>

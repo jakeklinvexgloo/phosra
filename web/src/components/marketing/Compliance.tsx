@@ -18,10 +18,10 @@ export function Compliance() {
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Built for the laws that protect children
+            Always compliant, automatically
           </h2>
           <p className="text-muted-foreground text-base max-w-2xl mx-auto">
-            Each of Phosra&apos;s 35 rule categories maps to specific legislative requirements. When laws change, your policies update automatically.
+            Phosra tracks child safety legislation worldwide and keeps your protections current. When KOSA, COPPA, or any law changes, your rules update — no action needed.
           </p>
         </div>
 

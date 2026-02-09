@@ -1,18 +1,18 @@
 const STEPS = [
   {
     number: "1",
-    title: "Define",
-    description: "Create a family, add your children, set age. Phosra generates rules automatically based on age-appropriate defaults and legislative requirements.",
+    title: "Set your rules",
+    description: "Open your parental controls app — Bark, Qustodio, Aura, or any Phosra-powered app — and set age-appropriate rules for your child.",
   },
   {
     number: "2",
-    title: "Connect",
-    description: "Link your platforms — NextDNS, Android, Apple, and more. One credential per platform, verified and encrypted with AES-256-GCM.",
+    title: "Phosra connects",
+    description: "Behind the scenes, Phosra translates your rules into platform-specific settings and connects to every service your child uses.",
   },
   {
     number: "3",
-    title: "Enforce",
-    description: "Push rules to every connected platform with one API call. Monitor compliance in real-time and get notified when enforcement fails.",
+    title: "Enforced everywhere",
+    description: "Your rules are pushed to YouTube, TikTok, Roblox, Android, Apple, and more. Real-time monitoring ensures they stay enforced.",
   },
 ]
 
@@ -22,10 +22,10 @@ export function HowItWorks() {
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Three steps to total protection
+            How Phosra works
           </h2>
           <p className="text-muted-foreground text-base max-w-2xl mx-auto">
-            From zero to fully enforced parental controls in minutes, not hours.
+            Your parental controls app handles the experience. Phosra handles the enforcement.
           </p>
         </div>
 

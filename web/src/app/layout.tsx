@@ -18,14 +18,14 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   openGraph: {
     title: "Phosra - Child Safety Standard",
-    description: "The universal parental controls API. One policy for your family, enforced across every platform.",
+    description: "The child safety infrastructure that powers parental controls apps. One policy, enforced across every platform.",
     siteName: "Phosra",
     type: "website",
   },
   twitter: {
     card: "summary",
     title: "Phosra - Child Safety Standard",
-    description: "The universal parental controls API. One policy for your family, enforced across every platform.",
+    description: "The child safety infrastructure that powers parental controls apps. One policy, enforced across every platform.",
   },
 }
 

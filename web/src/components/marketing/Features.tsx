@@ -3,32 +3,32 @@ import { Zap, Shield, Globe, Star, MessageSquare } from "lucide-react"
 const FEATURES = [
   {
     icon: Zap,
-    title: "Quick Setup",
-    description: "One API call creates a family, adds a child, and generates 24 age-appropriate rules automatically.",
+    title: "Works With Your App",
+    description: "Set your rules in Bark, Qustodio, Aura, or any Phosra-powered app. Phosra enforces them across every platform automatically.",
     color: "bg-amber-50 text-amber-600",
   },
   {
     icon: Shield,
     title: "35 Rule Categories",
-    description: "From screen time limits to algorithmic safety controls — every aspect of child safety, defined as policy.",
+    description: "From screen time limits to content filtering and social media controls — every aspect of child safety, standardized across platforms.",
     color: "bg-green-50 text-green-600",
   },
   {
     icon: Globe,
-    title: "15 Platform Adapters",
-    description: "Push rules to NextDNS, Android, Apple, Microsoft, and more. Connect once, enforce everywhere.",
+    title: "500+ Platforms Connected",
+    description: "YouTube, TikTok, Roblox, Netflix, Android, Apple, and hundreds more. Your rules follow your kids wherever they go.",
     color: "bg-blue-50 text-blue-600",
   },
   {
     icon: Star,
-    title: "Age-Aware Ratings",
-    description: "Automatic age-to-rating mapping across MPAA, TV Parental, ESRB, PEGI, and CSM systems.",
+    title: "Always Up to Date on the Law",
+    description: "KOSA, COPPA, EU DSA and 8 more child safety laws built in. When regulations change, your protections update automatically.",
     color: "bg-purple-50 text-purple-600",
   },
   {
     icon: MessageSquare,
     title: "AI Playground",
-    description: "Describe what you want in natural language. Watch the AI chain API calls in real-time.",
+    description: "Describe what you want in plain English. The AI sets up your policies and connects your platforms in seconds.",
     color: "bg-rose-50 text-rose-600",
   },
 ]
@@ -39,10 +39,10 @@ export function Features() {
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <div className="text-center mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Everything you need to protect your family
+            Everything your family needs, built into the apps you already use
           </h2>
           <p className="text-muted-foreground text-base max-w-2xl mx-auto">
-            A complete platform for defining, deploying, and monitoring parental controls across every device your children use.
+            Phosra powers parental controls apps with universal enforcement, regulatory intelligence, and connections to every major platform.
           </p>
         </div>
 
