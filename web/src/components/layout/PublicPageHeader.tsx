@@ -8,9 +8,9 @@ import { Menu, X } from "lucide-react"
 const NAV_LINKS = [
   { href: "/docs", label: "Docs" },
   { href: "/platforms", label: "Platforms" },
-  { href: "/playground", label: "Playground" },
+  { href: "/compliance", label: "Compliance" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/changelog", label: "Changelog" },
+  { href: "/playground", label: "Playground" },
 ]
 
 export function PublicPageHeader() {

@@ -65,7 +65,7 @@ export function Hero() {
                   Get Started Free
                 </Link>
                 <Link
-                  href="/dashboard/docs"
+                  href="/docs"
                   className="inline-flex items-center px-8 py-4 border border-white/20 text-white text-sm font-semibold rounded-sm hover:bg-white/5 hover:border-white/30 transition"
                 >
                   Read the Docs
