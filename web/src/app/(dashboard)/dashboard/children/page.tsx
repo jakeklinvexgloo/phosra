@@ -53,11 +53,11 @@ export default function ChildrenPage() {
         <h2 className="text-h2 text-foreground">Children</h2>
         <div className="flex gap-3">
           {families.length > 1 && (
-            <select value={selectedFamily} onChange={(e) => loadChildren(e.target.value)} className="rounded border border-input bg-white px-3 py-2 text-sm text-foreground">
+            <select value={selectedFamily} onChange={(e) => loadChildren(e.target.value)} className="rounded border border-input bg-background px-3 py-2 text-sm text-foreground">
               {families.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
             </select>
           )}
-          <button onClick={() => setShowCreate(true)} className="flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition">
+          <button onClick={() => setShowCreate(true)} className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">
             <UserPlus className="w-4 h-4" />
             Add Child
           </button>
@@ -78,7 +78,7 @@ export default function ChildrenPage() {
             </div>
           </div>
           <div className="flex gap-3">
-            <button onClick={createChild} className="bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition">Add Child</button>
+            <button onClick={createChild} className="bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">Add Child</button>
             <button onClick={() => setShowCreate(false)} className="px-5 py-2.5 rounded-full text-sm border border-foreground text-foreground hover:bg-muted transition">Cancel</button>
           </div>
         </div>

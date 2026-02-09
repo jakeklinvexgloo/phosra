@@ -1,14 +1,16 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Send } from "lucide-react"
+import { Send, Square } from "lucide-react"
 
 interface ChatInputProps {
   onSend: (message: string) => void
+  onStop?: () => void
   disabled?: boolean
+  isLoading?: boolean
 }
 
-export function ChatInput({ onSend, disabled }: ChatInputProps) {
+export function ChatInput({ onSend, onStop, disabled, isLoading }: ChatInputProps) {
   const [value, setValue] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -46,17 +48,27 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         onKeyDown={handleKeyDown}
         onInput={handleInput}
         placeholder="Ask about parental controls, policies, or platforms..."
-        disabled={disabled}
+        disabled={disabled || isLoading}
         rows={1}
         className="w-full px-4 py-3 pr-12 text-sm resize-none bg-transparent focus:outline-none placeholder:text-muted-foreground disabled:opacity-50"
       />
-      <button
-        onClick={handleSubmit}
-        disabled={disabled || !value.trim()}
-        className="absolute right-2 bottom-2 w-8 h-8 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
-      >
-        <Send className="w-4 h-4" />
-      </button>
+      {isLoading ? (
+        <button
+          onClick={onStop}
+          className="absolute right-2 bottom-2 w-8 h-8 rounded flex items-center justify-center bg-red-500 hover:bg-red-600 text-white transition-colors"
+          title="Stop generation"
+        >
+          <Square className="w-3 h-3 fill-current" />
+        </button>
+      ) : (
+        <button
+          onClick={handleSubmit}
+          disabled={disabled || !value.trim()}
+          className="absolute right-2 bottom-2 w-8 h-8 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
+        >
+          <Send className="w-4 h-4" />
+        </button>
+      )}
     </div>
   )
 }

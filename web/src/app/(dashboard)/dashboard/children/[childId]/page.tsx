@@ -5,6 +5,7 @@ import { useParams } from "next/navigation"
 import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
 import { Gavel } from "lucide-react"
+import { toast } from "@/hooks/use-toast"
 import { api } from "@/lib/api"
 import type { Child, ChildPolicy, Rating } from "@/lib/types"
 
@@ -44,7 +45,7 @@ export default function ChildDetailPage() {
 
   const triggerEnforcement = async () => {
     await api.triggerChildEnforcement(childId)
-    alert("Enforcement triggered!")
+    toast({ title: "Enforcement triggered", description: "Rules are being pushed to all connected platforms.", variant: "success" })
   }
 
   if (!child) {
@@ -76,7 +77,7 @@ export default function ChildDetailPage() {
             <p className="text-muted-foreground">Age {getAge(child.birth_date)}</p>
           </div>
         </div>
-        <button onClick={triggerEnforcement} className="flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition">
+        <button onClick={triggerEnforcement} className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">
           <Gavel className="w-4 h-4" />
           Enforce All Platforms
         </button>
@@ -105,8 +106,8 @@ export default function ChildDetailPage() {
           {tab === "policies" && (
             <div>
               <div className="flex gap-3 mb-6">
-                <input type="text" placeholder="New policy name" value={newPolicyName} onChange={(e) => setNewPolicyName(e.target.value)} className="rounded border border-input bg-white px-3 py-2 text-sm text-foreground focus:outline-none focus:border-foreground" />
-                <button onClick={createPolicy} className="bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition">Create Policy</button>
+                <input type="text" placeholder="New policy name" value={newPolicyName} onChange={(e) => setNewPolicyName(e.target.value)} className="rounded border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:border-foreground" />
+                <button onClick={createPolicy} className="bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">Create Policy</button>
               </div>
               <div className="space-y-4">
                 {policies.map(policy => {
@@ -128,8 +129,8 @@ export default function ChildDetailPage() {
                         </div>
                         <div className="flex gap-2">
                           <button onClick={() => generateFromAge(policy.id)} className="text-xs px-3 py-1.5 rounded-full border border-foreground text-foreground hover:bg-muted transition">Generate from Age</button>
-                          {policy.status !== "active" && <button onClick={() => activatePolicy(policy.id)} className="text-xs px-3 py-1.5 rounded-full bg-success text-success-foreground hover:opacity-90 transition">Activate</button>}
-                          <Link href={`/dashboard/children/${childId}/policies/${policy.id}`} className="text-xs px-3 py-1.5 rounded-full bg-foreground text-white hover:opacity-90 transition">Edit Rules</Link>
+                          {policy.status !== "active" && <button onClick={() => activatePolicy(policy.id)} className="text-xs px-3 py-1.5 rounded-full bg-success text-success-foreground hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">Activate</button>}
+                          <Link href={`/dashboard/children/${childId}/policies/${policy.id}`} className="text-xs px-3 py-1.5 rounded-full bg-foreground text-background hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">Edit Rules</Link>
                         </div>
                       </div>
                     </div>

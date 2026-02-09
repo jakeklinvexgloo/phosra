@@ -193,7 +193,7 @@ export default function PlatformsPage() {
             <ChevronDown className="w-4 h-4 text-muted-foreground ml-auto" />
           </button>
           {capsOpen && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-sm shadow-lg z-20 min-w-[180px]">
+            <div className="absolute top-full left-0 mt-1 bg-background border border-border rounded-sm shadow-lg z-20 min-w-[180px]">
               {CAP_GROUPS.map(g => (
                 <button
                   key={g.key}
@@ -201,7 +201,7 @@ export default function PlatformsPage() {
                   className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-muted/50 transition"
                 >
                   <span className={`w-4 h-4 rounded-sm border flex items-center justify-center text-xs ${
-                    selectedCaps.includes(g.key) ? "bg-foreground border-foreground text-white" : "border-border"
+                    selectedCaps.includes(g.key) ? "bg-foreground border-foreground text-background" : "border-border"
                   }`}>
                     {selectedCaps.includes(g.key) && "✓"}
                   </span>
@@ -373,10 +373,10 @@ export default function PlatformsPage() {
                                       placeholder="API Key"
                                       value={apiKey}
                                       onChange={e => setApiKey(e.target.value)}
-                                      className="rounded border border-input bg-white px-2 py-1 text-sm text-foreground focus:outline-none focus:border-foreground"
+                                      className="rounded border border-input bg-background px-2 py-1 text-sm text-foreground focus:outline-none focus:border-foreground"
                                     />
                                   )}
-                                  <button onClick={() => verify(platform.id)} className="bg-foreground text-white px-3 py-1 rounded-full text-xs font-medium hover:opacity-90 transition">
+                                  <button onClick={() => verify(platform.id)} className="bg-foreground text-background px-3 py-1 rounded-full text-xs font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">
                                     Verify
                                   </button>
                                   <button onClick={() => setVerifyingTo(null)} className="px-3 py-1 rounded-full border border-foreground text-foreground text-xs hover:bg-muted transition">
@@ -386,7 +386,7 @@ export default function PlatformsPage() {
                               ) : (
                                 <button
                                   onClick={(e) => { e.stopPropagation(); setVerifyingTo(platform.id) }}
-                                  className="bg-foreground text-white px-3 py-1 rounded-full text-xs font-medium hover:opacity-90 transition"
+                                  className="bg-foreground text-background px-3 py-1 rounded-full text-xs font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
                                 >
                                   {platform.auth_type === "manual" ? "View Instructions" : "Verify Compliance"}
                                 </button>

@@ -104,12 +104,12 @@ func (s *EnforcementService) TriggerEnforcement(ctx context.Context, userID, chi
 	}
 
 	// Fan out to all verified platforms
-	go s.executeEnforcementFanOut(context.Background(), job, rules, links)
+	go s.executeEnforcementFanOut(context.Background(), job, rules, links, child.Name, child.Age())
 
 	return job, nil
 }
 
-func (s *EnforcementService) executeEnforcementFanOut(ctx context.Context, job *domain.EnforcementJob, rules []domain.PolicyRule, links []domain.ComplianceLink) {
+func (s *EnforcementService) executeEnforcementFanOut(ctx context.Context, job *domain.EnforcementJob, rules []domain.PolicyRule, links []domain.ComplianceLink, childName string, childAge int) {
 	var hasFailure, hasSuccess bool
 
 	for _, link := range links {
@@ -136,6 +136,8 @@ func (s *EnforcementService) executeEnforcementFanOut(ctx context.Context, job *
 		enfReq := provider.EnforcementRequest{
 			Rules:      rules,
 			AuthConfig: provider.AuthConfig{EncryptedCreds: link.EncryptedCreds},
+			ChildName:  childName,
+			ChildAge:   childAge,
 		}
 
 		enfResult, err := adapter.EnforcePolicy(ctx, enfReq)

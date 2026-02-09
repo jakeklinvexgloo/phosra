@@ -1,10 +1,36 @@
 import type { Metadata } from "next"
 import dynamic from "next/dynamic"
 import { ClerkProvider } from "@clerk/nextjs"
+import { ThemeProvider } from "@/components/ui/theme-provider"
+import { Inter, DM_Serif_Display, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+})
+
+const dmSerif = DM_Serif_Display({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+})
 
 const FeedbackOverlay = dynamic(
   () => import("@/components/FeedbackOverlay"),
+  { ssr: false }
+)
+
+const Toaster = dynamic(
+  () => import("@/components/ui/toaster").then((m) => m.Toaster),
   { ssr: false }
 )
 
@@ -32,10 +58,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className="antialiased">
-          {children}
-          <FeedbackOverlay />
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.variable} ${dmSerif.variable} ${jetbrainsMono.variable} antialiased`}>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+            {children}
+            <Toaster />
+            <FeedbackOverlay />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

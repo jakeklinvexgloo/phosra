@@ -12,9 +12,9 @@ export const SCENARIOS: Scenario[] = [
   {
     id: "protect-8yo",
     title: "Protect my 8-year-old",
-    description: "Set up age-appropriate rules for a young child",
+    description: "Full setup: rules, platforms, and enforcement in one go",
     prompt:
-      "I have an 8-year-old daughter named Emma. Help me set up age-appropriate parental controls for her. Explain what rules you're applying and why.",
+      "I have an 8-year-old daughter named Emma. Set up her profile with age-appropriate parental controls, then push the rules to all connected platforms. Show me exactly what got configured on each platform — what she can and can't access on Netflix, YouTube, Xbox, and everything else.",
     icon: Shield,
   },
   {
@@ -36,9 +36,9 @@ export const SCENARIOS: Scenario[] = [
   {
     id: "multi-child",
     title: "Set up both kids",
-    description: "Configure age-appropriate rules for children of different ages",
+    description: "Configure and enforce rules for children of different ages",
     prompt:
-      "I need to set up parental controls for two children: Emma (age 8) and Noah (age 14). Each should get age-appropriate defaults. Show me how their rules compare.",
+      "I need to set up parental controls for two children: Emma (age 8) and Noah (age 14). Set them both up with age-appropriate defaults, push the rules to all platforms, and show me how their protections compare side by side.",
     icon: Users,
   },
   {
@@ -52,9 +52,9 @@ export const SCENARIOS: Scenario[] = [
   {
     id: "enforce-all",
     title: "Push rules everywhere",
-    description: "Trigger enforcement and inspect results per platform",
+    description: "Trigger enforcement and see per-platform results",
     prompt:
-      "Push Emma's active policy to all connected platforms. Show me what happened on each platform — which rules were applied, skipped, or failed.",
+      "Push Emma's active policy to all connected platforms. Show me what happened on each platform — which rules were applied, what content is blocked, and what her experience will look like on each service.",
     icon: Rocket,
   },
 ]

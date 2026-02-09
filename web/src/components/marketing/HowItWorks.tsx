@@ -1,48 +1,105 @@
+"use client"
+
+import { useRef } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
+import { AnimatedSection, WaveTexture } from "./shared"
+
 const STEPS = [
   {
-    number: "1",
+    number: "01",
     title: "Define",
-    description: "Create a family, add your children, set age. Phosra generates rules automatically based on age-appropriate defaults and legislative requirements.",
+    description:
+      "Create a family, add your children, set age. Phosra generates rules automatically based on age-appropriate defaults and legislative requirements.",
+    detail: "24 rules generated in <100ms",
   },
   {
-    number: "2",
+    number: "02",
     title: "Connect",
-    description: "Link your platforms — NextDNS, Android, Apple, and more. One credential per platform, verified and encrypted with AES-256-GCM.",
+    description:
+      "Link your platforms — NextDNS, Android, Apple, and more. One credential per platform, verified and encrypted with AES-256-GCM.",
+    detail: "15+ platform adapters",
   },
   {
-    number: "3",
+    number: "03",
     title: "Enforce",
-    description: "Push rules to every connected platform with one API call. Monitor compliance in real-time and get notified when enforcement fails.",
+    description:
+      "Push rules to every connected platform with one API call. Monitor compliance in real-time and get notified when enforcement fails.",
+    detail: "Real-time sync & monitoring",
   },
 ]
 
 export function HowItWorks() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 80%", "end 40%"],
+  })
+
   return (
-    <section className="py-16 sm:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-        <div className="text-center mb-10 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+    <section
+      ref={containerRef}
+      className="relative py-24 sm:py-32 overflow-hidden bg-white"
+    >
+      {/* Subtle background wave */}
+      <WaveTexture colorStart="#00D47E" colorEnd="#26A8C9" opacity={0.03} />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <AnimatedSection className="text-center mb-16 sm:mb-24">
+          <h2 className="font-display text-4xl sm:text-5xl text-foreground leading-tight mb-5">
             Three steps to total protection
           </h2>
-          <p className="text-muted-foreground text-base max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             From zero to fully enforced parental controls in minutes, not hours.
           </p>
-        </div>
+        </AnimatedSection>
 
-        <div className="grid md:grid-cols-3 gap-8 lg:gap-12 relative">
-          {/* Connecting line (desktop only) */}
-          <div className="hidden md:block absolute top-10 left-[16.67%] right-[16.67%] h-px bg-border" />
+        {/* Vertical timeline */}
+        <div className="relative max-w-3xl mx-auto">
+          {/* Timeline track (desktop) */}
+          <div className="hidden md:block absolute left-8 top-0 bottom-0 w-px">
+            {/* Gray background track */}
+            <div className="absolute inset-0 bg-gray-200" />
+            {/* Animated green fill */}
+            <motion.div
+              className="absolute top-0 left-0 w-full bg-brand-green origin-top"
+              style={{ scaleY: scrollYProgress, height: "100%" }}
+            />
+          </div>
 
-          {STEPS.map((step) => (
-            <div key={step.number} className="relative text-center">
-              {/* Number badge */}
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-brand-green/10 flex items-center justify-center mx-auto mb-4 sm:mb-6 relative z-10">
-                <span className="text-2xl font-bold text-brand-green">{step.number}</span>
-              </div>
-              <h3 className="text-xl font-semibold text-foreground mb-3">{step.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">{step.description}</p>
-            </div>
-          ))}
+          {/* Steps */}
+          <div className="space-y-16 sm:space-y-20">
+            {STEPS.map((step, i) => (
+              <AnimatedSection key={step.number} direction="left" delay={i * 0.15}>
+                <div className="flex gap-8 md:gap-12 items-start">
+                  {/* Number badge */}
+                  <div className="relative z-10 shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-white border-2 border-brand-green/20 flex items-center justify-center shadow-sm">
+                      <span className="font-display text-xl text-brand-green">
+                        {step.number}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 pb-2">
+                    <h3 className="font-display text-2xl sm:text-3xl text-foreground mb-3">
+                      {step.title}
+                    </h3>
+                    <p className="text-muted-foreground text-base leading-relaxed mb-4 max-w-lg">
+                      {step.description}
+                    </p>
+                    {/* Detail chip */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-green/5 border border-brand-green/10">
+                      <div className="w-1.5 h-1.5 rounded-full bg-brand-green" />
+                      <span className="text-xs font-medium text-brand-green">
+                        {step.detail}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </AnimatedSection>
+            ))}
+          </div>
         </div>
       </div>
     </section>

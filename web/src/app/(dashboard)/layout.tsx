@@ -3,52 +3,14 @@
 import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import { LogOut, Shield, Home, Zap, BookOpen, Globe, Users, Settings, Search, ChevronRight, MessageSquare, Menu, X, Rocket } from "lucide-react"
+import { LogOut, Search, ChevronRight, Menu, X } from "lucide-react"
 import { useUser, useClerk } from "@clerk/nextjs"
-
-interface NavItem {
-  href: string
-  label: string
-  icon: typeof Home
-  exact?: boolean
-  external?: boolean
-}
-
-interface NavGroup {
-  label?: string
-  items: NavItem[]
-}
-
-const navGroups: NavGroup[] = [
-  {
-    items: [
-      { href: "/dashboard", label: "Home", icon: Home, exact: true },
-      { href: "/dashboard/setup", label: "Quick Setup", icon: Zap },
-      { href: "/dashboard/docs", label: "API Docs", icon: BookOpen },
-      { href: "/dashboard/playground", label: "Playground", icon: MessageSquare },
-    ],
-  },
-  {
-    label: "Platform Compliance",
-    items: [
-      { href: "/dashboard/platforms", label: "Platforms", icon: Globe },
-      { href: "/dashboard/enforcement", label: "Enforcement", icon: Shield },
-    ],
-  },
-  {
-    label: "Family Management",
-    items: [
-      { href: "/dashboard/children", label: "Children", icon: Users },
-    ],
-  },
-  {
-    label: "Settings & Account",
-    items: [
-      { href: "/dashboard/settings", label: "Settings", icon: Settings },
-      { href: "/dashboard/deploy", label: "Deploy", icon: Rocket },
-    ],
-  },
-]
+import { DashboardSkeleton } from "@/components/ui/skeleton"
+import { CommandPalette } from "@/components/ui/command-palette"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { Breadcrumbs } from "@/components/ui/breadcrumbs"
+import { EnvironmentBadge } from "@/components/dashboard/EnvironmentBadge"
+import { navGroups } from "@/lib/navigation"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -57,6 +19,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { signOut } = useClerk()
   const [isSandbox, setIsSandbox] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [cmdkOpen, setCmdkOpen] = useState(false)
 
   useEffect(() => {
     const sandbox = localStorage.getItem("sandbox-session")
@@ -74,12 +37,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     setSidebarOpen(false)
   }, [pathname])
 
+  // Global Cmd+K shortcut
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault()
+        setCmdkOpen((prev) => !prev)
+      }
+    }
+    window.addEventListener("keydown", handler)
+    return () => window.removeEventListener("keydown", handler)
+  }, [])
+
   if (!isSandbox && (!isLoaded || !isSignedIn)) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-foreground border-t-transparent rounded-full animate-spin" />
-      </div>
-    )
+    return <DashboardSkeleton />
   }
 
   const displayName = isSandbox ? "Dev User" : (user?.firstName || user?.emailAddresses?.[0]?.emailAddress || "User")
@@ -91,6 +62,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Command Palette */}
+      <CommandPalette open={cmdkOpen} onOpenChange={setCmdkOpen} />
+
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -163,8 +137,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       {/* Top bar */}
-      <header className="fixed top-0 left-0 lg:left-[320px] right-0 h-16 lg:h-24 border-b border-border bg-white z-20 flex items-center justify-between px-4 lg:px-8">
-        {/* Mobile hamburger + Search */}
+      <header className="fixed top-0 left-0 lg:left-[320px] right-0 h-16 lg:h-24 border-b border-border bg-background z-20 flex items-center justify-between px-4 lg:px-8">
+        {/* Mobile hamburger + Search trigger */}
         <div className="flex items-center gap-3 flex-1">
           <button
             onClick={() => setSidebarOpen(true)}
@@ -172,22 +146,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           >
             <Menu className="w-5 h-5" />
           </button>
-          <div className="relative w-full max-w-xs lg:max-w-sm hidden sm:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full pl-10 pr-4 py-2.5 border border-input rounded-sm text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground"
-            />
-          </div>
+          {/* Command palette trigger */}
+          <button
+            onClick={() => setCmdkOpen(true)}
+            className="relative w-full max-w-xs lg:max-w-sm hidden sm:flex items-center gap-3 pl-3.5 pr-3 py-2.5 border border-border rounded-lg text-sm text-muted-foreground hover:border-foreground/20 hover:bg-muted/50 transition-colors cursor-pointer"
+          >
+            <Search className="w-4 h-4 shrink-0" />
+            <span className="flex-1 text-left">Search...</span>
+            <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-muted text-muted-foreground text-[10px] font-mono rounded border border-border">
+              ⌘K
+            </kbd>
+          </button>
           {/* Mobile logo (shown when sidebar is hidden) */}
           <div className="flex items-center sm:hidden">
             <img src="/logo.svg" alt="Phosra" className="h-5" />
           </div>
         </div>
 
-        {/* User info */}
+        {/* Theme toggle + User info */}
         <div className="flex items-center gap-3 lg:gap-5">
+          <ThemeToggle />
           <div className="flex items-center gap-2.5">
             {!isSandbox && user?.imageUrl ? (
               <img src={user.imageUrl} alt="" className="w-8 h-8 rounded-full" />
@@ -197,7 +175,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             )}
             <span className="text-sm text-foreground font-medium hidden sm:inline">{displayName}</span>
-            {isSandbox && <span className="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">DEV</span>}
+            <EnvironmentBadge isSandbox={isSandbox} />
           </div>
           <button
             onClick={() => {
@@ -224,6 +202,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className={pathname.startsWith("/dashboard/docs")
             ? "px-4 sm:px-6 lg:px-8 py-6 sm:py-10"
             : "max-w-[960px] px-4 sm:px-8 lg:px-12 py-6 sm:py-10"}>
+            <Breadcrumbs />
             {children}
           </div>
         )}

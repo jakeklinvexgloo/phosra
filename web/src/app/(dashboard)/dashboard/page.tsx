@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Users, ShieldCheck, Activity, Plus, ArrowRight, Zap, Globe, BookOpen } from "lucide-react"
 import { api } from "@/lib/api"
+import { UsageChart } from "@/components/dashboard/UsageChart"
 import type { Family, FamilyOverview } from "@/lib/types"
 
 export default function DashboardHome() {
@@ -77,7 +78,7 @@ export default function DashboardHome() {
 
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition"
+            className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
           >
             <Plus className="w-4 h-4" />
             Create Family
@@ -89,7 +90,7 @@ export default function DashboardHome() {
             <h2 className="text-h3 text-foreground">Overview</h2>
             <button
               onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition"
+              className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
             >
               <Plus className="w-4 h-4" />
               New Family
@@ -128,6 +129,11 @@ export default function DashboardHome() {
               </div>
             </div>
           )}
+
+          {/* API Usage Chart */}
+          <div className="mb-8">
+            <UsageChart />
+          </div>
 
           <div className="mb-6 flex justify-end">
             <Link
@@ -185,7 +191,7 @@ export default function DashboardHome() {
               />
             </div>
             <div className="flex gap-3 mt-4">
-              <button onClick={createFamily} className="bg-foreground text-white px-5 py-2.5 rounded-full text-sm font-medium hover:opacity-90 transition">Create</button>
+              <button onClick={createFamily} className="bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">Create</button>
               <button onClick={() => setShowCreate(false)} className="px-5 py-2.5 rounded-full text-sm border border-foreground text-foreground hover:bg-muted transition">Cancel</button>
             </div>
           </div>

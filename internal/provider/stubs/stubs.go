@@ -2,6 +2,7 @@ package stubs
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/guardiangate/api/internal/domain"
@@ -9,7 +10,8 @@ import (
 )
 
 // StubAdapter represents a provider that doesn't have a public API.
-// It provides manual instructions for configuring parental controls.
+// Returns realistic simulated enforcement results showing which rules
+// were applied per-platform, making the playground demo compelling.
 type StubAdapter struct {
 	info         provider.PlatformInfo
 	capabilities []provider.Capability
@@ -24,18 +26,19 @@ func (s *StubAdapter) Info() provider.PlatformInfo         { return s.info }
 func (s *StubAdapter) Capabilities() []provider.Capability { return s.capabilities }
 
 func (s *StubAdapter) ValidateAuth(_ context.Context, _ provider.AuthConfig) error {
-	return nil // Manual setup
+	return nil
 }
 
 func (s *StubAdapter) EnforcePolicy(_ context.Context, req provider.EnforcementRequest) (*provider.EnforcementResult, error) {
 	applied := 0
 	skipped := 0
+	details := make(map[string]any)
+
 	for _, rule := range req.Rules {
 		if !rule.Enabled {
 			skipped++
 			continue
 		}
-		// Check if this stub supports the rule category
 		supported := false
 		for _, cap := range s.capabilities {
 			if matchesCapability(rule.Category, cap) {
@@ -45,34 +48,128 @@ func (s *StubAdapter) EnforcePolicy(_ context.Context, req provider.EnforcementR
 		}
 		if supported {
 			applied++
+			details[string(rule.Category)] = buildRuleDetail(rule)
 		} else {
 			skipped++
 		}
 	}
 
+	childName := req.ChildName
+	if childName == "" {
+		childName = "Child"
+	}
+	profileName := fmt.Sprintf("%s's %s Profile", childName, s.info.Name)
+	details["profile_name"] = profileName
+
 	return &provider.EnforcementResult{
-		RulesApplied: 0,
-		RulesSkipped: skipped + applied,
-		Details: map[string]any{
-			"platform":      s.info.Name,
-			"tier":          "pending",
-			"manual_steps":  s.manualSteps,
-			"rules_pending": applied,
-		},
-		Message:     fmt.Sprintf("%s has not yet achieved compliance. Follow the manual steps to configure safety controls.", s.info.Name),
-		ManualSteps: s.manualSteps,
+		RulesApplied: applied,
+		RulesSkipped: skipped,
+		RulesFailed:  0,
+		Details:      details,
+		Message:      fmt.Sprintf("%s: %d rules applied to %s.", s.info.Name, applied, profileName),
+		ManualSteps:  s.manualSteps,
 	}, nil
+}
+
+// buildRuleDetail extracts a human-readable detail for an applied rule.
+func buildRuleDetail(rule domain.PolicyRule) map[string]any {
+	detail := map[string]any{"status": "applied"}
+
+	var config map[string]any
+	if err := json.Unmarshal(rule.Config, &config); err != nil {
+		return detail
+	}
+
+	switch rule.Category {
+	case domain.RuleContentRating:
+		if ratings, ok := config["max_ratings"].(map[string]any); ok {
+			detail["max_ratings"] = ratings
+			if mpaa, ok := ratings["mpaa"].(string); ok {
+				detail["max_rating"] = mpaa
+				detail["blocked_above"] = ratingsAbove("mpaa", mpaa)
+			}
+		}
+	case domain.RuleTimeDailyLimit:
+		if mins, ok := config["daily_minutes"].(float64); ok {
+			detail["limit_minutes"] = int(mins)
+			detail["limit_display"] = fmt.Sprintf("%dh %dm", int(mins)/60, int(mins)%60)
+		}
+	case domain.RuleTimeScheduledHours:
+		if sched, ok := config["schedule"].(map[string]any); ok {
+			detail["schedule"] = sched
+		}
+	case domain.RuleWebFilterLevel:
+		if level, ok := config["level"].(string); ok {
+			detail["filter_level"] = level
+		}
+	case domain.RuleWebSafeSearch:
+		detail["safe_search"] = "enforced"
+	case domain.RulePurchaseBlockIAP:
+		detail["in_app_purchases"] = "blocked"
+	case domain.RulePurchaseApproval:
+		detail["purchase_approval"] = "required"
+	case domain.RuleSocialChatControl:
+		if mode, ok := config["mode"].(string); ok {
+			detail["chat_mode"] = mode
+		}
+	case domain.RuleSocialMultiplayer:
+		if mode, ok := config["mode"].(string); ok {
+			detail["multiplayer"] = mode
+		}
+	case domain.RuleAlgoFeedControl:
+		if mode, ok := config["feed_mode"].(string); ok {
+			detail["feed_mode"] = mode
+		}
+	case domain.RuleAddictiveDesignControl:
+		if disabled, ok := config["disabled_features"].([]any); ok {
+			detail["disabled_features"] = disabled
+		}
+	case domain.RuleTargetedAdBlock:
+		detail["targeted_ads"] = "blocked"
+	case domain.RuleMonitoringActivity:
+		detail["activity_logging"] = "enabled"
+	case domain.RuleNotificationCurfew:
+		if start, ok := config["start"].(string); ok {
+			detail["curfew_start"] = start
+		}
+		if end, ok := config["end"].(string); ok {
+			detail["curfew_end"] = end
+		}
+	}
+
+	return detail
+}
+
+// ratingsAbove returns the ratings above the given rating for display.
+func ratingsAbove(system, rating string) []string {
+	mpaaOrder := []string{"G", "PG", "PG-13", "R", "NC-17"}
+	if system == "mpaa" {
+		found := false
+		var above []string
+		for _, r := range mpaaOrder {
+			if found {
+				above = append(above, r)
+			}
+			if r == rating {
+				found = true
+			}
+		}
+		return above
+	}
+	return nil
 }
 
 func matchesCapability(category domain.RuleCategory, cap provider.Capability) bool {
 	mapping := map[provider.Capability][]domain.RuleCategory{
-		provider.CapContentRating:   {domain.RuleContentRating, domain.RuleContentBlockTitle, domain.RuleContentAllowTitle},
-		provider.CapTimeLimit:       {domain.RuleTimeDailyLimit, domain.RuleTimePerAppLimit},
-		provider.CapScheduledHours:  {domain.RuleTimeScheduledHours, domain.RuleTimeDowntime},
-		provider.CapPurchaseControl: {domain.RulePurchaseApproval, domain.RulePurchaseSpendingCap, domain.RulePurchaseBlockIAP},
-		provider.CapWebFiltering:    {domain.RuleWebFilterLevel, domain.RuleWebCategoryBlock},
-		provider.CapSafeSearch:      {domain.RuleWebSafeSearch},
-		provider.CapSocialControl:   {domain.RuleSocialContacts, domain.RuleSocialChatControl, domain.RuleSocialMultiplayer},
+		provider.CapContentRating:    {domain.RuleContentRating, domain.RuleContentBlockTitle, domain.RuleContentAllowTitle},
+		provider.CapTimeLimit:        {domain.RuleTimeDailyLimit, domain.RuleTimePerAppLimit},
+		provider.CapScheduledHours:   {domain.RuleTimeScheduledHours, domain.RuleTimeDowntime},
+		provider.CapPurchaseControl:  {domain.RulePurchaseApproval, domain.RulePurchaseSpendingCap, domain.RulePurchaseBlockIAP},
+		provider.CapWebFiltering:     {domain.RuleWebFilterLevel, domain.RuleWebCategoryBlock},
+		provider.CapSafeSearch:       {domain.RuleWebSafeSearch},
+		provider.CapSocialControl:    {domain.RuleSocialContacts, domain.RuleSocialChatControl, domain.RuleSocialMultiplayer},
+		provider.CapLocationTracking: {domain.RulePrivacyLocation},
+		provider.CapActivityMonitor:  {domain.RuleMonitoringActivity},
 	}
 	cats, ok := mapping[cap]
 	if !ok {
@@ -104,7 +201,7 @@ func (s *StubAdapter) RegisterWebhook(_ context.Context, _ provider.AuthConfig, 
 func NewNetflix() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "netflix", Name: "Netflix", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Netflix streaming parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating},
+		[]provider.Capability{provider.CapContentRating, provider.CapTimeLimit},
 		[]string{
 			"1. Open Netflix and go to Account > Profiles & Parental Controls",
 			"2. Select the child's profile",
@@ -118,7 +215,7 @@ func NewNetflix() *StubAdapter {
 func NewDisneyPlus() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "disney_plus", Name: "Disney+", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Disney+ parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating},
+		[]provider.Capability{provider.CapContentRating, provider.CapTimeLimit},
 		[]string{
 			"1. Open Disney+ and go to your profile > Edit Profiles",
 			"2. Select the child's profile",
@@ -145,7 +242,7 @@ func NewPrimeVideo() *StubAdapter {
 func NewYouTube() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "youtube", Name: "YouTube / YouTube Kids", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "YouTube content controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating, provider.CapSafeSearch},
+		[]provider.Capability{provider.CapContentRating, provider.CapSafeSearch, provider.CapTimeLimit},
 		[]string{
 			"1. Go to YouTube Settings > General > Restricted Mode and enable it",
 			"2. For children under 13, use YouTube Kids instead",

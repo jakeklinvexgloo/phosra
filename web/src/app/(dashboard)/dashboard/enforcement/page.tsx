@@ -102,7 +102,7 @@ export default function EnforcementPage() {
                             <span className={`text-xs ${s.text}`}>{s.label}</span>
                           </button>
                           {isExpanded && (
-                            <div className="absolute z-10 left-1/2 -translate-x-1/2 top-full mt-1 bg-white rounded shadow-plaid-card p-3 text-left w-56">
+                            <div className="absolute z-10 left-1/2 -translate-x-1/2 top-full mt-1 bg-background rounded shadow-plaid-card p-3 text-left w-56">
                               {results ? (
                                 results.filter(r => r.platform_id === link.platform_id).length > 0 ? (
                                   results.filter(r => r.platform_id === link.platform_id).map(result => (

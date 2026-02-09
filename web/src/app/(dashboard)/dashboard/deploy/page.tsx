@@ -88,10 +88,10 @@ export default function DeployPage() {
           return (
             <div
               key={id}
-              className="border border-border rounded-sm p-5 bg-white flex flex-col sm:flex-row sm:items-center gap-4"
+              className="border border-border rounded-sm p-5 bg-background flex flex-col sm:flex-row sm:items-center gap-4"
             >
               <div className={`w-10 h-10 rounded-sm ${color} flex items-center justify-center flex-shrink-0`}>
-                <Icon className="w-5 h-5 text-white" strokeWidth={1.5} />
+                <Icon className="w-5 h-5 text-background" strokeWidth={1.5} />
               </div>
 
               <div className="flex-1 min-w-0">
@@ -114,7 +114,7 @@ export default function DeployPage() {
               <button
                 onClick={() => trigger(id)}
                 disabled={isDeploying}
-                className="px-5 py-2.5 bg-foreground text-white text-sm font-medium rounded-sm hover:opacity-90 transition disabled:opacity-50 flex items-center gap-2 flex-shrink-0"
+                className="px-5 py-2.5 bg-foreground text-background text-sm font-medium rounded-sm hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition disabled:opacity-50 flex items-center gap-2 flex-shrink-0"
               >
                 {isDeploying ? (
                   <>

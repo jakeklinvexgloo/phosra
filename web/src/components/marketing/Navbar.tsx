@@ -1,26 +1,43 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 
 const NAV_LINKS = [
   { href: "#features", label: "Features" },
-  { href: "#developers", label: "Developers" },
-  { href: "#compliance", label: "Compliance" },
-  { href: "/dashboard/docs", label: "Docs" },
+  { href: "/platforms", label: "Platforms" },
+  { href: "/docs", label: "Docs" },
+  { href: "/pricing", label: "Pricing" },
 ]
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-border">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/70 backdrop-blur-xl border-b border-black/[0.06] shadow-sm"
+          : "bg-white/0 backdrop-blur-sm"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-[72px]">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img src="/logo.svg" alt="Phosra" className="h-6" />
+            <img
+              src={scrolled ? "/logo.svg" : "/logo-white.svg"}
+              alt="Phosra"
+              className="h-6 transition-opacity"
+            />
           </Link>
 
           {/* Desktop nav links */}
@@ -29,7 +46,11 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className={`text-sm transition-colors ${
+                  scrolled
+                    ? "text-muted-foreground hover:text-foreground"
+                    : "text-white/70 hover:text-white"
+                }`}
               >
                 {link.label}
               </Link>
@@ -40,13 +61,17 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href="/login"
-              className="text-sm font-medium text-foreground hover:opacity-70 transition px-4 py-2"
+              className={`text-sm font-medium transition px-4 py-2 ${
+                scrolled
+                  ? "text-foreground hover:opacity-70"
+                  : "text-white/80 hover:text-white"
+              }`}
             >
               Log in
             </Link>
             <Link
               href="/login"
-              className="text-sm font-medium bg-brand-green text-foreground px-5 py-2.5 rounded-sm hover:opacity-90 transition"
+              className="text-sm font-medium bg-brand-green text-foreground px-5 py-2.5 rounded-sm transition-all hover:shadow-[0_0_20px_-4px_rgba(0,212,126,0.4)]"
             >
               Get Started
             </Link>
@@ -55,7 +80,7 @@ export function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-foreground"
+            className={`md:hidden p-2 ${scrolled ? "text-foreground" : "text-white"}`}
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

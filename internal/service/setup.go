@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guardiangate/api/internal/domain"
+	"github.com/guardiangate/api/internal/handler/middleware"
 	"github.com/guardiangate/api/internal/repository"
 )
 
@@ -36,24 +37,32 @@ type RuleSummary struct {
 	TotalRulesEnabled int    `json:"total_rules_enabled"`
 }
 
+type ConnectedPlatformSummary struct {
+	PlatformID string `json:"platform_id"`
+	Name       string `json:"name"`
+	Status     string `json:"status"`
+}
+
 type QuickSetupResponse struct {
-	Family      *domain.Family      `json:"family"`
-	Child       *domain.Child       `json:"child"`
-	Policy      *domain.ChildPolicy `json:"policy"`
-	Rules       []domain.PolicyRule `json:"rules"`
-	AgeGroup    string              `json:"age_group"`
-	MaxRatings  map[string]string   `json:"max_ratings"`
-	RuleSummary RuleSummary         `json:"rule_summary"`
+	Family             *domain.Family             `json:"family"`
+	Child              *domain.Child              `json:"child"`
+	Policy             *domain.ChildPolicy        `json:"policy"`
+	Rules              []domain.PolicyRule         `json:"rules"`
+	AgeGroup           string                     `json:"age_group"`
+	MaxRatings         map[string]string           `json:"max_ratings"`
+	RuleSummary        RuleSummary                `json:"rule_summary"`
+	ConnectedPlatforms []ConnectedPlatformSummary `json:"connected_platforms,omitempty"`
 }
 
 type QuickSetupService struct {
-	families repository.FamilyRepository
-	members  repository.FamilyMemberRepository
-	children repository.ChildRepository
-	policies repository.PolicyRepository
-	rules    repository.PolicyRuleRepository
-	ratings  repository.RatingRepository
-	policySvc *PolicyService
+	families        repository.FamilyRepository
+	members         repository.FamilyMemberRepository
+	children        repository.ChildRepository
+	policies        repository.PolicyRepository
+	rules           repository.PolicyRuleRepository
+	ratings         repository.RatingRepository
+	complianceLinks repository.ComplianceLinkRepository
+	policySvc       *PolicyService
 }
 
 func NewQuickSetupService(
@@ -64,8 +73,9 @@ func NewQuickSetupService(
 	rules repository.PolicyRuleRepository,
 	ratings repository.RatingRepository,
 	policySvc *PolicyService,
+	complianceLinks ...repository.ComplianceLinkRepository,
 ) *QuickSetupService {
-	return &QuickSetupService{
+	svc := &QuickSetupService{
 		families:  families,
 		members:   members,
 		children:  children,
@@ -74,6 +84,10 @@ func NewQuickSetupService(
 		ratings:   ratings,
 		policySvc: policySvc,
 	}
+	if len(complianceLinks) > 0 {
+		svc.complianceLinks = complianceLinks[0]
+	}
+	return svc
 }
 
 func (s *QuickSetupService) QuickSetup(ctx context.Context, userID uuid.UUID, req QuickSetupRequest) (*QuickSetupResponse, error) {
@@ -180,7 +194,7 @@ func (s *QuickSetupService) QuickSetup(ctx context.Context, userID uuid.UUID, re
 	maxRatings := extractMaxRatings(finalRules)
 	summary := buildRuleSummary(finalRules)
 
-	return &QuickSetupResponse{
+	resp := &QuickSetupResponse{
 		Family:      family,
 		Child:       child,
 		Policy:      policy,
@@ -188,7 +202,63 @@ func (s *QuickSetupService) QuickSetup(ctx context.Context, userID uuid.UUID, re
 		AgeGroup:    ageGroup,
 		MaxRatings:  maxRatings,
 		RuleSummary: summary,
-	}, nil
+	}
+
+	// Step 7 (sandbox only): Auto-connect popular platforms so enforcement
+	// has targets to fan out to, making the demo compelling out of the box.
+	if middleware.IsSandbox(ctx) && s.complianceLinks != nil {
+		resp.ConnectedPlatforms = s.autoConnectDemoPlatforms(ctx, family.ID)
+	}
+
+	return resp, nil
+}
+
+// sandboxPlatforms defines the platforms auto-connected in sandbox mode.
+var sandboxPlatforms = []struct {
+	ID   string
+	Name string
+}{
+	{"netflix", "Netflix"},
+	{"youtube", "YouTube / YouTube Kids"},
+	{"disney_plus", "Disney+"},
+	{"nextdns", "NextDNS"},
+	{"android", "Android / Family Link"},
+	{"xbox", "Xbox"},
+}
+
+func (s *QuickSetupService) autoConnectDemoPlatforms(ctx context.Context, familyID uuid.UUID) []ConnectedPlatformSummary {
+	var connected []ConnectedPlatformSummary
+	now := time.Now()
+
+	for _, p := range sandboxPlatforms {
+		// Skip if already connected
+		existing, _ := s.complianceLinks.GetByFamilyAndPlatform(ctx, familyID, p.ID)
+		if existing != nil {
+			connected = append(connected, ConnectedPlatformSummary{
+				PlatformID: p.ID,
+				Name:       p.Name,
+				Status:     existing.Status,
+			})
+			continue
+		}
+
+		link := &domain.ComplianceLink{
+			ID:         uuid.New(),
+			FamilyID:   familyID,
+			PlatformID: p.ID,
+			Status:     "connected",
+			VerifiedAt: now,
+		}
+		if err := s.complianceLinks.Create(ctx, link); err != nil {
+			continue
+		}
+		connected = append(connected, ConnectedPlatformSummary{
+			PlatformID: p.ID,
+			Name:       p.Name,
+			Status:     "connected",
+		})
+	}
+	return connected
 }
 
 func (s *QuickSetupService) applyStrictness(rules []domain.PolicyRule, strictness Strictness) []domain.PolicyRule {

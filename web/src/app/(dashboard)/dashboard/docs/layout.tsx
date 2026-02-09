@@ -4,9 +4,11 @@ import { DocsSidebar } from "@/components/docs/DocsSidebar"
 
 export default function DocsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex gap-6 items-start">
+    <div className="docs-three-col">
+      {/* Left sidebar — fixed width, sticky */}
       <DocsSidebar />
-      <div className="flex-1 min-w-0">{children}</div>
+      {/* Center content + Right code panel handled via SideBySideLayout grid within EndpointCard */}
+      <div className="docs-content-area min-w-0">{children}</div>
     </div>
   )
 }

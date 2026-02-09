@@ -10,14 +10,14 @@ import { Footer } from "@/components/marketing/Footer"
 
 export default function MarketingPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen scroll-smooth">
       <Navbar />
       <Hero />
+      <Compliance />
       <Features />
       <Stats />
       <HowItWorks />
       <DevSection />
-      <Compliance />
       <CTASection />
       <Footer />
     </div>

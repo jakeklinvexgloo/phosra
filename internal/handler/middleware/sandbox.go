@@ -71,6 +71,7 @@ func SandboxAuth(userRepo repository.UserRepository) func(http.Handler) http.Han
 			}
 
 			ctx := context.WithValue(r.Context(), UserIDKey, userID)
+			ctx = context.WithValue(ctx, SandboxKey, true)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}

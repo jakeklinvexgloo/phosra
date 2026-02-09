@@ -17,6 +17,13 @@ import (
 type contextKey string
 
 const UserIDKey contextKey = "user_id"
+const SandboxKey contextKey = "sandbox_mode"
+
+// IsSandbox returns true if the request context indicates sandbox mode.
+func IsSandbox(ctx context.Context) bool {
+	v, _ := ctx.Value(SandboxKey).(bool)
+	return v
+}
 
 // ClerkAuth validates Clerk session tokens and resolves the Clerk user ID
 // to a local UUID. If the user doesn't exist locally, it creates one (just-in-time sync).

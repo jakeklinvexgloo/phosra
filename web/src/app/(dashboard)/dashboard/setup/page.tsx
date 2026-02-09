@@ -151,7 +151,7 @@ export default function QuickSetupPage() {
           <div key={i} className="flex items-center gap-3 flex-1">
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
-                i < step ? "bg-foreground text-white" : i === step ? "bg-accent/15 text-brand-green border-2 border-brand-green" : "bg-muted text-muted-foreground"
+                i < step ? "bg-foreground text-background" : i === step ? "bg-accent/15 text-brand-green border-2 border-brand-green" : "bg-muted text-muted-foreground"
               }`}
             >
               {i < step ? <Check className="w-4 h-4" /> : i + 1}
@@ -254,10 +254,10 @@ export default function QuickSetupPage() {
               <button
                 onClick={handleStep1Next}
                 disabled={loading || !childName || !birthDate}
-                className="flex items-center gap-2 bg-foreground text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition disabled:opacity-50"
+                className="flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-full font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition disabled:opacity-50"
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
                     Continue
@@ -330,10 +330,10 @@ export default function QuickSetupPage() {
               <button
                 onClick={handleStep2Next}
                 disabled={loading}
-                className="flex items-center gap-2 bg-foreground text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition disabled:opacity-50"
+                className="flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-full font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition disabled:opacity-50"
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-background border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
                     Connect Platforms
@@ -391,10 +391,10 @@ export default function QuickSetupPage() {
                               placeholder="API Key"
                               value={apiKey}
                               onChange={(e) => setApiKey(e.target.value)}
-                              className="w-36 rounded border border-input bg-white px-2 py-1 text-xs text-foreground focus:outline-none focus:border-foreground"
+                              className="w-36 rounded border border-input bg-background px-2 py-1 text-xs text-foreground focus:outline-none focus:border-foreground"
                             />
                           )}
-                          <button onClick={() => verifyPlatform(platform.id)} className="bg-foreground text-white px-3 py-1 rounded-full text-xs font-medium hover:opacity-90 transition">
+                          <button onClick={() => verifyPlatform(platform.id)} className="bg-foreground text-background px-3 py-1 rounded-full text-xs font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">
                             Verify
                           </button>
                           <button onClick={() => setVerifyingPlatform(null)} className="text-xs text-muted-foreground hover:text-foreground">
@@ -433,7 +433,7 @@ export default function QuickSetupPage() {
                 {verifiedCount > 0 && (
                   <button
                     onClick={handleEnforce}
-                    className="flex items-center gap-2 bg-foreground text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition"
+                    className="flex items-center gap-2 bg-foreground text-background px-6 py-3 rounded-full font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
                   >
                     Enforce Now
                     <ChevronRight className="w-4 h-4" />

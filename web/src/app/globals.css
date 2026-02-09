@@ -22,17 +22,58 @@
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --border: 0 0% 89%;                 /* #E3E3E3 */
+    --border: 0 0% 91%;                 /* #E8E8E8 — softened */
     --input: 0 0% 58%;                  /* #949494 — darker input borders */
     --ring: 0 0% 7%;
-    --radius: 0.25rem;
+    --radius: 0.5rem;                   /* 8px — matches Vercel/Clerk */
     --sidebar: 0 0% 98%;              /* #FAFAFA — Plaid-style gray */
     --sidebar-foreground: 0 0% 7%;
-    --sidebar-border: 0 0% 89%;
+    --sidebar-border: 0 0% 91%;
     --surface: 0 0% 97%;
     --heading: 0 0% 7%;                 /* #111111 */
     --paragraph: 0 0% 22%;              /* #383838 */
     --brand-green: 157 100% 42%;        /* #00D47E */
+
+    /* Section gradient palette */
+    --gradient-hero-start: 213 55% 11%;    /* #0D1B2A deep navy */
+    --gradient-hero-mid: 180 50% 11%;      /* #0A2F2F dark teal */
+    --gradient-navy: 220 60% 8%;           /* #0A1628 dev section */
+
+    /* Accent colors */
+    --accent-teal: 172 55% 45%;            /* #2DB8A5 */
+    --accent-purple: 265 40% 54%;          /* #7B5CB8 */
+    --accent-magenta: 315 40% 54%;         /* #B85CA0 */
+    --accent-cyan: 195 68% 47%;            /* #26A8C9 */
+  }
+
+  .dark {
+    --background: 0 0% 6%;               /* #0F0F0F */
+    --foreground: 0 0% 93%;              /* #EDEDED */
+    --card: 0 0% 8%;                     /* #141414 */
+    --card-foreground: 0 0% 93%;
+    --primary: 0 0% 93%;
+    --primary-foreground: 0 0% 6%;
+    --secondary: 0 0% 12%;              /* #1F1F1F */
+    --secondary-foreground: 0 0% 93%;
+    --muted: 0 0% 10%;                  /* #1A1A1A */
+    --muted-foreground: 0 0% 55%;       /* #8C8C8C */
+    --accent: 157 100% 42%;             /* #00D47E — same green */
+    --accent-foreground: 0 0% 6%;
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 0 0% 93%;
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 93%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 6%;
+    --border: 0 0% 16%;                 /* #282828 */
+    --input: 0 0% 25%;                  /* #404040 */
+    --ring: 0 0% 93%;
+    --sidebar: 0 0% 7%;               /* #121212 */
+    --sidebar-foreground: 0 0% 93%;
+    --sidebar-border: 0 0% 16%;
+    --surface: 0 0% 10%;
+    --heading: 0 0% 93%;
+    --paragraph: 0 0% 70%;              /* #B3B3B3 */
   }
 }
 
@@ -40,9 +81,13 @@
   * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
-    font-family: -apple-system, "system-ui", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--font-sans), -apple-system, "system-ui", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 1.5;
+  }
+
+  ::selection {
+    background: hsl(var(--brand-green) / 0.3);
   }
 }
 
@@ -55,12 +100,12 @@
 
   .plaid-card {
     @apply bg-card p-6;
-    border-radius: 4px;
-    box-shadow: rgba(18,18,18,0.08) 0px 8px 16px;
-    transition: box-shadow 0.15s ease;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
   .plaid-card:hover {
-    box-shadow: rgba(18,18,18,0.14) 0px 12px 24px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
 
   .heading-color {
@@ -79,15 +124,76 @@
   }
 
   .plaid-input {
-    @apply w-full bg-white px-4 py-3 text-foreground;
+    @apply w-full bg-background px-4 py-3 text-foreground;
     border: 1px solid hsl(var(--input));
-    border-radius: 2px;
+    border-radius: calc(var(--radius) - 2px);
   }
   .plaid-input:focus {
     outline: none;
     border-color: hsl(var(--foreground));
     box-shadow: 0 0 0 1px hsl(var(--foreground));
   }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
+/* Three-column docs layout (Stripe/Plaid style) */
+.docs-three-col {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+.docs-content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Animated gradient border for CTA card */
+@property --cta-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes cta-gradient-rotate {
+  to { --cta-angle: 360deg; }
+}
+.cta-gradient-border {
+  position: relative;
+  isolation: isolate;
+}
+.cta-gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius) * 2 + 2px);
+  background: conic-gradient(from var(--cta-angle), #00D47E, #26A8C9, #7B5CB8, #B85CA0, #00D47E);
+  animation: cta-gradient-rotate 4s linear infinite;
+  z-index: -1;
+  opacity: 0.6;
+}
+.cta-gradient-border::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius) * 2 + 2px);
+  background: conic-gradient(from var(--cta-angle), #00D47E, #26A8C9, #7B5CB8, #B85CA0, #00D47E);
+  animation: cta-gradient-rotate 4s linear infinite;
+  z-index: -1;
+  opacity: 0.3;
+  filter: blur(12px);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -15,6 +15,7 @@ import (
 
 	"github.com/guardiangate/api/internal/config"
 	"github.com/guardiangate/api/internal/handler"
+	"github.com/guardiangate/api/internal/migrate"
 	"github.com/guardiangate/api/internal/provider"
 	"github.com/guardiangate/api/internal/provider/android"
 	"github.com/guardiangate/api/internal/provider/apple"
@@ -43,8 +44,17 @@ func main() {
 		zerolog.SetGlobalLevel(level)
 	}
 
-	// Database
+	// Auto-migrate if enabled
 	ctx := context.Background()
+	if cfg.AutoMigrate {
+		log.Info().Msg("AUTO_MIGRATE enabled, running pending migrations...")
+		if err := migrate.Run(ctx, cfg.DatabaseURL); err != nil {
+			log.Fatal().Err(err).Msg("auto-migration failed, refusing to start server")
+		}
+		log.Info().Msg("migrations complete")
+	}
+
+	// Database
 	db, err := postgres.New(ctx, cfg.DatabaseURL)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to connect to database")
@@ -88,7 +98,7 @@ func main() {
 	enforcementSvc := service.NewEnforcementService(enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, policyRepo, ruleRepo, childRepo, memberRepo, registry)
 	webhookSvc := service.NewWebhookService(webhookRepo, webhookDeliveryRepo, memberRepo)
 	reportSvc := service.NewReportService(childRepo, policyRepo, enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, memberRepo)
-	setupSvc := service.NewQuickSetupService(familyRepo, memberRepo, childRepo, policyRepo, ruleRepo, ratingRepo, policySvc)
+	setupSvc := service.NewQuickSetupService(familyRepo, memberRepo, childRepo, policyRepo, ruleRepo, ratingRepo, policySvc, complianceLinkRepo)
 
 	// Handlers
 	handlers := router.Handlers{

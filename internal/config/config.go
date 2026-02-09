@@ -27,6 +27,9 @@ type Config struct {
 	// CORS
 	CORSOrigins string
 
+	// Auto-migration on startup
+	AutoMigrate bool
+
 	// Sandbox / MCP Playground
 	SandboxMode    bool
 	AnthropicAPIKey string
@@ -53,6 +56,8 @@ func Load() *Config {
 		LogLevel:     getEnv("LOG_LEVEL", "info"),
 
 		CORSOrigins: getEnv("CORS_ORIGINS", "http://localhost:3000"),
+
+		AutoMigrate:    getBool("AUTO_MIGRATE", false),
 
 		SandboxMode:    getBool("SANDBOX_MODE", false),
 		AnthropicAPIKey: getEnv("ANTHROPIC_API_KEY", ""),
