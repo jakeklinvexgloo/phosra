@@ -1,4 +1,4 @@
-import { Home, Zap, BookOpen, MessageSquare, Globe, Shield, Users, Settings, Rocket } from "lucide-react"
+import { Home, Zap, Globe, Shield, Users, Settings, Rocket } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 export interface NavItem {
@@ -6,7 +6,6 @@ export interface NavItem {
   label: string
   icon: LucideIcon
   exact?: boolean
-  external?: boolean
 }
 
 export interface NavGroup {
@@ -19,8 +18,6 @@ export const navGroups: NavGroup[] = [
     items: [
       { href: "/dashboard", label: "Home", icon: Home, exact: true },
       { href: "/dashboard/setup", label: "Quick Setup", icon: Zap },
-      { href: "/docs", label: "API Docs", icon: BookOpen, external: true },
-      { href: "/playground", label: "Playground", icon: MessageSquare, external: true },
     ],
   },
   {

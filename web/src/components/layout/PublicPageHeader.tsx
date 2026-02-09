@@ -1,9 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+import { Menu, X, Search, LogOut, ChevronDown, LayoutDashboard } from "lucide-react"
+import { useAuth } from "@workos-inc/authkit-nextjs/components"
+import { signOut } from "@/lib/auth-actions"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 const NAV_LINKS = [
   { href: "/docs", label: "Docs" },
@@ -13,9 +16,44 @@ const NAV_LINKS = [
   { href: "/playground", label: "Playground" },
 ]
 
-export function PublicPageHeader() {
+interface PublicPageHeaderProps {
+  /** When true, shows Cmd+K search trigger and passes onSearchClick */
+  onSearchClick?: () => void
+}
+
+export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const userMenuRef = useRef<HTMLDivElement>(null)
+  const { user, loading } = useAuth()
+
+  // Check sandbox mode
+  const [isSandbox, setIsSandbox] = useState(false)
+  useEffect(() => {
+    setIsSandbox(!!localStorage.getItem("sandbox-session"))
+  }, [])
+
+  const isAuthenticated = !loading && (!!user || isSandbox)
+  const displayName = isSandbox ? "Dev User" : (user?.firstName || user?.email || "User")
+
+  // Close user menu on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => document.removeEventListener("mousedown", handleClick)
+  }, [])
+
+  // Determine active link — dashboard pages highlight nothing in the top nav
+  const isNavActive = (href: string) => {
+    if (pathname.startsWith("/dashboard")) return false
+    return pathname.startsWith(href)
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -36,7 +74,7 @@ export function PublicPageHeader() {
           {/* Desktop nav */}
           <nav className="hidden sm:flex items-center gap-1">
             {NAV_LINKS.map((link) => {
-              const isActive = pathname.startsWith(link.href)
+              const isActive = isNavActive(link.href)
               return (
                 <Link
                   key={link.href}
@@ -55,18 +93,87 @@ export function PublicPageHeader() {
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <Link
-            href="/login"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/login"
-            className="text-xs sm:text-sm font-medium bg-brand-green text-foreground px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm transition-all hover:shadow-[0_0_20px_-4px_rgba(0,212,126,0.4)]"
-          >
-            Get Started
-          </Link>
+          {/* Cmd+K search trigger (only when a handler is provided, i.e. dashboard) */}
+          {onSearchClick && (
+            <button
+              onClick={onSearchClick}
+              className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 border border-border rounded-lg text-sm text-muted-foreground hover:border-foreground/20 hover:bg-muted/50 transition-colors"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <kbd className="text-[10px] font-mono text-muted-foreground/60">⌘K</kbd>
+            </button>
+          )}
+
+          <ThemeToggle />
+
+          {isAuthenticated ? (
+            /* Authenticated: avatar dropdown */
+            <div ref={userMenuRef} className="relative">
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted/50 transition-colors"
+              >
+                {!isSandbox && user?.profilePictureUrl ? (
+                  <img src={user.profilePictureUrl} alt="" className="w-7 h-7 rounded-full" />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-accent/15 flex items-center justify-center text-brand-green text-xs font-semibold">
+                    {displayName.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <span className="text-sm text-foreground font-medium hidden sm:inline max-w-[120px] truncate">
+                  {displayName}
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground hidden sm:block" />
+              </button>
+
+              {userMenuOpen && (
+                <div className="absolute right-0 top-full mt-1.5 w-48 bg-background border border-border rounded-lg shadow-lg py-1 z-50">
+                  {!pathname.startsWith("/dashboard") && (
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                    >
+                      <LayoutDashboard className="w-4 h-4" />
+                      Dashboard
+                    </Link>
+                  )}
+                  <button
+                    onClick={async () => {
+                      setUserMenuOpen(false)
+                      if (isSandbox) {
+                        localStorage.removeItem("sandbox-session")
+                        router.push("/login")
+                      } else {
+                        await signOut()
+                        router.push("/login")
+                      }
+                    }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Unauthenticated: Log in + Get Started */
+            <>
+              <Link
+                href="/login"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:inline"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/login"
+                className="text-xs sm:text-sm font-medium bg-brand-green text-foreground px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm transition-all hover:shadow-[0_0_20px_-4px_rgba(0,212,126,0.4)]"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
@@ -74,7 +181,7 @@ export function PublicPageHeader() {
       {mobileOpen && (
         <div className="sm:hidden border-b border-border bg-background px-4 py-3 space-y-1">
           {NAV_LINKS.map((link) => {
-            const isActive = pathname.startsWith(link.href)
+            const isActive = isNavActive(link.href)
             return (
               <Link
                 key={link.href}
@@ -90,15 +197,44 @@ export function PublicPageHeader() {
               </Link>
             )
           })}
-          <div className="pt-2 border-t border-border mt-2">
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="block px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Log in
-            </Link>
-          </div>
+          {isAuthenticated ? (
+            <div className="pt-2 border-t border-border mt-2 space-y-1">
+              {!pathname.startsWith("/dashboard") && (
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Dashboard
+                </Link>
+              )}
+              <button
+                onClick={async () => {
+                  setMobileOpen(false)
+                  if (isSandbox) {
+                    localStorage.removeItem("sandbox-session")
+                    router.push("/login")
+                  } else {
+                    await signOut()
+                    router.push("/login")
+                  }
+                }}
+                className="block w-full text-left px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <div className="pt-2 border-t border-border mt-2">
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className="block px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Log in
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </header>
