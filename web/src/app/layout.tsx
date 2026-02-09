@@ -42,6 +42,7 @@ export const metadata: Metadata = {
     apple: "/mark.svg",
   },
   manifest: "/site.webmanifest",
+  themeColor: "#0D1B2A",
   openGraph: {
     title: "Phosra - Child Safety Standard",
     description: "The child safety infrastructure that powers parental controls apps. One policy, enforced across every platform.",
@@ -59,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <AuthKitProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.variable} ${dmSerif.variable} ${jetbrainsMono.variable} antialiased`}>
+        <body className={`${inter.variable} ${dmSerif.variable} ${jetbrainsMono.variable} antialiased bg-[#0D1B2A]`}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             {children}
             <Toaster />

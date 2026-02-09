@@ -76,14 +76,14 @@ export function DevSection() {
               <span className="text-xs font-medium text-white/70">For Developers</span>
             </div>
 
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-[52px] text-white leading-[1.15] mb-6">
+            <h2 className="font-display text-3xl sm:text-5xl lg:text-[52px] text-white leading-[1.15] mb-6">
               {PLATFORM_STATS.marketingTotal} platforms.{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
                 One API call.
               </span>
             </h2>
 
-            <p className="text-white/60 text-lg leading-relaxed mb-10 sm:max-w-lg">
+            <p className="text-white/60 text-base sm:text-lg leading-relaxed mb-10 max-w-sm sm:max-w-lg">
               Quick Setup creates a family, adds a child, generates 24 age-appropriate rules, and pushes them to every connected platform &mdash; Netflix, Kindle Fire, NextDNS, YouTube &mdash; all in a single request.
             </p>
 
@@ -107,7 +107,7 @@ export function DevSection() {
           </AnimatedSection>
 
           {/* Right — code block */}
-          <AnimatedSection direction="right" delay={0.2}>
+          <AnimatedSection direction="right" delay={0.2} className="min-w-0">
             <div
               className="relative"
               onMouseEnter={handleMouseEnter}
@@ -153,14 +153,14 @@ export function DevSection() {
                 <div className="relative overflow-x-auto">
                   {/* Invisible height holder */}
                   <pre
-                    className="p-0 text-[12px] sm:text-[13px] leading-6 font-mono invisible"
+                    className="p-0 text-[11px] sm:text-[13px] leading-6 font-mono invisible"
                     aria-hidden="true"
                   >
                     <ResponseCode />
                   </pre>
                   {/* Visible layer */}
                   <pre
-                    className="absolute inset-0 overflow-x-auto text-[12px] sm:text-[13px] leading-6 font-mono transition-opacity"
+                    className="absolute inset-0 overflow-x-auto text-[11px] sm:text-[13px] leading-6 font-mono transition-opacity"
                     style={{
                       opacity: fading ? 0 : 1,
                       transitionDuration: `${FADE_DURATION}ms`,
