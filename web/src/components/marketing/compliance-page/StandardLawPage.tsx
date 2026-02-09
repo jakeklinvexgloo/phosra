@@ -143,8 +143,10 @@ export function StandardLawPage({
               </div>
             </section>
 
+            <div className="border-t border-border my-12" />
+
             {/* Rule Categories Covered */}
-            <section id="categories" className="mt-16 sm:mt-20">
+            <section id="categories">
               <AnimatedSection initiallyVisible>
                 <div className="mb-10">
                   <div className="flex items-center gap-2 mb-3">
@@ -187,8 +189,10 @@ export function StandardLawPage({
               </div>
             </section>
 
+            <div className="border-t border-border my-12" />
+
             {/* Platforms Affected */}
-            <section id="platforms" className="mt-16 sm:mt-20">
+            <section id="platforms">
               <AnimatedSection initiallyVisible>
                 <div className="mb-10">
                   <div className="flex items-center gap-2 mb-3">
@@ -234,8 +238,10 @@ export function StandardLawPage({
               </div>
             </section>
 
+            <div className="border-t border-border my-12" />
+
             {/* MCP Enforcement Snippet */}
-            <section id="mcp-snippet" className="mt-16 sm:mt-20">
+            <section id="mcp-snippet">
               <AnimatedSection initiallyVisible>
                 <div className="mb-10">
                   <div className="flex items-center gap-2 mb-3">

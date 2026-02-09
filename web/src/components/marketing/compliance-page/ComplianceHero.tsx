@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+import { ChevronRight } from "lucide-react"
 import { PhosraBurst } from "@/components/marketing/shared"
 
 interface ComplianceHeroProps {
@@ -40,6 +42,18 @@ export function ComplianceHero({
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-1.5 text-sm mb-5" aria-label="Breadcrumb">
+          <Link
+            href="/compliance"
+            className="text-white/40 hover:text-white/70 transition-colors"
+          >
+            Compliance Hub
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 text-white/25" />
+          <span className="text-white/60">{shortName}</span>
+        </nav>
+
         {/* Badge row */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="bg-white/10 text-white/70 px-3 py-1 rounded-full text-xs font-medium">

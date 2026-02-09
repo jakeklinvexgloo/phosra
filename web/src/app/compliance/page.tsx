@@ -9,9 +9,11 @@ import { ComplianceSearch } from "@/components/marketing/compliance-hub/Complian
 import { StatusFilter } from "@/components/marketing/compliance-hub/StatusFilter"
 import { LawCard } from "@/components/marketing/compliance-hub/LawCard"
 import { JurisdictionGroup } from "@/components/marketing/compliance-hub/JurisdictionGroup"
+import { StateFilter } from "@/components/marketing/compliance-hub/StateFilter"
 import {
   LAW_REGISTRY,
   searchLaws,
+  getUSStates,
 } from "@/lib/compliance/index"
 import { JURISDICTION_META } from "@/lib/compliance/types"
 import { DISPLAY_GROUPS } from "@/lib/compliance/country-flags"
@@ -20,8 +22,10 @@ import type { LawStatus, LawEntry } from "@/lib/compliance/index"
 export default function ComplianceHubPage() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
+  const [stateFilter, setStateFilter] = useState<string | null>(null)
 
   const isSearchActive = searchQuery.trim().length > 0
+  const usStates = useMemo(() => getUSStates(), [])
 
   // Filter laws based on search + status
   const filteredLaws = useMemo(() => {
@@ -50,8 +54,20 @@ export default function ComplianceHubPage() {
     return groups
   }, [filteredLaws])
 
+  // Apply state filter to US state laws
+  const getDisplayLaws = useCallback(
+    (jurisdictionGroup: string, laws: LawEntry[]) => {
+      if (jurisdictionGroup === "us-state" && stateFilter) {
+        return laws.filter((l) => l.stateOrRegion === stateFilter)
+      }
+      return laws
+    },
+    [stateFilter]
+  )
+
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query)
+    setStateFilter(null)
   }, [])
 
   return (
@@ -65,14 +81,15 @@ export default function ComplianceHubPage() {
           <PhosraBurst size={400} color="#ffffff" opacity={0.03} />
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-8 py-20 sm:py-28">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-8 py-16 sm:py-24">
           <AnimatedSection>
             <div className="text-center max-w-3xl mx-auto mb-12">
               <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
                 Compliance Hub
               </p>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display text-white leading-tight">
-                Global Child Safety Compliance Hub
+                <span className="bg-gradient-to-r from-brand-green to-[#26A8C9] bg-clip-text text-transparent">Global</span>{" "}
+                Child Safety Compliance Hub
               </h1>
               <p className="text-base sm:text-lg text-white/60 mt-6 leading-relaxed">
                 The most comprehensive database of child online safety
@@ -92,12 +109,13 @@ export default function ComplianceHubPage() {
         </div>
       </section>
 
-      {/* Filter Bar */}
-      <section className="border-b border-border bg-background">
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-6 space-y-4">
-          <ComplianceSearch onSearch={handleSearch} />
-
-          <div className="flex items-center justify-end">
+      {/* Sticky Filter Bar */}
+      <section className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="flex-1 max-w-md">
+              <ComplianceSearch onSearch={handleSearch} resultCount={filteredLaws.length} />
+            </div>
             <StatusFilter
               active={statusFilter}
               onSelect={setStatusFilter}
@@ -113,6 +131,7 @@ export default function ComplianceHubPage() {
           if (!laws || laws.length === 0) return null
 
           const jMeta = JURISDICTION_META[group.jurisdictionGroup]
+          const displayLaws = getDisplayLaws(group.jurisdictionGroup, laws)
 
           return (
             <JurisdictionGroup
@@ -123,9 +142,19 @@ export default function ComplianceHubPage() {
               borderColor={jMeta.borderColor}
               defaultOpen={group.defaultOpen}
               forceOpen={isSearchActive}
+              laws={laws}
+              renderAbove={
+                group.jurisdictionGroup === "us-state" ? (
+                  <StateFilter
+                    states={usStates}
+                    active={stateFilter}
+                    onSelect={setStateFilter}
+                  />
+                ) : undefined
+              }
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {laws.map((law, i) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {displayLaws.map((law, i) => (
                   <LawCard key={law.id} law={law} index={i} />
                 ))}
               </div>

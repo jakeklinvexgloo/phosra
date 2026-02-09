@@ -126,8 +126,10 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
               <CustomSection key={section.id} section={section} law={law} />
             ))}
 
+            <div className="border-t border-border my-12" />
+
             {/* How Phosra Helps — Feature Cards */}
-            <section id="how-phosra-helps" className="mt-16 sm:mt-20">
+            <section id="how-phosra-helps">
               <AnimatedSection initiallyVisible>
                 <div className="mb-10">
                   <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
@@ -150,8 +152,10 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
               </div>
             </section>
 
+            <div className="border-t border-border my-12" />
+
             {/* Compliance Checklist */}
-            <section id="checklist" className="mt-16 sm:mt-20">
+            <section id="checklist">
               <AnimatedSection initiallyVisible>
                 <div className="mb-10">
                   <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">

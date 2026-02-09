@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { STATUS_META } from "@/lib/compliance/types"
+import { JURISDICTION_META, STATUS_META } from "@/lib/compliance/types"
 import { getCountryFlag } from "@/lib/compliance/country-flags"
 import type { LawEntry } from "@/lib/compliance/types"
 
@@ -11,6 +11,7 @@ interface HighlightLawCardProps {
 }
 
 export function HighlightLawCard({ law }: HighlightLawCardProps) {
+  const jMeta = JURISDICTION_META[law.jurisdictionGroup]
   const sMeta = STATUS_META[law.status]
   const flag = getCountryFlag(law.country)
 
@@ -22,8 +23,19 @@ export function HighlightLawCard({ law }: HighlightLawCardProps) {
   return (
     <Link
       href={`/compliance/${law.id}`}
-      className="plaid-card block group hover:shadow-md transition-all"
+      className="relative block p-6 rounded-xl border border-border bg-card
+        shadow-sm hover:shadow-premium-hover hover:-translate-y-0.5 transition-all duration-200 group overflow-hidden"
     >
+      {/* Top accent bar */}
+      <div className={`absolute top-0 left-0 right-0 h-[3px] ${jMeta.accentColor}`} />
+
+      {/* Guide badge */}
+      {law.detailedPage && (
+        <span className="absolute top-3 right-3 text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-brand-green/10 text-brand-green">
+          Guide
+        </span>
+      )}
+
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
         <span className="text-base" aria-hidden>{flag}</span>

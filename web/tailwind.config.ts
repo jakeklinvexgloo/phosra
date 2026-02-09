@@ -64,6 +64,8 @@ const config: Config = {
         "card-hover": "0 4px 16px rgba(0,0,0,0.08)",
         "plaid-card": "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
         "plaid-card-hover": "0 4px 16px rgba(0,0,0,0.08)",
+        "premium": "0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)",
+        "premium-hover": "0 8px 32px rgba(0,0,0,0.1)",
       },
       width: {
         "sidebar": "320px",

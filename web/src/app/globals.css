@@ -78,6 +78,7 @@
 }
 
 @layer base {
+  html { scroll-behavior: smooth; }
   * { @apply border-border; }
   body {
     @apply bg-background text-foreground;
@@ -208,6 +209,29 @@
   z-index: -1;
   opacity: 0.3;
   filter: blur(12px);
+}
+
+/* Glass card for dark hero sections */
+.glass-card {
+  position: relative;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+}
+
+@media print {
+  nav, footer, .sticky, [class*="sticky"] {
+    display: none !important;
+  }
+  .shadow-sm, .shadow-md, .shadow-lg, .shadow-premium, .shadow-premium-hover {
+    box-shadow: none !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

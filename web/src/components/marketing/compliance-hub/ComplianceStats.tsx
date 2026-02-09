@@ -1,12 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Globe, BookOpen, Layers, Shield } from "lucide-react"
 import { getRegistryStats } from "@/lib/compliance/index"
 
 interface StatItem {
   label: string
   target: number
   suffix?: string
+  icon: React.ReactNode
 }
 
 function useAnimatedCounter(target: number, duration = 1200) {
@@ -35,16 +37,21 @@ function useAnimatedCounter(target: number, duration = 1200) {
   return count
 }
 
-function StatCard({ label, target, suffix = "" }: StatItem) {
+function StatCard({ label, target, suffix = "", icon }: StatItem) {
   const count = useAnimatedCounter(target)
 
   return (
-    <div className="plaid-card text-center py-6">
-      <p className="text-3xl sm:text-4xl font-display text-foreground">
+    <div className="glass-card text-center py-6 px-4">
+      {/* Gradient accent line */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-brand-green/0 via-brand-green/40 to-brand-green/0" />
+      <div className="flex justify-center mb-3 text-brand-green">
+        {icon}
+      </div>
+      <p className="text-3xl sm:text-4xl font-display text-white">
         {count}
         {suffix}
       </p>
-      <p className="text-sm text-muted-foreground mt-1">{label}</p>
+      <p className="text-sm text-white/50 mt-1">{label}</p>
     </div>
   )
 }
@@ -53,10 +60,10 @@ export function ComplianceStats() {
   const stats = getRegistryStats()
 
   const items: StatItem[] = [
-    { label: "Laws Tracked", target: stats.totalLaws, suffix: "+" },
-    { label: "Jurisdictions Covered", target: stats.totalJurisdictions },
-    { label: "Rule Categories Mapped", target: stats.totalCategories },
-    { label: "Enacted Laws", target: stats.enacted },
+    { label: "Laws Tracked", target: stats.totalLaws, suffix: "+", icon: <Globe className="w-5 h-5" /> },
+    { label: "Jurisdictions Covered", target: stats.totalJurisdictions, icon: <BookOpen className="w-5 h-5" /> },
+    { label: "Rule Categories Mapped", target: stats.totalCategories, icon: <Layers className="w-5 h-5" /> },
+    { label: "Enacted Laws", target: stats.enacted, icon: <Shield className="w-5 h-5" /> },
   ]
 
   return (

@@ -94,49 +94,56 @@ export interface LawEntry {
 // Jurisdiction metadata for UI rendering
 export const JURISDICTION_META: Record<
   Jurisdiction,
-  { label: string; borderColor: string; bgColor: string; textColor: string }
+  { label: string; borderColor: string; bgColor: string; textColor: string; accentColor: string }
 > = {
   "us-federal": {
     label: "US Federal",
     borderColor: "border-l-blue-500",
     bgColor: "bg-blue-500/10",
     textColor: "text-blue-600",
+    accentColor: "bg-blue-500",
   },
   "us-state": {
     label: "US State",
     borderColor: "border-l-amber-500",
     bgColor: "bg-amber-500/10",
     textColor: "text-amber-600",
+    accentColor: "bg-amber-500",
   },
   eu: {
     label: "European Union",
     borderColor: "border-l-indigo-500",
     bgColor: "bg-indigo-500/10",
     textColor: "text-indigo-600",
+    accentColor: "bg-indigo-500",
   },
   uk: {
     label: "United Kingdom",
     borderColor: "border-l-red-500",
     bgColor: "bg-red-500/10",
     textColor: "text-red-600",
+    accentColor: "bg-red-500",
   },
   "asia-pacific": {
     label: "Asia-Pacific",
     borderColor: "border-l-green-500",
     bgColor: "bg-green-500/10",
     textColor: "text-green-600",
+    accentColor: "bg-green-500",
   },
   americas: {
     label: "Americas",
     borderColor: "border-l-cyan-500",
     bgColor: "bg-cyan-500/10",
     textColor: "text-cyan-600",
+    accentColor: "bg-cyan-500",
   },
   "middle-east-africa": {
     label: "Middle East & Africa",
     borderColor: "border-l-orange-500",
     bgColor: "bg-orange-500/10",
     textColor: "text-orange-600",
+    accentColor: "bg-orange-500",
   },
 }
 

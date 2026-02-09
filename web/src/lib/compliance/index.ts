@@ -84,6 +84,16 @@ export function getActiveJurisdictions(): Jurisdiction[] {
   return Array.from(groups) as Jurisdiction[]
 }
 
+/** Get sorted unique US state names from state-level laws */
+export function getUSStates(): string[] {
+  const states = new Set(
+    LAW_REGISTRY
+      .filter((l) => l.jurisdictionGroup === "us-state" && l.stateOrRegion)
+      .map((l) => l.stateOrRegion!)
+  )
+  return Array.from(states).sort()
+}
+
 /** Get total counts for the hub stats */
 export function getRegistryStats() {
   const jurisdictions = new Set(LAW_REGISTRY.map((l) => l.jurisdiction))

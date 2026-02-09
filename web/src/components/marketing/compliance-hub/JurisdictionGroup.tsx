@@ -2,6 +2,8 @@
 
 import { useState, type ReactNode } from "react"
 import { ChevronDown } from "lucide-react"
+import type { LawEntry } from "@/lib/compliance/types"
+import { STATUS_META } from "@/lib/compliance/types"
 
 interface JurisdictionGroupProps {
   flag: string
@@ -10,6 +12,8 @@ interface JurisdictionGroupProps {
   borderColor: string
   defaultOpen?: boolean
   forceOpen?: boolean
+  renderAbove?: ReactNode
+  laws?: LawEntry[]
   children: ReactNode
 }
 
@@ -20,10 +24,23 @@ export function JurisdictionGroup({
   borderColor,
   defaultOpen = true,
   forceOpen = false,
+  renderAbove,
+  laws,
   children,
 }: JurisdictionGroupProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const open = forceOpen || isOpen
+
+  // Status breakdown dots
+  const statusCounts = laws
+    ? {
+        enacted: laws.filter((l) => l.status === "enacted").length,
+        passed: laws.filter((l) => l.status === "passed").length,
+        pending: laws.filter(
+          (l) => l.status === "pending" || l.status === "proposed"
+        ).length,
+      }
+    : null
 
   return (
     <div className={`border-l-4 ${borderColor} rounded-lg bg-card border border-border overflow-hidden`}>
@@ -38,6 +55,28 @@ export function JurisdictionGroup({
           <span className="inline-flex items-center justify-center px-2 py-0.5 text-xs font-medium rounded-full bg-muted text-muted-foreground">
             {count}
           </span>
+          {statusCounts && (
+            <div className="hidden sm:flex items-center gap-1 ml-1">
+              {statusCounts.enacted > 0 && (
+                <span className="flex items-center gap-0.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${STATUS_META.enacted.dotColor}`} />
+                  <span className="text-[10px] text-muted-foreground">{statusCounts.enacted}</span>
+                </span>
+              )}
+              {statusCounts.passed > 0 && (
+                <span className="flex items-center gap-0.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${STATUS_META.passed.dotColor}`} />
+                  <span className="text-[10px] text-muted-foreground">{statusCounts.passed}</span>
+                </span>
+              )}
+              {statusCounts.pending > 0 && (
+                <span className="flex items-center gap-0.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${STATUS_META.pending.dotColor}`} />
+                  <span className="text-[10px] text-muted-foreground">{statusCounts.pending}</span>
+                </span>
+              )}
+            </div>
+          )}
         </div>
         <ChevronDown
           className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${
@@ -47,12 +86,16 @@ export function JurisdictionGroup({
       </button>
 
       <div
-        className={`transition-all duration-300 ease-in-out overflow-hidden ${
-          open ? "max-h-[5000px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className="grid transition-all duration-300 ease-in-out"
+        style={{
+          gridTemplateRows: open ? "1fr" : "0fr",
+        }}
       >
-        <div className="px-5 pb-5 pt-1">
-          {children}
+        <div className="overflow-hidden">
+          <div className="px-5 pb-5 pt-1">
+            {renderAbove}
+            {children}
+          </div>
         </div>
       </div>
     </div>
