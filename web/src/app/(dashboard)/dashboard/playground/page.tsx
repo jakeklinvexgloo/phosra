@@ -7,12 +7,14 @@ import { DefaultChatTransport, isToolUIPart, getToolName } from "ai"
 import { ChatPanel } from "@/components/playground/ChatPanel"
 import { InspectorPanel } from "@/components/playground/InspectorPanel"
 import type { ToolCallInfo } from "@/lib/playground/types"
+import { type EntityMap, extractEntities } from "@/lib/playground/entity-registry"
 
 export default function PlaygroundPage() {
   const [sessionId] = useState(
     () => `s-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
   )
   const [toolCalls, setToolCalls] = useState<ToolCallInfo[]>([])
+  const [entities, setEntities] = useState<EntityMap>(() => new Map())
   const [activePanel, setActivePanel] = useState<"chat" | "inspector">("chat")
 
   const transport = useMemo(
@@ -33,6 +35,7 @@ export default function PlaygroundPage() {
   // Extract tool calls from UIMessage parts for the Inspector panel
   useEffect(() => {
     const newToolCalls: ToolCallInfo[] = []
+    const newEntities: EntityMap = new Map()
     for (const msg of messages) {
       if (msg.role !== "assistant") continue
       for (const part of msg.parts) {
@@ -52,12 +55,14 @@ export default function PlaygroundPage() {
           }
           if (part.state === "output-available") {
             tc.result = part.output
+            extractEntities(getToolName(part), part.output, newEntities)
           }
           newToolCalls.push(tc)
         }
       }
     }
     setToolCalls(newToolCalls)
+    setEntities(newEntities)
   }, [messages])
 
   const handleSend = useCallback(
@@ -71,6 +76,7 @@ export default function PlaygroundPage() {
     stop()
     setMessages([])
     setToolCalls([])
+    setEntities(new Map())
 
     try {
       await fetch("/api/playground/reset", {
@@ -127,7 +133,7 @@ export default function PlaygroundPage() {
           />
         </div>
         <div className={`flex-1 min-w-0 ${activePanel !== "inspector" ? "hidden md:block" : ""}`}>
-          <InspectorPanel toolCalls={toolCalls} />
+          <InspectorPanel toolCalls={toolCalls} entities={entities} />
         </div>
       </div>
     </div>

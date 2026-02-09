@@ -128,6 +128,10 @@ func buildRuleDetail(rule domain.PolicyRule) map[string]any {
 		detail["targeted_ads"] = "blocked"
 	case domain.RuleMonitoringActivity:
 		detail["activity_logging"] = "enabled"
+	case domain.RuleMonitoringAlerts:
+		detail["alerts"] = "enabled"
+	case domain.RuleScreenTimeReport:
+		detail["screen_time_reports"] = "enabled"
 	case domain.RuleNotificationCurfew:
 		if start, ok := config["start"].(string); ok {
 			detail["curfew_start"] = start
@@ -135,6 +139,56 @@ func buildRuleDetail(rule domain.PolicyRule) map[string]any {
 		if end, ok := config["end"].(string); ok {
 			detail["curfew_end"] = end
 		}
+	case domain.RuleUsageTimerNotification:
+		if interval, ok := config["interval_minutes"].(float64); ok {
+			detail["timer_interval_minutes"] = int(interval)
+		}
+	case domain.RuleParentalEventNotification:
+		detail["parent_notifications"] = "enabled"
+	case domain.RulePrivacyProfileVisibility:
+		if mode, ok := config["visibility"].(string); ok {
+			detail["profile_visibility"] = mode
+		} else {
+			detail["profile_visibility"] = "private"
+		}
+	case domain.RulePrivacyDataSharing:
+		detail["data_sharing"] = "restricted"
+	case domain.RulePrivacyAccountCreation:
+		detail["account_creation"] = "requires_approval"
+	case domain.RuleDataDeletionRequest:
+		detail["data_deletion"] = "enabled"
+	case domain.RuleGeolocationOptIn:
+		detail["geolocation"] = "opt-in only"
+	case domain.RuleContentAllowlistMode:
+		detail["allowlist_mode"] = "enabled"
+	case domain.RuleContentDescriptorBlock:
+		if descriptors, ok := config["blocked_descriptors"].([]any); ok {
+			detail["blocked_descriptors"] = descriptors
+		}
+	case domain.RuleDMRestriction:
+		if mode, ok := config["mode"].(string); ok {
+			detail["dm_mode"] = mode
+		}
+	case domain.RuleAgeGate:
+		if minAge, ok := config["min_age"].(float64); ok {
+			detail["minimum_age"] = int(minAge)
+		}
+	case domain.RuleParentalConsentGate:
+		detail["parental_consent"] = "required"
+	case domain.RuleSocialMediaMinAge:
+		detail["social_media_min_age"] = "enforced"
+	case domain.RuleCommercialDataBan:
+		detail["commercial_data_use"] = "banned"
+	case domain.RuleAlgorithmicAudit:
+		detail["algorithmic_audit"] = "enabled"
+	case domain.RuleCSAMReporting:
+		detail["csam_reporting"] = "enabled"
+	case domain.RuleLibraryFilterCompliance:
+		detail["library_filter"] = "compliant"
+	case domain.RuleAIMinorInteraction:
+		detail["ai_interaction_safeguards"] = "enabled"
+	case domain.RuleImageRightsMinor:
+		detail["minor_image_rights"] = "protected"
 	}
 
 	return detail
@@ -161,15 +215,62 @@ func ratingsAbove(system, rating string) []string {
 
 func matchesCapability(category domain.RuleCategory, cap provider.Capability) bool {
 	mapping := map[provider.Capability][]domain.RuleCategory{
-		provider.CapContentRating:    {domain.RuleContentRating, domain.RuleContentBlockTitle, domain.RuleContentAllowTitle},
-		provider.CapTimeLimit:        {domain.RuleTimeDailyLimit, domain.RuleTimePerAppLimit},
-		provider.CapScheduledHours:   {domain.RuleTimeScheduledHours, domain.RuleTimeDowntime},
-		provider.CapPurchaseControl:  {domain.RulePurchaseApproval, domain.RulePurchaseSpendingCap, domain.RulePurchaseBlockIAP},
-		provider.CapWebFiltering:     {domain.RuleWebFilterLevel, domain.RuleWebCategoryBlock},
-		provider.CapSafeSearch:       {domain.RuleWebSafeSearch},
-		provider.CapSocialControl:    {domain.RuleSocialContacts, domain.RuleSocialChatControl, domain.RuleSocialMultiplayer},
-		provider.CapLocationTracking: {domain.RulePrivacyLocation},
-		provider.CapActivityMonitor:  {domain.RuleMonitoringActivity},
+		// Content
+		provider.CapContentRating: {
+			domain.RuleContentRating, domain.RuleContentBlockTitle,
+			domain.RuleContentAllowTitle, domain.RuleContentAllowlistMode,
+			domain.RuleContentDescriptorBlock,
+		},
+		// Time
+		provider.CapTimeLimit:      {domain.RuleTimeDailyLimit, domain.RuleTimePerAppLimit},
+		provider.CapScheduledHours: {domain.RuleTimeScheduledHours, domain.RuleTimeDowntime},
+		// Purchase
+		provider.CapPurchaseControl: {domain.RulePurchaseApproval, domain.RulePurchaseSpendingCap, domain.RulePurchaseBlockIAP},
+		// Web
+		provider.CapWebFiltering: {
+			domain.RuleWebFilterLevel, domain.RuleWebCategoryBlock,
+			domain.RuleWebCustomAllowlist, domain.RuleWebCustomBlocklist,
+		},
+		provider.CapSafeSearch:      {domain.RuleWebSafeSearch},
+		provider.CapCustomBlocklist: {domain.RuleWebCustomBlocklist},
+		provider.CapCustomAllowlist: {domain.RuleWebCustomAllowlist},
+		// Social
+		provider.CapSocialControl: {
+			domain.RuleSocialContacts, domain.RuleSocialChatControl,
+			domain.RuleSocialMultiplayer, domain.RuleDMRestriction,
+		},
+		// Location & monitoring
+		provider.CapLocationTracking: {domain.RulePrivacyLocation, domain.RuleGeolocationOptIn},
+		provider.CapActivityMonitor:  {domain.RuleMonitoringActivity, domain.RuleMonitoringAlerts, domain.RuleScreenTimeReport},
+		// Privacy
+		provider.CapPrivacyControl: {
+			domain.RulePrivacyProfileVisibility, domain.RulePrivacyDataSharing,
+			domain.RulePrivacyAccountCreation, domain.RuleDataDeletionRequest,
+		},
+		// Algorithmic safety (KOSA, CA SB 976, EU DSA)
+		provider.CapAlgorithmicSafety: {
+			domain.RuleAlgoFeedControl, domain.RuleAddictiveDesignControl,
+			domain.RuleAlgorithmicAudit,
+		},
+		// Notification control (VA SB 854, NY SAFE for Kids)
+		provider.CapNotificationControl: {
+			domain.RuleNotificationCurfew, domain.RuleUsageTimerNotification,
+			domain.RuleParentalEventNotification,
+		},
+		// Advertising & data (COPPA 2.0, EU DSA, India DPDPA)
+		provider.CapAdDataControl: {
+			domain.RuleTargetedAdBlock, domain.RuleCommercialDataBan,
+		},
+		// Age verification & access control
+		provider.CapAgeVerification: {
+			domain.RuleAgeGate, domain.RuleParentalConsentGate,
+			domain.RuleSocialMediaMinAge,
+		},
+		// Compliance reporting (CSAM, CIPA, EU AI Act)
+		provider.CapComplianceReporting: {
+			domain.RuleCSAMReporting, domain.RuleLibraryFilterCompliance,
+			domain.RuleAIMinorInteraction, domain.RuleImageRightsMinor,
+		},
 	}
 	cats, ok := mapping[cap]
 	if !ok {
@@ -201,7 +302,12 @@ func (s *StubAdapter) RegisterWebhook(_ context.Context, _ provider.AuthConfig, 
 func NewNetflix() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "netflix", Name: "Netflix", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Netflix streaming parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating, provider.CapTimeLimit},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapTimeLimit,
+			provider.CapAlgorithmicSafety, provider.CapPrivacyControl,
+			provider.CapAdDataControl, provider.CapAgeVerification,
+			provider.CapNotificationControl,
+		},
 		[]string{
 			"1. Open Netflix and go to Account > Profiles & Parental Controls",
 			"2. Select the child's profile",
@@ -215,7 +321,12 @@ func NewNetflix() *StubAdapter {
 func NewDisneyPlus() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "disney_plus", Name: "Disney+", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Disney+ parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating, provider.CapTimeLimit},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapTimeLimit,
+			provider.CapAlgorithmicSafety, provider.CapPrivacyControl,
+			provider.CapAdDataControl, provider.CapAgeVerification,
+			provider.CapNotificationControl,
+		},
 		[]string{
 			"1. Open Disney+ and go to your profile > Edit Profiles",
 			"2. Select the child's profile",
@@ -229,7 +340,11 @@ func NewDisneyPlus() *StubAdapter {
 func NewPrimeVideo() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "prime_video", Name: "Amazon Prime Video", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Prime Video parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating, provider.CapPurchaseControl},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapPurchaseControl,
+			provider.CapAlgorithmicSafety, provider.CapPrivacyControl,
+			provider.CapAdDataControl, provider.CapAgeVerification,
+		},
 		[]string{
 			"1. Open Prime Video > Settings > Parental Controls",
 			"2. Set a PIN for purchases and restricted content",
@@ -242,7 +357,13 @@ func NewPrimeVideo() *StubAdapter {
 func NewYouTube() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "youtube", Name: "YouTube / YouTube Kids", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "YouTube content controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating, provider.CapSafeSearch, provider.CapTimeLimit},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapSafeSearch, provider.CapTimeLimit,
+			provider.CapAlgorithmicSafety, provider.CapSocialControl,
+			provider.CapPrivacyControl, provider.CapAdDataControl,
+			provider.CapAgeVerification, provider.CapNotificationControl,
+			provider.CapComplianceReporting,
+		},
 		[]string{
 			"1. Go to YouTube Settings > General > Restricted Mode and enable it",
 			"2. For children under 13, use YouTube Kids instead",
@@ -256,7 +377,11 @@ func NewYouTube() *StubAdapter {
 func NewHulu() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "hulu", Name: "Hulu", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Hulu parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapAlgorithmicSafety,
+			provider.CapPrivacyControl, provider.CapAdDataControl,
+			provider.CapAgeVerification,
+		},
 		[]string{
 			"1. Go to Hulu Account > Profiles > Kids Profile",
 			"2. Enable Kids Mode for the child's profile",
@@ -268,7 +393,11 @@ func NewHulu() *StubAdapter {
 func NewMax() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "max", Name: "Max (HBO)", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Max parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapAlgorithmicSafety,
+			provider.CapPrivacyControl, provider.CapAdDataControl,
+			provider.CapAgeVerification,
+		},
 		[]string{
 			"1. Open Max > Profile > Edit > Parental Controls",
 			"2. Create a Kids profile for the child",
@@ -281,7 +410,13 @@ func NewMax() *StubAdapter {
 func NewXbox() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "xbox", Name: "Xbox", Category: domain.PlatformCategoryGaming, Tier: domain.ComplianceLevelPending, Description: "Xbox parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating, provider.CapTimeLimit, provider.CapScheduledHours, provider.CapPurchaseControl, provider.CapSocialControl},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapTimeLimit,
+			provider.CapScheduledHours, provider.CapPurchaseControl,
+			provider.CapSocialControl, provider.CapActivityMonitor,
+			provider.CapPrivacyControl, provider.CapNotificationControl,
+			provider.CapAgeVerification, provider.CapComplianceReporting,
+		},
 		[]string{
 			"1. Go to Xbox Settings > Account > Family settings",
 			"2. Add the child's Microsoft account to your family group",
@@ -296,7 +431,12 @@ func NewXbox() *StubAdapter {
 func NewPlayStation() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "playstation", Name: "PlayStation", Category: domain.PlatformCategoryGaming, Tier: domain.ComplianceLevelPending, Description: "PlayStation parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating, provider.CapTimeLimit, provider.CapPurchaseControl, provider.CapSocialControl},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapTimeLimit,
+			provider.CapPurchaseControl, provider.CapSocialControl,
+			provider.CapActivityMonitor, provider.CapPrivacyControl,
+			provider.CapNotificationControl, provider.CapAgeVerification,
+		},
 		[]string{
 			"1. Go to PS Settings > Family Management > Parental Controls",
 			"2. Create a child account under your family manager account",
@@ -311,7 +451,12 @@ func NewPlayStation() *StubAdapter {
 func NewNintendo() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "nintendo", Name: "Nintendo", Category: domain.PlatformCategoryGaming, Tier: domain.ComplianceLevelPending, Description: "Nintendo Switch parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating, provider.CapTimeLimit, provider.CapSocialControl},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapTimeLimit,
+			provider.CapSocialControl, provider.CapActivityMonitor,
+			provider.CapPrivacyControl, provider.CapNotificationControl,
+			provider.CapAgeVerification,
+		},
 		[]string{
 			"1. Download the Nintendo Switch Parental Controls app on your phone",
 			"2. Link the app to your child's Nintendo Switch console",
@@ -326,7 +471,10 @@ func NewNintendo() *StubAdapter {
 func NewRoku() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "roku", Name: "Roku", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Roku device parental controls", AuthType: "manual"},
-		[]provider.Capability{provider.CapContentRating},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapPrivacyControl,
+			provider.CapAgeVerification,
+		},
 		[]string{
 			"1. Go to Roku Settings > Parental controls",
 			"2. Enable parental controls and set a PIN",

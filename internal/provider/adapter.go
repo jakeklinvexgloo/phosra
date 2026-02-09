@@ -22,6 +22,14 @@ const (
 	CapActivityMonitor  Capability = "activity_monitoring"
 	CapCustomBlocklist  Capability = "custom_blocklist"
 	CapCustomAllowlist  Capability = "custom_allowlist"
+
+	// Expanded capabilities (2025 legislation support)
+	CapPrivacyControl     Capability = "privacy_control"
+	CapAlgorithmicSafety  Capability = "algorithmic_safety"
+	CapNotificationControl Capability = "notification_control"
+	CapAdDataControl      Capability = "ad_data_control"
+	CapAgeVerification    Capability = "age_verification"
+	CapComplianceReporting Capability = "compliance_reporting"
 )
 
 // PlatformInfo describes a platform adapter.

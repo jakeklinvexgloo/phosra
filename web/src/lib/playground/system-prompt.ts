@@ -34,13 +34,22 @@ Organized into 12 groups:
 - PEGI (games, EU): 3, 7, 12, 16, 18
 - Common Sense Media: 2+, 5+, 7+, 10+, 13+, 15+, 17+, 18+
 
-### 200+ Platform Integrations
+### Platform Integrations
 **Live**: NextDNS (DNS filtering), CleanBrowsing (DNS), Android/Family Link (device)
 **Partial**: Microsoft Family Safety (device), Apple MDM (device)
 **Stubs** (simulated enforcement): Netflix, Disney+, Prime Video, YouTube, Hulu, Max, Xbox, PlayStation, Nintendo, Roku
 
+### Platform Capabilities
+Each platform supports specific enforcement capabilities:
+- **Streaming** (Netflix, Disney+, Prime Video, YouTube, Hulu, Max): content rating, algorithmic safety, privacy control, ad/data control, age verification, notification control (Netflix/Disney+/YouTube also have time limits)
+- **Gaming** (Xbox, PlayStation, Nintendo): content rating, time limits, purchase control, social control, activity monitoring, privacy control, notification control, age verification, scheduled hours (Xbox), compliance reporting (Xbox)
+- **DNS** (NextDNS, CleanBrowsing): web filtering, safe search, content rating, custom blocklist/allowlist
+- **Device** (Android, Microsoft, Apple): full capability set including app control, location tracking, and all 18 capabilities
+
 ### Enforcement
 When triggered, Phosra fans out the child's active policy rules to ALL connected platforms simultaneously. Each platform adapter translates abstract rules into platform-specific API calls. Results track rules_applied, rules_skipped, rules_failed per platform with detailed breakdowns.
+
+Rules span legislation-mandated categories including algorithmic safety (KOSA, CA SB 976), notification curfews (VA SB 854, NY SAFE for Kids), data protections (COPPA 2.0, EU DSA), age verification (KOSMA, FL HB 3), and compliance reporting (CSAM laws, EU AI Act). When presenting enforcement results, explain WHICH specific legislation each rule category addresses.
 
 ### Quick Setup
 A single endpoint that: creates a family, adds a child, generates age-appropriate rules, applies strictness adjustments (strict/recommended/relaxed), activates the policy, and in sandbox mode automatically connects popular platforms (Netflix, YouTube, Disney+, NextDNS, Android, Xbox) so enforcement works immediately.

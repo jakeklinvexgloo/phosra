@@ -4,16 +4,18 @@ import { useState } from "react"
 import { Activity, Code2 } from "lucide-react"
 import { ToolCallCard } from "./ToolCallCard"
 import type { ToolCallInfo, HttpCapture } from "@/lib/playground/types"
+import type { EntityMap } from "@/lib/playground/entity-registry"
 import { toCurl, toJavaScript, toGo } from "@/lib/playground/codegen"
 
 interface InspectorPanelProps {
   toolCalls: ToolCallInfo[]
+  entities: EntityMap
 }
 
 type Tab = "timeline" | "code"
 type CodeLang = "curl" | "javascript" | "go"
 
-export function InspectorPanel({ toolCalls }: InspectorPanelProps) {
+export function InspectorPanel({ toolCalls, entities }: InspectorPanelProps) {
   const [tab, setTab] = useState<Tab>("timeline")
   const [codeLang, setCodeLang] = useState<CodeLang>("curl")
 
@@ -63,7 +65,7 @@ export function InspectorPanel({ toolCalls }: InspectorPanelProps) {
         ) : tab === "timeline" ? (
           <div className="space-y-2">
             {toolCalls.map((tc) => (
-              <ToolCallCard key={tc.id} toolCall={tc} />
+              <ToolCallCard key={tc.id} toolCall={tc} entities={entities} />
             ))}
           </div>
         ) : (
