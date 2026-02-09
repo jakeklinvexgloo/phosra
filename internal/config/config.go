@@ -8,7 +8,8 @@ import (
 type Config struct {
 	Port           string
 	DatabaseURL    string
-	ClerkSecretKey string
+	WorkOSAPIKey   string
+	WorkOSClientID string
 	EncryptionKey  string
 
 	NextDNSAPIKey  string
@@ -39,7 +40,8 @@ func Load() *Config {
 	return &Config{
 		Port:          getEnv("PORT", "8080"),
 		DatabaseURL:    getEnv("DATABASE_URL", "postgres://guardiangate:guardiangate_dev@localhost:5432/guardiangate?sslmode=disable"),
-		ClerkSecretKey: getEnv("CLERK_SECRET_KEY", ""),
+		WorkOSAPIKey:   getEnv("WORKOS_API_KEY", ""),
+		WorkOSClientID: getEnv("WORKOS_CLIENT_ID", ""),
 		EncryptionKey:  getEnv("ENCRYPTION_KEY", "0123456789abcdef0123456789abcdef"),
 
 		NextDNSAPIKey:  getEnv("NEXTDNS_API_KEY", ""),

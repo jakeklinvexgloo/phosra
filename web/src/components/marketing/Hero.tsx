@@ -206,10 +206,13 @@ export function Hero() {
           <p className="text-xs text-white/25 text-center mb-6 tracking-wider uppercase font-medium">
             Pushes rules to {PLATFORM_STATS.marketingTotal} platforms
           </p>
-          <div className="relative overflow-hidden">
-            {/* Fade edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#0D1B2A] to-transparent z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[#0D1B2A] to-transparent z-10" />
+          <div
+            className="relative overflow-hidden"
+            style={{
+              maskImage: "linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)",
+              WebkitMaskImage: "linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)",
+            }}
+          >
 
             <div className="flex animate-scroll gap-6">
               {[...PLATFORM_NAMES, ...PLATFORM_NAMES].map((name, i) => (

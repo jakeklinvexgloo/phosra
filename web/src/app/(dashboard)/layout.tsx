@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { LogOut, Search, ChevronRight, Menu, X } from "lucide-react"
-import { useUser, useClerk } from "@clerk/nextjs"
+import { useAuth } from "@workos-inc/authkit-nextjs/components"
+import { signOut } from "@/lib/auth-actions"
 import { DashboardSkeleton } from "@/components/ui/skeleton"
 import { CommandPalette } from "@/components/ui/command-palette"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
@@ -15,8 +16,7 @@ import { navGroups } from "@/lib/navigation"
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, isLoaded, isSignedIn } = useUser()
-  const { signOut } = useClerk()
+  const { user, loading } = useAuth()
   const [isSandbox, setIsSandbox] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [cmdkOpen, setCmdkOpen] = useState(false)
@@ -27,10 +27,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       setIsSandbox(true)
       return
     }
-    if (isLoaded && !isSignedIn) {
+    if (!loading && !user) {
       router.push("/login")
     }
-  }, [isLoaded, isSignedIn, router])
+  }, [loading, user, router])
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
@@ -49,11 +49,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => window.removeEventListener("keydown", handler)
   }, [])
 
-  if (!isSandbox && (!isLoaded || !isSignedIn)) {
+  if (!isSandbox && (loading || !user)) {
     return <DashboardSkeleton />
   }
 
-  const displayName = isSandbox ? "Dev User" : (user?.firstName || user?.emailAddresses?.[0]?.emailAddress || "User")
+  const displayName = isSandbox ? "Dev User" : (user?.firstName || user?.email || "User")
 
   const isActive = (href: string, exact?: boolean) => {
     if (exact) return pathname === href
@@ -167,8 +167,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="flex items-center gap-3 lg:gap-5">
           <ThemeToggle />
           <div className="flex items-center gap-2.5">
-            {!isSandbox && user?.imageUrl ? (
-              <img src={user.imageUrl} alt="" className="w-8 h-8 rounded-full" />
+            {!isSandbox && user?.profilePictureUrl ? (
+              <img src={user.profilePictureUrl} alt="" className="w-8 h-8 rounded-full" />
             ) : (
               <div className="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center text-brand-green text-sm font-semibold">
                 {displayName.charAt(0).toUpperCase()}
@@ -178,12 +178,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <EnvironmentBadge isSandbox={isSandbox} />
           </div>
           <button
-            onClick={() => {
+            onClick={async () => {
               if (isSandbox) {
                 localStorage.removeItem("sandbox-session")
                 router.push("/login")
               } else {
-                signOut({ redirectUrl: "/login" })
+                await signOut()
+                router.push("/login")
               }
             }}
             className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"

@@ -17,7 +17,7 @@ func NewAuthHandler(auth *service.AuthService) *AuthHandler {
 }
 
 func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
-	// Clerk handles session invalidation client-side.
+	// WorkOS AuthKit handles session invalidation client-side.
 	// This endpoint is kept for API compatibility.
 	httputil.NoContent(w)
 }

@@ -4,10 +4,10 @@ import Link from "next/link"
 import { BookOpen } from "lucide-react"
 import { ApiKeyPanel } from "@/components/dashboard/ApiKeyPanel"
 import { WebhookPanel } from "@/components/dashboard/WebhookPanel"
-import { useUser } from "@clerk/nextjs"
+import { useAuth } from "@workos-inc/authkit-nextjs/components"
 
 export default function SettingsPage() {
-  const { user } = useUser()
+  const { user } = useAuth()
 
   return (
     <div>
@@ -25,7 +25,7 @@ export default function SettingsPage() {
               </div>
               <div>
                 <label className="block text-sm text-muted-foreground">Email</label>
-                <p className="text-sm font-medium text-foreground">{user.emailAddresses?.[0]?.emailAddress}</p>
+                <p className="text-sm font-medium text-foreground">{user.email}</p>
               </div>
             </div>
           )}

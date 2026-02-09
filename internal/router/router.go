@@ -13,16 +13,22 @@ import (
 )
 
 type options struct {
-	sandboxMode bool
-	corsOrigins string
+	sandboxMode    bool
+	corsOrigins    string
+	workosClientID string
 }
 
 // Option configures the router.
 type Option func(*options)
 
-// WithSandboxMode enables sandbox authentication (no Clerk, session-based users).
+// WithSandboxMode enables sandbox authentication (no WorkOS, session-based users).
 func WithSandboxMode() Option {
 	return func(o *options) { o.sandboxMode = true }
+}
+
+// WithWorkOSClientID sets the WorkOS client ID for JWT validation.
+func WithWorkOSClientID(clientID string) Option {
+	return func(o *options) { o.workosClientID = clientID }
 }
 
 // WithCORSOrigins sets the allowed CORS origins (comma-separated).
@@ -109,7 +115,7 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 			if o.sandboxMode {
 				r.Use(middleware.SandboxAuth(userRepo))
 			} else {
-				r.Use(middleware.ClerkAuth(userRepo))
+				r.Use(middleware.WorkOSAuth(o.workosClientID, userRepo))
 			}
 
 			// Auth

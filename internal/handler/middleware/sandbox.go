@@ -20,7 +20,7 @@ var (
 )
 
 // SandboxAuth is a lightweight auth middleware for sandbox/playground mode.
-// Instead of validating Clerk JWTs, it accepts an X-Sandbox-Session header
+// Instead of validating WorkOS JWTs, it accepts an X-Sandbox-Session header
 // and creates or retrieves a sandbox user keyed by that session ID.
 // If no session header is provided, it falls back to a default sandbox session.
 func SandboxAuth(userRepo repository.UserRepository) func(http.Handler) http.Handler {
@@ -46,7 +46,7 @@ func SandboxAuth(userRepo repository.UserRepository) func(http.Handler) http.Han
 				now := time.Now()
 				user := &domain.User{
 					ID:        uuid.New(),
-					ClerkID:   "sandbox-" + sessionID,
+					ExternalAuthID: "sandbox-" + sessionID,
 					Email:     "sandbox-" + sessionID + "@playground.phosra.dev",
 					Name:      "Playground User",
 					CreatedAt: now,
@@ -54,7 +54,7 @@ func SandboxAuth(userRepo repository.UserRepository) func(http.Handler) http.Han
 				}
 
 				// Check if already exists in DB (e.g., from a previous server restart)
-				existing, _ := userRepo.GetByClerkID(r.Context(), user.ClerkID)
+				existing, _ := userRepo.GetByExternalAuthID(r.Context(), user.ExternalAuthID)
 				if existing != nil {
 					user = existing
 				} else {

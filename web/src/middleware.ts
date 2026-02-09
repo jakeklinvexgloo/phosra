@@ -1,18 +1,33 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
+import { authkitMiddleware } from "@workos-inc/authkit-nextjs"
 
-const publicRoutes = ["/", "/login(.*)", "/docs(.*)", "/sign-in(.*)", "/sign-up(.*)", "/sso-callback(.*)", "/api/playground(.*)", "/platforms(.*)", "/playground(.*)", "/pricing(.*)", "/changelog(.*)", "/demo(.*)", "/compliance(.*)", "/about(.*)", "/contact(.*)", "/privacy(.*)", "/terms(.*)"]
+const unauthenticatedPaths = [
+  "/",
+  "/login(.*)",
+  "/docs(.*)",
+  "/platforms(.*)",
+  "/playground(.*)",
+  "/pricing(.*)",
+  "/changelog(.*)",
+  "/demo(.*)",
+  "/compliance(.*)",
+  "/about(.*)",
+  "/contact(.*)",
+  "/privacy(.*)",
+  "/terms(.*)",
+  "/auth/callback(.*)",
+  "/api/playground(.*)",
+]
 
 // In sandbox mode, don't protect dashboard routes (auth is handled by X-Sandbox-Session header)
 if (process.env.NEXT_PUBLIC_SANDBOX_MODE === "true") {
-  publicRoutes.push("/dashboard(.*)")
+  unauthenticatedPaths.push("/dashboard(.*)")
 }
 
-const isPublicRoute = createRouteMatcher(publicRoutes)
-
-export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect()
-  }
+export default authkitMiddleware({
+  middlewareAuth: {
+    enabled: true,
+    unauthenticatedPaths,
+  },
 })
 
 export const config = {

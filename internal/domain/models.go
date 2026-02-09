@@ -10,7 +10,7 @@ import (
 // User represents an authenticated account.
 type User struct {
 	ID           uuid.UUID  `json:"id"`
-	ClerkID      string     `json:"clerk_id,omitempty"`
+	ExternalAuthID string   `json:"external_auth_id,omitempty"`
 	Email        string     `json:"email"`
 	PasswordHash string     `json:"-"`
 	Name         string     `json:"name"`

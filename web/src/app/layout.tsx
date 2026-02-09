@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import dynamic from "next/dynamic"
-import { ClerkProvider } from "@clerk/nextjs"
+import { AuthKitProvider } from "@workos-inc/authkit-nextjs/components"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import { Inter, DM_Serif_Display, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
+    <AuthKitProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.variable} ${dmSerif.variable} ${jetbrainsMono.variable} antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
@@ -67,6 +67,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </AuthKitProvider>
   )
 }

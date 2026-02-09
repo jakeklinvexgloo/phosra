@@ -9,7 +9,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/clerk/clerk-sdk-go/v2"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -34,9 +33,6 @@ func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	cfg := config.Load()
-
-	// Initialize Clerk
-	clerk.SetKey(cfg.ClerkSecretKey)
 
 	// Set log level
 	level, err := zerolog.ParseLevel(cfg.LogLevel)
@@ -119,7 +115,10 @@ func main() {
 	var routerOpts []router.Option
 	if cfg.SandboxMode {
 		routerOpts = append(routerOpts, router.WithSandboxMode())
-		log.Info().Msg("sandbox mode enabled — using session-based auth (no Clerk)")
+		log.Info().Msg("sandbox mode enabled — using session-based auth (no WorkOS)")
+	} else if cfg.WorkOSClientID != "" {
+		routerOpts = append(routerOpts, router.WithWorkOSClientID(cfg.WorkOSClientID))
+		log.Info().Msg("WorkOS authentication enabled")
 	}
 	if cfg.CORSOrigins != "" {
 		routerOpts = append(routerOpts, router.WithCORSOrigins(cfg.CORSOrigins))
