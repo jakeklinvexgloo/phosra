@@ -124,3 +124,18 @@ type WebhookDeliveryRepository interface {
 	ListByWebhook(ctx context.Context, webhookID uuid.UUID, limit int) ([]domain.WebhookDelivery, error)
 	ListPendingRetries(ctx context.Context, limit int) ([]domain.WebhookDelivery, error)
 }
+
+type StandardRepository interface {
+	List(ctx context.Context, publishedOnly bool) ([]domain.Standard, error)
+	GetByID(ctx context.Context, id uuid.UUID) (*domain.Standard, error)
+	GetBySlug(ctx context.Context, slug string) (*domain.Standard, error)
+	GetRulesByStandard(ctx context.Context, standardID uuid.UUID) ([]domain.StandardRule, error)
+	GetAdoptionCount(ctx context.Context, standardID uuid.UUID) (int, error)
+}
+
+type StandardAdoptionRepository interface {
+	Adopt(ctx context.Context, adoption *domain.StandardAdoption) error
+	Unadopt(ctx context.Context, childID, standardID uuid.UUID) error
+	ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.StandardAdoption, error)
+	IsAdopted(ctx context.Context, childID, standardID uuid.UUID) (bool, error)
+}

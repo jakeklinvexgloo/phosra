@@ -134,6 +134,45 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Community Standards */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+        <AnimatedSection>
+          <div className="max-w-3xl mx-auto text-center mb-10">
+            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
+              Community Standards
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-display text-foreground mb-6">
+              The enforcement engine behind the movements parents trust
+            </h2>
+            <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
+              Phosra isn&apos;t just infrastructure — it&apos;s the technology that makes social pledges stick. When Wait Until 8th says &ldquo;no smartphones before 8th grade,&rdquo; Phosra is the enforcement layer that makes that promise real at the device level. When The Anxious Generation defines Four Norms for phone-free childhood, Phosra translates those norms into verified, cross-platform protection.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-6">
+            {[
+              {
+                title: "Movements define",
+                description: "Organizations like Wait Until 8th and The Anxious Generation define standards — packaged rule sets based on their values and research.",
+              },
+              {
+                title: "Families adopt",
+                description: "One click to adopt a community standard. Rules generate automatically based on the standard definition and your child\u2019s age.",
+              },
+              {
+                title: "Phosra enforces",
+                description: "Standards push to every connected platform. Families earn verified badges. Schools see cohort adoption. Pledges become protection.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="plaid-card text-center">
+                <h3 className="font-semibold text-foreground mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </AnimatedSection>
+      </section>
+
       {/* Metrics Bar */}
       <section className="relative overflow-hidden bg-gradient-to-r from-[#0D1B2A] to-[#0A1628]">
         <div className="absolute inset-0">

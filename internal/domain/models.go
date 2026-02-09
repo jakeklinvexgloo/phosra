@@ -377,3 +377,43 @@ type WebhookDelivery struct {
 	NextRetryAt  *time.Time      `json:"next_retry_at,omitempty"`
 	CreatedAt    time.Time       `json:"created_at"`
 }
+
+// ── Community Standards ────────────────────────────────────────────
+
+// Standard represents a community-defined rule package (e.g. "Four Norms", "Wait Until 8th").
+type Standard struct {
+	ID              uuid.UUID      `json:"id"`
+	Slug            string         `json:"slug"`
+	Name            string         `json:"name"`
+	Organization    string         `json:"organization"`
+	Description     string         `json:"description"`
+	LongDescription string         `json:"long_description"`
+	IconURL         string         `json:"icon_url,omitempty"`
+	Version         string         `json:"version"`
+	Published       bool           `json:"published"`
+	MinAge          *int           `json:"min_age,omitempty"`
+	MaxAge          *int           `json:"max_age,omitempty"`
+	AdoptionCount   int            `json:"adoption_count"`
+	Rules           []StandardRule `json:"rules,omitempty"`
+	CreatedAt       time.Time      `json:"created_at"`
+	UpdatedAt       time.Time      `json:"updated_at"`
+}
+
+// StandardRule is a single rule within a community standard.
+type StandardRule struct {
+	ID         uuid.UUID       `json:"id"`
+	StandardID uuid.UUID       `json:"standard_id"`
+	Category   RuleCategory    `json:"category"`
+	Label      string          `json:"label"`
+	Enabled    bool            `json:"enabled"`
+	Config     json.RawMessage `json:"config"`
+	SortOrder  int             `json:"sort_order"`
+}
+
+// StandardAdoption records a child adopting a community standard.
+type StandardAdoption struct {
+	ID         uuid.UUID `json:"id"`
+	ChildID    uuid.UUID `json:"child_id"`
+	StandardID uuid.UUID `json:"standard_id"`
+	AdoptedAt  time.Time `json:"adopted_at"`
+}

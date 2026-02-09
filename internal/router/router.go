@@ -48,6 +48,7 @@ type Handlers struct {
 	Report      *handler.ReportHandler
 	Setup       *handler.SetupHandler
 	Feedback    *handler.FeedbackHandler
+	Standard    *handler.StandardHandler
 }
 
 func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts ...Option) http.Handler {
@@ -108,6 +109,10 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 			// UI Feedback (public: reviewers submit without auth)
 			r.Post("/feedback", h.Feedback.Create)
 			r.Get("/feedback", h.Feedback.List)
+
+			// Public community standards (browsable without auth)
+			r.Get("/standards", h.Standard.List)
+			r.Get("/standards/{slug}", h.Standard.GetBySlug)
 		})
 
 		// Protected routes
@@ -165,6 +170,11 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 				// Policies under child
 				r.Get("/policies", h.Policy.List)
 				r.Post("/policies", h.Policy.Create)
+
+				// Community standards under child
+				r.Get("/standards", h.Standard.ListByChild)
+				r.Post("/standards", h.Standard.Adopt)
+				r.Delete("/standards/{standardID}", h.Standard.Unadopt)
 
 				// Enforcement for child
 				r.Post("/enforce", h.Enforcement.TriggerChildEnforcement)

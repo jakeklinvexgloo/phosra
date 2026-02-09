@@ -6,6 +6,7 @@ import { Stats } from "@/components/marketing/Stats"
 import { HowItWorks } from "@/components/marketing/HowItWorks"
 import { DevSection } from "@/components/marketing/DevSection"
 import { Compliance } from "@/components/marketing/Compliance"
+import { Standards } from "@/components/marketing/Standards"
 import { CTASection } from "@/components/marketing/CTASection"
 import { Footer } from "@/components/marketing/Footer"
 
@@ -19,6 +20,7 @@ export default function MarketingPage() {
       <Ecosystem />
       <Stats />
       <HowItWorks />
+      <Standards />
       <DevSection />
       <CTASection />
       <Footer />

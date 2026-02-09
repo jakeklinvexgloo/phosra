@@ -177,7 +177,7 @@ func handleServiceError(w http.ResponseWriter, err error) {
 	case service.ErrFamilyNotFound, service.ErrChildNotFound, service.ErrPolicyNotFound,
 		service.ErrRuleNotFound, service.ErrPlatformNotFound, service.ErrComplianceLinkNotFound,
 		service.ErrEnforcementJobNotFound, service.ErrWebhookNotFound, service.ErrUserNotFound,
-		service.ErrRatingNotFound:
+		service.ErrRatingNotFound, service.ErrStandardNotFound:
 		httputil.Error(w, http.StatusNotFound, err.Error())
 	case service.ErrNotFamilyMember:
 		httputil.Error(w, http.StatusForbidden, err.Error())

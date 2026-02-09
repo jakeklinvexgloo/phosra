@@ -73,6 +73,8 @@ func main() {
 	webhookRepo := &postgres.WebhookRepo{DB: db}
 	webhookDeliveryRepo := &postgres.WebhookDeliveryRepo{DB: db}
 	feedbackRepo := postgres.NewFeedbackRepo(db)
+	standardRepo := postgres.NewStandardRepo(db)
+	standardAdoptionRepo := postgres.NewStandardAdoptionRepo(db)
 
 	// Platform registry
 	registry := provider.NewRegistry()
@@ -95,6 +97,7 @@ func main() {
 	webhookSvc := service.NewWebhookService(webhookRepo, webhookDeliveryRepo, memberRepo)
 	reportSvc := service.NewReportService(childRepo, policyRepo, enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, memberRepo)
 	setupSvc := service.NewQuickSetupService(familyRepo, memberRepo, childRepo, policyRepo, ruleRepo, ratingRepo, policySvc, complianceLinkRepo)
+	standardSvc := service.NewStandardService(standardRepo, standardAdoptionRepo, childRepo, memberRepo)
 
 	// Handlers
 	handlers := router.Handlers{
@@ -109,6 +112,7 @@ func main() {
 		Report:      handler.NewReportHandler(reportSvc),
 		Setup:       handler.NewSetupHandler(setupSvc),
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
+		Standard:    handler.NewStandardHandler(standardSvc),
 	}
 
 	// Router
