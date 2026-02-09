@@ -63,7 +63,7 @@ export function UsageChart() {
         </div>
       </div>
 
-      <div className="h-[240px] w-full">
+      <div className="h-[180px] sm:h-[240px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
             <defs>

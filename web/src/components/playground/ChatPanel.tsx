@@ -96,7 +96,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
                 push rules to platforms. Watch every API call in the inspector panel.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-3 max-w-lg w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg w-full">
               {SCENARIOS.map((scenario) => (
                 <ScenarioCard
                   key={scenario.id}

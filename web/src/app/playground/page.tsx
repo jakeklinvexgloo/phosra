@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useCallback, useMemo, useEffect } from "react"
+import { useState, useCallback, useMemo, useEffect, type ReactNode } from "react"
+import { MessageSquare, Search } from "lucide-react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport, isToolUIPart, getToolName } from "ai"
 import { ChatPanel } from "@/components/playground/ChatPanel"
@@ -12,6 +13,7 @@ export default function PublicPlaygroundPage() {
     () => `s-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
   )
   const [toolCalls, setToolCalls] = useState<ToolCallInfo[]>([])
+  const [activePanel, setActivePanel] = useState<"chat" | "inspector">("chat")
 
   const transport = useMemo(
     () =>
@@ -95,9 +97,38 @@ export default function PublicPlaygroundPage() {
         </p>
       </div>
 
+      {/* Mobile tab bar */}
+      <div className="flex md:hidden border-b border-border">
+        <button
+          onClick={() => setActivePanel("chat")}
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium transition-colors ${
+            activePanel === "chat"
+              ? "text-foreground border-b-2 border-foreground"
+              : "text-muted-foreground"
+          }`}
+        >
+          <MessageSquare className="w-3.5 h-3.5" />
+          Chat
+        </button>
+        <button
+          onClick={() => setActivePanel("inspector")}
+          className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium transition-colors ${
+            activePanel === "inspector"
+              ? "text-foreground border-b-2 border-foreground"
+              : "text-muted-foreground"
+          }`}
+        >
+          <Search className="w-3.5 h-3.5" />
+          Inspector
+          {toolCalls.length > 0 && (
+            <span className="bg-muted text-muted-foreground text-[10px] px-1.5 py-0.5 rounded-full">{toolCalls.length}</span>
+          )}
+        </button>
+      </div>
+
       {/* Chat + Inspector */}
-      <div className="flex-1 flex min-h-0">
-        <div className="flex-1 min-w-0 border-r border-border">
+      <div className="flex-1 flex flex-col md:flex-row min-h-0">
+        <div className={`flex-1 min-w-0 border-r border-border ${activePanel !== "chat" ? "hidden md:block" : ""}`}>
           <ChatPanel
             messages={messages}
             isLoading={isLoading}
@@ -107,7 +138,7 @@ export default function PublicPlaygroundPage() {
             error={error}
           />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className={`flex-1 min-w-0 ${activePanel !== "inspector" ? "hidden md:block" : ""}`}>
           <InspectorPanel toolCalls={toolCalls} />
         </div>
       </div>

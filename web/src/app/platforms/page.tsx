@@ -249,7 +249,7 @@ export default function PlatformsPage() {
       </div>
 
       {/* Table */}
-      <div className="plaid-card !p-0 overflow-hidden">
+      <div className="plaid-card !p-0 overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-border bg-muted/30">

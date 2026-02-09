@@ -82,7 +82,7 @@ export function DevSection() {
               </span>
             </h2>
 
-            <p className="text-white/60 text-lg leading-relaxed mb-10 max-w-lg">
+            <p className="text-white/60 text-lg leading-relaxed mb-10 sm:max-w-lg">
               Quick Setup creates a family, adds a child, generates 24 age-appropriate rules, and pushes them to every connected platform &mdash; Netflix, Kindle Fire, NextDNS, YouTube &mdash; all in a single request.
             </p>
 

@@ -156,6 +156,11 @@
   gap: 1.5rem;
   align-items: flex-start;
 }
+@media (max-width: 1023px) {
+  .docs-three-col {
+    flex-direction: column;
+  }
+}
 .docs-content-area {
   flex: 1;
   min-width: 0;

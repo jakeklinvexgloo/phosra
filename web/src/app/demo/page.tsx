@@ -148,7 +148,7 @@ export default function DemoPage() {
       {/* Active policies */}
       <div className="mb-8">
         <h2 className="text-lg font-semibold text-foreground mb-4">Active Policies</h2>
-        <div className="plaid-card !p-0 overflow-hidden">
+        <div className="plaid-card !p-0 overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/30">

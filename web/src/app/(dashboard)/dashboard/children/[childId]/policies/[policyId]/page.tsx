@@ -56,16 +56,16 @@ export default function PolicyEditorPage() {
         <p className="text-muted-foreground">Policy Editor - Configure rules for each category</p>
       </div>
 
-      <div className="flex gap-6">
-        {/* Rule group sidebar */}
-        <div className="w-48 flex-shrink-0">
-          <div className="space-y-1">
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Rule group sidebar — horizontal scroll on mobile, vertical on desktop */}
+        <div className="w-full lg:w-48 flex-shrink-0">
+          <div className="flex lg:flex-col gap-2 lg:gap-1 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
             {Object.entries(RULE_GROUPS).map(([key, group]) => (
               <button
                 key={key}
                 onClick={() => setActiveGroup(key)}
-                className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${
-                  activeGroup === key ? "text-foreground font-medium border-l-2 border-foreground bg-muted" : "text-muted-foreground hover:text-foreground border-l-2 border-transparent"
+                className={`whitespace-nowrap lg:whitespace-normal lg:w-full text-left px-3 py-2 rounded text-sm transition-colors ${
+                  activeGroup === key ? "text-foreground font-medium border-l-0 lg:border-l-2 border-b-2 lg:border-b-0 border-foreground bg-muted" : "text-muted-foreground hover:text-foreground border-l-0 lg:border-l-2 border-b-2 lg:border-b-0 border-transparent"
                 }`}
               >
                 {group.label}

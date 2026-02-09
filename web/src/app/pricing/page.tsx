@@ -161,7 +161,7 @@ export default function PricingPage() {
       {/* Feature comparison table */}
       <div className="max-w-4xl mx-auto px-4 sm:px-8 mb-20">
         <h2 className="text-2xl font-display text-foreground text-center mb-8">Feature Comparison</h2>
-        <div className="plaid-card !p-0 overflow-hidden">
+        <div className="plaid-card !p-0 overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/30">

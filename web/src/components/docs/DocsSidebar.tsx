@@ -131,7 +131,7 @@ export function DocsSidebar() {
   }
 
   return (
-    <aside className="w-[220px] flex-shrink-0 sticky top-[120px] self-start h-[calc(100vh-120px)] overflow-y-auto">
+    <aside className="w-full lg:w-[220px] flex-shrink-0 lg:sticky lg:top-[120px] lg:self-start lg:h-[calc(100vh-120px)] overflow-y-auto">
       {/* Specification sections */}
       <div className="mb-6">
         <p className="px-3 mb-2 text-[11px] font-semibold text-muted-foreground tracking-widest uppercase">

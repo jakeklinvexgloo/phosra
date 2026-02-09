@@ -713,7 +713,7 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                                   {/* Age-Based Defaults */}
                                   <div>
                                     <h4 className="text-sm font-semibold text-foreground mb-2">Age-Based Defaults</h4>
-                                    <div className="bg-card rounded border border-border overflow-hidden">
+                                    <div className="bg-card rounded border border-border overflow-x-auto">
                                       <table className="w-full text-xs">
                                         <thead><tr className="bg-muted/50"><th className="px-3 py-2 text-left text-muted-foreground">Age Range</th><th className="px-3 py-2 text-center text-muted-foreground">Enabled</th><th className="px-3 py-2 text-left text-muted-foreground">Default Settings</th></tr></thead>
                                         <tbody className="divide-y divide-border">

@@ -67,7 +67,7 @@ export default function ChildrenPage() {
       {showCreate && (
         <div className="plaid-card mb-6">
           <h3 className="text-base font-medium text-foreground mb-4">Add Child</h3>
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">Name</label>
               <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} className="plaid-input" />

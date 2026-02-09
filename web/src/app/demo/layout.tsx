@@ -10,7 +10,7 @@ export default function DemoLayout({ children }: { children: React.ReactNode }) 
       <div className="fixed top-0 left-0 right-0 h-10 bg-gradient-to-r from-brand-green/90 to-accent-teal/90 z-50 flex items-center justify-center gap-3 px-4">
         <Eye className="w-4 h-4 text-foreground" />
         <span className="text-xs font-semibold text-foreground">
-          Interactive Demo &mdash; this is sample data, not a real account
+          Interactive Demo<span className="hidden sm:inline"> &mdash; this is sample data, not a real account</span>
         </span>
         <Link
           href="/login"

@@ -67,7 +67,7 @@ export default function ChildDetailPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-accent/15 flex items-center justify-center text-brand-green text-xl font-bold">
             {child.name.charAt(0)}
