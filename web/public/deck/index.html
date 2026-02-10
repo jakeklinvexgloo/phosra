@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Phosra — Pre-Seed Pitch Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Page ─────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+@page { size: 1920px 1080px; margin: 0; }
+html { font-size: 16px; }
+body { margin: 0; padding: 0; background: #0D1B2A; }
+
+/* ── Tokens ───────────────────────────────── */
+:root {
+  --green: #00D47E;
+  --teal: #26A8C9;
+  --purple: #7B5CB8;
+  --navy: #0D1B2A;
+  --navy-mid: #0A2F2F;
+  --navy-dev: #0A1628;
+  --white: #FFFFFF;
+  --white-90: rgba(255,255,255,0.9);
+  --white-70: rgba(255,255,255,0.7);
+  --white-50: rgba(255,255,255,0.5);
+  --white-30: rgba(255,255,255,0.3);
+  --white-15: rgba(255,255,255,0.15);
+  --white-08: rgba(255,255,255,0.08);
+  --white-04: rgba(255,255,255,0.04);
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ── Slide Base ───────────────────────────── */
+.slide {
+  width: 1920px;
+  height: 1080px;
+  break-after: page;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 80px 120px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy) 100%);
+  color: var(--white);
+}
+
+/* ── Typography ───────────────────────────── */
+.headline {
+  font-family: var(--font-display);
+  font-size: 64px;
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 40px;
+}
+.headline .accent {
+  background: linear-gradient(90deg, var(--green), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.subheadline {
+  font-family: var(--font-body);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--white-50);
+  line-height: 1.6;
+  max-width: 1200px;
+}
+.body-text {
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--white-70);
+  line-height: 1.7;
+}
+.label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+}
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 72px;
+  color: var(--green);
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--white-50);
+  margin-top: 8px;
+}
+
+/* ── Cards ────────────────────────────────── */
+.glass-card {
+  background: var(--white-04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--white-08);
+  border-radius: 16px;
+  padding: 40px;
+}
+.glass-card-sm {
+  background: var(--white-04);
+  border: 1px solid var(--white-08);
+  border-radius: 12px;
+  padding: 24px 32px;
+}
+
+/* ── Code Block ───────────────────────────── */
+.code-block {
+  background: #0A1628;
+  border: 1px solid var(--white-08);
+  border-radius: 12px;
+  padding: 28px 32px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--white-70);
+}
+.code-block .method { color: #60A5FA; }
+.code-block .path { color: var(--white-50); }
+.code-block .green { color: var(--green); }
+.code-block .comment { color: var(--white-30); }
+
+/* ── Grid helpers ─────────────────────────── */
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+.cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+.cols-3-wide { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 40px; align-items: start; }
+.flex-row { display: flex; gap: 40px; align-items: center; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-1 { flex: 1; }
+.grow { flex-grow: 1; }
+.mt-auto { margin-top: auto; }
+.mb-24 { margin-bottom: 24px; }
+.mb-32 { margin-bottom: 32px; }
+.mb-48 { margin-bottom: 48px; }
+.gap-16 { gap: 16px; }
+.gap-24 { gap: 24px; }
+.text-center { text-align: center; }
+
+/* ── Utility ──────────────────────────────── */
+.green-line {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--green), var(--teal));
+  border-radius: 2px;
+  margin-bottom: 32px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,212,126,0.1);
+  border: 1px solid rgba(0,212,126,0.2);
+  border-radius: 100px;
+  padding: 8px 20px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+}
+.badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.check {
+  color: var(--green);
+  font-weight: 700;
+  margin-right: 4px;
+}
+.pill {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+}
+.pill-green { background: rgba(0,212,126,0.15); color: var(--green); border: 1px solid rgba(0,212,126,0.2); }
+.pill-teal { background: rgba(38,168,201,0.15); color: var(--teal); border: 1px solid rgba(38,168,201,0.2); }
+.pill-purple { background: rgba(123,92,184,0.15); color: var(--purple); border: 1px solid rgba(123,92,184,0.2); }
+.pill-dim { background: var(--white-04); color: var(--white-50); border: 1px solid var(--white-08); }
+
+/* ── Table ────────────────────────────────── */
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 20px;
+}
+.comp-table th {
+  text-align: left;
+  padding: 16px 24px;
+  font-weight: 600;
+  color: var(--white-70);
+  border-bottom: 1px solid var(--white-15);
+}
+.comp-table th:first-child { color: var(--white-50); font-weight: 400; }
+.comp-table th.highlight { color: var(--green); }
+.comp-table td {
+  padding: 14px 24px;
+  color: var(--white-50);
+  border-bottom: 1px solid var(--white-08);
+}
+.comp-table td.highlight { color: var(--green); font-weight: 600; }
+
+/* ── Slide-specific ───────────────────────── */
+.slide-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.slide-title .logo { width: 80px; height: 80px; margin-bottom: 40px; }
+.slide-title .headline { font-size: 80px; margin-bottom: 24px; }
+.slide-title .tagline {
+  font-family: var(--font-body);
+  font-size: 32px;
+  color: var(--white-50);
+  margin-bottom: 60px;
+}
+.slide-title .meta {
+  font-family: var(--font-body);
+  font-size: 20px;
+  color: var(--white-30);
+}
+
+/* Flow arrow */
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: var(--green);
+  padding: 0 12px;
+}
+
+/* Layer diagram */
+.moat-layer {
+  padding: 20px 32px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.moat-layer .num {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--green);
+  min-width: 36px;
+}
+.moat-layer .name {
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--white-90);
+  min-width: 280px;
+}
+.moat-layer .desc {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--white-50);
+}
+
+/* Timeline */
+.phase-card {
+  flex: 1;
+  background: var(--white-04);
+  border: 1px solid var(--white-08);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.phase-card .phase-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.phase-card .phase-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--white);
+}
+.phase-card .phase-target {
+  font-family: var(--font-body);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.callout {
+  background: rgba(0,212,126,0.06);
+  border-left: 3px solid var(--green);
+  padding: 20px 28px;
+  border-radius: 0 12px 12px 0;
+  font-family: var(--font-body);
+  font-size: 20px;
+  color: var(--white-70);
+  font-style: italic;
+}
+
+/* Hub diagram */
+.hub-center {
+  background: linear-gradient(135deg, rgba(0,212,126,0.12), rgba(38,168,201,0.08));
+  border: 2px solid rgba(0,212,126,0.3);
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+}
+.hub-label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--white-50);
+  margin-bottom: 4px;
+}
+.platform-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.platform-tags span {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  background: var(--white-04);
+  color: var(--white-70);
+  border: 1px solid var(--white-08);
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 1: TITLE                              -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide slide-title">
+  <img src="/favicon.svg" alt="Phosra" class="logo">
+  <h1 class="headline">Define once, <span class="accent">protect everywhere.</span></h1>
+  <p class="tagline">The infrastructure API for parental controls</p>
+  <div style="display:flex;gap:40px;margin-bottom:80px;">
+    <div class="badge"><span class="dot"></span> 188 platforms</div>
+    <div class="badge"><span class="dot"></span> 67 compliance laws</div>
+    <div class="badge"><span class="dot"></span> 45 rule categories</div>
+  </div>
+  <p class="meta">Pre-Seed &nbsp;|&nbsp; February 2026</p>
+  <p class="meta" style="margin-top:8px;">Jake &amp; Susannah Klinvex, Co-Founders &nbsp;|&nbsp; jake@phosra.com</p>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 2: THE PROBLEM                        -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">The Problem</div>
+  <h2 class="headline">Parents face an <span class="accent">impossible task</span></h2>
+  <div class="cols-3 grow" style="align-items:stretch;">
+    <div class="glass-card flex-col">
+      <div class="stat-number" style="margin-bottom:16px;">188</div>
+      <div style="font-family:var(--font-display);font-size:28px;color:var(--white-90);margin-bottom:16px;">Platforms. Zero coordination.</div>
+      <p class="body-text">Every app has its own parental control system &mdash; different settings, different menus, different terminology. Most parents give up after configuring two or three.</p>
+    </div>
+    <div class="glass-card flex-col">
+      <div class="stat-number" style="margin-bottom:16px;">67</div>
+      <div style="font-family:var(--font-display);font-size:28px;color:var(--white-90);margin-bottom:16px;">Laws. No unified path.</div>
+      <p class="body-text">KOSA, COPPA 2.0, EU DSA, UK OSA &mdash; platforms face $50K+ per-violation fines across 25+ jurisdictions with no unified compliance tooling.</p>
+    </div>
+    <div class="glass-card flex-col">
+      <div class="stat-number" style="margin-bottom:16px;">15K+</div>
+      <div style="font-family:var(--font-display);font-size:28px;color:var(--white-90);margin-bottom:16px;">Pledges without teeth.</div>
+      <p class="body-text">Families sign community pledges like Wait Until 8th and Four Norms, but have no way to actually enforce them across their children&rsquo;s platforms.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 3: WHY NOW                            -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Why Now</div>
+  <h2 class="headline">A regulatory <span class="accent">tsunami</span></h2>
+  <div class="cols-2 grow">
+    <div class="flex-col gap-24">
+      <div class="glass-card-sm flex-row gap-16">
+        <span class="stat-number" style="font-size:48px;">91&ndash;3</span>
+        <div>
+          <div style="font-family:var(--font-body);font-size:20px;color:var(--white-90);font-weight:600;">KOSA passes Senate</div>
+          <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Bipartisan supermajority &mdash; strongest child safety signal in decades</div>
+        </div>
+      </div>
+      <div class="glass-card-sm flex-row gap-16">
+        <span class="stat-number" style="font-size:48px;">22</span>
+        <div>
+          <div style="font-family:var(--font-body);font-size:20px;color:var(--white-90);font-weight:600;">US states passed child safety laws</div>
+          <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">2024&ndash;2025: CA, NY, TX, FL, VA, UT, and 16 more</div>
+        </div>
+      </div>
+      <div class="glass-card-sm flex-row gap-16">
+        <span style="font-family:var(--font-display);font-size:48px;color:var(--teal);line-height:1;">EU</span>
+        <div>
+          <div style="font-family:var(--font-body);font-size:20px;color:var(--white-90);font-weight:600;">Digital Services Act Article 28e</div>
+          <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Mandates minor protections for all platforms serving EU users</div>
+        </div>
+      </div>
+      <div class="glass-card-sm flex-row gap-16">
+        <span style="font-family:var(--font-display);font-size:48px;color:var(--purple);line-height:1;">🌏</span>
+        <div>
+          <div style="font-family:var(--font-body);font-size:20px;color:var(--white-90);font-weight:600;">Global momentum</div>
+          <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Australia bans social media for &lt;16. India, Brazil, Indonesia legislating.</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col" style="justify-content:center;align-items:center;text-align:center;">
+      <div class="glass-card" style="text-align:center;">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-30);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em;">Global Parental Controls Market</div>
+        <div style="font-family:var(--font-display);font-size:96px;color:var(--green);line-height:1;">$14.4B</div>
+        <div style="font-family:var(--font-body);font-size:22px;color:var(--white-50);margin-top:12px;">projected by 2032</div>
+        <div style="width:100%;height:1px;background:var(--white-08);margin:24px 0;"></div>
+        <div style="display:flex;justify-content:center;gap:40px;">
+          <div>
+            <div style="font-family:var(--font-display);font-size:36px;color:var(--white-90);">$4.2B</div>
+            <div style="font-family:var(--font-body);font-size:14px;color:var(--white-30);">2025 market</div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:36px;color:var(--green);">18%</div>
+            <div style="font-family:var(--font-body);font-size:14px;color:var(--white-30);">CAGR</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 4: THE SOLUTION                       -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">The Solution</div>
+  <h2 class="headline">The <span class="accent">Stripe</span> of parental controls</h2>
+  <div style="display:flex;gap:24px;align-items:stretch;margin-bottom:48px;">
+    <div class="glass-card" style="flex:1;text-align:center;">
+      <div style="font-family:var(--font-display);font-size:56px;color:var(--green);margin-bottom:12px;">1</div>
+      <div style="font-family:var(--font-display);font-size:32px;color:var(--white);margin-bottom:12px;">Define</div>
+      <p class="body-text">Parent apps or parents set rules using 45 policy categories &mdash; screen time, content ratings, web filters, privacy, and more.</p>
+      <div class="pill pill-green" style="margin-top:16px;">45 rule categories</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="glass-card" style="flex:1;text-align:center;">
+      <div style="font-family:var(--font-display);font-size:56px;color:var(--teal);margin-bottom:12px;">2</div>
+      <div style="font-family:var(--font-display);font-size:32px;color:var(--white);margin-bottom:12px;">Translate</div>
+      <p class="body-text">Phosra maps rules to platform-specific actions, handling 5 rating systems and 67 compliance laws automatically.</p>
+      <div class="pill pill-teal" style="margin-top:16px;">5 rating systems &bull; 67 laws</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="glass-card" style="flex:1;text-align:center;">
+      <div style="font-family:var(--font-display);font-size:56px;color:var(--purple);margin-bottom:12px;">3</div>
+      <div style="font-family:var(--font-display);font-size:32px;color:var(--white);margin-bottom:12px;">Enforce</div>
+      <p class="body-text">One API call pushes policies to 188+ platforms &mdash; Netflix, YouTube, TikTok, Roblox, and everywhere else.</p>
+      <div class="pill pill-purple" style="margin-top:16px;">188+ platforms</div>
+    </div>
+  </div>
+  <div class="code-block">
+    <span class="method">POST</span> <span class="path">/v1/setup/quick</span><br>
+    <span class="comment">// Child: Chap, age 10 &mdash; auto-generate rules &amp; enforce</span><br><br>
+    <span class="green">&rarr; Netflix:</span> PG content only, PG-13+ blocked &nbsp;&nbsp;<span class="green">&#10003;</span><br>
+    <span class="green">&rarr; YouTube:</span> restricted mode, supervised content &nbsp;&nbsp;<span class="green">&#10003;</span><br>
+    <span class="green">&rarr; Fire Tablet:</span> 2hr daily limit, school-hours block &nbsp;&nbsp;<span class="green">&#10003;</span><br>
+    <span class="green">&rarr; NextDNS:</span> strict web filtering, safe search &nbsp;&nbsp;<span class="green">&#10003;</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 5: ARCHITECTURE                       -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Architecture</div>
+  <h2 class="headline">Two-sided <span class="accent">infrastructure</span></h2>
+  <div class="cols-3-wide grow" style="align-items:stretch;">
+    <!-- Sources -->
+    <div class="flex-col gap-16">
+      <div style="font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Sources &mdash; Who sets the rules</div>
+      <div class="glass-card-sm">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);margin-bottom:8px;">Parental Control Apps</div>
+        <div class="platform-tags"><span>Bark</span><span>Qustodio</span><span>Aura</span><span>Net Nanny</span><span>Norton Family</span><span>Kaspersky</span></div>
+      </div>
+      <div class="glass-card-sm">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);margin-bottom:8px;">Built-in Controls</div>
+        <div class="platform-tags"><span>Apple Screen Time</span><span>Google Family Link</span><span>Microsoft Family</span></div>
+      </div>
+      <div class="glass-card-sm">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);margin-bottom:8px;">ISPs &amp; Carriers</div>
+        <div class="platform-tags"><span>Xfinity</span><span>Verizon</span><span>T-Mobile</span></div>
+      </div>
+      <div class="glass-card-sm">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);margin-bottom:8px;">Schools &amp; Institutions</div>
+        <div class="platform-tags"><span>Securly</span><span>GoGuardian</span><span>Lightspeed</span></div>
+      </div>
+    </div>
+    <!-- Center Hub -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="hub-center">
+        <img src="/favicon.svg" alt="" style="width:48px;height:48px;margin-bottom:16px;">
+        <div style="font-family:var(--font-display);font-size:36px;color:var(--green);margin-bottom:24px;">Phosra API</div>
+        <div style="display:flex;flex-direction:column;gap:12px;text-align:left;">
+          <div class="hub-label"><span class="check">&#10003;</span> 45 universal rule categories</div>
+          <div class="hub-label"><span class="check">&#10003;</span> 5 rating systems auto-mapped</div>
+          <div class="hub-label"><span class="check">&#10003;</span> 67 compliance laws encoded</div>
+          <div class="hub-label"><span class="check">&#10003;</span> AI / MCP native tooling</div>
+          <div class="hub-label"><span class="check">&#10003;</span> Real-time enforcement monitoring</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:16px;padding:0 40px;">
+        <span style="font-size:32px;color:var(--green);">&larr;</span>
+        <span style="font-family:var(--font-body);font-size:14px;color:var(--white-30);align-self:center;">policies flow through</span>
+        <span style="font-size:32px;color:var(--green);">&rarr;</span>
+      </div>
+    </div>
+    <!-- Targets -->
+    <div class="flex-col gap-16">
+      <div style="font-family:var(--font-body);font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);margin-bottom:8px;">Targets &mdash; Where rules are enforced</div>
+      <div class="glass-card-sm">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);margin-bottom:8px;">Streaming</div>
+        <div class="platform-tags"><span>Netflix</span><span>YouTube</span><span>Disney+</span><span>Hulu</span><span>Max</span><span>Peacock</span></div>
+      </div>
+      <div class="glass-card-sm">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);margin-bottom:8px;">Social Media</div>
+        <div class="platform-tags"><span>TikTok</span><span>Instagram</span><span>Snapchat</span><span>Discord</span></div>
+      </div>
+      <div class="glass-card-sm">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);margin-bottom:8px;">Gaming &amp; Devices</div>
+        <div class="platform-tags"><span>Roblox</span><span>Xbox</span><span>PlayStation</span><span>Fire Tablet</span><span>Android</span></div>
+      </div>
+      <div class="glass-card-sm">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);margin-bottom:8px;">DNS &amp; AI</div>
+        <div class="platform-tags"><span>NextDNS</span><span>CleanBrowsing</span><span>ChatGPT</span><span>Claude</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 6: TRACTION                           -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Traction</div>
+  <h2 class="headline">Community-led <span class="accent">growth</span></h2>
+  <div class="cols-2 grow">
+    <div class="flex-col gap-24">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div class="glass-card-sm">
+          <div class="stat-number" style="font-size:48px;">6,502</div>
+          <div class="stat-label">Screen-Smart Family</div>
+        </div>
+        <div class="glass-card-sm">
+          <div class="stat-number" style="font-size:48px;">4,213</div>
+          <div class="stat-label">Wait Until 8th</div>
+        </div>
+        <div class="glass-card-sm">
+          <div class="stat-number" style="font-size:48px;">2,847</div>
+          <div class="stat-label">Four Norms</div>
+        </div>
+        <div class="glass-card-sm">
+          <div class="stat-number" style="font-size:48px;">429+</div>
+          <div class="stat-label">Schools activated</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:32px;">
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:56px;color:var(--white-90);">188</div>
+          <div style="font-family:var(--font-body);font-size:14px;color:var(--white-30);">platforms</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:56px;color:var(--white-90);">67</div>
+          <div style="font-family:var(--font-body);font-size:14px;color:var(--white-30);">laws encoded</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:56px;color:var(--white-90);">45</div>
+          <div style="font-family:var(--font-body);font-size:14px;color:var(--white-30);">rule categories</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col" style="justify-content:center;">
+      <div style="font-family:var(--font-display);font-size:28px;color:var(--white-90);margin-bottom:32px;">The viral adoption loop</div>
+      <div class="flex-col gap-24">
+        <div style="display:flex;gap:16px;align-items:start;">
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);min-width:40px;">1</div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:20px;color:var(--white-90);font-weight:600;">Parent adopts a standard</div>
+            <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">One click to adopt Four Norms, Wait Until 8th, or any community standard</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:start;">
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);min-width:40px;">2</div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:20px;color:var(--white-90);font-weight:600;">Phosra enforces everywhere</div>
+            <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Rules push to every connected platform automatically</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:start;">
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);min-width:40px;">3</div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:20px;color:var(--white-90);font-weight:600;">Other families see it working</div>
+            <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">School-wide adoption when 10+ families in a grade sign up</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:start;">
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);min-width:40px;">4</div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:20px;color:var(--white-90);font-weight:600;">Each family brings 3&ndash;5 more</div>
+            <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Word-of-mouth within school communities drives organic growth</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 7: BUSINESS MODEL                     -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Business Model</div>
+  <h2 class="headline">Freemium to <span class="accent">enterprise</span></h2>
+  <div class="cols-3 grow" style="align-items:stretch;">
+    <div class="glass-card flex-col">
+      <div style="font-family:var(--font-body);font-size:14px;color:var(--white-30);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">For Families</div>
+      <div style="font-family:var(--font-display);font-size:48px;color:var(--white);">Free</div>
+      <div style="width:100%;height:1px;background:var(--white-08);margin:20px 0;"></div>
+      <div class="flex-col gap-16" style="font-family:var(--font-body);font-size:18px;color:var(--white-70);">
+        <div><span class="check">&#10003;</span> Up to 5 children</div>
+        <div><span class="check">&#10003;</span> 3 platform integrations</div>
+        <div><span class="check">&#10003;</span> All 45 policy categories</div>
+        <div><span class="check">&#10003;</span> Community standards</div>
+        <div><span class="check">&#10003;</span> Content rating enforcement</div>
+      </div>
+      <div class="mt-auto" style="margin-top:32px;">
+        <div class="pill pill-dim">Drives adoption &amp; network effects</div>
+      </div>
+    </div>
+    <div class="glass-card flex-col" style="border-color:rgba(0,212,126,0.3);box-shadow:0 0 40px -12px rgba(0,212,126,0.15);">
+      <div style="font-family:var(--font-body);font-size:14px;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">For Developers</div>
+      <div style="font-family:var(--font-display);font-size:48px;color:var(--green);">$49<span style="font-family:var(--font-body);font-size:20px;color:var(--white-50);">/mo</span></div>
+      <div style="width:100%;height:1px;background:var(--white-08);margin:20px 0;"></div>
+      <div class="flex-col gap-16" style="font-family:var(--font-body);font-size:18px;color:var(--white-70);">
+        <div><span class="check">&#10003;</span> Full REST API access</div>
+        <div><span class="check">&#10003;</span> MCP tool integration</div>
+        <div><span class="check">&#10003;</span> Unlimited platforms</div>
+        <div><span class="check">&#10003;</span> Webhooks &amp; sandbox</div>
+        <div><span class="check">&#10003;</span> Compliance verification</div>
+      </div>
+      <div class="mt-auto" style="margin-top:32px;">
+        <div class="pill pill-green">Target: parent app companies</div>
+      </div>
+    </div>
+    <div class="glass-card flex-col">
+      <div style="font-family:var(--font-body);font-size:14px;color:var(--white-30);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">For Platforms</div>
+      <div style="font-family:var(--font-display);font-size:48px;color:var(--white);">Custom</div>
+      <div style="width:100%;height:1px;background:var(--white-08);margin:20px 0;"></div>
+      <div class="flex-col gap-16" style="font-family:var(--font-body);font-size:18px;color:var(--white-70);">
+        <div><span class="check">&#10003;</span> KOSA &amp; COPPA 2.0 compliance</div>
+        <div><span class="check">&#10003;</span> EU DSA Article 28e</div>
+        <div><span class="check">&#10003;</span> 99.99% SLA</div>
+        <div><span class="check">&#10003;</span> Dedicated support</div>
+        <div><span class="check">&#10003;</span> Custom integrations</div>
+      </div>
+      <div class="mt-auto" style="margin-top:32px;">
+        <div class="pill pill-dim">$25K&ndash;$500K/year contracts</div>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:32px;">Enterprise is the primary revenue driver. Platforms facing $50K+ per-violation fines need Phosra&rsquo;s compliance engine.</div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 8: COMPETITION                        -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Competition</div>
+  <h2 class="headline">No one connects <span class="accent">both sides</span></h2>
+  <div class="glass-card grow" style="padding:0;overflow:hidden;">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="width:24%;"></th>
+          <th class="highlight" style="width:19%;">Phosra</th>
+          <th style="width:19%;">Bark / Qustodio</th>
+          <th style="width:19%;">Apple / Google</th>
+          <th style="width:19%;">Platform Settings</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cross-platform reach</td>
+          <td class="highlight">188+ platforms</td>
+          <td>1&ndash;10 platforms</td>
+          <td>Own ecosystem only</td>
+          <td>1 platform</td>
+        </tr>
+        <tr>
+          <td>Compliance engine</td>
+          <td class="highlight">67 laws encoded</td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+          <td>Per-platform</td>
+        </tr>
+        <tr>
+          <td>Developer API</td>
+          <td class="highlight">&#10003; Full REST + MCP</td>
+          <td>&mdash;</td>
+          <td>Limited</td>
+          <td>&mdash;</td>
+        </tr>
+        <tr>
+          <td>Community standards</td>
+          <td class="highlight">&#10003; Four Norms, Wait Until 8th</td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+        </tr>
+        <tr>
+          <td>AI / MCP native</td>
+          <td class="highlight">&#10003; Agent-ready</td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+          <td>&mdash;</td>
+        </tr>
+        <tr>
+          <td>Two-sided marketplace</td>
+          <td class="highlight">&#10003; Sources + Targets</td>
+          <td>Source only</td>
+          <td>Source only</td>
+          <td>Target only</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout" style="margin-top:24px;">Bark, Qustodio, and Aura are our <strong>customers</strong>, not competitors. They integrate via our API to extend their reach from 1&ndash;10 platforms to 188+.</div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 9: THE MOAT                           -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Defensibility</div>
+  <h2 class="headline">Five <span class="accent">compounding</span> moats</h2>
+  <div class="grow flex-col" style="justify-content:center;gap:4px;">
+    <div class="moat-layer" style="background:rgba(0,212,126,0.12);border:1px solid rgba(0,212,126,0.2);">
+      <div class="num">1</div>
+      <div class="name">Network Effects</div>
+      <div class="desc">Two-sided marketplace &mdash; every new source app and target platform makes the network more valuable for all participants</div>
+    </div>
+    <div class="moat-layer" style="background:rgba(0,212,126,0.09);border:1px solid rgba(0,212,126,0.15);">
+      <div class="num">2</div>
+      <div class="name">Compliance Data</div>
+      <div class="desc">67 laws &times; 45 rule categories with auto-generated enforcement snippets &mdash; years of legal classification work</div>
+    </div>
+    <div class="moat-layer" style="background:rgba(0,212,126,0.06);border:1px solid rgba(0,212,126,0.12);">
+      <div class="num">3</div>
+      <div class="name">Community Lock-in</div>
+      <div class="desc">15,000+ families and 429 schools on community standards &mdash; viral school-by-school adoption loops</div>
+    </div>
+    <div class="moat-layer" style="background:rgba(0,212,126,0.04);border:1px solid rgba(0,212,126,0.08);">
+      <div class="num">4</div>
+      <div class="name">Policy Taxonomy</div>
+      <div class="desc">45 universal rule categories becoming the industry lingua franca for child safety &mdash; switching costs compound</div>
+    </div>
+    <div class="moat-layer" style="background:rgba(0,212,126,0.02);border:1px solid rgba(0,212,126,0.06);">
+      <div class="num">5</div>
+      <div class="name">Regulatory Tailwind</div>
+      <div class="desc">Not a one-time event &mdash; new child safety laws pass every quarter, each one deepening the compliance moat</div>
+    </div>
+  </div>
+  <div style="font-family:var(--font-body);font-size:18px;color:var(--white-30);text-align:center;margin-top:24px;">Each layer compounds over time. Displacement requires rebuilding all five simultaneously.</div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 10: TEAM                              -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Team</div>
+  <h2 class="headline">Parents who <span class="accent">build</span></h2>
+  <div class="cols-2 grow" style="align-items:center;">
+    <div class="flex-col gap-24">
+      <div>
+        <div style="font-family:var(--font-display);font-size:36px;color:var(--white);margin-bottom:8px;">Jake &amp; Susannah Klinvex</div>
+        <div style="font-family:var(--font-body);font-size:20px;color:var(--green);margin-bottom:24px;">Co-Founders &nbsp;&bull;&nbsp; Parents of 5</div>
+      </div>
+      <div class="callout" style="border-left-color:var(--green);">&ldquo;We built this because we needed it. Five kids across dozens of platforms &mdash; and no way to manage it centrally.&rdquo;</div>
+      <div class="flex-col gap-16">
+        <div style="font-family:var(--font-body);font-size:16px;color:var(--white-30);text-transform:uppercase;letter-spacing:0.1em;">Previous Experience</div>
+        <div style="display:flex;gap:24px;">
+          <div class="glass-card-sm" style="text-align:center;">
+            <div style="font-family:var(--font-body);font-size:20px;font-weight:600;color:var(--white-90);">Mastercard</div>
+            <div style="font-family:var(--font-body);font-size:14px;color:var(--white-50);">Payments infrastructure</div>
+          </div>
+          <div class="glass-card-sm" style="text-align:center;">
+            <div style="font-family:var(--font-body);font-size:20px;font-weight:600;color:var(--white-90);">Gloo</div>
+            <div style="font-family:var(--font-body);font-size:14px;color:var(--white-50);">Faith-tech platform</div>
+          </div>
+          <div class="glass-card-sm" style="text-align:center;">
+            <div style="font-family:var(--font-body);font-size:20px;font-weight:600;color:var(--white-90);">SessionM</div>
+            <div style="font-family:var(--font-body);font-size:14px;color:var(--white-50);">Acq. by Mastercard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col gap-24" style="align-items:center;justify-content:center;">
+      <div class="glass-card" style="text-align:center;">
+        <div style="font-family:var(--font-display);font-size:28px;color:var(--white);margin-bottom:24px;">Why this team for this problem</div>
+        <div class="flex-col gap-16" style="text-align:left;">
+          <div>
+            <div style="font-family:var(--font-body);font-size:18px;color:var(--green);font-weight:600;">Payments infrastructure DNA</div>
+            <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Mastercard taught us how to build universal transaction rails &mdash; Phosra is universal policy rails</div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:18px;color:var(--green);font-weight:600;">Two-sided marketplace experience</div>
+            <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">SessionM &amp; Gloo were both platforms connecting two sides &mdash; same playbook, new vertical</div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-body);font-size:18px;color:var(--green);font-weight:600;">Authentic product-market fit</div>
+            <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Five kids. Real platform chaos. We are the customer.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 11: GO-TO-MARKET                      -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="label">Go-to-Market</div>
+  <h2 class="headline">Bottom-up adoption, <span class="accent">top-down contracts</span></h2>
+  <div style="display:flex;gap:32px;flex:1;align-items:stretch;">
+    <div class="phase-card">
+      <div class="phase-label">Phase 1 &mdash; Now</div>
+      <div class="phase-title">Community Growth</div>
+      <div style="width:100%;height:1px;background:var(--white-08);"></div>
+      <div class="flex-col gap-16" style="font-family:var(--font-body);font-size:17px;color:var(--white-70);">
+        <div><span class="check">&#10003;</span> Free family plan drives adoption</div>
+        <div><span class="check">&#10003;</span> Community standards as viral catalysts</div>
+        <div><span class="check">&#10003;</span> School-by-school grassroots growth</div>
+        <div><span class="check">&#10003;</span> Content &amp; SEO (compliance hub)</div>
+      </div>
+      <div class="mt-auto">
+        <div class="phase-target">50K families</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;font-size:36px;color:var(--green);">&rarr;</div>
+    <div class="phase-card">
+      <div class="phase-label">Phase 2 &mdash; Months 3&ndash;9</div>
+      <div class="phase-title">Developer Platform</div>
+      <div style="width:100%;height:1px;background:var(--white-08);"></div>
+      <div class="flex-col gap-16" style="font-family:var(--font-body);font-size:17px;color:var(--white-70);">
+        <div><span class="check">&#10003;</span> Bark, Qustodio, Aura integrate via API</div>
+        <div><span class="check">&#10003;</span> $49/mo developer tier revenue</div>
+        <div><span class="check">&#10003;</span> MCP / AI agent partnerships</div>
+        <div><span class="check">&#10003;</span> Developer documentation &amp; sandbox</div>
+      </div>
+      <div class="mt-auto">
+        <div class="phase-target">20 integrations</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;font-size:36px;color:var(--green);">&rarr;</div>
+    <div class="phase-card" style="border-color:rgba(0,212,126,0.2);">
+      <div class="phase-label">Phase 3 &mdash; Months 9&ndash;18</div>
+      <div class="phase-title">Enterprise Compliance</div>
+      <div style="width:100%;height:1px;background:var(--white-08);"></div>
+      <div class="flex-col gap-16" style="font-family:var(--font-body);font-size:17px;color:var(--white-70);">
+        <div><span class="check">&#10003;</span> Netflix, YouTube, TikTok need KOSA compliance</div>
+        <div><span class="check">&#10003;</span> Enterprise contracts $25K&ndash;$500K/year</div>
+        <div><span class="check">&#10003;</span> SOC 2 Type II certified</div>
+        <div><span class="check">&#10003;</span> Dedicated account management</div>
+      </div>
+      <div class="mt-auto">
+        <div class="phase-target">5 enterprise deals</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SLIDE 12: THE ASK                           -->
+<!-- ════════════════════════════════════════════ -->
+<div class="slide" style="justify-content:center;align-items:center;text-align:center;">
+  <img src="/favicon.svg" alt="Phosra" style="width:64px;height:64px;margin-bottom:32px;">
+  <div class="label" style="margin-bottom:16px;">The Ask</div>
+  <h2 class="headline" style="font-size:80px;">Raising <span class="accent">$1M</span> pre-seed</h2>
+  <div style="display:flex;gap:48px;margin:48px 0;justify-content:center;">
+    <div class="glass-card-sm" style="text-align:center;min-width:200px;">
+      <div style="font-family:var(--font-display);font-size:36px;color:var(--green);">55%</div>
+      <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Engineering</div>
+      <div style="font-family:var(--font-body);font-size:13px;color:var(--white-30);">Live integrations for top 20 platforms</div>
+    </div>
+    <div class="glass-card-sm" style="text-align:center;min-width:200px;">
+      <div style="font-family:var(--font-display);font-size:36px;color:var(--green);">25%</div>
+      <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Go-to-Market</div>
+      <div style="font-family:var(--font-body);font-size:13px;color:var(--white-30);">Community growth &amp; dev evangelism</div>
+    </div>
+    <div class="glass-card-sm" style="text-align:center;min-width:200px;">
+      <div style="font-family:var(--font-display);font-size:36px;color:var(--green);">10%</div>
+      <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Compliance</div>
+      <div style="font-family:var(--font-body);font-size:13px;color:var(--white-30);">SOC 2 audit &amp; legal review</div>
+    </div>
+    <div class="glass-card-sm" style="text-align:center;min-width:200px;">
+      <div style="font-family:var(--font-display);font-size:36px;color:var(--green);">10%</div>
+      <div style="font-family:var(--font-body);font-size:16px;color:var(--white-50);">Operations</div>
+      <div style="font-family:var(--font-body);font-size:13px;color:var(--white-30);">Infrastructure &amp; tooling</div>
+    </div>
+  </div>
+  <div style="font-family:var(--font-body);font-size:16px;color:var(--white-30);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.1em;">18-Month Milestones</div>
+  <div style="display:flex;gap:32px;justify-content:center;margin-bottom:60px;">
+    <div class="pill pill-green">50K families</div>
+    <div class="pill pill-green">20 developer integrations</div>
+    <div class="pill pill-green">5 enterprise contracts</div>
+    <div class="pill pill-green">20 live platform adapters</div>
+    <div class="pill pill-green">KOSA/COPPA certification</div>
+  </div>
+  <div style="font-family:var(--font-display);font-size:36px;color:var(--white);margin-bottom:16px;">Join us in building the infrastructure that makes the internet <span style="color:var(--green);">safe for every child.</span></div>
+  <div style="font-family:var(--font-body);font-size:22px;color:var(--white-50);">jake@phosra.com</div>
+</div>
+
+</body>
+</html>
