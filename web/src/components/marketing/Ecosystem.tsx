@@ -132,7 +132,7 @@ export function Ecosystem() {
             </div>
           </AnimatedSection>
 
-          <CategoryGrid categories={ENFORCEMENT_TARGETS} />
+          <CategoryGrid categories={ENFORCEMENT_TARGETS} marqueeTargets={MARQUEE_TARGETS} />
         </div>
 
         {/* ── Bottom Stats Bar ────────────────────────────────────── */}

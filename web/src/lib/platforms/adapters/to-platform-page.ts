@@ -22,6 +22,7 @@ export interface PlatformPageEntry {
   accentHex: string
   description?: string
   dbPlatformId?: string
+  marquee: boolean
 }
 
 const TIER_LABELS: Record<IntegrationTier, string> = {
@@ -56,6 +57,7 @@ export const PLATFORM_PAGE_ENTRIES: PlatformPageEntry[] = PLATFORM_REGISTRY
       accentHex: meta.accentHex,
       description: p.description,
       dbPlatformId: p.dbPlatformId,
+      marquee: p.marquee ?? false,
     }
   })
   .sort((a, b) => {
