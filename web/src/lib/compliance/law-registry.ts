@@ -91,6 +91,57 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "Phosra's 40-category rule system covers the full scope of KOSA's duty-of-care requirements, enforcing protective defaults across all connected platforms in a single API call.",
+          codeExample: {
+            title: "REST API — Enforce KOSA duty of care",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["algo_feed_control",
+              "addictive_design_control",
+              "targeted_ad_block"],
+    "platforms": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_7xK2mP",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rules_applied": 3,
+      "actions": [
+        "chronological_feed_enabled",
+        "autoplay_disabled",
+        "ad_personalization_off"
+      ]
+    },
+    {
+      "platform": "tiktok",
+      "rules_applied": 3,
+      "actions": [
+        "fyp_disabled",
+        "infinite_scroll_limited",
+        "targeted_ads_blocked"
+      ]
+    },
+    {
+      "platform": "instagram",
+      "rules_applied": 3,
+      "actions": [
+        "explore_feed_disabled",
+        "notification_streaks_off",
+        "ad_profiling_blocked"
+      ]
+    }
+  ],
+  "compliance": {
+    "law": "kosa",
+    "coverage": "3/3 platforms enforced"
+  }
+}`,
+          },
         },
         {
           regulation: "Default privacy settings",
@@ -105,6 +156,38 @@ input: {
           ruleCategory: "algo_feed_control",
           description:
             "The algo_feed_control rule category disables personalized recommendations and switches feeds to chronological mode on YouTube, TikTok, Instagram, and other supported platforms.",
+          codeExample: {
+            title: "REST API — Disable algorithmic feeds",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["algo_feed_control"],
+    "platforms": ["youtube", "tiktok"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_9bR4nQ",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "algo_feed_control",
+      "status": "applied",
+      "action": "chronological_feed_enabled",
+      "detail": "Restricted Mode on, recommendations off"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "algo_feed_control",
+      "status": "applied",
+      "action": "fyp_disabled",
+      "detail": "Following-only feed activated"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Disable addictive features",
@@ -112,6 +195,35 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "The addictive_design_control rule disables autoplay, infinite scroll, notification streaks, and other compulsive-use patterns across all connected platforms.",
+          codeExample: {
+            title: "MCP Tool — Addictive design enforcement",
+            language: "bash",
+            code: `# MCP tool invocation
+tool: trigger_child_enforcement
+input: {
+  "child_id": "ch_emma_01",
+  "rules": ["addictive_design_control"],
+  "scope": "all_connected_platforms"
+}`,
+            response: `{
+  "tool_result": "success",
+  "enforcements": [
+    {
+      "platform": "youtube",
+      "disabled": ["autoplay", "up_next_suggestions"]
+    },
+    {
+      "platform": "tiktok",
+      "disabled": ["infinite_scroll", "notification_streaks"]
+    },
+    {
+      "platform": "instagram",
+      "disabled": ["reels_autoplay", "like_counts", "streak_badges"]
+    }
+  ],
+  "total_features_disabled": 8
+}`,
+          },
         },
         {
           regulation: "FTC enforcement readiness",
@@ -256,6 +368,42 @@ input: {
           ruleCategory: "targeted_ad_block",
           description:
             "The targeted_ad_block rule category disables behavioral advertising, ad profiling, and retargeting across all connected platforms in a single enforcement action.",
+          codeExample: {
+            title: "REST API — Block targeted ads for minors",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["targeted_ad_block"],
+    "platforms": ["youtube", "instagram", "spotify"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_3kT8vW",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "targeted_ad_block",
+      "action": "ad_personalization_disabled",
+      "detail": "Behavioral ads off, contextual only"
+    },
+    {
+      "platform": "instagram",
+      "rule": "targeted_ad_block",
+      "action": "ad_profiling_blocked",
+      "detail": "Interest-based targeting removed"
+    },
+    {
+      "platform": "spotify",
+      "rule": "targeted_ad_block",
+      "action": "ad_tracking_disabled",
+      "detail": "Listening data excluded from ad graph"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Eraser button / data deletion",
@@ -263,6 +411,41 @@ input: {
           ruleCategory: "data_deletion_request",
           description:
             "The data_deletion_request rule triggers deletion workflows on connected platforms, and child profiles can be fully removed from Phosra within 7 days via dashboard or API.",
+          codeExample: {
+            title: "REST API — Eraser button data deletion",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/children/ch_emma_01/data-deletion \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "scope": "all_platforms",
+    "include_phosra_profile": true,
+    "reason": "parental_request"
+  }'`,
+            response: `{
+  "deletion_id": "del_2mN5pK",
+  "status": "processing",
+  "child_id": "ch_emma_01",
+  "platforms": [
+    {
+      "platform": "youtube",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-16T00:00:00Z"
+    },
+    {
+      "platform": "tiktok",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-14T00:00:00Z"
+    },
+    {
+      "platform": "instagram",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-16T00:00:00Z"
+    }
+  ],
+  "phosra_profile_deletion": "scheduled_7_days"
+}`,
+          },
         },
         {
           regulation: "Data minimization",
@@ -282,6 +465,37 @@ input: {
           ruleCategory: "geolocation_opt_in",
           description:
             "The geolocation_opt_in rule ensures that location tracking is disabled by default on connected platforms, requiring explicit parental authorization before any location data is collected.",
+          codeExample: {
+            title: "MCP Tool — Enforce geolocation opt-in",
+            language: "bash",
+            code: `# MCP tool invocation
+tool: trigger_child_enforcement
+input: {
+  "child_id": "ch_emma_01",
+  "rules": ["geolocation_opt_in"],
+  "scope": "all_connected_platforms"
+}`,
+            response: `{
+  "tool_result": "success",
+  "enforcements": [
+    {
+      "platform": "instagram",
+      "geolocation": "disabled",
+      "requires_parental_auth": true
+    },
+    {
+      "platform": "snapchat",
+      "geolocation": "disabled",
+      "snap_map": "ghost_mode_enabled"
+    },
+    {
+      "platform": "tiktok",
+      "geolocation": "disabled",
+      "location_tags": "blocked"
+    }
+  ]
+}`,
+          },
         },
       ],
       checklist: [
@@ -1480,6 +1694,48 @@ input: {
           ruleCategory: "targeted_ad_block",
           description:
             "The targeted_ad_block rule disables all forms of behavioral advertising and ad profiling for minor users across EU-regulated platforms including YouTube, TikTok, Instagram, and Spotify.",
+          codeExample: {
+            title: "REST API — DSA ad profiling ban",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_lucas_02",
+    "rules": ["targeted_ad_block"],
+    "platforms": ["youtube", "tiktok", "spotify"],
+    "compliance_metadata": {
+      "regulation": "eu_dsa",
+      "article": "28e"
+    }
+  }'`,
+            response: `{
+  "enforcement_id": "enf_5pL9wR",
+  "status": "applied",
+  "compliance": {
+    "regulation": "eu_dsa",
+    "article": "28e",
+    "status": "compliant"
+  },
+  "results": [
+    {
+      "platform": "youtube",
+      "action": "ad_personalization_disabled",
+      "dsa_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "action": "behavioral_ads_blocked",
+      "dsa_compliant": true
+    },
+    {
+      "platform": "spotify",
+      "action": "listening_profile_excluded",
+      "dsa_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Algorithmic risk mitigation",
@@ -1487,6 +1743,38 @@ input: {
           ruleCategory: "algo_feed_control",
           description:
             "The algo_feed_control rule switches feeds to non-profiled or chronological mode, directly addressing the DSA requirement to offer recommender options not based on personal data profiling.",
+          codeExample: {
+            title: "MCP Tool — Non-profiled feed enforcement",
+            language: "bash",
+            code: `# MCP tool invocation
+tool: trigger_child_enforcement
+input: {
+  "child_id": "ch_lucas_02",
+  "rules": ["algo_feed_control"],
+  "compliance": "eu_dsa"
+}`,
+            response: `{
+  "tool_result": "success",
+  "regulation": "eu_dsa",
+  "enforcements": [
+    {
+      "platform": "youtube",
+      "feed_mode": "chronological",
+      "recommendations": "disabled"
+    },
+    {
+      "platform": "tiktok",
+      "feed_mode": "following_only",
+      "fyp": "disabled"
+    },
+    {
+      "platform": "instagram",
+      "feed_mode": "chronological",
+      "explore": "disabled"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Addictive design prevention",
@@ -1507,6 +1795,33 @@ input: {
           phosraFeature: "Enforcement Audit Trail",
           description:
             "Detailed logs of every enforcement action, including rule configurations, platform responses, and timestamps, support platforms in producing DSA-mandated transparency reports.",
+          codeExample: {
+            title: "REST API — Export compliance audit trail",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=eu_dsa" \\
+  -d "from=2026-01-01" \\
+  -d "to=2026-02-01" \\
+  -d "format=json"`,
+            response: `{
+  "audit_period": {
+    "from": "2026-01-01",
+    "to": "2026-02-01"
+  },
+  "regulation": "eu_dsa",
+  "total_enforcements": 847,
+  "children_protected": 312,
+  "platforms_covered": ["youtube", "tiktok", "instagram", "spotify"],
+  "rules_enforced": {
+    "targeted_ad_block": 312,
+    "algo_feed_control": 298,
+    "addictive_design_control": 237
+  },
+  "compliance_score": "98.2%",
+  "export_url": "https://api.phosra.com/v1/reports/aud_7xK2..."
+}`,
+          },
         },
         {
           regulation: "Cross-platform compliance at scale",

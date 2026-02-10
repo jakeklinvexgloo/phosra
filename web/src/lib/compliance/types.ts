@@ -17,6 +17,17 @@ export type LawStatus =
   | "proposed"
   | "injunction"
 
+export interface CodeExample {
+  /** Label shown in tab/header, e.g. "REST API" or "MCP Tool" */
+  title: string
+  /** Syntax language for highlighting: "bash", "json", "typescript" */
+  language: string
+  /** The request/command code */
+  code: string
+  /** Optional response output */
+  response?: string
+}
+
 export interface DetailedPageData {
   provisions: { title: string; description: string }[]
   phosraFeatures: {
@@ -24,6 +35,7 @@ export interface DetailedPageData {
     phosraFeature: string
     ruleCategory?: string
     description: string
+    codeExample?: CodeExample
   }[]
   checklist: {
     requirement: string

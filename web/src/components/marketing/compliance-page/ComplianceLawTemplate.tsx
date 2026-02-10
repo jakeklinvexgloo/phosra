@@ -145,7 +145,11 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
                 </div>
               </AnimatedSection>
 
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div className={`grid gap-6 ${
+                phosraFeatures.some((f) => f.codeExample)
+                  ? ""
+                  : "sm:grid-cols-2"
+              }`}>
                 {phosraFeatures.map((feature) => (
                   <PhosraFeatureCard key={feature.regulation} {...feature} />
                 ))}
