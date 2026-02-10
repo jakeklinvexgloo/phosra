@@ -146,8 +146,9 @@ export default function StandardsHubPage() {
               </span>
             </h1>
             <p className="text-base sm:text-lg text-white/60 max-w-2xl leading-relaxed mb-10">
-              Browse community-defined standards from organizations like The Anxious Generation and Wait Until 8th.
-              Adopt a standard for your child, and Phosra enforces it across every connected platform.
+              Browse {stats.total} community standards from the AAP, WHO, US Surgeon General, Common Sense Media,
+              Fairplay, Thorn, and more. Adopt a standard for your child, and Phosra enforces it across every
+              connected platform.
             </p>
 
             {/* Stats */}
@@ -195,7 +196,7 @@ export default function StandardsHubPage() {
             >
               All
             </button>
-            {allTags.slice(0, 6).map((tag) => (
+            {allTags.slice(0, 8).map((tag) => (
               <button
                 key={tag}
                 onClick={() => setTagFilter(tagFilter === tag ? null : tag)}
@@ -247,7 +248,7 @@ export default function StandardsHubPage() {
                 number: "01",
                 title: "Movements define",
                 description:
-                  "Organizations like Wait Until 8th and The Anxious Generation define standards — packaged rule sets based on their values and research.",
+                  "Organizations from the AAP and WHO to grassroots movements like Wait Until 8th define standards — packaged rule sets based on their values and research.",
               },
               {
                 number: "02",
