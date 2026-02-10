@@ -70,7 +70,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
   return (
     <div className="h-full flex flex-col">
       {/* Header — hidden on mobile to maximise chat space; visible on md+ as panel label */}
-      <div className="hidden md:flex items-center justify-between px-6 h-12 border-b border-border flex-shrink-0">
+      <div className="hidden md:flex items-center justify-between px-6 h-12 border-b border-border/50 flex-shrink-0">
         <h2 className="text-sm font-semibold text-foreground">MCP Playground</h2>
         {!isEmpty && (
           <button
@@ -85,19 +85,19 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
 
       {/* Messages area — relative/absolute pattern ensures iOS Safari computes a real height */}
       <div className="relative flex-1 min-h-0">
-        <div ref={scrollRef} className="absolute inset-0 overflow-y-auto px-3 py-3 md:px-6 md:py-4">
+        <div ref={scrollRef} className="absolute inset-0 overflow-y-auto px-4 py-4 md:px-16 md:py-6">
         {isEmpty ? (
           <div className="h-full flex flex-col items-center justify-center">
-            <div className="max-w-lg text-center mb-4 md:mb-8">
-              <h3 className="text-base md:text-lg font-semibold text-foreground mb-1 md:mb-2">
-                Try Phosra with AI
+            <div className="max-w-3xl text-center mb-6 md:mb-10">
+              <h3 className="text-2xl md:text-3xl font-semibold text-foreground mb-2 md:mb-3">
+                What can I help with?
               </h3>
-              <p className="text-xs md:text-sm text-muted-foreground">
+              <p className="text-sm md:text-base text-muted-foreground">
                 Use natural language to create families, configure parental controls, and
                 push rules to platforms.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 max-w-lg w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 max-w-xl w-full px-4">
               {SCENARIOS.map((scenario) => (
                 <ScenarioCard
                   key={scenario.id}
@@ -108,38 +108,42 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
             </div>
           </div>
         ) : (
-          <div className="space-y-3 md:space-y-4 max-w-2xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             {messages.map((msg, i) => (
-              <ChatMessage
+              <div
                 key={msg.id}
-                message={msg}
-                isStreaming={isLoading && i === lastAssistantIndex}
-                showRetry={!!error && i === messages.length - 1 && msg.role === "assistant"}
-                onRetry={() => {
-                  // Remove the last assistant message and re-send the last user message
-                  // For now, just trigger onReset — useChat's reload() would be better
-                }}
-              />
+                className={msg.role === "user"
+                  ? "py-3 md:py-4"
+                  : "pt-1 pb-8 md:pb-10"
+                }
+              >
+                <ChatMessage
+                  message={msg}
+                  isStreaming={isLoading && i === lastAssistantIndex}
+                  showRetry={!!error && i === messages.length - 1 && msg.role === "assistant"}
+                  onRetry={() => {
+                    // Remove the last assistant message and re-send the last user message
+                    // For now, just trigger onReset — useChat's reload() would be better
+                  }}
+                />
+              </div>
             ))}
-            {/* Show thinking indicator when loading and no assistant message yet or between steps */}
+            {/* Show thinking indicator when loading and no assistant message yet */}
             {isLoading && lastAssistantIndex === -1 && (
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-brand-green/15 flex items-center justify-center">
-                  <div className="w-4 h-4 border-2 border-brand-green border-t-transparent rounded-full animate-spin" />
-                </div>
-                <div className="bg-white border border-border rounded-lg px-4 py-3 text-sm text-muted-foreground">
-                  Thinking...
+              <div className="pt-1 pb-8 md:pb-10">
+                <div className="flex items-center gap-1.5 py-2">
+                  <span className="w-2 h-2 bg-foreground/30 rounded-full animate-bounce [animation-delay:0ms]" />
+                  <span className="w-2 h-2 bg-foreground/30 rounded-full animate-bounce [animation-delay:150ms]" />
+                  <span className="w-2 h-2 bg-foreground/30 rounded-full animate-bounce [animation-delay:300ms]" />
                 </div>
               </div>
             )}
             {/* Error display */}
             {error && (
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                  <span className="text-red-500 text-xs font-bold">!</span>
-                </div>
-                <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 max-w-[80%]">
-                  {error.message || "An error occurred. Please try again."}
+              <div className="pt-1 pb-8 md:pb-10">
+                <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
+                  <span className="font-medium">Error:</span>
+                  <span>{error.message || "An error occurred. Please try again."}</span>
                 </div>
               </div>
             )}
@@ -150,7 +154,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
         {showScrollPill && (
           <button
             onClick={scrollToBottom}
-            className="sticky bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 text-xs bg-foreground text-white rounded-full shadow-lg hover:bg-foreground/90 transition-colors z-10"
+            className="sticky bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1.5 text-xs bg-foreground text-background rounded-full shadow-lg hover:bg-foreground/90 transition-colors z-10"
           >
             <ChevronDown className="w-3 h-3" />
             New messages
@@ -160,28 +164,30 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
       </div>
 
       {/* Input */}
-      <div className="px-3 pb-2 pt-1.5 md:px-6 md:pb-4 md:pt-2 flex-shrink-0">
-        {/* Mobile-only reset (header is hidden on mobile) */}
-        {!isEmpty && (
-          <div className="flex md:hidden justify-end mb-1">
-            <button
-              onClick={onReset}
-              className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <RotateCcw className="w-3 h-3" />
-              Reset
-            </button>
-          </div>
-        )}
-        <ChatInput
-          onSend={onSend}
-          onStop={onStop}
-          disabled={isLoading}
-          isLoading={isLoading}
-        />
-        <p className="hidden md:block text-[10px] text-muted-foreground text-center mt-2">
-          Sandbox mode — all data is temporary and enforcement is simulated
-        </p>
+      <div className="px-4 pb-3 pt-2 md:px-16 md:pb-6 md:pt-3 flex-shrink-0">
+        <div className="max-w-3xl mx-auto">
+          {/* Mobile-only reset (header is hidden on mobile) */}
+          {!isEmpty && (
+            <div className="flex md:hidden justify-end mb-1">
+              <button
+                onClick={onReset}
+                className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <RotateCcw className="w-3 h-3" />
+                Reset
+              </button>
+            </div>
+          )}
+          <ChatInput
+            onSend={onSend}
+            onStop={onStop}
+            disabled={isLoading}
+            isLoading={isLoading}
+          />
+          <p className="hidden md:block text-[11px] text-muted-foreground text-center mt-2.5">
+            Sandbox mode — all data is temporary and enforcement is simulated
+          </p>
+        </div>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Send, Square } from "lucide-react"
+import { ArrowUp, Square } from "lucide-react"
 
 interface ChatInputProps {
   onSend: (message: string) => void
@@ -40,7 +40,7 @@ export function ChatInput({ onSend, onStop, disabled, isLoading }: ChatInputProp
   }
 
   return (
-    <div className="relative border border-border rounded-lg bg-white focus-within:border-foreground transition-colors">
+    <div className="relative rounded-3xl bg-foreground/[0.04] dark:bg-foreground/[0.06] border border-border/50 focus-within:border-border focus-within:shadow-sm transition-all">
       <textarea
         ref={textareaRef}
         value={value}
@@ -50,12 +50,12 @@ export function ChatInput({ onSend, onStop, disabled, isLoading }: ChatInputProp
         placeholder="Ask about parental controls, policies, or platforms..."
         disabled={disabled || isLoading}
         rows={1}
-        className="w-full px-3 py-2.5 pr-11 md:px-4 md:py-3 md:pr-12 text-sm resize-none bg-transparent focus:outline-none placeholder:text-muted-foreground disabled:opacity-50"
+        className="w-full px-4 py-3 pr-12 md:px-5 md:py-3.5 md:pr-14 text-base resize-none bg-transparent focus:outline-none placeholder:text-muted-foreground/70 disabled:opacity-50"
       />
       {isLoading ? (
         <button
           onClick={onStop}
-          className="absolute right-2 bottom-2 w-8 h-8 rounded flex items-center justify-center bg-red-500 hover:bg-red-600 text-white transition-colors"
+          className="absolute right-2.5 bottom-2.5 w-8 h-8 rounded-full flex items-center justify-center bg-foreground text-background hover:bg-foreground/80 transition-colors"
           title="Stop generation"
         >
           <Square className="w-3 h-3 fill-current" />
@@ -64,9 +64,9 @@ export function ChatInput({ onSend, onStop, disabled, isLoading }: ChatInputProp
         <button
           onClick={handleSubmit}
           disabled={disabled || !value.trim()}
-          className="absolute right-2 bottom-2 w-8 h-8 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 transition-colors"
+          className="absolute right-2.5 bottom-2.5 w-8 h-8 rounded-full flex items-center justify-center bg-foreground text-background hover:bg-foreground/80 disabled:opacity-20 disabled:bg-transparent disabled:text-muted-foreground transition-colors"
         >
-          <Send className="w-4 h-4" />
+          <ArrowUp className="w-4 h-4" />
         </button>
       )}
     </div>
