@@ -68,7 +68,7 @@ export function DevSection() {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-20 items-center">
           {/* Left — text */}
           <AnimatedSection direction="left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6">
@@ -76,7 +76,7 @@ export function DevSection() {
               <span className="text-xs font-medium text-white/70">For Developers</span>
             </div>
 
-            <h2 className="font-display text-3xl sm:text-5xl lg:text-[52px] text-white leading-[1.15] mb-6">
+            <h2 className="font-display text-3xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-white leading-[1.15] mb-6">
               {PLATFORM_STATS.marketingTotal} platforms.{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
                 One API call.

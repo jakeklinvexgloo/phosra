@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import dynamic from "next/dynamic"
 import { AuthKitProvider } from "@workos-inc/authkit-nextjs/components"
 import { ThemeProvider } from "@/components/ui/theme-provider"
@@ -33,6 +33,12 @@ const Toaster = dynamic(
   () => import("@/components/ui/toaster").then((m) => m.Toaster),
   { ssr: false }
 )
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+}
 
 export const metadata: Metadata = {
   title: "Phosra - Child Safety Standard",

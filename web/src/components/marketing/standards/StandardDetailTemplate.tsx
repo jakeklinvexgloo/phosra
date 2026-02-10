@@ -126,7 +126,7 @@ export function StandardDetailTemplate({ standard }: { standard: StandardEntry }
       {/* About / Long Description */}
       <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
         <AnimatedSection>
-          <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid md:grid-cols-3 gap-8 lg:gap-10 xl:gap-12">
             <div className="md:col-span-2">
               <h2 className="text-xl sm:text-2xl font-display text-foreground mb-4">
                 About this standard

@@ -39,13 +39,13 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel — dark branded panel */}
-      <div className="hidden lg:flex w-[40%] bg-[#111111] flex-col justify-center px-12 xl:px-16">
+      <div className="hidden lg:flex w-[40%] bg-[#111111] flex-col justify-center px-8 xl:px-16">
         <div className="max-w-md">
           <div className="flex items-center mb-12">
             <img src="/logo-white.svg" alt="Phosra" className="h-8" />
           </div>
 
-          <h1 className="text-white text-4xl xl:text-[44px] font-bold leading-tight mb-6">
+          <h1 className="text-white text-3xl xl:text-[44px] font-bold leading-tight mb-6">
             Define once, protect everywhere
           </h1>
 

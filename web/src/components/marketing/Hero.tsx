@@ -29,8 +29,8 @@ export function Hero() {
         <PhosraBurst size={700} color="#00D47E" opacity={0.06} animate />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-36 sm:pb-24 lg:pt-48 lg:pb-32">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-36 sm:pb-24 lg:pt-36 lg:pb-24 xl:pt-48 xl:pb-32">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-20 items-center">
           {/* Left — text */}
           <div>
             {/* Announcement badge */}
@@ -43,7 +43,7 @@ export function Hero() {
 
             {/* Headline with serif display + gradient */}
             <AnimatedSection delay={0.1}>
-              <h1 className="font-display text-5xl sm:text-6xl lg:text-[72px] text-white leading-[1.05] mb-6 tracking-tight">
+              <h1 className="font-display text-5xl sm:text-6xl lg:text-[56px] xl:text-[72px] text-white leading-[1.05] mb-6 tracking-tight">
                 Define once,{" "}
                 <span className="bg-gradient-to-r from-[#00D47E] to-[#26A8C9] bg-clip-text text-transparent">
                   protect everywhere

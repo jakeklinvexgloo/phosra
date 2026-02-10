@@ -28,10 +28,10 @@ export function CTASection() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-20 items-center">
           {/* Left — headline */}
           <AnimatedSection direction="left">
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-[52px] text-white leading-[1.15] mb-6">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-white leading-[1.15] mb-6">
               Start protecting{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
                 every child

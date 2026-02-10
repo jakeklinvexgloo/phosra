@@ -85,7 +85,7 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
 
       {/* Main content with sidebar TOC */}
       <div className="max-w-5xl mx-auto px-4 sm:px-8">
-        <div className="lg:grid lg:grid-cols-[200px_1fr] lg:gap-10 py-16 sm:py-20">
+        <div className="lg:grid lg:grid-cols-[180px_1fr] lg:gap-8 xl:grid-cols-[200px_1fr] xl:gap-10 py-16 sm:py-20">
           {/* Sidebar TOC */}
           <ComplianceSidebarTOC items={DETAILED_TOC} />
 

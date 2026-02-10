@@ -66,7 +66,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           /* Playground: full-width, no sidebar, fills available height */
           children
         ) : (
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-6 xl:px-8 py-6 sm:py-10">
             {/* Mobile sidebar toggle */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -76,7 +76,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {sidebarOpen ? "Close" : "Dashboard Menu"}
             </button>
 
-            <div className="flex gap-8">
+            <div className="flex gap-6 xl:gap-8">
               {/* Sidebar — hidden on mobile unless toggled */}
               <div className={`${sidebarOpen ? "block" : "hidden"} lg:block`}>
                 <DashboardSidebar isSandbox={isSandbox} />

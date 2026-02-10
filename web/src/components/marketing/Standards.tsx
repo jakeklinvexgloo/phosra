@@ -127,7 +127,7 @@ export function Standards() {
         </AnimatedSection>
 
         {/* Standard cards grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-12">
           {STANDARDS_REGISTRY.map((standard, i) => (
             <StandardCard key={standard.id} standard={standard} index={i} />
           ))}

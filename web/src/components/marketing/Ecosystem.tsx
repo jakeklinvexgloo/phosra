@@ -70,7 +70,7 @@ export function Ecosystem() {
               <span className="text-xs font-medium text-muted-foreground">Ecosystem</span>
             </div>
 
-            <h2 className="font-display text-4xl sm:text-5xl lg:text-[52px] text-foreground leading-[1.15] mb-5">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-foreground leading-[1.15] mb-5">
               One API.{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
                 {TOTAL_COUNT}+ platforms.

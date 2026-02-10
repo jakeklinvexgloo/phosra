@@ -94,7 +94,7 @@ export default function AboutPage() {
       {/* The Problem */}
       <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
         <AnimatedSection>
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-10 xl:gap-12">
             <div>
               <h2 className="text-2xl sm:text-3xl font-display text-foreground mb-4">
                 The problem

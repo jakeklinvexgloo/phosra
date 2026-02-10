@@ -86,7 +86,7 @@ export function Stats() {
                   ? "lg:border-r lg:border-white/[0.08]"
                   : ""
               }`}>
-                <div className="font-display text-5xl sm:text-6xl lg:text-7xl bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent mb-3">
+                <div className="font-display text-5xl sm:text-6xl lg:text-6xl xl:text-7xl bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent mb-3">
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
                 <div className="text-sm font-semibold text-white mb-1.5">{stat.label}</div>

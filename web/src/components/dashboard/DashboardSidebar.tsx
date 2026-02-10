@@ -18,7 +18,7 @@ export function DashboardSidebar({ isSandbox }: DashboardSidebarProps) {
   }
 
   return (
-    <aside className="hidden lg:block w-[220px] flex-shrink-0">
+    <aside className="hidden lg:block w-[200px] xl:w-[220px] flex-shrink-0">
       <nav className="lg:sticky lg:top-[88px] space-y-6">
         {/* Environment badge */}
         <div className="px-1">
@@ -40,7 +40,7 @@ export function DashboardSidebar({ isSandbox }: DashboardSidebarProps) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-2.5 px-3 py-1.5 rounded text-[13px] transition-colors ${
+                    className={`flex items-center gap-2.5 px-3 py-2 min-h-[44px] rounded text-[13px] transition-colors ${
                       active
                         ? "text-foreground font-medium bg-muted"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
