@@ -136,6 +136,12 @@
   }
 }
 
+/* iOS momentum scrolling for overflow containers */
+.overflow-y-auto,
+.overflow-y-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Hide scrollbar utility */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

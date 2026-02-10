@@ -53,7 +53,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const isPlayground = pathname.startsWith("/dashboard/playground")
 
   return (
-    <div className={isPlayground ? "h-dvh flex flex-col bg-background" : "min-h-screen bg-background"}>
+    <div className={isPlayground ? "h-dvh flex flex-col bg-background overflow-hidden" : "min-h-screen bg-background"}>
       {/* Shared header — same as docs/compliance pages */}
       <PublicPageHeader onSearchClick={() => setCmdkOpen(true)} />
 

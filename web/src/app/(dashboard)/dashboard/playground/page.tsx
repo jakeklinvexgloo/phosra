@@ -92,7 +92,7 @@ export default function PlaygroundPage() {
   return (
     <div className="h-full flex flex-col">
       {/* Mobile tab bar */}
-      <div className="flex md:hidden border-b border-border">
+      <div className="flex md:hidden border-b border-border flex-shrink-0">
         <button
           onClick={() => setActivePanel("chat")}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium transition-colors ${

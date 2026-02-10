@@ -84,7 +84,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
       </div>
 
       {/* Messages area */}
-      <div ref={scrollRef} className="relative flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 py-4">
+      <div ref={scrollRef} className="relative flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 py-4" style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y" }}>
         {isEmpty ? (
           <div className="h-full flex flex-col items-center justify-center">
             <div className="max-w-lg text-center mb-8">

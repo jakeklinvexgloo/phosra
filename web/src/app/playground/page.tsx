@@ -92,7 +92,7 @@ export default function PublicPlaygroundPage() {
   return (
     <div className="h-full flex flex-col">
       {/* Playground info bar */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-muted/30">
+      <div className="flex items-center justify-between px-6 py-3 border-b border-border bg-muted/30 flex-shrink-0">
         <div className="flex items-center gap-3">
           <h1 className="text-sm font-semibold text-foreground">MCP Playground</h1>
           <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20">
@@ -105,7 +105,7 @@ export default function PublicPlaygroundPage() {
       </div>
 
       {/* Mobile tab bar */}
-      <div className="flex md:hidden border-b border-border">
+      <div className="flex md:hidden border-b border-border flex-shrink-0">
         <button
           onClick={() => setActivePanel("chat")}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium transition-colors ${

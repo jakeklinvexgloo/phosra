@@ -4,7 +4,7 @@ import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
 
 export default function PlaygroundLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-dvh flex flex-col bg-background">
+    <div className="h-dvh flex flex-col bg-background overflow-hidden">
       <PublicPageHeader />
       <main className="flex-1 pt-14 overflow-hidden">
         {children}
