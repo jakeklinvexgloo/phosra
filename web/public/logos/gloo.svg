@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" fill="none">
+  <circle cx="12" cy="14" r="5" fill="#4F46E5"/>
+  <circle cx="22" cy="14" r="5" fill="#7C3AED"/>
+  <circle cx="17" cy="22" r="5" fill="#6366F1"/>
+  <text x="34" y="25" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="currentColor">gloo</text>
+</svg>

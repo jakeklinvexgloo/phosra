@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { Shield, Globe, Scale, Code, ArrowRight, Lock, Zap, Eye, Cpu, Users } from "lucide-react"
+import { Shield, Globe, Scale, Code, ArrowRight, Lock, Zap, Eye, Cpu, Users, Linkedin, ExternalLink } from "lucide-react"
+import Image from "next/image"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 import { PLATFORM_STATS } from "@/lib/platforms"
 
@@ -64,33 +65,17 @@ const STEPS = [
   },
 ]
 
-const TEAM = [
-  {
-    name: "Jake Klinvex",
-    role: "Founder & CEO",
-    prev: "Previously at Google, Microsoft",
-    bio: "Spent a decade building platform safety infrastructure. Founded Phosra to give every family the protection tools that only big tech had internally.",
-  },
-  {
-    name: "Sarah Chen",
-    role: "CTO",
-    prev: "Previously at Meta, Stripe",
-    bio: "Led compliance engineering at Meta\u2019s family safety team. Designed Phosra\u2019s cross-platform enforcement engine and API architecture.",
-  },
-  {
-    name: "Marcus Rivera",
-    role: "Head of Policy",
-    prev: "Previously at NCMEC, FTC",
-    bio: "Former child safety policy advisor at FTC. Maps global legislation into Phosra\u2019s 45 enforceable rule categories.",
-  },
-]
-
-const ADVISORS = [
-  { name: "Dr. Emily Park", title: "Child Psychology, Stanford" },
-  { name: "David Nguyen", title: "Former VP Eng, Cloudflare" },
-  { name: "Rachel Torres", title: "Partner, Greylock" },
-  { name: "James Mitchell", title: "KOSA Policy Architect" },
-]
+const FOUNDERS = {
+  names: "Jake & Susannah Klinvex",
+  role: "CEO & Founders",
+  bio: "Serial entrepreneurs and parents of five children, passionate about family safety and technology.",
+  linkedin: "https://www.linkedin.com/in/jakeklinvex/",
+  companies: [
+    { name: "Mastercard", logo: "/logos/mastercard.svg" },
+    { name: "Gloo", logo: "/logos/gloo.svg" },
+    { name: "SessionM", logo: "/logos/sessionm.svg" },
+  ],
+}
 
 export default function AboutPage() {
   return (
@@ -298,47 +283,51 @@ export default function AboutPage() {
               Leadership
             </p>
             <h2 className="text-2xl sm:text-3xl font-display text-foreground">
-              Built by people who&apos;ve shipped at scale
+              Built by parents, for parents
             </h2>
             <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
-              Our team combines deep experience in child safety, platform engineering, and regulatory compliance.
+              Founded by serial entrepreneurs raising five children — we know firsthand why universal protection matters.
             </p>
           </div>
         </AnimatedSection>
 
-        {/* Founders grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {TEAM.map((person, i) => (
-            <AnimatedSection key={person.name} delay={i * 0.1}>
-              <div className="text-center">
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 bg-gradient-to-br from-brand-green/20 to-accent-teal/20 border-2 border-border flex items-center justify-center">
-                  <Users className="w-8 h-8 text-brand-green/40" />
-                </div>
-                <h3 className="font-semibold text-foreground text-lg">{person.name}</h3>
-                <p className="text-brand-green text-sm font-medium">{person.role}</p>
-                <p className="text-muted-foreground text-xs mt-1">{person.prev}</p>
-                <p className="text-muted-foreground text-sm mt-3 leading-relaxed">{person.bio}</p>
-              </div>
-            </AnimatedSection>
-          ))}
-        </div>
-
-        {/* Advisors */}
-        <AnimatedSection delay={0.3}>
-          <div className="text-center mb-8">
-            <h3 className="text-lg font-semibold text-foreground">Advisors</h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Industry leaders guiding our mission
+        {/* Founder card */}
+        <AnimatedSection>
+          <div className="max-w-md mx-auto text-center">
+            <div className="w-24 h-24 rounded-full mx-auto mb-4 bg-gradient-to-br from-brand-green/20 to-accent-teal/20 border-2 border-border flex items-center justify-center">
+              <Users className="w-8 h-8 text-brand-green/40" />
+            </div>
+            <h3 className="font-semibold text-foreground text-lg">{FOUNDERS.names}</h3>
+            <p className="text-brand-green text-sm font-medium">{FOUNDERS.role}</p>
+            <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
+              {FOUNDERS.bio}
             </p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-8">
-            {ADVISORS.map((a) => (
-              <div key={a.name} className="text-center px-2">
-                <div className="w-14 h-14 rounded-full mx-auto mb-2 bg-gradient-to-br from-muted to-accent-teal/10 border border-border" />
-                <p className="text-sm font-medium text-foreground">{a.name}</p>
-                <p className="text-xs text-muted-foreground">{a.title}</p>
-              </div>
-            ))}
+
+            {/* Previous companies */}
+            <div className="flex items-center justify-center gap-6 mt-6">
+              {FOUNDERS.companies.map((company) => (
+                <Image
+                  key={company.name}
+                  src={company.logo}
+                  alt={company.name}
+                  width={100}
+                  height={28}
+                  className="h-5 w-auto opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all"
+                />
+              ))}
+            </div>
+
+            {/* LinkedIn link */}
+            <Link
+              href={FOUNDERS.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mt-4 transition-colors"
+            >
+              <Linkedin className="w-4 h-4" />
+              <span>LinkedIn</span>
+              <ExternalLink className="w-3 h-3" />
+            </Link>
           </div>
         </AnimatedSection>
       </section>
