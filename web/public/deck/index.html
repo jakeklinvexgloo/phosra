@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1920">
+<meta name="viewport" content="width=960">
 <title>Phosra — Pre-Seed Pitch Deck</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,7 +10,7 @@
 <style>
 /* ── Reset & Page ─────────────────────────── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-@page { size: 1920px 1080px; margin: 0; }
+@page { size: 10in 5.625in; margin: 0; }
 html { font-size: 16px; }
 body { margin: 0; padding: 0; background: #0D1B2A; }
 
@@ -36,10 +36,18 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
 }
 
 /* ── Slide Base ───────────────────────────── */
+/* Google Slides = 10in × 5.625in (720×405pt at 72dpi = 960×540px at 96dpi).
+   We design at 1920×1080 for crispness, then scale(0.5) for print.
+   The .slide-wrapper constrains the layout box so page breaks work. */
+.slide-wrapper {
+  width: 960px;
+  height: 540px;
+  overflow: hidden;
+  break-after: page;
+}
 .slide {
   width: 1920px;
   height: 1080px;
-  break-after: page;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -47,6 +55,8 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
   padding: 80px 120px;
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy) 100%);
   color: var(--white);
+  transform: scale(0.5);
+  transform-origin: top left;
 }
 
 /* ── Typography ───────────────────────────── */
@@ -354,6 +364,7 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 1: TITLE                              -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide slide-title">
   <img src="/favicon.svg" alt="Phosra" class="logo">
   <h1 class="headline">Define once, <span class="accent">protect everywhere.</span></h1>
@@ -366,10 +377,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
   <p class="meta">Pre-Seed &nbsp;|&nbsp; February 2026</p>
   <p class="meta" style="margin-top:8px;">Jake &amp; Susannah Klinvex, Co-Founders &nbsp;|&nbsp; jake@phosra.com</p>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 2: THE PROBLEM                        -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">The Problem</div>
   <h2 class="headline">Parents face an <span class="accent">impossible task</span></h2>
@@ -391,10 +404,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
     </div>
   </div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 3: WHY NOW                            -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">Why Now</div>
   <h2 class="headline">A regulatory <span class="accent">tsunami</span></h2>
@@ -449,10 +464,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
     </div>
   </div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 4: THE SOLUTION                       -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">The Solution</div>
   <h2 class="headline">The <span class="accent">Stripe</span> of parental controls</h2>
@@ -487,10 +504,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
     <span class="green">&rarr; NextDNS:</span> strict web filtering, safe search &nbsp;&nbsp;<span class="green">&#10003;</span>
   </div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 5: ARCHITECTURE                       -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">Architecture</div>
   <h2 class="headline">Two-sided <span class="accent">infrastructure</span></h2>
@@ -556,10 +575,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
     </div>
   </div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 6: TRACTION                           -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">Traction</div>
   <h2 class="headline">Community-led <span class="accent">growth</span></h2>
@@ -633,10 +654,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
     </div>
   </div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 7: BUSINESS MODEL                     -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">Business Model</div>
   <h2 class="headline">Freemium to <span class="accent">enterprise</span></h2>
@@ -689,10 +712,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
   </div>
   <div class="callout" style="margin-top:32px;">Enterprise is the primary revenue driver. Platforms facing $50K+ per-violation fines need Phosra&rsquo;s compliance engine.</div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 8: COMPETITION                        -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">Competition</div>
   <h2 class="headline">No one connects <span class="accent">both sides</span></h2>
@@ -755,10 +780,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
   </div>
   <div class="callout" style="margin-top:24px;">Bark, Qustodio, and Aura are our <strong>customers</strong>, not competitors. They integrate via our API to extend their reach from 1&ndash;10 platforms to 188+.</div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 9: THE MOAT                           -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">Defensibility</div>
   <h2 class="headline">Five <span class="accent">compounding</span> moats</h2>
@@ -791,10 +818,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
   </div>
   <div style="font-family:var(--font-body);font-size:18px;color:var(--white-30);text-align:center;margin-top:24px;">Each layer compounds over time. Displacement requires rebuilding all five simultaneously.</div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 10: TEAM                              -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">Team</div>
   <h2 class="headline">Parents who <span class="accent">build</span></h2>
@@ -844,10 +873,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
     </div>
   </div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 11: GO-TO-MARKET                      -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide">
   <div class="label">Go-to-Market</div>
   <h2 class="headline">Bottom-up adoption, <span class="accent">top-down contracts</span></h2>
@@ -898,10 +929,12 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
     </div>
   </div>
 </div>
+</div>
 
 <!-- ════════════════════════════════════════════ -->
 <!-- SLIDE 12: THE ASK                           -->
 <!-- ════════════════════════════════════════════ -->
+<div class="slide-wrapper">
 <div class="slide" style="justify-content:center;align-items:center;text-align:center;">
   <img src="/favicon.svg" alt="Phosra" style="width:64px;height:64px;margin-bottom:32px;">
   <div class="label" style="margin-bottom:16px;">The Ask</div>
@@ -938,6 +971,7 @@ body { margin: 0; padding: 0; background: #0D1B2A; }
   </div>
   <div style="font-family:var(--font-display);font-size:36px;color:var(--white);margin-bottom:16px;">Join us in building the infrastructure that makes the internet <span style="color:var(--green);">safe for every child.</span></div>
   <div style="font-family:var(--font-body);font-size:22px;color:var(--white-50);">jake@phosra.com</div>
+</div>
 </div>
 
 </body>
