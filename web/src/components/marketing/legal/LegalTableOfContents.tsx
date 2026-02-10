@@ -60,8 +60,8 @@ export function LegalTableOfContents({ sections }: LegalTOCProps) {
       </nav>
 
       {/* Mobile — horizontal scroll bar */}
-      <nav className="lg:hidden overflow-x-auto -mx-4 px-4 pb-4">
-        <div className="flex gap-2">
+      <nav className="lg:hidden overflow-x-auto -mx-4 px-4 pb-4 no-scrollbar sticky top-14 z-10 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div className="flex gap-2 py-2">
           {sections.map((section) => {
             const isActive = activeId === section.id
             return (

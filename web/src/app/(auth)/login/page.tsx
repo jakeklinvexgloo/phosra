@@ -71,7 +71,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right panel — auth actions */}
-      <div className="flex-1 bg-[#F8F8F8] flex items-center justify-center px-6 py-12">
+      <div className="flex-1 bg-[#F8F8F8] flex items-center justify-center px-6 py-6 sm:py-12">
         <div className="w-full max-w-lg">
           {/* Mobile logo */}
           <div className="flex items-center mb-8 lg:hidden">

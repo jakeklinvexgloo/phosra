@@ -136,7 +136,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
         {docsTab === "specification" ? (
           <>
         {/* Main content — sidebar is now in the docs layout */}
-        <div className="space-y-12">
+        <div className="space-y-12 overflow-x-hidden">
           {/* Preamble */}
           <section id="preamble">
             <div className="bg-accent/5 border border-accent/20 rounded p-4 sm:p-8">
@@ -778,8 +778,8 @@ Content-Type: application/json
                 Overview of which category groups are supported by each platform adapter. <span className="text-emerald-500">&#10003;</span> = Full support,{" "}
                 <span className="text-amber-500">&#9681;</span> = Partial support, <span className="text-zinc-400">&mdash;</span> = No support.
               </p>
-              <div className="bg-card rounded border border-border overflow-x-auto -mx-4 sm:mx-0">
-                <table className="w-full text-sm min-w-[700px]">
+              <div className="bg-card rounded-none sm:rounded border border-border overflow-x-auto -mx-4 sm:mx-0">
+                <table className="w-full text-sm min-w-[600px]">
                   <thead>
                     <tr className="bg-muted/50">
                       <th className="px-3 sm:px-4 py-3 text-left text-xs text-muted-foreground sticky left-0 bg-muted/50 z-10">Category Group</th>
@@ -1031,7 +1031,7 @@ Content-Type: application/json
         ) : (
           <>
         {/* Recipes content — sidebar is now in the docs layout */}
-        <div className="space-y-12">
+        <div className="space-y-12 overflow-x-hidden">
           <section id="recipes">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-foreground">Real-World Recipes</h2>

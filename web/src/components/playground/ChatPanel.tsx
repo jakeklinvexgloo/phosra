@@ -151,7 +151,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
       </div>
 
       {/* Input */}
-      <div className="px-4 pb-3 pt-2 md:px-16 md:pb-6 md:pt-3 flex-shrink-0">
+      <div className="px-4 pb-3 pt-2 md:px-16 md:pb-6 md:pt-3 flex-shrink-0" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0.75rem))" }}>
         <div className="max-w-3xl mx-auto">
           {/* Mobile-only reset (header is hidden on mobile) */}
           {!isEmpty && (

@@ -234,11 +234,11 @@ export default function PlatformsPage() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-border bg-muted/30">
-              <SortHeader field="name" className="min-w-[200px]">
+              <SortHeader field="name" className="min-w-[140px] sm:min-w-[200px]">
                 Platform
               </SortHeader>
               <SortHeader field="category">Category</SortHeader>
-              <SortHeader field="side">Side</SortHeader>
+              <SortHeader field="side" className="hidden sm:table-cell">Side</SortHeader>
               <SortHeader field="tier">Integration</SortHeader>
             </tr>
           </thead>
@@ -277,7 +277,7 @@ export default function PlatformsPage() {
                         {platform.categoryShortLabel}
                       </span>
                     </td>
-                    <td className="px-4 py-4 text-sm text-muted-foreground capitalize">
+                    <td className="px-4 py-4 text-sm text-muted-foreground capitalize hidden sm:table-cell">
                       {platform.side}
                     </td>
                     <td className="px-4 py-4">

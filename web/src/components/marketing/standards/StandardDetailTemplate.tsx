@@ -29,7 +29,7 @@ export function StandardDetailTemplate({ standard }: { standard: StandardEntry }
           <PhosraBurst size={400} color="#ffffff" opacity={0.03} />
         </div>
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-24">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-24 pb-16 sm:pb-24">
           <AnimatedSection>
             {/* Back link */}
             <Link
@@ -124,7 +124,7 @@ export function StandardDetailTemplate({ standard }: { standard: StandardEntry }
       </section>
 
       {/* About / Long Description */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+      <section className="relative z-10 max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
         <AnimatedSection>
           <div className="grid md:grid-cols-3 gap-8 lg:gap-10 xl:gap-12">
             <div className="md:col-span-2">
