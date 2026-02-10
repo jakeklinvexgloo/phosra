@@ -29,6 +29,9 @@ web/out/
 *.png
 *.jpeg
 
+# Allow committed image assets
+!web/public/**/*.png
+
 # Go compiled binary
 /server
 
