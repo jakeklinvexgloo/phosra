@@ -19,6 +19,8 @@ const unauthenticatedPaths = [
   "/terms(.*)",
   "/auth/callback(.*)",
   "/api/playground(.*)",
+  "/opengraph-image(.*)",
+  "/twitter-image(.*)",
 ]
 
 // In sandbox mode, don't protect dashboard routes (auth is handled by X-Sandbox-Session header)
