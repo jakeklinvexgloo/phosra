@@ -6,7 +6,7 @@ import { HeroChatBubble } from "./HeroChatBubble"
 import { HeroToolCallPill } from "./HeroToolCallPill"
 import { HeroEnforcementCard } from "./HeroEnforcementCard"
 import { HeroApiLog, type LogEntry } from "./HeroApiLog"
-import { DEMO_SCRIPT, type DemoStep } from "./hero-demo-script"
+import { DEMO_SCENARIOS, type DemoStep } from "./hero-demo-script"
 
 /* ── Types ────────────────────────────────── */
 
@@ -21,6 +21,8 @@ interface ToolPill {
   name: string
   label: string
   status: "running" | "complete"
+  /** Unique key — tool names can repeat across turns */
+  key: string
 }
 
 /* ── Main Component ───────────────────────── */
@@ -44,14 +46,16 @@ export function HeroChatDemo() {
   const [tools, setTools] = useState<ToolPill[]>([])
   const [logLines, setLogLines] = useState<LogEntry[]>([])
   const [showThinking, setShowThinking] = useState(false)
-  const [showResult, setShowResult] = useState(false)
+  const [resultCardText, setResultCardText] = useState<string | null>(null)
   const [fading, setFading] = useState(false)
 
-  // Refs for cleanup
+  // Refs for cleanup & scenario cycling
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
   const intervalsRef = useRef<ReturnType<typeof setInterval>[]>([])
   const logIdRef = useRef(0)
+  const toolKeyRef = useRef(0)
   const isPlayingRef = useRef(false)
+  const scenarioIndexRef = useRef(0)
 
   const clearAllTimers = useCallback(() => {
     timersRef.current.forEach(clearTimeout)
@@ -65,9 +69,10 @@ export function HeroChatDemo() {
     setTools([])
     setLogLines([])
     setShowThinking(false)
-    setShowResult(false)
+    setResultCardText(null)
     setFading(false)
     logIdRef.current = 0
+    toolKeyRef.current = 0
   }, [])
 
   const addTimer = useCallback((fn: () => void, ms: number) => {
@@ -127,30 +132,31 @@ export function HeroChatDemo() {
     []
   )
 
-  // Run the demo script
+  // Run the current scenario's script
   const runDemo = useCallback(() => {
     if (isPlayingRef.current) return
     isPlayingRef.current = true
     resetState()
 
+    const scenario = DEMO_SCENARIOS[scenarioIndexRef.current]
+    const steps = scenario.steps
     let elapsed = 0
 
-    for (let i = 0; i < DEMO_SCRIPT.length; i++) {
-      const step = DEMO_SCRIPT[i]
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i]
       const startAt = elapsed
 
       addTimer(() => processStep(step), startAt)
-
-      // For typewriter steps, the duration IS the typing time.
-      // For other steps, duration is a wait before next step.
       elapsed += step.duration
     }
 
-    // After all steps (including fade), restart
+    // After all steps (including fade), advance to next scenario and restart
     addTimer(() => {
       isPlayingRef.current = false
+      scenarioIndexRef.current =
+        (scenarioIndexRef.current + 1) % DEMO_SCENARIOS.length
       resetState()
-      // Small pause then restart
+      // Small pause then restart with next scenario
       addTimer(() => runDemo(), 300)
     }, elapsed)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,6 +167,8 @@ export function HeroChatDemo() {
       switch (step.type) {
         case "user":
           setShowThinking(false)
+          // Hide previous result card when a new user message arrives (follow-up turn)
+          setResultCardText(null)
           typewrite("user", step.text!, step.duration, () => {})
           break
 
@@ -171,22 +179,33 @@ export function HeroChatDemo() {
 
         case "tool-start":
           setShowThinking(false)
+          toolKeyRef.current++
           setTools((prev) => [
             ...prev,
             {
               name: step.toolName!,
               label: step.toolLabel!,
               status: "running",
+              key: `${step.toolName}-${toolKeyRef.current}`,
             },
           ])
           break
 
         case "tool-complete":
-          setTools((prev) =>
-            prev.map((t) =>
-              t.name === step.toolName ? { ...t, status: "complete" } : t
-            )
-          )
+          // Complete the most recent tool with this name that's still running
+          setTools((prev) => {
+            const updated = [...prev]
+            for (let j = updated.length - 1; j >= 0; j--) {
+              if (
+                updated[j].name === step.toolName &&
+                updated[j].status === "running"
+              ) {
+                updated[j] = { ...updated[j], status: "complete" }
+                break
+              }
+            }
+            return updated
+          })
           break
 
         case "log-pending":
@@ -242,7 +261,7 @@ export function HeroChatDemo() {
           break
 
         case "result":
-          setShowResult(true)
+          setResultCardText(step.resultCardText ?? null)
           break
 
         case "pause":
@@ -277,7 +296,7 @@ export function HeroChatDemo() {
     }
   }, [isInView, prefersReducedMotion, runDemo, clearAllTimers, resetState])
 
-  // Reduced-motion: show static final state
+  // Reduced-motion: show static final state (first scenario)
   if (prefersReducedMotion) {
     return (
       <div ref={ref} className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)]">
@@ -290,9 +309,9 @@ export function HeroChatDemo() {
           </div>
           <HeroChatBubble
             role="assistant"
-            text="Done! Chap can watch G and PG on Netflix. PG-13, R, and NC-17 are blocked. Screen time: 2 hrs/day."
+            text="Done! Chap can watch G and PG on Netflix. PG-13, R, and NC-17 are blocked."
           />
-          <HeroEnforcementCard />
+          <HeroEnforcementCard text="Netflix — 6 rules applied" />
         </div>
         <div className="border-t border-white/[0.06]">
           <HeroApiLog
@@ -354,7 +373,7 @@ export function HeroChatDemo() {
           <div className="flex flex-wrap gap-1.5">
             {tools.map((t) => (
               <HeroToolCallPill
-                key={t.name}
+                key={t.key}
                 toolName={t.name}
                 status={t.status}
               />
@@ -363,7 +382,7 @@ export function HeroChatDemo() {
         )}
 
         {/* Enforcement result card */}
-        {showResult && <HeroEnforcementCard />}
+        {resultCardText && <HeroEnforcementCard text={resultCardText} />}
       </div>
 
       {/* Terminal pane */}

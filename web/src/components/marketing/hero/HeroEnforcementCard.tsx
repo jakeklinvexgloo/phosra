@@ -3,7 +3,11 @@
 import { motion } from "framer-motion"
 import { Check } from "lucide-react"
 
-export function HeroEnforcementCard() {
+interface HeroEnforcementCardProps {
+  text?: string
+}
+
+export function HeroEnforcementCard({ text = "Netflix \u2014 6 rules applied" }: HeroEnforcementCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -12,7 +16,7 @@ export function HeroEnforcementCard() {
       className="bg-brand-green/5 border border-brand-green/20 rounded-lg px-3 py-2 flex items-center gap-2"
     >
       <Check className="w-3.5 h-3.5 text-brand-green flex-shrink-0" />
-      <span className="text-xs text-white/80">Netflix &mdash; 6 rules applied</span>
+      <span className="text-xs text-white/80">{text}</span>
     </motion.div>
   )
 }
