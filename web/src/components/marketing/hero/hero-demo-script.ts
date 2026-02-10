@@ -378,7 +378,7 @@ const SCENARIO_COPPA: DemoScenario = {
 /* ── Export ordered scenario list ────────────────────────────────── */
 
 export const DEMO_SCENARIOS: DemoScenario[] = [
-  SCENARIO_NETFLIX,
   SCENARIO_FOUR_NORMS,
   SCENARIO_COPPA,
+  SCENARIO_NETFLIX,
 ]
