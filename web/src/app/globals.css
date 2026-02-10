@@ -78,7 +78,10 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
+  /* NOTE: scroll-behavior: smooth was removed from html because it breaks
+     overflow-y scroll containers inside overflow:hidden parents on iOS Safari
+     (WebKit bug 238497). Use the .smooth-scroll class on individual scroll
+     containers or page wrappers that need smooth anchor scrolling. */
   * { @apply border-border; }
   body {
     @apply bg-background text-foreground;

@@ -83,8 +83,9 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
         )}
       </div>
 
-      {/* Messages area */}
-      <div ref={scrollRef} className="relative flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 py-4" style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y" }}>
+      {/* Messages area — relative/absolute pattern ensures iOS Safari computes a real height */}
+      <div className="relative flex-1 min-h-0">
+        <div ref={scrollRef} className="absolute inset-0 overflow-y-auto px-6 py-4">
         {isEmpty ? (
           <div className="h-full flex flex-col items-center justify-center">
             <div className="max-w-lg text-center mb-8">
@@ -155,6 +156,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
             New messages
           </button>
         )}
+        </div>
       </div>
 
       {/* Input */}

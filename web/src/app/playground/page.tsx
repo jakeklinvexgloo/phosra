@@ -135,7 +135,7 @@ export default function PublicPlaygroundPage() {
 
       {/* Chat + Inspector */}
       <div className="flex-1 flex flex-col md:flex-row min-h-0">
-        <div className={`flex-1 min-w-0 border-r border-border ${activePanel !== "chat" ? "hidden md:block" : ""}`}>
+        <div className={`flex-1 min-w-0 min-h-0 border-r border-border ${activePanel !== "chat" ? "hidden md:block" : ""}`}>
           <ChatPanel
             messages={messages}
             isLoading={isLoading}
@@ -145,7 +145,7 @@ export default function PublicPlaygroundPage() {
             error={error}
           />
         </div>
-        <div className={`flex-1 min-w-0 ${activePanel !== "inspector" ? "hidden md:block" : ""}`}>
+        <div className={`flex-1 min-w-0 min-h-0 ${activePanel !== "inspector" ? "hidden md:block" : ""}`}>
           <InspectorPanel toolCalls={toolCalls} entities={entities} />
         </div>
       </div>
