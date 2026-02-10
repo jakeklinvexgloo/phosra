@@ -274,7 +274,7 @@ const SCENARIO_COPPA: DemoScenario = {
   steps: [
     {
       type: "user",
-      text: "Make Coldy COPPA 2.0 compliant. She\u2019s 5. Block ads, delete her data, full privacy lockdown.",
+      text: "Make Coldy COPPA 2.0 compliant. He\u2019s 5. Block ads, delete his data, full privacy lockdown.",
       duration: 2000,
     },
     { type: "thinking", duration: 500 },
