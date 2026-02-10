@@ -69,20 +69,6 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header — hidden on mobile to maximise chat space; visible on md+ as panel label */}
-      <div className="hidden md:flex items-center justify-between px-6 h-12 border-b border-border/50 flex-shrink-0">
-        <h2 className="text-sm font-semibold text-foreground">MCP Playground</h2>
-        {!isEmpty && (
-          <button
-            onClick={onReset}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            Reset
-          </button>
-        )}
-      </div>
-
       {/* Messages area — relative/absolute pattern ensures iOS Safari computes a real height */}
       <div className="relative flex-1 min-h-0">
         <div ref={scrollRef} className="absolute inset-0 overflow-y-auto px-4 py-4 md:px-16 md:py-6">

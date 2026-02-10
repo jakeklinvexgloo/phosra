@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback, useMemo, useEffect, type ReactNode } from "react"
-import { MessageSquare, Search } from "lucide-react"
+import { MessageSquare, Search, RotateCcw } from "lucide-react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport, isToolUIPart, getToolName } from "ai"
 import { ChatPanel } from "@/components/playground/ChatPanel"
@@ -99,9 +99,20 @@ export default function PublicPlaygroundPage() {
             SANDBOX
           </span>
         </div>
-        <p className="text-xs text-muted-foreground">
-          Test Phosra&apos;s MCP tools with sample data &mdash; no account required
-        </p>
+        <div className="flex items-center gap-4">
+          <p className="text-xs text-muted-foreground">
+            Test Phosra&apos;s MCP tools with sample data &mdash; no account required
+          </p>
+          {messages.length > 0 && (
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Reset
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Mobile tab bar — compact to maximise chat space */}
