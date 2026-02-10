@@ -50,7 +50,7 @@ export function ChatInput({ onSend, onStop, disabled, isLoading }: ChatInputProp
         placeholder="Ask about parental controls, policies, or platforms..."
         disabled={disabled || isLoading}
         rows={1}
-        className="w-full px-4 py-3 pr-12 text-sm resize-none bg-transparent focus:outline-none placeholder:text-muted-foreground disabled:opacity-50"
+        className="w-full px-3 py-2.5 pr-11 md:px-4 md:py-3 md:pr-12 text-sm resize-none bg-transparent focus:outline-none placeholder:text-muted-foreground disabled:opacity-50"
       />
       {isLoading ? (
         <button

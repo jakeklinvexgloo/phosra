@@ -91,28 +91,28 @@ export default function PlaygroundPage() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Mobile tab bar */}
+      {/* Mobile tab bar — compact to maximise chat space */}
       <div className="flex md:hidden border-b border-border flex-shrink-0">
         <button
           onClick={() => setActivePanel("chat")}
-          className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${
             activePanel === "chat"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground"
           }`}
         >
-          <MessageSquare className="w-3.5 h-3.5" />
+          <MessageSquare className="w-3 h-3" />
           Chat
         </button>
         <button
           onClick={() => setActivePanel("inspector")}
-          className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium transition-colors ${
+          className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${
             activePanel === "inspector"
               ? "text-foreground border-b-2 border-foreground"
               : "text-muted-foreground"
           }`}
         >
-          <Search className="w-3.5 h-3.5" />
+          <Search className="w-3 h-3" />
           Inspector
           {toolCalls.length > 0 && (
             <span className="bg-muted text-muted-foreground text-[10px] px-1.5 py-0.5 rounded-full">{toolCalls.length}</span>

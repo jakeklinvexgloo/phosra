@@ -69,8 +69,8 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 h-12 border-b border-border flex-shrink-0">
+      {/* Header — hidden on mobile to maximise chat space; visible on md+ as panel label */}
+      <div className="hidden md:flex items-center justify-between px-6 h-12 border-b border-border flex-shrink-0">
         <h2 className="text-sm font-semibold text-foreground">MCP Playground</h2>
         {!isEmpty && (
           <button
@@ -85,19 +85,19 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
 
       {/* Messages area — relative/absolute pattern ensures iOS Safari computes a real height */}
       <div className="relative flex-1 min-h-0">
-        <div ref={scrollRef} className="absolute inset-0 overflow-y-auto px-6 py-4">
+        <div ref={scrollRef} className="absolute inset-0 overflow-y-auto px-3 py-3 md:px-6 md:py-4">
         {isEmpty ? (
           <div className="h-full flex flex-col items-center justify-center">
-            <div className="max-w-lg text-center mb-8">
-              <h3 className="text-lg font-semibold text-foreground mb-2">
+            <div className="max-w-lg text-center mb-4 md:mb-8">
+              <h3 className="text-base md:text-lg font-semibold text-foreground mb-1 md:mb-2">
                 Try Phosra with AI
               </h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 Use natural language to create families, configure parental controls, and
-                push rules to platforms. Watch every API call in the inspector panel.
+                push rules to platforms.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 max-w-lg w-full">
               {SCENARIOS.map((scenario) => (
                 <ScenarioCard
                   key={scenario.id}
@@ -108,7 +108,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
             </div>
           </div>
         ) : (
-          <div className="space-y-4 max-w-2xl mx-auto">
+          <div className="space-y-3 md:space-y-4 max-w-2xl mx-auto">
             {messages.map((msg, i) => (
               <ChatMessage
                 key={msg.id}
@@ -160,14 +160,26 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
       </div>
 
       {/* Input */}
-      <div className="px-6 pb-4 pt-2 flex-shrink-0">
+      <div className="px-3 pb-2 pt-1.5 md:px-6 md:pb-4 md:pt-2 flex-shrink-0">
+        {/* Mobile-only reset (header is hidden on mobile) */}
+        {!isEmpty && (
+          <div className="flex md:hidden justify-end mb-1">
+            <button
+              onClick={onReset}
+              className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <RotateCcw className="w-3 h-3" />
+              Reset
+            </button>
+          </div>
+        )}
         <ChatInput
           onSend={onSend}
           onStop={onStop}
           disabled={isLoading}
           isLoading={isLoading}
         />
-        <p className="text-[10px] text-muted-foreground text-center mt-2">
+        <p className="hidden md:block text-[10px] text-muted-foreground text-center mt-2">
           Sandbox mode — all data is temporary and enforcement is simulated
         </p>
       </div>
