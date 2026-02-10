@@ -219,11 +219,16 @@ var sandboxPlatforms = []struct {
 	Name string
 }{
 	{"netflix", "Netflix"},
+	{"paramount_plus", "Paramount+"},
+	{"youtube_tv", "YouTube TV"},
+	{"peacock", "Peacock"},
+	{"prime_video", "Amazon Prime Video"},
+	{"fire_tablet", "Amazon Fire Tablet"},
+	{"apple_watch", "Apple Watch"},
+	{"fire_tv", "Amazon Fire TV Stick"},
 	{"youtube", "YouTube / YouTube Kids"},
-	{"disney_plus", "Disney+"},
 	{"nextdns", "NextDNS"},
 	{"android", "Android / Family Link"},
-	{"xbox", "Xbox"},
 }
 
 func (s *QuickSetupService) autoConnectDemoPlatforms(ctx context.Context, familyID uuid.UUID) []ConnectedPlatformSummary {

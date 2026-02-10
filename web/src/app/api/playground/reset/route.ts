@@ -31,5 +31,17 @@ export async function POST(req: Request) {
     // ignore errors during cleanup
   }
 
+  // Re-create the Klinvex Family so reset returns to the pre-populated state
+  try {
+    const setupUrl = new URL("/api/playground/setup", req.url)
+    await fetch(setupUrl.toString(), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId }),
+    })
+  } catch {
+    // ignore — family will be re-created on next chat message anyway
+  }
+
   return Response.json({ status: "reset", session_id: sessionId })
 }

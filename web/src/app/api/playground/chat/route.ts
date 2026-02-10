@@ -21,6 +21,21 @@ export async function POST(req: Request) {
   const sessionId: string = body.chatId ?? body.sessionId ?? "default"
   const sandboxToken = `sandbox-${sessionId}`
 
+  // On first message, pre-populate the Klinvex Family (children + platforms, no policies)
+  const isFirstMessage = uiMessages.length <= 1
+  if (isFirstMessage) {
+    try {
+      const setupUrl = new URL("/api/playground/setup", req.url)
+      await fetch(setupUrl.toString(), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId }),
+      })
+    } catch {
+      // setup failure shouldn't block chat
+    }
+  }
+
   // Collect HTTP captures — the frontend reads these from the tool results
   const httpCaptures: ToolHttpCapture[] = []
   const tools = buildTools(sandboxToken, (capture) => {

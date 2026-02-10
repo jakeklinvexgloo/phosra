@@ -15,194 +15,194 @@ export interface Scenario {
 }
 
 /**
- * Pool of 20 branded scenario prompts. Each page load randomly picks 6.
- * Prompts reference real providers, standards, and legislation that Phosra enforces.
+ * Pool of 20 Klinvex-family-specific scenario prompts. Each page load randomly picks 6.
+ * Every scenario starts from an unprotected state and shows controls being turned ON.
  */
 export const SCENARIO_POOL: Scenario[] = [
   // ── Providers & Platforms ──────────────────────────────────────────
   {
-    id: "qustodio-protect",
-    badge: "Qustodio",
-    title: "Protect my 8-year-old",
-    description: "Full setup with age-appropriate rules across all platforms",
-    prompt:
-      "I have an 8-year-old daughter named Emma. Set up her profile with age-appropriate parental controls — content ratings, safe search, time limits, and purchase approval — then push the rules to all connected platforms. Show me exactly what got configured on each one.",
-    icon: Shield,
-  },
-  {
-    id: "netflix-block-title",
+    id: "chap-netflix",
     badge: "Netflix",
-    title: "Block Stranger Things",
-    description: "Too scary for a 9-year-old — block by title across streaming",
+    title: "Protect Chap on Netflix",
+    description: "Set up age-appropriate streaming controls for a 10-year-old",
     prompt:
-      "My 9-year-old keeps trying to watch Stranger Things on Netflix. It's too scary for her age. Can you block that specific title and anything rated TV-14 or above across Netflix, Disney+, and Prime Video?",
+      "Chap is 10 years old and has no parental controls on Netflix yet. Set up a protection policy for him with preteen-appropriate content ratings, then push the rules to Netflix and all other connected streaming platforms. Show me exactly what he can and can't watch.",
     icon: Tv,
   },
   {
-    id: "xbox-two-kids",
-    badge: "Xbox",
-    title: "Set up Xbox for two kids",
-    description: "Age-appropriate gaming profiles with purchase approval",
+    id: "twins-bedtime",
+    badge: "Fire Tablet",
+    title: "Bedtime for the twins",
+    description: "Lock Samson and Mona's Fire Tablets at 8:30 PM",
     prompt:
-      "I need to configure Xbox parental controls for my two kids — Emma (age 8) and Noah (age 14). Emma should only see E-rated games, Noah can go up to T-rated. Both need purchase approval turned on and multiplayer chat restricted to friends only.",
-    icon: Gamepad2,
+      "Samson and Mona are both 9 years old and their Fire Tablets have no restrictions right now. Set up protection policies for both of them with a bedtime lockout at 8:30 PM on school nights and 9:30 PM on weekends. Also cap their daily screen time at 2 hours. Show me the enforcement results.",
+    icon: Clock,
+  },
+  {
+    id: "coldy-youtube",
+    badge: "YouTube Kids",
+    title: "Lock down Coldy's YouTube",
+    description: "She's 5 — YouTube Kids only with no search",
+    prompt:
+      "Coldy is only 5 and currently has zero protections in place. Set up the strictest possible controls — YouTube Kids only (no regular YouTube), disable search, turn off autoplay, cap screen time at 30 minutes per day, and make sure content is restricted to G-rated only. Push to all platforms and show me what changed.",
+    icon: Eye,
+  },
+  {
+    id: "ramsay-fire-tv",
+    badge: "Fire TV",
+    title: "Ramsay's TV time",
+    description: "Limit what a 7-year-old can watch on the Fire TV Stick",
+    prompt:
+      "Ramsay is 7 and watches shows on the living room Fire TV Stick with no restrictions. Set up his protection policy — content ratings should be G and PG only, block anything TV-PG or above, and set a 1-hour daily limit. Enforce it across Fire TV and all streaming platforms.",
+    icon: Tv,
+  },
+  {
+    id: "apple-watch-controls",
+    badge: "Apple Watch",
+    title: "Apple Watch for the older kids",
+    description: "Set up Screen Time on Chap, Samson, and Mona's watches",
+    prompt:
+      "Chap (10), Samson (9), and Mona (9) each have Apple Watches with no parental controls. Set up protection policies for all three with notification curfews from 9 PM to 7 AM, location tracking enabled, and screen time limited. Show me the enforcement results for each child's Apple Watch.",
+    icon: Smartphone,
+  },
+  {
+    id: "family-enforcement",
+    badge: "All Platforms",
+    title: "Protect all 5 kids",
+    description: "Set up and enforce rules for the entire Klinvex Family",
+    prompt:
+      "None of the 5 Klinvex kids have any protection policies yet. Set up age-appropriate controls for ALL of them — Chap (10), Samson (9), Mona (9), Ramsay (7), and Coldy (5). Then trigger enforcement across all 11 connected platforms and show me a full breakdown of what each child can and can't do.",
+    icon: Shield,
   },
   {
     id: "nextdns-filtering",
     badge: "NextDNS",
-    title: "Block adult websites",
-    description: "Set up DNS-level filtering with strict safe search everywhere",
+    title: "Home network filtering",
+    description: "Set up DNS-level protection for the whole household",
     prompt:
-      "Set up NextDNS filtering for our home network. I want strict safe search forced on Google, Bing, and YouTube, adult content categories blocked, and a custom blocklist for reddit.com and 4chan.org. Show me the DNS configuration.",
+      "The Klinvex home network runs on NextDNS but has no filtering rules. Set up the strictest child's rules first — probably Coldy since she's 5 — and push DNS filtering to NextDNS. I want safe search forced, adult content blocked, and a custom blocklist for social media sites. Show me what gets configured.",
     icon: Wifi,
-  },
-  {
-    id: "youtube-kids-safe",
-    badge: "YouTube Kids",
-    title: "Safe YouTube only",
-    description: "Lock YouTube to Kids mode with no search and no autoplay",
-    prompt:
-      "My 6-year-old should only be able to watch YouTube Kids, not regular YouTube. Disable autoplay, turn off search so she can only browse curated content, and set a 45-minute daily limit. Push this to all her devices.",
-    icon: Eye,
-  },
-  {
-    id: "android-family-link",
-    badge: "Android",
-    title: "Set up Family Link",
-    description: "Configure Google Family Link with time limits and app approval",
-    prompt:
-      "Walk me through setting up Google Family Link for my 10-year-old's Android tablet. I want a 2-hour daily screen limit, app install approval required, and bedtime lockout from 8:30 PM to 7 AM on school nights.",
-    icon: Smartphone,
-  },
-  {
-    id: "apple-bedtime",
-    badge: "Apple Screen Time",
-    title: "Bedtime wind-down",
-    description: "Block all notifications and apps from 9 PM to 7 AM",
-    prompt:
-      "Configure Apple Screen Time downtime for my 12-year-old's iPhone. From 9 PM to 7 AM on school nights, block all apps except Phone and Messages. On weekends, push it to 10 PM. Also enable a notification curfew during those hours.",
-    icon: Clock,
   },
 
   // ── Standards & Movements ──────────────────────────────────────────
   {
-    id: "wait-until-8th",
+    id: "wait-until-8th-twins",
     badge: "Wait Until 8th",
-    title: "No social until 8th grade",
-    description: "Enforce the Wait Until 8th pledge for my 11-year-old",
+    title: "Wait Until 8th for the twins",
+    description: "Enforce the pledge for Samson and Mona, age 9",
     prompt:
-      "We signed the Wait Until 8th pledge. My son is 11 and in 5th grade. Enforce the full standard — no social media apps at all, no smartphone-level browser access, content restricted to G/PG, and web filtering set to strict. Show me what changes on each platform.",
+      "We signed the Wait Until 8th pledge for the twins — Samson and Mona are both 9. They currently have zero restrictions. Enforce the full standard: no social media, no smartphone-level browser access, content restricted to G/PG, and web filtering set to strict. Push to all their devices and show me the before-and-after.",
     icon: Ban,
   },
   {
-    id: "four-norms",
+    id: "four-norms-chap",
     badge: "Anxious Generation",
-    title: "Apply the Four Norms",
-    description: "No smartphone until 14, no social until 16, phone-free schools",
+    title: "Four Norms for Chap",
+    description: "Apply Jonathan Haidt's recommendations for a 10-year-old",
     prompt:
-      "I want to follow Jonathan Haidt's Four Norms from The Anxious Generation for my family. Apply: no smartphone until age 14, no social media until 16, phone-free schools from 8 AM to 3 PM, and a max of 2 hours daily screen time. I have kids aged 10 and 15 — configure both.",
+      "I want to follow Jonathan Haidt's Four Norms from The Anxious Generation for Chap, who is 10. He has no controls right now. Apply: no smartphone-level social media, phone-free during school hours (8 AM to 3 PM), max 2 hours daily screen time, and strict content filtering. Set it all up and enforce it.",
     icon: BookOpen,
   },
   {
-    id: "aap-screen-time",
+    id: "screen-time-comparison",
     badge: "AAP Guidelines",
     title: "Screen time by age",
-    description: "Configure the AAP's recommended limits for a toddler and teen",
+    description: "Compare AAP-recommended limits across all 5 ages",
     prompt:
-      "I want to follow the American Academy of Pediatrics screen time guidelines. I have a 3-year-old and a 13-year-old. The toddler should have max 1 hour of educational-only content per day. The teen should have reasonable limits with content ratings enforced. Set both up.",
+      "Using the AAP's screen time recommendations, set up appropriate limits for each Klinvex child based on their age: Coldy (5) should get max 1 hour, Ramsay (7) about 1.5 hours, the twins (9) get 2 hours, and Chap (10) gets 2 hours. Create policies for all 5 kids, enforce them, and show me a comparison table.",
     icon: Baby,
   },
   {
-    id: "common-sense-ratings",
+    id: "csm-ramsay",
     badge: "Common Sense Media",
-    title: "Age-matched ratings",
-    description: "Apply CSM's age-appropriate content ratings across all streaming",
+    title: "CSM ratings for Ramsay",
+    description: "Apply age-appropriate ratings for a 7-year-old",
     prompt:
-      "Apply Common Sense Media's recommended age ratings for my 11-year-old across all streaming platforms. Use their guidelines for what's appropriate at age 11 — this usually means PG and some PG-13 movies, TV-Y7 to TV-PG shows, and E to E10+ games. Show me what gets blocked on each platform.",
+      "Ramsay is 7 and has no content controls. Apply Common Sense Media's recommended age ratings for him across all streaming platforms — that should be around G movies, TV-Y7 shows, and E-rated games. Set it up, enforce it, and tell me specifically which shows and games get blocked.",
     icon: Heart,
   },
   {
-    id: "surgeon-general",
+    id: "surgeon-general-twins",
     badge: "Surgeon General",
-    title: "Delay social media",
-    description: "Follow the US Surgeon General's advisory — no social until 13",
+    title: "Surgeon General advisory",
+    description: "Follow the no-social-media recommendation for Samson & Mona",
     prompt:
-      "The US Surgeon General recommends delaying social media until at least age 13. My daughter is 11. Block all social media platforms (Instagram, TikTok, Snapchat, X), enforce safe search, and set up activity monitoring so I can see what she's doing online.",
+      "The US Surgeon General recommends delaying social media until at least 13. Samson and Mona are 9 — set up their protection policies following the Surgeon General's advisory. Block all social media, enforce safe search, set up activity monitoring, and restrict DMs to approved contacts only. Push to all platforms.",
     icon: Scale,
   },
   {
-    id: "1000-hours-outside",
+    id: "1000-hours-family",
     badge: "1000 Hours Outside",
-    title: "Balance screen & outdoors",
-    description: "Set a 2-hour daily screen cap with outdoor activity reminders",
+    title: "1000 Hours Outside",
+    description: "Limit all 5 kids' screen time to encourage outdoor play",
     prompt:
-      "We're doing the 1000 Hours Outside challenge this year. Set my kids' daily screen time limit to 2 hours max, with 20-minute usage reminders. Block all screens from 10 AM to 12 PM on weekends for mandatory outdoor time. Configure this across all devices.",
+      "We're doing the 1000 Hours Outside challenge for the whole Klinvex family. Set up screen time limits for all 5 kids — 2 hours max for the older ones, 1 hour for Coldy. Add 20-minute usage reminders, and block all screens from 10 AM to 12 PM on weekends for mandatory outdoor time. Show enforcement across all devices.",
     icon: TreePine,
   },
 
   // ── Legislation & Compliance ───────────────────────────────────────
   {
-    id: "coppa-delete-data",
+    id: "coppa-coldy",
     badge: "COPPA 2.0",
-    title: "Delete my kid's data",
-    description: "Invoke the eraser button to remove data from streaming platforms",
+    title: "COPPA protections for Coldy",
+    description: "She's 5 — full COPPA data protections required",
     prompt:
-      "Under COPPA 2.0, I want to exercise the eraser button for my 10-year-old. Submit data deletion requests to Netflix, YouTube, and any other connected platforms. Also disable all targeted advertising and block commercial data sharing for her profile.",
+      "Coldy is 5 years old and needs full COPPA 2.0 protections. She currently has nothing set up. Enable parental consent gates, block all targeted advertising, disable commercial data sharing, submit data deletion requests to all connected platforms, and set the strictest possible privacy controls. Show me the enforcement results.",
     icon: MonitorOff,
   },
   {
-    id: "phone-free-schools",
-    badge: "Phone-Free Schools",
-    title: "School hours downtime",
-    description: "Lock devices 8 AM to 3 PM on weekdays for school compliance",
-    prompt:
-      "My kids' school adopted a phone-free policy. Set up scheduled downtime from 8 AM to 3 PM every weekday across all their devices. Only allow the Phone app for emergencies. Block all social media, games, and notifications during school hours.",
-    icon: Lock,
-  },
-  {
-    id: "kosa-algo-off",
+    id: "kosa-algorithmic",
     badge: "KOSA",
     title: "Disable the algorithm",
-    description: "Turn off algorithmic feeds on TikTok, Instagram, and YouTube",
+    description: "Turn off algorithmic feeds for all 5 kids per KOSA",
     prompt:
-      "Under the Kids Online Safety Act, platforms must let minors opt out of algorithmic recommendations. Disable algorithmic feeds on TikTok, Instagram, YouTube, and any other connected social platform for both my kids. Switch them all to chronological-only feeds.",
+      "Under the Kids Online Safety Act, platforms must let minors opt out of algorithmic recommendations. None of the Klinvex kids have this enabled. Disable algorithmic feeds on YouTube, Netflix, Paramount+, Peacock, Prime Video, and YouTube TV for ALL 5 kids. Switch everything to chronological-only or curated feeds.",
     icon: Zap,
+  },
+  {
+    id: "school-hours-lockdown",
+    badge: "Phone-Free Schools",
+    title: "School hours lockdown",
+    description: "Lock all devices from 8 AM to 3 PM on weekdays",
+    prompt:
+      "The Klinvex kids' school has a phone-free policy. None of their devices are configured for this yet. Set up scheduled downtime from 8 AM to 3 PM every weekday across all Fire Tablets, Apple Watches, and connected platforms. Only allow emergency phone calls. Block games, social media, and notifications during school hours.",
+    icon: Lock,
   },
   {
     id: "fairplay-ads",
     badge: "Fairplay",
     title: "Ban targeted ads",
-    description: "Block all behavioral advertising across every connected platform",
+    description: "Block behavioral advertising across every platform",
     prompt:
-      "Following Fairplay's commercial-free childhood standard, block all targeted and behavioral advertising for my children across every connected platform. Also disable loot boxes and in-app purchase prompts, and turn off addictive design features like infinite scroll and autoplay.",
+      "Following Fairplay's commercial-free childhood standard, set up ad-blocking protections for all 5 Klinvex kids. Block targeted and behavioral advertising, disable in-app purchase prompts, and turn off addictive design features like infinite scroll and autoplay on every connected platform. Show the enforcement breakdown.",
     icon: Ban,
+  },
+  {
+    id: "coppa-data-deletion",
+    badge: "COPPA 2.0",
+    title: "Delete Coldy's data",
+    description: "Exercise the COPPA eraser button across all platforms",
+    prompt:
+      "Coldy is 5 and under COPPA protection. I want to exercise the eraser button for her. First set up her protection policy, then submit data deletion requests to Netflix, YouTube, Paramount+, Peacock, Prime Video, and all other connected platforms. Disable all data collection and targeted advertising for her profile.",
+    icon: MonitorOff,
+  },
+  {
+    id: "eu-dsa-compliance",
+    badge: "EU DSA",
+    title: "EU DSA compliance",
+    description: "Apply Digital Services Act rules across all platforms",
+    prompt:
+      "Apply EU Digital Services Act requirements for all 5 Klinvex kids. That means: no targeted advertising based on profiling, no dark patterns or addictive design, transparent algorithmic recommendations, age-appropriate privacy defaults, and parental notification of account changes. Set it all up and push enforcement.",
+    icon: Globe,
   },
   {
     id: "uk-childrens-code",
     badge: "UK Children's Code",
     title: "Privacy by default",
-    description: "Make all profiles private, disable location, block data sharing",
+    description: "Make all profiles private, block data sharing",
     prompt:
-      "Apply the UK Age Appropriate Design Code (Children's Code) settings for my 13-year-old. Make all social profiles private by default, disable geolocation tracking, block data sharing with third parties, and ensure privacy-protective settings are the default on every platform.",
+      "Apply the UK Children's Code (Age Appropriate Design Code) settings for the Klinvex kids. Make all profiles private by default, disable geolocation tracking on all devices except Apple Watch (keep for safety), block data sharing with third parties, and ensure privacy-protective settings are the default on every connected platform.",
     icon: Lock,
-  },
-  {
-    id: "thorn-safety",
-    badge: "Thorn",
-    title: "Enable safety alerts",
-    description: "Turn on grooming detection, CSAM reporting, and contact controls",
-    prompt:
-      "Apply Thorn's Digital Defenders safety recommendations for my kids. Enable monitoring alerts for potential grooming patterns, restrict direct messages to approved contacts only, turn on CSAM reporting compliance, and block unknown users from sending friend requests or messages.",
-    icon: AlertTriangle,
-  },
-  {
-    id: "eu-dsa-compliance",
-    badge: "EU DSA",
-    title: "Comply with EU rules",
-    description: "Apply Digital Services Act requirements for minors across platforms",
-    prompt:
-      "We live in the EU and I want all connected platforms to comply with the Digital Services Act for my 14-year-old. That means: no targeted advertising based on profiling, no dark patterns or addictive design, transparent algorithmic recommendations, and age-appropriate terms of service. Apply all of these rules.",
-    icon: Globe,
   },
 ]
 

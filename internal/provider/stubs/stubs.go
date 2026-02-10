@@ -484,6 +484,116 @@ func NewRoku() *StubAdapter {
 	)
 }
 
+func NewParamountPlus() *StubAdapter {
+	return newStub(
+		provider.PlatformInfo{ID: "paramount_plus", Name: "Paramount+", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Paramount+ streaming parental controls", AuthType: "manual"},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapAlgorithmicSafety,
+			provider.CapPrivacyControl, provider.CapAdDataControl,
+			provider.CapAgeVerification,
+		},
+		[]string{
+			"1. Open Paramount+ and go to Settings > Parental Controls",
+			"2. Enable the Kids profile for the child",
+			"3. Set content rating restrictions to match the recommended level",
+			"4. Enable PIN protection on the main profile",
+		},
+	)
+}
+
+func NewYouTubeTV() *StubAdapter {
+	return newStub(
+		provider.PlatformInfo{ID: "youtube_tv", Name: "YouTube TV", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "YouTube TV live streaming parental controls", AuthType: "manual"},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapTimeLimit,
+			provider.CapAlgorithmicSafety, provider.CapPrivacyControl,
+			provider.CapAdDataControl, provider.CapAgeVerification,
+		},
+		[]string{
+			"1. Open YouTube TV and go to Settings > Filter",
+			"2. Enable 'Filter' to hide content rated TV-MA and R",
+			"3. Configure Google Family Link for additional controls",
+			"4. Set up restricted profiles for children",
+		},
+	)
+}
+
+func NewPeacock() *StubAdapter {
+	return newStub(
+		provider.PlatformInfo{ID: "peacock", Name: "Peacock", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Peacock streaming parental controls", AuthType: "manual"},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapAlgorithmicSafety,
+			provider.CapPrivacyControl, provider.CapAdDataControl,
+			provider.CapAgeVerification,
+		},
+		[]string{
+			"1. Open Peacock and go to Account > Parental Controls",
+			"2. Create a Kids profile for the child",
+			"3. Set content maturity rating to the recommended level",
+			"4. Enable PIN lock on adult profiles",
+		},
+	)
+}
+
+func NewFireTablet() *StubAdapter {
+	return newStub(
+		provider.PlatformInfo{ID: "fire_tablet", Name: "Amazon Fire Tablet", Category: domain.PlatformCategoryDevice, Tier: domain.ComplianceLevelPending, Description: "Amazon Fire Tablet Kids parental controls", AuthType: "manual"},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapTimeLimit,
+			provider.CapScheduledHours, provider.CapPurchaseControl,
+			provider.CapWebFiltering, provider.CapSafeSearch,
+			provider.CapSocialControl, provider.CapLocationTracking,
+			provider.CapActivityMonitor, provider.CapPrivacyControl,
+			provider.CapNotificationControl, provider.CapAgeVerification,
+		},
+		[]string{
+			"1. Open Settings > Parental Controls on the Fire Tablet",
+			"2. Set up Amazon Kids+ profile with age-appropriate content",
+			"3. Configure daily screen time goals and bedtime",
+			"4. Set web browser restrictions and enable safe search",
+			"5. Configure app and purchase restrictions",
+			"6. Enable 'Learn First' to require educational goals before free time",
+		},
+	)
+}
+
+func NewAppleWatch() *StubAdapter {
+	return newStub(
+		provider.PlatformInfo{ID: "apple_watch", Name: "Apple Watch", Category: domain.PlatformCategoryDevice, Tier: domain.ComplianceLevelPending, Description: "Apple Watch parental controls via Family Setup", AuthType: "manual"},
+		[]provider.Capability{
+			provider.CapTimeLimit, provider.CapScheduledHours,
+			provider.CapLocationTracking, provider.CapNotificationControl,
+			provider.CapActivityMonitor, provider.CapPrivacyControl,
+		},
+		[]string{
+			"1. Open the Watch app on the parent's iPhone",
+			"2. Go to My Watch > Family > Set Up Apple Watch for a Family Member",
+			"3. Configure Schooltime mode to limit apps during school hours",
+			"4. Set up location sharing via Find My",
+			"5. Configure allowed contacts and communication limits",
+			"6. Enable Downtime schedules for notification curfew",
+		},
+	)
+}
+
+func NewFireTV() *StubAdapter {
+	return newStub(
+		provider.PlatformInfo{ID: "fire_tv", Name: "Amazon Fire TV Stick", Category: domain.PlatformCategoryDevice, Tier: domain.ComplianceLevelPending, Description: "Amazon Fire TV parental controls", AuthType: "manual"},
+		[]provider.Capability{
+			provider.CapContentRating, provider.CapTimeLimit,
+			provider.CapPurchaseControl, provider.CapPrivacyControl,
+			provider.CapAgeVerification,
+		},
+		[]string{
+			"1. Open Settings > Preferences > Parental Controls on Fire TV",
+			"2. Enable parental controls and set a PIN",
+			"3. Set content rating restrictions for Prime Video",
+			"4. Restrict app launches and purchases",
+			"5. Configure viewing restrictions by content type",
+		},
+	)
+}
+
 // RegisterAll registers all stub adapters in the given registry.
 func RegisterAll(register func(provider.Adapter)) {
 	register(NewNetflix())
@@ -496,4 +606,10 @@ func RegisterAll(register func(provider.Adapter)) {
 	register(NewPlayStation())
 	register(NewNintendo())
 	register(NewRoku())
+	register(NewParamountPlus())
+	register(NewYouTubeTV())
+	register(NewPeacock())
+	register(NewFireTablet())
+	register(NewAppleWatch())
+	register(NewFireTV())
 }
