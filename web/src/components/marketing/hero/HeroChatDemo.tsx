@@ -331,8 +331,8 @@ export function HeroChatDemo() {
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: fading ? 0 : 1, x: 0 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: fading ? 0 : 1, y: 0 }}
       transition={{ duration: fading ? 0.4 : 0.7, ease: [0.22, 1, 0.36, 1] }}
       className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)]"
     >

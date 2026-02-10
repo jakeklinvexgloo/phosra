@@ -74,8 +74,8 @@ export function Hero() {
             </AnimatedSection>
           </div>
 
-          {/* Right — animated split demo */}
-          <div className="hidden lg:block mt-10 lg:mt-0">
+          {/* Right / below — animated split demo */}
+          <div className="mt-8 lg:mt-0">
             <HeroChatDemo />
           </div>
         </div>
