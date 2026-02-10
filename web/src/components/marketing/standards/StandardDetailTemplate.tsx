@@ -11,7 +11,7 @@ import {
   Clock,
   ExternalLink,
 } from "lucide-react"
-import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
+import { AnimatedSection, WaveTexture, PhosraBurst, StandardIcon } from "@/components/marketing/shared"
 import { STATUS_META } from "@/lib/standards/types"
 import type { StandardEntry } from "@/lib/standards"
 
@@ -43,10 +43,10 @@ export function StandardDetailTemplate({ standard }: { standard: StandardEntry }
             <div className="flex flex-col sm:flex-row sm:items-start gap-6">
               {/* Icon */}
               <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0"
+                className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0"
                 style={{ background: `${standard.accentColor}20` }}
               >
-                {standard.iconEmoji}
+                <StandardIcon standard={standard} size="xl" />
               </div>
 
               <div className="flex-1">

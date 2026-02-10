@@ -11,7 +11,7 @@ import {
   Sparkles,
   ChevronRight,
 } from "lucide-react"
-import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
+import { AnimatedSection, WaveTexture, PhosraBurst, StandardIcon } from "@/components/marketing/shared"
 import {
   STANDARDS_REGISTRY,
   getStandardsStats,
@@ -35,7 +35,7 @@ function StandardHubCard({ standard }: { standard: StandardEntry }) {
 
         <div className="flex items-start justify-between mb-4 mt-1">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">{standard.iconEmoji}</span>
+            <StandardIcon standard={standard} size="lg" />
             <div>
               <h3 className="text-lg font-semibold text-foreground group-hover:text-brand-green transition-colors">
                 {standard.name}

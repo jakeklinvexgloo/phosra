@@ -3,13 +3,19 @@
 import { useMemo } from "react"
 import Link from "next/link"
 import { ArrowRight, Users, School, Shield, Sparkles } from "lucide-react"
-import { AnimatedSection, WaveTexture, GradientMesh } from "./shared"
+import { AnimatedSection, WaveTexture, GradientMesh, StandardIcon } from "./shared"
 import { STANDARDS_REGISTRY, getStandardsStats } from "@/lib/standards"
 import type { StandardEntry } from "@/lib/standards"
 
 function StandardCard({ standard, index }: { standard: StandardEntry; index: number }) {
   return (
-    <AnimatedSection delay={index * 0.1}>
+    <div
+      className="stagger-card opacity-0"
+      style={{
+        animation: "fadeSlideUp 0.5s ease-out forwards",
+        animationDelay: `${Math.min(index * 0.04, 0.6)}s`,
+      }}
+    >
       <Link
         href={`/standards/${standard.slug}`}
         className="group block h-full"
@@ -23,7 +29,7 @@ function StandardCard({ standard, index }: { standard: StandardEntry; index: num
 
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">{standard.iconEmoji}</span>
+              <StandardIcon standard={standard} size="md" />
               <div>
                 <h3 className="text-base font-semibold text-white group-hover:text-brand-green transition-colors">
                   {standard.name}
@@ -72,7 +78,7 @@ function StandardCard({ standard, index }: { standard: StandardEntry; index: num
           </div>
         </div>
       </Link>
-    </AnimatedSection>
+    </div>
   )
 }
 
@@ -127,11 +133,13 @@ export function Standards() {
         </AnimatedSection>
 
         {/* Standard cards grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-12">
-          {STANDARDS_REGISTRY.map((standard, i) => (
-            <StandardCard key={standard.id} standard={standard} index={i} />
-          ))}
-        </div>
+        <AnimatedSection className="mb-12">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {STANDARDS_REGISTRY.map((standard, i) => (
+              <StandardCard key={standard.id} standard={standard} index={i} />
+            ))}
+          </div>
+        </AnimatedSection>
 
         {/* How it works — 3 step mini */}
         <AnimatedSection delay={0.3} className="mb-12">

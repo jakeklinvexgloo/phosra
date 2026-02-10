@@ -12,6 +12,7 @@ const unauthenticatedPaths = [
   "/changelog(.*)",
   "/demo(.*)",
   "/compliance(.*)",
+  "/standards(.*)",
   "/about(.*)",
   "/contact(.*)",
   "/privacy(.*)",

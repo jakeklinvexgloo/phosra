@@ -21,6 +21,8 @@ export interface StandardEntry {
   description: string
   longDescription: string
   iconEmoji: string
+  /** Optional path to a downloaded favicon/logo image (falls back to iconEmoji) */
+  iconUrl?: string
   accentColor: string
   rules: StandardRule[]
   /** Tags for filtering */
