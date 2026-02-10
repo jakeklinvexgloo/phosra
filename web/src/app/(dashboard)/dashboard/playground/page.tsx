@@ -90,7 +90,7 @@ export default function PlaygroundPage() {
   }, [sessionId, stop, setMessages])
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col">
+    <div className="h-full flex flex-col">
       {/* Mobile tab bar */}
       <div className="flex md:hidden border-b border-border">
         <button

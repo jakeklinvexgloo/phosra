@@ -53,7 +53,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const isPlayground = pathname.startsWith("/dashboard/playground")
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={isPlayground ? "h-dvh flex flex-col bg-background" : "min-h-screen bg-background"}>
       {/* Shared header — same as docs/compliance pages */}
       <PublicPageHeader onSearchClick={() => setCmdkOpen(true)} />
 
@@ -61,10 +61,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <CommandPalette open={cmdkOpen} onOpenChange={setCmdkOpen} />
 
       {/* Content area below fixed header */}
-      <div className="pt-14">
+      <div className={isPlayground ? "flex-1 pt-14 overflow-hidden" : "pt-14"}>
         {isPlayground ? (
-          /* Playground: full-width, no sidebar, no padding */
-          <div>{children}</div>
+          /* Playground: full-width, no sidebar, fills available height */
+          children
         ) : (
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
             {/* Mobile sidebar toggle */}
