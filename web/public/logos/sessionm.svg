@@ -1,5 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 40" fill="none">
-  <rect x="2" y="10" width="20" height="20" rx="4" fill="#0EA5E9"/>
-  <rect x="7" y="15" width="10" height="10" rx="2" fill="#38BDF8"/>
-  <text x="28" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="currentColor">SessionM</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 100" fill="none">
+  <!-- "session" text — gray, modern rounded sans-serif -->
+  <!-- s -->
+  <path d="M12 42 C12 34, 18 28, 28 28 C38 28, 44 33, 44 38 C44 48, 12 46, 12 58 C12 66, 18 72, 28 72 C38 72, 44 66, 44 58" stroke="#666" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- e -->
+  <path d="M54 50 L82 50 C82 38, 74 28, 66 28 C58 28, 50 36, 50 50 C50 64, 58 72, 68 72 C76 72, 80 68, 82 62" stroke="#666" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- ss -->
+  <path d="M94 42 C94 34, 100 28, 110 28 C120 28, 126 33, 126 38 C126 48, 94 46, 94 58 C94 66, 100 72, 110 72 C120 72, 126 66, 126 58" stroke="#666" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M138 42 C138 34, 144 28, 154 28 C164 28, 170 33, 170 38 C170 48, 138 46, 138 58 C138 66, 144 72, 154 72 C164 72, 170 66, 170 58" stroke="#666" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- i -->
+  <line x1="183" y1="30" x2="183" y2="70" stroke="#666" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="183" cy="18" r="4" fill="#666"/>
+  <!-- o -->
+  <circle cx="208" cy="50" r="22" stroke="#666" stroke-width="7" fill="none"/>
+  <!-- n -->
+  <path d="M240 70 L240 30 C240 30, 240 28, 252 28 C264 28, 268 36, 268 44 L268 70" stroke="#666" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+  <!-- Orange circle with white m -->
+  <circle cx="330" cy="42" r="42" fill="#CC4400"/>
+  <!-- White m arches inside circle -->
+  <path d="M305 62 L305 42 C305 32, 312 26, 318 26 C324 26, 330 32, 330 42 L330 62" stroke="white" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M330 42 C330 32, 337 26, 343 26 C349 26, 355 32, 355 42 L355 62" stroke="white" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- "A Mastercard Company" subtitle -->
+  <text x="175" y="95" font-family="system-ui, -apple-system, 'Helvetica Neue', sans-serif" font-size="13" font-weight="400" fill="#555" text-anchor="middle">A Mastercard Company</text>
 </svg>

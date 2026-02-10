@@ -71,9 +71,9 @@ const FOUNDERS = {
   bio: "Serial entrepreneurs and parents of five children, passionate about family safety and technology.",
   linkedin: "https://www.linkedin.com/in/jakeklinvex/",
   companies: [
-    { name: "Mastercard", logo: "/logos/mastercard.svg" },
+    { name: "Mastercard", logo: "/logos/mastercard.png" },
     { name: "Gloo", logo: "/logos/gloo.svg" },
-    { name: "SessionM", logo: "/logos/sessionm.svg" },
+    { name: "SessionM", logo: "/logos/sessionm.png" },
   ],
 }
 
@@ -294,9 +294,13 @@ export default function AboutPage() {
         {/* Founder card */}
         <AnimatedSection>
           <div className="max-w-md mx-auto text-center">
-            <div className="w-24 h-24 rounded-full mx-auto mb-4 bg-gradient-to-br from-brand-green/20 to-accent-teal/20 border-2 border-border flex items-center justify-center">
-              <Users className="w-8 h-8 text-brand-green/40" />
-            </div>
+            <Image
+              src="/logos/founders.jpg"
+              alt="Jake & Susannah Klinvex"
+              width={96}
+              height={96}
+              className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-border"
+            />
             <h3 className="font-semibold text-foreground text-lg">{FOUNDERS.names}</h3>
             <p className="text-brand-green text-sm font-medium">{FOUNDERS.role}</p>
             <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
