@@ -1,11 +1,11 @@
 "use client"
 
-import { useRef, useEffect, useCallback, useState } from "react"
+import { useRef, useEffect, useCallback, useState, useMemo } from "react"
 import { RotateCcw, ChevronDown } from "lucide-react"
 import { ChatMessage } from "./ChatMessage"
 import { ChatInput } from "./ChatInput"
 import { ScenarioCard } from "./ScenarioCard"
-import { SCENARIOS } from "@/lib/playground/scenarios"
+import { getRandomScenarios } from "@/lib/playground/scenarios"
 import type { UIMessage } from "ai"
 
 interface ChatPanelProps {
@@ -21,6 +21,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isAtBottom, setIsAtBottom] = useState(true)
   const [showScrollPill, setShowScrollPill] = useState(false)
+  const scenarios = useMemo(() => getRandomScenarios(6), [])
 
   // Check if user is scrolled near the bottom
   const checkIfAtBottom = useCallback(() => {
@@ -84,7 +85,7 @@ export function ChatPanel({ messages, isLoading, onSend, onReset, onStop, error 
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 max-w-xl w-full px-4">
-              {SCENARIOS.map((scenario) => (
+              {scenarios.map((scenario) => (
                 <ScenarioCard
                   key={scenario.id}
                   scenario={scenario}

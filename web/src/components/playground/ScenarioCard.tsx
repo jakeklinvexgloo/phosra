@@ -18,7 +18,12 @@ export function ScenarioCard({ scenario, onClick }: ScenarioCardProps) {
         <Icon className="w-4 h-4 text-muted-foreground" />
       </div>
       <div className="min-w-0">
-        <p className="text-sm font-medium text-foreground">{scenario.title}</p>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-medium text-muted-foreground bg-foreground/[0.05] px-1.5 py-0.5 rounded-full">
+            {scenario.badge}
+          </span>
+        </div>
+        <p className="text-sm font-medium text-foreground mt-0.5">{scenario.title}</p>
         <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
           {scenario.description}
         </p>
