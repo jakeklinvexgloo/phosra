@@ -1,0 +1,387 @@
+"use client"
+
+import { useRef, useState, useEffect, useCallback } from "react"
+import { motion, useInView } from "framer-motion"
+import { HeroChatBubble } from "./HeroChatBubble"
+import { HeroToolCallPill } from "./HeroToolCallPill"
+import { HeroEnforcementCard } from "./HeroEnforcementCard"
+import { HeroApiLog, type LogEntry } from "./HeroApiLog"
+import { DEMO_SCRIPT, type DemoStep } from "./hero-demo-script"
+
+/* ── Types ────────────────────────────────── */
+
+interface ChatMessage {
+  role: "user" | "assistant"
+  fullText: string
+  displayText: string
+  complete: boolean
+}
+
+interface ToolPill {
+  name: string
+  label: string
+  status: "running" | "complete"
+}
+
+/* ── Main Component ───────────────────────── */
+
+export function HeroChatDemo() {
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: false, amount: 0.3 })
+
+  // Reduced-motion check
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setPrefersReducedMotion(
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      )
+    }
+  }, [])
+
+  // Animation state
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [tools, setTools] = useState<ToolPill[]>([])
+  const [logLines, setLogLines] = useState<LogEntry[]>([])
+  const [showThinking, setShowThinking] = useState(false)
+  const [showResult, setShowResult] = useState(false)
+  const [fading, setFading] = useState(false)
+
+  // Refs for cleanup
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const intervalsRef = useRef<ReturnType<typeof setInterval>[]>([])
+  const logIdRef = useRef(0)
+  const isPlayingRef = useRef(false)
+
+  const clearAllTimers = useCallback(() => {
+    timersRef.current.forEach(clearTimeout)
+    intervalsRef.current.forEach(clearInterval)
+    timersRef.current = []
+    intervalsRef.current = []
+  }, [])
+
+  const resetState = useCallback(() => {
+    setMessages([])
+    setTools([])
+    setLogLines([])
+    setShowThinking(false)
+    setShowResult(false)
+    setFading(false)
+    logIdRef.current = 0
+  }, [])
+
+  const addTimer = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(fn, ms)
+    timersRef.current.push(id)
+    return id
+  }, [])
+
+  // Typewriter: incrementally reveal text in a message
+  const typewrite = useCallback(
+    (
+      role: "user" | "assistant",
+      text: string,
+      duration: number,
+      onDone: () => void
+    ) => {
+      const charDelay = duration / text.length
+
+      // Add the message in "streaming" state
+      setMessages((prev) => [
+        ...prev,
+        { role, fullText: text, displayText: "", complete: false },
+      ])
+
+      let charIndex = 0
+      const interval = setInterval(() => {
+        charIndex++
+        setMessages((prev) => {
+          const updated = [...prev]
+          const last = updated[updated.length - 1]
+          if (last && !last.complete) {
+            updated[updated.length - 1] = {
+              ...last,
+              displayText: text.slice(0, charIndex),
+            }
+          }
+          return updated
+        })
+
+        if (charIndex >= text.length) {
+          clearInterval(interval)
+          // Mark complete
+          setMessages((prev) => {
+            const updated = [...prev]
+            const last = updated[updated.length - 1]
+            if (last) {
+              updated[updated.length - 1] = { ...last, complete: true }
+            }
+            return updated
+          })
+          onDone()
+        }
+      }, charDelay)
+
+      intervalsRef.current.push(interval)
+    },
+    []
+  )
+
+  // Run the demo script
+  const runDemo = useCallback(() => {
+    if (isPlayingRef.current) return
+    isPlayingRef.current = true
+    resetState()
+
+    let elapsed = 0
+
+    for (let i = 0; i < DEMO_SCRIPT.length; i++) {
+      const step = DEMO_SCRIPT[i]
+      const startAt = elapsed
+
+      addTimer(() => processStep(step), startAt)
+
+      // For typewriter steps, the duration IS the typing time.
+      // For other steps, duration is a wait before next step.
+      elapsed += step.duration
+    }
+
+    // After all steps (including fade), restart
+    addTimer(() => {
+      isPlayingRef.current = false
+      resetState()
+      // Small pause then restart
+      addTimer(() => runDemo(), 300)
+    }, elapsed)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addTimer, resetState])
+
+  const processStep = useCallback(
+    (step: DemoStep) => {
+      switch (step.type) {
+        case "user":
+          setShowThinking(false)
+          typewrite("user", step.text!, step.duration, () => {})
+          break
+
+        case "thinking":
+          setShowThinking(true)
+          addTimer(() => setShowThinking(false), step.duration)
+          break
+
+        case "tool-start":
+          setShowThinking(false)
+          setTools((prev) => [
+            ...prev,
+            {
+              name: step.toolName!,
+              label: step.toolLabel!,
+              status: "running",
+            },
+          ])
+          break
+
+        case "tool-complete":
+          setTools((prev) =>
+            prev.map((t) =>
+              t.name === step.toolName ? { ...t, status: "complete" } : t
+            )
+          )
+          break
+
+        case "log-pending":
+          logIdRef.current++
+          setLogLines((prev) => [
+            ...prev,
+            {
+              id: logIdRef.current,
+              type: "request",
+              method: step.method,
+              path: step.path,
+              status: "pending",
+            },
+          ])
+          break
+
+        case "log-success":
+          // Update the last matching pending log to success
+          setLogLines((prev) => {
+            const updated = [...prev]
+            for (let j = updated.length - 1; j >= 0; j--) {
+              if (
+                updated[j].type === "request" &&
+                updated[j].path === step.path &&
+                updated[j].status === "pending"
+              ) {
+                updated[j] = {
+                  ...updated[j],
+                  status: "success",
+                  latency: step.latency,
+                }
+                break
+              }
+            }
+            return updated
+          })
+          break
+
+        case "log-result":
+          logIdRef.current++
+          setLogLines((prev) => [
+            ...prev,
+            {
+              id: logIdRef.current,
+              type: "result",
+              resultText: step.resultText,
+            },
+          ])
+          break
+
+        case "assistant":
+          typewrite("assistant", step.text!, step.duration, () => {})
+          break
+
+        case "result":
+          setShowResult(true)
+          break
+
+        case "pause":
+          // Just wait — the timer chain handles this
+          break
+
+        case "fade":
+          setFading(true)
+          break
+      }
+    },
+    [typewrite, addTimer]
+  )
+
+  // Start/stop based on visibility
+  useEffect(() => {
+    if (prefersReducedMotion) return
+
+    if (isInView) {
+      // Small delay before starting so the entrance animation plays first
+      const id = setTimeout(() => runDemo(), 600)
+      timersRef.current.push(id)
+    } else {
+      clearAllTimers()
+      isPlayingRef.current = false
+      resetState()
+    }
+
+    return () => {
+      clearAllTimers()
+      isPlayingRef.current = false
+    }
+  }, [isInView, prefersReducedMotion, runDemo, clearAllTimers, resetState])
+
+  // Reduced-motion: show static final state
+  if (prefersReducedMotion) {
+    return (
+      <div ref={ref} className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)]">
+        <DemoHeader />
+        <div className="px-4 py-3 space-y-2.5">
+          <HeroChatBubble role="user" text="Chap is 10. Set up Netflix parental controls." />
+          <div className="flex flex-wrap gap-1.5">
+            <HeroToolCallPill toolName="quick_setup" status="complete" />
+            <HeroToolCallPill toolName="trigger_enforcement" status="complete" />
+          </div>
+          <HeroChatBubble
+            role="assistant"
+            text="Done! Chap can watch G and PG on Netflix. PG-13, R, and NC-17 are blocked. Screen time: 2 hrs/day."
+          />
+          <HeroEnforcementCard />
+        </div>
+        <div className="border-t border-white/[0.06]">
+          <HeroApiLog
+            lines={[
+              { id: 1, type: "request", method: "POST", path: "/v1/setup/quick", status: "success", latency: "142ms" },
+              { id: 2, type: "request", method: "POST", path: "/v1/enforcement/trigger", status: "success", latency: "87ms" },
+              { id: 3, type: "result", resultText: "\u2192 Netflix: 6 rules applied" },
+              { id: 4, type: "result", resultText: "\u2192 Fire Tablet: 8 rules applied" },
+              { id: 5, type: "result", resultText: "\u2192 NextDNS: 5 rules applied" },
+            ]}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: fading ? 0 : 1, x: 0 }}
+      transition={{ duration: fading ? 0.4 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)]"
+    >
+      <DemoHeader />
+
+      {/* Chat messages pane */}
+      <div className="px-4 py-3 space-y-2.5 min-h-[200px]">
+        {messages.map((msg, i) => (
+          <motion.div
+            key={`msg-${i}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <HeroChatBubble
+              role={msg.role}
+              text={msg.displayText}
+              isStreaming={!msg.complete}
+            />
+          </motion.div>
+        ))}
+
+        {/* Thinking dots */}
+        {showThinking && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center gap-1 py-1"
+          >
+            <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:0ms]" />
+            <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:150ms]" />
+            <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:300ms]" />
+          </motion.div>
+        )}
+
+        {/* Tool call pills */}
+        {tools.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {tools.map((t) => (
+              <HeroToolCallPill
+                key={t.name}
+                toolName={t.name}
+                status={t.status}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Enforcement result card */}
+        {showResult && <HeroEnforcementCard />}
+      </div>
+
+      {/* Terminal pane */}
+      <div className="border-t border-white/[0.06]">
+        <HeroApiLog lines={logLines} />
+      </div>
+    </motion.div>
+  )
+}
+
+/* ── Shared header bar ────────────────────── */
+
+function DemoHeader() {
+  return (
+    <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06]">
+      <img src="/favicon.svg" alt="" className="w-4 h-4" />
+      <span className="text-xs font-medium text-white/60">Phosra AI</span>
+      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+    </div>
+  )
+}
