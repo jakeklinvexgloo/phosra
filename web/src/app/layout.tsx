@@ -41,6 +41,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://phosra.com"),
   title: "Phosra - Child Safety Standard",
   description: "The authoritative child safety standard for regulated technology platforms.",
   icons: {
@@ -53,10 +54,11 @@ export const metadata: Metadata = {
     title: "Phosra - Child Safety Standard",
     description: "The child safety infrastructure that powers parental controls apps. One policy, enforced across every platform.",
     siteName: "Phosra",
+    url: "https://phosra.com",
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Phosra - Child Safety Standard",
     description: "The child safety infrastructure that powers parental controls apps. One policy, enforced across every platform.",
   },
