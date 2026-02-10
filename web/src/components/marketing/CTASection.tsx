@@ -92,15 +92,8 @@ export function CTASection() {
                 </div>
 
                 {/* Social proof line */}
-                <div className="mt-6 pt-6 border-t border-white/[0.06] flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    {[0, 1, 2, 3].map((i) => (
-                      <div
-                        key={i}
-                        className="w-7 h-7 rounded-full border-2 border-[#0D1B2A] bg-gradient-to-br from-brand-green/40 to-accent-teal/40"
-                      />
-                    ))}
-                  </div>
+                <div className="mt-6 pt-6 border-t border-white/[0.06] flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
                   <p className="text-xs text-white/40">
                     Trusted by {totalAdoptions.toLocaleString()}+ families and growing
                   </p>
