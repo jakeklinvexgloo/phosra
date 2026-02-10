@@ -12,9 +12,14 @@ const STATS = [
 ]
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(value)
   const [hasAnimated, setHasAnimated] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
+
+  // Reset to 0 on client mount so the animation can run from 0 → value
+  useEffect(() => {
+    setCount(0)
+  }, [])
 
   useEffect(() => {
     const el = ref.current

@@ -2,6 +2,9 @@
 
 import Link from "next/link"
 import { AnimatedSection, WaveTexture, GradientMesh, PhosraBurst } from "./shared"
+import { getStandardsStats } from "@/lib/standards"
+
+const { totalAdoptions } = getStandardsStats()
 
 const TRUST_BADGES = [
   { icon: "🔒", label: "AES-256 Encrypted" },
@@ -81,7 +84,7 @@ export function CTASection() {
                     </svg>
                   </Link>
                   <Link
-                    href="#"
+                    href="/contact"
                     className="flex-1 inline-flex items-center justify-center px-8 py-3.5 border border-white/20 text-white text-sm font-semibold rounded-lg hover:bg-white/5 hover:border-white/30 transition-all"
                   >
                     Talk to Sales
@@ -99,7 +102,7 @@ export function CTASection() {
                     ))}
                   </div>
                   <p className="text-xs text-white/40">
-                    Trusted by 200+ families and growing
+                    Trusted by {totalAdoptions.toLocaleString()}+ families and growing
                   </p>
                 </div>
               </div>

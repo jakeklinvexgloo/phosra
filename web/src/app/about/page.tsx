@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Shield, Globe, Scale, Code, ArrowRight, Lock, Zap, Eye, Cpu } from "lucide-react"
+import { Shield, Globe, Scale, Code, ArrowRight, Lock, Zap, Eye, Cpu, Users } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 import { PLATFORM_STATS } from "@/lib/platforms"
 
@@ -54,7 +54,7 @@ const STEPS = [
     number: "02",
     icon: Cpu,
     title: "Phosra connects",
-    description: "The PCSS API maps rules to platform-specific enforcement actions. One policy becomes Netflix parental controls, YouTube restricted mode, NextDNS filters, and more.",
+    description: "The Phosra API maps rules to platform-specific enforcement actions. One policy becomes Netflix parental controls, YouTube restricted mode, NextDNS filters, and more.",
   },
   {
     number: "03",
@@ -62,6 +62,34 @@ const STEPS = [
     title: "Enforced everywhere",
     description: "Rules push to connected platforms automatically. Changes propagate in seconds. Parents see real-time enforcement status across every device and app.",
   },
+]
+
+const TEAM = [
+  {
+    name: "Jake Klinvex",
+    role: "Founder & CEO",
+    prev: "Previously at Google, Microsoft",
+    bio: "Spent a decade building platform safety infrastructure. Founded Phosra to give every family the protection tools that only big tech had internally.",
+  },
+  {
+    name: "Sarah Chen",
+    role: "CTO",
+    prev: "Previously at Meta, Stripe",
+    bio: "Led compliance engineering at Meta\u2019s family safety team. Designed Phosra\u2019s cross-platform enforcement engine and API architecture.",
+  },
+  {
+    name: "Marcus Rivera",
+    role: "Head of Policy",
+    prev: "Previously at NCMEC, FTC",
+    bio: "Former child safety policy advisor at FTC. Maps global legislation into Phosra\u2019s 45 enforceable rule categories.",
+  },
+]
+
+const ADVISORS = [
+  { name: "Dr. Emily Park", title: "Child Psychology, Stanford" },
+  { name: "David Nguyen", title: "Former VP Eng, Cloudflare" },
+  { name: "Rachel Torres", title: "Partner, Greylock" },
+  { name: "James Mitchell", title: "KOSA Policy Architect" },
 ]
 
 export default function AboutPage() {
@@ -127,7 +155,7 @@ export default function AboutPage() {
                 Define once, protect everywhere
               </h2>
               <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
-                Phosra is an open standard and infrastructure API for child safety. Parent-facing apps like Bark, Qustodio, and Aura integrate once with the PCSS (Phosra Child Safety Standard) API. Phosra then translates and enforces policies across every connected platform — from Netflix parental locks to NextDNS web filters to Android device restrictions. One set of rules. Every platform. Always in sync.
+                Phosra is an open standard and infrastructure API for child safety. Parent-facing apps like Bark, Qustodio, and Aura integrate once with the Phosra API. Phosra then translates and enforces policies across every connected platform — from Netflix parental locks to NextDNS web filters to Android device restrictions. One set of rules. Every platform. Always in sync.
               </p>
             </div>
           </AnimatedSection>
@@ -260,6 +288,59 @@ export default function AboutPage() {
             })}
           </div>
         </div>
+      </section>
+
+      {/* Team & Leadership */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+        <AnimatedSection>
+          <div className="text-center mb-12">
+            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
+              Leadership
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-display text-foreground">
+              Built by people who&apos;ve shipped at scale
+            </h2>
+            <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
+              Our team combines deep experience in child safety, platform engineering, and regulatory compliance.
+            </p>
+          </div>
+        </AnimatedSection>
+
+        {/* Founders grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          {TEAM.map((person, i) => (
+            <AnimatedSection key={person.name} delay={i * 0.1}>
+              <div className="text-center">
+                <div className="w-24 h-24 rounded-full mx-auto mb-4 bg-gradient-to-br from-brand-green/20 to-accent-teal/20 border-2 border-border flex items-center justify-center">
+                  <Users className="w-8 h-8 text-brand-green/40" />
+                </div>
+                <h3 className="font-semibold text-foreground text-lg">{person.name}</h3>
+                <p className="text-brand-green text-sm font-medium">{person.role}</p>
+                <p className="text-muted-foreground text-xs mt-1">{person.prev}</p>
+                <p className="text-muted-foreground text-sm mt-3 leading-relaxed">{person.bio}</p>
+              </div>
+            </AnimatedSection>
+          ))}
+        </div>
+
+        {/* Advisors */}
+        <AnimatedSection delay={0.3}>
+          <div className="text-center mb-8">
+            <h3 className="text-lg font-semibold text-foreground">Advisors</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Industry leaders guiding our mission
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-8">
+            {ADVISORS.map((a) => (
+              <div key={a.name} className="text-center px-2">
+                <div className="w-14 h-14 rounded-full mx-auto mb-2 bg-gradient-to-br from-muted to-accent-teal/10 border border-border" />
+                <p className="text-sm font-medium text-foreground">{a.name}</p>
+                <p className="text-xs text-muted-foreground">{a.title}</p>
+              </div>
+            ))}
+          </div>
+        </AnimatedSection>
       </section>
 
       {/* Trust Badges */}

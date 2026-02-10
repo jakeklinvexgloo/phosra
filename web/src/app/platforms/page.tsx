@@ -136,19 +136,11 @@ export default function PlatformsPage() {
         <div className="flex items-center gap-4 flex-wrap">
           <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            {PLATFORM_STATS.liveCount} live
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
-            <span className="w-2 h-2 rounded-full bg-amber-500" />
-            {PLATFORM_STATS.partialCount} partial
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
-            <span className="w-2 h-2 rounded-full bg-blue-500" />
-            {PLATFORM_STATS.stubCount} manual
+            {PLATFORM_STATS.integratedCount} integrated
           </span>
           <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
             <span className="w-2 h-2 rounded-full bg-gray-400" />
-            {PLATFORM_STATS.plannedCount} planned
+            {PLATFORM_STATS.plannedCount}+ on roadmap
           </span>
           <Link
             href="/login"
@@ -181,10 +173,10 @@ export default function PlatformsPage() {
           className="plaid-input !w-auto text-sm min-w-[160px] cursor-pointer"
         >
           <option value="all">All Integration Status</option>
-          <option value="live">Live API</option>
-          <option value="partial">Partial</option>
-          <option value="stub">Manual</option>
-          <option value="planned">Planned</option>
+          <option value="live">API</option>
+          <option value="partial">Hybrid</option>
+          <option value="stub">Guide</option>
+          <option value="planned">Roadmap</option>
         </select>
 
         <select

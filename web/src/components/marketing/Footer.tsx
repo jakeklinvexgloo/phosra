@@ -18,7 +18,7 @@ const FOOTER_SECTIONS = [
       { label: "API Docs", href: "/docs" },
       { label: "API Reference", href: "/docs" },
       { label: "Playground", href: "/playground" },
-      { label: "GitHub", href: "https://github.com" },
+      { label: "GitHub", href: "https://github.com/phosra" },
     ],
   },
   {

@@ -50,6 +50,9 @@ function findComponentHint(el: HTMLElement): string | undefined {
 }
 
 export default function FeedbackOverlay() {
+  // Disable in production to avoid CORS errors from old API URL
+  if (process.env.NODE_ENV === "production") return null
+
   const [active, setActive] = useState(true)
   const [enabled, setEnabled] = useState(false)
   const [selectedElement, setSelectedElement] = useState<HTMLElement | null>(null)

@@ -25,10 +25,10 @@ export interface PlatformPageEntry {
 }
 
 const TIER_LABELS: Record<IntegrationTier, string> = {
-  live: "Live API",
-  partial: "Partial",
-  stub: "Manual",
-  planned: "Planned",
+  live: "API",
+  partial: "Hybrid",
+  stub: "Guide",
+  planned: "Roadmap",
 }
 
 const TIER_ORDER: Record<IntegrationTier, number> = {

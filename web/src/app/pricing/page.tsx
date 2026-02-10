@@ -27,7 +27,7 @@ const TIERS = [
     name: "Developer",
     price: "$49",
     period: "/mo",
-    description: "Build parental control features into your platform with the PCSS API.",
+    description: "Build parental control features into your platform with the Phosra API.",
     cta: "Start Building",
     ctaStyle: "bg-brand-green text-foreground hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)]",
     popular: true,
@@ -69,7 +69,7 @@ const FAQ = [
   },
   {
     q: "What's the difference between Family and Developer plans?",
-    a: "The Family plan is for parents managing their children's digital safety. The Developer plan is for platform operators who want to integrate PCSS into their products via our REST API and MCP tools.",
+    a: "The Family plan is for parents managing their children's digital safety. The Developer plan is for platform operators who want to integrate Phosra into their products via our REST API and MCP tools.",
   },
   {
     q: "Do I need a credit card to start?",
