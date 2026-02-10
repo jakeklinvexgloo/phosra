@@ -149,6 +149,41 @@ input: {
           ruleCategory: "targeted_ad_block",
           description:
             "Phosra automatically maps child age groups to the most restrictive privacy defaults across each connected platform, ensuring compliance without manual configuration.",
+          codeExample: {
+            title: "REST API — Apply age-based defaults",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/children/ch_emma_01/defaults \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "age_group": "teen_13_15",
+    "apply_to": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "child_id": "ch_emma_01",
+  "age_group": "teen_13_15",
+  "defaults_applied": [
+    {
+      "platform": "youtube",
+      "restricted_mode": true,
+      "ad_personalization": "off",
+      "comments": "approved_only"
+    },
+    {
+      "platform": "tiktok",
+      "private_account": true,
+      "dm_restrictions": "friends_only",
+      "ad_personalization": "off"
+    },
+    {
+      "platform": "instagram",
+      "private_account": true,
+      "sensitive_content": "restricted",
+      "ad_personalization": "off"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Algorithmic feed opt-out",
@@ -230,12 +265,76 @@ input: {
           phosraFeature: "Enforcement Audit Trail",
           description:
             "Every enforcement action is logged with timestamps, platform responses, and rule snapshots, producing a complete audit trail for regulatory review and FTC compliance documentation.",
+          codeExample: {
+            title: "REST API — Export audit trail",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "child_id=ch_emma_01" \\
+  -d "law=kosa" \\
+  -d "from=2026-01-01" \\
+  -d "to=2026-02-10"`,
+            response: `{
+  "audit_entries": 47,
+  "period": "2026-01-01 to 2026-02-10",
+  "entries": [
+    {
+      "timestamp": "2026-02-09T14:32:00Z",
+      "action": "enforcement_applied",
+      "rule": "algo_feed_control",
+      "platform": "youtube",
+      "result": "chronological_feed_enabled",
+      "policy_snapshot_id": "snap_8kL2m"
+    },
+    {
+      "timestamp": "2026-02-09T14:32:01Z",
+      "action": "enforcement_applied",
+      "rule": "addictive_design_control",
+      "platform": "tiktok",
+      "result": "autoplay_disabled",
+      "policy_snapshot_id": "snap_8kL2m"
+    }
+  ],
+  "export_url": "/v1/enforcement/audit/download?id=aud_3nP9v"
+}`,
+          },
         },
         {
           regulation: "Annual compliance audits",
           phosraFeature: "Compliance Dashboard",
           description:
             "The Phosra dashboard provides real-time visibility into enforcement status across platforms, enabling platforms to demonstrate continuous compliance during audit cycles.",
+          codeExample: {
+            title: "REST API — Compliance status dashboard",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/compliance/status \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "law=kosa"`,
+            response: `{
+  "law": "kosa",
+  "overall_status": "compliant",
+  "last_audit": "2026-01-15T00:00:00Z",
+  "children_covered": 3,
+  "platforms": {
+    "youtube": {
+      "status": "compliant",
+      "rules_enforced": 3,
+      "last_sync": "2026-02-09T14:32:00Z"
+    },
+    "tiktok": {
+      "status": "compliant",
+      "rules_enforced": 3,
+      "last_sync": "2026-02-09T14:32:01Z"
+    },
+    "instagram": {
+      "status": "compliant",
+      "rules_enforced": 3,
+      "last_sync": "2026-02-09T14:31:58Z"
+    }
+  },
+  "next_audit_due": "2027-01-15T00:00:00Z"
+}`,
+          },
         },
       ],
       checklist: [
@@ -361,6 +460,31 @@ input: {
           phosraFeature: "Age Group Mapping",
           description:
             "Phosra's age-to-rating mapping covers five rating systems (MPAA, TV, ESRB, PEGI, CSM) and applies appropriate restrictions for all minors from birth through 17 years of age.",
+          codeExample: {
+            title: "REST API — Get age group mappings",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/children/ch_emma_01/age-mapping \\
+  -H "Authorization: Bearer sk_live_..."`,
+            response: `{
+  "child_id": "ch_emma_01",
+  "date_of_birth": "2012-05-15",
+  "current_age": 13,
+  "age_group": "teen_13_15",
+  "rating_mappings": {
+    "mpaa": "PG-13",
+    "tv": "TV-PG",
+    "esrb": "T (Teen)",
+    "pegi": "PEGI 12",
+    "csm": "13+"
+  },
+  "coppa_2_status": "protected",
+  "restrictions_active": [
+    "targeted_ad_block",
+    "data_deletion_request",
+    "geolocation_opt_in"
+  ]
+}`,
+          },
         },
         {
           regulation: "Ban on targeted advertising",
@@ -452,12 +576,61 @@ input: {
           phosraFeature: "Minimal Child Profiles",
           description:
             "Phosra stores only first name, birth date, and age group for child profiles. No email, phone, photos, biometrics, or social identifiers are collected or transmitted to platforms.",
+          codeExample: {
+            title: "REST API — Minimal child profile",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/children/ch_emma_01 \\
+  -H "Authorization: Bearer sk_live_..."`,
+            response: `{
+  "child_id": "ch_emma_01",
+  "first_name": "Emma",
+  "date_of_birth": "2012-05-15",
+  "age_group": "teen_13_15",
+  "family_id": "fam_7xK2m",
+  "created_at": "2025-09-01T10:00:00Z",
+  "fields_collected": 3,
+  "fields_not_collected": [
+    "email", "phone", "photo",
+    "biometrics", "social_ids",
+    "location", "school"
+  ],
+  "coppa_2_compliant": true
+}`,
+          },
         },
         {
           regulation: "FTC enforcement readiness",
           phosraFeature: "Compliance Audit Trail",
           description:
             "Full enforcement logging with timestamped records of every policy push, platform response, and rule change provides documentary evidence for FTC review and audit.",
+          codeExample: {
+            title: "REST API — COPPA compliance audit log",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "law=coppa_2" \\
+  -d "child_id=ch_emma_01" \\
+  -d "limit=5"`,
+            response: `{
+  "law": "coppa_2",
+  "total_entries": 128,
+  "entries": [
+    {
+      "timestamp": "2026-02-09T15:00:00Z",
+      "action": "targeted_ad_block",
+      "platform": "youtube",
+      "result": "ad_personalization_disabled"
+    },
+    {
+      "timestamp": "2026-02-09T15:00:01Z",
+      "action": "geolocation_opt_in",
+      "platform": "snapchat",
+      "result": "ghost_mode_enabled"
+    }
+  ],
+  "compliance_score": "100%"
+}`,
+          },
         },
         {
           regulation: "Geolocation data protection",
@@ -659,12 +832,58 @@ input: {
           phosraFeature: "Parent Account Ownership",
           description:
             "Phosra's parent/guardian account model ensures that all child profiles are created and managed by a verified adult, satisfying VPC requirements through account ownership verification.",
+          codeExample: {
+            title: "REST API — Verify parental consent",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/families/fam_7xK2m/consent-status \\
+  -H "Authorization: Bearer sk_live_..."`,
+            response: `{
+  "family_id": "fam_7xK2m",
+  "parent_verified": true,
+  "verification_method": "account_ownership",
+  "children": [
+    {
+      "child_id": "ch_emma_01",
+      "consent_status": "granted",
+      "consent_date": "2025-09-01T10:00:00Z",
+      "coppa_compliant": true
+    }
+  ],
+  "vpc_methods_available": [
+    "account_ownership",
+    "credit_card_verification",
+    "knowledge_based_auth"
+  ]
+}`,
+          },
         },
         {
           regulation: "Privacy policy compliance",
           phosraFeature: "Minimal Data Collection",
           description:
             "Phosra collects only first name, birth date, and age group for child profiles — no email, phone, photos, or biometrics — making privacy disclosures simple and compliant.",
+          codeExample: {
+            title: "REST API — Child data inventory",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/children/ch_emma_01 \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "include=data_inventory"`,
+            response: `{
+  "child_id": "ch_emma_01",
+  "first_name": "Emma",
+  "date_of_birth": "2012-05-15",
+  "age_group": "child_under_13",
+  "data_inventory": {
+    "fields_stored": ["first_name", "date_of_birth", "age_group"],
+    "fields_not_collected": [
+      "email", "phone", "address",
+      "photo", "biometrics", "social_ids"
+    ],
+    "third_party_sharing": "none",
+    "privacy_disclosure": "minimal_collection"
+  }
+}`,
+          },
         },
         {
           regulation: "Parental review and deletion",
@@ -672,6 +891,34 @@ input: {
           ruleCategory: "data_deletion_request",
           description:
             "The data_deletion_request rule category triggers deletion workflows on connected platforms. Parents can also fully delete child profiles from Phosra via the dashboard or API.",
+          codeExample: {
+            title: "REST API — Parental data deletion",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/children/ch_emma_01/data-deletion \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "scope": "all_platforms",
+    "reason": "parental_request",
+    "include_phosra_profile": false
+  }'`,
+            response: `{
+  "deletion_id": "del_5pK9v",
+  "status": "processing",
+  "platforms": [
+    {
+      "platform": "youtube",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-17T00:00:00Z"
+    },
+    {
+      "platform": "roblox",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-14T00:00:00Z"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Targeted ad protection",
@@ -679,18 +926,97 @@ input: {
           ruleCategory: "targeted_ad_block",
           description:
             "The targeted_ad_block rule disables all behavioral advertising and ad profiling for children under 13 across connected platforms, preventing COPPA-prohibited commercial data use.",
+          codeExample: {
+            title: "REST API — Block ads for under-13",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["targeted_ad_block"],
+    "platforms": ["youtube", "roblox"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_4mN8w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "targeted_ad_block",
+      "action": "coppa_compliant_mode",
+      "detail": "Behavioral ads off, made-for-kids mode"
+    },
+    {
+      "platform": "roblox",
+      "rule": "targeted_ad_block",
+      "action": "ad_profiling_blocked",
+      "detail": "Under-13 ad restrictions enforced"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Data security",
           phosraFeature: "AES-256-GCM Encryption",
           description:
             "All sensitive data is encrypted at rest using AES-256-GCM. Platform credentials are encrypted with per-family keys, and all API communication uses TLS 1.3.",
+          codeExample: {
+            title: "REST API — Encryption verification",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/compliance/encryption-status \\
+  -H "Authorization: Bearer sk_live_..."`,
+            response: `{
+  "encryption_at_rest": {
+    "algorithm": "AES-256-GCM",
+    "key_management": "per_family_keys",
+    "status": "active"
+  },
+  "encryption_in_transit": {
+    "protocol": "TLS 1.3",
+    "certificate": "valid",
+    "expires": "2027-01-15T00:00:00Z"
+  },
+  "credential_storage": {
+    "method": "encrypted_vault",
+    "rotation": "90_days",
+    "last_rotation": "2026-01-10T00:00:00Z"
+  },
+  "coppa_data_security": "compliant"
+}`,
+          },
         },
         {
           regulation: "Enforcement documentation",
           phosraFeature: "Compliance Audit Trail",
           description:
             "Every enforcement action is logged with timestamps, platform responses, and rule snapshots, providing documentary evidence for FTC safe harbor and compliance reviews.",
+          codeExample: {
+            title: "REST API — FTC compliance audit",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "law=ftc_coppa" \\
+  -d "format=ftc_report"`,
+            response: `{
+  "report_type": "ftc_coppa_compliance",
+  "generated_at": "2026-02-10T12:00:00Z",
+  "period": "2025-09-01 to 2026-02-10",
+  "summary": {
+    "total_enforcements": 312,
+    "children_protected": 3,
+    "platforms_covered": 4,
+    "compliance_rate": "100%"
+  },
+  "safe_harbor_evidence": {
+    "consent_records": 3,
+    "deletion_requests_honored": 2,
+    "ad_blocking_verified": true
+  },
+  "download_url": "/v1/enforcement/audit/download?id=rpt_9nQ4x"
+}`,
+          },
         },
       ],
       checklist: [
@@ -891,6 +1217,43 @@ input: {
           ruleCategory: "algo_feed_control",
           description:
             "The algo_feed_control rule switches feeds to chronological mode on Instagram, TikTok, YouTube, and Snapchat, directly satisfying SB 976's requirement to disable addictive algorithmic feeds.",
+          codeExample: {
+            title: "REST API — Disable addictive feeds",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["algo_feed_control"],
+    "platforms": ["instagram", "tiktok", "youtube"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_5kR2n",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "algo_feed_control",
+      "action": "chronological_feed_enabled",
+      "detail": "Explore disabled, following-only feed"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "algo_feed_control",
+      "action": "fyp_disabled",
+      "detail": "Following-only feed activated"
+    },
+    {
+      "platform": "youtube",
+      "rule": "algo_feed_control",
+      "action": "recommendations_off",
+      "detail": "Subscriptions-only feed enabled"
+    }
+  ],
+  "compliance": { "law": "ca_sb_976" }
+}`,
+          },
         },
         {
           regulation: "Notification restrictions",
@@ -898,6 +1261,46 @@ input: {
           ruleCategory: "notification_curfew",
           description:
             "The notification_curfew rule suppresses non-essential notifications during school hours and overnight, matching SB 976's specific time windows.",
+          codeExample: {
+            title: "REST API — Set notification curfew",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["notification_curfew"],
+    "config": {
+      "school_hours": { "start": "07:00", "end": "15:00" },
+      "overnight": { "start": "21:00", "end": "06:00" }
+    },
+    "platforms": ["instagram", "tiktok", "snapchat"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_8nQ3v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "notification_curfew",
+      "action": "notifications_suppressed",
+      "windows": ["07:00-15:00", "21:00-06:00"]
+    },
+    {
+      "platform": "tiktok",
+      "rule": "notification_curfew",
+      "action": "notifications_suppressed",
+      "windows": ["07:00-15:00", "21:00-06:00"]
+    },
+    {
+      "platform": "snapchat",
+      "rule": "notification_curfew",
+      "action": "notifications_suppressed",
+      "windows": ["07:00-15:00", "21:00-06:00"]
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Addictive design restrictions",
@@ -905,18 +1308,100 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "The addictive_design_control rule disables autoplay, infinite scroll, streaks, and daily rewards across all connected platforms in a single policy push.",
+          codeExample: {
+            title: "REST API — Disable addictive patterns",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["addictive_design_control"],
+    "platforms": ["instagram", "tiktok", "snapchat"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_2pL7w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "disabled": ["reels_autoplay", "infinite_scroll"]
+    },
+    {
+      "platform": "tiktok",
+      "disabled": ["infinite_scroll", "variable_rewards"]
+    },
+    {
+      "platform": "snapchat",
+      "disabled": ["streak_mechanics", "snap_score_visibility"]
+    }
+  ],
+  "total_features_disabled": 6
+}`,
+          },
         },
         {
           regulation: "Parental consent verification",
           phosraFeature: "Parent Account Model",
           description:
             "Phosra's parent-controlled account model provides verifiable parental consent for any feed or notification settings changes, satisfying SB 976's consent requirements.",
+          codeExample: {
+            title: "REST API — Parental consent status",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/families/fam_7xK2m/consent-status \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "law=ca_sb_976"`,
+            response: `{
+  "family_id": "fam_7xK2m",
+  "parent_verified": true,
+  "law": "ca_sb_976",
+  "children": [
+    {
+      "child_id": "ch_emma_01",
+      "algo_feed_consent": false,
+      "notification_override": false,
+      "feed_mode": "chronological",
+      "curfew_active": true
+    }
+  ],
+  "consent_log": {
+    "last_updated": "2025-09-01T10:00:00Z",
+    "method": "parent_dashboard"
+  }
+}`,
+          },
         },
         {
           regulation: "Cross-platform enforcement",
           phosraFeature: "Multi-Platform Policy Engine",
           description:
             "A single SB 976 compliance policy in Phosra enforces restrictions simultaneously across Instagram, TikTok, YouTube, and Snapchat — ensuring no platform is missed.",
+          codeExample: {
+            title: "REST API — Batch platform enforcement",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement/batch \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "children": ["ch_emma_01", "ch_jack_02"],
+    "rules": ["algo_feed_control",
+              "notification_curfew",
+              "addictive_design_control"],
+    "platforms": ["instagram", "tiktok", "youtube", "snapchat"]
+  }'`,
+            response: `{
+  "batch_id": "bat_3kN8v",
+  "status": "applied",
+  "children_enforced": 2,
+  "platforms_enforced": 4,
+  "rules_applied": 3,
+  "total_actions": 24,
+  "compliance": {
+    "law": "ca_sb_976",
+    "coverage": "100%"
+  }
+}`,
+          },
         },
       ],
       checklist: [
@@ -1259,6 +1744,42 @@ input: {
           ruleCategory: "age_gate",
           description:
             "The age_gate rule enforces age verification on connected platforms, ensuring minor accounts are properly identified and subject to appropriate restrictions.",
+          codeExample: {
+            title: "REST API — Enforce age verification",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["age_gate"],
+    "platforms": ["instagram", "tiktok", "discord"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_6mT3n",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "age_gate",
+      "action": "age_verified_minor_mode",
+      "detail": "Under-18 restrictions applied"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "age_gate",
+      "action": "age_verified_minor_mode",
+      "detail": "Teen safety mode enabled"
+    },
+    {
+      "platform": "discord",
+      "rule": "age_gate",
+      "action": "age_restricted_access",
+      "detail": "NSFW channels blocked"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Parental monitoring tools",
@@ -1266,6 +1787,36 @@ input: {
           ruleCategory: "monitoring_activity",
           description:
             "The monitoring_activity rule enables platform-level activity tracking with reports visible to parents through the Phosra dashboard, satisfying SCOPE's monitoring requirements.",
+          codeExample: {
+            title: "REST API — Activity monitoring report",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/children/ch_emma_01/activity \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "period=7d"`,
+            response: `{
+  "child_id": "ch_emma_01",
+  "period": "2026-02-03 to 2026-02-10",
+  "platforms": {
+    "instagram": {
+      "daily_avg_minutes": 45,
+      "sessions": 18,
+      "content_flags": 0
+    },
+    "tiktok": {
+      "daily_avg_minutes": 32,
+      "sessions": 12,
+      "content_flags": 0
+    },
+    "discord": {
+      "daily_avg_minutes": 28,
+      "sessions": 14,
+      "content_flags": 1
+    }
+  },
+  "total_screen_time_hrs": 12.3,
+  "parental_alerts": 1
+}`,
+          },
         },
         {
           regulation: "Content filtering",
@@ -1273,18 +1824,106 @@ input: {
           ruleCategory: "web_filter_level",
           description:
             "The web_filter_level rule sets age-appropriate filtering strictness across connected platforms, preventing minors from encountering harmful content.",
+          codeExample: {
+            title: "REST API — Set content filter level",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_emma_01",
+    "rules": ["web_filter_level"],
+    "config": {
+      "filter_level": "strict",
+      "categories_blocked": ["adult", "violence", "gambling"]
+    },
+    "platforms": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_9pN4v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "web_filter_level",
+      "action": "restricted_mode_strict",
+      "categories_blocked": 3
+    },
+    {
+      "platform": "tiktok",
+      "rule": "web_filter_level",
+      "action": "content_filter_applied",
+      "categories_blocked": 3
+    },
+    {
+      "platform": "instagram",
+      "rule": "web_filter_level",
+      "action": "sensitive_content_off",
+      "categories_blocked": 3
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Parental consent model",
           phosraFeature: "Parent Account Ownership",
           description:
             "Phosra's parent-managed account model ensures all child profiles are created by a verified parent, providing verifiable parental consent for platform access.",
+          codeExample: {
+            title: "REST API — Verify parental consent",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/families/fam_7xK2m/consent-status \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "law=tx_scope"`,
+            response: `{
+  "family_id": "fam_7xK2m",
+  "parent_verified": true,
+  "law": "tx_scope",
+  "children": [
+    {
+      "child_id": "ch_emma_01",
+      "account_consent": "granted",
+      "monitoring_consent": "granted",
+      "consent_date": "2025-09-01T10:00:00Z"
+    }
+  ],
+  "verification_method": "parent_account_ownership",
+  "scope_compliant": true
+}`,
+          },
         },
         {
           regulation: "Cross-platform enforcement",
           phosraFeature: "Multi-Platform Policy Engine",
           description:
             "A single SCOPE compliance policy enforces age verification, monitoring, and content filtering simultaneously across Instagram, TikTok, Snapchat, YouTube, and Discord.",
+          codeExample: {
+            title: "REST API — SCOPE batch enforcement",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement/batch \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "children": ["ch_emma_01"],
+    "rules": ["age_gate", "monitoring_activity",
+              "web_filter_level"],
+    "platforms": ["instagram", "tiktok",
+                  "snapchat", "youtube", "discord"]
+  }'`,
+            response: `{
+  "batch_id": "bat_7kN2v",
+  "status": "applied",
+  "platforms_enforced": 5,
+  "rules_applied": 3,
+  "total_actions": 15,
+  "compliance": {
+    "law": "tx_scope",
+    "coverage": "100%",
+    "note": "Enforcement paused (injunction)"
+  }
+}`,
+          },
         },
       ],
       checklist: [
@@ -1782,6 +2421,42 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "The addictive_design_control rule disables autoplay, infinite scroll, and engagement-maximizing patterns, reducing the systemic risks identified in DSA risk assessments.",
+          codeExample: {
+            title: "REST API — DSA addictive design controls",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_lucas_02",
+    "rules": ["addictive_design_control"],
+    "compliance_metadata": {
+      "regulation": "eu_dsa",
+      "article": "28e"
+    },
+    "platforms": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_4nR7wK",
+  "status": "applied",
+  "dsa_compliance": true,
+  "results": [
+    {
+      "platform": "youtube",
+      "disabled": ["autoplay", "up_next_queue"]
+    },
+    {
+      "platform": "tiktok",
+      "disabled": ["infinite_scroll", "like_animations"]
+    },
+    {
+      "platform": "instagram",
+      "disabled": ["reels_autoplay", "pull_to_refresh_dopamine"]
+    }
+  ],
+  "total_features_disabled": 6
+}`,
+          },
         },
         {
           regulation: "Recommender system opt-out",
@@ -1789,6 +2464,34 @@ input: {
           ruleCategory: "algo_feed_control",
           description:
             "Phosra enforces a non-profiled feed as the default experience for minors, satisfying the DSA requirement to offer at least one recommendation option not based on personal data.",
+          codeExample: {
+            title: "REST API — Non-profiled feed settings",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/children/ch_lucas_02/feed-settings \\
+  -H "Authorization: Bearer sk_live_..."`,
+            response: `{
+  "child_id": "ch_lucas_02",
+  "feed_mode": "non_profiled",
+  "dsa_article_38": "compliant",
+  "platforms": {
+    "youtube": {
+      "feed_type": "chronological",
+      "recommendations": "disabled",
+      "profiling": "none"
+    },
+    "tiktok": {
+      "feed_type": "following_only",
+      "fyp": "disabled",
+      "profiling": "none"
+    },
+    "instagram": {
+      "feed_type": "chronological",
+      "explore": "disabled",
+      "profiling": "none"
+    }
+  }
+}`,
+          },
         },
         {
           regulation: "Transparency and audit readiness",
@@ -1828,6 +2531,34 @@ input: {
           phosraFeature: "Multi-Platform Enforcement",
           description:
             "Phosra's universal adapter architecture enables simultaneous DSA compliance across all connected EU-regulated platforms from a single policy definition, reducing implementation cost and risk.",
+          codeExample: {
+            title: "REST API — Multi-platform DSA batch",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement/batch \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "children": ["ch_lucas_02", "ch_sophie_03"],
+    "rules": ["targeted_ad_block",
+              "algo_feed_control",
+              "addictive_design_control"],
+    "platforms": ["youtube", "tiktok",
+                  "instagram", "spotify"]
+  }'`,
+            response: `{
+  "batch_id": "bat_9kL3n",
+  "status": "applied",
+  "children_enforced": 2,
+  "platforms_enforced": 4,
+  "rules_applied": 3,
+  "total_actions": 24,
+  "compliance": {
+    "regulation": "eu_dsa",
+    "coverage": "100%",
+    "vlop_platforms": 4
+  }
+}`,
+          },
         },
       ],
       checklist: [
@@ -1939,6 +2670,29 @@ input: {
           phosraFeature: "Parent Account Ownership",
           description:
             "Phosra's parent-managed account model ensures all child profiles are created and controlled by a verified adult, satisfying Article 8's consent requirements through account ownership.",
+          codeExample: {
+            title: "REST API — GDPR parental consent",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/families/fam_8nL3m/consent-status \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=gdpr"`,
+            response: `{
+  "family_id": "fam_8nL3m",
+  "parent_verified": true,
+  "regulation": "gdpr_art_8",
+  "children": [
+    {
+      "child_id": "ch_lucas_02",
+      "age": 14,
+      "consent_status": "parental_consent_granted",
+      "consent_date": "2025-08-15T09:00:00Z",
+      "member_state_threshold": 16,
+      "gdpr_compliant": true
+    }
+  ],
+  "lawful_basis": "consent_art_6_1_a"
+}`,
+          },
         },
         {
           regulation: "Right to erasure",
@@ -1946,6 +2700,38 @@ input: {
           ruleCategory: "data_deletion_request",
           description:
             "The data_deletion_request rule triggers deletion workflows on connected platforms. Child profiles can be fully removed from Phosra within 7 days via the dashboard or API.",
+          codeExample: {
+            title: "REST API — GDPR right to erasure",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/children/ch_lucas_02/data-deletion \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "scope": "all_platforms",
+    "gdpr_article": "17",
+    "reason": "withdrawal_of_consent",
+    "include_phosra_profile": true
+  }'`,
+            response: `{
+  "deletion_id": "del_7mK4n",
+  "status": "processing",
+  "gdpr_article_17": true,
+  "platforms": [
+    {
+      "platform": "youtube",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-17T00:00:00Z"
+    },
+    {
+      "platform": "instagram",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-16T00:00:00Z"
+    }
+  ],
+  "phosra_profile": "scheduled_7_days",
+  "confirmation_sent_to": "parent@example.com"
+}`,
+          },
         },
         {
           regulation: "Targeted ad ban for minors",
@@ -1953,6 +2739,42 @@ input: {
           ruleCategory: "targeted_ad_block",
           description:
             "The targeted_ad_block rule disables all behavioral advertising and ad profiling for minor users, ensuring GDPR-compliant data processing across connected platforms.",
+          codeExample: {
+            title: "REST API — Block targeted ads (GDPR)",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_lucas_02",
+    "rules": ["targeted_ad_block"],
+    "platforms": ["youtube", "instagram", "tiktok"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_3kN8v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "targeted_ad_block",
+      "action": "ad_personalization_disabled",
+      "gdpr_lawful_basis": "consent_withdrawn"
+    },
+    {
+      "platform": "instagram",
+      "rule": "targeted_ad_block",
+      "action": "ad_profiling_blocked",
+      "gdpr_lawful_basis": "consent_withdrawn"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "targeted_ad_block",
+      "action": "behavioral_ads_blocked",
+      "gdpr_lawful_basis": "consent_withdrawn"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Data protection by default",
@@ -1960,18 +2782,102 @@ input: {
           ruleCategory: "privacy_data_sharing",
           description:
             "The privacy_data_sharing rule blocks third-party data sharing and analytics by default for child accounts, implementing data protection by default.",
+          codeExample: {
+            title: "REST API — Privacy data sharing controls",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_lucas_02",
+    "rules": ["privacy_data_sharing"],
+    "platforms": ["youtube", "instagram", "discord"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_6pL2w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "privacy_data_sharing",
+      "action": "third_party_sharing_blocked",
+      "analytics": "disabled"
+    },
+    {
+      "platform": "instagram",
+      "rule": "privacy_data_sharing",
+      "action": "data_sharing_restricted",
+      "cross_app_tracking": "blocked"
+    },
+    {
+      "platform": "discord",
+      "rule": "privacy_data_sharing",
+      "action": "data_collection_minimized",
+      "analytics": "disabled"
+    }
+  ],
+  "gdpr_article_25": "compliant"
+}`,
+          },
         },
         {
           regulation: "Data minimization",
           phosraFeature: "Minimal Child Profiles",
           description:
             "Phosra stores only first name, birth date, and age group. No email, phone, photos, or biometrics are collected, ensuring GDPR data minimization principles are upheld.",
+          codeExample: {
+            title: "REST API — GDPR minimal profile",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/children/ch_lucas_02 \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "include=gdpr_compliance"`,
+            response: `{
+  "child_id": "ch_lucas_02",
+  "first_name": "Lucas",
+  "date_of_birth": "2011-11-20",
+  "age_group": "teen_13_15",
+  "gdpr_compliance": {
+    "data_minimization": true,
+    "fields_stored": 3,
+    "unnecessary_fields_blocked": [
+      "email", "phone", "photo",
+      "biometrics", "social_ids"
+    ],
+    "article_5_1_c": "compliant",
+    "dpia_required": false
+  }
+}`,
+          },
         },
         {
           regulation: "Security measures",
           phosraFeature: "AES-256-GCM Encryption",
           description:
             "All sensitive data is encrypted at rest with AES-256-GCM. Platform credentials use per-family keys, and all transfers use TLS 1.3, satisfying GDPR Article 32 security requirements.",
+          codeExample: {
+            title: "REST API — GDPR Art. 32 security status",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/compliance/encryption-status \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=gdpr"`,
+            response: `{
+  "gdpr_article_32": "compliant",
+  "encryption_at_rest": {
+    "algorithm": "AES-256-GCM",
+    "key_management": "per_family_keys"
+  },
+  "encryption_in_transit": {
+    "protocol": "TLS 1.3",
+    "perfect_forward_secrecy": true
+  },
+  "cross_border_transfers": {
+    "mechanism": "standard_contractual_clauses",
+    "sccs_version": "2021/914",
+    "adequacy_decision": "pending"
+  },
+  "breach_notification": "72_hours"
+}`,
+          },
         },
       ],
       checklist: [
@@ -2078,6 +2984,43 @@ input: {
           ruleCategory: "ai_minor_interaction",
           description:
             "The ai_minor_interaction rule restricts AI-powered features that could exploit children's vulnerabilities, including manipulative recommendation algorithms and persuasive design patterns.",
+          codeExample: {
+            title: "REST API — AI interaction controls",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_lucas_02",
+    "rules": ["ai_minor_interaction"],
+    "platforms": ["youtube", "tiktok", "roblox"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_8pN3v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "ai_minor_interaction",
+      "action": "ai_recommendations_restricted",
+      "detail": "Personalized suggestions disabled"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "ai_minor_interaction",
+      "action": "ai_content_curation_off",
+      "detail": "AI-driven content blocked"
+    },
+    {
+      "platform": "roblox",
+      "rule": "ai_minor_interaction",
+      "action": "ai_chat_restricted",
+      "detail": "AI chatbot interactions limited"
+    }
+  ],
+  "eu_ai_act": "compliant"
+}`,
+          },
         },
         {
           regulation: "Blocking subliminal manipulation",
@@ -2085,6 +3028,38 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "The addictive_design_control rule disables engagement-maximizing features like infinite scroll, autoplay, and variable rewards that use AI-driven techniques to manipulate behavior.",
+          codeExample: {
+            title: "REST API — Block subliminal AI patterns",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_lucas_02",
+    "rules": ["addictive_design_control"],
+    "platforms": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_2mK7w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "disabled": ["autoplay", "ai_up_next"]
+    },
+    {
+      "platform": "tiktok",
+      "disabled": ["infinite_scroll", "variable_rewards"]
+    },
+    {
+      "platform": "instagram",
+      "disabled": ["reels_autoplay", "ai_engagement_hooks"]
+    }
+  ],
+  "total_ai_features_disabled": 6,
+  "eu_ai_act_article": "5"
+}`,
+          },
         },
         {
           regulation: "Algorithmic feed control",
@@ -2092,18 +3067,111 @@ input: {
           ruleCategory: "algo_feed_control",
           description:
             "The algo_feed_control rule switches AI-powered recommendation feeds to chronological mode, preventing AI systems from profiling and targeting children with engagement-optimized content.",
+          codeExample: {
+            title: "REST API — Disable AI recommendations",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_lucas_02",
+    "rules": ["algo_feed_control"],
+    "platforms": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_4nQ9v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "algo_feed_control",
+      "action": "ai_recommendations_off",
+      "feed_mode": "subscriptions_only"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "algo_feed_control",
+      "action": "fyp_ai_disabled",
+      "feed_mode": "following_only"
+    },
+    {
+      "platform": "instagram",
+      "rule": "algo_feed_control",
+      "action": "explore_ai_disabled",
+      "feed_mode": "chronological"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Cross-platform AI restriction",
           phosraFeature: "Multi-Platform Policy Engine",
           description:
             "A single EU AI Act compliance policy in Phosra disables AI-driven manipulation features simultaneously across YouTube, TikTok, Instagram, Roblox, and Discord.",
+          codeExample: {
+            title: "REST API — Batch AI restriction",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement/batch \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "children": ["ch_lucas_02", "ch_sophie_03"],
+    "rules": ["ai_minor_interaction",
+              "addictive_design_control",
+              "algo_feed_control"],
+    "platforms": ["youtube", "tiktok",
+                  "instagram", "roblox", "discord"]
+  }'`,
+            response: `{
+  "batch_id": "bat_5kN8v",
+  "status": "applied",
+  "children_enforced": 2,
+  "platforms_enforced": 5,
+  "rules_applied": 3,
+  "total_ai_features_restricted": 30,
+  "compliance": {
+    "regulation": "eu_ai_act",
+    "coverage": "100%"
+  }
+}`,
+          },
         },
         {
           regulation: "Audit and transparency",
           phosraFeature: "Enforcement Audit Trail",
           description:
             "Complete enforcement logging documents which AI-powered features were restricted for each child, supporting conformity assessments and regulatory transparency requirements.",
+          codeExample: {
+            title: "REST API — AI Act audit trail",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=eu_ai_act" \\
+  -d "child_id=ch_lucas_02" \\
+  -d "limit=5"`,
+            response: `{
+  "regulation": "eu_ai_act",
+  "total_entries": 89,
+  "entries": [
+    {
+      "timestamp": "2026-02-09T14:00:00Z",
+      "rule": "ai_minor_interaction",
+      "platform": "youtube",
+      "ai_features_restricted": 3,
+      "result": "compliant"
+    },
+    {
+      "timestamp": "2026-02-09T14:00:01Z",
+      "rule": "addictive_design_control",
+      "platform": "tiktok",
+      "ai_features_restricted": 2,
+      "result": "compliant"
+    }
+  ],
+  "conformity_status": "passed"
+}`,
+          },
         },
       ],
       checklist: [
@@ -2199,6 +3267,42 @@ input: {
           ruleCategory: "age_gate",
           description:
             "The age_gate rule enforces age verification on connected platforms, preventing minors from accessing age-restricted content as required by the SREN law.",
+          codeExample: {
+            title: "REST API — SREN age verification",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_amelie_04",
+    "rules": ["age_gate"],
+    "platforms": ["instagram", "tiktok", "youtube"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_3nR8v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "age_gate",
+      "action": "age_verified_minor",
+      "sren_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "age_gate",
+      "action": "minor_mode_enabled",
+      "sren_compliant": true
+    },
+    {
+      "platform": "youtube",
+      "rule": "age_gate",
+      "action": "restricted_mode_on",
+      "sren_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Image rights protection",
@@ -2206,6 +3310,42 @@ input: {
           ruleCategory: "image_rights_minor",
           description:
             "The image_rights_minor rule restricts image-sharing capabilities for minor accounts, supporting compliance with France's image rights protections.",
+          codeExample: {
+            title: "REST API — Image rights protection",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_amelie_04",
+    "rules": ["image_rights_minor"],
+    "platforms": ["instagram", "tiktok", "snapchat"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_7pK4n",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "image_rights_minor",
+      "action": "photo_sharing_restricted",
+      "detail": "Public posting requires approval"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "image_rights_minor",
+      "action": "video_privacy_enforced",
+      "detail": "Videos set to private by default"
+    },
+    {
+      "platform": "snapchat",
+      "rule": "image_rights_minor",
+      "action": "snap_map_hidden",
+      "detail": "Location sharing disabled"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Content filtering",
@@ -2213,6 +3353,43 @@ input: {
           ruleCategory: "web_filter_level",
           description:
             "The web_filter_level rule sets age-appropriate filtering on connected platforms, preventing minor access to restricted content categories.",
+          codeExample: {
+            title: "REST API — Content filtering (SREN)",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_amelie_04",
+    "rules": ["web_filter_level"],
+    "config": { "filter_level": "strict" },
+    "platforms": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_9mN2v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "web_filter_level",
+      "action": "restricted_mode_strict",
+      "categories_blocked": ["adult", "violence"]
+    },
+    {
+      "platform": "tiktok",
+      "rule": "web_filter_level",
+      "action": "content_filter_strict",
+      "categories_blocked": ["adult", "violence"]
+    },
+    {
+      "platform": "instagram",
+      "rule": "web_filter_level",
+      "action": "sensitive_content_off",
+      "categories_blocked": ["adult", "violence"]
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Privacy protections",
@@ -2220,12 +3397,73 @@ input: {
           ruleCategory: "privacy_data_sharing",
           description:
             "The privacy_data_sharing rule blocks third-party data sharing for child accounts, ensuring compliance with the SREN's data protection requirements enforced by the CNIL.",
+          codeExample: {
+            title: "REST API — CNIL data protection",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_amelie_04",
+    "rules": ["privacy_data_sharing"],
+    "platforms": ["instagram", "tiktok", "snapchat"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_4kL7w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "privacy_data_sharing",
+      "action": "third_party_sharing_blocked"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "privacy_data_sharing",
+      "action": "data_collection_minimized"
+    },
+    {
+      "platform": "snapchat",
+      "rule": "privacy_data_sharing",
+      "action": "analytics_disabled"
+    }
+  ],
+  "cnil_compliant": true
+}`,
+          },
         },
         {
           regulation: "Cross-platform enforcement",
           phosraFeature: "Multi-Platform Policy Engine",
           description:
             "A single SREN compliance policy enforces age verification and image rights simultaneously across Instagram, TikTok, YouTube, Snapchat, and Facebook.",
+          codeExample: {
+            title: "REST API — SREN batch enforcement",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement/batch \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "children": ["ch_amelie_04"],
+    "rules": ["age_gate", "image_rights_minor",
+              "web_filter_level", "privacy_data_sharing"],
+    "platforms": ["instagram", "tiktok",
+                  "youtube", "snapchat"]
+  }'`,
+            response: `{
+  "batch_id": "bat_2kN9v",
+  "status": "applied",
+  "platforms_enforced": 4,
+  "rules_applied": 4,
+  "total_actions": 16,
+  "compliance": {
+    "regulation": "fr_sren",
+    "coverage": "100%",
+    "cnil_compliant": true,
+    "arcom_compliant": true
+  }
+}`,
+          },
         },
       ],
       checklist: [
@@ -2372,6 +3610,49 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "Phosra's comprehensive policy engine covers the full scope of the OSA's duty of care, enforcing protective defaults across all connected platforms in a single API call.",
+          codeExample: {
+            title: "REST API — OSA duty of care enforcement",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_oliver_05",
+    "rules": ["addictive_design_control",
+              "algo_feed_control",
+              "dm_restriction",
+              "targeted_ad_block"],
+    "platforms": ["youtube", "tiktok",
+                  "instagram", "discord"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_5kR9w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rules_applied": 4,
+      "actions": [
+        "autoplay_disabled",
+        "chronological_feed",
+        "comments_restricted",
+        "ad_profiling_off"
+      ]
+    },
+    {
+      "platform": "tiktok",
+      "rules_applied": 4,
+      "actions": [
+        "infinite_scroll_limited",
+        "fyp_disabled",
+        "dm_contacts_only",
+        "targeted_ads_blocked"
+      ]
+    }
+  ],
+  "osa_compliance": "duty_of_care_met"
+}`,
+          },
         },
         {
           regulation: "Age verification",
@@ -2379,6 +3660,49 @@ input: {
           ruleCategory: "age_gate",
           description:
             "The age_gate rule enforces age verification requirements on connected platforms, ensuring minor accounts are properly identified and protected.",
+          codeExample: {
+            title: "REST API — UK age verification",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_oliver_05",
+    "rules": ["age_gate"],
+    "platforms": ["instagram", "tiktok",
+                  "discord", "snapchat"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_8nQ4v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "age_gate",
+      "action": "minor_account_verified",
+      "osa_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "age_gate",
+      "action": "age_restricted_mode",
+      "osa_compliant": true
+    },
+    {
+      "platform": "discord",
+      "rule": "age_gate",
+      "action": "nsfw_servers_blocked",
+      "osa_compliant": true
+    },
+    {
+      "platform": "snapchat",
+      "rule": "age_gate",
+      "action": "minor_protections_on",
+      "osa_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "DM restrictions",
@@ -2386,6 +3710,50 @@ input: {
           ruleCategory: "dm_restriction",
           description:
             "The dm_restriction rule limits direct messaging to contacts-only or disables DMs entirely, preventing unsolicited adult-to-child contact on Instagram, TikTok, Discord, and Snapchat.",
+          codeExample: {
+            title: "REST API — Restrict direct messages",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_oliver_05",
+    "rules": ["dm_restriction"],
+    "config": { "mode": "contacts_only" },
+    "platforms": ["instagram", "tiktok",
+                  "discord", "snapchat"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_3pL7w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "dm_restriction",
+      "action": "dms_contacts_only",
+      "unknown_adults_blocked": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "dm_restriction",
+      "action": "dms_friends_only",
+      "unknown_adults_blocked": true
+    },
+    {
+      "platform": "discord",
+      "rule": "dm_restriction",
+      "action": "dms_server_members_only",
+      "unknown_adults_blocked": true
+    },
+    {
+      "platform": "snapchat",
+      "rule": "dm_restriction",
+      "action": "dms_friends_only",
+      "unknown_adults_blocked": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "CSAM reporting compliance",
@@ -2393,6 +3761,34 @@ input: {
           ruleCategory: "csam_reporting",
           description:
             "The csam_reporting rule ensures platforms have detection and reporting mechanisms enabled, supporting compliance with the OSA's mandatory CSAM reporting obligations.",
+          codeExample: {
+            title: "REST API — CSAM reporting status",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/compliance/csam-reporting \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "child_id=ch_oliver_05"`,
+            response: `{
+  "child_id": "ch_oliver_05",
+  "csam_protections": {
+    "instagram": {
+      "reporting_enabled": true,
+      "hash_matching": "active",
+      "osa_compliant": true
+    },
+    "tiktok": {
+      "reporting_enabled": true,
+      "hash_matching": "active",
+      "osa_compliant": true
+    },
+    "discord": {
+      "reporting_enabled": true,
+      "hash_matching": "active",
+      "osa_compliant": true
+    }
+  },
+  "overall_status": "all_platforms_reporting"
+}`,
+          },
         },
         {
           regulation: "Addictive design mitigation",
@@ -2400,12 +3796,69 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "The addictive_design_control rule disables autoplay, infinite scroll, and engagement-maximizing features, reducing exposure to harmful content amplification.",
+          codeExample: {
+            title: "REST API — Disable addictive features",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_oliver_05",
+    "rules": ["addictive_design_control"],
+    "platforms": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_6mK2n",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "disabled": ["autoplay", "up_next_algorithm"]
+    },
+    {
+      "platform": "tiktok",
+      "disabled": ["infinite_scroll", "streak_rewards"]
+    },
+    {
+      "platform": "instagram",
+      "disabled": ["reels_autoplay", "engagement_hooks"]
+    }
+  ],
+  "total_features_disabled": 6,
+  "osa_compliant": true
+}`,
+          },
         },
         {
           regulation: "Regulatory audit readiness",
           phosraFeature: "Enforcement Audit Trail",
           description:
             "Complete enforcement logging with timestamped records provides documentary evidence for Ofcom regulatory reviews and compliance demonstrations.",
+          codeExample: {
+            title: "REST API — Ofcom audit export",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=uk_osa" \\
+  -d "format=ofcom_report"`,
+            response: `{
+  "report_type": "ofcom_compliance",
+  "regulation": "uk_osa",
+  "generated_at": "2026-02-10T12:00:00Z",
+  "summary": {
+    "children_protected": 5,
+    "platforms_covered": 4,
+    "total_enforcements": 420,
+    "compliance_rate": "100%"
+  },
+  "duty_of_care_evidence": {
+    "harmful_content_mitigated": true,
+    "csam_reporting_active": true,
+    "dm_restrictions_enforced": true
+  },
+  "download_url": "/v1/reports/ofcom_rpt_8kN3..."
+}`,
+          },
         },
       ],
       checklist: [
@@ -2590,6 +4043,49 @@ input: {
           ruleCategory: "age_gate",
           description:
             "The age_gate rule enforces age verification requirements across YouTube, Instagram, Roblox, and TikTok, supporting compliance with Australia's mandatory age verification provisions.",
+          codeExample: {
+            title: "REST API — AU age verification",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_liam_06",
+    "rules": ["age_gate"],
+    "platforms": ["youtube", "instagram",
+                  "roblox", "tiktok"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_7kR3n",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "age_gate",
+      "action": "minor_verified",
+      "au_osa_compliant": true
+    },
+    {
+      "platform": "instagram",
+      "rule": "age_gate",
+      "action": "age_restricted_mode",
+      "au_osa_compliant": true
+    },
+    {
+      "platform": "roblox",
+      "rule": "age_gate",
+      "action": "under_16_protections",
+      "au_osa_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "age_gate",
+      "action": "minor_mode_enabled",
+      "au_osa_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Content filtering",
@@ -2597,6 +4093,41 @@ input: {
           ruleCategory: "web_filter_level",
           description:
             "The web_filter_level rule sets age-appropriate filtering strictness on connected platforms, helping platforms meet their Basic Online Safety Expectations for minor users.",
+          codeExample: {
+            title: "REST API — BOSE content filtering",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_liam_06",
+    "rules": ["web_filter_level"],
+    "config": { "filter_level": "strict" },
+    "platforms": ["youtube", "tiktok", "instagram"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_2nQ8v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "web_filter_level",
+      "action": "restricted_mode_strict"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "web_filter_level",
+      "action": "content_filter_strict"
+    },
+    {
+      "platform": "instagram",
+      "rule": "web_filter_level",
+      "action": "sensitive_content_blocked"
+    }
+  ],
+  "bose_compliant": true
+}`,
+          },
         },
         {
           regulation: "Privacy protections",
@@ -2604,6 +4135,39 @@ input: {
           ruleCategory: "privacy_data_sharing",
           description:
             "The privacy_data_sharing rule blocks unauthorized third-party data sharing for child accounts, supporting compliance with Australia's data protection expectations.",
+          codeExample: {
+            title: "REST API — AU data sharing controls",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_liam_06",
+    "rules": ["privacy_data_sharing"],
+    "platforms": ["youtube", "instagram", "roblox"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_5pK4w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "privacy_data_sharing",
+      "action": "third_party_sharing_blocked"
+    },
+    {
+      "platform": "instagram",
+      "rule": "privacy_data_sharing",
+      "action": "data_sharing_restricted"
+    },
+    {
+      "platform": "roblox",
+      "rule": "privacy_data_sharing",
+      "action": "analytics_disabled"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Addictive design restrictions",
@@ -2611,12 +4175,63 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "The addictive_design_control rule disables engagement-maximizing features, supporting platforms in meeting their industry code obligations for child safety.",
+          codeExample: {
+            title: "REST API — Disable addictive patterns",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_liam_06",
+    "rules": ["addictive_design_control"],
+    "platforms": ["youtube", "tiktok", "roblox"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_9mN3v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "disabled": ["autoplay", "up_next_suggestions"]
+    },
+    {
+      "platform": "tiktok",
+      "disabled": ["infinite_scroll", "like_animations"]
+    },
+    {
+      "platform": "roblox",
+      "disabled": ["loot_boxes", "daily_rewards"]
+    }
+  ],
+  "total_features_disabled": 6
+}`,
+          },
         },
         {
           regulation: "Enforcement documentation",
           phosraFeature: "Compliance Audit Trail",
           description:
             "Complete enforcement logging provides evidence for eSafety Commissioner inquiries and demonstrates proactive compliance with Basic Online Safety Expectations.",
+          codeExample: {
+            title: "REST API — eSafety compliance audit",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=au_osa" \\
+  -d "format=esafety_report"`,
+            response: `{
+  "report_type": "esafety_compliance",
+  "regulation": "au_osa",
+  "summary": {
+    "children_protected": 4,
+    "platforms_covered": 4,
+    "total_enforcements": 256,
+    "compliance_rate": "100%"
+  },
+  "bose_status": "expectations_met",
+  "download_url": "/v1/reports/esafety_rpt_3kN..."
+}`,
+          },
         },
       ],
       checklist: [
@@ -2729,12 +4344,69 @@ input: {
           ruleCategory: "targeted_ad_block",
           description:
             "The targeted_ad_block rule disables all behavioral advertising and ad profiling for minor users across YouTube, Instagram, and TikTok, directly satisfying the DPDPA's advertising ban.",
+          codeExample: {
+            title: "REST API — DPDPA ad ban enforcement",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_arjun_07",
+    "rules": ["targeted_ad_block"],
+    "platforms": ["youtube", "instagram", "tiktok"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_4nR9w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "targeted_ad_block",
+      "action": "behavioral_ads_blocked",
+      "dpdpa_compliant": true
+    },
+    {
+      "platform": "instagram",
+      "rule": "targeted_ad_block",
+      "action": "ad_profiling_disabled",
+      "dpdpa_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "targeted_ad_block",
+      "action": "behavioral_monitoring_off",
+      "dpdpa_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Parental consent model",
           phosraFeature: "Parent Account Ownership",
           description:
             "Phosra's parent-managed account model ensures all child profiles are created by a verified adult, providing verifiable parental consent as required by the DPDPA.",
+          codeExample: {
+            title: "REST API — DPDPA parental consent",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/families/fam_9kL3m/consent-status \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=dpdpa"`,
+            response: `{
+  "family_id": "fam_9kL3m",
+  "parent_verified": true,
+  "regulation": "india_dpdpa",
+  "children": [
+    {
+      "child_id": "ch_arjun_07",
+      "consent_status": "guardian_consent_granted",
+      "consent_date": "2025-10-01T09:00:00Z",
+      "best_interest_assessment": "passed"
+    }
+  ],
+  "dpdpa_compliant": true
+}`,
+          },
         },
         {
           regulation: "Prohibition on profiling",
@@ -2742,18 +4414,91 @@ input: {
           ruleCategory: "algo_feed_control",
           description:
             "The algo_feed_control rule switches feeds to chronological mode, preventing platforms from profiling children through AI-driven content recommendations.",
+          codeExample: {
+            title: "REST API — Disable child profiling",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_arjun_07",
+    "rules": ["algo_feed_control"],
+    "platforms": ["youtube", "instagram", "tiktok"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_8mK5n",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "algo_feed_control",
+      "action": "profiling_disabled",
+      "feed_mode": "subscriptions_only"
+    },
+    {
+      "platform": "instagram",
+      "rule": "algo_feed_control",
+      "action": "profiling_disabled",
+      "feed_mode": "chronological"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "algo_feed_control",
+      "action": "profiling_disabled",
+      "feed_mode": "following_only"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Data minimization",
           phosraFeature: "Minimal Child Profiles",
           description:
             "Phosra stores only first name, birth date, and age group — no behavioral data, browsing history, or activity profiles are retained, supporting the DPDPA's data minimization requirements.",
+          codeExample: {
+            title: "REST API — Minimal DPDPA profile",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/children/ch_arjun_07 \\
+  -H "Authorization: Bearer sk_live_..."`,
+            response: `{
+  "child_id": "ch_arjun_07",
+  "first_name": "Arjun",
+  "date_of_birth": "2013-03-22",
+  "age_group": "teen_13_15",
+  "fields_collected": 3,
+  "behavioral_data": "none",
+  "profiling_data": "none",
+  "browsing_history": "not_retained",
+  "dpdpa_compliant": true
+}`,
+          },
         },
         {
           regulation: "Enforcement documentation",
           phosraFeature: "Compliance Audit Trail",
           description:
             "Complete enforcement logging with timestamped records provides documentary evidence for Data Protection Board reviews and compliance demonstrations.",
+          codeExample: {
+            title: "REST API — DPDPA compliance audit",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=india_dpdpa" \\
+  -d "format=dpb_report"`,
+            response: `{
+  "report_type": "dpb_compliance",
+  "regulation": "india_dpdpa",
+  "summary": {
+    "children_protected": 2,
+    "platforms_covered": 3,
+    "behavioral_monitoring_blocked": true,
+    "ad_profiling_disabled": true,
+    "compliance_rate": "100%"
+  },
+  "download_url": "/v1/reports/dpb_rpt_5nK..."
+}`,
+          },
         },
       ],
       checklist: [
@@ -3042,6 +4787,46 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "Phosra's 40-category rule system covers the full scope of C-63's child protection duties, enforcing protective defaults across all connected platforms.",
+          codeExample: {
+            title: "REST API — C-63 duty of care enforcement",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_noah_08",
+    "rules": ["addictive_design_control",
+              "dm_restriction",
+              "csam_reporting"],
+    "platforms": ["youtube", "tiktok",
+                  "instagram", "discord"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_6kR2n",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rules_applied": 3,
+      "actions": [
+        "autoplay_disabled",
+        "comments_restricted",
+        "csam_reporting_active"
+      ]
+    },
+    {
+      "platform": "discord",
+      "rules_applied": 3,
+      "actions": [
+        "engagement_hooks_off",
+        "dms_friends_only",
+        "csam_scanning_enabled"
+      ]
+    }
+  ],
+  "c63_compliance": "duty_of_care_met"
+}`,
+          },
         },
         {
           regulation: "CSAM reporting",
@@ -3049,6 +4834,34 @@ input: {
           ruleCategory: "csam_reporting",
           description:
             "The csam_reporting rule ensures platforms have CSAM detection and reporting mechanisms enabled, supporting compliance with Canada's mandatory reporting requirements.",
+          codeExample: {
+            title: "REST API — CSAM reporting status",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/compliance/csam-reporting \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "child_id=ch_noah_08" \\
+  -d "regulation=ca_c63"`,
+            response: `{
+  "child_id": "ch_noah_08",
+  "regulation": "ca_bill_c63",
+  "csam_protections": {
+    "youtube": {
+      "reporting_enabled": true,
+      "hash_matching": "active"
+    },
+    "tiktok": {
+      "reporting_enabled": true,
+      "hash_matching": "active"
+    },
+    "discord": {
+      "reporting_enabled": true,
+      "hash_matching": "active"
+    }
+  },
+  "cccp_reporting": "configured",
+  "overall_status": "all_platforms_compliant"
+}`,
+          },
         },
         {
           regulation: "Addictive design restrictions",
@@ -3056,6 +4869,42 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "The addictive_design_control rule disables autoplay, infinite scroll, streaks, and daily rewards across all connected platforms.",
+          codeExample: {
+            title: "REST API — Disable addictive features",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_noah_08",
+    "rules": ["addictive_design_control"],
+    "platforms": ["youtube", "tiktok",
+                  "snapchat", "roblox"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_3nQ7v",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "disabled": ["autoplay", "up_next_suggestions"]
+    },
+    {
+      "platform": "tiktok",
+      "disabled": ["infinite_scroll", "streak_rewards"]
+    },
+    {
+      "platform": "snapchat",
+      "disabled": ["streak_mechanics", "snap_score"]
+    },
+    {
+      "platform": "roblox",
+      "disabled": ["loot_boxes", "daily_login_rewards"]
+    }
+  ],
+  "total_features_disabled": 8
+}`,
+          },
         },
         {
           regulation: "DM safety measures",
@@ -3063,12 +4912,73 @@ input: {
           ruleCategory: "dm_restriction",
           description:
             "The dm_restriction rule limits direct messaging to contacts-only, preventing unsolicited contact from strangers on Instagram, TikTok, Snapchat, and Discord.",
+          codeExample: {
+            title: "REST API — Restrict DMs for minors",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_noah_08",
+    "rules": ["dm_restriction"],
+    "config": { "mode": "contacts_only" },
+    "platforms": ["instagram", "tiktok",
+                  "snapchat", "discord"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_7mK9w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "dm_restriction",
+      "action": "dms_contacts_only"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "dm_restriction",
+      "action": "dms_friends_only"
+    },
+    {
+      "platform": "snapchat",
+      "rule": "dm_restriction",
+      "action": "dms_friends_only"
+    },
+    {
+      "platform": "discord",
+      "rule": "dm_restriction",
+      "action": "dms_server_members_only"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Enforcement documentation",
           phosraFeature: "Compliance Audit Trail",
           description:
             "Complete enforcement logging provides documentary evidence for Digital Safety Commission reviews and compliance demonstrations.",
+          codeExample: {
+            title: "REST API — DSC compliance audit",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=ca_bill_c63" \\
+  -d "format=dsc_report"`,
+            response: `{
+  "report_type": "dsc_compliance",
+  "regulation": "ca_bill_c63",
+  "summary": {
+    "children_protected": 3,
+    "platforms_covered": 6,
+    "csam_reports_filed": 0,
+    "addictive_features_disabled": 24,
+    "dm_restrictions_active": true,
+    "compliance_rate": "100%"
+  },
+  "download_url": "/v1/reports/dsc_rpt_4nK..."
+}`,
+          },
         },
       ],
       checklist: [
@@ -3175,6 +5085,49 @@ input: {
           ruleCategory: "targeted_ad_block",
           description:
             "The targeted_ad_block rule disables all behavioral advertising for minor users across YouTube, Instagram, TikTok, and Roblox, satisfying the LGPD's advertising prohibition.",
+          codeExample: {
+            title: "REST API — LGPD ad ban enforcement",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_mateus_09",
+    "rules": ["targeted_ad_block"],
+    "platforms": ["youtube", "instagram",
+                  "tiktok", "roblox"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_5nR8w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "targeted_ad_block",
+      "action": "behavioral_ads_blocked",
+      "lgpd_compliant": true
+    },
+    {
+      "platform": "instagram",
+      "rule": "targeted_ad_block",
+      "action": "ad_profiling_disabled",
+      "lgpd_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "targeted_ad_block",
+      "action": "ad_tracking_off",
+      "lgpd_compliant": true
+    },
+    {
+      "platform": "roblox",
+      "rule": "targeted_ad_block",
+      "action": "ad_profiling_blocked",
+      "lgpd_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Data deletion rights",
@@ -3182,6 +5135,36 @@ input: {
           ruleCategory: "data_deletion_request",
           description:
             "The data_deletion_request rule triggers deletion workflows on connected platforms. Child profiles can be fully removed from Phosra via the dashboard or API.",
+          codeExample: {
+            title: "REST API — LGPD data deletion",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/children/ch_mateus_09/data-deletion \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "scope": "all_platforms",
+    "reason": "guardian_request",
+    "include_phosra_profile": true
+  }'`,
+            response: `{
+  "deletion_id": "del_8mK4n",
+  "status": "processing",
+  "platforms": [
+    {
+      "platform": "youtube",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-17T00:00:00Z"
+    },
+    {
+      "platform": "instagram",
+      "status": "deletion_requested",
+      "estimated_completion": "2026-02-16T00:00:00Z"
+    }
+  ],
+  "phosra_profile": "scheduled_7_days",
+  "lgpd_compliant": true
+}`,
+          },
         },
         {
           regulation: "Privacy data sharing controls",
@@ -3189,18 +5172,100 @@ input: {
           ruleCategory: "privacy_data_sharing",
           description:
             "The privacy_data_sharing rule blocks third-party data sharing by default for child accounts, ensuring compliance with LGPD's data protection requirements.",
+          codeExample: {
+            title: "REST API — LGPD data sharing controls",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_mateus_09",
+    "rules": ["privacy_data_sharing"],
+    "platforms": ["youtube", "instagram",
+                  "tiktok", "discord"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_2pK7w",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "youtube",
+      "rule": "privacy_data_sharing",
+      "action": "third_party_sharing_blocked"
+    },
+    {
+      "platform": "instagram",
+      "rule": "privacy_data_sharing",
+      "action": "cross_app_tracking_blocked"
+    },
+    {
+      "platform": "tiktok",
+      "rule": "privacy_data_sharing",
+      "action": "data_collection_minimized"
+    },
+    {
+      "platform": "discord",
+      "rule": "privacy_data_sharing",
+      "action": "analytics_disabled"
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Parental consent model",
           phosraFeature: "Parent Account Ownership",
           description:
             "Phosra's parent-managed account model ensures all child profiles are created by a verified adult, satisfying LGPD's consent requirements.",
+          codeExample: {
+            title: "REST API — LGPD parental consent",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/families/fam_4kL2m/consent-status \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=lgpd"`,
+            response: `{
+  "family_id": "fam_4kL2m",
+  "parent_verified": true,
+  "regulation": "br_lgpd",
+  "children": [
+    {
+      "child_id": "ch_mateus_09",
+      "consent_status": "guardian_consent_granted",
+      "consent_date": "2025-11-01T10:00:00Z",
+      "best_interest": "verified"
+    }
+  ],
+  "lgpd_compliant": true,
+  "anpd_ready": true
+}`,
+          },
         },
         {
           regulation: "Enforcement documentation",
           phosraFeature: "Compliance Audit Trail",
           description:
             "Complete enforcement logging provides documentary evidence for ANPD reviews and demonstrates compliance with LGPD's best-interest principle.",
+          codeExample: {
+            title: "REST API — ANPD compliance audit",
+            language: "bash",
+            code: `curl -G https://api.phosra.com/v1/enforcement/audit \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d "regulation=br_lgpd" \\
+  -d "format=anpd_report"`,
+            response: `{
+  "report_type": "anpd_compliance",
+  "regulation": "br_lgpd",
+  "summary": {
+    "children_protected": 2,
+    "platforms_covered": 5,
+    "ad_targeting_blocked": true,
+    "data_sharing_restricted": true,
+    "best_interest_documented": true,
+    "compliance_rate": "100%"
+  },
+  "download_url": "/v1/reports/anpd_rpt_6nK..."
+}`,
+          },
         },
       ],
       checklist: [
@@ -3369,6 +5434,43 @@ input: {
           ruleCategory: "age_gate",
           description:
             "The age_gate rule enforces age verification on connected platforms, ensuring minor accounts are properly identified and subject to UAE-required protections.",
+          codeExample: {
+            title: "REST API — Enforce age verification gate",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_omar_10",
+    "rules": ["age_gate"],
+    "platforms": ["instagram", "tiktok", "youtube"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_uae_age_901",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "age_gate",
+      "action": "age_verification_required",
+      "method": "document_or_parental",
+      "decree26_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "age_gate",
+      "action": "age_verification_required",
+      "decree26_compliant": true
+    },
+    {
+      "platform": "youtube",
+      "rule": "age_gate",
+      "action": "age_verification_required",
+      "decree26_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Targeted advertising ban",
@@ -3376,6 +5478,43 @@ input: {
           ruleCategory: "targeted_ad_block",
           description:
             "The targeted_ad_block rule disables all behavioral advertising for users under 13, satisfying the Decree's advertising prohibition.",
+          codeExample: {
+            title: "REST API — Block targeted ads for minors",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_omar_10",
+    "rules": ["targeted_ad_block"],
+    "platforms": ["instagram", "snapchat", "youtube"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_uae_ads_902",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "targeted_ad_block",
+      "action": "behavioral_ads_disabled",
+      "ad_mode": "contextual_only",
+      "decree26_compliant": true
+    },
+    {
+      "platform": "snapchat",
+      "rule": "targeted_ad_block",
+      "action": "behavioral_ads_disabled",
+      "decree26_compliant": true
+    },
+    {
+      "platform": "youtube",
+      "rule": "targeted_ad_block",
+      "action": "personalized_ads_off",
+      "decree26_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Privacy-by-default",
@@ -3383,6 +5522,43 @@ input: {
           ruleCategory: "privacy_data_sharing",
           description:
             "The privacy_data_sharing rule blocks third-party data sharing by default, implementing the Decree's privacy-by-default requirements.",
+          codeExample: {
+            title: "REST API — Enforce privacy-by-default",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_omar_10",
+    "rules": ["privacy_data_sharing"],
+    "platforms": ["instagram", "tiktok", "roblox"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_uae_priv_903",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "privacy_data_sharing",
+      "action": "third_party_sharing_blocked",
+      "default_mode": "most_restrictive",
+      "decree26_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "privacy_data_sharing",
+      "action": "third_party_sharing_blocked",
+      "decree26_compliant": true
+    },
+    {
+      "platform": "roblox",
+      "rule": "privacy_data_sharing",
+      "action": "data_sharing_disabled",
+      "decree26_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Addictive design restrictions",
@@ -3390,6 +5566,44 @@ input: {
           ruleCategory: "addictive_design_control",
           description:
             "The addictive_design_control rule disables autoplay, infinite scroll, and engagement-maximizing features for minor accounts.",
+          codeExample: {
+            title: "REST API — Disable addictive design patterns",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_omar_10",
+    "rules": ["addictive_design_control"],
+    "platforms": ["tiktok", "youtube", "snapchat"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_uae_addict_904",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "tiktok",
+      "rule": "addictive_design_control",
+      "action": "autoplay_infinite_scroll_disabled",
+      "features_blocked": ["autoplay", "infinite_scroll", "streak_rewards"],
+      "decree26_compliant": true
+    },
+    {
+      "platform": "youtube",
+      "rule": "addictive_design_control",
+      "action": "autoplay_disabled",
+      "features_blocked": ["autoplay", "up_next_suggestions"],
+      "decree26_compliant": true
+    },
+    {
+      "platform": "snapchat",
+      "rule": "addictive_design_control",
+      "action": "streak_mechanics_disabled",
+      "decree26_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Geolocation disabled by default",
@@ -3397,12 +5611,87 @@ input: {
           ruleCategory: "geolocation_opt_in",
           description:
             "The geolocation_opt_in rule ensures location tracking is disabled by default on connected platforms, requiring explicit parental authorization.",
+          codeExample: {
+            title: "REST API — Disable geolocation by default",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_omar_10",
+    "rules": ["geolocation_opt_in"],
+    "platforms": ["instagram", "snapchat", "tiktok"]
+  }'`,
+            response: `{
+  "enforcement_id": "enf_uae_geo_905",
+  "status": "applied",
+  "results": [
+    {
+      "platform": "instagram",
+      "rule": "geolocation_opt_in",
+      "action": "location_tracking_disabled",
+      "requires_parental_consent": true,
+      "decree26_compliant": true
+    },
+    {
+      "platform": "snapchat",
+      "rule": "geolocation_opt_in",
+      "action": "snap_map_disabled",
+      "requires_parental_consent": true,
+      "decree26_compliant": true
+    },
+    {
+      "platform": "tiktok",
+      "rule": "geolocation_opt_in",
+      "action": "location_services_off",
+      "decree26_compliant": true
+    }
+  ]
+}`,
+          },
         },
         {
           regulation: "Cross-platform enforcement",
           phosraFeature: "Multi-Platform Policy Engine",
           description:
             "A single UAE Decree-26 compliance policy enforces all requirements simultaneously across Instagram, TikTok, YouTube, Snapchat, Roblox, and Discord.",
+          codeExample: {
+            title: "REST API — Batch enforce all Decree 26 rules",
+            language: "bash",
+            code: `curl -X POST https://api.phosra.com/v1/enforcement/batch \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "child_id": "ch_omar_10",
+    "rules": [
+      "age_gate",
+      "targeted_ad_block",
+      "privacy_data_sharing",
+      "addictive_design_control",
+      "geolocation_opt_in"
+    ],
+    "platforms": [
+      "instagram", "tiktok", "youtube",
+      "snapchat", "roblox", "discord"
+    ]
+  }'`,
+            response: `{
+  "batch_id": "batch_uae_906",
+  "status": "all_applied",
+  "total_enforcements": 30,
+  "platforms_enforced": 6,
+  "rules_enforced": 5,
+  "decree26_fully_compliant": true,
+  "summary": [
+    { "platform": "instagram", "rules_applied": 5, "status": "compliant" },
+    { "platform": "tiktok", "rules_applied": 5, "status": "compliant" },
+    { "platform": "youtube", "rules_applied": 5, "status": "compliant" },
+    { "platform": "snapchat", "rules_applied": 5, "status": "compliant" },
+    { "platform": "roblox", "rules_applied": 5, "status": "compliant" },
+    { "platform": "discord", "rules_applied": 5, "status": "compliant" }
+  ]
+}`,
+          },
         },
       ],
       checklist: [
