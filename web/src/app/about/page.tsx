@@ -68,12 +68,19 @@ const STEPS = [
 const FOUNDERS = {
   names: "Jake & Susannah Klinvex",
   role: "CEO & Founders",
-  bio: "Serial entrepreneurs and parents of five children, passionate about family safety and technology.",
+  image: "/logos/founders.jpg",
   linkedin: "https://www.linkedin.com/in/jakeklinvex/",
-  companies: [
-    { name: "Mastercard", logo: "/logos/mastercard.png" },
-    { name: "Gloo", logo: "/logos/gloo.svg" },
-    { name: "SessionM", logo: "/logos/sessionm.png" },
+  bio: "Founded three companies, all acquired — including Personation (acquired by eMoney Advisor) which was then acquired by Fidelity, and LoyalTree (acquired by SessionM) which was then acquired by Mastercard. Jake spent five years at Mastercard working on technology partnerships and blockchain/digital assets strategy, then co-founded withSoul, an AI platform acquired by Gloo which IPO'd at the end of 2025 (GLOO). At Phosra, they are applying the infrastructure playbook from fintech to child safety — building the open standard that connects every parental control to every platform. Jake and Susannah are parents of five children — they built Phosra because they needed it themselves.",
+  highlights: [
+    { metric: "3", label: "Companies Founded & Acquired" },
+    { metric: "5 yrs", label: "At Mastercard (Fintech Infrastructure)" },
+    { metric: "IPO", label: "Gloo (GLOO) — 2025" },
+  ],
+  career: [
+    { company: "Mastercard", logo: "/logos/mastercard.png" },
+    { company: "SessionM", logo: "/logos/sessionm.png" },
+    { company: "Gloo", logo: "/logos/gloo.svg" },
+    { company: "Villanova University", logo: "/logos/villanova.svg" },
   ],
 }
 
@@ -283,56 +290,91 @@ export default function AboutPage() {
               Leadership
             </p>
             <h2 className="text-2xl sm:text-3xl font-display text-foreground">
-              Built by parents, for parents
+              Built by parents who build platforms
             </h2>
             <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
-              Founded by serial entrepreneurs raising five children — we know firsthand why universal protection matters.
+              Three companies founded and acquired. Five years of platform infrastructure at Mastercard. Now building the open standard for child safety.
             </p>
           </div>
         </AnimatedSection>
 
-        {/* Founder card */}
+        {/* Founders card — premium layout */}
         <AnimatedSection>
-          <div className="max-w-md mx-auto text-center">
-            <Image
-              src="/logos/founders.jpg"
-              alt="Jake & Susannah Klinvex"
-              width={96}
-              height={96}
-              className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-border"
-            />
-            <h3 className="font-semibold text-foreground text-lg">{FOUNDERS.names}</h3>
-            <p className="text-brand-green text-sm font-medium">{FOUNDERS.role}</p>
-            <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
-              {FOUNDERS.bio}
-            </p>
-
-            {/* Previous companies */}
-            <div className="flex items-center justify-center gap-6 mt-6">
-              {FOUNDERS.companies.map((company) => (
+          <div className="plaid-card p-6 sm:p-8 max-w-3xl mx-auto">
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
+              {/* Photo */}
+              <div className="flex-shrink-0 flex justify-center sm:justify-start">
                 <Image
-                  key={company.name}
-                  src={company.logo}
-                  alt={company.name}
-                  width={100}
-                  height={28}
-                  className="h-5 w-auto opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all"
+                  src={FOUNDERS.image}
+                  alt={FOUNDERS.names}
+                  width={160}
+                  height={160}
+                  className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-2 border-border"
                 />
-              ))}
-            </div>
+              </div>
 
-            {/* LinkedIn link */}
-            <Link
-              href={FOUNDERS.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mt-4 transition-colors"
-            >
-              <Linkedin className="w-4 h-4" />
-              <span>LinkedIn</span>
-              <ExternalLink className="w-3 h-3" />
-            </Link>
+              {/* Content */}
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="font-semibold text-foreground text-xl">{FOUNDERS.names}</h3>
+                <p className="text-brand-green text-sm font-medium mt-0.5">{FOUNDERS.role}</p>
+                <p className="text-muted-foreground text-sm mt-4 leading-relaxed">
+                  {FOUNDERS.bio}
+                </p>
+
+                {/* Highlights / metrics */}
+                <div className="grid grid-cols-3 gap-3 mt-6">
+                  {FOUNDERS.highlights.map((h) => (
+                    <div key={h.label} className="text-center sm:text-left">
+                      <p className="text-xl sm:text-2xl font-display text-foreground">{h.metric}</p>
+                      <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">{h.label}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Previously at — logo strip */}
+                <div className="mt-6 pt-6 border-t border-border">
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-4">Previously at</p>
+                  <div className="flex items-center gap-8">
+                    {FOUNDERS.career.map((c) => (
+                      <div key={c.company} className="flex flex-col items-center gap-1.5">
+                        <div className="h-8 flex items-center">
+                          <Image
+                            src={c.logo}
+                            alt={c.company}
+                            width={120}
+                            height={32}
+                            className="h-7 w-auto opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all"
+                          />
+                        </div>
+                        <p className="text-[10px] text-muted-foreground/60">{c.company}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* LinkedIn */}
+                <div className="mt-4 pt-4 border-t border-border">
+                  <Link
+                    href={FOUNDERS.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                    <span>LinkedIn</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
+        </AnimatedSection>
+
+        {/* Why this team */}
+        <AnimatedSection delay={0.15} className="mt-10">
+          <p className="text-center text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Three exits in fintech and loyalty infrastructure. Five years building platform APIs at Mastercard. Now applying the same infrastructure playbook to the most fragmented market in consumer technology: child safety.
+          </p>
         </AnimatedSection>
       </section>
 
