@@ -86,8 +86,8 @@ const FOUNDERS = {
 
 const ADVISORS = [
   {
-    name: "Steve Haggerty",
-    role: "Board Advisor",
+    name: "Steve & Sara Haggerty",
+    role: "Board Member",
     linkedin: "https://www.linkedin.com/in/stephen-dawson-haggerty-7188a161/",
     bio: "Co-founded Comfy, the workplace platform acquired by Siemens in 2018, where it was deployed across 600+ global offices. Berkeley CS PhD under David Culler with 3,300+ citations and a 2022 ACM Test of Time Award. Currently CEO of Normal Software. Steve advises Phosra on platform architecture, IoT infrastructure, and scaling enterprise deployments.",
     highlights: [
@@ -412,7 +412,7 @@ export default function AboutPage() {
                 <div className="flex-shrink-0 flex justify-center sm:justify-start">
                   <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-accent-teal/20 to-brand-green/20 border-2 border-border flex items-center justify-center">
                     <span className="text-2xl sm:text-3xl font-display text-foreground/70">
-                      {advisor.name.split(" ").map(n => n[0]).join("")}
+                      {advisor.name.split(" ").filter(n => n !== "&").map(n => n[0]).join("")}
                     </span>
                   </div>
                 </div>
