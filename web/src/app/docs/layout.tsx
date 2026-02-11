@@ -9,7 +9,7 @@ export default function PublicDocsLayout({ children }: { children: React.ReactNo
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <PublicPageHeader />
 
       {/* Content area below fixed header */}

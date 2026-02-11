@@ -102,25 +102,19 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
       )}
 
       {/* Tab bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 overflow-x-hidden">
         <div className="relative flex border-b border-border">
           {(["specification", "recipes"] as const).map(t => (
             <button key={t} onClick={() => setDocsTab(t)}
-              className={`relative px-5 py-3 text-sm font-medium transition-colors ${
+              className={`relative px-4 sm:px-5 py-3 text-sm font-medium transition-colors ${
                 docsTab === t ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}>
               {t === "specification" ? "Specification" : "Recipes"}
+              {docsTab === t && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-foreground rounded-full" />
+              )}
             </button>
           ))}
-          <motion.div
-            className="absolute bottom-0 h-0.5 bg-foreground rounded-full"
-            layoutId="docs-tab-indicator"
-            animate={{
-              left: docsTab === "specification" ? "0%" : "50%",
-              width: "50%",
-            }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          />
         </div>
       </div>
 

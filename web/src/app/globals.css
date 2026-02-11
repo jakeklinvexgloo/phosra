@@ -183,6 +183,10 @@
 .docs-content-area {
   flex: 1;
   min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Animated gradient border for CTA card */
