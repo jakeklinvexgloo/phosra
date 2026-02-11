@@ -10,9 +10,12 @@ import {
   Check,
   Clock,
   ExternalLink,
+  Code2,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, StandardIcon } from "@/components/marketing/shared"
+import { PhosraFeatureCard } from "@/components/marketing/compliance-page/PhosraFeatureCard"
 import { STATUS_META } from "@/lib/standards/types"
+import { generateFullStandardSnippet, generateRuleSnippet, getCategoryFeature } from "@/lib/standards/snippet-generator"
 import type { StandardEntry } from "@/lib/standards"
 
 export function StandardDetailTemplate({ standard }: { standard: StandardEntry }) {
@@ -164,6 +167,51 @@ export function StandardDetailTemplate({ standard }: { standard: StandardEntry }
             </div>
           </div>
         </AnimatedSection>
+      </section>
+
+      {/* How Phosra Enforces */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+        <AnimatedSection>
+          <div className="flex items-center gap-3 mb-2">
+            <Code2 className="w-5 h-5 text-brand-green" />
+            <h2 className="text-xl sm:text-2xl font-display text-foreground">
+              How Phosra Enforces {standard.name}
+            </h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-8">
+            {standard.name} rules mapped to the Phosra API — enforce them individually or adopt the entire standard in one call.
+          </p>
+        </AnimatedSection>
+
+        {/* Hero card: adopt entire standard */}
+        <AnimatedSection delay={0.05}>
+          <div className="mb-6">
+            <PhosraFeatureCard
+              regulation={standard.name}
+              phosraFeature="Adopt Entire Standard"
+              description={`Enforce all ${standard.rules.length} rules from ${standard.name} across every connected platform with a single API call.`}
+              codeExample={generateFullStandardSnippet(standard)}
+            />
+          </div>
+        </AnimatedSection>
+
+        {/* Per-rule cards */}
+        <div className="space-y-4">
+          {standard.rules.map((rule, i) => {
+            const feat = getCategoryFeature(rule.category)
+            return (
+              <AnimatedSection key={rule.category} delay={0.1 + i * 0.05}>
+                <PhosraFeatureCard
+                  regulation={rule.label}
+                  phosraFeature={feat.feature}
+                  ruleCategory={rule.category}
+                  description={feat.description}
+                  codeExample={generateRuleSnippet(standard, rule)}
+                />
+              </AnimatedSection>
+            )
+          })}
+        </div>
       </section>
 
       {/* Rules */}
