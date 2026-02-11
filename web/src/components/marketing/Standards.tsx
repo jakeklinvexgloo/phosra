@@ -1,8 +1,8 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
-import { ArrowRight, Users, School, Shield, Sparkles } from "lucide-react"
+import { ArrowRight, Shield, Sparkles, ChevronDown } from "lucide-react"
 import { AnimatedSection, WaveTexture, GradientMesh, StandardIcon } from "./shared"
 import { STANDARDS_REGISTRY, getStandardsStats } from "@/lib/standards"
 import type { StandardEntry } from "@/lib/standards"
@@ -52,24 +52,12 @@ function StandardCard({ standard, index }: { standard: StandardEntry; index: num
             {standard.description}
           </p>
 
-          {/* Rule count + adoption stats */}
+          {/* Rule count */}
           <div className="flex items-center gap-4 text-[11px] text-white/35">
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3" />
               {standard.rules.length} rules
             </span>
-            {standard.adoptionCount > 0 && (
-              <span className="flex items-center gap-1.5">
-                <Users className="w-3 h-3" />
-                {standard.adoptionCount.toLocaleString()} families
-              </span>
-            )}
-            {standard.schoolCount > 0 && (
-              <span className="flex items-center gap-1.5">
-                <School className="w-3 h-3" />
-                {standard.schoolCount} schools
-              </span>
-            )}
           </div>
 
           {/* Hover arrow */}
@@ -82,8 +70,12 @@ function StandardCard({ standard, index }: { standard: StandardEntry; index: num
   )
 }
 
+const INITIAL_COUNT = 12
+
 export function Standards() {
   const stats = useMemo(() => getStandardsStats(), [])
+  const [showAll, setShowAll] = useState(false)
+  const visibleStandards = showAll ? STANDARDS_REGISTRY : STANDARDS_REGISTRY.slice(0, INITIAL_COUNT)
 
   return (
     <section
@@ -120,9 +112,8 @@ export function Standards() {
         <AnimatedSection delay={0.1} className="mb-12">
           <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
             {[
-              { value: stats.totalAdoptions.toLocaleString(), label: "Families" },
-              { value: `${stats.totalSchools}+`, label: "Schools" },
-              { value: `${stats.active}`, label: "Active Standards" },
+              { value: `${stats.total}`, label: "Standards" },
+              { value: `${stats.active}`, label: "Active" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <p className="text-2xl sm:text-3xl font-display text-white">{stat.value}</p>
@@ -135,10 +126,22 @@ export function Standards() {
         {/* Standard cards grid */}
         <AnimatedSection className="mb-12">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {STANDARDS_REGISTRY.map((standard, i) => (
+            {visibleStandards.map((standard, i) => (
               <StandardCard key={standard.id} standard={standard} index={i} />
             ))}
           </div>
+
+          {!showAll && STANDARDS_REGISTRY.length > INITIAL_COUNT && (
+            <div className="text-center mt-8">
+              <button
+                onClick={() => setShowAll(true)}
+                className="inline-flex items-center gap-2 px-6 py-2.5 border border-white/15 text-white/60 text-sm font-medium rounded-lg hover:bg-white/5 hover:text-white hover:border-white/25 transition-all"
+              >
+                Show All {STANDARDS_REGISTRY.length} Standards
+                <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </AnimatedSection>
 
         {/* How it works — 3 step mini */}
