@@ -84,6 +84,26 @@ const FOUNDERS = {
   ],
 }
 
+const ADVISORS = [
+  {
+    name: "Steve Haggerty",
+    role: "Board Advisor",
+    linkedin: "https://www.linkedin.com/in/stephen-dawson-haggerty-7188a161/",
+    bio: "Co-founded Comfy, the workplace platform acquired by Siemens in 2018, where it was deployed across 600+ global offices. Berkeley CS PhD under David Culler with 3,300+ citations and a 2022 ACM Test of Time Award. Currently CEO of Normal Software. Steve advises Phosra on platform architecture, IoT infrastructure, and scaling enterprise deployments.",
+    highlights: [
+      { metric: "PhD", label: "UC Berkeley Computer Science" },
+      { metric: "3.3K+", label: "Academic Citations" },
+      { metric: "600+", label: "Siemens Offices on Comfy" },
+    ],
+    career: [
+      { company: "Siemens", logo: "/logos/siemens.svg" },
+      { company: "UC Berkeley", logo: "/logos/berkeley.svg" },
+      { company: "Normal Software", logo: "/logos/normal.svg" },
+      { company: "Harvard", logo: "/logos/harvard.svg" },
+    ],
+  },
+]
+
 export default function AboutPage() {
   return (
     <div>
@@ -375,6 +395,84 @@ export default function AboutPage() {
           <p className="text-center text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Three exits in fintech and loyalty infrastructure. Five years building platform APIs at Mastercard. Now applying the same infrastructure playbook to the most fragmented market in consumer technology: child safety.
           </p>
+        </AnimatedSection>
+
+        {/* Board & Advisors */}
+        <AnimatedSection delay={0.2} className="mt-16">
+          <div className="text-center mb-8">
+            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-3">
+              Board & Advisors
+            </p>
+          </div>
+
+          {ADVISORS.map((advisor) => (
+            <div key={advisor.name} className="plaid-card p-5 sm:p-6 max-w-3xl mx-auto">
+              <div className="flex flex-col sm:flex-row gap-5 sm:gap-6">
+                {/* Initials avatar */}
+                <div className="flex-shrink-0 flex justify-center sm:justify-start">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-accent-teal/20 to-brand-green/20 border-2 border-border flex items-center justify-center">
+                    <span className="text-2xl sm:text-3xl font-display text-foreground/70">
+                      {advisor.name.split(" ").map(n => n[0]).join("")}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="font-semibold text-foreground text-lg">{advisor.name}</h3>
+                  <p className="text-brand-green text-sm font-medium mt-0.5">{advisor.role}</p>
+                  <p className="text-muted-foreground text-sm mt-3 leading-relaxed">
+                    {advisor.bio}
+                  </p>
+
+                  {/* Highlights */}
+                  <div className="grid grid-cols-3 gap-3 mt-5">
+                    {advisor.highlights.map((h) => (
+                      <div key={h.label} className="text-center sm:text-left">
+                        <p className="text-lg sm:text-xl font-display text-foreground">{h.metric}</p>
+                        <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">{h.label}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Previously at — logo strip */}
+                  <div className="mt-5 pt-5 border-t border-border">
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-3">Previously at</p>
+                    <div className="flex items-center gap-6">
+                      {advisor.career.map((c) => (
+                        <div key={c.company} className="flex flex-col items-center gap-1.5">
+                          <div className="h-7 flex items-center">
+                            <Image
+                              src={c.logo}
+                              alt={c.company}
+                              width={100}
+                              height={28}
+                              className="h-6 w-auto opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all"
+                            />
+                          </div>
+                          <p className="text-[10px] text-muted-foreground/60">{c.company}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* LinkedIn */}
+                  <div className="mt-3 pt-3 border-t border-border">
+                    <Link
+                      href={advisor.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <Linkedin className="w-4 h-4" />
+                      <span>LinkedIn</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </AnimatedSection>
       </section>
 
