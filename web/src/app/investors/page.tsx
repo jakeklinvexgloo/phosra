@@ -1,9 +1,11 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { ArrowRight, Download, FileText, Shield, Globe, Layers, TrendingUp } from "lucide-react"
+import { ArrowRight, FileText, Globe, Layers, TrendingUp, Lock } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 import { getRecentNews, CATEGORY_CONFIG } from "@/lib/newsroom"
+import { InterestModal } from "@/components/investors/InterestModal"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -52,6 +54,7 @@ const PRODUCT_LINKS = [
 
 export default function InvestorsPage() {
   const recentNews = getRecentNews(3)
+  const [modalOpen, setModalOpen] = useState(false)
 
   return (
     <div>
@@ -303,7 +306,7 @@ export default function InvestorsPage() {
       </section>
 
       {/* ============================================================ */}
-      {/*  Pitch Deck                                                   */}
+      {/*  Data Room (Gated Teaser)                                     */}
       {/* ============================================================ */}
       <section className="bg-gradient-to-b from-[#0D1B2A] to-[#060D16] text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-8 py-20 lg:py-28">
@@ -313,39 +316,30 @@ export default function InvestorsPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <FileText className="w-5 h-5 text-brand-green" strokeWidth={1.5} />
                   <p className="text-brand-green text-sm font-semibold tracking-wider uppercase">
-                    Pitch Deck
+                    Data Room
                   </p>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-display text-white mb-3">
-                  Pre-seed deck
+                  Investor materials
                 </h2>
                 <p className="text-white/50 leading-relaxed max-w-lg">
-                  12 slides covering the problem, product, market, traction, and team. Available as an interactive HTML deck or downloadable PDF.
+                  Pitch deck, SAFE agreement, financial model, cap table, and technical architecture — available to approved investors.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link
-                  href="/deck/"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-green text-[#0D1B2A] font-semibold rounded-lg hover:bg-brand-green/90 transition-colors text-sm"
-                >
-                  View Deck <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-                <a
-                  href="/deck/phosra-pre-seed-deck.pdf"
-                  download
-                  className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/20 text-white font-medium rounded-lg hover:border-white/40 transition-colors text-sm"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  Download PDF
-                </a>
-              </div>
+              <button
+                onClick={() => setModalOpen(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-green text-[#0D1B2A] font-semibold rounded-lg hover:bg-brand-green/90 transition-colors text-sm"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                Request Access
+              </button>
             </div>
           </AnimatedSection>
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/*  Contact                                                      */}
+      {/*  Contact / CTA                                                */}
       {/* ============================================================ */}
       <section className="max-w-5xl mx-auto px-4 sm:px-8 py-20 lg:py-28">
         <AnimatedSection>
@@ -358,12 +352,12 @@ export default function InvestorsPage() {
               We&apos;re building the infrastructure for a safer internet. If you&apos;re an investor, partner, or policy maker, we&apos;d love to connect.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="mailto:investors@phosra.com"
+              <button
+                onClick={() => setModalOpen(true)}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-lg hover:bg-brand-green/90 transition-colors text-sm"
               >
-                Contact Us <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+                Request Access <ArrowRight className="w-3.5 h-3.5" />
+              </button>
               <Link
                 href="/contact"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -374,6 +368,8 @@ export default function InvestorsPage() {
           </div>
         </AnimatedSection>
       </section>
+
+      <InterestModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   )
 }
