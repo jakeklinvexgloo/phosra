@@ -52,7 +52,7 @@ export function Hero() {
 
             <AnimatedSection delay={0.2}>
               <p className="text-lg sm:text-xl text-white/50 leading-relaxed mb-10 max-w-lg">
-                The infrastructure layer for parental control apps. Bark, Qustodio, and Aura define the policies {"\u2014"} Phosra pushes them to Netflix, YouTube, and {PLATFORM_STATS.marketingTotal} platforms.
+                The enforcement layer for child safety. Set rules through one API {"\u2014"} Phosra pushes them to Netflix, YouTube, and {PLATFORM_STATS.marketingTotal} platforms, with built-in compliance for KOSA, COPPA, and the EU&nbsp;DSA.
               </p>
             </AnimatedSection>
 
