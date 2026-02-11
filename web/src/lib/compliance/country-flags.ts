@@ -45,7 +45,7 @@ export const DISPLAY_GROUPS: DisplayGroup[] = [
     jurisdictionGroup: "us-state",
     label: "US State",
     flag: "\ud83c\uddfa\ud83c\uddf8",
-    defaultOpen: false,
+    defaultOpen: true,
   },
   {
     jurisdictionGroup: "eu",
