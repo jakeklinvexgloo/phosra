@@ -1235,4 +1235,179 @@ export const RECIPES: Recipe[] = [
     ],
     keyTeachingPoint: "The same API works for both individual parents and school districts. Bulk onboarding is just a loop over Quick Setup + Compliance + Enforce. Use CSV exports and scripting for scale."
   },
+  {
+    id: "adopt-standard",
+    title: "Adopting a Community Standard",
+    summary: "Parent adopts the 'Four Norms' standard to align with Anxious Generation guidelines",
+    icon: "\u{1F4D6}",
+    tags: ["Standards", "Four Norms", "Movement"],
+    scenario: "Lisa has been reading The Anxious Generation by Jonathan Haidt and wants to adopt his Four Norms for her 11-year-old son Max. Instead of manually configuring each rule, she browses the community standards, adopts the Four Norms standard, and Phosra automatically merges those rules into Max's active policy.",
+    actors: ["Parent App", "Phosra API", "Platforms"],
+    flowDiagram: `Parent App          Phosra API            Platforms
+    |                       |                           |
+    |\u2500\u2500 GET /standards \u2500\u2500\u2500\u2500>|                           |
+    |<\u2500\u2500 200 standards list \u2500|                           |
+    |\u2500\u2500 GET /standards/     |                           |
+    |   four-norms \u2500\u2500\u2500\u2500\u2500\u2500\u2500>|                           |
+    |<\u2500\u2500 200 standard \u2500\u2500\u2500\u2500\u2500\u2500|                           |
+    |\u2500\u2500 POST /children/     |                           |
+    |   {id}/standards \u2500\u2500\u2500>|\u2500\u2500 merge rules \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500  |
+    |<\u2500\u2500 200 adopted \u2500\u2500\u2500\u2500\u2500\u2500\u2500|                           |
+    |\u2500\u2500 POST /enforce \u2500\u2500\u2500\u2500\u2500>|\u2500\u2500 push updated rules \u2500\u2500\u2500>|
+    |<\u2500\u2500 200 results \u2500\u2500\u2500\u2500\u2500\u2500\u2500|                           |`,
+    steps: [
+      {
+        number: 1,
+        method: "GET",
+        endpoint: "/api/v1/standards",
+        description: "Browse all available community standards",
+        responseBody: `{
+  "standards": [
+    { "id": "four-norms", "name": "Four Norms (Anxious Generation)", "rules_count": 6, "category": "expert" },
+    { "id": "wait-until-8th", "name": "Wait Until 8th", "rules_count": 4, "category": "pledge" },
+    { "id": "common-sense-media", "name": "Common Sense Media", "rules_count": 8, "category": "organization" }
+  ]
+}`,
+        whatHappens: "Returns all 21 available community standards with their rule counts and categories. Lisa can browse these to find standards that align with her values."
+      },
+      {
+        number: 2,
+        method: "GET",
+        endpoint: "/api/v1/standards/four-norms",
+        description: "View full details of the Four Norms standard before adopting",
+        responseBody: `{
+  "id": "four-norms",
+  "name": "Four Norms (Anxious Generation)",
+  "description": "Jonathan Haidt's four foundational norms for childhood in the smartphone age.",
+  "rules": [
+    { "category": "social_media_min_age", "value": "16", "label": "No social media before 16" },
+    { "category": "time_daily_limit", "value": "phone_free_schools", "label": "Phone-free schools" },
+    { "category": "time_bedtime", "value": "enabled", "label": "Device-free bedrooms" },
+    { "category": "monitoring_activity", "value": "outdoor_play", "label": "More outdoor unstructured play" }
+  ]
+}`,
+        whatHappens: "Full standard details show each recommended rule. Lisa can review what will change before committing. The Four Norms focus on delaying social media, reducing phone usage at school, keeping devices out of bedrooms, and encouraging outdoor play."
+      },
+      {
+        number: 3,
+        method: "POST",
+        endpoint: "/api/v1/children/child_max/standards",
+        description: "Adopt the Four Norms standard for Max",
+        requestBody: `{
+  "standard_id": "four-norms"
+}`,
+        responseBody: `{
+  "standard_id": "four-norms",
+  "name": "Four Norms (Anxious Generation)",
+  "adopted_at": "2026-02-07T10:00:00Z",
+  "rules_applied": 6,
+  "rules_created": 2,
+  "rules_updated": 4
+}`,
+        whatHappens: "Standard adopted. 4 existing rules were updated to match the stricter Four Norms values (e.g. social_media_min_age raised from 13 to 16). 2 new rules created for categories that weren't in Max's policy yet."
+      },
+      {
+        number: 4,
+        method: "POST",
+        endpoint: "/api/v1/children/child_max/enforce",
+        description: "Push the updated policy to all connected platforms",
+        requestBody: `{}`,
+        responseBody: `{
+  "results": [
+    { "platform": "nextdns", "status": "success", "rules_pushed": 8 },
+    { "platform": "android", "status": "success", "rules_pushed": 20 }
+  ]
+}`,
+        whatHappens: "Updated rules are pushed to all platforms. Android blocks social media apps (previously supervised access). NextDNS adds social media domains to the blocklist. All changes traced back to the Four Norms standard in the audit log."
+      }
+    ],
+    keyTeachingPoint: "Community standards let parents align with expert guidelines in one API call. Adopting a standard merges its rules into the existing policy — no manual rule-by-rule configuration needed."
+  },
+  {
+    id: "connect-parental-source",
+    title: "Connecting a Parental Control App",
+    summary: "Link Bark as a source and push rules through its partner API",
+    icon: "\u{1F4F1}",
+    tags: ["Sources", "Bark", "Partner API"],
+    scenario: "The Martinez family already uses Bark to monitor their daughter Mia's phone. Now they want to connect Bark to Phosra so they can push Phosra's policy rules through Bark's partner API. Since Bark has a partner_api integration, Phosra can automate the rule push. For apps without an API (like Net Nanny), Phosra would instead generate guided setup steps.",
+    actors: ["Parent App", "Phosra API", "Bark"],
+    flowDiagram: `Parent App          Phosra API            Bark
+    |                       |                       |
+    |\u2500\u2500 POST /v1/sources \u2500\u2500>|                       |
+    |   (bark, creds)       |\u2500\u2500 verify partner \u2500\u2500\u2500>|
+    |                       |<\u2500\u2500 200 connected \u2500\u2500\u2500\u2500|
+    |<\u2500\u2500 201 connected \u2500\u2500\u2500\u2500\u2500|                       |
+    |\u2500\u2500 POST /sources/      |                       |
+    |   {id}/sync \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500>|\u2500\u2500 push rules \u2500\u2500\u2500\u2500\u2500\u2500>|
+    |                       |<\u2500\u2500 200 synced \u2500\u2500\u2500\u2500\u2500\u2500|
+    |<\u2500\u2500 200 sync results \u2500\u2500|                       |
+    |\u2500\u2500 POST /sources/      |                       |
+    |   {id}/rules \u2500\u2500\u2500\u2500\u2500\u2500\u2500>|\u2500\u2500 push one rule \u2500\u2500\u2500\u2500>|
+    |<\u2500\u2500 200 applied \u2500\u2500\u2500\u2500\u2500\u2500\u2500|                       |`,
+    steps: [
+      {
+        number: 1,
+        method: "POST",
+        endpoint: "/api/v1/sources",
+        description: "Connect Bark as a parental control source for Mia",
+        requestBody: `{
+  "child_id": "ch_mia_01",
+  "source": "bark",
+  "credentials": {
+    "partner_token": "bark_ptr_abc123..."
+  },
+  "auto_sync": true
+}`,
+        responseBody: `{
+  "source_id": "src_bark_01",
+  "status": "connected",
+  "source": "bark",
+  "api_tier": "partner",
+  "capabilities_linked": 9,
+  "note": "Connected via partner integration"
+}`,
+        whatHappens: "Bark partner token is verified via the Bark Partner API. Phosra identifies 9 capabilities that Bark supports (monitoring, web filtering, screen time scheduling, etc.) and links them to Mia's profile."
+      },
+      {
+        number: 2,
+        method: "POST",
+        endpoint: "/api/v1/sources/src_bark_01/sync",
+        description: "Push all active rules to Bark in a single sync",
+        requestBody: `{
+  "sync_mode": "full"
+}`,
+        responseBody: `{
+  "status": "completed",
+  "rules_pushed": 9,
+  "rules_skipped": 4,
+  "results": [
+    { "category": "monitoring_activity", "status": "applied" },
+    { "category": "web_filter_level", "status": "applied" },
+    { "category": "time_daily_limit", "status": "applied_with_limitations" },
+    { "category": "purchase_approval", "status": "skipped" }
+  ]
+}`,
+        whatHappens: "Full sync pushes all applicable rules. 9 rules were applied (some with limitations where Bark has partial support), 4 were skipped (capabilities Bark doesn't support like purchase approval). Each result shows the exact status."
+      },
+      {
+        number: 3,
+        method: "POST",
+        endpoint: "/api/v1/sources/src_bark_01/rules",
+        description: "Push an individual rule to Bark for fine-grained control",
+        requestBody: `{
+  "category": "web_filter_level",
+  "value": "enabled"
+}`,
+        responseBody: `{
+  "category": "web_filter_level",
+  "status": "applied",
+  "support": "full",
+  "verified": true,
+  "note": "Applied via partner integration"
+}`,
+        whatHappens: "Individual rule push for more granular control. Bark confirms the web filter is applied with full support. The 'verified' flag confirms the rule is active on the Bark side."
+      }
+    ],
+    keyTeachingPoint: "Parental control apps are 'sources' that Phosra pushes rules through. Apps with APIs get automated syncing; apps without APIs get guided setup instructions. The API handles both transparently."
+  },
 ]

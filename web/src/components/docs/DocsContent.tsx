@@ -251,6 +251,37 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
             </div>
           </section>
 
+          {/* Section 2.1: Family Members */}
+          <section id="members">
+            <h2 className="text-xl font-bold text-foreground mb-4">2.1 Family Members</h2>
+            <div className="bg-card rounded border border-border p-6 space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Families support multi-guardian access with role-based permissions. Members <Keyword>MAY</Keyword> be
+                added to share access to children, policies, and enforcement controls. The family data model supports
+                co-parenting, caregiver delegation, and institutional use cases.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                <div className="bg-muted/30 rounded p-4">
+                  <h4 className="font-medium text-foreground mb-1">Owner</h4>
+                  <p className="text-xs text-muted-foreground">Full administrative control. <Keyword>MAY</Keyword> add/remove members, manage all policies, and delete the family.</p>
+                </div>
+                <div className="bg-muted/30 rounded p-4">
+                  <h4 className="font-medium text-foreground mb-1">Parent</h4>
+                  <p className="text-xs text-muted-foreground"><Keyword>MAY</Keyword> manage children, modify policies, trigger enforcement, and view reports.</p>
+                </div>
+                <div className="bg-muted/30 rounded p-4">
+                  <h4 className="font-medium text-foreground mb-1">Guardian</h4>
+                  <p className="text-xs text-muted-foreground">Read-only access. <Keyword>MAY</Keyword> view policies and reports. <Keyword>MUST NOT</Keyword> modify rules.</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6">
+              {getEndpointsBySection("Family Members").map((ep) => (
+                <EndpointCard key={ep.id} endpoint={ep} />
+              ))}
+            </div>
+          </section>
+
           {/* Section 3: Safety Policies */}
           <section id="policies">
             <h2 className="text-xl font-bold text-foreground mb-4">3. Safety Policies</h2>
@@ -387,9 +418,29 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
             </div>
           </section>
 
-          {/* Section 5.1: Quick Setup API */}
+          {/* Section 5.1: Compliance Links */}
+          <section id="compliance-links">
+            <h2 className="text-xl font-bold text-foreground mb-4">5.1 Compliance Links</h2>
+            <div className="bg-card rounded border border-border p-6 space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Compliance links connect a child to a specific platform for enforcement. Each link stores encrypted
+                platform credentials (AES-256-GCM) and tracks verification status, supported capabilities, and enforcement history.
+                Platforms <Keyword>MUST</Keyword> be re-verified when credentials are rotated.
+              </p>
+              <div className="bg-accent/5 border border-accent/20 rounded p-4">
+                <p className="text-sm text-foreground"><strong>Lifecycle:</strong> Create link → Verify credentials → Enforce rules → Monitor health → Re-verify on rotation</p>
+              </div>
+            </div>
+            <div className="mt-6">
+              {getEndpointsBySection("Compliance Links").map((ep) => (
+                <EndpointCard key={ep.id} endpoint={ep} />
+              ))}
+            </div>
+          </section>
+
+          {/* Section 5.2: Quick Setup API */}
           <section id="quick-setup">
-            <h2 className="text-xl font-bold text-foreground mb-4">5.1 Quick Setup API</h2>
+            <h2 className="text-xl font-bold text-foreground mb-4">5.2 Quick Setup API</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
                 The Quick Setup API provides a single-call onboarding flow that creates a family (if needed), registers a child,
@@ -440,6 +491,11 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
                 </p>
               </div>
             </div>
+            <div className="mt-6">
+              {getEndpointsBySection("Quick Setup").map((ep) => (
+                <EndpointCard key={ep.id} endpoint={ep} />
+              ))}
+            </div>
           </section>
 
           {/* Section 6: Policy Enforcement */}
@@ -453,12 +509,18 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
                 <code className="bg-muted px-1 rounded text-xs text-foreground">running</code> →
                 <code className="bg-muted px-1 rounded text-xs text-foreground">completed</code> / <code className="bg-muted px-1 rounded text-xs text-foreground">partial</code> / <code className="bg-muted px-1 rounded text-xs text-foreground">failed</code>.
               </p>
-              {/* Sync endpoint cards */}
-              <div className="mt-2">
-                {getEndpointsBySection("Sync").map((ep) => (
-                  <EndpointCard key={ep.id} endpoint={ep} />
-                ))}
+              <div className="bg-accent/5 border border-accent/20 rounded p-4">
+                <p className="text-sm text-foreground"><strong>Enforcement flow:</strong> Trigger enforcement → Job created → Fan out to platforms → Collect per-provider results → Retry failures</p>
               </div>
+            </div>
+            {/* Enforcement + Sync endpoint cards */}
+            <div className="mt-6">
+              {getEndpointsBySection("Enforcement").map((ep) => (
+                <EndpointCard key={ep.id} endpoint={ep} />
+              ))}
+              {getEndpointsBySection("Sync").map((ep) => (
+                <EndpointCard key={ep.id} endpoint={ep} />
+              ))}
             </div>
           </section>
 
@@ -489,17 +551,26 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
                 All webhook payloads <Keyword>MUST</Keyword> be signed using HMAC-SHA256 with the webhook secret.
                 Platforms <Keyword>MUST</Keyword> verify the <code className="bg-muted px-1 rounded text-xs text-foreground">X-Phosra-Signature</code> header before processing.
               </p>
-              <div className="text-xs font-mono space-y-1 text-muted-foreground">
-                <p><span className="text-emerald-400">POST</span> /webhooks — Register notification endpoint</p>
-                <p><span className="text-amber-400">PUT</span> /webhooks/{'{'}webhookID{'}'} — Update endpoint configuration</p>
-                <p><span className="text-emerald-400">POST</span> /webhooks/{'{'}webhookID{'}'}/test — Send test notification</p>
-                <p><span className="text-blue-400">GET</span> /webhooks/{'{'}webhookID{'}'}/deliveries — Delivery audit log</p>
-              </div>
               <pre className="bg-zinc-900 text-green-400 rounded p-3 text-xs overflow-x-auto">
 {`# Signature verification
 signature = HMAC-SHA256(webhook_secret, request_body)
 # Compare with X-Phosra-Signature header (hex-encoded)`}
               </pre>
+              <div className="bg-accent/5 border border-accent/20 rounded p-4">
+                <p className="text-sm text-foreground"><strong>Supported events:</strong>{" "}
+                  <code className="bg-muted px-1 rounded text-xs">enforcement.completed</code>{" "}
+                  <code className="bg-muted px-1 rounded text-xs">enforcement.failed</code>{" "}
+                  <code className="bg-muted px-1 rounded text-xs">policy.updated</code>{" "}
+                  <code className="bg-muted px-1 rounded text-xs">policy.activated</code>{" "}
+                  <code className="bg-muted px-1 rounded text-xs">compliance.verified</code>{" "}
+                  <code className="bg-muted px-1 rounded text-xs">compliance.failed</code>
+                </p>
+              </div>
+            </div>
+            <div className="mt-6">
+              {getEndpointsBySection("Webhooks").map((ep) => (
+                <EndpointCard key={ep.id} endpoint={ep} />
+              ))}
             </div>
           </section>
 
@@ -1016,6 +1087,118 @@ Content-Type: application/json
                     <li>Legislation-compliant rules for algorithmic safety, notifications, advertising, and data privacy</li>
                   </ul>
                 </div>
+              </div>
+            </section>
+
+            {/* Section 13: Community Standards */}
+            <section id="standards">
+              <h2 className="text-xl font-bold text-foreground mb-4">13. Community Standards</h2>
+              <div className="bg-card rounded border border-border p-6 space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Phosra supports <strong className="text-foreground">community standards</strong> (also called movements) — curated rule sets based
+                  on expert guidance, research, and advocacy organizations. Parents <Keyword>MAY</Keyword> adopt one or
+                  more standards for each child to automatically generate matching policy rules.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Standards provide a &quot;one-click&quot; way to align with community guidelines like the
+                  <strong className="text-foreground"> Four Norms</strong> from Jonathan Haidt&apos;s Anxious Generation,
+                  <strong className="text-foreground"> Wait Until 8th</strong>, or
+                  <strong className="text-foreground"> Common Sense Media</strong> age ratings.
+                  When adopted, the standard&apos;s rules are merged into the child&apos;s active policy.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                  <div className="bg-muted/30 rounded p-4">
+                    <h4 className="font-medium text-foreground mb-1">Expert Standards</h4>
+                    <p className="text-xs text-muted-foreground">Research-backed rule sets from child development experts and psychologists.</p>
+                  </div>
+                  <div className="bg-muted/30 rounded p-4">
+                    <h4 className="font-medium text-foreground mb-1">Community Pledges</h4>
+                    <p className="text-xs text-muted-foreground">Grassroots movements like Wait Until 8th and Smartphone Free Childhood.</p>
+                  </div>
+                  <div className="bg-muted/30 rounded p-4">
+                    <h4 className="font-medium text-foreground mb-1">Organization Guidelines</h4>
+                    <p className="text-xs text-muted-foreground">Recommendations from AAP, Common Sense Media, and other organizations.</p>
+                  </div>
+                </div>
+                <div className="bg-accent/5 border border-accent/20 rounded p-4">
+                  <p className="text-sm text-foreground">
+                    Browse all available standards at <a href="/standards" className="text-brand-green font-medium hover:underline">/standards</a>.
+                    The Phosra API currently includes <strong>21 community standards</strong> spanning expert guidance, parenting pledges, and organizational recommendations.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-6">
+                {getEndpointsBySection("Community Standards").map((ep) => (
+                  <EndpointCard key={ep.id} endpoint={ep} />
+                ))}
+              </div>
+            </section>
+
+            {/* Section 14: Parental Control Sources */}
+            <section id="sources">
+              <h2 className="text-xl font-bold text-foreground mb-4">14. Parental Control Sources</h2>
+              <div className="bg-card rounded border border-border p-6 space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Phosra maintains a registry of <strong className="text-foreground">21 parental control applications and services</strong> that
+                  can be connected as <em>sources</em> — apps parents already use to manage their children&apos;s devices.
+                  Unlike target platforms that Phosra pushes rules <em>to</em>, sources are apps that Phosra integrates
+                  <em> with</em> to push rules <em>through</em>.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                  <div className="bg-success/5 border border-success/20 rounded p-4">
+                    <span className="inline-flex items-center gap-1.5 bg-success/10 text-success px-2 py-1 rounded-full text-xs font-bold border border-success/30">Public API</span>
+                    <p className="text-xs text-muted-foreground mt-2">Direct API integration. Phosra pushes rules automatically via documented REST endpoints.</p>
+                    <p className="text-xs text-foreground mt-1">Qustodio, Apple Screen Time (MDM), Google Family Link</p>
+                  </div>
+                  <div className="bg-blue-500/5 border border-blue-500/20 rounded p-4">
+                    <span className="inline-flex items-center gap-1.5 bg-blue-500/10 text-blue-500 px-2 py-1 rounded-full text-xs font-bold border border-blue-500/30">Partner API</span>
+                    <p className="text-xs text-muted-foreground mt-2">Integration via partnership agreement. Automated rule enforcement with partner credentials.</p>
+                    <p className="text-xs text-foreground mt-1">Bark, Securly, Canopy</p>
+                  </div>
+                  <div className="bg-muted/50 border border-border rounded p-4">
+                    <span className="inline-flex items-center gap-1.5 bg-muted text-muted-foreground px-2 py-1 rounded-full text-xs font-bold border border-border">No API</span>
+                    <p className="text-xs text-muted-foreground mt-2">Guided setup mode. Phosra generates step-by-step instructions for manual configuration.</p>
+                    <p className="text-xs text-foreground mt-1">Net Nanny, Norton Family, Kaspersky, Circle</p>
+                  </div>
+                  <div className="bg-amber-500/5 border border-amber-500/20 rounded p-4">
+                    <span className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-500 px-2 py-1 rounded-full text-xs font-bold border border-amber-500/30">Undocumented</span>
+                    <p className="text-xs text-muted-foreground mt-2">Identified integration points. Availability may vary.</p>
+                    <p className="text-xs text-foreground mt-1">Bark Phone</p>
+                  </div>
+                </div>
+                <div className="bg-accent/5 border border-accent/20 rounded p-4">
+                  <p className="text-sm text-foreground">
+                    Each source is mapped to Phosra&apos;s 45 rule categories with <strong>full</strong>, <strong>partial</strong>, or <strong>none</strong> support
+                    per capability. Browse all sources with their capability matrices at{" "}
+                    <a href="/parental-controls" className="text-brand-green font-medium hover:underline">/parental-controls</a>.
+                  </p>
+                </div>
+                <div className="bg-muted/30 rounded p-4">
+                  <h4 className="text-sm font-medium text-foreground mb-2">Source API Pattern</h4>
+                  <div className="text-xs font-mono space-y-1 text-muted-foreground">
+                    <p><span className="text-emerald-400">POST</span> /v1/sources — Connect a parental control app to a child</p>
+                    <p><span className="text-emerald-400">POST</span> /v1/sources/{'{'}sourceID{'}'}/sync — Push all rules to source</p>
+                    <p><span className="text-emerald-400">POST</span> /v1/sources/{'{'}sourceID{'}'}/rules — Push individual capability</p>
+                    <p><span className="text-blue-400">GET</span> /v1/sources/{'{'}sourceID{'}'}/guide/{'{'}category{'}'} — Get guided setup steps (no-API sources)</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Section 15: Family Reports */}
+            <section id="reports">
+              <h2 className="text-xl font-bold text-foreground mb-4">15. Family Reports</h2>
+              <div className="bg-card rounded border border-border p-6 space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  The reporting API provides family-level overviews of enforcement status, compliance health, and
+                  per-child statistics. Reports <Keyword>SHOULD</Keyword> be used by parent-facing applications to
+                  surface the current protection state at a glance.
+                </p>
+              </div>
+              <div className="mt-6">
+                {getEndpointsBySection("Reports").map((ep) => (
+                  <EndpointCard key={ep.id} endpoint={ep} />
+                ))}
               </div>
             </section>
 

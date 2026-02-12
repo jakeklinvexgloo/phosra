@@ -9,8 +9,13 @@ import { ENDPOINTS, ENDPOINT_SECTIONS } from "@/lib/docs/endpoints"
 const sectionEndpointMap: Record<string, string> = {
   auth: "Auth",
   families: "Families",
+  members: "Family Members",
   policies: "Policies",
-  enforcement: "Sync",
+  "compliance-links": "Compliance Links",
+  enforcement: "Enforcement",
+  webhooks: "Webhooks",
+  standards: "Community Standards",
+  reports: "Reports",
 }
 
 interface SidebarSectionProps {
