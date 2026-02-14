@@ -46,6 +46,8 @@ export interface DemoStep {
 export interface DemoScenario {
   /** Unique key for React reconciliation */
   id: string
+  /** Tab label shown in the demo header */
+  label: string
   /** The sequence of steps to play */
   steps: DemoStep[]
 }
@@ -54,6 +56,7 @@ export interface DemoScenario {
 
 const SCENARIO_NETFLIX: DemoScenario = {
   id: "netflix",
+  label: "Netflix",
   steps: [
     // Turn 1: Netflix parental controls
     {
@@ -182,6 +185,7 @@ const SCENARIO_NETFLIX: DemoScenario = {
 
 const SCENARIO_FOUR_NORMS: DemoScenario = {
   id: "four-norms",
+  label: "Four Norms",
   steps: [
     {
       type: "user",
@@ -271,6 +275,7 @@ const SCENARIO_FOUR_NORMS: DemoScenario = {
 
 const SCENARIO_COPPA: DemoScenario = {
   id: "coppa",
+  label: "COPPA 2.0",
   steps: [
     {
       type: "user",

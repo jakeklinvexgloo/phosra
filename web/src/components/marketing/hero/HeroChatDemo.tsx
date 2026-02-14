@@ -29,6 +29,8 @@ interface ToolPill {
 
 export function HeroChatDemo() {
   const ref = useRef<HTMLDivElement>(null)
+  const chatScrollRef = useRef<HTMLDivElement>(null)
+  const chatEndRef = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: false, amount: 0.3 })
 
   // Reduced-motion check
@@ -48,6 +50,7 @@ export function HeroChatDemo() {
   const [showThinking, setShowThinking] = useState(false)
   const [resultCardText, setResultCardText] = useState<string | null>(null)
   const [fading, setFading] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(0)
 
   // Refs for cleanup & scenario cycling
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
@@ -80,6 +83,11 @@ export function HeroChatDemo() {
     timersRef.current.push(id)
     return id
   }, [])
+
+  // Auto-scroll chat pane to bottom when content changes
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages, tools, resultCardText, showThinking])
 
   // Typewriter: incrementally reveal text in a message
   const typewrite = useCallback(
@@ -155,6 +163,7 @@ export function HeroChatDemo() {
       isPlayingRef.current = false
       scenarioIndexRef.current =
         (scenarioIndexRef.current + 1) % DEMO_SCENARIOS.length
+      setActiveIndex(scenarioIndexRef.current)
       resetState()
       // Small pause then restart with next scenario
       addTimer(() => runDemo(), 300)
@@ -276,6 +285,21 @@ export function HeroChatDemo() {
     [typewrite, addTimer]
   )
 
+  // Handle manual tab click
+  const handleTabClick = useCallback(
+    (index: number) => {
+      clearAllTimers()
+      isPlayingRef.current = false
+      scenarioIndexRef.current = index
+      setActiveIndex(index)
+      resetState()
+      // Small delay before starting so reset renders first
+      const id = setTimeout(() => runDemo(), 50)
+      timersRef.current.push(id)
+    },
+    [clearAllTimers, resetState, runDemo]
+  )
+
   // Start/stop based on visibility
   useEffect(() => {
     if (prefersReducedMotion) return
@@ -299,9 +323,9 @@ export function HeroChatDemo() {
   // Reduced-motion: show static final state (first scenario)
   if (prefersReducedMotion) {
     return (
-      <div ref={ref} className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)]">
-        <DemoHeader />
-        <div className="px-4 py-3 space-y-2.5">
+      <div ref={ref} className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)] h-[420px] flex flex-col">
+        <DemoHeader activeIndex={0} onTabClick={() => {}} />
+        <div className="px-4 py-3 space-y-2.5 flex-1 overflow-y-auto">
           <HeroChatBubble role="user" text="Chap is 10. Set up Netflix parental controls." />
           <div className="flex flex-wrap gap-1.5">
             <HeroToolCallPill toolName="quick_setup" status="complete" />
@@ -334,12 +358,18 @@ export function HeroChatDemo() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: fading ? 0 : 1, y: 0 }}
       transition={{ duration: fading ? 0.4 : 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)]"
+      className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)] h-[420px] flex flex-col"
     >
-      <DemoHeader />
+      <DemoHeader activeIndex={activeIndex} onTabClick={handleTabClick} />
 
       {/* Chat messages pane */}
-      <div className="px-4 py-3 space-y-2.5 min-h-[200px]">
+      <div
+        ref={chatScrollRef}
+        className="relative px-4 py-3 space-y-2.5 flex-1 overflow-y-auto scrollbar-hide"
+      >
+        {/* Top fade overlay for clipped messages */}
+        <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-white/[0.04] to-transparent -mt-3 -mx-4 px-4 z-10 pointer-events-none" />
+
         {messages.map((msg, i) => (
           <motion.div
             key={`msg-${i}`}
@@ -383,24 +413,51 @@ export function HeroChatDemo() {
 
         {/* Enforcement result card */}
         {resultCardText && <HeroEnforcementCard text={resultCardText} />}
+
+        {/* Scroll anchor */}
+        <div ref={chatEndRef} />
       </div>
 
       {/* Terminal pane */}
-      <div className="border-t border-white/[0.06]">
+      <div className="border-t border-white/[0.06] max-h-[140px] overflow-hidden">
         <HeroApiLog lines={logLines} />
       </div>
     </motion.div>
   )
 }
 
-/* ── Shared header bar ────────────────────── */
+/* ── Shared header bar with tabs ─────────── */
 
-function DemoHeader() {
+function DemoHeader({
+  activeIndex,
+  onTabClick,
+}: {
+  activeIndex: number
+  onTabClick: (index: number) => void
+}) {
   return (
-    <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06]">
+    <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] shrink-0">
       <img src="/favicon.svg" alt="" className="w-4 h-4" />
       <span className="text-xs font-medium text-white/60">Phosra AI</span>
-      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+
+      {/* Scenario tabs */}
+      <div className="flex items-center gap-0.5 ml-3">
+        {DEMO_SCENARIOS.map((scenario, i) => (
+          <button
+            key={scenario.id}
+            onClick={() => onTabClick(i)}
+            className={`px-2 py-1 text-[10px] font-medium rounded transition-colors ${
+              i === activeIndex
+                ? "text-white/90 bg-white/[0.08]"
+                : "text-white/30 hover:text-white/50"
+            }`}
+          >
+            {scenario.label}
+          </button>
+        ))}
+      </div>
+
+      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shrink-0" />
     </div>
   )
 }
