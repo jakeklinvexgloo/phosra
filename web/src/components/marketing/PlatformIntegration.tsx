@@ -10,16 +10,25 @@ import {
   FloatingElement,
 } from "./shared"
 
-/* ── Step durations (ms) ────────────────── */
-const STEP_DURATIONS = [2500, 2200, 1800, 2200, 2500, 3000, 3000] as const
+/* ── Demo platforms ─────────────────────── */
+const DEMO_SERVICES = [
+  { name: "Netflix", initial: "N", color: "#E50914" },
+  { name: "YouTube", initial: "Y", color: "#FF0000" },
+  { name: "Roblox", initial: "R", color: "#00A2FF" },
+  { name: "TikTok", initial: "T", color: "#00F2EA" },
+  { name: "Discord", initial: "D", color: "#5865F2" },
+]
+
+/* ── Step durations (ms) — 6 steps, ~13s cycle ── */
+const STEP_DURATIONS = [2000, 2000, 1500, 2000, 2500, 3000] as const
 
 /* ── Step pill labels ───────────────────── */
 const STEP_PILLS = [
-  { label: "Initiate", steps: [0] },
+  { label: "Connect", steps: [0] },
   { label: "Verify", steps: [1] },
-  { label: "Authorize", steps: [2, 3] },
-  { label: "Connected", steps: [4] },
-  { label: "Enforce", steps: [5, 6] },
+  { label: "Authorize", steps: [2] },
+  { label: "Connected", steps: [3] },
+  { label: "Enforce", steps: [4, 5] },
 ]
 
 /* ── Helpers ─────────────────────────────── */
@@ -72,6 +81,99 @@ function ShieldIcon() {
   )
 }
 
+/* ── Service Row (inside phone) ──────────── */
+
+function ServiceRow({
+  service,
+  step,
+  index,
+}: {
+  service: (typeof DEMO_SERVICES)[number]
+  step: number
+  index: number
+}) {
+  const staggerDelay = index * 0.12
+
+  // Step 0-2: unconnected
+  if (step < 3) {
+    return (
+      <div className="flex items-center justify-between px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-md bg-white/[0.03] border border-white/[0.05]">
+        <div className="flex items-center gap-1.5">
+          <div
+            className="w-4 h-4 sm:w-5 sm:h-5 rounded flex items-center justify-center"
+            style={{ backgroundColor: "rgba(255,255,255,0.04)" }}
+          >
+            <span className="text-[7px] sm:text-[8px] font-bold text-white/20">
+              {service.initial}
+            </span>
+          </div>
+          <span className="text-[9px] sm:text-[10px] text-white/30">
+            {service.name}
+          </span>
+        </div>
+        <span className="text-[7px] sm:text-[8px] text-white/15">
+          Not linked
+        </span>
+      </div>
+    )
+  }
+
+  const isEnforcing = step === 4
+  const isEnforced = step >= 5
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: staggerDelay }}
+      className={`flex items-center justify-between px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-md transition-colors duration-300 ${
+        isEnforced
+          ? "bg-emerald-500/[0.08] border border-emerald-500/20"
+          : "bg-white/[0.04] border border-white/[0.06]"
+      }`}
+    >
+      <div className="flex items-center gap-1.5">
+        <div
+          className="w-4 h-4 sm:w-5 sm:h-5 rounded flex items-center justify-center transition-all duration-500"
+          style={{ backgroundColor: `${service.color}20` }}
+        >
+          <span className="text-[7px] sm:text-[8px] font-bold text-white/80">
+            {service.initial}
+          </span>
+        </div>
+        <span className="text-[9px] sm:text-[10px] text-white/70 font-medium">
+          {service.name}
+        </span>
+      </div>
+      <span className="flex items-center gap-0.5 text-[7px] sm:text-[8px]">
+        {isEnforced ? (
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: staggerDelay }}
+            className="flex items-center gap-0.5 text-emerald-400 font-medium"
+          >
+            <CheckIcon className="w-2.5 h-2.5" /> Enforced
+          </motion.span>
+        ) : isEnforcing ? (
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: staggerDelay }}
+            className="flex items-center gap-0.5 text-white/40"
+          >
+            <Spinner className="w-2.5 h-2.5 text-brand-green" />
+          </motion.span>
+        ) : (
+          <span className="flex items-center gap-0.5 text-emerald-400">
+            <CheckIcon className="w-2.5 h-2.5" /> Linked
+          </span>
+        )}
+      </span>
+    </motion.div>
+  )
+}
+
 /* ── Phone Mockup ────────────────────────── */
 
 function PhoneMockup({ step }: { step: number }) {
@@ -105,7 +207,7 @@ function PhoneMockup({ step }: { step: number }) {
         {/* App content */}
         <div className="px-3 sm:px-4 pt-1 sm:pt-2 relative h-[calc(100%-60px)] sm:h-[calc(100%-72px)]">
           {/* App header */}
-          <div className="flex items-center gap-1.5 mb-3 sm:mb-4">
+          <div className="flex items-center gap-1.5 mb-2 sm:mb-3">
             <div className="text-brand-green">
               <ShieldIcon />
             </div>
@@ -115,7 +217,7 @@ function PhoneMockup({ step }: { step: number }) {
           </div>
 
           {/* Child card */}
-          <div className="flex items-center gap-2.5 mb-3 sm:mb-4 p-2 sm:p-2.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
+          <div className="flex items-center gap-2.5 mb-2 sm:mb-3 p-2 sm:p-2.5 rounded-lg bg-white/[0.04] border border-white/[0.06]">
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-[10px] sm:text-xs font-bold text-white">
               E
             </div>
@@ -127,73 +229,44 @@ function PhoneMockup({ step }: { step: number }) {
             </div>
           </div>
 
-          {/* Connected Platforms */}
-          <p className="text-[8px] sm:text-[9px] uppercase tracking-wider text-white/25 mb-1.5 sm:mb-2 font-medium">
-            Connected Platforms
+          {/* Platforms label */}
+          <p className="text-[8px] sm:text-[9px] uppercase tracking-wider text-white/25 mb-1 sm:mb-1.5 font-medium">
+            Platforms
           </p>
 
-          <div className="space-y-1 sm:space-y-1.5">
-            {/* NextDNS */}
-            <div className="flex items-center justify-between px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-md bg-white/[0.03] border border-white/[0.05]">
-              <span className="text-[9px] sm:text-[10px] text-white/60">
-                NextDNS
-              </span>
-              <span className="flex items-center gap-0.5 text-[8px] sm:text-[9px] text-emerald-400">
-                <CheckIcon className="w-2.5 h-2.5" /> Verified
-              </span>
-            </div>
-
-            {/* CleanBrowsing */}
-            <div className="flex items-center justify-between px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-md bg-white/[0.03] border border-white/[0.05]">
-              <span className="text-[9px] sm:text-[10px] text-white/60">
-                CleanBrowsing
-              </span>
-              <span className="flex items-center gap-0.5 text-[8px] sm:text-[9px] text-emerald-400">
-                <CheckIcon className="w-2.5 h-2.5" /> Verified
-              </span>
-            </div>
-
-            {/* StreamSafe row — changes with steps */}
-            {step >= 4 ? (
-              <motion.div
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="flex items-center justify-between px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-md bg-emerald-500/[0.08] border border-emerald-500/20"
-              >
-                <span className="text-[9px] sm:text-[10px] text-white/80 font-medium">
-                  StreamSafe
-                </span>
-                <span className="flex items-center gap-0.5 text-[8px] sm:text-[9px] text-emerald-400 font-medium">
-                  <CheckIcon className="w-2.5 h-2.5" /> Connected
-                </span>
-              </motion.div>
-            ) : step === 0 ? (
-              <button className="w-full flex items-center justify-center gap-1.5 px-2 sm:px-2.5 py-2 sm:py-2.5 rounded-md bg-brand-green/10 border border-brand-green/20 text-brand-green text-[9px] sm:text-[10px] font-semibold animate-pulse">
-                Connect StreamSafe
-              </button>
-            ) : null}
+          {/* Dynamic service rows */}
+          <div className="space-y-0.5 sm:space-y-1">
+            {DEMO_SERVICES.map((svc, i) => (
+              <ServiceRow key={svc.name} service={svc} step={step} index={i} />
+            ))}
           </div>
 
-          {/* Status text at step 5-6 */}
+          {/* Connect button at step 0 */}
+          {step === 0 && (
+            <button className="w-full mt-2 sm:mt-2.5 flex items-center justify-center gap-1.5 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-md bg-brand-green/10 border border-brand-green/20 text-brand-green text-[9px] sm:text-[10px] font-semibold animate-pulse">
+              Connect with Phosra
+            </button>
+          )}
+
+          {/* Status text at steps 4-5 */}
+          {step === 4 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-2 sm:mt-2.5 flex items-center gap-1.5 text-[8px] sm:text-[9px] text-white/50"
+            >
+              <Spinner className="w-3 h-3 text-brand-green" />
+              Pushing rules to all platforms...
+            </motion.div>
+          )}
           {step === 5 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="mt-3 sm:mt-4 flex items-center gap-1.5 text-[9px] sm:text-[10px] text-white/50"
+              className="mt-2 sm:mt-2.5 flex items-center gap-1.5 text-[8px] sm:text-[9px] text-emerald-400 font-medium"
             >
-              <Spinner className="w-3 h-3 text-brand-green" />
-              Pushing rules to StreamSafe...
-            </motion.div>
-          )}
-          {step === 6 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-3 sm:mt-4 flex items-center gap-1.5 text-[9px] sm:text-[10px] text-emerald-400 font-medium"
-            >
-              <CheckIcon className="w-3.5 h-3.5" />
-              All rules enforced
+              <CheckIcon className="w-3 h-3" />
+              All rules enforced across 5 platforms
             </motion.div>
           )}
 
@@ -219,13 +292,13 @@ function PhoneMockup({ step }: { step: number }) {
             </p>
 
             <p className="text-[9px] sm:text-[10px] text-white/35 mb-2 sm:mb-3 font-medium">
-              StreamSafe requests access to:
+              Connecting your platforms:
             </p>
 
             <div className="space-y-2 sm:space-y-2.5 mb-4 sm:mb-5 flex-1">
               {[
-                "View profiles",
-                "Manage content restrictions",
+                "View child profiles",
+                "Apply content restrictions",
                 "Push rule updates",
               ].map((perm) => (
                 <div
@@ -261,77 +334,77 @@ function PhoneMockup({ step }: { step: number }) {
   )
 }
 
-/* ── StreamSafe Card (Left) ──────────────── */
+/* ── Service Panel (Left) ──────────────── */
 
-function StreamSafeCard({ step }: { step: number }) {
-  const isConnected = step >= 4
-  const isConnecting = step === 3
-  const isEnforcing = step >= 5
+function ServicePanel({ step }: { step: number }) {
+  const isConnected = step >= 3
+  const isEnforcing = step >= 4
 
   const rules = [
     { label: "Content: PG", delay: 0 },
-    { label: "Screen time: 2hr", delay: 0.2 },
-    { label: "Social: Off", delay: 0.4 },
+    { label: "Screen time: 2hr", delay: 0.15 },
+    { label: "Social: Off", delay: 0.3 },
   ]
 
   return (
     <div
-      className={`w-36 sm:w-40 p-3 sm:p-4 rounded-xl border backdrop-blur-xl transition-all duration-700 ${
+      className={`w-40 sm:w-48 p-3 sm:p-4 rounded-xl border backdrop-blur-xl transition-all duration-700 ${
         isConnected
           ? "bg-emerald-500/[0.06] border-emerald-500/20 shadow-[0_0_30px_-8px_rgba(0,212,126,0.2)]"
           : "bg-white/[0.04] border-white/[0.06]"
       }`}
     >
-      {/* Icon + name */}
-      <div className="flex items-center gap-2 mb-2 sm:mb-3">
-        <div
-          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors duration-500 ${
-            isConnected
-              ? "bg-gradient-to-br from-red-500 to-orange-500"
-              : "bg-white/[0.06]"
-          }`}
-        >
-          <svg
-            className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors duration-500 ${
-              isConnected ? "text-white" : "text-white/30"
-            }`}
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
-          </svg>
-        </div>
-        <div>
-          <p
-            className={`text-[10px] sm:text-xs font-bold transition-colors duration-500 ${
-              isConnected ? "text-white" : "text-white/40"
-            }`}
-          >
-            StreamSafe
-          </p>
-        </div>
+      <p className="text-[8px] sm:text-[9px] uppercase tracking-wider text-white/25 mb-2 sm:mb-3 font-medium">
+        Target Platforms
+      </p>
+
+      <div className="space-y-1.5">
+        {DEMO_SERVICES.map((svc, i) => (
+          <div key={svc.name} className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <div
+                className="w-5 h-5 rounded flex items-center justify-center transition-all duration-500"
+                style={{
+                  backgroundColor: isConnected
+                    ? `${svc.color}20`
+                    : "rgba(255,255,255,0.04)",
+                }}
+              >
+                <span
+                  className={`text-[7px] font-bold transition-colors duration-500 ${
+                    isConnected ? "text-white/80" : "text-white/20"
+                  }`}
+                >
+                  {svc.initial}
+                </span>
+              </div>
+              <span
+                className={`text-[9px] sm:text-[10px] transition-colors duration-500 ${
+                  isConnected ? "text-white/70" : "text-white/25"
+                }`}
+              >
+                {svc.name}
+              </span>
+            </div>
+            {step >= 5 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.12 }}
+              >
+                <CheckIcon className="w-2.5 h-2.5 text-emerald-400" />
+              </motion.div>
+            )}
+          </div>
+        ))}
       </div>
 
-      {/* Status */}
-      {isConnecting ? (
-        <div className="flex items-center gap-1.5 text-[9px] sm:text-[10px] text-white/40">
-          <Spinner className="w-3 h-3 text-brand-green" />
-          Connecting...
-        </div>
-      ) : isConnected ? (
-        <div className="flex items-center gap-1 text-[9px] sm:text-[10px] text-emerald-400 font-medium mb-2">
-          <CheckIcon className="w-3 h-3" />
-          Connected
-        </div>
-      ) : (
-        <p className="text-[9px] sm:text-[10px] text-white/20">
-          Not connected
-        </p>
-      )}
-
-      {/* Enforced rules */}
+      {/* Rules being pushed — shown at step 4+ */}
       {isEnforcing && (
-        <div className="space-y-1 mt-1.5">
+        <div className="mt-3 pt-2 border-t border-white/[0.06] space-y-1">
+          <p className="text-[7px] sm:text-[8px] text-white/25 uppercase tracking-wider mb-1">
+            Rules
+          </p>
           {rules.map((rule) => (
             <motion.div
               key={rule.label}
@@ -353,8 +426,8 @@ function StreamSafeCard({ step }: { step: number }) {
 /* ── Phosra Node (Right) ─────────────────── */
 
 function PhosraNode({ step }: { step: number }) {
-  const isActive = step >= 3
-  const isPulsing = step === 3 || step === 5
+  const isActive = step >= 2
+  const isPulsing = step === 2 || step === 4
 
   return (
     <div className="relative flex flex-col items-center">
@@ -407,7 +480,7 @@ function ConnectionLines({
   side: "left" | "right"
 }) {
   const id = useId()
-  const showParticles = step === 3 || step === 5
+  const showParticles = step === 2 || step === 4
 
   return (
     <svg
@@ -445,7 +518,7 @@ function ConnectionLines({
             stroke={`url(#line-grad-${side}-${id})`}
             strokeWidth={1.2}
             strokeDasharray="4 6"
-            strokeOpacity={step >= 3 ? 0.5 : 0.15}
+            strokeOpacity={step >= 2 ? 0.5 : 0.15}
             className="animate-dash-flow"
             style={{
               animationDelay: `${i * 0.3}s`,
@@ -559,7 +632,11 @@ function StepPills({ activeStep }: { activeStep: number }) {
 
 export function PlatformIntegration() {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(sectionRef, { once: false, amount: 0.3 })
+  const isInView = useInView(sectionRef, {
+    once: false,
+    amount: 0.05,
+    margin: "100px 0px 0px 0px",
+  })
   const [step, setStep] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const stepRef = useRef(0)
@@ -590,7 +667,7 @@ export function PlatformIntegration() {
       const duration = STEP_DURATIONS[currentStep]
 
       timerRef.current = setTimeout(() => {
-        const nextStep = (stepRef.current + 1) % 7
+        const nextStep = (stepRef.current + 1) % 6
         stepRef.current = nextStep
         setStep(nextStep)
         tick()
@@ -615,7 +692,7 @@ export function PlatformIntegration() {
     }
   }, [isInView, prefersReducedMotion])
 
-  // Static state for reduced motion
+  // Static state for reduced motion — show all enforced
   if (prefersReducedMotion) {
     return (
       <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A]">
@@ -642,7 +719,7 @@ export function PlatformIntegration() {
             </p>
           </div>
           <div className="flex items-center justify-center">
-            <PhoneMockup step={4} />
+            <PhoneMockup step={5} />
           </div>
         </div>
       </section>
@@ -697,17 +774,17 @@ export function PlatformIntegration() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Left: StreamSafe card */}
+          {/* Left: Service panel */}
           <AnimatedSection direction="left" delay={0.1}>
             <FloatingElement duration={7} distance={6} delay={0.5}>
               <div className="lg:mr-0">
-                <StreamSafeCard step={step} />
+                <ServicePanel step={step} />
               </div>
             </FloatingElement>
           </AnimatedSection>
 
           {/* Mobile down arrow (above phone) */}
-          <MobileArrow active={step >= 3} />
+          <MobileArrow active={step >= 2} />
 
           {/* Left SVG lines (desktop) */}
           <ConnectionLines step={step} side="left" />
@@ -721,7 +798,7 @@ export function PlatformIntegration() {
           <ConnectionLines step={step} side="right" />
 
           {/* Mobile down arrow (below phone) */}
-          <MobileArrow active={step >= 3} />
+          <MobileArrow active={step >= 2} />
 
           {/* Right: Phosra node */}
           <AnimatedSection direction="right" delay={0.1}>
