@@ -86,10 +86,11 @@ const FOUNDERS = {
 
 const ADVISORS = [
   {
-    name: "Steve & Sara Haggerty",
+    name: "Steve Haggerty",
     role: "Board Member",
+    image: "/team/steve-haggerty.jpg",
     linkedin: "https://www.linkedin.com/in/stephen-dawson-haggerty-7188a161/",
-    bio: "Co-founded Comfy, the workplace platform acquired by Siemens in 2018, where it was deployed across 600+ global offices. Berkeley CS PhD under David Culler with 3,300+ citations and a 2022 ACM Test of Time Award. Currently CEO of Normal Software. Steve advises Phosra on platform architecture, IoT infrastructure, and scaling enterprise deployments.",
+    bio: "Co-founded Comfy, the workplace platform acquired by Siemens in 2018, where it was deployed across 600+ global offices. Berkeley CS PhD under David Culler with 3,300+ citations and a 2022 ACM Test of Time Award. Currently CEO of Normal Software. Advises Phosra on platform architecture, IoT infrastructure, and scaling enterprise deployments.",
     highlights: [
       { metric: "PhD", label: "UC Berkeley Computer Science" },
       { metric: "3.3K+", label: "Academic Citations" },
@@ -408,13 +409,23 @@ export default function AboutPage() {
           {ADVISORS.map((advisor) => (
             <div key={advisor.name} className="plaid-card p-5 sm:p-6 max-w-3xl mx-auto">
               <div className="flex flex-col sm:flex-row gap-5 sm:gap-6">
-                {/* Initials avatar */}
+                {/* Avatar */}
                 <div className="flex-shrink-0 flex justify-center sm:justify-start">
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-accent-teal/20 to-brand-green/20 border-2 border-border flex items-center justify-center">
-                    <span className="text-2xl sm:text-3xl font-display text-foreground/70">
-                      {advisor.name.split(" ").filter(n => n !== "&").map(n => n[0]).join("")}
-                    </span>
-                  </div>
+                  {advisor.image ? (
+                    <Image
+                      src={advisor.image}
+                      alt={advisor.name}
+                      width={112}
+                      height={112}
+                      className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-border"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-accent-teal/20 to-brand-green/20 border-2 border-border flex items-center justify-center">
+                      <span className="text-2xl sm:text-3xl font-display text-foreground/70">
+                        {advisor.name.split(" ").filter(n => n !== "&").map(n => n[0]).join("")}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Content */}
