@@ -635,7 +635,7 @@ export function PlatformIntegration() {
   const isInView = useInView(sectionRef, {
     once: false,
     amount: 0.05,
-    margin: "100px 0px 0px 0px",
+    margin: "0px 0px 200px 0px",
   })
   const [step, setStep] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
@@ -727,7 +727,10 @@ export function PlatformIntegration() {
   }
 
   return (
-    <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A]">
+    <section
+      ref={sectionRef}
+      className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A]"
+    >
       {/* Background textures */}
       <WaveTexture colorStart="#00D47E" colorEnd="#26A8C9" opacity={0.08} />
       <GradientMesh
@@ -769,7 +772,6 @@ export function PlatformIntegration() {
 
         {/* Animation stage */}
         <div
-          ref={sectionRef}
           className="relative flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-0"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
