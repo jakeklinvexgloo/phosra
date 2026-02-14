@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState, useEffect, useId } from "react"
-import { motion, useInView } from "framer-motion"
+import { motion } from "framer-motion"
 import {
   AnimatedSection,
   WaveTexture,
@@ -632,11 +632,7 @@ function StepPills({ activeStep }: { activeStep: number }) {
 
 export function PlatformIntegration() {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(sectionRef, {
-    once: false,
-    amount: 0.05,
-    margin: "0px 0px 200px 0px",
-  })
+  const [isInView, setIsInView] = useState(false)
   const [step, setStep] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const stepRef = useRef(0)
@@ -650,6 +646,19 @@ export function PlatformIntegration() {
         window.matchMedia("(prefers-reduced-motion: reduce)").matches
       )
     }
+  }, [])
+
+  // Manual IntersectionObserver — fires early via 200px bottom margin
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.01, rootMargin: "0px 0px 200px 0px" }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [])
 
   // Timer-driven step machine — uses ref to avoid stale closure / double-fire
