@@ -429,7 +429,7 @@ function StepConnectVisual({ reduced }: { reduced: boolean }) {
                   </div>
 
                   {/* Status */}
-                  <div className="flex items-center gap-2 shrink-0 min-w-[100px]">
+                  <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0 sm:min-w-[100px]">
                     <span className="text-xs text-white/50">{platform.name}</span>
                     <motion.div
                       initial={reduced ? false : { scale: 0 }}

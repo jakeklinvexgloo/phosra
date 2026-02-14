@@ -190,7 +190,7 @@ function HighlightedCode({
   let charsSoFar = 0
 
   return (
-    <code className="block px-5 py-5 text-[11px] sm:text-[13px] leading-6 font-mono">
+    <code className="block px-3 sm:px-5 py-4 sm:py-5 text-[10px] sm:text-[13px] leading-5 sm:leading-6 font-mono">
       {lines.map((line, i) => {
         const lineStart = charsSoFar
         charsSoFar += line.length + 1 // +1 for newline
@@ -213,11 +213,11 @@ function HighlightedCode({
             key={i}
             className={
               isEnforcementLine
-                ? "bg-brand-green/[0.06] -mx-5 px-5 border-l-2 border-brand-green"
+                ? "bg-brand-green/[0.06] -mx-3 sm:-mx-5 px-3 sm:px-5 border-l-2 border-brand-green"
                 : ""
             }
           >
-            <span className="inline-block w-8 text-right text-white/20 select-none mr-4">
+            <span className="inline-block w-6 sm:w-8 text-right text-white/20 select-none mr-2 sm:mr-4">
               {i + 1}
             </span>
             {highlightLine(displayLine, lang)}
@@ -449,23 +449,23 @@ export function DevSection() {
 
               <div className="relative bg-[#0D1117] rounded-xl overflow-hidden border border-white/10 shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)]">
                 {/* Terminal header */}
-                <div className="flex items-center gap-3 px-5 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
+                <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-3 sm:py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
                   <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-                    <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-                    <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FF5F57]" />
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FEBC2E]" />
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#28C840]" />
                   </div>
-                  <span className="text-[11px] text-white/30 font-mono ml-2">Terminal</span>
-                  <span className="ml-auto text-[11px] text-white/30 font-mono">/v1/setup/quick</span>
+                  <span className="text-[10px] sm:text-[11px] text-white/30 font-mono ml-1 sm:ml-2">Terminal</span>
+                  <span className="ml-auto text-[10px] sm:text-[11px] text-white/30 font-mono hidden sm:inline">/v1/setup/quick</span>
                 </div>
 
                 {/* Language tabs + Response tab */}
-                <div className="flex items-center gap-1 px-5 py-2 border-b border-white/[0.04] bg-white/[0.01]">
+                <div className="flex items-center gap-0.5 sm:gap-1 px-3 sm:px-5 py-2 border-b border-white/[0.04] bg-white/[0.01] overflow-x-auto no-scrollbar">
                   {LANG_TABS.map((t) => (
                     <button
                       key={t.key}
                       onClick={() => handleLangTab(t.key)}
-                      className={`px-3 py-1 text-[11px] font-mono rounded transition-colors ${
+                      className={`px-2 sm:px-3 py-1 text-[10px] sm:text-[11px] font-mono rounded transition-colors shrink-0 ${
                         lang === t.key && !showResponse
                           ? "text-white bg-white/10"
                           : "text-white/30 hover:text-white/60"
@@ -474,10 +474,10 @@ export function DevSection() {
                       {t.label}
                     </button>
                   ))}
-                  <div className="w-px h-4 bg-white/[0.08] mx-1" />
+                  <div className="w-px h-4 bg-white/[0.08] mx-0.5 sm:mx-1 shrink-0" />
                   <button
                     onClick={handleResponseTab}
-                    className={`px-3 py-1 text-[11px] font-mono rounded transition-colors ${
+                    className={`px-2 sm:px-3 py-1 text-[10px] sm:text-[11px] font-mono rounded transition-colors shrink-0 ${
                       showResponse
                         ? "text-brand-green bg-brand-green/10"
                         : "text-white/30 hover:text-white/60"
@@ -489,7 +489,7 @@ export function DevSection() {
                   {/* Copy button */}
                   <button
                     onClick={handleCopy}
-                    className="ml-auto flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-mono rounded border border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white/70 hover:border-white/15 transition-all"
+                    className="ml-auto flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 text-[9px] sm:text-[10px] font-mono rounded border border-white/[0.08] bg-white/[0.03] text-white/40 hover:text-white/70 hover:border-white/15 transition-all shrink-0"
                   >
                     {copied ? (
                       <>

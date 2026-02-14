@@ -13,7 +13,7 @@ import { Footer } from "@/components/marketing/Footer"
 
 export default function MarketingPage() {
   return (
-    <div className="min-h-screen scroll-smooth">
+    <div className="min-h-screen scroll-smooth overflow-x-hidden">
       <Navbar />
       <Hero />
       <Compliance />

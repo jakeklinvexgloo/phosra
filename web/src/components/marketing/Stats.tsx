@@ -3,12 +3,15 @@
 import { useEffect, useRef, useState } from "react"
 import { AnimatedSection, GradientMesh, PhosraBurst } from "./shared"
 import { PLATFORM_STATS } from "@/lib/platforms"
+import { getRegistryStats } from "@/lib/compliance"
+
+const complianceStats = getRegistryStats()
 
 const STATS = [
-  { value: 45, suffix: "", label: "Rule categories", description: "Covering every aspect of child digital safety" },
+  { value: complianceStats.totalCategories, suffix: "", label: "Rule categories", description: "Covering every aspect of child digital safety" },
   { value: PLATFORM_STATS.total, suffix: "+", label: "Platform integrations", description: "YouTube, TikTok, Roblox, and more \u2014 all connected" },
   { value: 5, suffix: "", label: "Rating systems", description: "MPAA, TV, ESRB, PEGI, CSM \u2014 mapped automatically" },
-  { value: 50, suffix: "+", label: "Compliance laws", description: "KOSA, COPPA 2.0, EU DSA, and more \u2014 built in" },
+  { value: complianceStats.totalLaws, suffix: "+", label: "Compliance laws", description: "KOSA, COPPA 2.0, EU DSA, and more \u2014 built in" },
 ]
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
@@ -83,19 +86,19 @@ export function Stats() {
           </p>
         </AnimatedSection>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-0">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-0">
           {STATS.map((stat, i) => (
             <AnimatedSection key={stat.label} delay={i * 0.1}>
-              <div className={`text-center py-6 sm:py-0 ${
+              <div className={`text-center py-4 sm:py-0 ${
                 i < STATS.length - 1
                   ? "lg:border-r lg:border-white/[0.08]"
                   : ""
               }`}>
-                <div className="font-display text-5xl sm:text-6xl lg:text-6xl xl:text-7xl bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent mb-3">
+                <div className="font-display text-4xl sm:text-6xl lg:text-6xl xl:text-7xl bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent mb-2 sm:mb-3">
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-sm font-semibold text-white mb-1.5">{stat.label}</div>
-                <p className="text-xs text-white/40 max-w-[180px] mx-auto">{stat.description}</p>
+                <div className="text-xs sm:text-sm font-semibold text-white mb-1 sm:mb-1.5">{stat.label}</div>
+                <p className="text-[10px] sm:text-xs text-white/40 max-w-[160px] sm:max-w-[180px] mx-auto leading-tight">{stat.description}</p>
               </div>
             </AnimatedSection>
           ))}

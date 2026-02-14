@@ -76,7 +76,7 @@ export function CTASection() {
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link
                     href="/login"
-                    className="inline-flex items-center justify-center px-8 py-3.5 bg-brand-green text-foreground text-sm font-semibold rounded-lg transition-all hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)]"
+                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 bg-brand-green text-foreground text-sm font-semibold rounded-lg transition-all hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)]"
                   >
                     Create Free Account
                     <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

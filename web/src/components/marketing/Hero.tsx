@@ -42,7 +42,7 @@ export function Hero() {
 
             {/* Headline with serif display + gradient */}
             <AnimatedSection delay={0.1}>
-              <h1 className="font-display text-5xl sm:text-6xl lg:text-[56px] xl:text-[72px] text-white leading-[1.05] mb-6 tracking-tight">
+              <h1 className="font-display text-[40px] sm:text-6xl lg:text-[56px] xl:text-[72px] text-white leading-[1.05] mb-6 tracking-tight">
                 Define once,{" "}
                 <span className="bg-gradient-to-r from-[#00D47E] to-[#26A8C9] bg-clip-text text-transparent">
                   protect everywhere
@@ -57,16 +57,16 @@ export function Hero() {
             </AnimatedSection>
 
             <AnimatedSection delay={0.3}>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-3 sm:gap-4">
                 <Link
                   href="/login"
-                  className="inline-flex items-center px-8 py-4 bg-brand-green text-foreground text-sm font-semibold rounded-sm hover:opacity-90 transition hover:shadow-[0_0_30px_-6px_rgba(0,212,126,0.4)]"
+                  className="inline-flex items-center px-6 sm:px-8 py-3.5 sm:py-4 bg-brand-green text-foreground text-sm font-semibold rounded-sm hover:opacity-90 transition hover:shadow-[0_0_30px_-6px_rgba(0,212,126,0.4)]"
                 >
                   Get Started Free
                 </Link>
                 <Link
                   href="/docs"
-                  className="inline-flex items-center px-8 py-4 border border-white/20 text-white text-sm font-semibold rounded-sm hover:bg-white/5 hover:border-white/30 transition"
+                  className="inline-flex items-center px-6 sm:px-8 py-3.5 sm:py-4 border border-white/20 text-white text-sm font-semibold rounded-sm hover:bg-white/5 hover:border-white/30 transition"
                 >
                   Read the Docs
                 </Link>
