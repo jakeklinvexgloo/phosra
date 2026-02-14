@@ -326,9 +326,9 @@ export function HeroChatDemo() {
   // Reduced-motion: show static final state (first scenario)
   if (prefersReducedMotion) {
     return (
-      <div ref={ref} className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)] h-[420px] flex flex-col">
+      <div ref={ref} className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)] flex flex-col">
         <DemoHeader activeIndex={0} onTabClick={() => {}} />
-        <div className="px-4 py-3 space-y-2.5 flex-1 overflow-y-auto">
+        <div className="px-4 py-3 space-y-2.5">
           <HeroChatBubble role="user" text="Chap is 10. Set up Netflix parental controls." />
           <div className="flex flex-wrap gap-1.5">
             <HeroToolCallPill toolName="quick_setup" status="complete" />
@@ -359,72 +359,75 @@ export function HeroChatDemo() {
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: fading ? 0 : 1, y: 0 }}
-      transition={{ duration: fading ? 0.4 : 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)] h-[420px] flex flex-col"
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      className="relative bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl overflow-hidden max-w-md mx-auto lg:ml-auto shadow-[0_0_60px_-12px_rgba(0,212,126,0.15)] flex flex-col"
     >
       <DemoHeader activeIndex={activeIndex} onTabClick={handleTabClick} />
 
-      {/* Chat messages pane */}
-      <div
-        ref={chatScrollRef}
-        className="relative px-4 py-3 space-y-2.5 flex-1 overflow-y-auto scrollbar-hide"
+      {/* Inner content — fades between scenarios while container stays visible */}
+      <motion.div
+        animate={{ opacity: fading ? 0 : 1 }}
+        transition={{ duration: fading ? 0.4 : 0.3 }}
       >
-        {/* Top fade overlay for clipped messages */}
-        <div className="sticky top-0 left-0 right-0 h-4 bg-gradient-to-b from-white/[0.04] to-transparent -mt-3 -mx-4 px-4 z-10 pointer-events-none" />
-
-        {messages.map((msg, i) => (
-          <motion.div
-            key={`msg-${i}`}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            <HeroChatBubble
-              role={msg.role}
-              text={msg.displayText}
-              isStreaming={!msg.complete}
-            />
-          </motion.div>
-        ))}
-
-        {/* Thinking dots */}
-        {showThinking && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-1 py-1"
-          >
-            <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:0ms]" />
-            <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:150ms]" />
-            <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:300ms]" />
-          </motion.div>
-        )}
-
-        {/* Tool call pills */}
-        {tools.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {tools.map((t) => (
-              <HeroToolCallPill
-                key={t.key}
-                toolName={t.name}
-                status={t.status}
+        {/* Chat messages pane */}
+        <div
+          ref={chatScrollRef}
+          className="px-4 py-3 space-y-2.5"
+        >
+          {messages.map((msg, i) => (
+            <motion.div
+              key={`msg-${i}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <HeroChatBubble
+                role={msg.role}
+                text={msg.displayText}
+                isStreaming={!msg.complete}
               />
-            ))}
-          </div>
-        )}
+            </motion.div>
+          ))}
 
-        {/* Enforcement result card */}
-        {resultCardText && <HeroEnforcementCard text={resultCardText} />}
+          {/* Thinking dots */}
+          {showThinking && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex items-center gap-1 py-1"
+            >
+              <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:0ms]" />
+              <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:150ms]" />
+              <span className="w-1.5 h-1.5 bg-white/30 rounded-full animate-bounce [animation-delay:300ms]" />
+            </motion.div>
+          )}
 
-        {/* Scroll anchor */}
-        <div ref={chatEndRef} />
-      </div>
+          {/* Tool call pills */}
+          {tools.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {tools.map((t) => (
+                <HeroToolCallPill
+                  key={t.key}
+                  toolName={t.name}
+                  status={t.status}
+                />
+              ))}
+            </div>
+          )}
 
-      {/* Terminal pane */}
-      <div className="border-t border-white/[0.06] max-h-[140px] overflow-hidden">
-        <HeroApiLog lines={logLines} />
-      </div>
+          {/* Enforcement result card */}
+          {resultCardText && <HeroEnforcementCard text={resultCardText} />}
+
+          {/* Scroll anchor */}
+          <div ref={chatEndRef} />
+        </div>
+
+        {/* Terminal pane */}
+        <div className="border-t border-white/[0.06]">
+          <HeroApiLog lines={logLines} />
+        </div>
+      </motion.div>
     </motion.div>
   )
 }
