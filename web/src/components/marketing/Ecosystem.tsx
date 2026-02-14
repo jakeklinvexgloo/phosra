@@ -102,13 +102,13 @@ export function Ecosystem() {
             <LogoMarquee
               items={MARQUEE_SOURCES}
               direction="left"
-              speed={50}
+              speed={70}
               fallbackHex="10B981"
             />
             <LogoMarquee
               items={MARQUEE_TARGETS}
               direction="right"
-              speed={55}
+              speed={75}
               fallbackHex="0D9488"
               className="hidden sm:block"
             />
@@ -135,29 +135,6 @@ export function Ecosystem() {
           <CategoryGrid categories={ENFORCEMENT_TARGETS} marqueeTargets={MARQUEE_TARGETS} />
         </div>
 
-        {/* ── Bottom Stats Bar ────────────────────────────────────── */}
-        <AnimatedSection direction="up" delay={0.2}>
-          <div className="mt-12 sm:mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
-            {[
-              { value: TOTAL_COUNT, suffix: "+", label: "Total integrations" },
-              { value: CATEGORY_COUNT, suffix: "", label: "Platform categories" },
-              { value: 50, suffix: "+", label: "Compliance laws" },
-              { value: 45, suffix: "", label: "Rule categories" },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="text-center p-4 bg-white border border-border rounded-sm shadow-plaid-card border-l-[3px] border-l-brand-green/30"
-              >
-                <div className="text-xl sm:text-2xl font-bold text-foreground">
-                  <Counter value={stat.value} suffix={stat.suffix} />
-                </div>
-                <div className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wider font-medium">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </AnimatedSection>
       </div>
     </section>
   )

@@ -29,11 +29,11 @@ export function JurisdictionSummaryRow() {
       {badges.map((badge) => (
         <div
           key={badge.label}
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/60 border border-border text-sm"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-sm"
         >
           <span aria-hidden>{badge.flag}</span>
-          <span className="font-semibold text-foreground tabular-nums">{badge.count}</span>
-          <span className="text-muted-foreground text-xs">{badge.label}</span>
+          <span className="font-semibold text-white tabular-nums">{badge.count}</span>
+          <span className="text-white/40 text-xs">{badge.label}</span>
         </div>
       ))}
     </div>

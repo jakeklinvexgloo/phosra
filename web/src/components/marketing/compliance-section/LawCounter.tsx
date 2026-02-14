@@ -38,11 +38,11 @@ function CounterItem({ target, suffix = "", label }: CounterItemProps) {
 
   return (
     <div ref={ref} className="text-center">
-      <div className="text-3xl sm:text-4xl font-display text-brand-green">
+      <div className="text-3xl sm:text-4xl font-display bg-gradient-to-b from-brand-green to-accent-teal bg-clip-text text-transparent">
         {count}
         {suffix}
       </div>
-      <div className="text-xs text-muted-foreground mt-1">{label}</div>
+      <div className="text-xs text-white/40 mt-1">{label}</div>
     </div>
   )
 }

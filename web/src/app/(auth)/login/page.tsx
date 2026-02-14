@@ -39,8 +39,19 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel — dark branded panel */}
-      <div className="hidden lg:flex w-[40%] bg-[#111111] flex-col justify-center px-8 xl:px-16">
-        <div className="max-w-md">
+      <div className="hidden lg:flex w-[40%] bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A] flex-col justify-center px-8 xl:px-16 relative overflow-hidden">
+        {/* Ambient background layers */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            background: `
+              radial-gradient(ellipse 60% 50% at 20% 80%, rgba(0,212,126,0.08) 0%, transparent 55%),
+              radial-gradient(ellipse 50% 40% at 80% 20%, rgba(38,168,201,0.06) 0%, transparent 50%)
+            `,
+          }}
+        />
+        <div className="relative z-10 max-w-md">
           <div className="flex items-center mb-12">
             <img src="/logo-white.svg" alt="Phosra" className="h-8" />
           </div>

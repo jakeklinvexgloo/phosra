@@ -3,7 +3,7 @@
 import { useMemo } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { AnimatedSection, WaveTexture } from "./shared"
+import { AnimatedSection, WaveTexture, GradientMesh } from "./shared"
 import { JurisdictionSummaryRow } from "./compliance-section/JurisdictionSummaryRow"
 import { HighlightLawCard } from "./compliance-section/HighlightLawCard"
 import { LawCounter } from "./compliance-section/LawCounter"
@@ -26,17 +26,21 @@ export function Compliance() {
   return (
     <section
       id="compliance"
-      className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-b from-white to-[#FAFAFA]"
+      className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A]"
     >
-      <WaveTexture colorStart="#00D47E" colorEnd="#7B5CB8" opacity={0.02} />
+      <WaveTexture colorStart="#00D47E" colorEnd="#7B5CB8" opacity={0.08} />
+      <GradientMesh
+        colors={["#00D47E", "#26A8C9", "#7B5CB8", "#0D1B2A"]}
+        className="opacity-20"
+      />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         {/* Header */}
         <AnimatedSection className="text-center mb-10 sm:mb-14">
-          <h2 className="font-display text-4xl sm:text-5xl text-foreground leading-tight mb-5">
+          <h2 className="font-display text-4xl sm:text-5xl text-white leading-tight mb-5">
             Built for the laws that protect children
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
+          <p className="text-white/50 text-lg max-w-2xl mx-auto mb-8">
             Phosra maps every rule category to specific legislative
             requirements across 25+ jurisdictions worldwide.
           </p>
@@ -65,7 +69,7 @@ export function Compliance() {
         <AnimatedSection delay={0.2} className="text-center">
           <Link
             href="/compliance"
-            className="inline-flex items-center gap-2 text-brand-green font-medium hover:gap-3 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-green text-foreground text-sm font-semibold rounded-lg transition-all hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)]"
           >
             See all {stats.totalLaws}+ laws in the Compliance Hub
             <ArrowRight className="w-4 h-4" />
