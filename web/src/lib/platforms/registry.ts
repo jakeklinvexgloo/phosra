@@ -217,6 +217,7 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   // ─── Targets: Network & DNS (10) ───
   p("nextdns", "NextDNS", "network_dns", "target", "live", null, null, { marquee: true, dbPlatformId: "nextdns" }),
   p("cleanbrowsing", "CleanBrowsing", "network_dns", "target", "live", null, null, { marquee: true, dbPlatformId: "cleanbrowsing" }),
+  p("controld", "Control D", "network_dns", "target", "live", null, null, { marquee: true, dbPlatformId: "controld" }),
   p("opendns", "OpenDNS", "network_dns", "target", "planned"),
   p("cloudflare_family", "Cloudflare Family", "network_dns", "target", "planned", "siCloudflare", "F38020"),
   p("adguard_dns", "AdGuard DNS", "network_dns", "target", "planned", "siAdguard", "68BC71"),

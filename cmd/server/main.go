@@ -20,6 +20,7 @@ import (
 	"github.com/guardiangate/api/internal/provider/android"
 	"github.com/guardiangate/api/internal/provider/apple"
 	"github.com/guardiangate/api/internal/provider/cleanbrowsing"
+	"github.com/guardiangate/api/internal/provider/controld"
 	"github.com/guardiangate/api/internal/provider/microsoft"
 	"github.com/guardiangate/api/internal/provider/nextdns"
 	"github.com/guardiangate/api/internal/provider/stubs"
@@ -92,6 +93,7 @@ func main() {
 	registry := provider.NewRegistry()
 	registry.Register(nextdns.New())
 	registry.Register(cleanbrowsing.New())
+	registry.Register(controld.New())
 	registry.Register(android.New(cfg.MicrosoftClientID, cfg.MicrosoftClientSecret))
 	registry.Register(microsoft.New(cfg.MicrosoftClientID, cfg.MicrosoftClientSecret))
 	registry.Register(apple.New())
