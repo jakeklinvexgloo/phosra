@@ -2,9 +2,9 @@
 
 import Link from "next/link"
 import { AnimatedSection, WaveTexture, GradientMesh, PhosraBurst } from "./shared"
-import { getStandardsStats } from "@/lib/standards"
+import { getMovementsStats } from "@/lib/movements"
 
-const { totalAdoptions } = getStandardsStats()
+const { totalAdoptions } = getMovementsStats()
 
 const TRUST_BADGES = [
   { icon: "🔒", label: "AES-256 Encrypted" },

@@ -297,17 +297,28 @@ func (s *StubAdapter) RegisterWebhook(_ context.Context, _ provider.AuthConfig, 
 	return fmt.Errorf("%s does not support webhooks", s.info.Name)
 }
 
+// allCapabilities is the full set of 18 capabilities. With the composite
+// enforcement engine catching overflow rules, every stub can declare full
+// support — native rules go to the stub adapter and overflow rules route to
+// the appropriate Phosra service.
+var allCapabilities = []provider.Capability{
+	provider.CapContentRating, provider.CapTimeLimit,
+	provider.CapScheduledHours, provider.CapPurchaseControl,
+	provider.CapWebFiltering, provider.CapSafeSearch,
+	provider.CapAppControl, provider.CapSocialControl,
+	provider.CapLocationTracking, provider.CapActivityMonitor,
+	provider.CapCustomBlocklist, provider.CapCustomAllowlist,
+	provider.CapPrivacyControl, provider.CapAlgorithmicSafety,
+	provider.CapNotificationControl, provider.CapAdDataControl,
+	provider.CapAgeVerification, provider.CapComplianceReporting,
+}
+
 // Factory functions for each stub provider
 
 func NewNetflix() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "netflix", Name: "Netflix", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Netflix streaming parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapTimeLimit,
-			provider.CapAlgorithmicSafety, provider.CapPrivacyControl,
-			provider.CapAdDataControl, provider.CapAgeVerification,
-			provider.CapNotificationControl,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open Netflix and go to Account > Profiles & Parental Controls",
 			"2. Select the child's profile",
@@ -321,12 +332,7 @@ func NewNetflix() *StubAdapter {
 func NewDisneyPlus() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "disney_plus", Name: "Disney+", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Disney+ parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapTimeLimit,
-			provider.CapAlgorithmicSafety, provider.CapPrivacyControl,
-			provider.CapAdDataControl, provider.CapAgeVerification,
-			provider.CapNotificationControl,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open Disney+ and go to your profile > Edit Profiles",
 			"2. Select the child's profile",
@@ -340,11 +346,7 @@ func NewDisneyPlus() *StubAdapter {
 func NewPrimeVideo() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "prime_video", Name: "Amazon Prime Video", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Prime Video parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapPurchaseControl,
-			provider.CapAlgorithmicSafety, provider.CapPrivacyControl,
-			provider.CapAdDataControl, provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open Prime Video > Settings > Parental Controls",
 			"2. Set a PIN for purchases and restricted content",
@@ -357,13 +359,7 @@ func NewPrimeVideo() *StubAdapter {
 func NewYouTube() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "youtube", Name: "YouTube / YouTube Kids", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "YouTube content controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapSafeSearch, provider.CapTimeLimit,
-			provider.CapAlgorithmicSafety, provider.CapSocialControl,
-			provider.CapPrivacyControl, provider.CapAdDataControl,
-			provider.CapAgeVerification, provider.CapNotificationControl,
-			provider.CapComplianceReporting,
-		},
+		allCapabilities,
 		[]string{
 			"1. Go to YouTube Settings > General > Restricted Mode and enable it",
 			"2. For children under 13, use YouTube Kids instead",
@@ -377,11 +373,7 @@ func NewYouTube() *StubAdapter {
 func NewHulu() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "hulu", Name: "Hulu", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Hulu parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapAlgorithmicSafety,
-			provider.CapPrivacyControl, provider.CapAdDataControl,
-			provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Go to Hulu Account > Profiles > Kids Profile",
 			"2. Enable Kids Mode for the child's profile",
@@ -393,11 +385,7 @@ func NewHulu() *StubAdapter {
 func NewMax() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "max", Name: "Max (HBO)", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Max parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapAlgorithmicSafety,
-			provider.CapPrivacyControl, provider.CapAdDataControl,
-			provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open Max > Profile > Edit > Parental Controls",
 			"2. Create a Kids profile for the child",
@@ -410,13 +398,7 @@ func NewMax() *StubAdapter {
 func NewXbox() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "xbox", Name: "Xbox", Category: domain.PlatformCategoryGaming, Tier: domain.ComplianceLevelPending, Description: "Xbox parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapTimeLimit,
-			provider.CapScheduledHours, provider.CapPurchaseControl,
-			provider.CapSocialControl, provider.CapActivityMonitor,
-			provider.CapPrivacyControl, provider.CapNotificationControl,
-			provider.CapAgeVerification, provider.CapComplianceReporting,
-		},
+		allCapabilities,
 		[]string{
 			"1. Go to Xbox Settings > Account > Family settings",
 			"2. Add the child's Microsoft account to your family group",
@@ -431,12 +413,7 @@ func NewXbox() *StubAdapter {
 func NewPlayStation() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "playstation", Name: "PlayStation", Category: domain.PlatformCategoryGaming, Tier: domain.ComplianceLevelPending, Description: "PlayStation parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapTimeLimit,
-			provider.CapPurchaseControl, provider.CapSocialControl,
-			provider.CapActivityMonitor, provider.CapPrivacyControl,
-			provider.CapNotificationControl, provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Go to PS Settings > Family Management > Parental Controls",
 			"2. Create a child account under your family manager account",
@@ -451,12 +428,7 @@ func NewPlayStation() *StubAdapter {
 func NewNintendo() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "nintendo", Name: "Nintendo", Category: domain.PlatformCategoryGaming, Tier: domain.ComplianceLevelPending, Description: "Nintendo Switch parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapTimeLimit,
-			provider.CapSocialControl, provider.CapActivityMonitor,
-			provider.CapPrivacyControl, provider.CapNotificationControl,
-			provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Download the Nintendo Switch Parental Controls app on your phone",
 			"2. Link the app to your child's Nintendo Switch console",
@@ -471,10 +443,7 @@ func NewNintendo() *StubAdapter {
 func NewRoku() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "roku", Name: "Roku", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Roku device parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapPrivacyControl,
-			provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Go to Roku Settings > Parental controls",
 			"2. Enable parental controls and set a PIN",
@@ -487,11 +456,7 @@ func NewRoku() *StubAdapter {
 func NewParamountPlus() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "paramount_plus", Name: "Paramount+", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Paramount+ streaming parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapAlgorithmicSafety,
-			provider.CapPrivacyControl, provider.CapAdDataControl,
-			provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open Paramount+ and go to Settings > Parental Controls",
 			"2. Enable the Kids profile for the child",
@@ -504,11 +469,7 @@ func NewParamountPlus() *StubAdapter {
 func NewYouTubeTV() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "youtube_tv", Name: "YouTube TV", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "YouTube TV live streaming parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapTimeLimit,
-			provider.CapAlgorithmicSafety, provider.CapPrivacyControl,
-			provider.CapAdDataControl, provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open YouTube TV and go to Settings > Filter",
 			"2. Enable 'Filter' to hide content rated TV-MA and R",
@@ -521,11 +482,7 @@ func NewYouTubeTV() *StubAdapter {
 func NewPeacock() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "peacock", Name: "Peacock", Category: domain.PlatformCategoryStreaming, Tier: domain.ComplianceLevelPending, Description: "Peacock streaming parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapAlgorithmicSafety,
-			provider.CapPrivacyControl, provider.CapAdDataControl,
-			provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open Peacock and go to Account > Parental Controls",
 			"2. Create a Kids profile for the child",
@@ -538,14 +495,7 @@ func NewPeacock() *StubAdapter {
 func NewFireTablet() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "fire_tablet", Name: "Amazon Fire Tablet", Category: domain.PlatformCategoryDevice, Tier: domain.ComplianceLevelPending, Description: "Amazon Fire Tablet Kids parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapTimeLimit,
-			provider.CapScheduledHours, provider.CapPurchaseControl,
-			provider.CapWebFiltering, provider.CapSafeSearch,
-			provider.CapSocialControl, provider.CapLocationTracking,
-			provider.CapActivityMonitor, provider.CapPrivacyControl,
-			provider.CapNotificationControl, provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open Settings > Parental Controls on the Fire Tablet",
 			"2. Set up Amazon Kids+ profile with age-appropriate content",
@@ -560,11 +510,7 @@ func NewFireTablet() *StubAdapter {
 func NewAppleWatch() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "apple_watch", Name: "Apple Watch", Category: domain.PlatformCategoryDevice, Tier: domain.ComplianceLevelPending, Description: "Apple Watch parental controls via Family Setup", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapTimeLimit, provider.CapScheduledHours,
-			provider.CapLocationTracking, provider.CapNotificationControl,
-			provider.CapActivityMonitor, provider.CapPrivacyControl,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open the Watch app on the parent's iPhone",
 			"2. Go to My Watch > Family > Set Up Apple Watch for a Family Member",
@@ -579,11 +525,7 @@ func NewAppleWatch() *StubAdapter {
 func NewFireTV() *StubAdapter {
 	return newStub(
 		provider.PlatformInfo{ID: "fire_tv", Name: "Amazon Fire TV Stick", Category: domain.PlatformCategoryDevice, Tier: domain.ComplianceLevelPending, Description: "Amazon Fire TV parental controls", AuthType: "manual"},
-		[]provider.Capability{
-			provider.CapContentRating, provider.CapTimeLimit,
-			provider.CapPurchaseControl, provider.CapPrivacyControl,
-			provider.CapAgeVerification,
-		},
+		allCapabilities,
 		[]string{
 			"1. Open Settings > Preferences > Parental Controls on Fire TV",
 			"2. Enable parental controls and set a PIN",

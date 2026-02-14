@@ -154,26 +154,23 @@
   scrollbar-width: none;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Scrollbar: thin on Firefox, native auto-hiding overlay on WebKit/macOS */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.4);
+
+/* Offset scroll targets so fixed header doesn't clip section headings */
+.docs-three-col section[id],
+.docs-three-col div[id] {
+  scroll-margin-top: 80px;
 }
 
 /* Three-column docs layout (Stripe/Plaid style) */
 .docs-three-col {
   display: flex;
   gap: 1.5rem;
-  align-items: flex-start;
+  /* align-items defaults to stretch so sidebar wrapper gets full content height */
 }
 @media (max-width: 1023px) {
   .docs-three-col {

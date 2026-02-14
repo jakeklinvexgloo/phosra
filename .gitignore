@@ -15,6 +15,7 @@ web/out/
 
 # Go binaries
 /bin/
+/tmp/
 *.exe
 
 # IDE

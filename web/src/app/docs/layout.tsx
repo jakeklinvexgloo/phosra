@@ -9,7 +9,7 @@ export default function PublicDocsLayout({ children }: { children: React.ReactNo
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background">
       <PublicPageHeader />
 
       {/* Content area below fixed header */}
@@ -26,7 +26,7 @@ export default function PublicDocsLayout({ children }: { children: React.ReactNo
 
           <div className="docs-three-col">
             {/* Left sidebar — hidden on mobile unless toggled */}
-            <div className={`${sidebarOpen ? "block" : "hidden"} lg:block`}>
+            <div className={`${sidebarOpen ? "block" : "hidden"} lg:block lg:self-stretch`}>
               <DocsSidebar />
             </div>
             {/* Center content + Right code panel */}

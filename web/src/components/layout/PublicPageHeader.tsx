@@ -10,11 +10,11 @@ import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 const NAV_LINKS = [
   { href: "/docs", label: "Docs" },
-  { href: "/platforms", label: "Platforms" },
+  { href: "/parental-controls", label: "Parental Controls" },
+  { href: "/technology-services", label: "Services" },
   { href: "/compliance", label: "Compliance" },
-  { href: "/standards", label: "Standards" },
+  { href: "/movements", label: "Movements" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/playground", label: "Playground" },
 ]
 
 interface PublicPageHeaderProps {

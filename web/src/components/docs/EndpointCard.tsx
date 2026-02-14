@@ -1,5 +1,6 @@
 "use client"
 
+import { Link2 } from "lucide-react"
 import { MethodBadge } from "./MethodBadge"
 import { CodePanel } from "./CodePanel"
 import { ParamTable, type FieldDef } from "./ParamTable"
@@ -20,13 +21,23 @@ export interface EndpointDef {
 
 export function EndpointCard({ endpoint }: { endpoint: EndpointDef }) {
   return (
-    <div id={endpoint.id} className="py-8 border-b border-border/40 last:border-b-0">
+    <div id={endpoint.id} className="group/ep py-8 border-b border-border/40 last:border-b-0">
       {/* Endpoint heading */}
       <div className="flex items-center gap-3 mb-2">
         <MethodBadge method={endpoint.method} />
         <code className="text-[16px] font-semibold font-mono text-foreground">
           {endpoint.path}
         </code>
+        <button
+          onClick={() => {
+            window.location.hash = endpoint.id
+            navigator.clipboard.writeText(window.location.href)
+          }}
+          className="opacity-0 group-hover/ep:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
+          title="Copy link"
+        >
+          <Link2 className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Summary */}

@@ -110,9 +110,11 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 			r.Post("/feedback", h.Feedback.Create)
 			r.Get("/feedback", h.Feedback.List)
 
-			// Public community standards (browsable without auth)
+			// Public community standards/movements (browsable without auth)
 			r.Get("/standards", h.Standard.List)
 			r.Get("/standards/{slug}", h.Standard.GetBySlug)
+			r.Get("/movements", h.Standard.List)
+			r.Get("/movements/{slug}", h.Standard.GetBySlug)
 		})
 
 		// Protected routes
@@ -171,10 +173,13 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 				r.Get("/policies", h.Policy.List)
 				r.Post("/policies", h.Policy.Create)
 
-				// Community standards under child
+				// Community standards/movements under child
 				r.Get("/standards", h.Standard.ListByChild)
 				r.Post("/standards", h.Standard.Adopt)
 				r.Delete("/standards/{standardID}", h.Standard.Unadopt)
+				r.Get("/movements", h.Standard.ListByChild)
+				r.Post("/movements", h.Standard.Adopt)
+				r.Delete("/movements/{standardID}", h.Standard.Unadopt)
 
 				// Enforcement for child
 				r.Post("/enforce", h.Enforcement.TriggerChildEnforcement)

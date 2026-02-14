@@ -13,6 +13,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/guardiangate/api/internal/config"
+	"github.com/guardiangate/api/internal/engine"
 	"github.com/guardiangate/api/internal/handler"
 	"github.com/guardiangate/api/internal/migrate"
 	"github.com/guardiangate/api/internal/provider"
@@ -76,6 +77,17 @@ func main() {
 	standardRepo := postgres.NewStandardRepo(db)
 	standardAdoptionRepo := postgres.NewStandardAdoptionRepo(db)
 
+	// Phosra service-layer repositories
+	notificationScheduleRepo := postgres.NewNotificationScheduleRepo(db)
+	activityLogRepo := postgres.NewActivityLogRepo(db)
+	ageVerificationRepo := postgres.NewAgeVerificationRepo(db)
+	privacyRequestRepo := postgres.NewPrivacyRequestRepo(db)
+	complianceAttestRepo := postgres.NewComplianceAttestationRepo(db)
+	socialPolicyRepo := postgres.NewSocialPolicyRepo(db)
+	locationLogRepo := postgres.NewLocationLogRepo(db)
+	purchaseApprovalRepo := postgres.NewPurchaseApprovalRepo(db)
+	contentClassRepo := postgres.NewContentClassificationRepo(db)
+
 	// Platform registry
 	registry := provider.NewRegistry()
 	registry.Register(nextdns.New())
@@ -93,7 +105,25 @@ func main() {
 	policySvc := service.NewPolicyService(policyRepo, ruleRepo, childRepo, memberRepo, ratingRepo)
 	ratingSvc := service.NewRatingService(ratingRepo)
 	platformSvc := service.NewPlatformService(platformRepo, complianceLinkRepo, memberRepo, registry)
-	enforcementSvc := service.NewEnforcementService(enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, policyRepo, ruleRepo, childRepo, memberRepo, registry)
+
+	// Phosra service layer
+	notificationSvc := service.NewPhosraNotificationService(notificationScheduleRepo)
+	analyticsSvc := service.NewPhosraAnalyticsService(activityLogRepo)
+	ageVerifySvc := service.NewPhosraAgeVerificationService(ageVerificationRepo, childRepo)
+	contentClassSvc := service.NewPhosraContentClassifyService(contentClassRepo)
+	privacyConsentSvc := service.NewPhosraPrivacyConsentService(privacyRequestRepo)
+	complianceAttestSvc := service.NewPhosraComplianceAttestService(complianceAttestRepo)
+	socialSvc := service.NewPhosraSocialService(socialPolicyRepo)
+	locationSvc := service.NewPhosraLocationService(locationLogRepo)
+	purchaseSvc := service.NewPhosraPurchaseService(purchaseApprovalRepo)
+
+	compositeEng := engine.NewCompositeEngine(
+		notificationSvc, analyticsSvc, ageVerifySvc, contentClassSvc,
+		privacyConsentSvc, complianceAttestSvc, socialSvc, locationSvc, purchaseSvc,
+	)
+	log.Info().Msg("composite enforcement engine initialized with 9 Phosra services")
+
+	enforcementSvc := service.NewEnforcementService(enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, policyRepo, ruleRepo, childRepo, memberRepo, registry, compositeEng)
 	webhookSvc := service.NewWebhookService(webhookRepo, webhookDeliveryRepo, memberRepo)
 	reportSvc := service.NewReportService(childRepo, policyRepo, enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, memberRepo)
 	setupSvc := service.NewQuickSetupService(familyRepo, memberRepo, childRepo, policyRepo, ruleRepo, ratingRepo, policySvc, complianceLinkRepo)

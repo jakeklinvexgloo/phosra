@@ -417,3 +417,122 @@ type StandardAdoption struct {
 	StandardID uuid.UUID `json:"standard_id"`
 	AdoptedAt  time.Time `json:"adopted_at"`
 }
+
+// Movement aliases — same underlying types, new naming for /movements routes.
+type Movement = Standard
+type MovementRule = StandardRule
+type MovementAdoption = StandardAdoption
+
+// ── Phosra Service Layer ─────────────────────────────────────────
+
+// NotificationSchedule stores curfew/timer configs per child managed by Phosra.
+type NotificationSchedule struct {
+	ID           uuid.UUID       `json:"id"`
+	ChildID      uuid.UUID       `json:"child_id"`
+	FamilyID     uuid.UUID       `json:"family_id"`
+	RuleCategory RuleCategory    `json:"rule_category"`
+	Config       json.RawMessage `json:"config"`
+	Active       bool            `json:"active"`
+	CreatedAt    time.Time       `json:"created_at"`
+	UpdatedAt    time.Time       `json:"updated_at"`
+}
+
+// ActivityLog records a single activity entry aggregated from any provider.
+type ActivityLog struct {
+	ID         uuid.UUID       `json:"id"`
+	ChildID    uuid.UUID       `json:"child_id"`
+	PlatformID string          `json:"platform_id"`
+	Category   string          `json:"category"`
+	Detail     json.RawMessage `json:"detail"`
+	RecordedAt time.Time       `json:"recorded_at"`
+	CreatedAt  time.Time       `json:"created_at"`
+}
+
+// PrivacyRequest tracks data deletion, sharing opt-out, and consent requests.
+type PrivacyRequest struct {
+	ID          uuid.UUID       `json:"id"`
+	ChildID     uuid.UUID       `json:"child_id"`
+	FamilyID    uuid.UUID       `json:"family_id"`
+	RequestType string          `json:"request_type"`
+	PlatformID  string          `json:"platform_id"`
+	Status      string          `json:"status"`
+	Config      json.RawMessage `json:"config"`
+	SubmittedAt *time.Time      `json:"submitted_at,omitempty"`
+	CompletedAt *time.Time      `json:"completed_at,omitempty"`
+	CreatedAt   time.Time       `json:"created_at"`
+}
+
+// AgeVerificationRecord tracks age gate and consent verification per child+platform.
+type AgeVerificationRecord struct {
+	ID               uuid.UUID       `json:"id"`
+	ChildID          uuid.UUID       `json:"child_id"`
+	VerificationType string          `json:"verification_type"`
+	PlatformID       string          `json:"platform_id"`
+	Verified         bool            `json:"verified"`
+	VerifiedAt       *time.Time      `json:"verified_at,omitempty"`
+	Config           json.RawMessage `json:"config"`
+	CreatedAt        time.Time       `json:"created_at"`
+}
+
+// ComplianceAttestation records compliance status for a family+platform+rule.
+type ComplianceAttestation struct {
+	ID           uuid.UUID       `json:"id"`
+	FamilyID     uuid.UUID       `json:"family_id"`
+	RuleCategory RuleCategory    `json:"rule_category"`
+	PlatformID   string          `json:"platform_id"`
+	Status       string          `json:"status"`
+	Evidence     json.RawMessage `json:"evidence"`
+	AttestedAt   *time.Time      `json:"attested_at,omitempty"`
+	NextReviewAt *time.Time      `json:"next_review_at,omitempty"`
+	CreatedAt    time.Time       `json:"created_at"`
+}
+
+// SocialPolicy stores Phosra-managed social control policies per child+platform.
+type SocialPolicy struct {
+	ID         uuid.UUID       `json:"id"`
+	ChildID    uuid.UUID       `json:"child_id"`
+	PlatformID string          `json:"platform_id"`
+	PolicyType string          `json:"policy_type"`
+	Config     json.RawMessage `json:"config"`
+	Active     bool            `json:"active"`
+	CreatedAt  time.Time       `json:"created_at"`
+	UpdatedAt  time.Time       `json:"updated_at"`
+}
+
+// LocationLog stores Phosra-tracked location data for providers that lack native tracking.
+type LocationLog struct {
+	ID         uuid.UUID `json:"id"`
+	ChildID    uuid.UUID `json:"child_id"`
+	DeviceID   string    `json:"device_id"`
+	Latitude   float64   `json:"latitude"`
+	Longitude  float64   `json:"longitude"`
+	Accuracy   float64   `json:"accuracy"`
+	RecordedAt time.Time `json:"recorded_at"`
+}
+
+// PurchaseApproval tracks parent approval workflow for purchases.
+type PurchaseApproval struct {
+	ID          uuid.UUID  `json:"id"`
+	ChildID     uuid.UUID  `json:"child_id"`
+	FamilyID    uuid.UUID  `json:"family_id"`
+	PlatformID  string     `json:"platform_id"`
+	ItemName    string     `json:"item_name"`
+	Amount      float64    `json:"amount"`
+	Currency    string     `json:"currency"`
+	Status      string     `json:"status"`
+	RequestedAt time.Time  `json:"requested_at"`
+	ResolvedAt  *time.Time `json:"resolved_at,omitempty"`
+	ResolvedBy  *uuid.UUID `json:"resolved_by,omitempty"`
+}
+
+// ContentClassification stores Phosra-managed content ratings.
+type ContentClassification struct {
+	ID           uuid.UUID `json:"id"`
+	ContentType  string    `json:"content_type"`
+	ContentID    string    `json:"content_id"`
+	RatingSystem string    `json:"rating_system"`
+	Rating       string    `json:"rating"`
+	Confidence   float64   `json:"confidence"`
+	Source       string    `json:"source"`
+	ClassifiedAt time.Time `json:"classified_at"`
+}

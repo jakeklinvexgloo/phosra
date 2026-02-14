@@ -14,7 +14,7 @@ import { InterestModal } from "@/components/investors/InterestModal"
 const METRICS = [
   { value: "190+", label: "Platforms Connected" },
   { value: "67", label: "Child Safety Laws Tracked" },
-  { value: "28", label: "Community Standards" },
+  { value: "28", label: "Community Movements" },
   { value: "50K+", label: "Families" },
   { value: "2K+", label: "Schools" },
   { value: "25+", label: "Jurisdictions" },
@@ -44,8 +44,8 @@ const MARKET_CARDS = [
 const PRODUCT_LINKS = [
   { href: "/docs", label: "API Documentation", sublabel: "PCSS v1.0 specification and integration guides" },
   { href: "/compliance", label: "Compliance Hub", sublabel: "67 laws mapped to enforcement actions" },
-  { href: "/standards", label: "Community Standards", sublabel: "28 standards, 50K families, 2K schools" },
-  { href: "/platforms", label: "Platform Coverage", sublabel: "190+ connected platforms and growing" },
+  { href: "/movements", label: "Community Movements", sublabel: "28 movements, 50K families, 2K schools" },
+  { href: "/technology-services", label: "Technology Services", sublabel: "190+ connected platforms and growing" },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -142,7 +142,7 @@ export default function InvestorsPage() {
 
             <p>
               Today, Phosra tracks 67 of these child safety laws across 25+ jurisdictions and maps each
-              one to specific enforcement actions. We support 28 community standards — from Four Norms to
+              one to specific enforcement actions. We support 28 community movements — from Four Norms to
               Wait Until 8th — adopted by over 50,000 families and 2,000 schools. We&apos;ve published PCSS
               v1.0, the open specification for how parental controls should work across platforms. The
               technical standard exists. The infrastructure is live.

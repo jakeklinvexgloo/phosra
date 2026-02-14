@@ -9,3346 +9,5139 @@
           - navigation [ref=e8]:
             - link "Docs" [ref=e9] [cursor=pointer]:
               - /url: /docs
-            - link "Platforms" [ref=e10] [cursor=pointer]:
-              - /url: /platforms
-            - link "Compliance" [ref=e11] [cursor=pointer]:
+            - link "Parental Controls" [ref=e10] [cursor=pointer]:
+              - /url: /parental-controls
+            - link "Services" [ref=e11] [cursor=pointer]:
+              - /url: /technology-services
+            - link "Compliance" [ref=e12] [cursor=pointer]:
               - /url: /compliance
-            - link "Pricing" [ref=e12] [cursor=pointer]:
+            - link "Movements" [ref=e13] [cursor=pointer]:
+              - /url: /movements
+            - link "Pricing" [ref=e14] [cursor=pointer]:
               - /url: /pricing
-            - link "Playground" [ref=e13] [cursor=pointer]:
-              - /url: /playground
-        - generic [ref=e14]:
-          - link "Log in" [ref=e15] [cursor=pointer]:
+        - generic [ref=e15]:
+          - 'button "Theme: Light. Click to change." [ref=e6326] [cursor=pointer]':
+            - img [ref=e17]
+          - link "Log in" [ref=e23] [cursor=pointer]:
             - /url: /login
-          - link "Get Started" [ref=e16] [cursor=pointer]:
+          - link "Get Started" [ref=e24] [cursor=pointer]:
             - /url: /login
-    - generic [ref=e19]:
-      - complementary [ref=e21]:
-        - generic [ref=e22]:
-          - paragraph [ref=e23]: Specification
-          - generic [ref=e24]:
-            - button "Preamble" [ref=e26] [cursor=pointer]:
-              - generic [ref=e27]: Preamble
-            - button "RFC 2119 Keywords" [ref=e29] [cursor=pointer]:
-              - generic [ref=e30]: RFC 2119 Keywords
-            - button "1. Platform Authentication" [ref=e32] [cursor=pointer]:
-              - img [ref=e34]
-              - generic [ref=e36]: 1. Platform Authentication
-            - button "2. Protected Families" [ref=e38] [cursor=pointer]:
-              - img [ref=e40]
-              - generic [ref=e42]: 2. Protected Families
-            - button "3. Safety Policies" [ref=e44] [cursor=pointer]:
-              - img [ref=e46]
-              - generic [ref=e48]: 3. Safety Policies
-            - button "3.1 Policy Categories" [ref=e50] [cursor=pointer]:
-              - generic [ref=e51]: 3.1 Policy Categories
-            - button "4. Regulated Platforms" [ref=e53] [cursor=pointer]:
-              - generic [ref=e54]: 4. Regulated Platforms
-            - button "5. Compliance Verification" [ref=e56] [cursor=pointer]:
-              - generic [ref=e57]: 5. Compliance Verification
-            - button "5.1 Quick Setup API" [ref=e59] [cursor=pointer]:
-              - generic [ref=e60]: 5.1 Quick Setup API
-            - button "6. Policy Enforcement" [ref=e62] [cursor=pointer]:
-              - img [ref=e64]
-              - generic [ref=e66]: 6. Policy Enforcement
-            - button "7. Content Rating Standard" [ref=e68] [cursor=pointer]:
-              - generic [ref=e69]: 7. Content Rating Standard
-            - button "8. Event Notifications" [ref=e71] [cursor=pointer]:
-              - generic [ref=e72]: 8. Event Notifications
-            - button "9. Compliance Levels" [ref=e74] [cursor=pointer]:
-              - generic [ref=e75]: 9. Compliance Levels
-            - button "10. Enforcement Timeline" [ref=e77] [cursor=pointer]:
-              - generic [ref=e78]: 10. Enforcement Timeline
-            - button "11. Legislative Compliance" [ref=e80] [cursor=pointer]:
-              - generic [ref=e81]: 11. Legislative Compliance
-            - button "12. Parent Experience" [ref=e83] [cursor=pointer]:
-              - generic [ref=e84]: 12. Parent Experience
-        - generic [ref=e85]:
-          - paragraph [ref=e86]: API Reference
-          - generic [ref=e87]:
-            - button "Children" [ref=e89] [cursor=pointer]
-            - button "Policy Rules" [ref=e91] [cursor=pointer]
-            - button "Providers" [ref=e93] [cursor=pointer]
-            - button "Connections" [ref=e95] [cursor=pointer]
-            - button "Ratings" [ref=e97] [cursor=pointer]
-        - generic [ref=e98]:
-          - paragraph [ref=e99]: Reference
-          - generic [ref=e100]:
-            - button "40 Policy Categories" [ref=e101] [cursor=pointer]
-            - button "Age-Rating Map" [ref=e102] [cursor=pointer]
-            - button "Legislative Compliance" [ref=e103] [cursor=pointer]
-        - generic [ref=e104]:
-          - paragraph [ref=e105]: Guides
-          - button "Recipes" [ref=e107] [cursor=pointer]
-      - generic [ref=e109]:
-        - generic [ref=e111]:
-          - button "Specification" [ref=e112] [cursor=pointer]
-          - button "Recipes" [ref=e113] [cursor=pointer]
-        - generic [ref=e116]:
-          - generic [ref=e118]:
-            - heading "Phosra Child Safety Standard (PCSS) v1.0" [level=2] [ref=e119]
-            - paragraph [ref=e120]:
+    - generic [ref=e27]:
+      - complementary [ref=e29]:
+        - generic [ref=e30]:
+          - paragraph [ref=e31]: Specification
+          - generic [ref=e32]:
+            - button "Preamble" [ref=e34] [cursor=pointer]:
+              - generic [ref=e35]: Preamble
+            - button "RFC 2119 Keywords" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: RFC 2119 Keywords
+            - button "1. Platform Authentication" [ref=e40] [cursor=pointer]:
+              - img [ref=e42]
+              - generic [ref=e44]: 1. Platform Authentication
+            - button "2. Protected Families" [ref=e46] [cursor=pointer]:
+              - img [ref=e48]
+              - generic [ref=e50]: 2. Protected Families
+            - button "2.1 Family Members" [ref=e52] [cursor=pointer]:
+              - img [ref=e54]
+              - generic [ref=e56]: 2.1 Family Members
+            - button "3. Safety Policies" [ref=e58] [cursor=pointer]:
+              - img [ref=e60]
+              - generic [ref=e62]: 3. Safety Policies
+            - button "3.1 Policy Categories" [ref=e64] [cursor=pointer]:
+              - generic [ref=e65]: 3.1 Policy Categories
+            - button "4. Regulated Platforms" [ref=e67] [cursor=pointer]:
+              - generic [ref=e68]: 4. Regulated Platforms
+            - button "5. Compliance Verification" [ref=e70] [cursor=pointer]:
+              - generic [ref=e71]: 5. Compliance Verification
+            - button "5.1 Compliance Links" [ref=e73] [cursor=pointer]:
+              - img [ref=e75]
+              - generic [ref=e77]: 5.1 Compliance Links
+            - button "5.2 Quick Setup API" [ref=e79] [cursor=pointer]:
+              - generic [ref=e80]: 5.2 Quick Setup API
+            - button "6. Policy Enforcement" [ref=e82] [cursor=pointer]:
+              - img [ref=e84]
+              - generic [ref=e86]: 6. Policy Enforcement
+            - button "7. Content Rating Standard" [ref=e88] [cursor=pointer]:
+              - generic [ref=e89]: 7. Content Rating Standard
+            - button "8. Event Notifications" [ref=e91] [cursor=pointer]:
+              - img [ref=e93]
+              - generic [ref=e95]: 8. Event Notifications
+            - button "9. Compliance Levels" [ref=e97] [cursor=pointer]:
+              - generic [ref=e98]: 9. Compliance Levels
+            - button "10. Enforcement Timeline" [ref=e100] [cursor=pointer]:
+              - generic [ref=e101]: 10. Enforcement Timeline
+            - button "11. Legislative Compliance" [ref=e103] [cursor=pointer]:
+              - generic [ref=e104]: 11. Legislative Compliance
+            - button "12. Parent Experience" [ref=e106] [cursor=pointer]:
+              - generic [ref=e107]: 12. Parent Experience
+            - button "13. Community Standards" [ref=e109] [cursor=pointer]:
+              - img [ref=e111]
+              - generic [ref=e113]: 13. Community Standards
+            - button "14. Parental Control Sources" [ref=e115] [cursor=pointer]:
+              - generic [ref=e116]: 14. Parental Control Sources
+            - button "15. Family Reports" [ref=e118] [cursor=pointer]:
+              - img [ref=e120]
+              - generic [ref=e122]: 15. Family Reports
+        - generic [ref=e123]:
+          - paragraph [ref=e124]: API Reference
+          - generic [ref=e125]:
+            - button "Children" [ref=e127] [cursor=pointer]
+            - button "Policy Rules" [ref=e129] [cursor=pointer]
+            - button "Providers" [ref=e131] [cursor=pointer]
+            - button "Connections" [ref=e133] [cursor=pointer]
+            - button "Sync" [ref=e135] [cursor=pointer]
+            - button "Quick Setup" [ref=e137] [cursor=pointer]
+            - button "Ratings" [ref=e139] [cursor=pointer]
+            - button "Feedback" [ref=e141] [cursor=pointer]
+        - generic [ref=e142]:
+          - paragraph [ref=e143]: Reference
+          - generic [ref=e144]:
+            - button "45 Policy Categories" [ref=e145] [cursor=pointer]
+            - button "Age-Rating Map" [ref=e146] [cursor=pointer]
+            - button "Legislative Compliance" [ref=e147] [cursor=pointer]
+        - generic [ref=e148]:
+          - paragraph [ref=e149]: Guides
+          - button "Recipes" [ref=e151] [cursor=pointer]
+      - generic [ref=e153]:
+        - generic [ref=e155]:
+          - button "Specification" [ref=e156] [cursor=pointer]: Specification
+          - button "Recipes" [ref=e158] [cursor=pointer]
+          - button "Search... ⌘K" [ref=e159] [cursor=pointer]:
+            - img [ref=e160]
+            - generic [ref=e163]: Search...
+            - generic [ref=e164]: ⌘K
+        - generic [ref=e166]:
+          - generic [ref=e168]:
+            - heading "Phosra Child Safety Standard (PCSS) v1.0" [level=2] [ref=e169]
+            - paragraph [ref=e170]:
               - text: This document defines the
-              - strong [ref=e121]: Phosra Child Safety Standard (PCSS)
+              - strong [ref=e171]: Phosra Child Safety Standard (PCSS)
               - text: ", a mandatory regulatory framework for technology platforms that serve minors. All regulated platforms"
-              - strong [ref=e122]: MUST
+              - strong [ref=e172]: MUST
               - text: implement this standard to achieve and maintain compliance certification.
-            - paragraph [ref=e123]:
-              - text: "PCSS establishes a universal policy framework spanning 40 safety categories across 11 domains: Content, Time, Purchase, Social, Web, Privacy, Monitoring, Algorithmic Safety, Notifications, Advertising & Data, and Access Control. Platforms"
-              - strong [ref=e124]: SHALL
+            - paragraph [ref=e173]:
+              - text: "PCSS establishes a universal policy framework spanning 45 safety categories across 12 domains: Content, Time, Purchase, Social, Web, Privacy, Monitoring, Algorithmic Safety, Notifications, Advertising & Data, and Access Control. Platforms"
+              - strong [ref=e174]: SHALL
               - text: expose compliance endpoints that accept policy enforcement requests from the Phosra Enforcement Engine.
-            - paragraph [ref=e125]: This standard is administered by Phosra in coordination with government child safety authorities. Non-compliance may result in regulatory action as defined in Section 10.
-            - generic [ref=e126]:
-              - generic [ref=e127]:
-                - paragraph [ref=e128]: "40"
-                - paragraph [ref=e129]: Policy Categories
-              - generic [ref=e130]:
-                - paragraph [ref=e131]: "5"
-                - paragraph [ref=e132]: Rating Systems
-              - generic [ref=e133]:
-                - paragraph [ref=e134]: "15"
-                - paragraph [ref=e135]: Regulated Platforms
-              - generic [ref=e136]:
-                - paragraph [ref=e137]: "3"
-                - paragraph [ref=e138]: Compliance Levels
-          - generic [ref=e139]:
-            - heading "RFC 2119 Keywords" [level=2] [ref=e140]
-            - generic [ref=e141]:
-              - paragraph [ref=e142]:
+            - paragraph [ref=e175]: This standard is administered by Phosra in coordination with government child safety authorities. Non-compliance may result in regulatory action as defined in Section 10.
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - paragraph [ref=e178]: "45"
+                - paragraph [ref=e179]: Policy Categories
+              - generic [ref=e180]:
+                - paragraph [ref=e181]: "5"
+                - paragraph [ref=e182]: Rating Systems
+              - generic [ref=e183]:
+                - paragraph [ref=e184]: "15"
+                - paragraph [ref=e185]: Regulated Platforms
+              - generic [ref=e186]:
+                - paragraph [ref=e187]: "3"
+                - paragraph [ref=e188]: Compliance Levels
+          - generic [ref=e189]:
+            - heading "RFC 2119 Keywords" [level=2] [ref=e190]
+            - generic [ref=e191]:
+              - paragraph [ref=e192]:
                 - text: The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
-                - link "RFC 2119" [ref=e143] [cursor=pointer]:
+                - link "RFC 2119" [ref=e193] [cursor=pointer]:
                   - /url: https://www.rfc-editor.org/rfc/rfc2119
                 - text: .
-              - generic [ref=e144]:
-                - generic [ref=e145]:
-                  - strong [ref=e146]: MUST
+              - generic [ref=e194]:
+                - generic [ref=e195]:
+                  - strong [ref=e196]: MUST
                   - text: /
-                  - strong [ref=e147]: REQUIRED
+                  - strong [ref=e197]: REQUIRED
                   - text: /
-                  - strong [ref=e148]: SHALL
+                  - strong [ref=e198]: SHALL
                   - text: — Absolute requirement
-                - generic [ref=e149]:
-                  - strong [ref=e150]: SHOULD
+                - generic [ref=e199]:
+                  - strong [ref=e200]: SHOULD
                   - text: /
-                  - strong [ref=e151]: RECOMMENDED
+                  - strong [ref=e201]: RECOMMENDED
                   - text: — Strong recommendation, may be deviated from with justification
-                - generic [ref=e152]:
-                  - strong [ref=e153]: MAY
+                - generic [ref=e202]:
+                  - strong [ref=e203]: MAY
                   - text: /
-                  - strong [ref=e154]: OPTIONAL
+                  - strong [ref=e204]: OPTIONAL
                   - text: — Truly optional behavior
-                - generic [ref=e155]:
-                  - strong [ref=e156]: MUST NOT
+                - generic [ref=e205]:
+                  - strong [ref=e206]: MUST NOT
                   - text: /
-                  - strong [ref=e157]: SHALL NOT
+                  - strong [ref=e207]: SHALL NOT
                   - text: — Absolute prohibition
-          - generic [ref=e158]:
-            - heading "1. Platform Authentication" [level=2] [ref=e159]
-            - generic [ref=e160]:
-              - paragraph [ref=e161]:
+          - generic [ref=e208]:
+            - heading "1. Platform Authentication" [level=2] [ref=e209]
+            - generic [ref=e210]:
+              - paragraph [ref=e211]:
                 - text: All regulated platforms
-                - strong [ref=e162]: MUST
+                - strong [ref=e212]: MUST
                 - text: authenticate using JWT bearer tokens. The authentication system implements refresh token rotation with SHA-256 hashing for security.
-              - generic [ref=e163]:
-                - generic [ref=e164]:
-                  - heading "Access Token" [level=4] [ref=e165]
-                  - paragraph [ref=e166]:
+              - generic [ref=e213]:
+                - generic [ref=e214]:
+                  - heading "Access Token" [level=4] [ref=e215]
+                  - paragraph [ref=e216]:
                     - text: Platforms
-                    - strong [ref=e167]: MUST
+                    - strong [ref=e217]: MUST
                     - text: include a valid JWT in the Authorization header. Tokens expire after 15 minutes.
-                  - generic [ref=e168]: "Authorization: Bearer <access_token>"
-                - generic [ref=e169]:
-                  - heading "Token Rotation" [level=4] [ref=e170]
-                  - paragraph [ref=e171]:
+                  - generic [ref=e218]: "Authorization: Bearer <access_token>"
+                - generic [ref=e219]:
+                  - heading "Token Rotation" [level=4] [ref=e220]
+                  - paragraph [ref=e221]:
                     - text: Platforms
-                    - strong [ref=e172]: MUST
+                    - strong [ref=e222]: MUST
                     - text: implement token rotation. Each refresh request returns a new token pair and revokes the previous refresh token. Platforms
-                    - strong [ref=e173]: MUST NOT
+                    - strong [ref=e223]: MUST NOT
                     - text: reuse expired refresh tokens.
-            - generic [ref=e174]:
-              - generic [ref=e175]:
-                - generic [ref=e176]:
-                  - generic [ref=e177]: POST
-                  - code [ref=e178]: /auth/register
-                - paragraph [ref=e179]: Create a new user account. Returns the user object and a token pair (access + refresh). The access token expires in 15 minutes; use the refresh endpoint to obtain a new one.
-                - generic [ref=e180]:
-                  - generic [ref=e182]:
-                    - generic [ref=e183]:
-                      - heading "Request fields" [level=4] [ref=e184]
-                      - generic [ref=e185]:
-                        - generic [ref=e187]:
-                          - generic [ref=e188]:
-                            - code [ref=e190]: email
-                            - paragraph [ref=e191]: Valid email address
-                          - generic [ref=e192]:
-                            - generic [ref=e193]: string
-                            - generic [ref=e194]: required
-                        - generic [ref=e196]:
-                          - generic [ref=e197]:
-                            - code [ref=e199]: password
-                            - paragraph [ref=e200]: Minimum 8 characters
-                          - generic [ref=e201]:
-                            - generic [ref=e202]: string
-                            - generic [ref=e203]: required
-                        - generic [ref=e205]:
-                          - generic [ref=e206]:
-                            - code [ref=e208]: name
-                            - paragraph [ref=e209]: Display name
-                          - generic [ref=e210]:
-                            - generic [ref=e211]: string
-                            - generic [ref=e212]: required
-                    - generic [ref=e213]:
-                      - heading "Response fields" [level=4] [ref=e214]
-                      - generic [ref=e215]:
-                        - generic [ref=e217]:
-                          - generic [ref=e218]:
-                            - generic [ref=e219]:
-                              - button [ref=e220] [cursor=pointer]:
-                                - img [ref=e221]
-                              - code [ref=e223]: user
-                            - paragraph [ref=e224]: Created user
-                          - generic [ref=e226]: object
-                        - generic [ref=e228]:
-                          - generic [ref=e229]:
-                            - generic [ref=e230]:
-                              - button [ref=e231] [cursor=pointer]:
-                                - img [ref=e232]
-                              - code [ref=e234]: tokens
-                            - paragraph [ref=e235]: JWT token pair
-                          - generic [ref=e237]: object
-                  - generic [ref=e239]:
-                    - generic [ref=e240]:
-                      - generic [ref=e241]:
-                        - generic [ref=e242]:
-                          - generic [ref=e243]: Request
-                          - generic [ref=e244]: curl
-                        - button "Copy" [ref=e245] [cursor=pointer]:
-                          - img [ref=e246]
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - generic [ref=e226]:
+                  - generic [ref=e227]: POST
+                  - code [ref=e228]: /auth/register
+                  - button "Copy link" [ref=e229] [cursor=pointer]:
+                    - img [ref=e230]
+                - paragraph [ref=e233]: Create a new user account. Returns the user object and a token pair (access + refresh). The access token expires in 15 minutes; use the refresh endpoint to obtain a new one.
+                - generic [ref=e234]:
+                  - generic [ref=e236]:
+                    - generic [ref=e237]:
+                      - heading "Request fields" [level=4] [ref=e238]
+                      - generic [ref=e239]:
+                        - generic [ref=e241]:
+                          - generic [ref=e242]:
+                            - code [ref=e244]: email
+                            - paragraph [ref=e245]: Valid email address
+                          - generic [ref=e246]:
+                            - generic [ref=e247]: string
+                            - generic [ref=e248]: required
+                        - generic [ref=e250]:
+                          - generic [ref=e251]:
+                            - code [ref=e253]: password
+                            - paragraph [ref=e254]: Minimum 8 characters
+                          - generic [ref=e255]:
+                            - generic [ref=e256]: string
+                            - generic [ref=e257]: required
+                        - generic [ref=e259]:
+                          - generic [ref=e260]:
+                            - code [ref=e262]: name
+                            - paragraph [ref=e263]: Display name
+                          - generic [ref=e264]:
+                            - generic [ref=e265]: string
+                            - generic [ref=e266]: required
+                    - generic [ref=e267]:
+                      - heading "Response fields" [level=4] [ref=e268]
+                      - generic [ref=e269]:
+                        - generic [ref=e271]:
+                          - generic [ref=e272]:
+                            - generic [ref=e273]:
+                              - button [ref=e274] [cursor=pointer]:
+                                - img [ref=e275]
+                              - code [ref=e277]: user
+                            - paragraph [ref=e278]: Created user
+                          - generic [ref=e280]: object
+                        - generic [ref=e282]:
+                          - generic [ref=e283]:
+                            - generic [ref=e284]:
+                              - button [ref=e285] [cursor=pointer]:
+                                - img [ref=e286]
+                              - code [ref=e288]: tokens
+                            - paragraph [ref=e289]: JWT token pair
+                          - generic [ref=e291]: object
+                  - generic [ref=e293]:
+                    - generic [ref=e294]:
+                      - generic [ref=e295]:
+                        - generic [ref=e296]:
+                          - generic [ref=e297]: Request
+                          - generic [ref=e298]: curl
+                        - button "Copy" [ref=e299] [cursor=pointer]:
+                          - img [ref=e300]
                           - text: Copy
-                      - code [ref=e250]: "curl -X POST http://localhost:8080/api/v1/auth/register \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"parent@example.com\", \"password\": \"securepass123\", \"name\": \"Jane Parent\" }'"
-                    - generic [ref=e251]:
-                      - generic [ref=e252]:
-                        - generic [ref=e253]:
-                          - generic [ref=e254]: Response
-                          - generic [ref=e255]: json
-                        - button "Copy" [ref=e256] [cursor=pointer]:
-                          - img [ref=e257]
+                      - code [ref=e304]: "curl -X POST http://localhost:8080/api/v1/auth/register \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"parent@example.com\", \"password\": \"securepass123\", \"name\": \"Jane Parent\" }'"
+                    - generic [ref=e305]:
+                      - generic [ref=e306]:
+                        - generic [ref=e307]:
+                          - generic [ref=e308]: Response
+                          - generic [ref=e309]: json
+                        - button "Copy" [ref=e310] [cursor=pointer]:
+                          - img [ref=e311]
                           - text: Copy
-                      - code [ref=e261]: "{ \"user\": { \"id\": \"550e8400-e29b-41d4-a716-446655440000\", \"email\": \"parent@example.com\", \"name\": \"Jane Parent\", \"created_at\": \"2025-01-15T10:30:00Z\" }, \"tokens\": { \"access_token\": \"eyJhbGciOiJIUzI1NiIs...\", \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJl...\", \"expires_at\": \"2025-01-15T10:45:00Z\" } }"
-              - generic [ref=e262]:
-                - generic [ref=e263]:
-                  - generic [ref=e264]: POST
-                  - code [ref=e265]: /auth/login
-                - paragraph [ref=e266]: Authenticate with email and password. Returns a user object and token pair. Previous refresh tokens remain valid until explicitly revoked via logout.
-                - generic [ref=e267]:
-                  - generic [ref=e269]:
-                    - generic [ref=e270]:
-                      - heading "Request fields" [level=4] [ref=e271]
-                      - generic [ref=e272]:
-                        - generic [ref=e274]:
-                          - generic [ref=e275]:
-                            - code [ref=e277]: email
-                            - paragraph [ref=e278]: Registered email address
-                          - generic [ref=e279]:
-                            - generic [ref=e280]: string
-                            - generic [ref=e281]: required
-                        - generic [ref=e283]:
-                          - generic [ref=e284]:
-                            - code [ref=e286]: password
-                            - paragraph [ref=e287]: Account password
-                          - generic [ref=e288]:
-                            - generic [ref=e289]: string
-                            - generic [ref=e290]: required
-                    - generic [ref=e291]:
-                      - heading "Response fields" [level=4] [ref=e292]
-                      - generic [ref=e293]:
-                        - generic [ref=e295]:
-                          - generic [ref=e296]:
-                            - generic [ref=e297]:
-                              - button [ref=e298] [cursor=pointer]:
-                                - img [ref=e299]
-                              - code [ref=e301]: user
-                            - paragraph [ref=e302]: Authenticated user
-                          - generic [ref=e304]: object
-                        - generic [ref=e306]:
-                          - generic [ref=e307]:
-                            - generic [ref=e308]:
-                              - button [ref=e309] [cursor=pointer]:
-                                - img [ref=e310]
-                              - code [ref=e312]: tokens
-                            - paragraph [ref=e313]: JWT token pair
-                          - generic [ref=e315]: object
-                  - generic [ref=e317]:
-                    - generic [ref=e318]:
-                      - generic [ref=e319]:
-                        - generic [ref=e320]:
-                          - generic [ref=e321]: Request
-                          - generic [ref=e322]: curl
-                        - button "Copy" [ref=e323] [cursor=pointer]:
-                          - img [ref=e324]
-                          - text: Copy
-                      - code [ref=e328]: "curl -X POST http://localhost:8080/api/v1/auth/login \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"parent@example.com\", \"password\": \"securepass123\" }'"
-                    - generic [ref=e329]:
+                      - code [ref=e315]: "{ \"user\": { \"id\": \"550e8400-e29b-41d4-a716-446655440000\", \"email\": \"parent@example.com\", \"name\": \"Jane Parent\", \"created_at\": \"2025-01-15T10:30:00Z\" }, \"tokens\": { \"access_token\": \"eyJhbGciOiJIUzI1NiIs...\", \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJl...\", \"expires_at\": \"2025-01-15T10:45:00Z\" } }"
+              - generic [ref=e316]:
+                - generic [ref=e317]:
+                  - generic [ref=e318]: POST
+                  - code [ref=e319]: /auth/login
+                  - button "Copy link" [ref=e320] [cursor=pointer]:
+                    - img [ref=e321]
+                - paragraph [ref=e324]: Authenticate with email and password. Returns a user object and token pair. Previous refresh tokens remain valid until explicitly revoked via logout.
+                - generic [ref=e325]:
+                  - generic [ref=e327]:
+                    - generic [ref=e328]:
+                      - heading "Request fields" [level=4] [ref=e329]
                       - generic [ref=e330]:
-                        - generic [ref=e331]:
-                          - generic [ref=e332]: Response
-                          - generic [ref=e333]: json
-                        - button "Copy" [ref=e334] [cursor=pointer]:
-                          - img [ref=e335]
-                          - text: Copy
-                      - code [ref=e339]: "{ \"user\": { \"id\": \"550e8400-e29b-41d4-a716-446655440000\", \"email\": \"parent@example.com\", \"name\": \"Jane Parent\", \"created_at\": \"2025-01-15T10:30:00Z\" }, \"tokens\": { \"access_token\": \"eyJhbGciOiJIUzI1NiIs...\", \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJl...\", \"expires_at\": \"2025-01-15T10:45:00Z\" } }"
-              - generic [ref=e340]:
-                - generic [ref=e341]:
-                  - generic [ref=e342]: POST
-                  - code [ref=e343]: /auth/refresh
-                - paragraph [ref=e344]: Exchange a valid refresh token for a new token pair. The old refresh token is revoked (rotation). No Authorization header required.
-                - generic [ref=e345]:
-                  - generic [ref=e347]:
-                    - generic [ref=e348]:
-                      - heading "Request fields" [level=4] [ref=e349]
-                      - generic [ref=e352]:
+                        - generic [ref=e332]:
+                          - generic [ref=e333]:
+                            - code [ref=e335]: email
+                            - paragraph [ref=e336]: Registered email address
+                          - generic [ref=e337]:
+                            - generic [ref=e338]: string
+                            - generic [ref=e339]: required
+                        - generic [ref=e341]:
+                          - generic [ref=e342]:
+                            - code [ref=e344]: password
+                            - paragraph [ref=e345]: Account password
+                          - generic [ref=e346]:
+                            - generic [ref=e347]: string
+                            - generic [ref=e348]: required
+                    - generic [ref=e349]:
+                      - heading "Response fields" [level=4] [ref=e350]
+                      - generic [ref=e351]:
                         - generic [ref=e353]:
-                          - code [ref=e355]: refresh_token
-                          - paragraph [ref=e356]: Valid refresh token from login or previous refresh
-                        - generic [ref=e357]:
-                          - generic [ref=e358]: string
-                          - generic [ref=e359]: required
-                    - generic [ref=e360]:
-                      - heading "Response fields" [level=4] [ref=e361]
-                      - generic [ref=e362]:
+                          - generic [ref=e354]:
+                            - generic [ref=e355]:
+                              - button [ref=e356] [cursor=pointer]:
+                                - img [ref=e357]
+                              - code [ref=e359]: user
+                            - paragraph [ref=e360]: Authenticated user
+                          - generic [ref=e362]: object
                         - generic [ref=e364]:
                           - generic [ref=e365]:
-                            - code [ref=e367]: access_token
-                            - paragraph [ref=e368]: JWT access token (15 min TTL)
-                          - generic [ref=e370]: string
-                        - generic [ref=e372]:
-                          - generic [ref=e373]:
-                            - code [ref=e375]: refresh_token
-                            - paragraph [ref=e376]: Refresh token for obtaining new access tokens
-                          - generic [ref=e378]: string
-                        - generic [ref=e380]:
-                          - generic [ref=e381]:
-                            - code [ref=e383]: expires_at
-                            - paragraph [ref=e384]: Access token expiration timestamp
-                          - generic [ref=e386]: datetime
-                  - generic [ref=e388]:
-                    - generic [ref=e389]:
-                      - generic [ref=e390]:
-                        - generic [ref=e391]:
-                          - generic [ref=e392]: Request
-                          - generic [ref=e393]: curl
-                        - button "Copy" [ref=e394] [cursor=pointer]:
-                          - img [ref=e395]
+                            - generic [ref=e366]:
+                              - button [ref=e367] [cursor=pointer]:
+                                - img [ref=e368]
+                              - code [ref=e370]: tokens
+                            - paragraph [ref=e371]: JWT token pair
+                          - generic [ref=e373]: object
+                  - generic [ref=e375]:
+                    - generic [ref=e376]:
+                      - generic [ref=e377]:
+                        - generic [ref=e378]:
+                          - generic [ref=e379]: Request
+                          - generic [ref=e380]: curl
+                        - button "Copy" [ref=e381] [cursor=pointer]:
+                          - img [ref=e382]
                           - text: Copy
-                      - code [ref=e399]: "curl -X POST http://localhost:8080/api/v1/auth/refresh \\ -H \"Content-Type: application/json\" \\ -d '{ \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJl...\" }'"
-                    - generic [ref=e400]:
-                      - generic [ref=e401]:
-                        - generic [ref=e402]:
-                          - generic [ref=e403]: Response
-                          - generic [ref=e404]: json
-                        - button "Copy" [ref=e405] [cursor=pointer]:
-                          - img [ref=e406]
+                      - code [ref=e386]: "curl -X POST http://localhost:8080/api/v1/auth/login \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"parent@example.com\", \"password\": \"securepass123\" }'"
+                    - generic [ref=e387]:
+                      - generic [ref=e388]:
+                        - generic [ref=e389]:
+                          - generic [ref=e390]: Response
+                          - generic [ref=e391]: json
+                        - button "Copy" [ref=e392] [cursor=pointer]:
+                          - img [ref=e393]
                           - text: Copy
-                      - code [ref=e410]: "{ \"access_token\": \"eyJhbGciOiJIUzI1NiIs...\", \"refresh_token\": \"bmV3IHJlZnJlc2ggdG9r...\", \"expires_at\": \"2025-01-15T11:00:00Z\" }"
-              - generic [ref=e411]:
-                - generic [ref=e412]:
-                  - generic [ref=e413]: POST
-                  - code [ref=e414]: /auth/logout
-                - paragraph [ref=e415]: Revoke all refresh tokens for the current user. The access token remains valid until its TTL expires (15 min). Requires a valid access token.
-                - generic [ref=e418]:
-                  - generic [ref=e419]:
-                    - generic [ref=e420]:
-                      - generic [ref=e421]:
-                        - generic [ref=e422]: Request
-                        - generic [ref=e423]: curl
-                      - button "Copy" [ref=e424] [cursor=pointer]:
-                        - img [ref=e425]
-                        - text: Copy
-                    - code [ref=e429]: "curl -X POST http://localhost:8080/api/v1/auth/logout \\ -H \"Authorization: Bearer <access_token>\""
-                  - generic [ref=e430]:
-                    - generic [ref=e431]:
-                      - generic [ref=e432]:
-                        - generic [ref=e433]: Response
-                        - generic [ref=e434]: json
-                      - button "Copy" [ref=e435] [cursor=pointer]:
-                        - img [ref=e436]
-                        - text: Copy
-                    - code [ref=e440]: // 204 No Content
-              - generic [ref=e441]:
-                - generic [ref=e442]:
-                  - generic [ref=e443]: GET
-                  - code [ref=e444]: /auth/me
-                - paragraph [ref=e445]: Return the authenticated user's profile. Requires a valid access token.
-                - generic [ref=e446]:
-                  - generic [ref=e449]:
-                    - heading "Response fields" [level=4] [ref=e450]
+                      - code [ref=e397]: "{ \"user\": { \"id\": \"550e8400-e29b-41d4-a716-446655440000\", \"email\": \"parent@example.com\", \"name\": \"Jane Parent\", \"created_at\": \"2025-01-15T10:30:00Z\" }, \"tokens\": { \"access_token\": \"eyJhbGciOiJIUzI1NiIs...\", \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJl...\", \"expires_at\": \"2025-01-15T10:45:00Z\" } }"
+              - generic [ref=e398]:
+                - generic [ref=e399]:
+                  - generic [ref=e400]: POST
+                  - code [ref=e401]: /auth/refresh
+                  - button "Copy link" [ref=e402] [cursor=pointer]:
+                    - img [ref=e403]
+                - paragraph [ref=e406]: Exchange a valid refresh token for a new token pair. The old refresh token is revoked (rotation). No Authorization header required.
+                - generic [ref=e407]:
+                  - generic [ref=e409]:
+                    - generic [ref=e410]:
+                      - heading "Request fields" [level=4] [ref=e411]
+                      - generic [ref=e414]:
+                        - generic [ref=e415]:
+                          - code [ref=e417]: refresh_token
+                          - paragraph [ref=e418]: Valid refresh token from login or previous refresh
+                        - generic [ref=e419]:
+                          - generic [ref=e420]: string
+                          - generic [ref=e421]: required
+                    - generic [ref=e422]:
+                      - heading "Response fields" [level=4] [ref=e423]
+                      - generic [ref=e424]:
+                        - generic [ref=e426]:
+                          - generic [ref=e427]:
+                            - code [ref=e429]: access_token
+                            - paragraph [ref=e430]: JWT access token (15 min TTL)
+                          - generic [ref=e432]: string
+                        - generic [ref=e434]:
+                          - generic [ref=e435]:
+                            - code [ref=e437]: refresh_token
+                            - paragraph [ref=e438]: Refresh token for obtaining new access tokens
+                          - generic [ref=e440]: string
+                        - generic [ref=e442]:
+                          - generic [ref=e443]:
+                            - code [ref=e445]: expires_at
+                            - paragraph [ref=e446]: Access token expiration timestamp
+                          - generic [ref=e448]: datetime
+                  - generic [ref=e450]:
                     - generic [ref=e451]:
-                      - generic [ref=e453]:
-                        - generic [ref=e454]:
-                          - code [ref=e456]: id
-                          - paragraph [ref=e457]: Unique user identifier
-                        - generic [ref=e459]: uuid
-                      - generic [ref=e461]:
-                        - generic [ref=e462]:
-                          - code [ref=e464]: email
-                          - paragraph [ref=e465]: User email address
-                        - generic [ref=e467]: string
-                      - generic [ref=e469]:
-                        - generic [ref=e470]:
-                          - code [ref=e472]: name
-                          - paragraph [ref=e473]: User display name
-                        - generic [ref=e475]: string
-                      - generic [ref=e477]:
-                        - generic [ref=e478]:
-                          - code [ref=e480]: created_at
-                          - paragraph [ref=e481]: Account creation timestamp
-                        - generic [ref=e483]: datetime
+                      - generic [ref=e452]:
+                        - generic [ref=e453]:
+                          - generic [ref=e454]: Request
+                          - generic [ref=e455]: curl
+                        - button "Copy" [ref=e456] [cursor=pointer]:
+                          - img [ref=e457]
+                          - text: Copy
+                      - code [ref=e461]: "curl -X POST http://localhost:8080/api/v1/auth/refresh \\ -H \"Content-Type: application/json\" \\ -d '{ \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJl...\" }'"
+                    - generic [ref=e462]:
+                      - generic [ref=e463]:
+                        - generic [ref=e464]:
+                          - generic [ref=e465]: Response
+                          - generic [ref=e466]: json
+                        - button "Copy" [ref=e467] [cursor=pointer]:
+                          - img [ref=e468]
+                          - text: Copy
+                      - code [ref=e472]: "{ \"access_token\": \"eyJhbGciOiJIUzI1NiIs...\", \"refresh_token\": \"bmV3IHJlZnJlc2ggdG9r...\", \"expires_at\": \"2025-01-15T11:00:00Z\" }"
+              - generic [ref=e473]:
+                - generic [ref=e474]:
+                  - generic [ref=e475]: POST
+                  - code [ref=e476]: /auth/logout
+                  - button "Copy link" [ref=e477] [cursor=pointer]:
+                    - img [ref=e478]
+                - paragraph [ref=e481]: Revoke all refresh tokens for the current user. The access token remains valid until its TTL expires (15 min). Requires a valid access token.
+                - generic [ref=e484]:
                   - generic [ref=e485]:
                     - generic [ref=e486]:
                       - generic [ref=e487]:
-                        - generic [ref=e488]:
-                          - generic [ref=e489]: Request
-                          - generic [ref=e490]: curl
-                        - button "Copy" [ref=e491] [cursor=pointer]:
-                          - img [ref=e492]
-                          - text: Copy
-                      - code [ref=e496]: "curl http://localhost:8080/api/v1/auth/me \\ -H \"Authorization: Bearer <access_token>\""
+                        - generic [ref=e488]: Request
+                        - generic [ref=e489]: curl
+                      - button "Copy" [ref=e490] [cursor=pointer]:
+                        - img [ref=e491]
+                        - text: Copy
+                    - code [ref=e495]: "curl -X POST http://localhost:8080/api/v1/auth/logout \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e496]:
                     - generic [ref=e497]:
                       - generic [ref=e498]:
-                        - generic [ref=e499]:
-                          - generic [ref=e500]: Response
-                          - generic [ref=e501]: json
-                        - button "Copy" [ref=e502] [cursor=pointer]:
-                          - img [ref=e503]
+                        - generic [ref=e499]: Response
+                        - generic [ref=e500]: json
+                      - button "Copy" [ref=e501] [cursor=pointer]:
+                        - img [ref=e502]
+                        - text: Copy
+                    - code [ref=e506]: // 204 No Content
+              - generic [ref=e507]:
+                - generic [ref=e508]:
+                  - generic [ref=e509]: GET
+                  - code [ref=e510]: /auth/me
+                  - button "Copy link" [ref=e511] [cursor=pointer]:
+                    - img [ref=e512]
+                - paragraph [ref=e515]: Return the authenticated user's profile. Requires a valid access token.
+                - generic [ref=e516]:
+                  - generic [ref=e519]:
+                    - heading "Response fields" [level=4] [ref=e520]
+                    - generic [ref=e521]:
+                      - generic [ref=e523]:
+                        - generic [ref=e524]:
+                          - code [ref=e526]: id
+                          - paragraph [ref=e527]: Unique user identifier
+                        - generic [ref=e529]: uuid
+                      - generic [ref=e531]:
+                        - generic [ref=e532]:
+                          - code [ref=e534]: email
+                          - paragraph [ref=e535]: User email address
+                        - generic [ref=e537]: string
+                      - generic [ref=e539]:
+                        - generic [ref=e540]:
+                          - code [ref=e542]: name
+                          - paragraph [ref=e543]: User display name
+                        - generic [ref=e545]: string
+                      - generic [ref=e547]:
+                        - generic [ref=e548]:
+                          - code [ref=e550]: created_at
+                          - paragraph [ref=e551]: Account creation timestamp
+                        - generic [ref=e553]: datetime
+                  - generic [ref=e555]:
+                    - generic [ref=e556]:
+                      - generic [ref=e557]:
+                        - generic [ref=e558]:
+                          - generic [ref=e559]: Request
+                          - generic [ref=e560]: curl
+                        - button "Copy" [ref=e561] [cursor=pointer]:
+                          - img [ref=e562]
                           - text: Copy
-                      - code [ref=e507]: "{ \"id\": \"550e8400-e29b-41d4-a716-446655440000\", \"email\": \"parent@example.com\", \"name\": \"Jane Parent\", \"created_at\": \"2025-01-15T10:30:00Z\" }"
-          - generic [ref=e508]:
-            - heading "2. Protected Families" [level=2] [ref=e509]
-            - generic [ref=e510]:
-              - paragraph [ref=e511]:
+                      - code [ref=e566]: "curl http://localhost:8080/api/v1/auth/me \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e567]:
+                      - generic [ref=e568]:
+                        - generic [ref=e569]:
+                          - generic [ref=e570]: Response
+                          - generic [ref=e571]: json
+                        - button "Copy" [ref=e572] [cursor=pointer]:
+                          - img [ref=e573]
+                          - text: Copy
+                      - code [ref=e577]: "{ \"id\": \"550e8400-e29b-41d4-a716-446655440000\", \"email\": \"parent@example.com\", \"name\": \"Jane Parent\", \"created_at\": \"2025-01-15T10:30:00Z\" }"
+          - generic [ref=e578]:
+            - heading "2. Protected Families" [level=2] [ref=e579]
+            - generic [ref=e580]:
+              - paragraph [ref=e581]:
                 - text: The family data model
-                - strong [ref=e512]: SHALL
+                - strong [ref=e582]: SHALL
                 - text: support multiple guardians per family unit with role-based access control. Child profiles
-                - strong [ref=e513]: MUST
+                - strong [ref=e583]: MUST
                 - text: include birth date for age-based policy computation.
-              - generic [ref=e514]:
-                - generic [ref=e515]:
-                  - heading "Owner" [level=4] [ref=e516]
-                  - paragraph [ref=e517]:
+              - generic [ref=e584]:
+                - generic [ref=e585]:
+                  - heading "Owner" [level=4] [ref=e586]
+                  - paragraph [ref=e587]:
                     - text: Full administrative control.
-                    - strong [ref=e518]: MAY
+                    - strong [ref=e588]: MAY
                     - text: delete the family unit.
-                - generic [ref=e519]:
-                  - heading "Parent" [level=4] [ref=e520]
-                  - paragraph [ref=e521]:
-                    - strong [ref=e522]: MAY
+                - generic [ref=e589]:
+                  - heading "Parent" [level=4] [ref=e590]
+                  - paragraph [ref=e591]:
+                    - strong [ref=e592]: MAY
                     - text: manage children, policies, and compliance links.
-                - generic [ref=e523]:
-                  - heading "Guardian" [level=4] [ref=e524]
-                  - paragraph [ref=e525]:
+                - generic [ref=e593]:
+                  - heading "Guardian" [level=4] [ref=e594]
+                  - paragraph [ref=e595]:
                     - text: Read-only access.
-                    - strong [ref=e526]: MUST NOT
+                    - strong [ref=e596]: MUST NOT
                     - text: modify policies or compliance links.
-            - generic [ref=e527]:
-              - generic [ref=e528]:
-                - generic [ref=e529]:
-                  - generic [ref=e530]: GET
-                  - code [ref=e531]: /families
-                - paragraph [ref=e532]: Return all families the authenticated user belongs to, including families where the user is owner, parent, or guardian.
-                - generic [ref=e533]:
-                  - generic [ref=e536]:
-                    - heading "Response fields" [level=4] [ref=e537]
-                    - generic [ref=e540]:
-                      - generic [ref=e541]:
-                        - generic [ref=e542]:
-                          - button [ref=e543] [cursor=pointer]:
-                            - img [ref=e544]
-                          - code [ref=e546]: "[]"
-                        - paragraph [ref=e547]: Array of family objects
-                      - generic [ref=e549]: Family[]
-                  - generic [ref=e551]:
-                    - generic [ref=e552]:
-                      - generic [ref=e553]:
-                        - generic [ref=e554]:
-                          - generic [ref=e555]: Request
-                          - generic [ref=e556]: curl
-                        - button "Copy" [ref=e557] [cursor=pointer]:
-                          - img [ref=e558]
+            - generic [ref=e597]:
+              - generic [ref=e598]:
+                - generic [ref=e599]:
+                  - generic [ref=e600]: GET
+                  - code [ref=e601]: /families
+                  - button "Copy link" [ref=e602] [cursor=pointer]:
+                    - img [ref=e603]
+                - paragraph [ref=e606]: Return all families the authenticated user belongs to, including families where the user is owner, parent, or guardian.
+                - generic [ref=e607]:
+                  - generic [ref=e610]:
+                    - heading "Response fields" [level=4] [ref=e611]
+                    - generic [ref=e614]:
+                      - generic [ref=e615]:
+                        - generic [ref=e616]:
+                          - button [ref=e617] [cursor=pointer]:
+                            - img [ref=e618]
+                          - code [ref=e620]: "[]"
+                        - paragraph [ref=e621]: Array of family objects
+                      - generic [ref=e623]: Family[]
+                  - generic [ref=e625]:
+                    - generic [ref=e626]:
+                      - generic [ref=e627]:
+                        - generic [ref=e628]:
+                          - generic [ref=e629]: Request
+                          - generic [ref=e630]: curl
+                        - button "Copy" [ref=e631] [cursor=pointer]:
+                          - img [ref=e632]
                           - text: Copy
-                      - code [ref=e562]: "curl http://localhost:8080/api/v1/families \\ -H \"Authorization: Bearer <access_token>\""
-                    - generic [ref=e563]:
-                      - generic [ref=e564]:
-                        - generic [ref=e565]:
-                          - generic [ref=e566]: Response
-                          - generic [ref=e567]: json
-                        - button "Copy" [ref=e568] [cursor=pointer]:
-                          - img [ref=e569]
+                      - code [ref=e636]: "curl http://localhost:8080/api/v1/families \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e637]:
+                      - generic [ref=e638]:
+                        - generic [ref=e639]:
+                          - generic [ref=e640]: Response
+                          - generic [ref=e641]: json
+                        - button "Copy" [ref=e642] [cursor=pointer]:
+                          - img [ref=e643]
                           - text: Copy
-                      - code [ref=e573]: "[ { \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Smith Family\", \"created_at\": \"2025-01-10T08:00:00Z\" } ]"
-              - generic [ref=e574]:
-                - generic [ref=e575]:
-                  - generic [ref=e576]: POST
-                  - code [ref=e577]: /families
-                - paragraph [ref=e578]: Create a new family group. The authenticated user becomes the owner automatically. A user can belong to multiple families.
-                - generic [ref=e579]:
-                  - generic [ref=e581]:
-                    - generic [ref=e582]:
-                      - heading "Request fields" [level=4] [ref=e583]
-                      - generic [ref=e586]:
-                        - generic [ref=e587]:
-                          - code [ref=e589]: name
-                          - paragraph [ref=e590]: Family display name
-                        - generic [ref=e591]:
-                          - generic [ref=e592]: string
-                          - generic [ref=e593]: required
-                    - generic [ref=e594]:
-                      - heading "Response fields" [level=4] [ref=e595]
-                      - generic [ref=e596]:
-                        - generic [ref=e598]:
-                          - generic [ref=e599]:
-                            - code [ref=e601]: id
-                            - paragraph [ref=e602]: Family identifier
-                          - generic [ref=e604]: uuid
-                        - generic [ref=e606]:
-                          - generic [ref=e607]:
-                            - code [ref=e609]: name
-                            - paragraph [ref=e610]: Family display name
-                          - generic [ref=e612]: string
-                        - generic [ref=e614]:
-                          - generic [ref=e615]:
-                            - code [ref=e617]: created_at
-                            - paragraph [ref=e618]: Family creation timestamp
-                          - generic [ref=e620]: datetime
-                  - generic [ref=e622]:
-                    - generic [ref=e623]:
-                      - generic [ref=e624]:
-                        - generic [ref=e625]:
-                          - generic [ref=e626]: Request
-                          - generic [ref=e627]: curl
-                        - button "Copy" [ref=e628] [cursor=pointer]:
-                          - img [ref=e629]
-                          - text: Copy
-                      - code [ref=e633]: "curl -X POST http://localhost:8080/api/v1/families \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Smith Family\" }'"
-                    - generic [ref=e634]:
-                      - generic [ref=e635]:
-                        - generic [ref=e636]:
-                          - generic [ref=e637]: Response
-                          - generic [ref=e638]: json
-                        - button "Copy" [ref=e639] [cursor=pointer]:
-                          - img [ref=e640]
-                          - text: Copy
-                      - code [ref=e644]: "{ \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Smith Family\", \"created_at\": \"2025-01-10T08:00:00Z\" }"
-              - generic [ref=e645]:
-                - generic [ref=e646]:
-                  - generic [ref=e647]: GET
-                  - code [ref=e648]: "/families/{familyID}"
-                - paragraph [ref=e649]: Retrieve details of a specific family. Caller must be a member of the family.
-                - generic [ref=e650]:
-                  - generic [ref=e653]:
-                    - heading "Response fields" [level=4] [ref=e654]
-                    - generic [ref=e655]:
-                      - generic [ref=e657]:
-                        - generic [ref=e658]:
-                          - code [ref=e660]: id
-                          - paragraph [ref=e661]: Family identifier
-                        - generic [ref=e663]: uuid
-                      - generic [ref=e665]:
-                        - generic [ref=e666]:
-                          - code [ref=e668]: name
-                          - paragraph [ref=e669]: Family display name
-                        - generic [ref=e671]: string
-                      - generic [ref=e673]:
-                        - generic [ref=e674]:
-                          - code [ref=e676]: created_at
-                          - paragraph [ref=e677]: Family creation timestamp
-                        - generic [ref=e679]: datetime
-                  - generic [ref=e681]:
-                    - generic [ref=e682]:
-                      - generic [ref=e683]:
+                      - code [ref=e647]: "[ { \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Smith Family\", \"created_at\": \"2025-01-10T08:00:00Z\" } ]"
+              - generic [ref=e648]:
+                - generic [ref=e649]:
+                  - generic [ref=e650]: POST
+                  - code [ref=e651]: /families
+                  - button "Copy link" [ref=e652] [cursor=pointer]:
+                    - img [ref=e653]
+                - paragraph [ref=e656]: Create a new family group. The authenticated user becomes the owner automatically. A user can belong to multiple families.
+                - generic [ref=e657]:
+                  - generic [ref=e659]:
+                    - generic [ref=e660]:
+                      - heading "Request fields" [level=4] [ref=e661]
+                      - generic [ref=e664]:
+                        - generic [ref=e665]:
+                          - code [ref=e667]: name
+                          - paragraph [ref=e668]: Family display name
+                        - generic [ref=e669]:
+                          - generic [ref=e670]: string
+                          - generic [ref=e671]: required
+                    - generic [ref=e672]:
+                      - heading "Response fields" [level=4] [ref=e673]
+                      - generic [ref=e674]:
+                        - generic [ref=e676]:
+                          - generic [ref=e677]:
+                            - code [ref=e679]: id
+                            - paragraph [ref=e680]: Family identifier
+                          - generic [ref=e682]: uuid
                         - generic [ref=e684]:
-                          - generic [ref=e685]: Request
-                          - generic [ref=e686]: curl
-                        - button "Copy" [ref=e687] [cursor=pointer]:
-                          - img [ref=e688]
+                          - generic [ref=e685]:
+                            - code [ref=e687]: name
+                            - paragraph [ref=e688]: Family display name
+                          - generic [ref=e690]: string
+                        - generic [ref=e692]:
+                          - generic [ref=e693]:
+                            - code [ref=e695]: created_at
+                            - paragraph [ref=e696]: Family creation timestamp
+                          - generic [ref=e698]: datetime
+                  - generic [ref=e700]:
+                    - generic [ref=e701]:
+                      - generic [ref=e702]:
+                        - generic [ref=e703]:
+                          - generic [ref=e704]: Request
+                          - generic [ref=e705]: curl
+                        - button "Copy" [ref=e706] [cursor=pointer]:
+                          - img [ref=e707]
                           - text: Copy
-                      - code [ref=e692]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\""
-                    - generic [ref=e693]:
-                      - generic [ref=e694]:
-                        - generic [ref=e695]:
-                          - generic [ref=e696]: Response
-                          - generic [ref=e697]: json
-                        - button "Copy" [ref=e698] [cursor=pointer]:
-                          - img [ref=e699]
+                      - code [ref=e711]: "curl -X POST http://localhost:8080/api/v1/families \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Smith Family\" }'"
+                    - generic [ref=e712]:
+                      - generic [ref=e713]:
+                        - generic [ref=e714]:
+                          - generic [ref=e715]: Response
+                          - generic [ref=e716]: json
+                        - button "Copy" [ref=e717] [cursor=pointer]:
+                          - img [ref=e718]
                           - text: Copy
-                      - code [ref=e703]: "{ \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Smith Family\", \"created_at\": \"2025-01-10T08:00:00Z\" }"
-              - generic [ref=e704]:
-                - generic [ref=e705]:
-                  - generic [ref=e706]: PUT
-                  - code [ref=e707]: "/families/{familyID}"
-                - paragraph [ref=e708]: Update family properties. Only the family owner can perform updates.
-                - generic [ref=e709]:
-                  - generic [ref=e712]:
-                    - heading "Request fields" [level=4] [ref=e713]
-                    - generic [ref=e716]:
-                      - generic [ref=e717]:
-                        - code [ref=e719]: name
-                        - paragraph [ref=e720]: New family display name
-                      - generic [ref=e722]: string
-                  - generic [ref=e724]:
-                    - generic [ref=e725]:
-                      - generic [ref=e726]:
-                        - generic [ref=e727]:
-                          - generic [ref=e728]: Request
-                          - generic [ref=e729]: curl
-                        - button "Copy" [ref=e730] [cursor=pointer]:
-                          - img [ref=e731]
+                      - code [ref=e722]: "{ \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Smith Family\", \"created_at\": \"2025-01-10T08:00:00Z\" }"
+              - generic [ref=e723]:
+                - generic [ref=e724]:
+                  - generic [ref=e725]: GET
+                  - code [ref=e726]: "/families/{familyID}"
+                  - button "Copy link" [ref=e727] [cursor=pointer]:
+                    - img [ref=e728]
+                - paragraph [ref=e731]: Retrieve details of a specific family. Caller must be a member of the family.
+                - generic [ref=e732]:
+                  - generic [ref=e735]:
+                    - heading "Response fields" [level=4] [ref=e736]
+                    - generic [ref=e737]:
+                      - generic [ref=e739]:
+                        - generic [ref=e740]:
+                          - code [ref=e742]: id
+                          - paragraph [ref=e743]: Family identifier
+                        - generic [ref=e745]: uuid
+                      - generic [ref=e747]:
+                        - generic [ref=e748]:
+                          - code [ref=e750]: name
+                          - paragraph [ref=e751]: Family display name
+                        - generic [ref=e753]: string
+                      - generic [ref=e755]:
+                        - generic [ref=e756]:
+                          - code [ref=e758]: created_at
+                          - paragraph [ref=e759]: Family creation timestamp
+                        - generic [ref=e761]: datetime
+                  - generic [ref=e763]:
+                    - generic [ref=e764]:
+                      - generic [ref=e765]:
+                        - generic [ref=e766]:
+                          - generic [ref=e767]: Request
+                          - generic [ref=e768]: curl
+                        - button "Copy" [ref=e769] [cursor=pointer]:
+                          - img [ref=e770]
                           - text: Copy
-                      - code [ref=e735]: "curl -X PUT http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Smith-Jones Family\" }'"
-                    - generic [ref=e736]:
-                      - generic [ref=e737]:
-                        - generic [ref=e738]:
-                          - generic [ref=e739]: Response
-                          - generic [ref=e740]: json
-                        - button "Copy" [ref=e741] [cursor=pointer]:
-                          - img [ref=e742]
+                      - code [ref=e774]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e775]:
+                      - generic [ref=e776]:
+                        - generic [ref=e777]:
+                          - generic [ref=e778]: Response
+                          - generic [ref=e779]: json
+                        - button "Copy" [ref=e780] [cursor=pointer]:
+                          - img [ref=e781]
                           - text: Copy
-                      - code [ref=e746]: // 200 OK
-              - generic [ref=e747]:
-                - generic [ref=e748]:
-                  - generic [ref=e749]: DELETE
-                  - code [ref=e750]: "/families/{familyID}"
-                - paragraph [ref=e751]: Permanently delete a family and all associated children, policies, and connections. Only the family owner can delete. This action cannot be undone.
-                - generic [ref=e754]:
-                  - generic [ref=e755]:
-                    - generic [ref=e756]:
-                      - generic [ref=e757]:
-                        - generic [ref=e758]: Request
-                        - generic [ref=e759]: curl
-                      - button "Copy" [ref=e760] [cursor=pointer]:
-                        - img [ref=e761]
+                      - code [ref=e785]: "{ \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Smith Family\", \"created_at\": \"2025-01-10T08:00:00Z\" }"
+              - generic [ref=e786]:
+                - generic [ref=e787]:
+                  - generic [ref=e788]: PUT
+                  - code [ref=e789]: "/families/{familyID}"
+                  - button "Copy link" [ref=e790] [cursor=pointer]:
+                    - img [ref=e791]
+                - paragraph [ref=e794]: Update family properties. Only the family owner can perform updates.
+                - generic [ref=e795]:
+                  - generic [ref=e798]:
+                    - heading "Request fields" [level=4] [ref=e799]
+                    - generic [ref=e802]:
+                      - generic [ref=e803]:
+                        - code [ref=e805]: name
+                        - paragraph [ref=e806]: New family display name
+                      - generic [ref=e808]: string
+                  - generic [ref=e810]:
+                    - generic [ref=e811]:
+                      - generic [ref=e812]:
+                        - generic [ref=e813]:
+                          - generic [ref=e814]: Request
+                          - generic [ref=e815]: curl
+                        - button "Copy" [ref=e816] [cursor=pointer]:
+                          - img [ref=e817]
+                          - text: Copy
+                      - code [ref=e821]: "curl -X PUT http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Smith-Jones Family\" }'"
+                    - generic [ref=e822]:
+                      - generic [ref=e823]:
+                        - generic [ref=e824]:
+                          - generic [ref=e825]: Response
+                          - generic [ref=e826]: json
+                        - button "Copy" [ref=e827] [cursor=pointer]:
+                          - img [ref=e828]
+                          - text: Copy
+                      - code [ref=e832]: // 200 OK
+              - generic [ref=e833]:
+                - generic [ref=e834]:
+                  - generic [ref=e835]: DELETE
+                  - code [ref=e836]: "/families/{familyID}"
+                  - button "Copy link" [ref=e837] [cursor=pointer]:
+                    - img [ref=e838]
+                - paragraph [ref=e841]: Permanently delete a family and all associated children, policies, and connections. Only the family owner can delete. This action cannot be undone.
+                - generic [ref=e844]:
+                  - generic [ref=e845]:
+                    - generic [ref=e846]:
+                      - generic [ref=e847]:
+                        - generic [ref=e848]: Request
+                        - generic [ref=e849]: curl
+                      - button "Copy" [ref=e850] [cursor=pointer]:
+                        - img [ref=e851]
                         - text: Copy
-                    - code [ref=e765]: "curl -X DELETE http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\""
-                  - generic [ref=e766]:
-                    - generic [ref=e767]:
-                      - generic [ref=e768]:
-                        - generic [ref=e769]: Response
-                        - generic [ref=e770]: json
-                      - button "Copy" [ref=e771] [cursor=pointer]:
-                        - img [ref=e772]
+                    - code [ref=e855]: "curl -X DELETE http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e856]:
+                    - generic [ref=e857]:
+                      - generic [ref=e858]:
+                        - generic [ref=e859]: Response
+                        - generic [ref=e860]: json
+                      - button "Copy" [ref=e861] [cursor=pointer]:
+                        - img [ref=e862]
                         - text: Copy
-                    - code [ref=e776]: // 204 No Content
-              - generic [ref=e777]:
-                - generic [ref=e778]:
-                  - generic [ref=e779]: GET
-                  - code [ref=e780]: "/families/{familyID}/children"
-                - paragraph [ref=e781]: List all children belonging to a family. Caller must be a family member.
-                - generic [ref=e782]:
-                  - generic [ref=e785]:
-                    - heading "Response fields" [level=4] [ref=e786]
-                    - generic [ref=e789]:
-                      - generic [ref=e790]:
-                        - generic [ref=e791]:
-                          - button [ref=e792] [cursor=pointer]:
-                            - img [ref=e793]
-                          - code [ref=e795]: "[]"
-                        - paragraph [ref=e796]: Array of child objects
-                      - generic [ref=e798]: Child[]
-                  - generic [ref=e800]:
-                    - generic [ref=e801]:
-                      - generic [ref=e802]:
-                        - generic [ref=e803]:
-                          - generic [ref=e804]: Request
-                          - generic [ref=e805]: curl
-                        - button "Copy" [ref=e806] [cursor=pointer]:
-                          - img [ref=e807]
+                    - code [ref=e866]: // 204 No Content
+              - generic [ref=e867]:
+                - generic [ref=e868]:
+                  - generic [ref=e869]: GET
+                  - code [ref=e870]: "/families/{familyID}/children"
+                  - button "Copy link" [ref=e871] [cursor=pointer]:
+                    - img [ref=e872]
+                - paragraph [ref=e875]: List all children belonging to a family. Caller must be a family member.
+                - generic [ref=e876]:
+                  - generic [ref=e879]:
+                    - heading "Response fields" [level=4] [ref=e880]
+                    - generic [ref=e883]:
+                      - generic [ref=e884]:
+                        - generic [ref=e885]:
+                          - button [ref=e886] [cursor=pointer]:
+                            - img [ref=e887]
+                          - code [ref=e889]: "[]"
+                        - paragraph [ref=e890]: Array of child objects
+                      - generic [ref=e892]: Child[]
+                  - generic [ref=e894]:
+                    - generic [ref=e895]:
+                      - generic [ref=e896]:
+                        - generic [ref=e897]:
+                          - generic [ref=e898]: Request
+                          - generic [ref=e899]: curl
+                        - button "Copy" [ref=e900] [cursor=pointer]:
+                          - img [ref=e901]
                           - text: Copy
-                      - code [ref=e811]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\ -H \"Authorization: Bearer <access_token>\""
-                    - generic [ref=e812]:
-                      - generic [ref=e813]:
-                        - generic [ref=e814]:
-                          - generic [ref=e815]: Response
-                          - generic [ref=e816]: json
-                        - button "Copy" [ref=e817] [cursor=pointer]:
-                          - img [ref=e818]
+                      - code [ref=e905]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e906]:
+                      - generic [ref=e907]:
+                        - generic [ref=e908]:
+                          - generic [ref=e909]: Response
+                          - generic [ref=e910]: json
+                        - button "Copy" [ref=e911] [cursor=pointer]:
+                          - img [ref=e912]
                           - text: Copy
-                      - code [ref=e822]: "[ { \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Alex\", \"birth_date\": \"2015-06-20\", \"avatar_url\": null, \"created_at\": \"2025-01-10T08:15:00Z\" } ]"
-              - generic [ref=e823]:
-                - generic [ref=e824]:
-                  - generic [ref=e825]: POST
-                  - code [ref=e826]: "/families/{familyID}/children"
-                - paragraph [ref=e827]: Add a child to a family. The birth date is used for age-based policy generation and content rating calculations.
-                - generic [ref=e828]:
-                  - generic [ref=e830]:
-                    - generic [ref=e831]:
-                      - heading "Request fields" [level=4] [ref=e832]
-                      - generic [ref=e833]:
-                        - generic [ref=e835]:
-                          - generic [ref=e836]:
-                            - code [ref=e838]: name
-                            - paragraph [ref=e839]: Child display name
-                          - generic [ref=e840]:
-                            - generic [ref=e841]: string
-                            - generic [ref=e842]: required
-                        - generic [ref=e844]:
-                          - generic [ref=e845]:
-                            - code [ref=e847]: birth_date
-                            - paragraph [ref=e848]: Date of birth in YYYY-MM-DD format
-                          - generic [ref=e849]:
-                            - generic [ref=e850]: date
-                            - generic [ref=e851]: required
-                    - generic [ref=e852]:
-                      - heading "Response fields" [level=4] [ref=e853]
-                      - generic [ref=e854]:
-                        - generic [ref=e856]:
-                          - generic [ref=e857]:
-                            - code [ref=e859]: id
-                            - paragraph [ref=e860]: Child identifier
-                          - generic [ref=e862]: uuid
-                        - generic [ref=e864]:
-                          - generic [ref=e865]:
-                            - code [ref=e867]: family_id
-                            - paragraph [ref=e868]: Parent family identifier
-                          - generic [ref=e870]: uuid
-                        - generic [ref=e872]:
-                          - generic [ref=e873]:
-                            - code [ref=e875]: name
-                            - paragraph [ref=e876]: Child display name
-                          - generic [ref=e878]: string
-                        - generic [ref=e880]:
-                          - generic [ref=e881]:
-                            - code [ref=e883]: birth_date
-                            - paragraph [ref=e884]: Date of birth (YYYY-MM-DD)
-                          - generic [ref=e886]: date
-                        - generic [ref=e888]:
-                          - generic [ref=e889]:
-                            - code [ref=e891]: avatar_url
-                            - paragraph [ref=e892]: Optional avatar URL
-                          - generic [ref=e894]: string
-                        - generic [ref=e896]:
-                          - generic [ref=e897]:
-                            - code [ref=e899]: created_at
-                            - paragraph [ref=e900]: Record creation timestamp
-                          - generic [ref=e902]: datetime
-                  - generic [ref=e904]:
-                    - generic [ref=e905]:
-                      - generic [ref=e906]:
-                        - generic [ref=e907]:
-                          - generic [ref=e908]: Request
-                          - generic [ref=e909]: curl
-                        - button "Copy" [ref=e910] [cursor=pointer]:
-                          - img [ref=e911]
+                      - code [ref=e916]: "[ { \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Alex\", \"birth_date\": \"2015-06-20\", \"avatar_url\": null, \"created_at\": \"2025-01-10T08:15:00Z\" } ]"
+              - generic [ref=e917]:
+                - generic [ref=e918]:
+                  - generic [ref=e919]: POST
+                  - code [ref=e920]: "/families/{familyID}/children"
+                  - button "Copy link" [ref=e921] [cursor=pointer]:
+                    - img [ref=e922]
+                - paragraph [ref=e925]: Add a child to a family. The birth date is used for age-based policy generation and content rating calculations.
+                - generic [ref=e926]:
+                  - generic [ref=e928]:
+                    - generic [ref=e929]:
+                      - heading "Request fields" [level=4] [ref=e930]
+                      - generic [ref=e931]:
+                        - generic [ref=e933]:
+                          - generic [ref=e934]:
+                            - code [ref=e936]: name
+                            - paragraph [ref=e937]: Child display name
+                          - generic [ref=e938]:
+                            - generic [ref=e939]: string
+                            - generic [ref=e940]: required
+                        - generic [ref=e942]:
+                          - generic [ref=e943]:
+                            - code [ref=e945]: birth_date
+                            - paragraph [ref=e946]: Date of birth in YYYY-MM-DD format
+                          - generic [ref=e947]:
+                            - generic [ref=e948]: date
+                            - generic [ref=e949]: required
+                    - generic [ref=e950]:
+                      - heading "Response fields" [level=4] [ref=e951]
+                      - generic [ref=e952]:
+                        - generic [ref=e954]:
+                          - generic [ref=e955]:
+                            - code [ref=e957]: id
+                            - paragraph [ref=e958]: Child identifier
+                          - generic [ref=e960]: uuid
+                        - generic [ref=e962]:
+                          - generic [ref=e963]:
+                            - code [ref=e965]: family_id
+                            - paragraph [ref=e966]: Parent family identifier
+                          - generic [ref=e968]: uuid
+                        - generic [ref=e970]:
+                          - generic [ref=e971]:
+                            - code [ref=e973]: name
+                            - paragraph [ref=e974]: Child display name
+                          - generic [ref=e976]: string
+                        - generic [ref=e978]:
+                          - generic [ref=e979]:
+                            - code [ref=e981]: birth_date
+                            - paragraph [ref=e982]: Date of birth (YYYY-MM-DD)
+                          - generic [ref=e984]: date
+                        - generic [ref=e986]:
+                          - generic [ref=e987]:
+                            - code [ref=e989]: avatar_url
+                            - paragraph [ref=e990]: Optional avatar URL
+                          - generic [ref=e992]: string
+                        - generic [ref=e994]:
+                          - generic [ref=e995]:
+                            - code [ref=e997]: created_at
+                            - paragraph [ref=e998]: Record creation timestamp
+                          - generic [ref=e1000]: datetime
+                  - generic [ref=e1002]:
+                    - generic [ref=e1003]:
+                      - generic [ref=e1004]:
+                        - generic [ref=e1005]:
+                          - generic [ref=e1006]: Request
+                          - generic [ref=e1007]: curl
+                        - button "Copy" [ref=e1008] [cursor=pointer]:
+                          - img [ref=e1009]
                           - text: Copy
-                      - code [ref=e915]: "curl -X POST http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Alex\", \"birth_date\": \"2015-06-20\" }'"
-                    - generic [ref=e916]:
-                      - generic [ref=e917]:
-                        - generic [ref=e918]:
-                          - generic [ref=e919]: Response
-                          - generic [ref=e920]: json
-                        - button "Copy" [ref=e921] [cursor=pointer]:
-                          - img [ref=e922]
+                      - code [ref=e1013]: "curl -X POST http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Alex\", \"birth_date\": \"2015-06-20\" }'"
+                    - generic [ref=e1014]:
+                      - generic [ref=e1015]:
+                        - generic [ref=e1016]:
+                          - generic [ref=e1017]: Response
+                          - generic [ref=e1018]: json
+                        - button "Copy" [ref=e1019] [cursor=pointer]:
+                          - img [ref=e1020]
                           - text: Copy
-                      - code [ref=e926]: "{ \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Alex\", \"birth_date\": \"2015-06-20\", \"avatar_url\": null, \"created_at\": \"2025-01-10T08:15:00Z\" }"
-              - generic [ref=e927]:
-                - generic [ref=e928]:
-                  - generic [ref=e929]: GET
-                  - code [ref=e930]: "/children/{childID}"
-                - paragraph [ref=e931]: Retrieve details of a specific child. Caller must be a member of the child's family.
-                - generic [ref=e932]:
-                  - generic [ref=e935]:
-                    - heading "Response fields" [level=4] [ref=e936]
-                    - generic [ref=e937]:
-                      - generic [ref=e939]:
-                        - generic [ref=e940]:
-                          - code [ref=e942]: id
-                          - paragraph [ref=e943]: Child identifier
-                        - generic [ref=e945]: uuid
-                      - generic [ref=e947]:
-                        - generic [ref=e948]:
-                          - code [ref=e950]: family_id
-                          - paragraph [ref=e951]: Parent family identifier
-                        - generic [ref=e953]: uuid
-                      - generic [ref=e955]:
-                        - generic [ref=e956]:
-                          - code [ref=e958]: name
-                          - paragraph [ref=e959]: Child display name
-                        - generic [ref=e961]: string
-                      - generic [ref=e963]:
-                        - generic [ref=e964]:
-                          - code [ref=e966]: birth_date
-                          - paragraph [ref=e967]: Date of birth (YYYY-MM-DD)
-                        - generic [ref=e969]: date
-                      - generic [ref=e971]:
-                        - generic [ref=e972]:
-                          - code [ref=e974]: avatar_url
-                          - paragraph [ref=e975]: Optional avatar URL
-                        - generic [ref=e977]: string
-                      - generic [ref=e979]:
-                        - generic [ref=e980]:
-                          - code [ref=e982]: created_at
-                          - paragraph [ref=e983]: Record creation timestamp
-                        - generic [ref=e985]: datetime
-                  - generic [ref=e987]:
-                    - generic [ref=e988]:
-                      - generic [ref=e989]:
-                        - generic [ref=e990]:
-                          - generic [ref=e991]: Request
-                          - generic [ref=e992]: curl
-                        - button "Copy" [ref=e993] [cursor=pointer]:
-                          - img [ref=e994]
-                          - text: Copy
-                      - code [ref=e998]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
-                    - generic [ref=e999]:
-                      - generic [ref=e1000]:
-                        - generic [ref=e1001]:
-                          - generic [ref=e1002]: Response
-                          - generic [ref=e1003]: json
-                        - button "Copy" [ref=e1004] [cursor=pointer]:
-                          - img [ref=e1005]
-                          - text: Copy
-                      - code [ref=e1009]: "{ \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Alex\", \"birth_date\": \"2015-06-20\", \"avatar_url\": null, \"created_at\": \"2025-01-10T08:15:00Z\" }"
-              - generic [ref=e1010]:
-                - generic [ref=e1011]:
-                  - generic [ref=e1012]: PUT
-                  - code [ref=e1013]: "/children/{childID}"
-                - paragraph [ref=e1014]: Update a child's profile. Only family members with parent or owner role can update.
-                - generic [ref=e1015]:
-                  - generic [ref=e1018]:
-                    - heading "Request fields" [level=4] [ref=e1019]
-                    - generic [ref=e1020]:
-                      - generic [ref=e1022]:
-                        - generic [ref=e1023]:
-                          - code [ref=e1025]: name
-                          - paragraph [ref=e1026]: Updated display name
-                        - generic [ref=e1028]: string
-                      - generic [ref=e1030]:
-                        - generic [ref=e1031]:
-                          - code [ref=e1033]: birth_date
-                          - paragraph [ref=e1034]: Updated date of birth
-                        - generic [ref=e1036]: date
-                  - generic [ref=e1038]:
+                      - code [ref=e1024]: "{ \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Alex\", \"birth_date\": \"2015-06-20\", \"avatar_url\": null, \"created_at\": \"2025-01-10T08:15:00Z\" }"
+              - generic [ref=e1025]:
+                - generic [ref=e1026]:
+                  - generic [ref=e1027]: GET
+                  - code [ref=e1028]: "/children/{childID}"
+                  - button "Copy link" [ref=e1029] [cursor=pointer]:
+                    - img [ref=e1030]
+                - paragraph [ref=e1033]: Retrieve details of a specific child. Caller must be a member of the child's family.
+                - generic [ref=e1034]:
+                  - generic [ref=e1037]:
+                    - heading "Response fields" [level=4] [ref=e1038]
                     - generic [ref=e1039]:
-                      - generic [ref=e1040]:
-                        - generic [ref=e1041]:
-                          - generic [ref=e1042]: Request
-                          - generic [ref=e1043]: curl
-                        - button "Copy" [ref=e1044] [cursor=pointer]:
-                          - img [ref=e1045]
+                      - generic [ref=e1041]:
+                        - generic [ref=e1042]:
+                          - code [ref=e1044]: id
+                          - paragraph [ref=e1045]: Child identifier
+                        - generic [ref=e1047]: uuid
+                      - generic [ref=e1049]:
+                        - generic [ref=e1050]:
+                          - code [ref=e1052]: family_id
+                          - paragraph [ref=e1053]: Parent family identifier
+                        - generic [ref=e1055]: uuid
+                      - generic [ref=e1057]:
+                        - generic [ref=e1058]:
+                          - code [ref=e1060]: name
+                          - paragraph [ref=e1061]: Child display name
+                        - generic [ref=e1063]: string
+                      - generic [ref=e1065]:
+                        - generic [ref=e1066]:
+                          - code [ref=e1068]: birth_date
+                          - paragraph [ref=e1069]: Date of birth (YYYY-MM-DD)
+                        - generic [ref=e1071]: date
+                      - generic [ref=e1073]:
+                        - generic [ref=e1074]:
+                          - code [ref=e1076]: avatar_url
+                          - paragraph [ref=e1077]: Optional avatar URL
+                        - generic [ref=e1079]: string
+                      - generic [ref=e1081]:
+                        - generic [ref=e1082]:
+                          - code [ref=e1084]: created_at
+                          - paragraph [ref=e1085]: Record creation timestamp
+                        - generic [ref=e1087]: datetime
+                  - generic [ref=e1089]:
+                    - generic [ref=e1090]:
+                      - generic [ref=e1091]:
+                        - generic [ref=e1092]:
+                          - generic [ref=e1093]: Request
+                          - generic [ref=e1094]: curl
+                        - button "Copy" [ref=e1095] [cursor=pointer]:
+                          - img [ref=e1096]
                           - text: Copy
-                      - code [ref=e1049]: "curl -X PUT http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Alexander\" }'"
-                    - generic [ref=e1050]:
-                      - generic [ref=e1051]:
-                        - generic [ref=e1052]:
-                          - generic [ref=e1053]: Response
-                          - generic [ref=e1054]: json
-                        - button "Copy" [ref=e1055] [cursor=pointer]:
-                          - img [ref=e1056]
-                          - text: Copy
-                      - code [ref=e1060]: // 200 OK
-              - generic [ref=e1061]:
-                - generic [ref=e1062]:
-                  - generic [ref=e1063]: DELETE
-                  - code [ref=e1064]: "/children/{childID}"
-                - paragraph [ref=e1065]: Remove a child and all associated policies and sync history. Only the family owner can delete children.
-                - generic [ref=e1068]:
-                  - generic [ref=e1069]:
-                    - generic [ref=e1070]:
-                      - generic [ref=e1071]:
-                        - generic [ref=e1072]: Request
-                        - generic [ref=e1073]: curl
-                      - button "Copy" [ref=e1074] [cursor=pointer]:
-                        - img [ref=e1075]
-                        - text: Copy
-                    - code [ref=e1079]: "curl -X DELETE http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
-                  - generic [ref=e1080]:
-                    - generic [ref=e1081]:
-                      - generic [ref=e1082]:
-                        - generic [ref=e1083]: Response
-                        - generic [ref=e1084]: json
-                      - button "Copy" [ref=e1085] [cursor=pointer]:
-                        - img [ref=e1086]
-                        - text: Copy
-                    - code [ref=e1090]: // 204 No Content
-              - generic [ref=e1091]:
-                - generic [ref=e1092]:
-                  - generic [ref=e1093]: GET
-                  - code [ref=e1094]: "/children/{childID}/age-ratings"
-                - paragraph [ref=e1095]: Return age-appropriate content ratings for a child across all supported rating systems (MPAA, TV Parental Guidelines, ESRB, PEGI, Common Sense Media). Calculated from the child's birth date.
-                - generic [ref=e1096]:
-                  - generic [ref=e1099]:
-                    - heading "Response fields" [level=4] [ref=e1100]
+                      - code [ref=e1100]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e1101]:
-                      - generic [ref=e1103]:
-                        - generic [ref=e1104]:
-                          - code [ref=e1106]: age
-                          - paragraph [ref=e1107]: Child's current age in years
-                        - generic [ref=e1109]: integer
-                      - generic [ref=e1111]:
-                        - generic [ref=e1112]:
-                          - generic [ref=e1113]:
-                            - button [ref=e1114] [cursor=pointer]:
-                              - img [ref=e1115]
-                            - code [ref=e1117]: ratings
-                          - paragraph [ref=e1118]: Map of rating system ID to maximum allowed rating
-                        - generic [ref=e1120]: object
-                  - generic [ref=e1122]:
-                    - generic [ref=e1123]:
-                      - generic [ref=e1124]:
-                        - generic [ref=e1125]:
-                          - generic [ref=e1126]: Request
-                          - generic [ref=e1127]: curl
-                        - button "Copy" [ref=e1128] [cursor=pointer]:
-                          - img [ref=e1129]
+                      - generic [ref=e1102]:
+                        - generic [ref=e1103]:
+                          - generic [ref=e1104]: Response
+                          - generic [ref=e1105]: json
+                        - button "Copy" [ref=e1106] [cursor=pointer]:
+                          - img [ref=e1107]
                           - text: Copy
-                      - code [ref=e1133]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/age-ratings \\ -H \"Authorization: Bearer <access_token>\""
-                    - generic [ref=e1134]:
-                      - generic [ref=e1135]:
-                        - generic [ref=e1136]:
-                          - generic [ref=e1137]: Response
-                          - generic [ref=e1138]: json
-                        - button "Copy" [ref=e1139] [cursor=pointer]:
-                          - img [ref=e1140]
+                      - code [ref=e1111]: "{ \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"Alex\", \"birth_date\": \"2015-06-20\", \"avatar_url\": null, \"created_at\": \"2025-01-10T08:15:00Z\" }"
+              - generic [ref=e1112]:
+                - generic [ref=e1113]:
+                  - generic [ref=e1114]: PUT
+                  - code [ref=e1115]: "/children/{childID}"
+                  - button "Copy link" [ref=e1116] [cursor=pointer]:
+                    - img [ref=e1117]
+                - paragraph [ref=e1120]: Update a child's profile. Only family members with parent or owner role can update.
+                - generic [ref=e1121]:
+                  - generic [ref=e1124]:
+                    - heading "Request fields" [level=4] [ref=e1125]
+                    - generic [ref=e1126]:
+                      - generic [ref=e1128]:
+                        - generic [ref=e1129]:
+                          - code [ref=e1131]: name
+                          - paragraph [ref=e1132]: Updated display name
+                        - generic [ref=e1134]: string
+                      - generic [ref=e1136]:
+                        - generic [ref=e1137]:
+                          - code [ref=e1139]: birth_date
+                          - paragraph [ref=e1140]: Updated date of birth
+                        - generic [ref=e1142]: date
+                  - generic [ref=e1144]:
+                    - generic [ref=e1145]:
+                      - generic [ref=e1146]:
+                        - generic [ref=e1147]:
+                          - generic [ref=e1148]: Request
+                          - generic [ref=e1149]: curl
+                        - button "Copy" [ref=e1150] [cursor=pointer]:
+                          - img [ref=e1151]
                           - text: Copy
-                      - code [ref=e1144]: "{ \"age\": 10, \"ratings\": { \"mpaa\": { \"code\": \"PG\", \"name\": \"Parental Guidance Suggested\", \"min_age\": 8 }, \"tv\": { \"code\": \"TV-PG\", \"name\": \"Parental Guidance Suggested\", \"min_age\": 8 }, \"esrb\": { \"code\": \"E10+\", \"name\": \"Everyone 10+\", \"min_age\": 10 }, \"pegi\": { \"code\": \"PEGI 12\", \"name\": \"PEGI 12\", \"min_age\": 12 }, \"csm\": { \"code\": \"10+\", \"name\": \"Age 10+\", \"min_age\": 10 } } }"
-          - generic [ref=e1145]:
-            - heading "3. Safety Policies" [level=2] [ref=e1146]
-            - generic [ref=e1147]:
-              - paragraph [ref=e1148]:
-                - text: Safety policies define protection rules for each child. Each policy contains rules across 40 categories spanning 11 domains. Platforms
-                - strong [ref=e1149]: MUST
-                - text: implement enforcement for all categories they claim capability in. Rules are stored as JSONB with category-specific schemas.
-              - paragraph [ref=e1150]:
-                - text: "Policies transition through states:"
-                - code [ref=e1151]: draft
-                - text: →
-                - code [ref=e1152]: active
-                - text: →
-                - code [ref=e1153]: paused
-                - text: . Only
-                - code [ref=e1154]: active
-                - text: policies
-                - strong [ref=e1155]: SHALL
-                - text: be enforced on platforms.
-            - generic [ref=e1156]:
-              - generic [ref=e1157]:
-                - generic [ref=e1158]:
-                  - generic [ref=e1159]: GET
-                  - code [ref=e1160]: "/children/{childID}/policies"
-                - paragraph [ref=e1161]: List all safety policies for a child, ordered by priority. Each child can have multiple policies (e.g. weekday vs weekend).
-                - generic [ref=e1162]:
-                  - generic [ref=e1165]:
-                    - heading "Response fields" [level=4] [ref=e1166]
-                    - generic [ref=e1169]:
-                      - generic [ref=e1170]:
-                        - generic [ref=e1171]:
-                          - button [ref=e1172] [cursor=pointer]:
-                            - img [ref=e1173]
-                          - code [ref=e1175]: "[]"
-                        - paragraph [ref=e1176]: Array of policy objects
-                      - generic [ref=e1178]: Policy[]
-                  - generic [ref=e1180]:
-                    - generic [ref=e1181]:
-                      - generic [ref=e1182]:
-                        - generic [ref=e1183]:
-                          - generic [ref=e1184]: Request
-                          - generic [ref=e1185]: curl
-                        - button "Copy" [ref=e1186] [cursor=pointer]:
-                          - img [ref=e1187]
+                      - code [ref=e1155]: "curl -X PUT http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Alexander\" }'"
+                    - generic [ref=e1156]:
+                      - generic [ref=e1157]:
+                        - generic [ref=e1158]:
+                          - generic [ref=e1159]: Response
+                          - generic [ref=e1160]: json
+                        - button "Copy" [ref=e1161] [cursor=pointer]:
+                          - img [ref=e1162]
                           - text: Copy
-                      - code [ref=e1191]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\ -H \"Authorization: Bearer <access_token>\""
-                    - generic [ref=e1192]:
-                      - generic [ref=e1193]:
-                        - generic [ref=e1194]:
-                          - generic [ref=e1195]: Response
-                          - generic [ref=e1196]: json
-                        - button "Copy" [ref=e1197] [cursor=pointer]:
-                          - img [ref=e1198]
-                          - text: Copy
-                      - code [ref=e1202]: "[ { \"id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"name\": \"School Days\", \"status\": \"active\", \"priority\": 1, \"created_at\": \"2025-01-10T09:00:00Z\" } ]"
-              - generic [ref=e1203]:
-                - generic [ref=e1204]:
-                  - generic [ref=e1205]: POST
-                  - code [ref=e1206]: "/children/{childID}/policies"
-                - paragraph [ref=e1207]: Create a new safety policy for a child. The policy starts in draft status. Add rules, then activate it to begin enforcement.
-                - generic [ref=e1208]:
-                  - generic [ref=e1210]:
-                    - generic [ref=e1211]:
-                      - heading "Request fields" [level=4] [ref=e1212]
-                      - generic [ref=e1215]:
-                        - generic [ref=e1216]:
-                          - code [ref=e1218]: name
-                          - paragraph [ref=e1219]: Policy display name (e.g. "School Days", "Weekend")
-                        - generic [ref=e1220]:
-                          - generic [ref=e1221]: string
-                          - generic [ref=e1222]: required
-                    - generic [ref=e1223]:
-                      - heading "Response fields" [level=4] [ref=e1224]
+                      - code [ref=e1166]: // 200 OK
+              - generic [ref=e1167]:
+                - generic [ref=e1168]:
+                  - generic [ref=e1169]: DELETE
+                  - code [ref=e1170]: "/children/{childID}"
+                  - button "Copy link" [ref=e1171] [cursor=pointer]:
+                    - img [ref=e1172]
+                - paragraph [ref=e1175]: Remove a child and all associated policies and sync history. Only the family owner can delete children.
+                - generic [ref=e1178]:
+                  - generic [ref=e1179]:
+                    - generic [ref=e1180]:
+                      - generic [ref=e1181]:
+                        - generic [ref=e1182]: Request
+                        - generic [ref=e1183]: curl
+                      - button "Copy" [ref=e1184] [cursor=pointer]:
+                        - img [ref=e1185]
+                        - text: Copy
+                    - code [ref=e1189]: "curl -X DELETE http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e1190]:
+                    - generic [ref=e1191]:
+                      - generic [ref=e1192]:
+                        - generic [ref=e1193]: Response
+                        - generic [ref=e1194]: json
+                      - button "Copy" [ref=e1195] [cursor=pointer]:
+                        - img [ref=e1196]
+                        - text: Copy
+                    - code [ref=e1200]: // 204 No Content
+              - generic [ref=e1201]:
+                - generic [ref=e1202]:
+                  - generic [ref=e1203]: GET
+                  - code [ref=e1204]: "/children/{childID}/age-ratings"
+                  - button "Copy link" [ref=e1205] [cursor=pointer]:
+                    - img [ref=e1206]
+                - paragraph [ref=e1209]: Return age-appropriate content ratings for a child across all supported rating systems (MPAA, TV Parental Guidelines, ESRB, PEGI, Common Sense Media). Calculated from the child's birth date.
+                - generic [ref=e1210]:
+                  - generic [ref=e1213]:
+                    - heading "Response fields" [level=4] [ref=e1214]
+                    - generic [ref=e1215]:
+                      - generic [ref=e1217]:
+                        - generic [ref=e1218]:
+                          - code [ref=e1220]: age
+                          - paragraph [ref=e1221]: Child's current age in years
+                        - generic [ref=e1223]: integer
                       - generic [ref=e1225]:
-                        - generic [ref=e1227]:
-                          - generic [ref=e1228]:
-                            - code [ref=e1230]: id
-                            - paragraph [ref=e1231]: Policy identifier
-                          - generic [ref=e1233]: uuid
-                        - generic [ref=e1235]:
-                          - generic [ref=e1236]:
-                            - code [ref=e1238]: child_id
-                            - paragraph [ref=e1239]: Associated child identifier
-                          - generic [ref=e1241]: uuid
-                        - generic [ref=e1243]:
-                          - generic [ref=e1244]:
-                            - code [ref=e1246]: name
-                            - paragraph [ref=e1247]: Policy display name
-                          - generic [ref=e1249]: string
-                        - generic [ref=e1251]:
-                          - generic [ref=e1252]:
-                            - code [ref=e1254]: status
-                            - paragraph [ref=e1255]: "One of: active, paused, draft"
-                          - generic [ref=e1257]: enum
-                        - generic [ref=e1259]:
-                          - generic [ref=e1260]:
-                            - code [ref=e1262]: priority
-                            - paragraph [ref=e1263]: Evaluation priority (lower = higher precedence)
-                          - generic [ref=e1265]: integer
-                        - generic [ref=e1267]:
-                          - generic [ref=e1268]:
-                            - code [ref=e1270]: created_at
-                            - paragraph [ref=e1271]: Policy creation timestamp
-                          - generic [ref=e1273]: datetime
-                  - generic [ref=e1275]:
-                    - generic [ref=e1276]:
-                      - generic [ref=e1277]:
-                        - generic [ref=e1278]:
-                          - generic [ref=e1279]: Request
-                          - generic [ref=e1280]: curl
-                        - button "Copy" [ref=e1281] [cursor=pointer]:
-                          - img [ref=e1282]
+                        - generic [ref=e1226]:
+                          - generic [ref=e1227]:
+                            - button [ref=e1228] [cursor=pointer]:
+                              - img [ref=e1229]
+                            - code [ref=e1231]: ratings
+                          - paragraph [ref=e1232]: Map of rating system ID to maximum allowed rating
+                        - generic [ref=e1234]: object
+                  - generic [ref=e1236]:
+                    - generic [ref=e1237]:
+                      - generic [ref=e1238]:
+                        - generic [ref=e1239]:
+                          - generic [ref=e1240]: Request
+                          - generic [ref=e1241]: curl
+                        - button "Copy" [ref=e1242] [cursor=pointer]:
+                          - img [ref=e1243]
                           - text: Copy
-                      - code [ref=e1286]: "curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"School Days\" }'"
-                    - generic [ref=e1287]:
-                      - generic [ref=e1288]:
-                        - generic [ref=e1289]:
-                          - generic [ref=e1290]: Response
-                          - generic [ref=e1291]: json
-                        - button "Copy" [ref=e1292] [cursor=pointer]:
-                          - img [ref=e1293]
+                      - code [ref=e1247]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/age-ratings \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e1248]:
+                      - generic [ref=e1249]:
+                        - generic [ref=e1250]:
+                          - generic [ref=e1251]: Response
+                          - generic [ref=e1252]: json
+                        - button "Copy" [ref=e1253] [cursor=pointer]:
+                          - img [ref=e1254]
                           - text: Copy
-                      - code [ref=e1297]: "{ \"id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"name\": \"School Days\", \"status\": \"draft\", \"priority\": 1, \"created_at\": \"2025-01-10T09:00:00Z\" }"
-              - generic [ref=e1298]:
-                - generic [ref=e1299]:
-                  - generic [ref=e1300]: POST
-                  - code [ref=e1301]: "/policies/{policyID}/activate"
-                - paragraph [ref=e1302]: Transition a policy from draft or paused to active. An active policy's rules will be enforced on the next sync. Only one policy per child can be active at a time; activating one pauses others.
-                - generic [ref=e1305]:
+                      - code [ref=e1258]: "{ \"age\": 10, \"ratings\": { \"mpaa\": { \"code\": \"PG\", \"name\": \"Parental Guidance Suggested\", \"min_age\": 8 }, \"tv\": { \"code\": \"TV-PG\", \"name\": \"Parental Guidance Suggested\", \"min_age\": 8 }, \"esrb\": { \"code\": \"E10+\", \"name\": \"Everyone 10+\", \"min_age\": 10 }, \"pegi\": { \"code\": \"PEGI 12\", \"name\": \"PEGI 12\", \"min_age\": 12 }, \"csm\": { \"code\": \"10+\", \"name\": \"Age 10+\", \"min_age\": 10 } } }"
+          - generic [ref=e1259]:
+            - heading "2.1 Family Members" [level=2] [ref=e1260]
+            - generic [ref=e1261]:
+              - paragraph [ref=e1262]:
+                - text: Families support multi-guardian access with role-based permissions. Members
+                - strong [ref=e1263]: MAY
+                - text: be added to share access to children, policies, and enforcement controls. The family data model supports co-parenting, caregiver delegation, and institutional use cases.
+              - generic [ref=e1264]:
+                - generic [ref=e1265]:
+                  - heading "Owner" [level=4] [ref=e1266]
+                  - paragraph [ref=e1267]:
+                    - text: Full administrative control.
+                    - strong [ref=e1268]: MAY
+                    - text: add/remove members, manage all policies, and delete the family.
+                - generic [ref=e1269]:
+                  - heading "Parent" [level=4] [ref=e1270]
+                  - paragraph [ref=e1271]:
+                    - strong [ref=e1272]: MAY
+                    - text: manage children, modify policies, trigger enforcement, and view reports.
+                - generic [ref=e1273]:
+                  - heading "Guardian" [level=4] [ref=e1274]
+                  - paragraph [ref=e1275]:
+                    - text: Read-only access.
+                    - strong [ref=e1276]: MAY
+                    - text: view policies and reports.
+                    - strong [ref=e1277]: MUST NOT
+                    - text: modify rules.
+            - generic [ref=e1278]:
+              - generic [ref=e1279]:
+                - generic [ref=e1280]:
+                  - generic [ref=e1281]: GET
+                  - code [ref=e1282]: "/families/{familyID}/members"
+                  - button "Copy link" [ref=e1283] [cursor=pointer]:
+                    - img [ref=e1284]
+                - paragraph [ref=e1287]: List all members of a family with their roles and permissions. Roles include owner (full admin), parent (manage children and policies), and guardian (read-only access).
+                - generic [ref=e1288]:
+                  - generic [ref=e1291]:
+                    - heading "Response fields" [level=4] [ref=e1292]
+                    - generic [ref=e1295]:
+                      - generic [ref=e1296]:
+                        - generic [ref=e1297]:
+                          - button [ref=e1298] [cursor=pointer]:
+                            - img [ref=e1299]
+                          - code [ref=e1301]: "[]"
+                        - paragraph [ref=e1302]: Array of family member objects
+                      - generic [ref=e1304]: Member[]
                   - generic [ref=e1306]:
                     - generic [ref=e1307]:
                       - generic [ref=e1308]:
-                        - generic [ref=e1309]: Request
-                        - generic [ref=e1310]: curl
-                      - button "Copy" [ref=e1311] [cursor=pointer]:
-                        - img [ref=e1312]
-                        - text: Copy
-                    - code [ref=e1316]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/activate \\ -H \"Authorization: Bearer <access_token>\""
-                  - generic [ref=e1317]:
+                        - generic [ref=e1309]:
+                          - generic [ref=e1310]: Request
+                          - generic [ref=e1311]: curl
+                        - button "Copy" [ref=e1312] [cursor=pointer]:
+                          - img [ref=e1313]
+                          - text: Copy
+                      - code [ref=e1317]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e1318]:
                       - generic [ref=e1319]:
-                        - generic [ref=e1320]: Response
-                        - generic [ref=e1321]: json
-                      - button "Copy" [ref=e1322] [cursor=pointer]:
-                        - img [ref=e1323]
-                        - text: Copy
-                    - code [ref=e1327]: // 200 OK
-              - generic [ref=e1328]:
-                - generic [ref=e1329]:
-                  - generic [ref=e1330]: POST
-                  - code [ref=e1331]: "/policies/{policyID}/pause"
-                - paragraph [ref=e1332]: Pause an active policy. Rules remain configured but will not be enforced until reactivated. Pausing does not remove already-pushed rules from providers.
-                - generic [ref=e1335]:
-                  - generic [ref=e1336]:
-                    - generic [ref=e1337]:
-                      - generic [ref=e1338]:
-                        - generic [ref=e1339]: Request
-                        - generic [ref=e1340]: curl
-                      - button "Copy" [ref=e1341] [cursor=pointer]:
-                        - img [ref=e1342]
-                        - text: Copy
-                    - code [ref=e1346]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/pause \\ -H \"Authorization: Bearer <access_token>\""
-                  - generic [ref=e1347]:
-                    - generic [ref=e1348]:
-                      - generic [ref=e1349]:
-                        - generic [ref=e1350]: Response
-                        - generic [ref=e1351]: json
-                      - button "Copy" [ref=e1352] [cursor=pointer]:
-                        - img [ref=e1353]
-                        - text: Copy
-                    - code [ref=e1357]: // 200 OK
-              - generic [ref=e1358]:
-                - generic [ref=e1359]:
-                  - generic [ref=e1360]: POST
-                  - code [ref=e1361]: "/policies/{policyID}/generate-from-age"
-                - paragraph [ref=e1362]: Automatically generate a full set of policy rules based on the child's current age. Uses the built-in age-to-setting mapping across all 26 rule categories. Existing rules on the policy are replaced.
-                - generic [ref=e1363]:
-                  - generic [ref=e1366]:
-                    - heading "Response fields" [level=4] [ref=e1367]
-                    - generic [ref=e1370]:
-                      - generic [ref=e1371]:
-                        - generic [ref=e1372]:
-                          - button [ref=e1373] [cursor=pointer]:
-                            - img [ref=e1374]
-                          - code [ref=e1376]: "[]"
-                        - paragraph [ref=e1377]: Generated rules
-                      - generic [ref=e1379]: PolicyRule[]
-                  - generic [ref=e1381]:
-                    - generic [ref=e1382]:
-                      - generic [ref=e1383]:
-                        - generic [ref=e1384]:
-                          - generic [ref=e1385]: Request
-                          - generic [ref=e1386]: curl
-                        - button "Copy" [ref=e1387] [cursor=pointer]:
-                          - img [ref=e1388]
+                        - generic [ref=e1320]:
+                          - generic [ref=e1321]: Response
+                          - generic [ref=e1322]: json
+                        - button "Copy" [ref=e1323] [cursor=pointer]:
+                          - img [ref=e1324]
                           - text: Copy
-                      - code [ref=e1392]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/generate-from-age \\ -H \"Authorization: Bearer <access_token>\""
-                    - generic [ref=e1393]:
-                      - generic [ref=e1394]:
-                        - generic [ref=e1395]:
-                          - generic [ref=e1396]: Response
-                          - generic [ref=e1397]: json
-                        - button "Copy" [ref=e1398] [cursor=pointer]:
-                          - img [ref=e1399]
+                      - code [ref=e1328]: "[ { \"id\": \"m1a2b3c4-d5e6-7890-abcd-ef1234567890\", \"user_id\": \"550e8400-e29b-41d4-a716-446655440000\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"role\": \"owner\", \"email\": \"parent@example.com\", \"name\": \"Jane Parent\", \"joined_at\": \"2025-01-10T08:00:00Z\" } ]"
+              - generic [ref=e1329]:
+                - generic [ref=e1330]:
+                  - generic [ref=e1331]: POST
+                  - code [ref=e1332]: "/families/{familyID}/members"
+                  - button "Copy link" [ref=e1333] [cursor=pointer]:
+                    - img [ref=e1334]
+                - paragraph [ref=e1337]: "Invite a user to join a family. The invited user must have an existing Phosra account. Only the family owner can add new members. Supported roles: parent, guardian."
+                - generic [ref=e1338]:
+                  - generic [ref=e1340]:
+                    - generic [ref=e1341]:
+                      - heading "Request fields" [level=4] [ref=e1342]
+                      - generic [ref=e1343]:
+                        - generic [ref=e1345]:
+                          - generic [ref=e1346]:
+                            - code [ref=e1348]: email
+                            - paragraph [ref=e1349]: Email address of the user to invite
+                          - generic [ref=e1350]:
+                            - generic [ref=e1351]: string
+                            - generic [ref=e1352]: required
+                        - generic [ref=e1354]:
+                          - generic [ref=e1355]:
+                            - code [ref=e1357]: role
+                            - paragraph [ref=e1358]: "One of: parent, guardian"
+                          - generic [ref=e1359]:
+                            - generic [ref=e1360]: enum
+                            - generic [ref=e1361]: required
+                    - generic [ref=e1362]:
+                      - heading "Response fields" [level=4] [ref=e1363]
+                      - generic [ref=e1364]:
+                        - generic [ref=e1366]:
+                          - generic [ref=e1367]:
+                            - code [ref=e1369]: id
+                            - paragraph [ref=e1370]: Member record identifier
+                          - generic [ref=e1372]: uuid
+                        - generic [ref=e1374]:
+                          - generic [ref=e1375]:
+                            - code [ref=e1377]: user_id
+                            - paragraph [ref=e1378]: User account identifier
+                          - generic [ref=e1380]: uuid
+                        - generic [ref=e1382]:
+                          - generic [ref=e1383]:
+                            - code [ref=e1385]: family_id
+                            - paragraph [ref=e1386]: Family identifier
+                          - generic [ref=e1388]: uuid
+                        - generic [ref=e1390]:
+                          - generic [ref=e1391]:
+                            - code [ref=e1393]: role
+                            - paragraph [ref=e1394]: "One of: owner, parent, guardian"
+                          - generic [ref=e1396]: enum
+                        - generic [ref=e1398]:
+                          - generic [ref=e1399]:
+                            - code [ref=e1401]: email
+                            - paragraph [ref=e1402]: Member email address
+                          - generic [ref=e1404]: string
+                        - generic [ref=e1406]:
+                          - generic [ref=e1407]:
+                            - code [ref=e1409]: name
+                            - paragraph [ref=e1410]: Member display name
+                          - generic [ref=e1412]: string
+                        - generic [ref=e1414]:
+                          - generic [ref=e1415]:
+                            - code [ref=e1417]: joined_at
+                            - paragraph [ref=e1418]: When the member joined the family
+                          - generic [ref=e1420]: datetime
+                  - generic [ref=e1422]:
+                    - generic [ref=e1423]:
+                      - generic [ref=e1424]:
+                        - generic [ref=e1425]:
+                          - generic [ref=e1426]: Request
+                          - generic [ref=e1427]: curl
+                        - button "Copy" [ref=e1428] [cursor=pointer]:
+                          - img [ref=e1429]
                           - text: Copy
-                      - code [ref=e1403]: "[ { \"id\": \"d4e5f6a7-b8c9-0123-def0-123456789abc\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"web_filtering\", \"enabled\": true, \"config\": { \"block_categories\": [ \"adult\", \"gambling\", \"violence\" ] }, \"created_at\": \"2025-01-10T09:05:00Z\" }, { \"id\": \"e5f6a7b8-c9d0-1234-ef01-23456789abcd\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"screen_time\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 120, \"bedtime\": \"21:00\" }, \"created_at\": \"2025-01-10T09:05:00Z\" } ]"
-              - generic [ref=e1404]:
-                - generic [ref=e1405]:
-                  - generic [ref=e1406]: GET
-                  - code [ref=e1407]: "/policies/{policyID}/rules"
-                - paragraph [ref=e1408]: List all rules in a policy. Rules are returned in category order across all 26 supported categories.
-                - generic [ref=e1409]:
-                  - generic [ref=e1412]:
-                    - heading "Response fields" [level=4] [ref=e1413]
-                    - generic [ref=e1416]:
-                      - generic [ref=e1417]:
-                        - generic [ref=e1418]:
-                          - button [ref=e1419] [cursor=pointer]:
-                            - img [ref=e1420]
-                          - code [ref=e1422]: "[]"
-                        - paragraph [ref=e1423]: Array of rule objects
-                      - generic [ref=e1425]: PolicyRule[]
-                  - generic [ref=e1427]:
-                    - generic [ref=e1428]:
-                      - generic [ref=e1429]:
-                        - generic [ref=e1430]:
-                          - generic [ref=e1431]: Request
-                          - generic [ref=e1432]: curl
-                        - button "Copy" [ref=e1433] [cursor=pointer]:
-                          - img [ref=e1434]
+                      - code [ref=e1433]: "curl -X POST http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"coparent@example.com\", \"role\": \"parent\" }'"
+                    - generic [ref=e1434]:
+                      - generic [ref=e1435]:
+                        - generic [ref=e1436]:
+                          - generic [ref=e1437]: Response
+                          - generic [ref=e1438]: json
+                        - button "Copy" [ref=e1439] [cursor=pointer]:
+                          - img [ref=e1440]
                           - text: Copy
-                      - code [ref=e1438]: "curl http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\ -H \"Authorization: Bearer <access_token>\""
-                    - generic [ref=e1439]:
-                      - generic [ref=e1440]:
-                        - generic [ref=e1441]:
-                          - generic [ref=e1442]: Response
-                          - generic [ref=e1443]: json
-                        - button "Copy" [ref=e1444] [cursor=pointer]:
-                          - img [ref=e1445]
-                          - text: Copy
-                      - code [ref=e1449]: "[ { \"id\": \"d4e5f6a7-b8c9-0123-def0-123456789abc\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"web_filtering\", \"enabled\": true, \"config\": { \"block_categories\": [ \"adult\", \"gambling\", \"violence\" ] }, \"created_at\": \"2025-01-10T09:05:00Z\" } ]"
-              - generic [ref=e1450]:
-                - generic [ref=e1451]:
-                  - generic [ref=e1452]: POST
-                  - code [ref=e1453]: "/policies/{policyID}/rules"
-                - paragraph [ref=e1454]: Add a rule to a policy. The category must be one of the 26 supported categories. Config schema varies per category (see Category Reference).
-                - generic [ref=e1455]:
+                      - code [ref=e1444]: "{ \"id\": \"m2b3c4d5-e6f7-8901-bcde-f12345678901\", \"user_id\": \"660e8400-e29b-41d4-a716-446655440001\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"role\": \"parent\", \"email\": \"coparent@example.com\", \"name\": \"John Co-Parent\", \"joined_at\": \"2025-01-12T14:30:00Z\" }"
+              - generic [ref=e1445]:
+                - generic [ref=e1446]:
+                  - generic [ref=e1447]: DELETE
+                  - code [ref=e1448]: "/families/{familyID}/members/{memberID}"
+                  - button "Copy link" [ref=e1449] [cursor=pointer]:
+                    - img [ref=e1450]
+                - paragraph [ref=e1453]: Remove a member from a family. Only the family owner can remove members. The owner cannot remove themselves — use Delete Family instead. Removed members immediately lose access to all family data.
+                - generic [ref=e1456]:
                   - generic [ref=e1457]:
                     - generic [ref=e1458]:
-                      - heading "Request fields" [level=4] [ref=e1459]
-                      - generic [ref=e1460]:
-                        - generic [ref=e1462]:
-                          - generic [ref=e1463]:
-                            - code [ref=e1465]: category
-                            - paragraph [ref=e1466]: Rule category (e.g. web_filtering, screen_time, app_restrictions)
-                          - generic [ref=e1467]:
-                            - generic [ref=e1468]: string
-                            - generic [ref=e1469]: required
-                        - generic [ref=e1471]:
-                          - generic [ref=e1472]:
-                            - code [ref=e1474]: enabled
-                            - paragraph [ref=e1475]: "Whether the rule is active (default: true)"
-                          - generic [ref=e1477]: boolean
-                        - generic [ref=e1479]:
-                          - generic [ref=e1480]:
-                            - code [ref=e1482]: config
-                            - paragraph [ref=e1483]: Category-specific configuration object
-                          - generic [ref=e1484]:
-                            - generic [ref=e1485]: object
-                            - generic [ref=e1486]: required
-                    - generic [ref=e1487]:
-                      - heading "Response fields" [level=4] [ref=e1488]
-                      - generic [ref=e1489]:
-                        - generic [ref=e1491]:
-                          - generic [ref=e1492]:
-                            - code [ref=e1494]: id
-                            - paragraph [ref=e1495]: Rule identifier
-                          - generic [ref=e1497]: uuid
-                        - generic [ref=e1499]:
-                          - generic [ref=e1500]:
-                            - code [ref=e1502]: policy_id
-                            - paragraph [ref=e1503]: Parent policy identifier
-                          - generic [ref=e1505]: uuid
-                        - generic [ref=e1507]:
-                          - generic [ref=e1508]:
-                            - code [ref=e1510]: category
-                            - paragraph [ref=e1511]: One of 26 rule categories (e.g. web_filtering, screen_time)
-                          - generic [ref=e1513]: string
-                        - generic [ref=e1515]:
-                          - generic [ref=e1516]:
-                            - code [ref=e1518]: enabled
-                            - paragraph [ref=e1519]: Whether this rule is active
-                          - generic [ref=e1521]: boolean
-                        - generic [ref=e1523]:
-                          - generic [ref=e1524]:
-                            - code [ref=e1526]: config
-                            - paragraph [ref=e1527]: Category-specific configuration (JSONB)
-                          - generic [ref=e1529]: object
-                        - generic [ref=e1531]:
-                          - generic [ref=e1532]:
-                            - code [ref=e1534]: created_at
-                            - paragraph [ref=e1535]: Rule creation timestamp
-                          - generic [ref=e1537]: datetime
-                  - generic [ref=e1539]:
-                    - generic [ref=e1540]:
-                      - generic [ref=e1541]:
-                        - generic [ref=e1542]:
-                          - generic [ref=e1543]: Request
-                          - generic [ref=e1544]: curl
-                        - button "Copy" [ref=e1545] [cursor=pointer]:
-                          - img [ref=e1546]
+                      - generic [ref=e1459]:
+                        - generic [ref=e1460]: Request
+                        - generic [ref=e1461]: curl
+                      - button "Copy" [ref=e1462] [cursor=pointer]:
+                        - img [ref=e1463]
+                        - text: Copy
+                    - code [ref=e1467]: "curl -X DELETE http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members/m2b3c4d5-e6f7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e1468]:
+                    - generic [ref=e1469]:
+                      - generic [ref=e1470]:
+                        - generic [ref=e1471]: Response
+                        - generic [ref=e1472]: json
+                      - button "Copy" [ref=e1473] [cursor=pointer]:
+                        - img [ref=e1474]
+                        - text: Copy
+                    - code [ref=e1478]: // 204 No Content
+          - generic [ref=e1479]:
+            - heading "3. Safety Policies" [level=2] [ref=e1480]
+            - generic [ref=e1481]:
+              - paragraph [ref=e1482]:
+                - text: Safety policies define protection rules for each child. Each policy contains rules across 45 categories spanning 12 domains. Platforms
+                - strong [ref=e1483]: MUST
+                - text: implement enforcement for all categories they claim capability in. Rules are stored as JSONB with category-specific schemas.
+              - paragraph [ref=e1484]:
+                - text: "Policies transition through states:"
+                - code [ref=e1485]: draft
+                - text: →
+                - code [ref=e1486]: active
+                - text: →
+                - code [ref=e1487]: paused
+                - text: . Only
+                - code [ref=e1488]: active
+                - text: policies
+                - strong [ref=e1489]: SHALL
+                - text: be enforced on platforms.
+            - generic [ref=e1490]:
+              - generic [ref=e1491]:
+                - generic [ref=e1492]:
+                  - generic [ref=e1493]: GET
+                  - code [ref=e1494]: "/children/{childID}/policies"
+                  - button "Copy link" [ref=e1495] [cursor=pointer]:
+                    - img [ref=e1496]
+                - paragraph [ref=e1499]: List all safety policies for a child, ordered by priority. Each child can have multiple policies (e.g. weekday vs weekend).
+                - generic [ref=e1500]:
+                  - generic [ref=e1503]:
+                    - heading "Response fields" [level=4] [ref=e1504]
+                    - generic [ref=e1507]:
+                      - generic [ref=e1508]:
+                        - generic [ref=e1509]:
+                          - button [ref=e1510] [cursor=pointer]:
+                            - img [ref=e1511]
+                          - code [ref=e1513]: "[]"
+                        - paragraph [ref=e1514]: Array of policy objects
+                      - generic [ref=e1516]: Policy[]
+                  - generic [ref=e1518]:
+                    - generic [ref=e1519]:
+                      - generic [ref=e1520]:
+                        - generic [ref=e1521]:
+                          - generic [ref=e1522]: Request
+                          - generic [ref=e1523]: curl
+                        - button "Copy" [ref=e1524] [cursor=pointer]:
+                          - img [ref=e1525]
                           - text: Copy
-                      - code [ref=e1550]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"category\": \"screen_time\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 120, \"bedtime\": \"21:00\", \"wake_time\": \"07:00\" } }'"
-                    - generic [ref=e1551]:
-                      - generic [ref=e1552]:
-                        - generic [ref=e1553]:
-                          - generic [ref=e1554]: Response
-                          - generic [ref=e1555]: json
-                        - button "Copy" [ref=e1556] [cursor=pointer]:
-                          - img [ref=e1557]
+                      - code [ref=e1529]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e1530]:
+                      - generic [ref=e1531]:
+                        - generic [ref=e1532]:
+                          - generic [ref=e1533]: Response
+                          - generic [ref=e1534]: json
+                        - button "Copy" [ref=e1535] [cursor=pointer]:
+                          - img [ref=e1536]
                           - text: Copy
-                      - code [ref=e1561]: "{ \"id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"screen_time\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 120, \"bedtime\": \"21:00\", \"wake_time\": \"07:00\" }, \"created_at\": \"2025-01-10T09:10:00Z\" }"
-          - generic [ref=e1562]:
-            - heading "3.1 40 Mandatory Policy Categories" [level=2] [ref=e1563]
-            - generic [ref=e1564]:
-              - paragraph [ref=e1565]:
-                - text: PCSS v1.0 defines 40 policy categories across 11 domains. The 15 new legislation-driven categories are backed by specific child safety laws and
-                - strong [ref=e1566]: MUST
-                - text: be enforced by all compliant platforms.
-              - generic [ref=e1567]:
-                - generic [ref=e1569]:
-                  - generic [ref=e1570]:
-                    - code [ref=e1571]: algo_feed_control
-                    - paragraph [ref=e1572]: Control algorithmic feed recommendations; enforce chronological mode for minors
-                  - generic [ref=e1573]:
-                    - generic [ref=e1574]: KOSA
-                    - generic [ref=e1575]: KOSMA
-                    - generic [ref=e1576]: CA SB 976
-                    - generic [ref=e1577]: EU DSA
-                - generic [ref=e1579]:
-                  - generic [ref=e1580]:
-                    - code [ref=e1581]: addictive_design_control
-                    - paragraph [ref=e1582]: Disable infinite scroll, autoplay, streaks, like counts, and daily rewards
-                  - generic [ref=e1583]:
-                    - generic [ref=e1584]: KOSA
-                    - generic [ref=e1585]: CT SB 3
-                    - generic [ref=e1586]: EU DSA
-                    - generic [ref=e1587]: UK OSA
-                - generic [ref=e1589]:
-                  - generic [ref=e1590]:
-                    - code [ref=e1591]: notification_curfew
-                    - paragraph [ref=e1592]: Suppress notifications during defined quiet hours (e.g., 20:00-07:00)
-                  - generic [ref=e1593]:
-                    - generic [ref=e1594]: VA SB 854
-                    - generic [ref=e1595]: NY SAFE for Kids
-                - generic [ref=e1597]:
-                  - generic [ref=e1598]:
-                    - code [ref=e1599]: usage_timer_notification
-                    - paragraph [ref=e1600]: Periodic usage reminders at configurable intervals (15/30/45/60 min)
-                  - generic [ref=e1601]:
-                    - generic [ref=e1602]: MN HF 2
-                    - generic [ref=e1603]: TN HB 1891
-                - generic [ref=e1605]:
-                  - generic [ref=e1606]:
-                    - code [ref=e1607]: targeted_ad_block
-                    - paragraph [ref=e1608]: Block all targeted/behavioral advertising for minors
-                  - generic [ref=e1609]:
-                    - generic [ref=e1610]: COPPA 2.0
-                    - generic [ref=e1611]: EU DSA
-                    - generic [ref=e1612]: India DPDPA
-                - generic [ref=e1614]:
-                  - generic [ref=e1615]:
-                    - code [ref=e1616]: dm_restriction
-                    - paragraph [ref=e1617]: "Restrict direct messaging: none, contacts_only, or everyone"
-                  - generic [ref=e1618]:
-                    - generic [ref=e1619]: CT SB 3
-                    - generic [ref=e1620]: UK OSA
-                - generic [ref=e1622]:
-                  - generic [ref=e1623]:
-                    - code [ref=e1624]: age_gate
-                    - paragraph [ref=e1625]: Require age verification before platform access
-                  - generic [ref=e1626]:
-                    - generic [ref=e1627]: KOSMA
-                    - generic [ref=e1628]: FL HB 3
-                    - generic [ref=e1629]: Australia Online Safety Act
-                - generic [ref=e1631]:
-                  - generic [ref=e1632]:
-                    - code [ref=e1633]: data_deletion_request
-                    - paragraph [ref=e1634]: Enable one-click data deletion request for child accounts
-                  - generic [ref=e1635]:
-                    - generic [ref=e1636]: COPPA 2.0
-                    - generic [ref=e1637]: NY NYCDPA
-                - generic [ref=e1639]:
-                  - generic [ref=e1640]:
-                    - code [ref=e1641]: geolocation_opt_in
-                    - paragraph [ref=e1642]: Default geolocation sharing to off; require explicit opt-in
-                  - generic [ref=e1643]:
-                    - generic [ref=e1644]: CT SB 3
-                    - generic [ref=e1645]: MD Kids Code
-                    - generic [ref=e1646]: COPPA update
-                - generic [ref=e1648]:
-                  - generic [ref=e1649]:
-                    - code [ref=e1650]: csam_reporting
-                    - paragraph [ref=e1651]: Ensure CSAM detection/reporting mechanisms are enabled on platforms
+                      - code [ref=e1540]: "[ { \"id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"name\": \"School Days\", \"status\": \"active\", \"priority\": 1, \"created_at\": \"2025-01-10T09:00:00Z\" } ]"
+              - generic [ref=e1541]:
+                - generic [ref=e1542]:
+                  - generic [ref=e1543]: POST
+                  - code [ref=e1544]: "/children/{childID}/policies"
+                  - button "Copy link" [ref=e1545] [cursor=pointer]:
+                    - img [ref=e1546]
+                - paragraph [ref=e1549]: Create a new safety policy for a child. The policy starts in draft status. Add rules, then activate it to begin enforcement.
+                - generic [ref=e1550]:
+                  - generic [ref=e1552]:
+                    - generic [ref=e1553]:
+                      - heading "Request fields" [level=4] [ref=e1554]
+                      - generic [ref=e1557]:
+                        - generic [ref=e1558]:
+                          - code [ref=e1560]: name
+                          - paragraph [ref=e1561]: Policy display name (e.g. "School Days", "Weekend")
+                        - generic [ref=e1562]:
+                          - generic [ref=e1563]: string
+                          - generic [ref=e1564]: required
+                    - generic [ref=e1565]:
+                      - heading "Response fields" [level=4] [ref=e1566]
+                      - generic [ref=e1567]:
+                        - generic [ref=e1569]:
+                          - generic [ref=e1570]:
+                            - code [ref=e1572]: id
+                            - paragraph [ref=e1573]: Policy identifier
+                          - generic [ref=e1575]: uuid
+                        - generic [ref=e1577]:
+                          - generic [ref=e1578]:
+                            - code [ref=e1580]: child_id
+                            - paragraph [ref=e1581]: Associated child identifier
+                          - generic [ref=e1583]: uuid
+                        - generic [ref=e1585]:
+                          - generic [ref=e1586]:
+                            - code [ref=e1588]: name
+                            - paragraph [ref=e1589]: Policy display name
+                          - generic [ref=e1591]: string
+                        - generic [ref=e1593]:
+                          - generic [ref=e1594]:
+                            - code [ref=e1596]: status
+                            - paragraph [ref=e1597]: "One of: active, paused, draft"
+                          - generic [ref=e1599]: enum
+                        - generic [ref=e1601]:
+                          - generic [ref=e1602]:
+                            - code [ref=e1604]: priority
+                            - paragraph [ref=e1605]: Evaluation priority (lower = higher precedence)
+                          - generic [ref=e1607]: integer
+                        - generic [ref=e1609]:
+                          - generic [ref=e1610]:
+                            - code [ref=e1612]: created_at
+                            - paragraph [ref=e1613]: Policy creation timestamp
+                          - generic [ref=e1615]: datetime
+                  - generic [ref=e1617]:
+                    - generic [ref=e1618]:
+                      - generic [ref=e1619]:
+                        - generic [ref=e1620]:
+                          - generic [ref=e1621]: Request
+                          - generic [ref=e1622]: curl
+                        - button "Copy" [ref=e1623] [cursor=pointer]:
+                          - img [ref=e1624]
+                          - text: Copy
+                      - code [ref=e1628]: "curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"School Days\" }'"
+                    - generic [ref=e1629]:
+                      - generic [ref=e1630]:
+                        - generic [ref=e1631]:
+                          - generic [ref=e1632]: Response
+                          - generic [ref=e1633]: json
+                        - button "Copy" [ref=e1634] [cursor=pointer]:
+                          - img [ref=e1635]
+                          - text: Copy
+                      - code [ref=e1639]: "{ \"id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"name\": \"School Days\", \"status\": \"draft\", \"priority\": 1, \"created_at\": \"2025-01-10T09:00:00Z\" }"
+              - generic [ref=e1640]:
+                - generic [ref=e1641]:
+                  - generic [ref=e1642]: POST
+                  - code [ref=e1643]: "/policies/{policyID}/activate"
+                  - button "Copy link" [ref=e1644] [cursor=pointer]:
+                    - img [ref=e1645]
+                - paragraph [ref=e1648]: Transition a policy from draft or paused to active. An active policy's rules will be enforced on the next sync. Only one policy per child can be active at a time; activating one pauses others.
+                - generic [ref=e1651]:
                   - generic [ref=e1652]:
-                    - generic [ref=e1653]: CIPA
-                    - generic [ref=e1654]: EARN IT Act
-                    - generic [ref=e1655]: UK OSA
-                    - generic [ref=e1656]: Canada C-63
-                - generic [ref=e1658]:
-                  - generic [ref=e1659]:
-                    - code [ref=e1660]: library_filter_compliance
-                    - paragraph [ref=e1661]: CIPA E-rate filtering for schools and libraries
-                  - generic [ref=e1663]: CIPA
-                - generic [ref=e1665]:
-                  - generic [ref=e1666]:
-                    - code [ref=e1667]: ai_minor_interaction
-                    - paragraph [ref=e1668]: Restrict AI systems that exploit or manipulate children
-                  - generic [ref=e1670]: EU AI Act
-                - generic [ref=e1672]:
-                  - generic [ref=e1673]:
-                    - code [ref=e1674]: social_media_min_age
-                    - paragraph [ref=e1675]: Enforce hard minimum age ban for social media access
-                  - generic [ref=e1676]:
-                    - generic [ref=e1677]: AU SMMA
-                    - generic [ref=e1678]: UT SMRA
-                - generic [ref=e1680]:
-                  - generic [ref=e1681]:
-                    - code [ref=e1682]: image_rights_minor
-                    - paragraph [ref=e1683]: Protect minors' image rights; restrict unauthorized sharing
-                  - generic [ref=e1685]: France SREN
-              - paragraph [ref=e1687]:
-                - text: See the
-                - link "complete API reference below" [ref=e1688] [cursor=pointer]:
-                  - /url: "#rule-categories"
-                - text: for full JSON schemas, field constraints, age-based defaults, platform support, and code examples for all 40 categories.
-          - generic [ref=e1689]:
-            - heading "4. Regulated Platforms" [level=2] [ref=e1690]
-            - generic [ref=e1691]:
-              - paragraph [ref=e1692]:
-                - text: All technology platforms serving minors
-                - strong [ref=e1693]: SHALL
-                - text: register with the Phosra platform registry. Each platform declares its category, compliance level, supported capabilities, and authentication mechanism.
-              - generic [ref=e1695]:
-                - generic [ref=e1696]:
-                  - generic [ref=e1697]: GET
-                  - code [ref=e1698]: /providers
-                - paragraph [ref=e1699]: List all available providers with their integration tier, supported capabilities, and authentication method. This endpoint is public and does not require authentication.
-                - generic [ref=e1700]:
-                  - generic [ref=e1703]:
-                    - heading "Response fields" [level=4] [ref=e1704]
-                    - generic [ref=e1707]:
-                      - generic [ref=e1708]:
-                        - generic [ref=e1709]:
-                          - button [ref=e1710] [cursor=pointer]:
-                            - img [ref=e1711]
-                          - code [ref=e1713]: "[]"
-                        - paragraph [ref=e1714]: Array of provider objects
-                      - generic [ref=e1716]: Provider[]
-                  - generic [ref=e1718]:
-                    - generic [ref=e1719]:
-                      - generic [ref=e1720]:
-                        - generic [ref=e1721]:
-                          - generic [ref=e1722]: Request
-                          - generic [ref=e1723]: curl
-                        - button "Copy" [ref=e1724] [cursor=pointer]:
-                          - img [ref=e1725]
+                    - generic [ref=e1653]:
+                      - generic [ref=e1654]:
+                        - generic [ref=e1655]: Request
+                        - generic [ref=e1656]: curl
+                      - button "Copy" [ref=e1657] [cursor=pointer]:
+                        - img [ref=e1658]
+                        - text: Copy
+                    - code [ref=e1662]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/activate \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e1663]:
+                    - generic [ref=e1664]:
+                      - generic [ref=e1665]:
+                        - generic [ref=e1666]: Response
+                        - generic [ref=e1667]: json
+                      - button "Copy" [ref=e1668] [cursor=pointer]:
+                        - img [ref=e1669]
+                        - text: Copy
+                    - code [ref=e1673]: // 200 OK
+              - generic [ref=e1674]:
+                - generic [ref=e1675]:
+                  - generic [ref=e1676]: POST
+                  - code [ref=e1677]: "/policies/{policyID}/pause"
+                  - button "Copy link" [ref=e1678] [cursor=pointer]:
+                    - img [ref=e1679]
+                - paragraph [ref=e1682]: Pause an active policy. Rules remain configured but will not be enforced until reactivated. Pausing does not remove already-pushed rules from providers.
+                - generic [ref=e1685]:
+                  - generic [ref=e1686]:
+                    - generic [ref=e1687]:
+                      - generic [ref=e1688]:
+                        - generic [ref=e1689]: Request
+                        - generic [ref=e1690]: curl
+                      - button "Copy" [ref=e1691] [cursor=pointer]:
+                        - img [ref=e1692]
+                        - text: Copy
+                    - code [ref=e1696]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/pause \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e1697]:
+                    - generic [ref=e1698]:
+                      - generic [ref=e1699]:
+                        - generic [ref=e1700]: Response
+                        - generic [ref=e1701]: json
+                      - button "Copy" [ref=e1702] [cursor=pointer]:
+                        - img [ref=e1703]
+                        - text: Copy
+                    - code [ref=e1707]: // 200 OK
+              - generic [ref=e1708]:
+                - generic [ref=e1709]:
+                  - generic [ref=e1710]: POST
+                  - code [ref=e1711]: "/policies/{policyID}/generate-from-age"
+                  - button "Copy link" [ref=e1712] [cursor=pointer]:
+                    - img [ref=e1713]
+                - paragraph [ref=e1716]: Automatically generate a full set of policy rules based on the child's current age. Uses the built-in age-to-setting mapping across all 45 rule categories. Existing rules on the policy are replaced.
+                - generic [ref=e1717]:
+                  - generic [ref=e1720]:
+                    - heading "Response fields" [level=4] [ref=e1721]
+                    - generic [ref=e1724]:
+                      - generic [ref=e1725]:
+                        - generic [ref=e1726]:
+                          - button [ref=e1727] [cursor=pointer]:
+                            - img [ref=e1728]
+                          - code [ref=e1730]: "[]"
+                        - paragraph [ref=e1731]: Generated rules
+                      - generic [ref=e1733]: PolicyRule[]
+                  - generic [ref=e1735]:
+                    - generic [ref=e1736]:
+                      - generic [ref=e1737]:
+                        - generic [ref=e1738]:
+                          - generic [ref=e1739]: Request
+                          - generic [ref=e1740]: curl
+                        - button "Copy" [ref=e1741] [cursor=pointer]:
+                          - img [ref=e1742]
                           - text: Copy
-                      - code [ref=e1729]: curl http://localhost:8080/api/v1/providers
-                    - generic [ref=e1730]:
-                      - generic [ref=e1731]:
-                        - generic [ref=e1732]:
-                          - generic [ref=e1733]: Response
-                          - generic [ref=e1734]: json
-                        - button "Copy" [ref=e1735] [cursor=pointer]:
-                          - img [ref=e1736]
+                      - code [ref=e1746]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/generate-from-age \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e1747]:
+                      - generic [ref=e1748]:
+                        - generic [ref=e1749]:
+                          - generic [ref=e1750]: Response
+                          - generic [ref=e1751]: json
+                        - button "Copy" [ref=e1752] [cursor=pointer]:
+                          - img [ref=e1753]
                           - text: Copy
-                      - code [ref=e1740]: "[ { \"id\": \"nextdns\", \"name\": \"NextDNS\", \"category\": \"dns\", \"tier\": \"live\", \"description\": \"DNS-level web filtering and analytics\", \"auth_type\": \"api_key\", \"capabilities\": [ \"web_filtering\", \"safe_search\", \"youtube_restricted\", \"block_bypass_methods\" ] }, { \"id\": \"cleanbrowing\", \"name\": \"CleanBrowsing\", \"category\": \"dns\", \"tier\": \"live\", \"description\": \"Family-friendly DNS filtering\", \"auth_type\": \"api_key\", \"capabilities\": [ \"web_filtering\", \"safe_search\" ] } ]"
-              - generic [ref=e1741]:
-                - generic [ref=e1742]:
-                  - generic [ref=e1743]: COMPLIANT
-                  - paragraph [ref=e1745]: Full API enforcement. Real-time policy push.
-                  - list [ref=e1746]:
-                    - listitem [ref=e1747]: NextDNS
-                    - listitem [ref=e1748]: CleanBrowsing
-                    - listitem [ref=e1749]: Android / Google Family Link
-                - generic [ref=e1750]:
-                  - generic [ref=e1751]: PROVISIONAL
-                  - paragraph [ref=e1753]: Limited API. Partial enforcement capability.
-                  - list [ref=e1754]:
-                    - listitem [ref=e1755]: Microsoft Family Safety
-                    - listitem [ref=e1756]: Apple Screen Time (MDM)
-                - generic [ref=e1757]:
-                  - generic [ref=e1758]: PENDING COMPLIANCE
-                  - paragraph [ref=e1760]: No API. Manual compliance instructions provided.
-                  - list [ref=e1761]:
-                    - listitem [ref=e1762]: Netflix, Disney+, Prime Video, YouTube
-                    - listitem [ref=e1763]: Hulu, Max, Roku
-                    - listitem [ref=e1764]: Xbox, PlayStation, Nintendo
-          - generic [ref=e1765]:
-            - heading "5. Compliance Verification" [level=2] [ref=e1766]
-            - generic [ref=e1767]:
-              - paragraph [ref=e1768]:
-                - text: Platforms
-                - strong [ref=e1769]: MUST
-                - text: establish a compliance link to prove they can receive enforcement instructions. Credentials are encrypted with AES-256-GCM at rest. Platforms
-                - strong [ref=e1770]: SHALL
-                - text: support periodic re-verification.
-              - paragraph [ref=e1772]:
-                - strong [ref=e1773]: "Credential Security:"
-                - text: All platform credentials
-                - strong [ref=e1774]: MUST
-                - text: be encrypted using AES-256-GCM before storage. Plaintext credentials
-                - strong [ref=e1775]: MUST NOT
-                - text: be logged or stored unencrypted at any point in the pipeline.
-              - generic [ref=e1777]:
-                - generic [ref=e1778]:
-                  - generic [ref=e1779]: POST
-                  - code [ref=e1780]: /connections
-                - paragraph [ref=e1781]: Establish a connection between a family and a provider. Credentials are encrypted with AES-256-GCM before storage. The connection is verified immediately upon creation.
-                - generic [ref=e1782]:
-                  - generic [ref=e1784]:
-                    - generic [ref=e1785]:
-                      - heading "Request fields" [level=4] [ref=e1786]
+                      - code [ref=e1757]: "[ { \"id\": \"d4e5f6a7-b8c9-0123-def0-123456789abc\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"web_filtering\", \"enabled\": true, \"config\": { \"block_categories\": [ \"adult\", \"gambling\", \"violence\" ] }, \"created_at\": \"2025-01-10T09:05:00Z\" }, { \"id\": \"e5f6a7b8-c9d0-1234-ef01-23456789abcd\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"screen_time\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 120, \"bedtime\": \"21:00\" }, \"created_at\": \"2025-01-10T09:05:00Z\" } ]"
+              - generic [ref=e1758]:
+                - generic [ref=e1759]:
+                  - generic [ref=e1760]: GET
+                  - code [ref=e1761]: "/policies/{policyID}/rules"
+                  - button "Copy link" [ref=e1762] [cursor=pointer]:
+                    - img [ref=e1763]
+                - paragraph [ref=e1766]: List all rules in a policy. Rules are returned in category order across all 45 supported categories.
+                - generic [ref=e1767]:
+                  - generic [ref=e1770]:
+                    - heading "Response fields" [level=4] [ref=e1771]
+                    - generic [ref=e1774]:
+                      - generic [ref=e1775]:
+                        - generic [ref=e1776]:
+                          - button [ref=e1777] [cursor=pointer]:
+                            - img [ref=e1778]
+                          - code [ref=e1780]: "[]"
+                        - paragraph [ref=e1781]: Array of rule objects
+                      - generic [ref=e1783]: PolicyRule[]
+                  - generic [ref=e1785]:
+                    - generic [ref=e1786]:
                       - generic [ref=e1787]:
-                        - generic [ref=e1789]:
-                          - generic [ref=e1790]:
-                            - code [ref=e1792]: family_id
-                            - paragraph [ref=e1793]: Family to connect the provider to
-                          - generic [ref=e1794]:
-                            - generic [ref=e1795]: uuid
-                            - generic [ref=e1796]: required
-                        - generic [ref=e1798]:
-                          - generic [ref=e1799]:
-                            - code [ref=e1801]: provider_id
-                            - paragraph [ref=e1802]: Provider slug (e.g. nextdns, android)
-                          - generic [ref=e1803]:
-                            - generic [ref=e1804]: string
-                            - generic [ref=e1805]: required
-                        - generic [ref=e1807]:
-                          - generic [ref=e1808]:
-                            - code [ref=e1810]: credentials
-                            - paragraph [ref=e1811]: Provider-specific credentials (API key, OAuth token, etc.)
-                          - generic [ref=e1812]:
-                            - generic [ref=e1813]: string
-                            - generic [ref=e1814]: required
-                    - generic [ref=e1815]:
-                      - heading "Response fields" [level=4] [ref=e1816]
-                      - generic [ref=e1817]:
-                        - generic [ref=e1819]:
-                          - generic [ref=e1820]:
-                            - code [ref=e1822]: id
-                            - paragraph [ref=e1823]: Connection identifier
-                          - generic [ref=e1825]: uuid
-                        - generic [ref=e1827]:
-                          - generic [ref=e1828]:
-                            - code [ref=e1830]: family_id
-                            - paragraph [ref=e1831]: Owning family identifier
-                          - generic [ref=e1833]: uuid
-                        - generic [ref=e1835]:
-                          - generic [ref=e1836]:
-                            - code [ref=e1838]: provider_id
-                            - paragraph [ref=e1839]: Connected provider slug
-                          - generic [ref=e1841]: string
-                        - generic [ref=e1843]:
-                          - generic [ref=e1844]:
-                            - code [ref=e1846]: status
-                            - paragraph [ref=e1847]: "One of: connected, disconnected, error"
-                          - generic [ref=e1849]: enum
-                        - generic [ref=e1851]:
-                          - generic [ref=e1852]:
-                            - code [ref=e1854]: last_sync_at
-                            - paragraph [ref=e1855]: Last successful sync timestamp
-                          - generic [ref=e1857]: datetime
-                        - generic [ref=e1859]:
-                          - generic [ref=e1860]:
-                            - code [ref=e1862]: last_sync_status
-                            - paragraph [ref=e1863]: Status of last sync attempt
-                          - generic [ref=e1865]: string
-                        - generic [ref=e1867]:
-                          - generic [ref=e1868]:
-                            - code [ref=e1870]: connected_at
-                            - paragraph [ref=e1871]: Initial connection timestamp
-                          - generic [ref=e1873]: datetime
-                  - generic [ref=e1875]:
-                    - generic [ref=e1876]:
-                      - generic [ref=e1877]:
-                        - generic [ref=e1878]:
-                          - generic [ref=e1879]: Request
-                          - generic [ref=e1880]: curl
-                        - button "Copy" [ref=e1881] [cursor=pointer]:
-                          - img [ref=e1882]
+                        - generic [ref=e1788]:
+                          - generic [ref=e1789]: Request
+                          - generic [ref=e1790]: curl
+                        - button "Copy" [ref=e1791] [cursor=pointer]:
+                          - img [ref=e1792]
                           - text: Copy
-                      - code [ref=e1886]: "curl -X POST http://localhost:8080/api/v1/connections \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"provider_id\": \"nextdns\", \"credentials\": \"your-nextdns-api-key\" }'"
-                    - generic [ref=e1887]:
-                      - generic [ref=e1888]:
-                        - generic [ref=e1889]:
-                          - generic [ref=e1890]: Response
-                          - generic [ref=e1891]: json
-                        - button "Copy" [ref=e1892] [cursor=pointer]:
-                          - img [ref=e1893]
+                      - code [ref=e1796]: "curl http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e1797]:
+                      - generic [ref=e1798]:
+                        - generic [ref=e1799]:
+                          - generic [ref=e1800]: Response
+                          - generic [ref=e1801]: json
+                        - button "Copy" [ref=e1802] [cursor=pointer]:
+                          - img [ref=e1803]
                           - text: Copy
-                      - code [ref=e1897]: "{ \"id\": \"e5f6a7b8-c9d0-1234-ef01-23456789abcd\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"provider_id\": \"nextdns\", \"status\": \"connected\", \"last_sync_at\": null, \"last_sync_status\": null, \"connected_at\": \"2025-01-10T10:00:00Z\" }"
-          - generic [ref=e1898]:
-            - heading "5.1 Quick Setup API" [level=2] [ref=e1899]
-            - generic [ref=e1900]:
-              - paragraph [ref=e1901]:
-                - text: The Quick Setup API provides a single-call onboarding flow that creates a family (if needed), registers a child, generates all 40 age-appropriate policy rules, and activates the policy. This endpoint
-                - strong [ref=e1902]: SHOULD
-                - text: be the primary entry point for parent-facing applications.
-              - generic [ref=e1903]:
-                - heading "Endpoint" [level=4] [ref=e1904]
-                - paragraph [ref=e1905]: POST /setup/quick
-              - generic [ref=e1906]:
-                - heading "Request Body" [level=4] [ref=e1907]
-                - generic [ref=e1908]: "{ \"family_id\": \"uuid (optional — omit to create new family)\", \"family_name\": \"string (optional — used when creating new family)\", \"child_name\": \"string (required)\", \"birth_date\": \"YYYY-MM-DD (required)\", \"strictness\": \"recommended | strict | relaxed\" }"
-              - generic [ref=e1909]:
-                - heading "Response" [level=4] [ref=e1910]
-                - generic [ref=e1911]: "{ \"family\": { \"id\": \"...\", \"name\": \"...\" }, \"child\": { \"id\": \"...\", \"name\": \"Emma\", \"birth_date\": \"2019-03-15\" }, \"policy\": { \"id\": \"...\", \"status\": \"active\" }, \"rules\": [ ... ], // ~20-25 enabled rules \"age_group\": \"child\", \"max_ratings\": { \"mpaa\": \"PG\", \"tv\": \"TV-Y7\", \"esrb\": \"E\" }, \"rule_summary\": { \"screen_time_minutes\": 90, \"bedtime_hour\": 20, \"web_filter_level\": \"strict\", \"content_rating\": \"PG\", \"total_rules_enabled\": 22 } }"
-              - paragraph [ref=e1913]:
-                - strong [ref=e1914]: "Strictness levels:"
-                - code [ref=e1915]: recommended
-                - text: uses age-appropriate defaults.
-                - code [ref=e1916]: strict
-                - text: reduces screen time by 30% and tightens timer intervals.
-                - code [ref=e1917]: relaxed
-                - text: increases screen time by 30% and extends timer intervals.
-          - generic [ref=e1918]:
-            - heading "6. Policy Enforcement" [level=2] [ref=e1919]
-            - generic [ref=e1920]:
-              - paragraph [ref=e1921]:
-                - text: The Phosra Enforcement Engine fans out policy rules to all verified platforms concurrently. Platforms
-                - strong [ref=e1922]: MUST
-                - text: "accept enforcement requests and report per-rule results. Enforcement jobs track status as:"
-                - code [ref=e1923]: pending
-                - text: →
-                - code [ref=e1924]: running
-                - text: →
-                - code [ref=e1925]: completed
-                - text: /
-                - code [ref=e1926]: partial
-                - text: /
-                - code [ref=e1927]: failed
-                - text: .
-              - generic [ref=e1928]:
-                - generic [ref=e1929]:
-                  - generic [ref=e1930]:
-                    - generic [ref=e1931]: POST
-                    - code [ref=e1932]: "/children/{childID}/sync"
-                  - paragraph [ref=e1933]: Trigger enforcement sync for a child across all connected providers. Pushes the active policy's rules to each provider. Returns a sync job that can be polled for status.
-                  - generic [ref=e1934]:
-                    - generic [ref=e1937]:
-                      - heading "Response fields" [level=4] [ref=e1938]
-                      - generic [ref=e1939]:
-                        - generic [ref=e1941]:
-                          - generic [ref=e1942]:
-                            - code [ref=e1944]: id
-                            - paragraph [ref=e1945]: Sync job identifier
-                          - generic [ref=e1947]: uuid
-                        - generic [ref=e1949]:
-                          - generic [ref=e1950]:
-                            - code [ref=e1952]: child_id
-                            - paragraph [ref=e1953]: Target child identifier
-                          - generic [ref=e1955]: uuid
-                        - generic [ref=e1957]:
-                          - generic [ref=e1958]:
-                            - code [ref=e1960]: policy_id
-                            - paragraph [ref=e1961]: Policy being enforced
-                          - generic [ref=e1963]: uuid
-                        - generic [ref=e1965]:
-                          - generic [ref=e1966]:
-                            - code [ref=e1968]: trigger_type
-                            - paragraph [ref=e1969]: "One of: manual, auto, webhook"
-                          - generic [ref=e1971]: enum
-                        - generic [ref=e1973]:
-                          - generic [ref=e1974]:
-                            - code [ref=e1976]: status
-                            - paragraph [ref=e1977]: "One of: pending, running, completed, failed, partial"
-                          - generic [ref=e1979]: enum
-                        - generic [ref=e1981]:
-                          - generic [ref=e1982]:
-                            - code [ref=e1984]: started_at
-                            - paragraph [ref=e1985]: Job start timestamp
-                          - generic [ref=e1987]: datetime
-                        - generic [ref=e1989]:
-                          - generic [ref=e1990]:
-                            - code [ref=e1992]: completed_at
-                            - paragraph [ref=e1993]: Job completion timestamp
-                          - generic [ref=e1995]: datetime
-                        - generic [ref=e1997]:
-                          - generic [ref=e1998]:
-                            - code [ref=e2000]: created_at
-                            - paragraph [ref=e2001]: Job creation timestamp
-                          - generic [ref=e2003]: datetime
-                    - generic [ref=e2005]:
-                      - generic [ref=e2006]:
-                        - generic [ref=e2007]:
-                          - generic [ref=e2008]:
-                            - generic [ref=e2009]: Request
-                            - generic [ref=e2010]: curl
-                          - button "Copy" [ref=e2011] [cursor=pointer]:
-                            - img [ref=e2012]
-                            - text: Copy
-                        - code [ref=e2016]: "curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/sync \\ -H \"Authorization: Bearer <access_token>\""
-                      - generic [ref=e2017]:
-                        - generic [ref=e2018]:
-                          - generic [ref=e2019]:
-                            - generic [ref=e2020]: Response
-                            - generic [ref=e2021]: json
-                          - button "Copy" [ref=e2022] [cursor=pointer]:
-                            - img [ref=e2023]
-                            - text: Copy
-                        - code [ref=e2027]: "{ \"id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"trigger_type\": \"manual\", \"status\": \"pending\", \"started_at\": null, \"completed_at\": null, \"created_at\": \"2025-01-10T10:30:00Z\" }"
-                - generic [ref=e2028]:
-                  - generic [ref=e2029]:
-                    - generic [ref=e2030]: GET
-                    - code [ref=e2031]: "/sync/jobs/{jobID}"
-                  - paragraph [ref=e2032]: Check the status of a sync job. Poll this endpoint until status is completed, failed, or partial.
-                  - generic [ref=e2033]:
-                    - generic [ref=e2036]:
-                      - heading "Response fields" [level=4] [ref=e2037]
-                      - generic [ref=e2038]:
-                        - generic [ref=e2040]:
-                          - generic [ref=e2041]:
-                            - code [ref=e2043]: id
-                            - paragraph [ref=e2044]: Sync job identifier
-                          - generic [ref=e2046]: uuid
-                        - generic [ref=e2048]:
-                          - generic [ref=e2049]:
-                            - code [ref=e2051]: child_id
-                            - paragraph [ref=e2052]: Target child identifier
-                          - generic [ref=e2054]: uuid
-                        - generic [ref=e2056]:
-                          - generic [ref=e2057]:
-                            - code [ref=e2059]: policy_id
-                            - paragraph [ref=e2060]: Policy being enforced
-                          - generic [ref=e2062]: uuid
-                        - generic [ref=e2064]:
-                          - generic [ref=e2065]:
-                            - code [ref=e2067]: trigger_type
-                            - paragraph [ref=e2068]: "One of: manual, auto, webhook"
-                          - generic [ref=e2070]: enum
-                        - generic [ref=e2072]:
-                          - generic [ref=e2073]:
-                            - code [ref=e2075]: status
-                            - paragraph [ref=e2076]: "One of: pending, running, completed, failed, partial"
-                          - generic [ref=e2078]: enum
-                        - generic [ref=e2080]:
-                          - generic [ref=e2081]:
-                            - code [ref=e2083]: started_at
-                            - paragraph [ref=e2084]: Job start timestamp
-                          - generic [ref=e2086]: datetime
+                      - code [ref=e1807]: "[ { \"id\": \"d4e5f6a7-b8c9-0123-def0-123456789abc\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"web_filtering\", \"enabled\": true, \"config\": { \"block_categories\": [ \"adult\", \"gambling\", \"violence\" ] }, \"created_at\": \"2025-01-10T09:05:00Z\" } ]"
+              - generic [ref=e1808]:
+                - generic [ref=e1809]:
+                  - generic [ref=e1810]: POST
+                  - code [ref=e1811]: "/policies/{policyID}/rules"
+                  - button "Copy link" [ref=e1812] [cursor=pointer]:
+                    - img [ref=e1813]
+                - paragraph [ref=e1816]: Add a rule to a policy. The category must be one of the 45 supported categories. Config schema varies per category (see Category Reference).
+                - generic [ref=e1817]:
+                  - generic [ref=e1819]:
+                    - generic [ref=e1820]:
+                      - heading "Request fields" [level=4] [ref=e1821]
+                      - generic [ref=e1822]:
+                        - generic [ref=e1824]:
+                          - generic [ref=e1825]:
+                            - code [ref=e1827]: category
+                            - paragraph [ref=e1828]: Rule category (e.g. web_filtering, screen_time, app_restrictions)
+                          - generic [ref=e1829]:
+                            - generic [ref=e1830]: string
+                            - generic [ref=e1831]: required
+                        - generic [ref=e1833]:
+                          - generic [ref=e1834]:
+                            - code [ref=e1836]: enabled
+                            - paragraph [ref=e1837]: "Whether the rule is active (default: true)"
+                          - generic [ref=e1839]: boolean
+                        - generic [ref=e1841]:
+                          - generic [ref=e1842]:
+                            - code [ref=e1844]: config
+                            - paragraph [ref=e1845]: Category-specific configuration object
+                          - generic [ref=e1846]:
+                            - generic [ref=e1847]: object
+                            - generic [ref=e1848]: required
+                    - generic [ref=e1849]:
+                      - heading "Response fields" [level=4] [ref=e1850]
+                      - generic [ref=e1851]:
+                        - generic [ref=e1853]:
+                          - generic [ref=e1854]:
+                            - code [ref=e1856]: id
+                            - paragraph [ref=e1857]: Rule identifier
+                          - generic [ref=e1859]: uuid
+                        - generic [ref=e1861]:
+                          - generic [ref=e1862]:
+                            - code [ref=e1864]: policy_id
+                            - paragraph [ref=e1865]: Parent policy identifier
+                          - generic [ref=e1867]: uuid
+                        - generic [ref=e1869]:
+                          - generic [ref=e1870]:
+                            - code [ref=e1872]: category
+                            - paragraph [ref=e1873]: One of 45 rule categories (e.g. web_filtering, screen_time)
+                          - generic [ref=e1875]: string
+                        - generic [ref=e1877]:
+                          - generic [ref=e1878]:
+                            - code [ref=e1880]: enabled
+                            - paragraph [ref=e1881]: Whether this rule is active
+                          - generic [ref=e1883]: boolean
+                        - generic [ref=e1885]:
+                          - generic [ref=e1886]:
+                            - code [ref=e1888]: config
+                            - paragraph [ref=e1889]: Category-specific configuration (JSONB)
+                          - generic [ref=e1891]: object
+                        - generic [ref=e1893]:
+                          - generic [ref=e1894]:
+                            - code [ref=e1896]: created_at
+                            - paragraph [ref=e1897]: Rule creation timestamp
+                          - generic [ref=e1899]: datetime
+                  - generic [ref=e1901]:
+                    - generic [ref=e1902]:
+                      - generic [ref=e1903]:
+                        - generic [ref=e1904]:
+                          - generic [ref=e1905]: Request
+                          - generic [ref=e1906]: curl
+                        - button "Copy" [ref=e1907] [cursor=pointer]:
+                          - img [ref=e1908]
+                          - text: Copy
+                      - code [ref=e1912]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"category\": \"screen_time\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 120, \"bedtime\": \"21:00\", \"wake_time\": \"07:00\" } }'"
+                    - generic [ref=e1913]:
+                      - generic [ref=e1914]:
+                        - generic [ref=e1915]:
+                          - generic [ref=e1916]: Response
+                          - generic [ref=e1917]: json
+                        - button "Copy" [ref=e1918] [cursor=pointer]:
+                          - img [ref=e1919]
+                          - text: Copy
+                      - code [ref=e1923]: "{ \"id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"screen_time\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 120, \"bedtime\": \"21:00\", \"wake_time\": \"07:00\" }, \"created_at\": \"2025-01-10T09:10:00Z\" }"
+              - generic [ref=e1924]:
+                - generic [ref=e1925]:
+                  - generic [ref=e1926]: PUT
+                  - code [ref=e1927]: "/rules/{ruleID}"
+                  - button "Copy link" [ref=e1928] [cursor=pointer]:
+                    - img [ref=e1929]
+                - paragraph [ref=e1932]: Update an existing policy rule's configuration or enabled status. The category cannot be changed — delete and recreate if a different category is needed.
+                - generic [ref=e1933]:
+                  - generic [ref=e1935]:
+                    - generic [ref=e1936]:
+                      - heading "Request fields" [level=4] [ref=e1937]
+                      - generic [ref=e1938]:
+                        - generic [ref=e1940]:
+                          - generic [ref=e1941]:
+                            - code [ref=e1943]: enabled
+                            - paragraph [ref=e1944]: Whether the rule is active
+                          - generic [ref=e1946]: boolean
+                        - generic [ref=e1948]:
+                          - generic [ref=e1949]:
+                            - code [ref=e1951]: config
+                            - paragraph [ref=e1952]: Updated category-specific configuration
+                          - generic [ref=e1954]: object
+                    - generic [ref=e1955]:
+                      - heading "Response fields" [level=4] [ref=e1956]
+                      - generic [ref=e1957]:
+                        - generic [ref=e1959]:
+                          - generic [ref=e1960]:
+                            - code [ref=e1962]: id
+                            - paragraph [ref=e1963]: Rule identifier
+                          - generic [ref=e1965]: uuid
+                        - generic [ref=e1967]:
+                          - generic [ref=e1968]:
+                            - code [ref=e1970]: policy_id
+                            - paragraph [ref=e1971]: Parent policy identifier
+                          - generic [ref=e1973]: uuid
+                        - generic [ref=e1975]:
+                          - generic [ref=e1976]:
+                            - code [ref=e1978]: category
+                            - paragraph [ref=e1979]: One of 45 rule categories (e.g. web_filtering, screen_time)
+                          - generic [ref=e1981]: string
+                        - generic [ref=e1983]:
+                          - generic [ref=e1984]:
+                            - code [ref=e1986]: enabled
+                            - paragraph [ref=e1987]: Whether this rule is active
+                          - generic [ref=e1989]: boolean
+                        - generic [ref=e1991]:
+                          - generic [ref=e1992]:
+                            - code [ref=e1994]: config
+                            - paragraph [ref=e1995]: Category-specific configuration (JSONB)
+                          - generic [ref=e1997]: object
+                        - generic [ref=e1999]:
+                          - generic [ref=e2000]:
+                            - code [ref=e2002]: created_at
+                            - paragraph [ref=e2003]: Rule creation timestamp
+                          - generic [ref=e2005]: datetime
+                  - generic [ref=e2007]:
+                    - generic [ref=e2008]:
+                      - generic [ref=e2009]:
+                        - generic [ref=e2010]:
+                          - generic [ref=e2011]: Request
+                          - generic [ref=e2012]: curl
+                        - button "Copy" [ref=e2013] [cursor=pointer]:
+                          - img [ref=e2014]
+                          - text: Copy
+                      - code [ref=e2018]: "curl -X PUT http://localhost:8080/api/v1/rules/d4e5f6a7-b8c9-0123-def0-123456789abc \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"enabled\": true, \"config\": { \"daily_limit_minutes\": 90, \"bedtime\": \"20:00\" } }'"
+                    - generic [ref=e2019]:
+                      - generic [ref=e2020]:
+                        - generic [ref=e2021]:
+                          - generic [ref=e2022]: Response
+                          - generic [ref=e2023]: json
+                        - button "Copy" [ref=e2024] [cursor=pointer]:
+                          - img [ref=e2025]
+                          - text: Copy
+                      - code [ref=e2029]: "{ \"id\": \"d4e5f6a7-b8c9-0123-def0-123456789abc\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"category\": \"time_daily_limit\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 90, \"bedtime\": \"20:00\" }, \"created_at\": \"2025-01-10T09:05:00Z\" }"
+              - generic [ref=e2030]:
+                - generic [ref=e2031]:
+                  - generic [ref=e2032]: DELETE
+                  - code [ref=e2033]: "/rules/{ruleID}"
+                  - button "Copy link" [ref=e2034] [cursor=pointer]:
+                    - img [ref=e2035]
+                - paragraph [ref=e2038]: Remove a rule from a policy. The rule is permanently deleted. To temporarily disable a rule, set enabled to false instead.
+                - generic [ref=e2041]:
+                  - generic [ref=e2042]:
+                    - generic [ref=e2043]:
+                      - generic [ref=e2044]:
+                        - generic [ref=e2045]: Request
+                        - generic [ref=e2046]: curl
+                      - button "Copy" [ref=e2047] [cursor=pointer]:
+                        - img [ref=e2048]
+                        - text: Copy
+                    - code [ref=e2052]: "curl -X DELETE http://localhost:8080/api/v1/rules/d4e5f6a7-b8c9-0123-def0-123456789abc \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e2053]:
+                    - generic [ref=e2054]:
+                      - generic [ref=e2055]:
+                        - generic [ref=e2056]: Response
+                        - generic [ref=e2057]: json
+                      - button "Copy" [ref=e2058] [cursor=pointer]:
+                        - img [ref=e2059]
+                        - text: Copy
+                    - code [ref=e2063]: // 204 No Content
+              - generic [ref=e2064]:
+                - generic [ref=e2065]:
+                  - generic [ref=e2066]: PUT
+                  - code [ref=e2067]: "/policies/{policyID}/rules/bulk"
+                  - button "Copy link" [ref=e2068] [cursor=pointer]:
+                    - img [ref=e2069]
+                - paragraph [ref=e2072]: Create or update multiple rules in a single request. For each entry, if a rule with the given category already exists on the policy it is updated; otherwise a new rule is created. This is the recommended way to configure multiple categories at once.
+                - generic [ref=e2073]:
+                  - generic [ref=e2075]:
+                    - generic [ref=e2076]:
+                      - heading "Request fields" [level=4] [ref=e2077]
+                      - generic [ref=e2080]:
+                        - generic [ref=e2081]:
+                          - generic [ref=e2082]:
+                            - button [ref=e2083] [cursor=pointer]:
+                              - img [ref=e2084]
+                            - code [ref=e2086]: rules
+                          - paragraph [ref=e2087]: Array of rule objects with category, enabled, and config
                         - generic [ref=e2088]:
-                          - generic [ref=e2089]:
-                            - code [ref=e2091]: completed_at
-                            - paragraph [ref=e2092]: Job completion timestamp
-                          - generic [ref=e2094]: datetime
-                        - generic [ref=e2096]:
-                          - generic [ref=e2097]:
-                            - code [ref=e2099]: created_at
-                            - paragraph [ref=e2100]: Job creation timestamp
-                          - generic [ref=e2102]: datetime
-                    - generic [ref=e2104]:
-                      - generic [ref=e2105]:
-                        - generic [ref=e2106]:
-                          - generic [ref=e2107]:
-                            - generic [ref=e2108]: Request
-                            - generic [ref=e2109]: curl
-                          - button "Copy" [ref=e2110] [cursor=pointer]:
-                            - img [ref=e2111]
-                            - text: Copy
-                        - code [ref=e2115]: "curl http://localhost:8080/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde \\ -H \"Authorization: Bearer <access_token>\""
-                      - generic [ref=e2116]:
-                        - generic [ref=e2117]:
-                          - generic [ref=e2118]:
-                            - generic [ref=e2119]: Response
-                            - generic [ref=e2120]: json
-                          - button "Copy" [ref=e2121] [cursor=pointer]:
-                            - img [ref=e2122]
-                            - text: Copy
-                        - code [ref=e2126]: "{ \"id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"trigger_type\": \"manual\", \"status\": \"completed\", \"started_at\": \"2025-01-10T10:30:01Z\", \"completed_at\": \"2025-01-10T10:30:05Z\", \"created_at\": \"2025-01-10T10:30:00Z\" }"
-                - generic [ref=e2127]:
-                  - generic [ref=e2128]:
-                    - generic [ref=e2129]: GET
-                    - code [ref=e2130]: "/sync/jobs/{jobID}/results"
-                  - paragraph [ref=e2131]: Get per-provider results for a completed sync job. Each result shows how many rules were applied, skipped, or failed for that provider.
-                  - generic [ref=e2132]:
-                    - generic [ref=e2135]:
-                      - heading "Response fields" [level=4] [ref=e2136]
-                      - generic [ref=e2139]:
-                        - generic [ref=e2140]:
-                          - generic [ref=e2141]:
-                            - button [ref=e2142] [cursor=pointer]:
-                              - img [ref=e2143]
-                            - code [ref=e2145]: "[]"
-                          - paragraph [ref=e2146]: Per-provider result breakdown
-                        - generic [ref=e2148]: SyncJobResult[]
-                    - generic [ref=e2150]:
-                      - generic [ref=e2151]:
-                        - generic [ref=e2152]:
-                          - generic [ref=e2153]:
-                            - generic [ref=e2154]: Request
-                            - generic [ref=e2155]: curl
-                          - button "Copy" [ref=e2156] [cursor=pointer]:
-                            - img [ref=e2157]
-                            - text: Copy
-                        - code [ref=e2161]: "curl http://localhost:8080/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/results \\ -H \"Authorization: Bearer <access_token>\""
-                      - generic [ref=e2162]:
-                        - generic [ref=e2163]:
-                          - generic [ref=e2164]:
-                            - generic [ref=e2165]: Response
-                            - generic [ref=e2166]: json
-                          - button "Copy" [ref=e2167] [cursor=pointer]:
-                            - img [ref=e2168]
-                            - text: Copy
-                        - code [ref=e2172]: "[ { \"id\": \"a7b8c9d0-e1f2-3456-0123-456789abcdef\", \"sync_job_id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"provider_id\": \"nextdns\", \"status\": \"completed\", \"rules_applied\": 8, \"rules_skipped\": 2, \"rules_failed\": 0, \"error_message\": null, \"details\": { \"profile_id\": \"abc123\" } } ]"
-          - generic [ref=e2173]:
-            - heading "7. Content Rating Standard" [level=2] [ref=e2174]
-            - generic [ref=e2175]:
-              - paragraph [ref=e2176]:
-                - text: PCSS defines a unified content rating framework spanning 5 international rating systems. Platforms
-                - strong [ref=e2177]: MUST
-                - text: map their internal content ratings to the nearest PCSS equivalent. Cross-system equivalences
-                - strong [ref=e2178]: SHALL
-                - text: be computed with a confidence score (0-1).
-              - generic [ref=e2179]:
-                - generic [ref=e2180]:
+                          - generic [ref=e2089]: object[]
+                          - generic [ref=e2090]: required
+                    - generic [ref=e2091]:
+                      - heading "Response fields" [level=4] [ref=e2092]
+                      - generic [ref=e2093]:
+                        - generic [ref=e2095]:
+                          - generic [ref=e2096]:
+                            - code [ref=e2098]: created
+                            - paragraph [ref=e2099]: Number of new rules created
+                          - generic [ref=e2101]: integer
+                        - generic [ref=e2103]:
+                          - generic [ref=e2104]:
+                            - code [ref=e2106]: updated
+                            - paragraph [ref=e2107]: Number of existing rules updated
+                          - generic [ref=e2109]: integer
+                  - generic [ref=e2111]:
+                    - generic [ref=e2112]:
+                      - generic [ref=e2113]:
+                        - generic [ref=e2114]:
+                          - generic [ref=e2115]: Request
+                          - generic [ref=e2116]: curl
+                        - button "Copy" [ref=e2117] [cursor=pointer]:
+                          - img [ref=e2118]
+                          - text: Copy
+                      - code [ref=e2122]: "curl -X PUT http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules/bulk \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"rules\": [ { \"category\": \"web_filter_level\", \"config\": { \"level\": \"strict\" } }, { \"category\": \"time_daily_limit\", \"config\": { \"daily_limit_minutes\": 120 } }, { \"category\": \"content_rating\", \"config\": { \"max_mpaa\": \"PG\", \"max_esrb\": \"E\" } } ] }'"
+                    - generic [ref=e2123]:
+                      - generic [ref=e2124]:
+                        - generic [ref=e2125]:
+                          - generic [ref=e2126]: Response
+                          - generic [ref=e2127]: json
+                        - button "Copy" [ref=e2128] [cursor=pointer]:
+                          - img [ref=e2129]
+                          - text: Copy
+                      - code [ref=e2133]: "{ \"created\": 1, \"updated\": 2 }"
+          - generic [ref=e2134]:
+            - heading "3.1 45 Mandatory Policy Categories" [level=2] [ref=e2135]
+            - generic [ref=e2136]:
+              - paragraph [ref=e2137]:
+                - text: PCSS v1.0 defines 45 policy categories across 12 domains. The 19 new legislation-driven categories are backed by specific child safety laws and
+                - strong [ref=e2138]: MUST
+                - text: be enforced by all compliant platforms.
+              - generic [ref=e2139]:
+                - generic [ref=e2141]:
+                  - generic [ref=e2142]:
+                    - code [ref=e2143]: algo_feed_control
+                    - paragraph [ref=e2144]: Control algorithmic feed recommendations; enforce chronological mode for minors
+                  - generic [ref=e2145]:
+                    - generic [ref=e2146]: KOSA
+                    - generic [ref=e2147]: KOSMA
+                    - generic [ref=e2148]: CA SB 976
+                    - generic [ref=e2149]: EU DSA
+                - generic [ref=e2151]:
+                  - generic [ref=e2152]:
+                    - code [ref=e2153]: addictive_design_control
+                    - paragraph [ref=e2154]: Disable infinite scroll, autoplay, streaks, like counts, and daily rewards
+                  - generic [ref=e2155]:
+                    - generic [ref=e2156]: KOSA
+                    - generic [ref=e2157]: CT SB 3
+                    - generic [ref=e2158]: EU DSA
+                    - generic [ref=e2159]: UK OSA
+                - generic [ref=e2161]:
+                  - generic [ref=e2162]:
+                    - code [ref=e2163]: notification_curfew
+                    - paragraph [ref=e2164]: Suppress notifications during defined quiet hours (e.g., 20:00-07:00)
+                  - generic [ref=e2165]:
+                    - generic [ref=e2166]: VA SB 854
+                    - generic [ref=e2167]: NY SAFE for Kids
+                - generic [ref=e2169]:
+                  - generic [ref=e2170]:
+                    - code [ref=e2171]: usage_timer_notification
+                    - paragraph [ref=e2172]: Periodic usage reminders at configurable intervals (15/30/45/60 min)
+                  - generic [ref=e2173]:
+                    - generic [ref=e2174]: MN HF 2
+                    - generic [ref=e2175]: TN HB 1891
+                - generic [ref=e2177]:
+                  - generic [ref=e2178]:
+                    - code [ref=e2179]: targeted_ad_block
+                    - paragraph [ref=e2180]: Block all targeted/behavioral advertising for minors
                   - generic [ref=e2181]:
-                    - generic [ref=e2182]: GET
-                    - code [ref=e2183]: /ratings/systems
-                  - paragraph [ref=e2184]: List all supported content rating systems (MPAA, TV Parental Guidelines, ESRB, PEGI, Common Sense Media). This endpoint is public.
-                  - generic [ref=e2185]:
-                    - generic [ref=e2188]:
-                      - heading "Response fields" [level=4] [ref=e2189]
-                      - generic [ref=e2192]:
-                        - generic [ref=e2193]:
-                          - generic [ref=e2194]:
-                            - button [ref=e2195] [cursor=pointer]:
-                              - img [ref=e2196]
-                            - code [ref=e2198]: "[]"
-                          - paragraph [ref=e2199]: Array of rating system objects
-                        - generic [ref=e2201]: RatingSystem[]
-                    - generic [ref=e2203]:
-                      - generic [ref=e2204]:
-                        - generic [ref=e2205]:
-                          - generic [ref=e2206]:
-                            - generic [ref=e2207]: Request
-                            - generic [ref=e2208]: curl
-                          - button "Copy" [ref=e2209] [cursor=pointer]:
-                            - img [ref=e2210]
-                            - text: Copy
-                        - code [ref=e2214]: curl http://localhost:8080/api/v1/ratings/systems
-                      - generic [ref=e2215]:
-                        - generic [ref=e2216]:
-                          - generic [ref=e2217]:
-                            - generic [ref=e2218]: Response
-                            - generic [ref=e2219]: json
-                          - button "Copy" [ref=e2220] [cursor=pointer]:
-                            - img [ref=e2221]
-                            - text: Copy
-                        - code [ref=e2225]: "[ { \"id\": \"mpaa\", \"name\": \"MPAA\", \"country\": \"US\", \"media_type\": \"film\" }, { \"id\": \"tv\", \"name\": \"TV Parental Guidelines\", \"country\": \"US\", \"media_type\": \"tv\" }, { \"id\": \"esrb\", \"name\": \"ESRB\", \"country\": \"US/CA\", \"media_type\": \"game\" }, { \"id\": \"pegi\", \"name\": \"PEGI\", \"country\": \"EU\", \"media_type\": \"game\" }, { \"id\": \"csm\", \"name\": \"Common Sense Media\", \"country\": \"US\", \"media_type\": \"general\" } ]"
-                - generic [ref=e2226]:
-                  - generic [ref=e2227]:
-                    - generic [ref=e2228]: GET
-                    - code [ref=e2229]: /ratings/by-age
-                  - paragraph [ref=e2230]: Look up the maximum appropriate content rating for a given age across all rating systems. This endpoint is public and useful for previewing age mappings without creating a child profile.
+                    - generic [ref=e2182]: COPPA 2.0
+                    - generic [ref=e2183]: EU DSA
+                    - generic [ref=e2184]: India DPDPA
+                - generic [ref=e2186]:
+                  - generic [ref=e2187]:
+                    - code [ref=e2188]: dm_restriction
+                    - paragraph [ref=e2189]: "Restrict direct messaging: none, contacts_only, or everyone"
+                  - generic [ref=e2190]:
+                    - generic [ref=e2191]: CT SB 3
+                    - generic [ref=e2192]: UK OSA
+                - generic [ref=e2194]:
+                  - generic [ref=e2195]:
+                    - code [ref=e2196]: age_gate
+                    - paragraph [ref=e2197]: Require age verification before platform access
+                  - generic [ref=e2198]:
+                    - generic [ref=e2199]: KOSMA
+                    - generic [ref=e2200]: FL HB 3
+                    - generic [ref=e2201]: Australia Online Safety Act
+                - generic [ref=e2203]:
+                  - generic [ref=e2204]:
+                    - code [ref=e2205]: data_deletion_request
+                    - paragraph [ref=e2206]: Enable one-click data deletion request for child accounts
+                  - generic [ref=e2207]:
+                    - generic [ref=e2208]: COPPA 2.0
+                    - generic [ref=e2209]: NY NYCDPA
+                - generic [ref=e2211]:
+                  - generic [ref=e2212]:
+                    - code [ref=e2213]: geolocation_opt_in
+                    - paragraph [ref=e2214]: Default geolocation sharing to off; require explicit opt-in
+                  - generic [ref=e2215]:
+                    - generic [ref=e2216]: CT SB 3
+                    - generic [ref=e2217]: MD Kids Code
+                    - generic [ref=e2218]: COPPA update
+                - generic [ref=e2220]:
+                  - generic [ref=e2221]:
+                    - code [ref=e2222]: csam_reporting
+                    - paragraph [ref=e2223]: Ensure CSAM detection/reporting mechanisms are enabled on platforms
+                  - generic [ref=e2224]:
+                    - generic [ref=e2225]: CIPA
+                    - generic [ref=e2226]: EARN IT Act
+                    - generic [ref=e2227]: UK OSA
+                    - generic [ref=e2228]: Canada C-63
+                - generic [ref=e2230]:
                   - generic [ref=e2231]:
-                    - generic [ref=e2233]:
-                      - generic [ref=e2234]:
-                        - heading "Request fields" [level=4] [ref=e2235]
-                        - generic [ref=e2238]:
-                          - generic [ref=e2239]:
-                            - code [ref=e2241]: age
-                            - paragraph [ref=e2242]: "Age in years (query parameter: ?age=10)"
-                          - generic [ref=e2243]:
-                            - generic [ref=e2244]: integer
-                            - generic [ref=e2245]: required
-                      - generic [ref=e2246]:
-                        - heading "Response fields" [level=4] [ref=e2247]
-                        - generic [ref=e2248]:
-                          - generic [ref=e2250]:
-                            - generic [ref=e2251]:
-                              - code [ref=e2253]: age
-                              - paragraph [ref=e2254]: Queried age
-                            - generic [ref=e2256]: integer
-                          - generic [ref=e2258]:
-                            - generic [ref=e2259]:
-                              - code [ref=e2261]: ratings
-                              - paragraph [ref=e2262]: Map of rating system ID to maximum allowed rating
-                            - generic [ref=e2264]: object
-                    - generic [ref=e2266]:
-                      - generic [ref=e2267]:
-                        - generic [ref=e2268]:
-                          - generic [ref=e2269]:
-                            - generic [ref=e2270]: Request
-                            - generic [ref=e2271]: curl
-                          - button "Copy" [ref=e2272] [cursor=pointer]:
-                            - img [ref=e2273]
+                    - code [ref=e2232]: library_filter_compliance
+                    - paragraph [ref=e2233]: CIPA E-rate filtering for schools and libraries
+                  - generic [ref=e2235]: CIPA
+                - generic [ref=e2237]:
+                  - generic [ref=e2238]:
+                    - code [ref=e2239]: ai_minor_interaction
+                    - paragraph [ref=e2240]: Restrict AI systems that exploit or manipulate children
+                  - generic [ref=e2242]: EU AI Act
+                - generic [ref=e2244]:
+                  - generic [ref=e2245]:
+                    - code [ref=e2246]: social_media_min_age
+                    - paragraph [ref=e2247]: Enforce hard minimum age ban for social media access
+                  - generic [ref=e2248]:
+                    - generic [ref=e2249]: AU SMMA
+                    - generic [ref=e2250]: UT SMRA
+                - generic [ref=e2252]:
+                  - generic [ref=e2253]:
+                    - code [ref=e2254]: image_rights_minor
+                    - paragraph [ref=e2255]: Protect minors' image rights; restrict unauthorized sharing
+                  - generic [ref=e2257]: France SREN
+                - generic [ref=e2259]:
+                  - generic [ref=e2260]:
+                    - code [ref=e2261]: parental_consent_gate
+                    - paragraph [ref=e2262]: Require verifiable parental consent before account creation or data collection
+                  - generic [ref=e2263]:
+                    - generic [ref=e2264]: COPPA
+                    - generic [ref=e2265]: KOSMA
+                    - generic [ref=e2266]: GDPR Art. 8
+                    - generic [ref=e2267]: India DPDPA
+                    - generic [ref=e2268]: 15+ state laws
+                - generic [ref=e2270]:
+                  - generic [ref=e2271]:
+                    - code [ref=e2272]: parental_event_notification
+                    - paragraph [ref=e2273]: Notify parents when minors create accounts or encounter flagged content
+                  - generic [ref=e2274]:
+                    - generic [ref=e2275]: LA Act 456
+                    - generic [ref=e2276]: OH HB 33
+                - generic [ref=e2278]:
+                  - generic [ref=e2279]:
+                    - code [ref=e2280]: screen_time_report
+                    - paragraph [ref=e2281]: Generate and deliver screen time usage reports to parents
+                  - generic [ref=e2282]:
+                    - generic [ref=e2283]: VA SB 854
+                    - generic [ref=e2284]: TN HB 1891
+                    - generic [ref=e2285]: MN HF 2
+                - generic [ref=e2287]:
+                  - generic [ref=e2288]:
+                    - code [ref=e2289]: commercial_data_ban
+                    - paragraph [ref=e2290]: Ban commercial sale, sharing, or profiling of minor data
+                  - generic [ref=e2291]:
+                    - generic [ref=e2292]: NY NYCDPA
+                    - generic [ref=e2293]: COPPA 2.0
+                    - generic [ref=e2294]: India DPDPA
+                    - generic [ref=e2295]: BR LGPD
+                - generic [ref=e2297]:
+                  - generic [ref=e2298]:
+                    - code [ref=e2299]: algorithmic_audit
+                    - paragraph [ref=e2300]: Require algorithmic transparency reports and independent audits
+                  - generic [ref=e2301]:
+                    - generic [ref=e2302]: KOSA
+                    - generic [ref=e2303]: EU DSA
+                    - generic [ref=e2304]: EU AI Act
+                    - generic [ref=e2305]: UK OSA
+              - paragraph [ref=e2307]:
+                - text: See the
+                - link "complete API reference below" [ref=e2308] [cursor=pointer]:
+                  - /url: "#rule-categories"
+                - text: for full JSON schemas, field constraints, age-based defaults, platform support, and code examples for all 45 categories.
+          - generic [ref=e2309]:
+            - heading "4. Regulated Platforms" [level=2] [ref=e2310]
+            - generic [ref=e2311]:
+              - paragraph [ref=e2312]:
+                - text: All technology platforms serving minors
+                - strong [ref=e2313]: SHALL
+                - text: register with the Phosra platform registry. Each platform declares its category, compliance level, supported capabilities, and authentication mechanism.
+              - generic [ref=e2314]:
+                - generic [ref=e2315]:
+                  - generic [ref=e2316]:
+                    - generic [ref=e2317]: GET
+                    - code [ref=e2318]: /providers
+                    - button "Copy link" [ref=e2319] [cursor=pointer]:
+                      - img [ref=e2320]
+                  - paragraph [ref=e2323]: List all available providers with their integration tier, supported capabilities, and authentication method. This endpoint is public and does not require authentication.
+                  - generic [ref=e2324]:
+                    - generic [ref=e2327]:
+                      - heading "Response fields" [level=4] [ref=e2328]
+                      - generic [ref=e2331]:
+                        - generic [ref=e2332]:
+                          - generic [ref=e2333]:
+                            - button [ref=e2334] [cursor=pointer]:
+                              - img [ref=e2335]
+                            - code [ref=e2337]: "[]"
+                          - paragraph [ref=e2338]: Array of provider objects
+                        - generic [ref=e2340]: Provider[]
+                    - generic [ref=e2342]:
+                      - generic [ref=e2343]:
+                        - generic [ref=e2344]:
+                          - generic [ref=e2345]:
+                            - generic [ref=e2346]: Request
+                            - generic [ref=e2347]: curl
+                          - button "Copy" [ref=e2348] [cursor=pointer]:
+                            - img [ref=e2349]
                             - text: Copy
-                        - code [ref=e2277]: curl "http://localhost:8080/api/v1/ratings/by-age?age=10"
-                      - generic [ref=e2278]:
-                        - generic [ref=e2279]:
-                          - generic [ref=e2280]:
-                            - generic [ref=e2281]: Response
-                            - generic [ref=e2282]: json
-                          - button "Copy" [ref=e2283] [cursor=pointer]:
-                            - img [ref=e2284]
+                        - code [ref=e2353]: curl http://localhost:8080/api/v1/providers
+                      - generic [ref=e2354]:
+                        - generic [ref=e2355]:
+                          - generic [ref=e2356]:
+                            - generic [ref=e2357]: Response
+                            - generic [ref=e2358]: json
+                          - button "Copy" [ref=e2359] [cursor=pointer]:
+                            - img [ref=e2360]
                             - text: Copy
-                        - code [ref=e2288]: "{ \"age\": 10, \"ratings\": { \"mpaa\": { \"code\": \"PG\", \"name\": \"Parental Guidance Suggested\", \"min_age\": 8 }, \"tv\": { \"code\": \"TV-PG\", \"name\": \"Parental Guidance Suggested\", \"min_age\": 8 }, \"esrb\": { \"code\": \"E10+\", \"name\": \"Everyone 10+\", \"min_age\": 10 }, \"pegi\": { \"code\": \"PEGI 12\", \"name\": \"PEGI 12\", \"min_age\": 12 }, \"csm\": { \"code\": \"10+\", \"name\": \"Age 10+\", \"min_age\": 10 } } }"
-          - generic [ref=e2289]:
-            - heading "8. Event Notifications" [level=2] [ref=e2290]
-            - generic [ref=e2291]:
-              - paragraph [ref=e2292]:
-                - text: Platforms
-                - strong [ref=e2293]: SHOULD
-                - text: register webhook endpoints to receive real-time enforcement notifications. All webhook payloads
-                - strong [ref=e2294]: MUST
-                - text: be signed using HMAC-SHA256 with the webhook secret. Platforms
-                - strong [ref=e2295]: MUST
-                - text: verify the
-                - code [ref=e2296]: X-Phosra-Signature
-                - text: header before processing.
-              - generic [ref=e2297]:
-                - paragraph [ref=e2298]: POST /webhooks — Register notification endpoint
-                - paragraph [ref=e2299]: "PUT /webhooks/{webhookID} — Update endpoint configuration"
-                - paragraph [ref=e2300]: "POST /webhooks/{webhookID}/test — Send test notification"
-                - paragraph [ref=e2301]: "GET /webhooks/{webhookID}/deliveries — Delivery audit log"
-              - generic [ref=e2302]: "# Signature verification signature = HMAC-SHA256(webhook_secret, request_body) # Compare with X-Phosra-Signature header (hex-encoded)"
-          - generic [ref=e2303]:
-            - heading "9. Compliance Levels" [level=2] [ref=e2304]
-            - generic [ref=e2305]:
-              - paragraph [ref=e2306]:
-                - text: Each platform is classified into one of three compliance levels. Platforms
-                - strong [ref=e2307]: MUST
-                - text: progress toward full compliance. Regression from Compliant to a lower level
-                - strong [ref=e2308]: SHALL
-                - text: trigger regulatory review.
-              - generic [ref=e2309]:
-                - generic [ref=e2310]:
-                  - generic [ref=e2311]: COMPLIANT
-                  - heading "Full API Enforcement" [level=3] [ref=e2313]
-                  - list [ref=e2314]:
-                    - listitem [ref=e2315]:
-                      - text: Platform
-                      - strong [ref=e2316]: MUST
-                      - text: accept all enforcement requests via API
-                    - listitem [ref=e2317]:
-                      - text: Platform
-                      - strong [ref=e2318]: MUST
-                      - text: report per-rule enforcement results
-                    - listitem [ref=e2319]:
-                      - text: Platform
-                      - strong [ref=e2320]: MUST
-                      - text: support credential validation
-                    - listitem [ref=e2321]:
-                      - text: Platform
-                      - strong [ref=e2322]: SHOULD
-                      - text: support webhook notifications
-                - generic [ref=e2323]:
-                  - generic [ref=e2324]: PROVISIONAL
-                  - heading "Limited API Access" [level=3] [ref=e2326]
-                  - list [ref=e2327]:
-                    - listitem [ref=e2328]:
-                      - text: Platform
-                      - strong [ref=e2329]: MUST
-                      - text: provide at least read access to safety settings
-                    - listitem [ref=e2330]:
-                      - text: Platform
-                      - strong [ref=e2331]: SHOULD
-                      - text: accept write requests for supported capabilities
-                    - listitem [ref=e2332]:
-                      - text: Platform
-                      - strong [ref=e2333]: MUST
-                      - text: document unsupported enforcement categories
-                - generic [ref=e2334]:
-                  - generic [ref=e2335]: PENDING COMPLIANCE
-                  - heading "Manual Compliance" [level=3] [ref=e2337]
-                  - list [ref=e2338]:
-                    - listitem [ref=e2339]:
-                      - text: Platform
-                      - strong [ref=e2340]: MUST
-                      - text: provide documented safety configuration steps
-                    - listitem [ref=e2341]:
-                      - text: Platform
-                      - strong [ref=e2342]: SHALL
-                      - text: publish a public API roadmap within 12 months
-                    - listitem [ref=e2343]:
-                      - text: Platform
-                      - strong [ref=e2344]: MUST NOT
-                      - text: remain at Pending level beyond 24 months
-          - generic [ref=e2345]:
-            - heading "10. Enforcement Timeline" [level=2] [ref=e2346]
-            - generic [ref=e2347]:
-              - paragraph [ref=e2348]: The following timeline governs the transition to mandatory PCSS compliance for all regulated platforms.
-              - generic [ref=e2349]:
-                - generic [ref=e2350]:
-                  - generic [ref=e2351]: Phase 1
-                  - generic [ref=e2352]:
-                    - heading "Voluntary Adoption" [level=4] [ref=e2353]
-                    - paragraph [ref=e2354]:
-                      - text: Platforms
-                      - strong [ref=e2355]: MAY
-                      - text: register and begin compliance integration. Early adopters receive Compliant certification.
-                - generic [ref=e2356]:
-                  - generic [ref=e2357]: Phase 2
-                  - generic [ref=e2358]:
-                    - heading "Mandatory Registration" [level=4] [ref=e2359]
-                    - paragraph [ref=e2360]:
-                      - text: All platforms serving minors
-                      - strong [ref=e2361]: MUST
-                      - text: register with the PCSS platform registry. Pending Compliance status assigned.
-                - generic [ref=e2362]:
-                  - generic [ref=e2363]: Phase 3
-                  - generic [ref=e2364]:
-                    - heading "Full Enforcement" [level=4] [ref=e2365]
-                    - paragraph [ref=e2366]:
-                      - text: All platforms
-                      - strong [ref=e2367]: MUST
-                      - text: achieve at least Provisional compliance. Platforms at Pending
-                      - strong [ref=e2368]: SHALL
-                      - text: face regulatory review and potential enforcement action.
-          - generic [ref=e2369]:
-            - generic [ref=e2370]:
-              - heading "40 Mandatory Policy Categories" [level=2] [ref=e2371]
-              - paragraph [ref=e2372]:
-                - text: Complete API reference for all 40 policy categories. Each entry includes the JSON configuration schema, field constraints, age-based defaults, platform support, and usage examples. Platforms claiming capability in a category
-                - strong [ref=e2373]: MUST
-                - text: implement enforcement for all rules within that category.
-              - generic [ref=e2374]:
-                - textbox "Search categories..." [ref=e2375]
-                - generic [ref=e2376]:
-                  - button "Expand All" [ref=e2377] [cursor=pointer]
-                  - button "Collapse All" [ref=e2378] [cursor=pointer]
-              - generic [ref=e2379]:
-                - generic [ref=e2380]:
-                  - generic [ref=e2381]:
-                    - heading "Content" [level=3] [ref=e2382]
-                    - generic [ref=e2383]: 5 categories
-                    - generic [ref=e2384]: Control what media and content children can access across platforms
-                  - generic [ref=e2385]:
-                    - button "#1 content_rating Content Rating Controls the maximum content rating a child can access across five international..." [ref=e2387] [cursor=pointer]:
-                      - generic [ref=e2388]: "#1"
-                      - code [ref=e2389]: content_rating
-                      - generic [ref=e2390]: Content Rating
-                      - generic [ref=e2391]: Controls the maximum content rating a child can access across five international...
-                      - img [ref=e2392]
-                    - button "#2 content_block_title Content Block by Title Blocks specific content titles (movies, shows, games, apps) by name. Provides gr..." [ref=e2395] [cursor=pointer]:
-                      - generic [ref=e2396]: "#2"
-                      - code [ref=e2397]: content_block_title
-                      - generic [ref=e2398]: Content Block by Title
-                      - generic [ref=e2399]: Blocks specific content titles (movies, shows, games, apps) by name. Provides gr...
-                      - img [ref=e2400]
-                    - button "#3 content_allow_title Content Allow by Title Explicitly allows specific content titles that would otherwise be blocked by rat..." [ref=e2403] [cursor=pointer]:
-                      - generic [ref=e2404]: "#3"
-                      - code [ref=e2405]: content_allow_title
-                      - generic [ref=e2406]: Content Allow by Title
-                      - generic [ref=e2407]: Explicitly allows specific content titles that would otherwise be blocked by rat...
-                      - img [ref=e2408]
-                    - button "#4 content_allowlist_mode Content Allowlist Mode When enabled, switches content access to allowlist-only mode — only explicitly a..." [ref=e2411] [cursor=pointer]:
-                      - generic [ref=e2412]: "#4"
-                      - code [ref=e2413]: content_allowlist_mode
-                      - generic [ref=e2414]: Content Allowlist Mode
-                      - generic [ref=e2415]: When enabled, switches content access to allowlist-only mode — only explicitly a...
-                      - img [ref=e2416]
-                    - button "#5 content_descriptor_block Content Descriptor Block Blocks content based on specific content descriptors (violence, language, sexual..." [ref=e2419] [cursor=pointer]:
-                      - generic [ref=e2420]: "#5"
-                      - code [ref=e2421]: content_descriptor_block
-                      - generic [ref=e2422]: Content Descriptor Block
-                      - generic [ref=e2423]: Blocks content based on specific content descriptors (violence, language, sexual...
-                      - img [ref=e2424]
-                - generic [ref=e2426]:
-                  - generic [ref=e2427]:
-                    - heading "Time" [level=3] [ref=e2428]
-                    - generic [ref=e2429]: 4 categories
-                    - generic [ref=e2430]: Manage screen time limits, schedules, and downtime periods
-                  - generic [ref=e2431]:
-                    - button "#6 time_daily_limit Daily Screen Time Limit Sets the maximum total screen time allowed per day in minutes. Enforced across a..." [ref=e2433] [cursor=pointer]:
-                      - generic [ref=e2434]: "#6"
-                      - code [ref=e2435]: time_daily_limit
-                      - generic [ref=e2436]: Daily Screen Time Limit
-                      - generic [ref=e2437]: Sets the maximum total screen time allowed per day in minutes. Enforced across a...
-                      - img [ref=e2438]
-                    - button "#7 time_scheduled_hours Scheduled Usage Hours Defines allowed usage windows for weekdays and weekends. Device access is blocke..." [ref=e2441] [cursor=pointer]:
-                      - generic [ref=e2442]: "#7"
-                      - code [ref=e2443]: time_scheduled_hours
-                      - generic [ref=e2444]: Scheduled Usage Hours
-                      - generic [ref=e2445]: Defines allowed usage windows for weekdays and weekends. Device access is blocke...
-                      - img [ref=e2446]
-                    - button "#8 time_per_app_limit Per-App Time Limit Sets individual time limits for specific apps. Allows parents to restrict time o..." [ref=e2449] [cursor=pointer]:
-                      - generic [ref=e2450]: "#8"
-                      - code [ref=e2451]: time_per_app_limit
-                      - generic [ref=e2452]: Per-App Time Limit
-                      - generic [ref=e2453]: Sets individual time limits for specific apps. Allows parents to restrict time o...
-                      - img [ref=e2454]
-                    - button "#9 time_downtime Scheduled Downtime Defines specific downtime periods where device usage is fully blocked. Supports ..." [ref=e2457] [cursor=pointer]:
-                      - generic [ref=e2458]: "#9"
-                      - code [ref=e2459]: time_downtime
-                      - generic [ref=e2460]: Scheduled Downtime
-                      - generic [ref=e2461]: Defines specific downtime periods where device usage is fully blocked. Supports ...
-                      - img [ref=e2462]
-                - generic [ref=e2464]:
-                  - generic [ref=e2465]:
-                    - heading "Purchase" [level=3] [ref=e2466]
-                    - generic [ref=e2467]: 3 categories
-                    - generic [ref=e2468]: Control digital purchases, spending limits, and in-app transactions
+                        - code [ref=e2364]: "[ { \"id\": \"nextdns\", \"name\": \"NextDNS\", \"category\": \"dns\", \"tier\": \"live\", \"description\": \"DNS-level web filtering and analytics\", \"auth_type\": \"api_key\", \"capabilities\": [ \"web_filtering\", \"safe_search\", \"youtube_restricted\", \"block_bypass_methods\" ] }, { \"id\": \"cleanbrowing\", \"name\": \"CleanBrowsing\", \"category\": \"dns\", \"tier\": \"live\", \"description\": \"Family-friendly DNS filtering\", \"auth_type\": \"api_key\", \"capabilities\": [ \"web_filtering\", \"safe_search\" ] } ]"
+                - generic [ref=e2365]:
+                  - generic [ref=e2366]:
+                    - generic [ref=e2367]: GET
+                    - code [ref=e2368]: "/platforms/{platformID}"
+                    - button "Copy link" [ref=e2369] [cursor=pointer]:
+                      - img [ref=e2370]
+                  - paragraph [ref=e2373]: Get detailed information about a specific provider including capabilities, authentication method, and integration tier. This endpoint is public.
+                  - generic [ref=e2374]:
+                    - generic [ref=e2377]:
+                      - heading "Response fields" [level=4] [ref=e2378]
+                      - generic [ref=e2379]:
+                        - generic [ref=e2381]:
+                          - generic [ref=e2382]:
+                            - code [ref=e2384]: id
+                            - paragraph [ref=e2385]: Provider slug (e.g. nextdns, cleanbrowing)
+                          - generic [ref=e2387]: string
+                        - generic [ref=e2389]:
+                          - generic [ref=e2390]:
+                            - code [ref=e2392]: name
+                            - paragraph [ref=e2393]: Provider display name
+                          - generic [ref=e2395]: string
+                        - generic [ref=e2397]:
+                          - generic [ref=e2398]:
+                            - code [ref=e2400]: category
+                            - paragraph [ref=e2401]: "One of: dns, streaming, gaming, device, browser"
+                          - generic [ref=e2403]: enum
+                        - generic [ref=e2405]:
+                          - generic [ref=e2406]:
+                            - code [ref=e2408]: tier
+                            - paragraph [ref=e2409]: "Integration level: live, partial, or stub"
+                          - generic [ref=e2411]: enum
+                        - generic [ref=e2413]:
+                          - generic [ref=e2414]:
+                            - code [ref=e2416]: description
+                            - paragraph [ref=e2417]: Human-readable provider description
+                          - generic [ref=e2419]: string
+                        - generic [ref=e2421]:
+                          - generic [ref=e2422]:
+                            - code [ref=e2424]: auth_type
+                            - paragraph [ref=e2425]: "One of: api_key, oauth2, manual"
+                          - generic [ref=e2427]: enum
+                        - generic [ref=e2429]:
+                          - generic [ref=e2430]:
+                            - code [ref=e2432]: capabilities
+                            - paragraph [ref=e2433]: Supported rule categories for this provider
+                          - generic [ref=e2435]: string[]
+                    - generic [ref=e2437]:
+                      - generic [ref=e2438]:
+                        - generic [ref=e2439]:
+                          - generic [ref=e2440]:
+                            - generic [ref=e2441]: Request
+                            - generic [ref=e2442]: curl
+                          - button "Copy" [ref=e2443] [cursor=pointer]:
+                            - img [ref=e2444]
+                            - text: Copy
+                        - code [ref=e2448]: curl http://localhost:8080/api/v1/platforms/nextdns
+                      - generic [ref=e2449]:
+                        - generic [ref=e2450]:
+                          - generic [ref=e2451]:
+                            - generic [ref=e2452]: Response
+                            - generic [ref=e2453]: json
+                          - button "Copy" [ref=e2454] [cursor=pointer]:
+                            - img [ref=e2455]
+                            - text: Copy
+                        - code [ref=e2459]: "{ \"id\": \"nextdns\", \"name\": \"NextDNS\", \"category\": \"dns\", \"tier\": \"live\", \"description\": \"DNS-level web filtering and analytics\", \"auth_type\": \"api_key\", \"capabilities\": [ \"web_filtering\", \"safe_search\", \"youtube_restricted\", \"block_bypass_methods\" ] }"
+                - generic [ref=e2460]:
+                  - generic [ref=e2461]:
+                    - generic [ref=e2462]: GET
+                    - code [ref=e2463]: /platforms/by-category
+                    - button "Copy link" [ref=e2464] [cursor=pointer]:
+                      - img [ref=e2465]
+                  - paragraph [ref=e2468]: "Filter platforms by category (dns, streaming, gaming, device, browser). Useful for discovering which platforms serve a particular need. Query parameter: ?category=dns"
                   - generic [ref=e2469]:
-                    - button "#10 purchase_approval Purchase Approval Requires parent/guardian approval before any purchase can be completed. Applies ..." [ref=e2471] [cursor=pointer]:
-                      - generic [ref=e2472]: "#10"
-                      - code [ref=e2473]: purchase_approval
-                      - generic [ref=e2474]: Purchase Approval
-                      - generic [ref=e2475]: Requires parent/guardian approval before any purchase can be completed. Applies ...
-                      - img [ref=e2476]
-                    - button "#11 purchase_spending_cap Monthly Spending Cap Sets a maximum monthly spending limit for the child's account across all digital..." [ref=e2479] [cursor=pointer]:
-                      - generic [ref=e2480]: "#11"
-                      - code [ref=e2481]: purchase_spending_cap
-                      - generic [ref=e2482]: Monthly Spending Cap
-                      - generic [ref=e2483]: Sets a maximum monthly spending limit for the child's account across all digital...
-                      - img [ref=e2484]
-                    - button "#12 purchase_block_iap Block In-App Purchases Blocks all in-app purchases (IAP) including consumables, subscriptions, and loot..." [ref=e2487] [cursor=pointer]:
-                      - generic [ref=e2488]: "#12"
-                      - code [ref=e2489]: purchase_block_iap
-                      - generic [ref=e2490]: Block In-App Purchases
-                      - generic [ref=e2491]: Blocks all in-app purchases (IAP) including consumables, subscriptions, and loot...
-                      - img [ref=e2492]
-                - generic [ref=e2494]:
-                  - generic [ref=e2495]:
-                    - heading "Social" [level=3] [ref=e2496]
-                    - generic [ref=e2497]: 3 categories
-                    - generic [ref=e2498]: Manage contacts, chat, and multiplayer interactions
-                  - generic [ref=e2499]:
-                    - button "#13 social_contacts Contact Management Controls who the child can communicate with. In approved-only mode, only parent-..." [ref=e2501] [cursor=pointer]:
-                      - generic [ref=e2502]: "#13"
-                      - code [ref=e2503]: social_contacts
-                      - generic [ref=e2504]: Contact Management
-                      - generic [ref=e2505]: Controls who the child can communicate with. In approved-only mode, only parent-...
-                      - img [ref=e2506]
-                    - button "#14 social_chat_control Chat Control Controls in-app chat functionality. Can be fully disabled, limited to friends on..." [ref=e2509] [cursor=pointer]:
-                      - generic [ref=e2510]: "#14"
-                      - code [ref=e2511]: social_chat_control
-                      - generic [ref=e2512]: Chat Control
-                      - generic [ref=e2513]: Controls in-app chat functionality. Can be fully disabled, limited to friends on...
-                      - img [ref=e2514]
-                    - button "#15 social_multiplayer Multiplayer Gaming Controls access to multiplayer gaming features. Can restrict to approved games o..." [ref=e2517] [cursor=pointer]:
-                      - generic [ref=e2518]: "#15"
-                      - code [ref=e2519]: social_multiplayer
-                      - generic [ref=e2520]: Multiplayer Gaming
-                      - generic [ref=e2521]: Controls access to multiplayer gaming features. Can restrict to approved games o...
-                      - img [ref=e2522]
-                - generic [ref=e2524]:
-                  - generic [ref=e2525]:
-                    - heading "Web" [level=3] [ref=e2526]
-                    - generic [ref=e2527]: 5 categories
-                    - generic [ref=e2528]: Filter web content, enforce safe search, and manage blocklists
-                  - generic [ref=e2529]:
-                    - button "#16 web_safesearch Safe Search Forces safe search mode on supported search engines (Google, Bing, DuckDuckGo, Y..." [ref=e2531] [cursor=pointer]:
-                      - generic [ref=e2532]: "#16"
-                      - code [ref=e2533]: web_safesearch
-                      - generic [ref=e2534]: Safe Search
-                      - generic [ref=e2535]: Forces safe search mode on supported search engines (Google, Bing, DuckDuckGo, Y...
-                      - img [ref=e2536]
-                    - button "#17 web_category_block Web Category Block Blocks access to entire categories of websites. Categories include adult content..." [ref=e2539] [cursor=pointer]:
-                      - generic [ref=e2540]: "#17"
-                      - code [ref=e2541]: web_category_block
-                      - generic [ref=e2542]: Web Category Block
-                      - generic [ref=e2543]: Blocks access to entire categories of websites. Categories include adult content...
-                      - img [ref=e2544]
-                    - button "#18 web_custom_allowlist Web Custom Allowlist Explicitly allows specific URLs/domains that would otherwise be blocked by categ..." [ref=e2547] [cursor=pointer]:
-                      - generic [ref=e2548]: "#18"
-                      - code [ref=e2549]: web_custom_allowlist
-                      - generic [ref=e2550]: Web Custom Allowlist
-                      - generic [ref=e2551]: Explicitly allows specific URLs/domains that would otherwise be blocked by categ...
-                      - img [ref=e2552]
-                    - button "#19 web_custom_blocklist Web Custom Blocklist Blocks specific URLs/domains in addition to category-based blocking. Provides pe..." [ref=e2555] [cursor=pointer]:
-                      - generic [ref=e2556]: "#19"
-                      - code [ref=e2557]: web_custom_blocklist
-                      - generic [ref=e2558]: Web Custom Blocklist
-                      - generic [ref=e2559]: Blocks specific URLs/domains in addition to category-based blocking. Provides pe...
-                      - img [ref=e2560]
-                    - button "#20 web_filter_level Web Filter Level Sets the overall web filtering strictness level. Controls how aggressively conte..." [ref=e2563] [cursor=pointer]:
-                      - generic [ref=e2564]: "#20"
-                      - code [ref=e2565]: web_filter_level
-                      - generic [ref=e2566]: Web Filter Level
-                      - generic [ref=e2567]: Sets the overall web filtering strictness level. Controls how aggressively conte...
-                      - img [ref=e2568]
-                - generic [ref=e2570]:
-                  - generic [ref=e2571]:
-                    - heading "Privacy" [level=3] [ref=e2572]
-                    - generic [ref=e2573]: 4 categories
-                    - generic [ref=e2574]: Control location sharing, profile visibility, and data sharing
-                  - generic [ref=e2575]:
-                    - button "#21 privacy_location Location Sharing Controls location sharing settings. Can be off, shared with family only, or full..." [ref=e2577] [cursor=pointer]:
-                      - generic [ref=e2578]: "#21"
-                      - code [ref=e2579]: privacy_location
-                      - generic [ref=e2580]: Location Sharing
-                      - generic [ref=e2581]: Controls location sharing settings. Can be off, shared with family only, or full...
-                      - img [ref=e2582]
-                    - button "#22 privacy_profile_visibility Profile Visibility Controls the visibility of the child's profile on platforms. Can be set to priva..." [ref=e2585] [cursor=pointer]:
-                      - generic [ref=e2586]: "#22"
-                      - code [ref=e2587]: privacy_profile_visibility
-                      - generic [ref=e2588]: Profile Visibility
-                      - generic [ref=e2589]: Controls the visibility of the child's profile on platforms. Can be set to priva...
-                      - img [ref=e2590]
-                    - button "#23 privacy_data_sharing Data Sharing Controls Controls whether the child's data can be shared with third parties for advertisi..." [ref=e2593] [cursor=pointer]:
-                      - generic [ref=e2594]: "#23"
-                      - code [ref=e2595]: privacy_data_sharing
-                      - generic [ref=e2596]: Data Sharing Controls
-                      - generic [ref=e2597]: Controls whether the child's data can be shared with third parties for advertisi...
-                      - img [ref=e2598]
-                    - button "#24 privacy_account_creation Account Creation Approval Requires parent approval before the child can create new accounts on platforms a..." [ref=e2601] [cursor=pointer]:
-                      - generic [ref=e2602]: "#24"
-                      - code [ref=e2603]: privacy_account_creation
-                      - generic [ref=e2604]: Account Creation Approval
-                      - generic [ref=e2605]: Requires parent approval before the child can create new accounts on platforms a...
-                      - img [ref=e2606]
-                - generic [ref=e2608]:
-                  - generic [ref=e2609]:
-                    - heading "Monitoring" [level=3] [ref=e2610]
-                    - generic [ref=e2611]: 2 categories
-                    - generic [ref=e2612]: Track activity and configure real-time alerts for parents
-                  - generic [ref=e2613]:
-                    - button "#25 monitoring_activity Activity Monitoring Enables activity monitoring to track app usage, screen time, and browsing activi..." [ref=e2615] [cursor=pointer]:
-                      - generic [ref=e2616]: "#25"
-                      - code [ref=e2617]: monitoring_activity
-                      - generic [ref=e2618]: Activity Monitoring
-                      - generic [ref=e2619]: Enables activity monitoring to track app usage, screen time, and browsing activi...
-                      - img [ref=e2620]
-                    - button "#26 monitoring_alerts Monitoring Alerts Configures real-time alerts sent to parents when specific events occur, such as ..." [ref=e2623] [cursor=pointer]:
-                      - generic [ref=e2624]: "#26"
-                      - code [ref=e2625]: monitoring_alerts
-                      - generic [ref=e2626]: Monitoring Alerts
-                      - generic [ref=e2627]: Configures real-time alerts sent to parents when specific events occur, such as ...
-                      - img [ref=e2628]
-                - generic [ref=e2630]:
-                  - generic [ref=e2631]:
-                    - heading "Algorithmic Safety" [level=3] [ref=e2632]
-                    - generic [ref=e2633]: 2 categories
-                    - generic [ref=e2634]: Control algorithmic feeds and disable addictive design patterns
-                  - generic [ref=e2635]:
-                    - button "#27 algo_feed_control Algorithm Feed Control Controls whether platforms serve algorithmic or chronological feeds. In chronolo... KOSA KOSMA +2" [ref=e2637] [cursor=pointer]:
-                      - generic [ref=e2638]: "#27"
-                      - code [ref=e2639]: algo_feed_control
-                      - generic [ref=e2640]: Algorithm Feed Control
-                      - generic [ref=e2641]: Controls whether platforms serve algorithmic or chronological feeds. In chronolo...
-                      - generic [ref=e2642]:
-                        - generic [ref=e2643]: KOSA
-                        - generic [ref=e2644]: KOSMA
-                        - generic [ref=e2645]: "+2"
-                      - img [ref=e2646]
-                    - button "#28 addictive_design_control Addictive Design Control Disables addictive design patterns including infinite scroll, autoplay, streaks,... KOSA CT SB 3 +2" [ref=e2649] [cursor=pointer]:
-                      - generic [ref=e2650]: "#28"
-                      - code [ref=e2651]: addictive_design_control
-                      - generic [ref=e2652]: Addictive Design Control
-                      - generic [ref=e2653]: Disables addictive design patterns including infinite scroll, autoplay, streaks,...
-                      - generic [ref=e2654]:
-                        - generic [ref=e2655]: KOSA
-                        - generic [ref=e2656]: CT SB 3
-                        - generic [ref=e2657]: "+2"
-                      - img [ref=e2658]
-                - generic [ref=e2660]:
-                  - generic [ref=e2661]:
-                    - heading "Notifications" [level=3] [ref=e2662]
-                    - generic [ref=e2663]: 2 categories
-                    - generic [ref=e2664]: Manage notification curfews and usage timer reminders
-                  - generic [ref=e2665]:
-                    - button "#29 notification_curfew Notification Curfew Suppresses all non-essential notifications during defined quiet hours. Emergency... VA SB 854 NY SAFE for Kids" [ref=e2667] [cursor=pointer]:
-                      - generic [ref=e2668]: "#29"
-                      - code [ref=e2669]: notification_curfew
-                      - generic [ref=e2670]: Notification Curfew
-                      - generic [ref=e2671]: Suppresses all non-essential notifications during defined quiet hours. Emergency...
-                      - generic [ref=e2672]:
-                        - generic [ref=e2673]: VA SB 854
-                        - generic [ref=e2674]: NY SAFE for Kids
-                      - img [ref=e2675]
-                    - button "#30 usage_timer_notification Usage Timer Notification Sends periodic reminders to the child at configurable intervals while they are u... MN HF 2 TN HB 1891" [ref=e2678] [cursor=pointer]:
-                      - generic [ref=e2679]: "#30"
-                      - code [ref=e2680]: usage_timer_notification
-                      - generic [ref=e2681]: Usage Timer Notification
-                      - generic [ref=e2682]: Sends periodic reminders to the child at configurable intervals while they are u...
-                      - generic [ref=e2683]:
-                        - generic [ref=e2684]: MN HF 2
-                        - generic [ref=e2685]: TN HB 1891
-                      - img [ref=e2686]
-                - generic [ref=e2688]:
-                  - generic [ref=e2689]:
-                    - heading "Advertising & Data" [level=3] [ref=e2690]
-                    - generic [ref=e2691]: 3 categories
-                    - generic [ref=e2692]: Block targeted ads, enable data deletion, and control geolocation
-                  - generic [ref=e2693]:
-                    - button "#31 targeted_ad_block Targeted Ad Block Blocks all targeted and behavioral advertising for the child's account. Only con... COPPA 2.0 EU DSA +1" [ref=e2695] [cursor=pointer]:
-                      - generic [ref=e2696]: "#31"
-                      - code [ref=e2697]: targeted_ad_block
-                      - generic [ref=e2698]: Targeted Ad Block
-                      - generic [ref=e2699]: Blocks all targeted and behavioral advertising for the child's account. Only con...
-                      - generic [ref=e2700]:
-                        - generic [ref=e2701]: COPPA 2.0
-                        - generic [ref=e2702]: EU DSA
-                        - generic [ref=e2703]: "+1"
-                      - img [ref=e2704]
-                    - button "#32 data_deletion_request Data Deletion Request Enables one-click data deletion request for child accounts. Platforms must honor... COPPA 2.0 NY NYCDPA" [ref=e2707] [cursor=pointer]:
-                      - generic [ref=e2708]: "#32"
-                      - code [ref=e2709]: data_deletion_request
-                      - generic [ref=e2710]: Data Deletion Request
-                      - generic [ref=e2711]: Enables one-click data deletion request for child accounts. Platforms must honor...
-                      - generic [ref=e2712]:
-                        - generic [ref=e2713]: COPPA 2.0
-                        - generic [ref=e2714]: NY NYCDPA
-                      - img [ref=e2715]
-                    - button "#33 geolocation_opt_in Geolocation Opt-In Defaults geolocation sharing to off and requires explicit opt-in. Prevents apps ... CT SB 3 MD Kids Code +1" [ref=e2718] [cursor=pointer]:
-                      - generic [ref=e2719]: "#33"
-                      - code [ref=e2720]: geolocation_opt_in
-                      - generic [ref=e2721]: Geolocation Opt-In
-                      - generic [ref=e2722]: Defaults geolocation sharing to off and requires explicit opt-in. Prevents apps ...
-                      - generic [ref=e2723]:
-                        - generic [ref=e2724]: CT SB 3
-                        - generic [ref=e2725]: MD Kids Code
-                        - generic [ref=e2726]: "+1"
-                      - img [ref=e2727]
-                - generic [ref=e2729]:
-                  - generic [ref=e2730]:
-                    - heading "Access Control" [level=3] [ref=e2731]
-                    - generic [ref=e2732]: 2 categories
-                    - generic [ref=e2733]: Manage DM restrictions and age verification gates
-                  - generic [ref=e2734]:
-                    - button "#39 dm_restriction DM Restriction Restricts direct messaging capabilities. Can block all DMs, limit to contacts on... CT SB 3 UK OSA" [ref=e2736] [cursor=pointer]:
-                      - generic [ref=e2737]: "#39"
-                      - code [ref=e2738]: dm_restriction
-                      - generic [ref=e2739]: DM Restriction
-                      - generic [ref=e2740]: Restricts direct messaging capabilities. Can block all DMs, limit to contacts on...
-                      - generic [ref=e2741]:
-                        - generic [ref=e2742]: CT SB 3
-                        - generic [ref=e2743]: UK OSA
-                      - img [ref=e2744]
-                    - button "#40 age_gate Age Gate Requires age verification before platform access. Configurable minimum age thres... KOSMA FL HB 3 +1" [ref=e2747] [cursor=pointer]:
-                      - generic [ref=e2748]: "#40"
-                      - code [ref=e2749]: age_gate
-                      - generic [ref=e2750]: Age Gate
-                      - generic [ref=e2751]: Requires age verification before platform access. Configurable minimum age thres...
-                      - generic [ref=e2752]:
-                        - generic [ref=e2753]: KOSMA
-                        - generic [ref=e2754]: FL HB 3
-                        - generic [ref=e2755]: "+1"
-                      - img [ref=e2756]
-                - generic [ref=e2758]:
-                  - generic [ref=e2759]:
-                    - heading "Compliance Expansion" [level=3] [ref=e2760]
-                    - generic [ref=e2761]: 5 categories
-                    - generic [ref=e2762]: Extended rule categories for global regulatory compliance
-                  - generic [ref=e2763]:
-                    - button "#34 csam_reporting CSAM Reporting Ensures platforms have CSAM (Child Sexual Abuse Material) detection and reportin... CIPA EARN IT Act +2" [ref=e2765] [cursor=pointer]:
-                      - generic [ref=e2766]: "#34"
-                      - code [ref=e2767]: csam_reporting
-                      - generic [ref=e2768]: CSAM Reporting
-                      - generic [ref=e2769]: Ensures platforms have CSAM (Child Sexual Abuse Material) detection and reportin...
-                      - generic [ref=e2770]:
-                        - generic [ref=e2771]: CIPA
-                        - generic [ref=e2772]: EARN IT Act
-                        - generic [ref=e2773]: "+2"
-                      - img [ref=e2774]
-                    - button "#35 library_filter_compliance Library Filter Compliance Enforces content filtering requirements for schools and libraries receiving E-Ra... CIPA" [ref=e2777] [cursor=pointer]:
-                      - generic [ref=e2778]: "#35"
-                      - code [ref=e2779]: library_filter_compliance
-                      - generic [ref=e2780]: Library Filter Compliance
-                      - generic [ref=e2781]: Enforces content filtering requirements for schools and libraries receiving E-Ra...
-                      - generic [ref=e2783]: CIPA
-                      - img [ref=e2784]
-                    - button "#36 ai_minor_interaction AI Minor Interaction Restricts AI-powered features that could exploit children's vulnerabilities, inc... EU AI Act" [ref=e2787] [cursor=pointer]:
-                      - generic [ref=e2788]: "#36"
-                      - code [ref=e2789]: ai_minor_interaction
-                      - generic [ref=e2790]: AI Minor Interaction
-                      - generic [ref=e2791]: Restricts AI-powered features that could exploit children's vulnerabilities, inc...
-                      - generic [ref=e2793]: EU AI Act
-                      - img [ref=e2794]
-                    - button "#37 social_media_min_age Social Media Minimum Age Enforces hard minimum age requirements for social media access. Unlike age_gate ... AU Social Media Minimum Age Act UT SMRA" [ref=e2797] [cursor=pointer]:
-                      - generic [ref=e2798]: "#37"
-                      - code [ref=e2799]: social_media_min_age
-                      - generic [ref=e2800]: Social Media Minimum Age
-                      - generic [ref=e2801]: Enforces hard minimum age requirements for social media access. Unlike age_gate ...
-                      - generic [ref=e2802]:
-                        - generic [ref=e2803]: AU Social Media Minimum Age Act
-                        - generic [ref=e2804]: UT SMRA
-                      - img [ref=e2805]
-                    - button "#38 image_rights_minor Image Rights Minor Protects minors' image rights by restricting image-sharing capabilities and impl... France SREN" [ref=e2808] [cursor=pointer]:
-                      - generic [ref=e2809]: "#38"
-                      - code [ref=e2810]: image_rights_minor
-                      - generic [ref=e2811]: Image Rights Minor
-                      - generic [ref=e2812]: Protects minors' image rights by restricting image-sharing capabilities and impl...
-                      - generic [ref=e2814]: France SREN
-                      - img [ref=e2815]
-            - generic [ref=e2817]:
-              - heading "Platform Support Matrix" [level=2] [ref=e2818]
-              - paragraph [ref=e2819]: Overview of which category groups are supported by each platform adapter. ✓ = Full support, ◑ = Partial support, — = No support.
-              - table [ref=e2821]:
-                - rowgroup [ref=e2822]:
-                  - row "Category Group NextDNS CleanBrowsing Android Apple MDM Microsoft" [ref=e2823]:
-                    - columnheader "Category Group" [ref=e2824]
-                    - columnheader "NextDNS" [ref=e2825]
-                    - columnheader "CleanBrowsing" [ref=e2826]
-                    - columnheader "Android" [ref=e2827]
-                    - columnheader "Apple MDM" [ref=e2828]
-                    - columnheader "Microsoft" [ref=e2829]
-                - rowgroup [ref=e2830]:
-                  - row "Content(5) — — ✓ ◑ ✓" [ref=e2831]:
-                    - cell "Content(5)" [ref=e2832]:
-                      - link "Content" [ref=e2833] [cursor=pointer]:
-                        - /url: "#cat-group-content"
-                      - generic [ref=e2834]: (5)
-                    - cell "—" [ref=e2835]
-                    - cell "—" [ref=e2836]
-                    - cell "✓" [ref=e2837]
-                    - cell "◑" [ref=e2838]
-                    - cell "✓" [ref=e2839]
-                  - row "Time(4) — — ✓ ◑ ◑" [ref=e2840]:
-                    - cell "Time(4)" [ref=e2841]:
-                      - link "Time" [ref=e2842] [cursor=pointer]:
-                        - /url: "#cat-group-time"
-                      - generic [ref=e2843]: (4)
-                    - cell "—" [ref=e2844]
-                    - cell "—" [ref=e2845]
-                    - cell "✓" [ref=e2846]
-                    - cell "◑" [ref=e2847]
-                    - cell "◑" [ref=e2848]
-                  - row "Purchase(3) — — — — —" [ref=e2849]:
-                    - cell "Purchase(3)" [ref=e2850]:
-                      - link "Purchase" [ref=e2851] [cursor=pointer]:
-                        - /url: "#cat-group-purchase"
-                      - generic [ref=e2852]: (3)
-                    - cell "—" [ref=e2853]
-                    - cell "—" [ref=e2854]
-                    - cell "—" [ref=e2855]
-                    - cell "—" [ref=e2856]
-                    - cell "—" [ref=e2857]
-                  - row "Social(3) — — — — —" [ref=e2858]:
-                    - cell "Social(3)" [ref=e2859]:
-                      - link "Social" [ref=e2860] [cursor=pointer]:
-                        - /url: "#cat-group-social"
-                      - generic [ref=e2861]: (3)
-                    - cell "—" [ref=e2862]
-                    - cell "—" [ref=e2863]
-                    - cell "—" [ref=e2864]
-                    - cell "—" [ref=e2865]
-                    - cell "—" [ref=e2866]
-                  - row "Web(5) ✓ ✓ — ◑ ◑" [ref=e2867]:
-                    - cell "Web(5)" [ref=e2868]:
-                      - link "Web" [ref=e2869] [cursor=pointer]:
-                        - /url: "#cat-group-web"
-                      - generic [ref=e2870]: (5)
-                    - cell "✓" [ref=e2871]
-                    - cell "✓" [ref=e2872]
-                    - cell "—" [ref=e2873]
-                    - cell "◑" [ref=e2874]
-                    - cell "◑" [ref=e2875]
-                  - row "Privacy(4) — — ◑ — —" [ref=e2876]:
-                    - cell "Privacy(4)" [ref=e2877]:
-                      - link "Privacy" [ref=e2878] [cursor=pointer]:
-                        - /url: "#cat-group-privacy"
-                      - generic [ref=e2879]: (4)
-                    - cell "—" [ref=e2880]
-                    - cell "—" [ref=e2881]
-                    - cell "◑" [ref=e2882]
-                    - cell "—" [ref=e2883]
-                    - cell "—" [ref=e2884]
-                  - row "Monitoring(2) — — ✓ — ✓" [ref=e2885]:
-                    - cell "Monitoring(2)" [ref=e2886]:
-                      - link "Monitoring" [ref=e2887] [cursor=pointer]:
-                        - /url: "#cat-group-monitoring"
-                      - generic [ref=e2888]: (2)
-                    - cell "—" [ref=e2889]
-                    - cell "—" [ref=e2890]
-                    - cell "✓" [ref=e2891]
-                    - cell "—" [ref=e2892]
-                    - cell "✓" [ref=e2893]
-                  - row "Algorithmic Safety(2) — — — — —" [ref=e2894]:
-                    - cell "Algorithmic Safety(2)" [ref=e2895]:
-                      - link "Algorithmic Safety" [ref=e2896] [cursor=pointer]:
-                        - /url: "#cat-group-algorithmic_safety"
-                      - generic [ref=e2897]: (2)
-                    - cell "—" [ref=e2898]
-                    - cell "—" [ref=e2899]
-                    - cell "—" [ref=e2900]
-                    - cell "—" [ref=e2901]
-                    - cell "—" [ref=e2902]
-                  - row "Notifications(2) — — — — —" [ref=e2903]:
-                    - cell "Notifications(2)" [ref=e2904]:
-                      - link "Notifications" [ref=e2905] [cursor=pointer]:
-                        - /url: "#cat-group-notifications"
-                      - generic [ref=e2906]: (2)
-                    - cell "—" [ref=e2907]
-                    - cell "—" [ref=e2908]
-                    - cell "—" [ref=e2909]
-                    - cell "—" [ref=e2910]
-                    - cell "—" [ref=e2911]
-                  - row "Advertising & Data(3) — — — — —" [ref=e2912]:
-                    - cell "Advertising & Data(3)" [ref=e2913]:
-                      - link "Advertising & Data" [ref=e2914] [cursor=pointer]:
-                        - /url: "#cat-group-advertising_data"
-                      - generic [ref=e2915]: (3)
-                    - cell "—" [ref=e2916]
-                    - cell "—" [ref=e2917]
-                    - cell "—" [ref=e2918]
-                    - cell "—" [ref=e2919]
-                    - cell "—" [ref=e2920]
-                  - row "Access Control(2) — — — — —" [ref=e2921]:
-                    - cell "Access Control(2)" [ref=e2922]:
-                      - link "Access Control" [ref=e2923] [cursor=pointer]:
-                        - /url: "#cat-group-access_control"
-                      - generic [ref=e2924]: (2)
-                    - cell "—" [ref=e2925]
-                    - cell "—" [ref=e2926]
-                    - cell "—" [ref=e2927]
-                    - cell "—" [ref=e2928]
-                    - cell "—" [ref=e2929]
-                  - row "Compliance Expansion(5) ◑ ◑ — — —" [ref=e2930]:
-                    - cell "Compliance Expansion(5)" [ref=e2931]:
-                      - link "Compliance Expansion" [ref=e2932] [cursor=pointer]:
-                        - /url: "#cat-group-compliance_expansion"
-                      - generic [ref=e2933]: (5)
-                    - cell "◑" [ref=e2934]
-                    - cell "◑" [ref=e2935]
-                    - cell "—" [ref=e2936]
-                    - cell "—" [ref=e2937]
-                    - cell "—" [ref=e2938]
-            - generic [ref=e2939]:
-              - heading "Age-to-Rating Standard" [level=2] [ref=e2940]
-              - paragraph [ref=e2941]:
+                    - generic [ref=e2472]:
+                      - heading "Request fields" [level=4] [ref=e2473]
+                      - generic [ref=e2476]:
+                        - generic [ref=e2477]:
+                          - code [ref=e2479]: category
+                          - paragraph [ref=e2480]: Platform category filter (query parameter)
+                        - generic [ref=e2481]:
+                          - generic [ref=e2482]: string
+                          - generic [ref=e2483]: required
+                    - generic [ref=e2485]:
+                      - generic [ref=e2486]:
+                        - generic [ref=e2487]:
+                          - generic [ref=e2488]:
+                            - generic [ref=e2489]: Request
+                            - generic [ref=e2490]: curl
+                          - button "Copy" [ref=e2491] [cursor=pointer]:
+                            - img [ref=e2492]
+                            - text: Copy
+                        - code [ref=e2496]: curl "http://localhost:8080/api/v1/platforms/by-category?category=dns"
+                      - generic [ref=e2497]:
+                        - generic [ref=e2498]:
+                          - generic [ref=e2499]:
+                            - generic [ref=e2500]: Response
+                            - generic [ref=e2501]: json
+                          - button "Copy" [ref=e2502] [cursor=pointer]:
+                            - img [ref=e2503]
+                            - text: Copy
+                        - code [ref=e2507]: "[ { \"id\": \"nextdns\", \"name\": \"NextDNS\", \"tier\": \"live\" }, { \"id\": \"cleanbrowsing\", \"name\": \"CleanBrowsing\", \"tier\": \"live\" } ]"
+                - generic [ref=e2508]:
+                  - generic [ref=e2509]:
+                    - generic [ref=e2510]: GET
+                    - code [ref=e2511]: /platforms/by-capability
+                    - button "Copy link" [ref=e2512] [cursor=pointer]:
+                      - img [ref=e2513]
+                  - paragraph [ref=e2516]: "Filter platforms by supported rule category. Returns all platforms that can enforce a specific rule type. Query parameter: ?capability=web_filter_level"
+                  - generic [ref=e2517]:
+                    - generic [ref=e2520]:
+                      - heading "Request fields" [level=4] [ref=e2521]
+                      - generic [ref=e2524]:
+                        - generic [ref=e2525]:
+                          - code [ref=e2527]: capability
+                          - paragraph [ref=e2528]: Rule category to filter by (query parameter)
+                        - generic [ref=e2529]:
+                          - generic [ref=e2530]: string
+                          - generic [ref=e2531]: required
+                    - generic [ref=e2533]:
+                      - generic [ref=e2534]:
+                        - generic [ref=e2535]:
+                          - generic [ref=e2536]:
+                            - generic [ref=e2537]: Request
+                            - generic [ref=e2538]: curl
+                          - button "Copy" [ref=e2539] [cursor=pointer]:
+                            - img [ref=e2540]
+                            - text: Copy
+                        - code [ref=e2544]: curl "http://localhost:8080/api/v1/platforms/by-capability?capability=web_filter_level"
+                      - generic [ref=e2545]:
+                        - generic [ref=e2546]:
+                          - generic [ref=e2547]:
+                            - generic [ref=e2548]: Response
+                            - generic [ref=e2549]: json
+                          - button "Copy" [ref=e2550] [cursor=pointer]:
+                            - img [ref=e2551]
+                            - text: Copy
+                        - code [ref=e2555]: "[ { \"id\": \"nextdns\", \"name\": \"NextDNS\", \"tier\": \"live\", \"support\": \"full\" }, { \"id\": \"cleanbrowsing\", \"name\": \"CleanBrowsing\", \"tier\": \"live\", \"support\": \"partial\" } ]"
+              - generic [ref=e2556]:
+                - generic [ref=e2557]:
+                  - generic [ref=e2558]: COMPLIANT
+                  - paragraph [ref=e2560]: Full API enforcement. Real-time policy push.
+                  - list [ref=e2561]:
+                    - listitem [ref=e2562]: NextDNS
+                    - listitem [ref=e2563]: CleanBrowsing
+                    - listitem [ref=e2564]: Android / Google Family Link
+                - generic [ref=e2565]:
+                  - generic [ref=e2566]: PROVISIONAL
+                  - paragraph [ref=e2568]: Limited API. Partial enforcement capability.
+                  - list [ref=e2569]:
+                    - listitem [ref=e2570]: Microsoft Family Safety
+                    - listitem [ref=e2571]: Apple Screen Time (MDM)
+                - generic [ref=e2572]:
+                  - generic [ref=e2573]: PENDING COMPLIANCE
+                  - paragraph [ref=e2575]: No API. Manual compliance instructions provided.
+                  - list [ref=e2576]:
+                    - listitem [ref=e2577]: Netflix, Disney+, Prime Video, YouTube
+                    - listitem [ref=e2578]: Hulu, Max, Roku
+                    - listitem [ref=e2579]: Xbox, PlayStation, Nintendo
+          - generic [ref=e2580]:
+            - heading "5. Compliance Verification" [level=2] [ref=e2581]
+            - generic [ref=e2582]:
+              - paragraph [ref=e2583]:
                 - text: Platforms
-                - strong [ref=e2942]: MUST
-                - text: use the following age-to-rating mappings when computing content restrictions. Used by
-                - code [ref=e2943]: GET /ratings/by-age
-                - text: and
-                - code [ref=e2944]: POST /policies/:id/generate-from-age
+                - strong [ref=e2584]: MUST
+                - text: establish a compliance link to prove they can receive enforcement instructions. Credentials are encrypted with AES-256-GCM at rest. Platforms
+                - strong [ref=e2585]: SHALL
+                - text: support periodic re-verification.
+              - paragraph [ref=e2587]:
+                - strong [ref=e2588]: "Credential Security:"
+                - text: All platform credentials
+                - strong [ref=e2589]: MUST
+                - text: be encrypted using AES-256-GCM before storage. Plaintext credentials
+                - strong [ref=e2590]: MUST NOT
+                - text: be logged or stored unencrypted at any point in the pipeline.
+              - generic [ref=e2592]:
+                - generic [ref=e2593]:
+                  - generic [ref=e2594]: POST
+                  - code [ref=e2595]: /connections
+                  - button "Copy link" [ref=e2596] [cursor=pointer]:
+                    - img [ref=e2597]
+                - paragraph [ref=e2600]: Establish a connection between a family and a provider. Credentials are encrypted with AES-256-GCM before storage. The connection is verified immediately upon creation.
+                - generic [ref=e2601]:
+                  - generic [ref=e2603]:
+                    - generic [ref=e2604]:
+                      - heading "Request fields" [level=4] [ref=e2605]
+                      - generic [ref=e2606]:
+                        - generic [ref=e2608]:
+                          - generic [ref=e2609]:
+                            - code [ref=e2611]: family_id
+                            - paragraph [ref=e2612]: Family to connect the provider to
+                          - generic [ref=e2613]:
+                            - generic [ref=e2614]: uuid
+                            - generic [ref=e2615]: required
+                        - generic [ref=e2617]:
+                          - generic [ref=e2618]:
+                            - code [ref=e2620]: provider_id
+                            - paragraph [ref=e2621]: Provider slug (e.g. nextdns, android)
+                          - generic [ref=e2622]:
+                            - generic [ref=e2623]: string
+                            - generic [ref=e2624]: required
+                        - generic [ref=e2626]:
+                          - generic [ref=e2627]:
+                            - code [ref=e2629]: credentials
+                            - paragraph [ref=e2630]: Provider-specific credentials (API key, OAuth token, etc.)
+                          - generic [ref=e2631]:
+                            - generic [ref=e2632]: string
+                            - generic [ref=e2633]: required
+                    - generic [ref=e2634]:
+                      - heading "Response fields" [level=4] [ref=e2635]
+                      - generic [ref=e2636]:
+                        - generic [ref=e2638]:
+                          - generic [ref=e2639]:
+                            - code [ref=e2641]: id
+                            - paragraph [ref=e2642]: Connection identifier
+                          - generic [ref=e2644]: uuid
+                        - generic [ref=e2646]:
+                          - generic [ref=e2647]:
+                            - code [ref=e2649]: family_id
+                            - paragraph [ref=e2650]: Owning family identifier
+                          - generic [ref=e2652]: uuid
+                        - generic [ref=e2654]:
+                          - generic [ref=e2655]:
+                            - code [ref=e2657]: provider_id
+                            - paragraph [ref=e2658]: Connected provider slug
+                          - generic [ref=e2660]: string
+                        - generic [ref=e2662]:
+                          - generic [ref=e2663]:
+                            - code [ref=e2665]: status
+                            - paragraph [ref=e2666]: "One of: connected, disconnected, error"
+                          - generic [ref=e2668]: enum
+                        - generic [ref=e2670]:
+                          - generic [ref=e2671]:
+                            - code [ref=e2673]: last_sync_at
+                            - paragraph [ref=e2674]: Last successful sync timestamp
+                          - generic [ref=e2676]: datetime
+                        - generic [ref=e2678]:
+                          - generic [ref=e2679]:
+                            - code [ref=e2681]: last_sync_status
+                            - paragraph [ref=e2682]: Status of last sync attempt
+                          - generic [ref=e2684]: string
+                        - generic [ref=e2686]:
+                          - generic [ref=e2687]:
+                            - code [ref=e2689]: connected_at
+                            - paragraph [ref=e2690]: Initial connection timestamp
+                          - generic [ref=e2692]: datetime
+                  - generic [ref=e2694]:
+                    - generic [ref=e2695]:
+                      - generic [ref=e2696]:
+                        - generic [ref=e2697]:
+                          - generic [ref=e2698]: Request
+                          - generic [ref=e2699]: curl
+                        - button "Copy" [ref=e2700] [cursor=pointer]:
+                          - img [ref=e2701]
+                          - text: Copy
+                      - code [ref=e2705]: "curl -X POST http://localhost:8080/api/v1/connections \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"provider_id\": \"nextdns\", \"credentials\": \"your-nextdns-api-key\" }'"
+                    - generic [ref=e2706]:
+                      - generic [ref=e2707]:
+                        - generic [ref=e2708]:
+                          - generic [ref=e2709]: Response
+                          - generic [ref=e2710]: json
+                        - button "Copy" [ref=e2711] [cursor=pointer]:
+                          - img [ref=e2712]
+                          - text: Copy
+                      - code [ref=e2716]: "{ \"id\": \"e5f6a7b8-c9d0-1234-ef01-23456789abcd\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"provider_id\": \"nextdns\", \"status\": \"connected\", \"last_sync_at\": null, \"last_sync_status\": null, \"connected_at\": \"2025-01-10T10:00:00Z\" }"
+          - generic [ref=e2717]:
+            - heading "5.1 Compliance Links" [level=2] [ref=e2718]
+            - generic [ref=e2719]:
+              - paragraph [ref=e2720]:
+                - text: Compliance links connect a child to a specific platform for enforcement. Each link stores encrypted platform credentials (AES-256-GCM) and tracks verification status, supported capabilities, and enforcement history. Platforms
+                - strong [ref=e2721]: MUST
+                - text: be re-verified when credentials are rotated.
+              - paragraph [ref=e2723]:
+                - strong [ref=e2724]: "Lifecycle:"
+                - text: Create link → Verify credentials → Enforce rules → Monitor health → Re-verify on rotation
+            - generic [ref=e2725]:
+              - generic [ref=e2726]:
+                - generic [ref=e2727]:
+                  - generic [ref=e2728]: POST
+                  - code [ref=e2729]: /compliance
+                  - button "Copy link" [ref=e2730] [cursor=pointer]:
+                    - img [ref=e2731]
+                - paragraph [ref=e2734]: Create a compliance link between a child and a platform. Credentials are encrypted with AES-256-GCM before storage. The platform is contacted immediately to verify that the credentials are valid.
+                - generic [ref=e2735]:
+                  - generic [ref=e2737]:
+                    - generic [ref=e2738]:
+                      - heading "Request fields" [level=4] [ref=e2739]
+                      - generic [ref=e2740]:
+                        - generic [ref=e2742]:
+                          - generic [ref=e2743]:
+                            - code [ref=e2745]: platform
+                            - paragraph [ref=e2746]: Platform identifier (e.g. nextdns, android, apple_mdm)
+                          - generic [ref=e2747]:
+                            - generic [ref=e2748]: string
+                            - generic [ref=e2749]: required
+                        - generic [ref=e2751]:
+                          - generic [ref=e2752]:
+                            - code [ref=e2754]: credentials
+                            - paragraph [ref=e2755]: Platform-specific credential object
+                          - generic [ref=e2756]:
+                            - generic [ref=e2757]: object
+                            - generic [ref=e2758]: required
+                        - generic [ref=e2760]:
+                          - generic [ref=e2761]:
+                            - code [ref=e2763]: child_id
+                            - paragraph [ref=e2764]: Child to link the platform to
+                          - generic [ref=e2765]:
+                            - generic [ref=e2766]: uuid
+                            - generic [ref=e2767]: required
+                    - generic [ref=e2768]:
+                      - heading "Response fields" [level=4] [ref=e2769]
+                      - generic [ref=e2770]:
+                        - generic [ref=e2772]:
+                          - generic [ref=e2773]:
+                            - code [ref=e2775]: id
+                            - paragraph [ref=e2776]: Compliance link identifier
+                          - generic [ref=e2778]: string
+                        - generic [ref=e2780]:
+                          - generic [ref=e2781]:
+                            - code [ref=e2783]: platform
+                            - paragraph [ref=e2784]: Platform identifier
+                          - generic [ref=e2786]: string
+                        - generic [ref=e2788]:
+                          - generic [ref=e2789]:
+                            - code [ref=e2791]: child_id
+                            - paragraph [ref=e2792]: Linked child identifier
+                          - generic [ref=e2794]: uuid
+                        - generic [ref=e2796]:
+                          - generic [ref=e2797]:
+                            - code [ref=e2799]: status
+                            - paragraph [ref=e2800]: "One of: verified, auth_failed, manual, pending"
+                          - generic [ref=e2802]: enum
+                        - generic [ref=e2804]:
+                          - generic [ref=e2805]:
+                            - code [ref=e2807]: capabilities
+                            - paragraph [ref=e2808]: Rule categories this platform can enforce
+                          - generic [ref=e2810]: string[]
+                        - generic [ref=e2812]:
+                          - generic [ref=e2813]:
+                            - code [ref=e2815]: verified_at
+                            - paragraph [ref=e2816]: Last successful verification timestamp
+                          - generic [ref=e2818]: datetime
+                        - generic [ref=e2820]:
+                          - generic [ref=e2821]:
+                            - code [ref=e2823]: last_sync_at
+                            - paragraph [ref=e2824]: Last enforcement sync timestamp
+                          - generic [ref=e2826]: datetime
+                  - generic [ref=e2828]:
+                    - generic [ref=e2829]:
+                      - generic [ref=e2830]:
+                        - generic [ref=e2831]:
+                          - generic [ref=e2832]: Request
+                          - generic [ref=e2833]: curl
+                        - button "Copy" [ref=e2834] [cursor=pointer]:
+                          - img [ref=e2835]
+                          - text: Copy
+                      - code [ref=e2839]: "curl -X POST http://localhost:8080/api/v1/compliance \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"platform\": \"nextdns\", \"credentials\": { \"api_key\": \"ndns_abc...\", \"profile_id\": \"abc123\" }, \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\" }'"
+                    - generic [ref=e2840]:
+                      - generic [ref=e2841]:
+                        - generic [ref=e2842]:
+                          - generic [ref=e2843]: Response
+                          - generic [ref=e2844]: json
+                        - button "Copy" [ref=e2845] [cursor=pointer]:
+                          - img [ref=e2846]
+                          - text: Copy
+                      - code [ref=e2850]: "{ \"id\": \"cl_abc123\", \"platform\": \"nextdns\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"status\": \"verified\", \"capabilities\": [ \"web_filter_level\", \"web_safesearch\", \"web_category_block\" ], \"verified_at\": \"2025-01-10T10:00:00Z\" }"
+              - generic [ref=e2851]:
+                - generic [ref=e2852]:
+                  - generic [ref=e2853]: GET
+                  - code [ref=e2854]: "/families/{familyID}/compliance"
+                  - button "Copy link" [ref=e2855] [cursor=pointer]:
+                    - img [ref=e2856]
+                - paragraph [ref=e2859]: List all compliance links (platform connections) across all children in a family. Shows verification status, capabilities, and last sync time for each link.
+                - generic [ref=e2860]:
+                  - generic [ref=e2863]:
+                    - heading "Response fields" [level=4] [ref=e2864]
+                    - generic [ref=e2867]:
+                      - generic [ref=e2868]:
+                        - generic [ref=e2869]:
+                          - button [ref=e2870] [cursor=pointer]:
+                            - img [ref=e2871]
+                          - code [ref=e2873]: "[]"
+                        - paragraph [ref=e2874]: Array of compliance link objects
+                      - generic [ref=e2876]: ComplianceLink[]
+                  - generic [ref=e2878]:
+                    - generic [ref=e2879]:
+                      - generic [ref=e2880]:
+                        - generic [ref=e2881]:
+                          - generic [ref=e2882]: Request
+                          - generic [ref=e2883]: curl
+                        - button "Copy" [ref=e2884] [cursor=pointer]:
+                          - img [ref=e2885]
+                          - text: Copy
+                      - code [ref=e2889]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/compliance \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e2890]:
+                      - generic [ref=e2891]:
+                        - generic [ref=e2892]:
+                          - generic [ref=e2893]: Response
+                          - generic [ref=e2894]: json
+                        - button "Copy" [ref=e2895] [cursor=pointer]:
+                          - img [ref=e2896]
+                          - text: Copy
+                      - code [ref=e2900]: "[ { \"id\": \"cl_abc123\", \"platform\": \"nextdns\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"status\": \"verified\", \"capabilities\": [ \"web_filter_level\", \"web_safesearch\" ], \"verified_at\": \"2025-01-10T10:00:00Z\", \"last_sync_at\": \"2025-01-12T18:00:00Z\" } ]"
+              - generic [ref=e2901]:
+                - generic [ref=e2902]:
+                  - generic [ref=e2903]: POST
+                  - code [ref=e2904]: "/compliance/{linkID}/verify"
+                  - button "Copy link" [ref=e2905] [cursor=pointer]:
+                    - img [ref=e2906]
+                - paragraph [ref=e2909]: Re-verify a compliance link with new or existing credentials. Use this when platform credentials have been rotated or when a previous verification has expired. Credentials are re-encrypted on update.
+                - generic [ref=e2910]:
+                  - generic [ref=e2913]:
+                    - heading "Request fields" [level=4] [ref=e2914]
+                    - generic [ref=e2917]:
+                      - generic [ref=e2918]:
+                        - code [ref=e2920]: credentials
+                        - paragraph [ref=e2921]: Updated platform credentials (optional — re-verifies existing if omitted)
+                      - generic [ref=e2923]: object
+                  - generic [ref=e2925]:
+                    - generic [ref=e2926]:
+                      - generic [ref=e2927]:
+                        - generic [ref=e2928]:
+                          - generic [ref=e2929]: Request
+                          - generic [ref=e2930]: curl
+                        - button "Copy" [ref=e2931] [cursor=pointer]:
+                          - img [ref=e2932]
+                          - text: Copy
+                      - code [ref=e2936]: "curl -X POST http://localhost:8080/api/v1/compliance/cl_abc123/verify \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"credentials\": { \"api_key\": \"ndns_NEW_key...\", \"profile_id\": \"abc123\" } }'"
+                    - generic [ref=e2937]:
+                      - generic [ref=e2938]:
+                        - generic [ref=e2939]:
+                          - generic [ref=e2940]: Response
+                          - generic [ref=e2941]: json
+                        - button "Copy" [ref=e2942] [cursor=pointer]:
+                          - img [ref=e2943]
+                          - text: Copy
+                      - code [ref=e2947]: "{ \"id\": \"cl_abc123\", \"platform\": \"nextdns\", \"status\": \"verified\", \"previous_status\": \"auth_failed\", \"verified_at\": \"2025-01-15T09:15:00Z\" }"
+              - generic [ref=e2948]:
+                - generic [ref=e2949]:
+                  - generic [ref=e2950]: DELETE
+                  - code [ref=e2951]: "/compliance/{linkID}"
+                  - button "Copy link" [ref=e2952] [cursor=pointer]:
+                    - img [ref=e2953]
+                - paragraph [ref=e2956]: Permanently remove a compliance link. Encrypted credentials are deleted. Future enforcement will skip this platform. Active rules on the platform are not automatically removed — run enforcement with the platform disconnected to clear them.
+                - generic [ref=e2959]:
+                  - generic [ref=e2960]:
+                    - generic [ref=e2961]:
+                      - generic [ref=e2962]:
+                        - generic [ref=e2963]: Request
+                        - generic [ref=e2964]: curl
+                      - button "Copy" [ref=e2965] [cursor=pointer]:
+                        - img [ref=e2966]
+                        - text: Copy
+                    - code [ref=e2970]: "curl -X DELETE http://localhost:8080/api/v1/compliance/cl_abc123 \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e2971]:
+                    - generic [ref=e2972]:
+                      - generic [ref=e2973]:
+                        - generic [ref=e2974]: Response
+                        - generic [ref=e2975]: json
+                      - button "Copy" [ref=e2976] [cursor=pointer]:
+                        - img [ref=e2977]
+                        - text: Copy
+                    - code [ref=e2981]: // 204 No Content
+              - generic [ref=e2982]:
+                - generic [ref=e2983]:
+                  - generic [ref=e2984]: POST
+                  - code [ref=e2985]: "/compliance/{linkID}/enforce"
+                  - button "Copy link" [ref=e2986] [cursor=pointer]:
+                    - img [ref=e2987]
+                - paragraph [ref=e2990]: Trigger enforcement on a single compliance link. Unlike child-wide enforcement which pushes to all linked platforms, this targets a specific platform connection. Useful for re-pushing rules after re-verification.
+                - generic [ref=e2993]:
+                  - generic [ref=e2994]:
+                    - generic [ref=e2995]:
+                      - generic [ref=e2996]:
+                        - generic [ref=e2997]: Request
+                        - generic [ref=e2998]: curl
+                      - button "Copy" [ref=e2999] [cursor=pointer]:
+                        - img [ref=e3000]
+                        - text: Copy
+                    - code [ref=e3004]: "curl -X POST http://localhost:8080/api/v1/compliance/cl_abc123/enforce \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e3005]:
+                    - generic [ref=e3006]:
+                      - generic [ref=e3007]:
+                        - generic [ref=e3008]: Response
+                        - generic [ref=e3009]: json
+                      - button "Copy" [ref=e3010] [cursor=pointer]:
+                        - img [ref=e3011]
+                        - text: Copy
+                    - code [ref=e3015]: "{ \"job_id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"platform\": \"nextdns\", \"status\": \"pending\", \"created_at\": \"2025-01-15T09:20:00Z\" }"
+          - generic [ref=e3016]:
+            - heading "5.2 Quick Setup API" [level=2] [ref=e3017]
+            - generic [ref=e3018]:
+              - paragraph [ref=e3019]:
+                - text: The Quick Setup API provides a single-call onboarding flow that creates a family (if needed), registers a child, generates all 45 age-appropriate policy rules, and activates the policy. This endpoint
+                - strong [ref=e3020]: SHOULD
+                - text: be the primary entry point for parent-facing applications.
+              - generic [ref=e3021]:
+                - heading "Endpoint" [level=4] [ref=e3022]
+                - paragraph [ref=e3023]: POST /setup/quick
+              - generic [ref=e3024]:
+                - heading "Request Body" [level=4] [ref=e3025]
+                - generic [ref=e3026]: "{ \"family_id\": \"uuid (optional — omit to create new family)\", \"family_name\": \"string (optional — used when creating new family)\", \"child_name\": \"string (required)\", \"birth_date\": \"YYYY-MM-DD (required)\", \"strictness\": \"recommended | strict | relaxed\" }"
+              - generic [ref=e3027]:
+                - heading "Response" [level=4] [ref=e3028]
+                - generic [ref=e3029]: "{ \"family\": { \"id\": \"...\", \"name\": \"...\" }, \"child\": { \"id\": \"...\", \"name\": \"Emma\", \"birth_date\": \"2019-03-15\" }, \"policy\": { \"id\": \"...\", \"status\": \"active\" }, \"rules\": [ ... ], // ~20-25 enabled rules \"age_group\": \"child\", \"max_ratings\": { \"mpaa\": \"PG\", \"tv\": \"TV-Y7\", \"esrb\": \"E\" }, \"rule_summary\": { \"screen_time_minutes\": 90, \"bedtime_hour\": 20, \"web_filter_level\": \"strict\", \"content_rating\": \"PG\", \"total_rules_enabled\": 22 } }"
+              - paragraph [ref=e3031]:
+                - strong [ref=e3032]: "Strictness levels:"
+                - code [ref=e3033]: recommended
+                - text: uses age-appropriate defaults.
+                - code [ref=e3034]: strict
+                - text: reduces screen time by 30% and tightens timer intervals.
+                - code [ref=e3035]: relaxed
+                - text: increases screen time by 30% and extends timer intervals.
+            - generic [ref=e3037]:
+              - generic [ref=e3038]:
+                - generic [ref=e3039]: POST
+                - code [ref=e3040]: /setup/quick
+                - button "Copy link" [ref=e3041] [cursor=pointer]:
+                  - img [ref=e3042]
+              - paragraph [ref=e3045]: Single-call onboarding that creates a family (if needed), registers a child, generates all 45 age-appropriate policy rules, and activates the policy. This is the recommended entry point for parent-facing applications.
+              - generic [ref=e3046]:
+                - generic [ref=e3048]:
+                  - generic [ref=e3049]:
+                    - heading "Request fields" [level=4] [ref=e3050]
+                    - generic [ref=e3051]:
+                      - generic [ref=e3053]:
+                        - generic [ref=e3054]:
+                          - code [ref=e3056]: family_id
+                          - paragraph [ref=e3057]: Existing family ID (optional — omit to create new family)
+                        - generic [ref=e3059]: uuid
+                      - generic [ref=e3061]:
+                        - generic [ref=e3062]:
+                          - code [ref=e3064]: family_name
+                          - paragraph [ref=e3065]: Family name (used when creating new family)
+                        - generic [ref=e3067]: string
+                      - generic [ref=e3069]:
+                        - generic [ref=e3070]:
+                          - code [ref=e3072]: child_name
+                          - paragraph [ref=e3073]: Child display name
+                        - generic [ref=e3074]:
+                          - generic [ref=e3075]: string
+                          - generic [ref=e3076]: required
+                      - generic [ref=e3078]:
+                        - generic [ref=e3079]:
+                          - code [ref=e3081]: birth_date
+                          - paragraph [ref=e3082]: Child date of birth (YYYY-MM-DD)
+                        - generic [ref=e3083]:
+                          - generic [ref=e3084]: date
+                          - generic [ref=e3085]: required
+                      - generic [ref=e3087]:
+                        - generic [ref=e3088]:
+                          - code [ref=e3090]: strictness
+                          - paragraph [ref=e3091]: "One of: recommended (default), strict, relaxed"
+                        - generic [ref=e3093]: enum
+                  - generic [ref=e3094]:
+                    - heading "Response fields" [level=4] [ref=e3095]
+                    - generic [ref=e3096]:
+                      - generic [ref=e3098]:
+                        - generic [ref=e3099]:
+                          - code [ref=e3101]: family
+                          - paragraph [ref=e3102]: Created or existing family
+                        - generic [ref=e3104]: object
+                      - generic [ref=e3106]:
+                        - generic [ref=e3107]:
+                          - code [ref=e3109]: child
+                          - paragraph [ref=e3110]: Created child profile with computed age
+                        - generic [ref=e3112]: object
+                      - generic [ref=e3114]:
+                        - generic [ref=e3115]:
+                          - code [ref=e3117]: policy
+                          - paragraph [ref=e3118]: Active policy with rule count
+                        - generic [ref=e3120]: object
+                      - generic [ref=e3122]:
+                        - generic [ref=e3123]:
+                          - code [ref=e3125]: rules
+                          - paragraph [ref=e3126]: Generated policy rules (~20-25 enabled)
+                        - generic [ref=e3128]: object[]
+                      - generic [ref=e3130]:
+                        - generic [ref=e3131]:
+                          - code [ref=e3133]: age_group
+                          - paragraph [ref=e3134]: Computed age group (toddler, child, tween, teen)
+                        - generic [ref=e3136]: string
+                      - generic [ref=e3138]:
+                        - generic [ref=e3139]:
+                          - code [ref=e3141]: max_ratings
+                          - paragraph [ref=e3142]: Age-appropriate content ratings across 5 systems
+                        - generic [ref=e3144]: object
+                - generic [ref=e3146]:
+                  - generic [ref=e3147]:
+                    - generic [ref=e3148]:
+                      - generic [ref=e3149]:
+                        - generic [ref=e3150]: Request
+                        - generic [ref=e3151]: curl
+                      - button "Copy" [ref=e3152] [cursor=pointer]:
+                        - img [ref=e3153]
+                        - text: Copy
+                    - code [ref=e3157]: "curl -X POST http://localhost:8080/api/v1/setup/quick \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"child_name\": \"Emma\", \"birth_date\": \"2019-03-15\", \"strictness\": \"recommended\" }'"
+                  - generic [ref=e3158]:
+                    - generic [ref=e3159]:
+                      - generic [ref=e3160]:
+                        - generic [ref=e3161]: Response
+                        - generic [ref=e3162]: json
+                      - button "Copy" [ref=e3163] [cursor=pointer]:
+                        - img [ref=e3164]
+                        - text: Copy
+                    - code [ref=e3168]: "{ \"family\": { \"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"name\": \"My Family\" }, \"child\": { \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"name\": \"Emma\", \"birth_date\": \"2019-03-15\", \"age\": 6 }, \"policy\": { \"id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"status\": \"active\", \"rules_count\": 22 }, \"age_group\": \"child\", \"max_ratings\": { \"mpaa\": \"PG\", \"tv\": \"TV-Y7\", \"esrb\": \"E\", \"pegi\": \"7\", \"csm\": \"6+\" } }"
+          - generic [ref=e3169]:
+            - heading "6. Policy Enforcement" [level=2] [ref=e3170]
+            - generic [ref=e3171]:
+              - paragraph [ref=e3172]:
+                - text: The Phosra Enforcement Engine fans out policy rules to all verified platforms concurrently. Platforms
+                - strong [ref=e3173]: MUST
+                - text: "accept enforcement requests and report per-rule results. Enforcement jobs track status as:"
+                - code [ref=e3174]: pending
+                - text: →
+                - code [ref=e3175]: running
+                - text: →
+                - code [ref=e3176]: completed
+                - text: /
+                - code [ref=e3177]: partial
+                - text: /
+                - code [ref=e3178]: failed
                 - text: .
-              - table [ref=e2946]:
-                - rowgroup [ref=e2947]:
-                  - row "Age MPAA TV ESRB PEGI CSM" [ref=e2948]:
-                    - columnheader "Age" [ref=e2949]
-                    - columnheader "MPAA" [ref=e2950]
-                    - columnheader "TV" [ref=e2951]
-                    - columnheader "ESRB" [ref=e2952]
-                    - columnheader "PEGI" [ref=e2953]
-                    - columnheader "CSM" [ref=e2954]
-                - rowgroup [ref=e2955]:
-                  - row "0-6 G TV-Y E 3 5+" [ref=e2956]:
-                    - cell "0-6" [ref=e2957]
-                    - cell "G" [ref=e2958]
-                    - cell "TV-Y" [ref=e2959]
-                    - cell "E" [ref=e2960]
-                    - cell "3" [ref=e2961]
-                    - cell "5+" [ref=e2962]
-                  - row "7-9 PG TV-Y7 E 7 7+" [ref=e2963]:
-                    - cell "7-9" [ref=e2964]
-                    - cell "PG" [ref=e2965]
-                    - cell "TV-Y7" [ref=e2966]
-                    - cell "E" [ref=e2967]
-                    - cell "7" [ref=e2968]
-                    - cell "7+" [ref=e2969]
-                  - row "10-12 PG TV-PG E10+ 7 10+" [ref=e2970]:
-                    - cell "10-12" [ref=e2971]
-                    - cell "PG" [ref=e2972]
-                    - cell "TV-PG" [ref=e2973]
-                    - cell "E10+" [ref=e2974]
-                    - cell "7" [ref=e2975]
-                    - cell "10+" [ref=e2976]
-                  - row "13-16 PG-13 TV-14 T 12 13+" [ref=e2977]:
-                    - cell "13-16" [ref=e2978]
-                    - cell "PG-13" [ref=e2979]
-                    - cell "TV-14" [ref=e2980]
-                    - cell "T" [ref=e2981]
-                    - cell "12" [ref=e2982]
-                    - cell "13+" [ref=e2983]
-                  - row "17 R TV-MA M 16 17+" [ref=e2984]:
-                    - cell "17" [ref=e2985]
-                    - cell "R" [ref=e2986]
-                    - cell "TV-MA" [ref=e2987]
-                    - cell "M" [ref=e2988]
-                    - cell "16" [ref=e2989]
-                    - cell "17+" [ref=e2990]
-                  - row "18+ NC-17 TV-MA AO 18 18+" [ref=e2991]:
-                    - cell "18+" [ref=e2992]
-                    - cell "NC-17" [ref=e2993]
-                    - cell "TV-MA" [ref=e2994]
-                    - cell "AO" [ref=e2995]
-                    - cell "18" [ref=e2996]
-                    - cell "18+" [ref=e2997]
-            - generic [ref=e2998]:
-              - heading "Age-Based Default Policies" [level=2] [ref=e2999]
-              - paragraph [ref=e3000]:
-                - text: Default policy values generated by
-                - code [ref=e3001]: POST /policies/:id/generate-from-age
-                - text: and the Quick Setup API. These defaults represent the "recommended" strictness level. Values are computed from the child's age at policy creation time.
-              - table [ref=e3003]:
-                - rowgroup [ref=e3004]:
-                  - row "Setting 0-6 7-9 10-12 13-16 17+" [ref=e3005]:
-                    - columnheader "Setting" [ref=e3006]
-                    - columnheader "0-6" [ref=e3007]
-                    - columnheader "7-9" [ref=e3008]
-                    - columnheader "10-12" [ref=e3009]
-                    - columnheader "13-16" [ref=e3010]
-                    - columnheader "17+" [ref=e3011]
-                - rowgroup [ref=e3012]:
-                  - row "Screen Time 60 min 90 min 120 min 180 min 240 min" [ref=e3013]:
-                    - cell "Screen Time" [ref=e3014]:
-                      - link "Screen Time" [ref=e3015] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "60 min" [ref=e3016]
-                    - cell "90 min" [ref=e3017]
-                    - cell "120 min" [ref=e3018]
-                    - cell "180 min" [ref=e3019]
-                    - cell "240 min" [ref=e3020]
-                  - row "Bedtime 19:00 20:00 21:00 22:00 23:00" [ref=e3021]:
-                    - cell "Bedtime" [ref=e3022]:
-                      - link "Bedtime" [ref=e3023] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "19:00" [ref=e3024]
-                    - cell "20:00" [ref=e3025]
-                    - cell "21:00" [ref=e3026]
-                    - cell "22:00" [ref=e3027]
-                    - cell "23:00" [ref=e3028]
-                  - row "Web Filter Strict Strict Moderate Light Light" [ref=e3029]:
-                    - cell "Web Filter" [ref=e3030]:
-                      - link "Web Filter" [ref=e3031] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "Strict" [ref=e3032]
-                    - cell "Strict" [ref=e3033]
-                    - cell "Moderate" [ref=e3034]
-                    - cell "Light" [ref=e3035]
-                    - cell "Light" [ref=e3036]
-                  - row "Purchase Approval Yes Yes Yes Yes No" [ref=e3037]:
-                    - cell "Purchase Approval" [ref=e3038]:
-                      - link "Purchase Approval" [ref=e3039] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "Yes" [ref=e3040]
-                    - cell "Yes" [ref=e3041]
-                    - cell "Yes" [ref=e3042]
-                    - cell "Yes" [ref=e3043]
-                    - cell "No" [ref=e3044]
-                  - row "Block IAP Yes Yes Yes No No" [ref=e3045]:
-                    - cell "Block IAP" [ref=e3046]:
-                      - link "Block IAP" [ref=e3047] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "Yes" [ref=e3048]
-                    - cell "Yes" [ref=e3049]
-                    - cell "Yes" [ref=e3050]
-                    - cell "No" [ref=e3051]
-                    - cell "No" [ref=e3052]
-                  - row "Chat Control Disabled Friends only Friends only Friends only Everyone" [ref=e3053]:
-                    - cell "Chat Control" [ref=e3054]:
-                      - link "Chat Control" [ref=e3055] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "Disabled" [ref=e3056]
-                    - cell "Friends only" [ref=e3057]
-                    - cell "Friends only" [ref=e3058]
-                    - cell "Friends only" [ref=e3059]
-                    - cell "Everyone" [ref=e3060]
-                  - row "Feed Algorithm Chrono Chrono Chrono Chrono Chrono" [ref=e3061]:
-                    - cell "Feed Algorithm" [ref=e3062]:
-                      - link "Feed Algorithm" [ref=e3063] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "Chrono" [ref=e3064]
-                    - cell "Chrono" [ref=e3065]
-                    - cell "Chrono" [ref=e3066]
-                    - cell "Chrono" [ref=e3067]
-                    - cell "Chrono" [ref=e3068]
-                  - row "Addictive Design All blocked All blocked All blocked Autoplay+Scroll Off" [ref=e3069]:
-                    - cell "Addictive Design" [ref=e3070]:
-                      - link "Addictive Design" [ref=e3071] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "All blocked" [ref=e3072]
-                    - cell "All blocked" [ref=e3073]
-                    - cell "All blocked" [ref=e3074]
-                    - cell "Autoplay+Scroll" [ref=e3075]
-                    - cell "Off" [ref=e3076]
-                  - row "DM Restriction None None None Contacts only Everyone" [ref=e3077]:
-                    - cell "DM Restriction" [ref=e3078]:
-                      - link "DM Restriction" [ref=e3079] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "None" [ref=e3080]
-                    - cell "None" [ref=e3081]
-                    - cell "None" [ref=e3082]
-                    - cell "Contacts only" [ref=e3083]
-                    - cell "Everyone" [ref=e3084]
-                  - row "Notification Curfew 20-07 20-07 20-07 22-06 00-06" [ref=e3085]:
-                    - cell "Notification Curfew" [ref=e3086]:
-                      - link "Notification Curfew" [ref=e3087] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "20-07" [ref=e3088]
-                    - cell "20-07" [ref=e3089]
-                    - cell "20-07" [ref=e3090]
-                    - cell "22-06" [ref=e3091]
-                    - cell "00-06" [ref=e3092]
-                  - row "Usage Timer 15 min 15 min 15 min 30 min 60 min" [ref=e3093]:
-                    - cell "Usage Timer" [ref=e3094]:
-                      - link "Usage Timer" [ref=e3095] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "15 min" [ref=e3096]
-                    - cell "15 min" [ref=e3097]
-                    - cell "15 min" [ref=e3098]
-                    - cell "30 min" [ref=e3099]
-                    - cell "60 min" [ref=e3100]
-                  - row "Targeted Ads Blocked Blocked Blocked Blocked Blocked" [ref=e3101]:
-                    - cell "Targeted Ads" [ref=e3102]:
-                      - link "Targeted Ads" [ref=e3103] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "Blocked" [ref=e3104]
-                    - cell "Blocked" [ref=e3105]
-                    - cell "Blocked" [ref=e3106]
-                    - cell "Blocked" [ref=e3107]
-                    - cell "Blocked" [ref=e3108]
-                  - row "Geolocation Off Off Off Off Off" [ref=e3109]:
-                    - cell "Geolocation" [ref=e3110]:
-                      - link "Geolocation" [ref=e3111] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "Off" [ref=e3112]
-                    - cell "Off" [ref=e3113]
-                    - cell "Off" [ref=e3114]
-                    - cell "Off" [ref=e3115]
-                    - cell "Off" [ref=e3116]
-                  - row "Age Gate On (13+) On (13+) On (13+) Off Off" [ref=e3117]:
-                    - cell "Age Gate" [ref=e3118]:
-                      - link "Age Gate" [ref=e3119] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "On (13+)" [ref=e3120]
-                    - cell "On (13+)" [ref=e3121]
-                    - cell "On (13+)" [ref=e3122]
-                    - cell "Off" [ref=e3123]
-                    - cell "Off" [ref=e3124]
-                  - row "Data Deletion Enabled Enabled Enabled Enabled Enabled" [ref=e3125]:
-                    - cell "Data Deletion" [ref=e3126]:
-                      - link "Data Deletion" [ref=e3127] [cursor=pointer]:
-                        - /url: "#rule-categories"
-                    - cell "Enabled" [ref=e3128]
-                    - cell "Enabled" [ref=e3129]
-                    - cell "Enabled" [ref=e3130]
-                    - cell "Enabled" [ref=e3131]
-                    - cell "Enabled" [ref=e3132]
-            - generic [ref=e3133]:
-              - heading "API Base URL" [level=2] [ref=e3134]
-              - generic [ref=e3135]:
-                - paragraph [ref=e3136]: "All PCSS API endpoints are served under:"
-                - generic [ref=e3137]: https://guardiangate-production.up.railway.app/api/v1
-                - paragraph [ref=e3138]:
-                  - text: Platforms
-                  - strong [ref=e3139]: MUST
-                  - text: use HTTPS in production environments. HTTP
-                  - strong [ref=e3140]: MAY
-                  - text: be used only in development.
-            - generic [ref=e3141]:
-              - heading "11. Legislative Compliance Matrix" [level=2] [ref=e3142]
-              - paragraph [ref=e3143]:
-                - text: The following legislation maps to PCSS policy categories. Platforms operating in jurisdictions covered by these laws
-                - strong [ref=e3144]: MUST
-                - text: implement the corresponding categories. Click any entry to see key provisions, jurisdiction details, and legislative status.
-              - generic [ref=e3145]:
-                - button "KOSA (Kids Online Safety Act) Passed Senate (Jul 2024) United States (Federal) Establishes a duty of care for platforms, requiring them to disable addictive features and algorithmic feeds for minors by default. algo_feed_control addictive_design_control targeted_ad_block" [ref=e3147] [cursor=pointer]:
-                  - generic [ref=e3148]:
-                    - generic [ref=e3149]:
-                      - generic [ref=e3150]:
-                        - generic [ref=e3151]: KOSA (Kids Online Safety Act)
-                        - generic [ref=e3152]: Passed Senate (Jul 2024)
-                        - generic [ref=e3153]: United States (Federal)
-                      - paragraph [ref=e3154]: Establishes a duty of care for platforms, requiring them to disable addictive features and algorithmic feeds for minors by default.
-                    - generic [ref=e3155]:
-                      - generic [ref=e3156]:
-                        - code [ref=e3157]: algo_feed_control
-                        - code [ref=e3158]: addictive_design_control
-                        - code [ref=e3159]: targeted_ad_block
-                      - img [ref=e3160]
-                - button "COPPA 2.0 (Children's Online Privacy Protection Act 2.0) Passed Senate as part of KOSMA (Jul 2024) United States (Federal) Extends COPPA to teens under 17, bans all targeted advertising to minors, and creates an Eraser Button for data deletion. targeted_ad_block data_deletion_request geolocation_opt_in" [ref=e3163] [cursor=pointer]:
-                  - generic [ref=e3164]:
-                    - generic [ref=e3165]:
-                      - generic [ref=e3166]:
-                        - generic [ref=e3167]: COPPA 2.0 (Children's Online Privacy Protection Act 2.0)
-                        - generic [ref=e3168]: Passed Senate as part of KOSMA (Jul 2024)
-                        - generic [ref=e3169]: United States (Federal)
-                      - paragraph [ref=e3170]: Extends COPPA to teens under 17, bans all targeted advertising to minors, and creates an Eraser Button for data deletion.
-                    - generic [ref=e3171]:
-                      - generic [ref=e3172]:
-                        - code [ref=e3173]: targeted_ad_block
-                        - code [ref=e3174]: data_deletion_request
-                        - code [ref=e3175]: geolocation_opt_in
-                      - img [ref=e3176]
-                - button "KOSMA (Kids Online Safety & Media Act) Passed Senate (Jul 2024) United States (Federal) Combined KOSA + COPPA 2.0 package extending protections to all minors under 17, with mandatory age verification. algo_feed_control age_gate" [ref=e3179] [cursor=pointer]:
-                  - generic [ref=e3180]:
-                    - generic [ref=e3181]:
-                      - generic [ref=e3182]:
-                        - generic [ref=e3183]: KOSMA (Kids Online Safety & Media Act)
-                        - generic [ref=e3184]: Passed Senate (Jul 2024)
-                        - generic [ref=e3185]: United States (Federal)
-                      - paragraph [ref=e3186]: Combined KOSA + COPPA 2.0 package extending protections to all minors under 17, with mandatory age verification.
-                    - generic [ref=e3187]:
-                      - generic [ref=e3188]:
-                        - code [ref=e3189]: algo_feed_control
-                        - code [ref=e3190]: age_gate
-                      - img [ref=e3191]
-                - button "FTC COPPA Rule (Federal Trade Commission COPPA Rule) In force (updated 2024) United States (Federal) The original COPPA enforcement rule requiring verifiable parental consent for data collection on children under 13. targeted_ad_block data_deletion_request" [ref=e3194] [cursor=pointer]:
+              - paragraph [ref=e3180]:
+                - strong [ref=e3181]: "Enforcement flow:"
+                - text: Trigger enforcement → Job created → Fan out to platforms → Collect per-provider results → Retry failures
+            - generic [ref=e3182]:
+              - generic [ref=e3183]:
+                - generic [ref=e3184]:
+                  - generic [ref=e3185]: POST
+                  - code [ref=e3186]: "/children/{childID}/enforce"
+                  - button "Copy link" [ref=e3187] [cursor=pointer]:
+                    - img [ref=e3188]
+                - paragraph [ref=e3191]: Push the child's active policy rules to all verified compliance links (platform connections). Creates an enforcement job that fans out to each connected platform concurrently. Returns the job for status polling.
+                - generic [ref=e3192]:
                   - generic [ref=e3195]:
-                    - generic [ref=e3196]:
-                      - generic [ref=e3197]:
-                        - generic [ref=e3198]: FTC COPPA Rule (Federal Trade Commission COPPA Rule)
-                        - generic [ref=e3199]: In force (updated 2024)
-                        - generic [ref=e3200]: United States (Federal)
-                      - paragraph [ref=e3201]: The original COPPA enforcement rule requiring verifiable parental consent for data collection on children under 13.
-                    - generic [ref=e3202]:
-                      - generic [ref=e3203]:
-                        - code [ref=e3204]: targeted_ad_block
-                        - code [ref=e3205]: data_deletion_request
-                      - img [ref=e3206]
-                - button "CIPA (Children's Internet Protection Act) In force (enacted 2000) United States (Federal) Requires schools and libraries receiving E-Rate funding to implement internet safety policies and content filters to protect children from harmful online content. web_category_block web_safesearch web_filter_level" [ref=e3209] [cursor=pointer]:
-                  - generic [ref=e3210]:
-                    - generic [ref=e3211]:
-                      - generic [ref=e3212]:
-                        - generic [ref=e3213]: CIPA (Children's Internet Protection Act)
-                        - generic [ref=e3214]: In force (enacted 2000)
-                        - generic [ref=e3215]: United States (Federal)
-                      - paragraph [ref=e3216]: Requires schools and libraries receiving E-Rate funding to implement internet safety policies and content filters to protect children from harmful online content.
-                    - generic [ref=e3217]:
-                      - generic [ref=e3218]:
-                        - code [ref=e3219]: web_category_block
-                        - code [ref=e3220]: web_safesearch
-                        - code [ref=e3221]: web_filter_level
-                      - img [ref=e3222]
-                - button "EARN IT Act (Eliminating Abusive and Rampant Neglect of Interactive Technologies Act) Proposed (reintroduced 2023) United States (Federal) Proposes to hold platforms accountable for CSAM by modifying Section 230 protections and establishing best practices for preventing child exploitation. csam_reporting" [ref=e3225] [cursor=pointer]:
-                  - generic [ref=e3226]:
-                    - generic [ref=e3227]:
-                      - generic [ref=e3228]:
-                        - generic [ref=e3229]: EARN IT Act (Eliminating Abusive and Rampant Neglect of Interactive Technologies Act)
-                        - generic [ref=e3230]: Proposed (reintroduced 2023)
-                        - generic [ref=e3231]: United States (Federal)
-                      - paragraph [ref=e3232]: Proposes to hold platforms accountable for CSAM by modifying Section 230 protections and establishing best practices for preventing child exploitation.
-                    - generic [ref=e3233]:
-                      - code [ref=e3235]: csam_reporting
-                      - img [ref=e3236]
-                - button "FOSTA-SESTA (Allow States and Victims to Fight Online Sex Trafficking Act) Signed into law (Apr 2018) United States (Federal) Amends Section 230 to hold platforms liable for facilitating sex trafficking. Requires platforms to actively monitor for and remove trafficking content involving minors. csam_reporting dm_restriction" [ref=e3239] [cursor=pointer]:
-                  - generic [ref=e3240]:
-                    - generic [ref=e3241]:
-                      - generic [ref=e3242]:
-                        - generic [ref=e3243]: FOSTA-SESTA (Allow States and Victims to Fight Online Sex Trafficking Act)
-                        - generic [ref=e3244]: Signed into law (Apr 2018)
-                        - generic [ref=e3245]: United States (Federal)
-                      - paragraph [ref=e3246]: Amends Section 230 to hold platforms liable for facilitating sex trafficking. Requires platforms to actively monitor for and remove trafficking content involving minors.
-                    - generic [ref=e3247]:
-                      - generic [ref=e3248]:
-                        - code [ref=e3249]: csam_reporting
-                        - code [ref=e3250]: dm_restriction
-                      - img [ref=e3251]
-                - button "CA SB 976 (California Age-Appropriate Design Code) Signed into law (Sep 2024) California, United States Bans addictive feeds and notifications during school hours for minors. Platforms must default to chronological feeds. algo_feed_control addictive_design_control" [ref=e3254] [cursor=pointer]:
-                  - generic [ref=e3255]:
-                    - generic [ref=e3256]:
-                      - generic [ref=e3257]:
-                        - generic [ref=e3258]: CA SB 976 (California Age-Appropriate Design Code)
-                        - generic [ref=e3259]: Signed into law (Sep 2024)
-                        - generic [ref=e3260]: California, United States
-                      - paragraph [ref=e3261]: Bans addictive feeds and notifications during school hours for minors. Platforms must default to chronological feeds.
-                    - generic [ref=e3262]:
-                      - generic [ref=e3263]:
-                        - code [ref=e3264]: algo_feed_control
-                        - code [ref=e3265]: addictive_design_control
-                      - img [ref=e3266]
-                - button "VA SB 854 (Virginia Child Safety Act) Signed into law (Apr 2024) Virginia, United States Requires platforms to suppress non-essential notifications during nighttime and provide configurable screen time limits. notification_curfew" [ref=e3269] [cursor=pointer]:
-                  - generic [ref=e3270]:
-                    - generic [ref=e3271]:
-                      - generic [ref=e3272]:
-                        - generic [ref=e3273]: VA SB 854 (Virginia Child Safety Act)
-                        - generic [ref=e3274]: Signed into law (Apr 2024)
-                        - generic [ref=e3275]: Virginia, United States
-                      - paragraph [ref=e3276]: Requires platforms to suppress non-essential notifications during nighttime and provide configurable screen time limits.
-                    - generic [ref=e3277]:
-                      - code [ref=e3279]: notification_curfew
-                      - img [ref=e3280]
-                - button "NY SAFE for Kids (New York SAFE for Kids Act) Signed into law (Jun 2024) New York, United States Prohibits addictive algorithmic feeds for minors without parental consent and mandates notification-free quiet hours. notification_curfew" [ref=e3283] [cursor=pointer]:
-                  - generic [ref=e3284]:
-                    - generic [ref=e3285]:
-                      - generic [ref=e3286]:
-                        - generic [ref=e3287]: NY SAFE for Kids (New York SAFE for Kids Act)
-                        - generic [ref=e3288]: Signed into law (Jun 2024)
-                        - generic [ref=e3289]: New York, United States
-                      - paragraph [ref=e3290]: Prohibits addictive algorithmic feeds for minors without parental consent and mandates notification-free quiet hours.
-                    - generic [ref=e3291]:
-                      - code [ref=e3293]: notification_curfew
-                      - img [ref=e3294]
-                - button "CT SB 3 (Connecticut SB 3) Signed into law (Jun 2023) Connecticut, United States Connecticut law protecting minors from addictive platform features and restricting unsolicited contact. Requires platforms to default to safest settings for accounts identified as minors. addictive_design_control dm_restriction geolocation_opt_in" [ref=e3297] [cursor=pointer]:
+                    - heading "Response fields" [level=4] [ref=e3196]
+                    - generic [ref=e3197]:
+                      - generic [ref=e3199]:
+                        - generic [ref=e3200]:
+                          - code [ref=e3202]: id
+                          - paragraph [ref=e3203]: Sync job identifier
+                        - generic [ref=e3205]: uuid
+                      - generic [ref=e3207]:
+                        - generic [ref=e3208]:
+                          - code [ref=e3210]: child_id
+                          - paragraph [ref=e3211]: Target child identifier
+                        - generic [ref=e3213]: uuid
+                      - generic [ref=e3215]:
+                        - generic [ref=e3216]:
+                          - code [ref=e3218]: policy_id
+                          - paragraph [ref=e3219]: Policy being enforced
+                        - generic [ref=e3221]: uuid
+                      - generic [ref=e3223]:
+                        - generic [ref=e3224]:
+                          - code [ref=e3226]: trigger_type
+                          - paragraph [ref=e3227]: "One of: manual, auto, webhook"
+                        - generic [ref=e3229]: enum
+                      - generic [ref=e3231]:
+                        - generic [ref=e3232]:
+                          - code [ref=e3234]: status
+                          - paragraph [ref=e3235]: "One of: pending, running, completed, failed, partial"
+                        - generic [ref=e3237]: enum
+                      - generic [ref=e3239]:
+                        - generic [ref=e3240]:
+                          - code [ref=e3242]: started_at
+                          - paragraph [ref=e3243]: Job start timestamp
+                        - generic [ref=e3245]: datetime
+                      - generic [ref=e3247]:
+                        - generic [ref=e3248]:
+                          - code [ref=e3250]: completed_at
+                          - paragraph [ref=e3251]: Job completion timestamp
+                        - generic [ref=e3253]: datetime
+                      - generic [ref=e3255]:
+                        - generic [ref=e3256]:
+                          - code [ref=e3258]: created_at
+                          - paragraph [ref=e3259]: Job creation timestamp
+                        - generic [ref=e3261]: datetime
+                  - generic [ref=e3263]:
+                    - generic [ref=e3264]:
+                      - generic [ref=e3265]:
+                        - generic [ref=e3266]:
+                          - generic [ref=e3267]: Request
+                          - generic [ref=e3268]: curl
+                        - button "Copy" [ref=e3269] [cursor=pointer]:
+                          - img [ref=e3270]
+                          - text: Copy
+                      - code [ref=e3274]: "curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/enforce \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e3275]:
+                      - generic [ref=e3276]:
+                        - generic [ref=e3277]:
+                          - generic [ref=e3278]: Response
+                          - generic [ref=e3279]: json
+                        - button "Copy" [ref=e3280] [cursor=pointer]:
+                          - img [ref=e3281]
+                          - text: Copy
+                      - code [ref=e3285]: "{ \"id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"trigger_type\": \"manual\", \"status\": \"pending\", \"created_at\": \"2025-01-10T10:30:00Z\" }"
+              - generic [ref=e3286]:
+                - generic [ref=e3287]:
+                  - generic [ref=e3288]: GET
+                  - code [ref=e3289]: "/children/{childID}/enforcement/jobs"
+                  - button "Copy link" [ref=e3290] [cursor=pointer]:
+                    - img [ref=e3291]
+                - paragraph [ref=e3294]: List all enforcement jobs for a child, ordered by creation time (newest first). Useful for viewing enforcement history and identifying failures.
+                - generic [ref=e3295]:
                   - generic [ref=e3298]:
-                    - generic [ref=e3299]:
-                      - generic [ref=e3300]:
-                        - generic [ref=e3301]: CT SB 3 (Connecticut SB 3)
-                        - generic [ref=e3302]: Signed into law (Jun 2023)
-                        - generic [ref=e3303]: Connecticut, United States
-                      - paragraph [ref=e3304]: Connecticut law protecting minors from addictive platform features and restricting unsolicited contact. Requires platforms to default to safest settings for accounts identified as minors.
-                    - generic [ref=e3305]:
-                      - generic [ref=e3306]:
-                        - code [ref=e3307]: addictive_design_control
-                        - code [ref=e3308]: dm_restriction
-                        - code [ref=e3309]: geolocation_opt_in
-                      - img [ref=e3310]
-                - button "FL HB 3 (Florida Social Media Act) Signed into law (Mar 2024) Florida, United States Florida law requiring age verification for social media platforms and prohibiting minors under 14 from holding accounts. Minors 14-15 need parental consent. age_gate" [ref=e3313] [cursor=pointer]:
-                  - generic [ref=e3314]:
-                    - generic [ref=e3315]:
-                      - generic [ref=e3316]:
-                        - generic [ref=e3317]: FL HB 3 (Florida Social Media Act)
-                        - generic [ref=e3318]: Signed into law (Mar 2024)
-                        - generic [ref=e3319]: Florida, United States
-                      - paragraph [ref=e3320]: Florida law requiring age verification for social media platforms and prohibiting minors under 14 from holding accounts. Minors 14-15 need parental consent.
-                    - generic [ref=e3321]:
-                      - code [ref=e3323]: age_gate
-                      - img [ref=e3324]
-                - button "MN HF 2 (Minnesota Usage Awareness) Introduced Minnesota, United States Minnesota bill requiring platforms to implement usage awareness tools for minor users, including periodic screen time reminders and usage dashboards. usage_timer_notification" [ref=e3327] [cursor=pointer]:
-                  - generic [ref=e3328]:
-                    - generic [ref=e3329]:
-                      - generic [ref=e3330]:
-                        - generic [ref=e3331]: MN HF 2 (Minnesota Usage Awareness)
-                        - generic [ref=e3332]: Introduced
-                        - generic [ref=e3333]: Minnesota, United States
-                      - paragraph [ref=e3334]: Minnesota bill requiring platforms to implement usage awareness tools for minor users, including periodic screen time reminders and usage dashboards.
-                    - generic [ref=e3335]:
-                      - code [ref=e3337]: usage_timer_notification
-                      - img [ref=e3338]
-                - button "TN HB 1891 (Tennessee Screen Time Act) Signed into law (May 2024) Tennessee, United States Tennessee law requiring social media platforms to implement screen time awareness features for minor users, including configurable usage timer notifications. usage_timer_notification" [ref=e3341] [cursor=pointer]:
-                  - generic [ref=e3342]:
-                    - generic [ref=e3343]:
-                      - generic [ref=e3344]:
-                        - generic [ref=e3345]: TN HB 1891 (Tennessee Screen Time Act)
-                        - generic [ref=e3346]: Signed into law (May 2024)
-                        - generic [ref=e3347]: Tennessee, United States
-                      - paragraph [ref=e3348]: Tennessee law requiring social media platforms to implement screen time awareness features for minor users, including configurable usage timer notifications.
-                    - generic [ref=e3349]:
-                      - code [ref=e3351]: usage_timer_notification
-                      - img [ref=e3352]
-                - button "NY NYCDPA (New York Child Data Protection Act) Introduced New York, United States New York Child Data Protection Act focusing on commercial data collection from minors, with strong data minimization and deletion rights for child accounts. data_deletion_request" [ref=e3355] [cursor=pointer]:
-                  - generic [ref=e3356]:
-                    - generic [ref=e3357]:
-                      - generic [ref=e3358]:
-                        - generic [ref=e3359]: NY NYCDPA (New York Child Data Protection Act)
-                        - generic [ref=e3360]: Introduced
-                        - generic [ref=e3361]: New York, United States
-                      - paragraph [ref=e3362]: New York Child Data Protection Act focusing on commercial data collection from minors, with strong data minimization and deletion rights for child accounts.
-                    - generic [ref=e3363]:
-                      - code [ref=e3365]: data_deletion_request
-                      - img [ref=e3366]
-                - button "MD Kids Code (Maryland Kids Code) Signed into law (May 2024) Maryland, United States Maryland Age-Appropriate Design Code requiring platforms to default to maximum privacy settings for minors, including geolocation disabled by default and data protection impact assessments. geolocation_opt_in" [ref=e3369] [cursor=pointer]:
-                  - generic [ref=e3370]:
-                    - generic [ref=e3371]:
-                      - generic [ref=e3372]:
-                        - generic [ref=e3373]: MD Kids Code (Maryland Kids Code)
-                        - generic [ref=e3374]: Signed into law (May 2024)
-                        - generic [ref=e3375]: Maryland, United States
-                      - paragraph [ref=e3376]: Maryland Age-Appropriate Design Code requiring platforms to default to maximum privacy settings for minors, including geolocation disabled by default and data protection impact assessments.
-                    - generic [ref=e3377]:
-                      - code [ref=e3379]: geolocation_opt_in
-                      - img [ref=e3380]
-                - button "TX SCOPE Act (Texas Securing Children Online through Parental Empowerment Act) Enacted (2023) Texas, United States Texas law requiring parental consent for minors to access social media, with age verification requirements and monitoring provisions for platforms serving minors. age_gate monitoring_activity web_filter_level" [ref=e3383] [cursor=pointer]:
-                  - generic [ref=e3384]:
-                    - generic [ref=e3385]:
-                      - generic [ref=e3386]:
-                        - generic [ref=e3387]: TX SCOPE Act (Texas Securing Children Online through Parental Empowerment Act)
-                        - generic [ref=e3388]: Enacted (2023)
-                        - generic [ref=e3389]: Texas, United States
-                      - paragraph [ref=e3390]: Texas law requiring parental consent for minors to access social media, with age verification requirements and monitoring provisions for platforms serving minors.
-                    - generic [ref=e3391]:
+                    - heading "Response fields" [level=4] [ref=e3299]
+                    - generic [ref=e3302]:
+                      - generic [ref=e3303]:
+                        - generic [ref=e3304]:
+                          - button [ref=e3305] [cursor=pointer]:
+                            - img [ref=e3306]
+                          - code [ref=e3308]: "[]"
+                        - paragraph [ref=e3309]: Array of enforcement job objects
+                      - generic [ref=e3311]: EnforcementJob[]
+                  - generic [ref=e3313]:
+                    - generic [ref=e3314]:
+                      - generic [ref=e3315]:
+                        - generic [ref=e3316]:
+                          - generic [ref=e3317]: Request
+                          - generic [ref=e3318]: curl
+                        - button "Copy" [ref=e3319] [cursor=pointer]:
+                          - img [ref=e3320]
+                          - text: Copy
+                      - code [ref=e3324]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/enforcement/jobs \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e3325]:
+                      - generic [ref=e3326]:
+                        - generic [ref=e3327]:
+                          - generic [ref=e3328]: Response
+                          - generic [ref=e3329]: json
+                        - button "Copy" [ref=e3330] [cursor=pointer]:
+                          - img [ref=e3331]
+                          - text: Copy
+                      - code [ref=e3335]: "[ { \"id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"trigger_type\": \"manual\", \"status\": \"completed\", \"started_at\": \"2025-01-10T10:30:01Z\", \"completed_at\": \"2025-01-10T10:30:05Z\", \"created_at\": \"2025-01-10T10:30:00Z\" } ]"
+              - generic [ref=e3336]:
+                - generic [ref=e3337]:
+                  - generic [ref=e3338]: POST
+                  - code [ref=e3339]: "/children/{childID}/sync"
+                  - button "Copy link" [ref=e3340] [cursor=pointer]:
+                    - img [ref=e3341]
+                - paragraph [ref=e3344]: Trigger enforcement sync for a child across all connected providers. Pushes the active policy's rules to each provider. Returns a sync job that can be polled for status.
+                - generic [ref=e3345]:
+                  - generic [ref=e3348]:
+                    - heading "Response fields" [level=4] [ref=e3349]
+                    - generic [ref=e3350]:
+                      - generic [ref=e3352]:
+                        - generic [ref=e3353]:
+                          - code [ref=e3355]: id
+                          - paragraph [ref=e3356]: Sync job identifier
+                        - generic [ref=e3358]: uuid
+                      - generic [ref=e3360]:
+                        - generic [ref=e3361]:
+                          - code [ref=e3363]: child_id
+                          - paragraph [ref=e3364]: Target child identifier
+                        - generic [ref=e3366]: uuid
+                      - generic [ref=e3368]:
+                        - generic [ref=e3369]:
+                          - code [ref=e3371]: policy_id
+                          - paragraph [ref=e3372]: Policy being enforced
+                        - generic [ref=e3374]: uuid
+                      - generic [ref=e3376]:
+                        - generic [ref=e3377]:
+                          - code [ref=e3379]: trigger_type
+                          - paragraph [ref=e3380]: "One of: manual, auto, webhook"
+                        - generic [ref=e3382]: enum
+                      - generic [ref=e3384]:
+                        - generic [ref=e3385]:
+                          - code [ref=e3387]: status
+                          - paragraph [ref=e3388]: "One of: pending, running, completed, failed, partial"
+                        - generic [ref=e3390]: enum
                       - generic [ref=e3392]:
-                        - code [ref=e3393]: age_gate
-                        - code [ref=e3394]: monitoring_activity
-                        - code [ref=e3395]: web_filter_level
-                      - img [ref=e3396]
-                - button "UT SMRA (Utah Social Media Regulation Act) Passed (2023) Utah, United States Utah law imposing curfews on minor social media use, requiring age verification, and banning addictive design features targeting minors. social_media_min_age time_scheduled_hours addictive_design_control" [ref=e3399] [cursor=pointer]:
-                  - generic [ref=e3400]:
-                    - generic [ref=e3401]:
-                      - generic [ref=e3402]:
-                        - generic [ref=e3403]: UT SMRA (Utah Social Media Regulation Act)
-                        - generic [ref=e3404]: Passed (2023)
-                        - generic [ref=e3405]: Utah, United States
-                      - paragraph [ref=e3406]: Utah law imposing curfews on minor social media use, requiring age verification, and banning addictive design features targeting minors.
-                    - generic [ref=e3407]:
+                        - generic [ref=e3393]:
+                          - code [ref=e3395]: started_at
+                          - paragraph [ref=e3396]: Job start timestamp
+                        - generic [ref=e3398]: datetime
+                      - generic [ref=e3400]:
+                        - generic [ref=e3401]:
+                          - code [ref=e3403]: completed_at
+                          - paragraph [ref=e3404]: Job completion timestamp
+                        - generic [ref=e3406]: datetime
                       - generic [ref=e3408]:
-                        - code [ref=e3409]: social_media_min_age
-                        - code [ref=e3410]: time_scheduled_hours
-                        - code [ref=e3411]: addictive_design_control
-                      - img [ref=e3412]
-                - button "LA Act 456 (Louisiana Act 456) Enacted (2024) Louisiana, United States Louisiana law requiring age verification for social media platforms and restricting minor access without parental consent. age_gate" [ref=e3415] [cursor=pointer]:
+                        - generic [ref=e3409]:
+                          - code [ref=e3411]: created_at
+                          - paragraph [ref=e3412]: Job creation timestamp
+                        - generic [ref=e3414]: datetime
                   - generic [ref=e3416]:
                     - generic [ref=e3417]:
                       - generic [ref=e3418]:
-                        - generic [ref=e3419]: LA Act 456 (Louisiana Act 456)
-                        - generic [ref=e3420]: Enacted (2024)
-                        - generic [ref=e3421]: Louisiana, United States
-                      - paragraph [ref=e3422]: Louisiana law requiring age verification for social media platforms and restricting minor access without parental consent.
-                    - generic [ref=e3423]:
-                      - code [ref=e3425]: age_gate
-                      - img [ref=e3426]
-                - button "OH HB 33 (Ohio Social Media Parental Notification Act) Enacted (2024) Ohio, United States Ohio law requiring platforms to obtain parental consent for users under 16, with restrictions on direct messaging to minor accounts. age_gate dm_restriction" [ref=e3429] [cursor=pointer]:
-                  - generic [ref=e3430]:
-                    - generic [ref=e3431]:
-                      - generic [ref=e3432]:
-                        - generic [ref=e3433]: OH HB 33 (Ohio Social Media Parental Notification Act)
-                        - generic [ref=e3434]: Enacted (2024)
-                        - generic [ref=e3435]: Ohio, United States
-                      - paragraph [ref=e3436]: Ohio law requiring platforms to obtain parental consent for users under 16, with restrictions on direct messaging to minor accounts.
-                    - generic [ref=e3437]:
-                      - generic [ref=e3438]:
-                        - code [ref=e3439]: age_gate
-                        - code [ref=e3440]: dm_restriction
-                      - img [ref=e3441]
-                - button "VT S69 (Vermont Age-Appropriate Design Code) Enacted (2024) Vermont, United States Vermont age-appropriate design code requiring platforms to disable addictive design features, ban targeted ads, and default geolocation to off for minors. addictive_design_control targeted_ad_block geolocation_opt_in" [ref=e3444] [cursor=pointer]:
-                  - generic [ref=e3445]:
-                    - generic [ref=e3446]:
-                      - generic [ref=e3447]:
-                        - generic [ref=e3448]: VT S69 (Vermont Age-Appropriate Design Code)
-                        - generic [ref=e3449]: Enacted (2024)
-                        - generic [ref=e3450]: Vermont, United States
-                      - paragraph [ref=e3451]: Vermont age-appropriate design code requiring platforms to disable addictive design features, ban targeted ads, and default geolocation to off for minors.
-                    - generic [ref=e3452]:
-                      - generic [ref=e3453]:
-                        - code [ref=e3454]: addictive_design_control
-                        - code [ref=e3455]: targeted_ad_block
-                        - code [ref=e3456]: geolocation_opt_in
-                      - img [ref=e3457]
-                - button "MA S2619 (Massachusetts S2619) Passed Senate (2025) Massachusetts, United States Massachusetts bill targeting dark patterns and addictive design in platforms used by minors, with bans on targeted advertising to children. targeted_ad_block addictive_design_control" [ref=e3460] [cursor=pointer]:
-                  - generic [ref=e3461]:
-                    - generic [ref=e3462]:
+                        - generic [ref=e3419]:
+                          - generic [ref=e3420]: Request
+                          - generic [ref=e3421]: curl
+                        - button "Copy" [ref=e3422] [cursor=pointer]:
+                          - img [ref=e3423]
+                          - text: Copy
+                      - code [ref=e3427]: "curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/sync \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e3428]:
+                      - generic [ref=e3429]:
+                        - generic [ref=e3430]:
+                          - generic [ref=e3431]: Response
+                          - generic [ref=e3432]: json
+                        - button "Copy" [ref=e3433] [cursor=pointer]:
+                          - img [ref=e3434]
+                          - text: Copy
+                      - code [ref=e3438]: "{ \"id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"trigger_type\": \"manual\", \"status\": \"pending\", \"started_at\": null, \"completed_at\": null, \"created_at\": \"2025-01-10T10:30:00Z\" }"
+              - generic [ref=e3439]:
+                - generic [ref=e3440]:
+                  - generic [ref=e3441]: GET
+                  - code [ref=e3442]: "/sync/jobs/{jobID}"
+                  - button "Copy link" [ref=e3443] [cursor=pointer]:
+                    - img [ref=e3444]
+                - paragraph [ref=e3447]: Check the status of a sync job. Poll this endpoint until status is completed, failed, or partial.
+                - generic [ref=e3448]:
+                  - generic [ref=e3451]:
+                    - heading "Response fields" [level=4] [ref=e3452]
+                    - generic [ref=e3453]:
+                      - generic [ref=e3455]:
+                        - generic [ref=e3456]:
+                          - code [ref=e3458]: id
+                          - paragraph [ref=e3459]: Sync job identifier
+                        - generic [ref=e3461]: uuid
                       - generic [ref=e3463]:
-                        - generic [ref=e3464]: MA S2619 (Massachusetts S2619)
-                        - generic [ref=e3465]: Passed Senate (2025)
-                        - generic [ref=e3466]: Massachusetts, United States
-                      - paragraph [ref=e3467]: Massachusetts bill targeting dark patterns and addictive design in platforms used by minors, with bans on targeted advertising to children.
-                    - generic [ref=e3468]:
-                      - generic [ref=e3469]:
-                        - code [ref=e3470]: targeted_ad_block
-                        - code [ref=e3471]: addictive_design_control
-                      - img [ref=e3472]
-                - button "AR Age Verify (Arkansas Social Media Safety Act) Enacted (2023) Arkansas, United States Arkansas law requiring age verification for social media platforms and prohibiting minors under 18 from creating accounts without parental consent. age_gate social_media_min_age" [ref=e3475] [cursor=pointer]:
-                  - generic [ref=e3476]:
-                    - generic [ref=e3477]:
-                      - generic [ref=e3478]:
-                        - generic [ref=e3479]: AR Age Verify (Arkansas Social Media Safety Act)
-                        - generic [ref=e3480]: Enacted (2023)
-                        - generic [ref=e3481]: Arkansas, United States
-                      - paragraph [ref=e3482]: Arkansas law requiring age verification for social media platforms and prohibiting minors under 18 from creating accounts without parental consent.
-                    - generic [ref=e3483]:
-                      - generic [ref=e3484]:
-                        - code [ref=e3485]: age_gate
-                        - code [ref=e3486]: social_media_min_age
-                      - img [ref=e3487]
-                - button "CA Addiction Act (California Social Media Addiction Act) Enacted (Sep 2024) California, United States California law restricting notification delivery to minors during school hours and banning addictive design features that target children. notification_curfew addictive_design_control" [ref=e3490] [cursor=pointer]:
-                  - generic [ref=e3491]:
-                    - generic [ref=e3492]:
-                      - generic [ref=e3493]:
-                        - generic [ref=e3494]: CA Addiction Act (California Social Media Addiction Act)
-                        - generic [ref=e3495]: Enacted (Sep 2024)
-                        - generic [ref=e3496]: California, United States
-                      - paragraph [ref=e3497]: California law restricting notification delivery to minors during school hours and banning addictive design features that target children.
-                    - generic [ref=e3498]:
-                      - generic [ref=e3499]:
-                        - code [ref=e3500]: notification_curfew
-                        - code [ref=e3501]: addictive_design_control
-                      - img [ref=e3502]
-                - button "EU DSA (Digital Services Act) In force (Feb 2024) European Union (27 member states) Comprehensive EU regulation banning targeted ads to minors and requiring risk assessments for algorithmic systems. algo_feed_control addictive_design_control targeted_ad_block" [ref=e3505] [cursor=pointer]:
-                  - generic [ref=e3506]:
-                    - generic [ref=e3507]:
-                      - generic [ref=e3508]:
-                        - generic [ref=e3509]: EU DSA (Digital Services Act)
-                        - generic [ref=e3510]: In force (Feb 2024)
-                        - generic [ref=e3511]: European Union (27 member states)
-                      - paragraph [ref=e3512]: Comprehensive EU regulation banning targeted ads to minors and requiring risk assessments for algorithmic systems.
-                    - generic [ref=e3513]:
-                      - generic [ref=e3514]:
-                        - code [ref=e3515]: algo_feed_control
-                        - code [ref=e3516]: addictive_design_control
-                        - code [ref=e3517]: targeted_ad_block
-                      - img [ref=e3518]
-                - button "GDPR Art. 8 (GDPR Article 8 Child Consent) In force (enacted May 2018) European Union (27 member states) GDPR Article 8 establishes conditions for child consent to data processing, requiring parental consent for children under 16 (or 13, depending on member state). targeted_ad_block data_deletion_request privacy_data_sharing" [ref=e3521] [cursor=pointer]:
-                  - generic [ref=e3522]:
-                    - generic [ref=e3523]:
-                      - generic [ref=e3524]:
-                        - generic [ref=e3525]: GDPR Art. 8 (GDPR Article 8 Child Consent)
-                        - generic [ref=e3526]: In force (enacted May 2018)
-                        - generic [ref=e3527]: European Union (27 member states)
-                      - paragraph [ref=e3528]: GDPR Article 8 establishes conditions for child consent to data processing, requiring parental consent for children under 16 (or 13, depending on member state).
-                    - generic [ref=e3529]:
-                      - generic [ref=e3530]:
-                        - code [ref=e3531]: targeted_ad_block
-                        - code [ref=e3532]: data_deletion_request
-                        - code [ref=e3533]: privacy_data_sharing
-                      - img [ref=e3534]
-                - button "EU AI Act (EU AI Act Minor Provisions) Enacted (Dec 2023) European Union (27 member states) The EU AI Act includes specific provisions protecting minors from AI systems that exploit vulnerabilities, manipulate behavior, or use subliminal techniques harmful to children. ai_minor_interaction addictive_design_control" [ref=e3537] [cursor=pointer]:
-                  - generic [ref=e3538]:
-                    - generic [ref=e3539]:
-                      - generic [ref=e3540]:
-                        - generic [ref=e3541]: EU AI Act (EU AI Act Minor Provisions)
-                        - generic [ref=e3542]: Enacted (Dec 2023)
-                        - generic [ref=e3543]: European Union (27 member states)
-                      - paragraph [ref=e3544]: The EU AI Act includes specific provisions protecting minors from AI systems that exploit vulnerabilities, manipulate behavior, or use subliminal techniques harmful to children.
-                    - generic [ref=e3545]:
-                      - generic [ref=e3546]:
-                        - code [ref=e3547]: ai_minor_interaction
-                        - code [ref=e3548]: addictive_design_control
-                      - img [ref=e3549]
-                - button "FR SREN (France SREN + Image Rights Law) Enacted (2024) France French law requiring age verification for accessing certain online content and establishing image rights protections for minors, including provisions against sharenting. age_gate image_rights_minor" [ref=e3552] [cursor=pointer]:
-                  - generic [ref=e3553]:
-                    - generic [ref=e3554]:
-                      - generic [ref=e3555]:
-                        - generic [ref=e3556]: FR SREN (France SREN + Image Rights Law)
-                        - generic [ref=e3557]: Enacted (2024)
-                        - generic [ref=e3558]: France
-                      - paragraph [ref=e3559]: French law requiring age verification for accessing certain online content and establishing image rights protections for minors, including provisions against sharenting.
-                    - generic [ref=e3560]:
-                      - generic [ref=e3561]:
-                        - code [ref=e3562]: age_gate
-                        - code [ref=e3563]: image_rights_minor
-                      - img [ref=e3564]
-                - button "UK AADC (UK Age Appropriate Design Code) Enacted (Sep 2021) United Kingdom Duty of care requiring platforms to protect children from harmful content, restrict adult-child DMs, and implement age verification. addictive_design_control dm_restriction" [ref=e3567] [cursor=pointer]:
-                  - generic [ref=e3568]:
-                    - generic [ref=e3569]:
-                      - generic [ref=e3570]:
-                        - generic [ref=e3571]: UK AADC (UK Age Appropriate Design Code)
-                        - generic [ref=e3572]: Enacted (Sep 2021)
-                        - generic [ref=e3573]: United Kingdom
-                      - paragraph [ref=e3574]: Duty of care requiring platforms to protect children from harmful content, restrict adult-child DMs, and implement age verification.
-                    - generic [ref=e3575]:
-                      - generic [ref=e3576]:
-                        - code [ref=e3577]: addictive_design_control
-                        - code [ref=e3578]: dm_restriction
-                      - img [ref=e3579]
-                - button "UK OSA (UK Online Safety Act 2023) Enacted (Oct 2023) United Kingdom UK law imposing a duty of care on platforms to protect children from harmful content online. Requires age verification and proactive measures to prevent children encountering harmful material. addictive_design_control dm_restriction age_gate csam_reporting" [ref=e3582] [cursor=pointer]:
-                  - generic [ref=e3583]:
-                    - generic [ref=e3584]:
-                      - generic [ref=e3585]:
-                        - generic [ref=e3586]: UK OSA (UK Online Safety Act 2023)
-                        - generic [ref=e3587]: Enacted (Oct 2023)
-                        - generic [ref=e3588]: United Kingdom
-                      - paragraph [ref=e3589]: UK law imposing a duty of care on platforms to protect children from harmful content online. Requires age verification and proactive measures to prevent children encountering harmful material.
-                    - generic [ref=e3590]:
-                      - generic [ref=e3591]:
-                        - code [ref=e3592]: addictive_design_control
-                        - code [ref=e3593]: dm_restriction
-                        - code [ref=e3594]: age_gate
-                        - code [ref=e3595]: csam_reporting
-                      - img [ref=e3596]
-                - button "DE JMStV (Germany Youth Media State Treaty) In force (ongoing amendments) Germany German interstate treaty governing youth protection in media, requiring content classification, age verification, and filtering for online services accessible by minors. age_gate content_rating web_filter_level" [ref=e3599] [cursor=pointer]:
-                  - generic [ref=e3600]:
-                    - generic [ref=e3601]:
-                      - generic [ref=e3602]:
-                        - generic [ref=e3603]: DE JMStV (Germany Youth Media State Treaty)
-                        - generic [ref=e3604]: In force (ongoing amendments)
-                        - generic [ref=e3605]: Germany
-                      - paragraph [ref=e3606]: German interstate treaty governing youth protection in media, requiring content classification, age verification, and filtering for online services accessible by minors.
-                    - generic [ref=e3607]:
-                      - generic [ref=e3608]:
-                        - code [ref=e3609]: age_gate
-                        - code [ref=e3610]: content_rating
-                        - code [ref=e3611]: web_filter_level
-                      - img [ref=e3612]
-                - button "IE OSMRA (Ireland Online Safety and Media Regulation Act 2022) Enacted (2022) Ireland Irish law establishing Coimisiún na Meán as online safety regulator, with powers to issue binding online safety codes and designate platforms for compliance obligations protecting children. age_gate addictive_design_control web_filter_level" [ref=e3615] [cursor=pointer]:
-                  - generic [ref=e3616]:
-                    - generic [ref=e3617]:
-                      - generic [ref=e3618]:
-                        - generic [ref=e3619]: IE OSMRA (Ireland Online Safety and Media Regulation Act 2022)
-                        - generic [ref=e3620]: Enacted (2022)
-                        - generic [ref=e3621]: Ireland
-                      - paragraph [ref=e3622]: Irish law establishing Coimisiún na Meán as online safety regulator, with powers to issue binding online safety codes and designate platforms for compliance obligations protecting children.
-                    - generic [ref=e3623]:
-                      - generic [ref=e3624]:
-                        - code [ref=e3625]: age_gate
-                        - code [ref=e3626]: addictive_design_control
-                        - code [ref=e3627]: web_filter_level
-                      - img [ref=e3628]
-                - button "AU OSA (Australia Online Safety Act) In force (age verification trial) Australia Establishes the eSafety Commissioner with powers to enforce age verification and removal of content harmful to children. age_gate" [ref=e3631] [cursor=pointer]:
-                  - generic [ref=e3632]:
-                    - generic [ref=e3633]:
-                      - generic [ref=e3634]:
-                        - generic [ref=e3635]: AU OSA (Australia Online Safety Act)
-                        - generic [ref=e3636]: In force (age verification trial)
-                        - generic [ref=e3637]: Australia
-                      - paragraph [ref=e3638]: Establishes the eSafety Commissioner with powers to enforce age verification and removal of content harmful to children.
-                    - generic [ref=e3639]:
-                      - code [ref=e3641]: age_gate
-                      - img [ref=e3642]
-                - button "India DPDPA (Digital Personal Data Protection Act) Enacted (Aug 2023) India Complete ban on behavioral monitoring and targeted advertising directed at children. Verifiable parental consent required. targeted_ad_block" [ref=e3645] [cursor=pointer]:
-                  - generic [ref=e3646]:
-                    - generic [ref=e3647]:
-                      - generic [ref=e3648]:
-                        - generic [ref=e3649]: India DPDPA (Digital Personal Data Protection Act)
-                        - generic [ref=e3650]: Enacted (Aug 2023)
-                        - generic [ref=e3651]: India
-                      - paragraph [ref=e3652]: Complete ban on behavioral monitoring and targeted advertising directed at children. Verifiable parental consent required.
-                    - generic [ref=e3653]:
-                      - code [ref=e3655]: targeted_ad_block
-                      - img [ref=e3656]
-                - button "AU SMMA (Australia Social Media Minimum Age Act 2024) Enacted (Dec 2024) Australia Australian law establishing a minimum age of 16 for social media access, with significant penalties for platforms that fail to enforce age verification. social_media_min_age age_gate" [ref=e3659] [cursor=pointer]:
-                  - generic [ref=e3660]:
-                    - generic [ref=e3661]:
-                      - generic [ref=e3662]:
-                        - generic [ref=e3663]: AU SMMA (Australia Social Media Minimum Age Act 2024)
-                        - generic [ref=e3664]: Enacted (Dec 2024)
-                        - generic [ref=e3665]: Australia
-                      - paragraph [ref=e3666]: Australian law establishing a minimum age of 16 for social media access, with significant penalties for platforms that fail to enforce age verification.
-                    - generic [ref=e3667]:
-                      - generic [ref=e3668]:
-                        - code [ref=e3669]: social_media_min_age
-                        - code [ref=e3670]: age_gate
-                      - img [ref=e3671]
-                - button "ID GR 17 (Indonesia GR 17/2025 on Child Protection) Enacted (2025) Indonesia Indonesian government regulation requiring platforms to implement age verification, content rating, and privacy protections for children accessing digital services. age_gate content_rating privacy_data_sharing" [ref=e3674] [cursor=pointer]:
-                  - generic [ref=e3675]:
-                    - generic [ref=e3676]:
-                      - generic [ref=e3677]:
-                        - generic [ref=e3678]: ID GR 17 (Indonesia GR 17/2025 on Child Protection)
-                        - generic [ref=e3679]: Enacted (2025)
-                        - generic [ref=e3680]: Indonesia
-                      - paragraph [ref=e3681]: Indonesian government regulation requiring platforms to implement age verification, content rating, and privacy protections for children accessing digital services.
-                    - generic [ref=e3682]:
-                      - generic [ref=e3683]:
-                        - code [ref=e3684]: age_gate
-                        - code [ref=e3685]: content_rating
-                        - code [ref=e3686]: privacy_data_sharing
-                      - img [ref=e3687]
-                - button "SG PDPA (Singapore PDPA Child Guidelines) Guidelines published (2024) Singapore Singapore's Personal Data Protection Commission guidelines on collecting, using, and disclosing personal data of children, emphasizing consent and data protection. privacy_data_sharing targeted_ad_block" [ref=e3690] [cursor=pointer]:
-                  - generic [ref=e3691]:
-                    - generic [ref=e3692]:
-                      - generic [ref=e3693]:
-                        - generic [ref=e3694]: SG PDPA (Singapore PDPA Child Guidelines)
-                        - generic [ref=e3695]: Guidelines published (2024)
-                        - generic [ref=e3696]: Singapore
-                      - paragraph [ref=e3697]: Singapore's Personal Data Protection Commission guidelines on collecting, using, and disclosing personal data of children, emphasizing consent and data protection.
-                    - generic [ref=e3698]:
-                      - generic [ref=e3699]:
-                        - code [ref=e3700]: privacy_data_sharing
-                        - code [ref=e3701]: targeted_ad_block
-                      - img [ref=e3702]
-                - button "JP YIEA (Japan Youth Internet Environment Act) In force (enacted 2008 Japan Japanese law requiring ISPs and device manufacturers to provide content filtering for minors, promoting a safe internet environment for young people. web_filter_level web_category_block" [ref=e3705] [cursor=pointer]:
-                  - generic [ref=e3706]:
-                    - generic [ref=e3707]:
-                      - generic [ref=e3708]:
-                        - generic [ref=e3709]: JP YIEA (Japan Youth Internet Environment Act)
-                        - generic [ref=e3710]: In force (enacted 2008
-                        - generic [ref=e3711]: Japan
-                      - paragraph [ref=e3712]: Japanese law requiring ISPs and device manufacturers to provide content filtering for minors, promoting a safe internet environment for young people.
-                    - generic [ref=e3713]:
-                      - generic [ref=e3714]:
-                        - code [ref=e3715]: web_filter_level
-                        - code [ref=e3716]: web_category_block
-                      - img [ref=e3717]
-                - button "KR JPA (South Korea Juvenile Protection Act) In force (enacted 2014 South Korea South Korean law restricting minors' access to online games during nighttime hours and requiring content rating for all games and media accessible to juveniles. time_daily_limit content_rating" [ref=e3720] [cursor=pointer]:
-                  - generic [ref=e3721]:
-                    - generic [ref=e3722]:
-                      - generic [ref=e3723]:
-                        - generic [ref=e3724]: KR JPA (South Korea Juvenile Protection Act)
-                        - generic [ref=e3725]: In force (enacted 2014
-                        - generic [ref=e3726]: South Korea
-                      - paragraph [ref=e3727]: South Korean law restricting minors' access to online games during nighttime hours and requiring content rating for all games and media accessible to juveniles.
-                    - generic [ref=e3728]:
-                      - generic [ref=e3729]:
-                        - code [ref=e3730]: time_daily_limit
-                        - code [ref=e3731]: content_rating
-                      - img [ref=e3732]
-                - button "KR PIPA (South Korea Personal Information Protection Act) In force (enacted 2011 South Korea South Korea's comprehensive data protection law with strengthened provisions for children's personal information, requiring parental consent and restricting data processing for minors. privacy_data_sharing data_deletion_request targeted_ad_block" [ref=e3735] [cursor=pointer]:
-                  - generic [ref=e3736]:
-                    - generic [ref=e3737]:
-                      - generic [ref=e3738]:
-                        - generic [ref=e3739]: KR PIPA (South Korea Personal Information Protection Act)
-                        - generic [ref=e3740]: In force (enacted 2011
-                        - generic [ref=e3741]: South Korea
-                      - paragraph [ref=e3742]: South Korea's comprehensive data protection law with strengthened provisions for children's personal information, requiring parental consent and restricting data processing for minors.
-                    - generic [ref=e3743]:
-                      - generic [ref=e3744]:
-                        - code [ref=e3745]: privacy_data_sharing
-                        - code [ref=e3746]: data_deletion_request
-                        - code [ref=e3747]: targeted_ad_block
-                      - img [ref=e3748]
-                - button "NZ SM Proposal (New Zealand Social Media Age Proposal) Proposed (2024) New Zealand New Zealand government proposal to establish a minimum age for social media access, modeled on Australia's Social Media Minimum Age Act. social_media_min_age age_gate" [ref=e3751] [cursor=pointer]:
-                  - generic [ref=e3752]:
-                    - generic [ref=e3753]:
-                      - generic [ref=e3754]:
-                        - generic [ref=e3755]: NZ SM Proposal (New Zealand Social Media Age Proposal)
-                        - generic [ref=e3756]: Proposed (2024)
-                        - generic [ref=e3757]: New Zealand
-                      - paragraph [ref=e3758]: New Zealand government proposal to establish a minimum age for social media access, modeled on Australia's Social Media Minimum Age Act.
-                    - generic [ref=e3759]:
-                      - generic [ref=e3760]:
-                        - code [ref=e3761]: social_media_min_age
-                        - code [ref=e3762]: age_gate
-                      - img [ref=e3763]
-                - button "CA Bill C-63 (Canada Online Harms Act (Bill C-63)) Proposed (2024) Canada Canadian bill establishing a duty of care for online platforms to protect children from harmful content, with specific provisions for CSAM reporting and addictive design restrictions. csam_reporting addictive_design_control dm_restriction" [ref=e3766] [cursor=pointer]:
-                  - generic [ref=e3767]:
-                    - generic [ref=e3768]:
-                      - generic [ref=e3769]:
-                        - generic [ref=e3770]: CA Bill C-63 (Canada Online Harms Act (Bill C-63))
-                        - generic [ref=e3771]: Proposed (2024)
-                        - generic [ref=e3772]: Canada
-                      - paragraph [ref=e3773]: Canadian bill establishing a duty of care for online platforms to protect children from harmful content, with specific provisions for CSAM reporting and addictive design restrictions.
-                    - generic [ref=e3774]:
-                      - generic [ref=e3775]:
-                        - code [ref=e3776]: csam_reporting
-                        - code [ref=e3777]: addictive_design_control
-                        - code [ref=e3778]: dm_restriction
-                      - img [ref=e3779]
-                - button "BR LGPD (Brazil LGPD Child Provisions + Digital ECA) LGPD enacted (2018) Brazil Brazil's data protection law includes specific child provisions banning targeted advertising to minors, supplemented by the Digital ECA bill strengthening children's digital rights. targeted_ad_block privacy_data_sharing data_deletion_request" [ref=e3782] [cursor=pointer]:
-                  - generic [ref=e3783]:
-                    - generic [ref=e3784]:
-                      - generic [ref=e3785]:
-                        - generic [ref=e3786]: BR LGPD (Brazil LGPD Child Provisions + Digital ECA)
-                        - generic [ref=e3787]: LGPD enacted (2018)
-                        - generic [ref=e3788]: Brazil
-                      - paragraph [ref=e3789]: Brazil's data protection law includes specific child provisions banning targeted advertising to minors, supplemented by the Digital ECA bill strengthening children's digital rights.
-                    - generic [ref=e3790]:
-                      - generic [ref=e3791]:
-                        - code [ref=e3792]: targeted_ad_block
-                        - code [ref=e3793]: privacy_data_sharing
-                        - code [ref=e3794]: data_deletion_request
-                      - img [ref=e3795]
-                - button "MX LFPDPPP (Mexico Data Protection Law 2025) Enacted (March 2025) Mexico Mexican federal data protection law with provisions for minors' personal data, requiring parental consent and data protection measures for children's information. privacy_data_sharing" [ref=e3798] [cursor=pointer]:
-                  - generic [ref=e3799]:
-                    - generic [ref=e3800]:
-                      - generic [ref=e3801]:
-                        - generic [ref=e3802]: MX LFPDPPP (Mexico Data Protection Law 2025)
-                        - generic [ref=e3803]: Enacted (March 2025)
-                        - generic [ref=e3804]: Mexico
-                      - paragraph [ref=e3805]: Mexican federal data protection law with provisions for minors' personal data, requiring parental consent and data protection measures for children's information.
-                    - generic [ref=e3806]:
-                      - code [ref=e3808]: privacy_data_sharing
-                      - img [ref=e3809]
-                - button "CL PDP (Chile Personal Data Protection Bill) Passed Congress (Aug 2024) Chile Chilean personal data protection bill with specific provisions for children's data, establishing a data protection authority and rights including data deletion for minors. privacy_data_sharing data_deletion_request" [ref=e3812] [cursor=pointer]:
-                  - generic [ref=e3813]:
-                    - generic [ref=e3814]:
-                      - generic [ref=e3815]:
-                        - generic [ref=e3816]: CL PDP (Chile Personal Data Protection Bill)
-                        - generic [ref=e3817]: Passed Congress (Aug 2024)
-                        - generic [ref=e3818]: Chile
-                      - paragraph [ref=e3819]: Chilean personal data protection bill with specific provisions for children's data, establishing a data protection authority and rights including data deletion for minors.
-                    - generic [ref=e3820]:
-                      - generic [ref=e3821]:
-                        - code [ref=e3822]: privacy_data_sharing
-                        - code [ref=e3823]: data_deletion_request
-                      - img [ref=e3824]
-                - button "UAE Decree 26 (UAE Child Digital Safety Law) Enacted (2025) United Arab Emirates UAE law establishing comprehensive child digital safety requirements, including age verification, targeted ad bans, privacy protections, and restrictions on addictive design for platforms serving children under 13. age_gate targeted_ad_block privacy_data_sharing addictive_design_control geolocation_opt_in" [ref=e3827] [cursor=pointer]:
-                  - generic [ref=e3828]:
-                    - generic [ref=e3829]:
-                      - generic [ref=e3830]:
-                        - generic [ref=e3831]: UAE Decree 26 (UAE Child Digital Safety Law)
-                        - generic [ref=e3832]: Enacted (2025)
-                        - generic [ref=e3833]: United Arab Emirates
-                      - paragraph [ref=e3834]: UAE law establishing comprehensive child digital safety requirements, including age verification, targeted ad bans, privacy protections, and restrictions on addictive design for platforms serving children under 13.
-                    - generic [ref=e3835]:
-                      - generic [ref=e3836]:
-                        - code [ref=e3837]: age_gate
-                        - code [ref=e3838]: targeted_ad_block
-                        - code [ref=e3839]: privacy_data_sharing
-                        - code [ref=e3840]: addictive_design_control
-                        - code [ref=e3841]: geolocation_opt_in
-                      - img [ref=e3842]
-                - button "PH COTG (Philippines Child Transparency Guidelines) Published (Dec 2024) Philippines Philippines National Privacy Commission guidelines on transparency requirements for processing children's personal data, emphasizing best interests and data protection. privacy_data_sharing" [ref=e3845] [cursor=pointer]:
-                  - generic [ref=e3846]:
-                    - generic [ref=e3847]:
-                      - generic [ref=e3848]:
-                        - generic [ref=e3849]: PH COTG (Philippines Child Transparency Guidelines)
-                        - generic [ref=e3850]: Published (Dec 2024)
-                        - generic [ref=e3851]: Philippines
-                      - paragraph [ref=e3852]: Philippines National Privacy Commission guidelines on transparency requirements for processing children's personal data, emphasizing best interests and data protection.
-                    - generic [ref=e3853]:
-                      - code [ref=e3855]: privacy_data_sharing
-                      - img [ref=e3856]
-                - button "SA PDPL (Saudi Arabia Personal Data Protection Law) Enacted (Sep 2023) Saudi Arabia Saudi Arabia's comprehensive data protection law with specific provisions for children's data, requiring explicit parental consent and prohibiting processing that harms minors' interests. privacy_data_sharing data_deletion_request" [ref=e3859] [cursor=pointer]:
-                  - generic [ref=e3860]:
-                    - generic [ref=e3861]:
-                      - generic [ref=e3862]:
-                        - generic [ref=e3863]: SA PDPL (Saudi Arabia Personal Data Protection Law)
-                        - generic [ref=e3864]: Enacted (Sep 2023)
-                        - generic [ref=e3865]: Saudi Arabia
-                      - paragraph [ref=e3866]: Saudi Arabia's comprehensive data protection law with specific provisions for children's data, requiring explicit parental consent and prohibiting processing that harms minors' interests.
-                    - generic [ref=e3867]:
-                      - generic [ref=e3868]:
-                        - code [ref=e3869]: privacy_data_sharing
-                        - code [ref=e3870]: data_deletion_request
-                      - img [ref=e3871]
-                - button "ID Age Verify (Idaho Age Verification Act) Enacted Idaho, United States Idaho law requiring age verification for platforms hosting content harmful to minors, mandating commercially reasonable age verification methods. age_gate" [ref=e3874] [cursor=pointer]:
-                  - generic [ref=e3875]:
-                    - generic [ref=e3876]:
-                      - generic [ref=e3877]:
-                        - generic [ref=e3878]: ID Age Verify (Idaho Age Verification Act)
-                        - generic [ref=e3879]: Enacted
-                        - generic [ref=e3880]: Idaho, United States
-                      - paragraph [ref=e3881]: Idaho law requiring age verification for platforms hosting content harmful to minors, mandating commercially reasonable age verification methods.
-                    - generic [ref=e3882]:
-                      - code [ref=e3884]: age_gate
-                      - img [ref=e3885]
-                - button "KY Age Verify (Kentucky Age Verification Act) Enacted Kentucky, United States Kentucky law requiring age verification for platforms hosting content harmful to minors, with civil liability for non-compliance. age_gate" [ref=e3888] [cursor=pointer]:
-                  - generic [ref=e3889]:
-                    - generic [ref=e3890]:
-                      - generic [ref=e3891]:
-                        - generic [ref=e3892]: KY Age Verify (Kentucky Age Verification Act)
-                        - generic [ref=e3893]: Enacted
-                        - generic [ref=e3894]: Kentucky, United States
-                      - paragraph [ref=e3895]: Kentucky law requiring age verification for platforms hosting content harmful to minors, with civil liability for non-compliance.
-                    - generic [ref=e3896]:
-                      - code [ref=e3898]: age_gate
-                      - img [ref=e3899]
-                - button "NE Age Verify (Nebraska Age Verification Act) Enacted Nebraska, United States Nebraska law requiring age verification for platforms hosting content harmful to minors, establishing obligations for commercial content publishers. age_gate" [ref=e3902] [cursor=pointer]:
-                  - generic [ref=e3903]:
-                    - generic [ref=e3904]:
-                      - generic [ref=e3905]:
-                        - generic [ref=e3906]: NE Age Verify (Nebraska Age Verification Act)
-                        - generic [ref=e3907]: Enacted
-                        - generic [ref=e3908]: Nebraska, United States
-                      - paragraph [ref=e3909]: Nebraska law requiring age verification for platforms hosting content harmful to minors, establishing obligations for commercial content publishers.
-                    - generic [ref=e3910]:
-                      - code [ref=e3912]: age_gate
-                      - img [ref=e3913]
-                - button "SC Age Verify (South Carolina Age Verification Act) Enacted South Carolina, United States South Carolina law requiring age verification for platforms hosting content harmful to minors, with both AG enforcement and private right of action. age_gate" [ref=e3916] [cursor=pointer]:
-                  - generic [ref=e3917]:
-                    - generic [ref=e3918]:
-                      - generic [ref=e3919]:
-                        - generic [ref=e3920]: SC Age Verify (South Carolina Age Verification Act)
-                        - generic [ref=e3921]: Enacted
-                        - generic [ref=e3922]: South Carolina, United States
-                      - paragraph [ref=e3923]: South Carolina law requiring age verification for platforms hosting content harmful to minors, with both AG enforcement and private right of action.
-                    - generic [ref=e3924]:
-                      - code [ref=e3926]: age_gate
-                      - img [ref=e3927]
-            - generic [ref=e3929]:
-              - heading "12. Parent Experience" [level=2] [ref=e3930]
-              - generic [ref=e3931]:
-                - paragraph [ref=e3932]: Phosra provides a guided Quick Setup flow that enables parents to protect their children across all regulated platforms in under one minute. The three-step wizard handles family creation, age-based policy generation, and platform verification.
-                - generic [ref=e3933]:
-                  - generic [ref=e3934]:
-                    - generic [ref=e3935]: "1"
-                    - heading "Tell Us About Your Child" [level=4] [ref=e3936]
-                    - paragraph [ref=e3937]: Enter name, birth date, and choose a protection level (Recommended, Strict, or Relaxed).
-                  - generic [ref=e3938]:
-                    - generic [ref=e3939]: "2"
-                    - heading "Review Protections" [level=4] [ref=e3940]
-                    - paragraph [ref=e3941]: See plain-language summary cards for screen time, content ratings, web filtering, social controls, privacy, and algorithm safety.
-                  - generic [ref=e3942]:
-                    - generic [ref=e3943]: "3"
-                    - heading "Connect Platforms" [level=4] [ref=e3944]
-                    - paragraph [ref=e3945]: Verify compliance on platforms with a progress indicator. Enforce with one click after connecting.
-                - generic [ref=e3946]:
-                  - heading "What Gets Created" [level=4] [ref=e3947]
-                  - list [ref=e3948]:
-                    - listitem [ref=e3949]: Family (if not already created)
-                    - listitem [ref=e3950]: Child profile with age computation
-                    - listitem [ref=e3951]: Active safety policy with ~20-25 enabled rules across all 40 categories
-                    - listitem [ref=e3952]: Age-appropriate content ratings across 5 rating systems
-                    - listitem [ref=e3953]: Legislation-compliant rules for algorithmic safety, notifications, advertising, and data privacy
-  - alert [ref=e3954]
-  - generic [ref=e3955]:
-    - generic [ref=e3957]: Feedback
-    - button "OFF" [ref=e3958] [cursor=pointer]
+                        - generic [ref=e3464]:
+                          - code [ref=e3466]: child_id
+                          - paragraph [ref=e3467]: Target child identifier
+                        - generic [ref=e3469]: uuid
+                      - generic [ref=e3471]:
+                        - generic [ref=e3472]:
+                          - code [ref=e3474]: policy_id
+                          - paragraph [ref=e3475]: Policy being enforced
+                        - generic [ref=e3477]: uuid
+                      - generic [ref=e3479]:
+                        - generic [ref=e3480]:
+                          - code [ref=e3482]: trigger_type
+                          - paragraph [ref=e3483]: "One of: manual, auto, webhook"
+                        - generic [ref=e3485]: enum
+                      - generic [ref=e3487]:
+                        - generic [ref=e3488]:
+                          - code [ref=e3490]: status
+                          - paragraph [ref=e3491]: "One of: pending, running, completed, failed, partial"
+                        - generic [ref=e3493]: enum
+                      - generic [ref=e3495]:
+                        - generic [ref=e3496]:
+                          - code [ref=e3498]: started_at
+                          - paragraph [ref=e3499]: Job start timestamp
+                        - generic [ref=e3501]: datetime
+                      - generic [ref=e3503]:
+                        - generic [ref=e3504]:
+                          - code [ref=e3506]: completed_at
+                          - paragraph [ref=e3507]: Job completion timestamp
+                        - generic [ref=e3509]: datetime
+                      - generic [ref=e3511]:
+                        - generic [ref=e3512]:
+                          - code [ref=e3514]: created_at
+                          - paragraph [ref=e3515]: Job creation timestamp
+                        - generic [ref=e3517]: datetime
+                  - generic [ref=e3519]:
+                    - generic [ref=e3520]:
+                      - generic [ref=e3521]:
+                        - generic [ref=e3522]:
+                          - generic [ref=e3523]: Request
+                          - generic [ref=e3524]: curl
+                        - button "Copy" [ref=e3525] [cursor=pointer]:
+                          - img [ref=e3526]
+                          - text: Copy
+                      - code [ref=e3530]: "curl http://localhost:8080/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e3531]:
+                      - generic [ref=e3532]:
+                        - generic [ref=e3533]:
+                          - generic [ref=e3534]: Response
+                          - generic [ref=e3535]: json
+                        - button "Copy" [ref=e3536] [cursor=pointer]:
+                          - img [ref=e3537]
+                          - text: Copy
+                      - code [ref=e3541]: "{ \"id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"child_id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"policy_id\": \"c3d4e5f6-a7b8-9012-cdef-123456789012\", \"trigger_type\": \"manual\", \"status\": \"completed\", \"started_at\": \"2025-01-10T10:30:01Z\", \"completed_at\": \"2025-01-10T10:30:05Z\", \"created_at\": \"2025-01-10T10:30:00Z\" }"
+              - generic [ref=e3542]:
+                - generic [ref=e3543]:
+                  - generic [ref=e3544]: GET
+                  - code [ref=e3545]: "/sync/jobs/{jobID}/results"
+                  - button "Copy link" [ref=e3546] [cursor=pointer]:
+                    - img [ref=e3547]
+                - paragraph [ref=e3550]: Get per-provider results for a completed sync job. Each result shows how many rules were applied, skipped, or failed for that provider.
+                - generic [ref=e3551]:
+                  - generic [ref=e3554]:
+                    - heading "Response fields" [level=4] [ref=e3555]
+                    - generic [ref=e3558]:
+                      - generic [ref=e3559]:
+                        - generic [ref=e3560]:
+                          - button [ref=e3561] [cursor=pointer]:
+                            - img [ref=e3562]
+                          - code [ref=e3564]: "[]"
+                        - paragraph [ref=e3565]: Per-provider result breakdown
+                      - generic [ref=e3567]: SyncJobResult[]
+                  - generic [ref=e3569]:
+                    - generic [ref=e3570]:
+                      - generic [ref=e3571]:
+                        - generic [ref=e3572]:
+                          - generic [ref=e3573]: Request
+                          - generic [ref=e3574]: curl
+                        - button "Copy" [ref=e3575] [cursor=pointer]:
+                          - img [ref=e3576]
+                          - text: Copy
+                      - code [ref=e3580]: "curl http://localhost:8080/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/results \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e3581]:
+                      - generic [ref=e3582]:
+                        - generic [ref=e3583]:
+                          - generic [ref=e3584]: Response
+                          - generic [ref=e3585]: json
+                        - button "Copy" [ref=e3586] [cursor=pointer]:
+                          - img [ref=e3587]
+                          - text: Copy
+                      - code [ref=e3591]: "[ { \"id\": \"a7b8c9d0-e1f2-3456-0123-456789abcdef\", \"sync_job_id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"provider_id\": \"nextdns\", \"status\": \"completed\", \"rules_applied\": 8, \"rules_skipped\": 2, \"rules_failed\": 0, \"error_message\": null, \"details\": { \"profile_id\": \"abc123\" } } ]"
+              - generic [ref=e3592]:
+                - generic [ref=e3593]:
+                  - generic [ref=e3594]: POST
+                  - code [ref=e3595]: "/enforcement/jobs/{jobID}/retry"
+                  - button "Copy link" [ref=e3596] [cursor=pointer]:
+                    - img [ref=e3597]
+                - paragraph [ref=e3600]: Retry a failed or partial enforcement job. Only failed providers are retried — providers that previously succeeded are skipped. Requires the original job to be in failed or partial status.
+                - generic [ref=e3603]:
+                  - generic [ref=e3604]:
+                    - generic [ref=e3605]:
+                      - generic [ref=e3606]:
+                        - generic [ref=e3607]: Request
+                        - generic [ref=e3608]: curl
+                      - button "Copy" [ref=e3609] [cursor=pointer]:
+                        - img [ref=e3610]
+                        - text: Copy
+                    - code [ref=e3614]: "curl -X POST http://localhost:8080/api/v1/enforcement/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/retry \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e3615]:
+                    - generic [ref=e3616]:
+                      - generic [ref=e3617]:
+                        - generic [ref=e3618]: Response
+                        - generic [ref=e3619]: json
+                      - button "Copy" [ref=e3620] [cursor=pointer]:
+                        - img [ref=e3621]
+                        - text: Copy
+                    - code [ref=e3625]: "{ \"id\": \"a1b2c3d4-new-retry-job-id\", \"parent_job_id\": \"f6a7b8c9-d0e1-2345-f012-3456789abcde\", \"status\": \"pending\", \"retry_count\": 1, \"providers_retrying\": [ \"nextdns\" ], \"created_at\": \"2025-01-10T10:35:00Z\" }"
+          - generic [ref=e3626]:
+            - heading "7. Content Rating Standard" [level=2] [ref=e3627]
+            - generic [ref=e3628]:
+              - paragraph [ref=e3629]:
+                - text: PCSS defines a unified content rating framework spanning 5 international rating systems. Platforms
+                - strong [ref=e3630]: MUST
+                - text: map their internal content ratings to the nearest PCSS equivalent. Cross-system equivalences
+                - strong [ref=e3631]: SHALL
+                - text: be computed with a confidence score (0-1).
+              - generic [ref=e3632]:
+                - generic [ref=e3633]:
+                  - generic [ref=e3634]:
+                    - generic [ref=e3635]: GET
+                    - code [ref=e3636]: /ratings/systems
+                    - button "Copy link" [ref=e3637] [cursor=pointer]:
+                      - img [ref=e3638]
+                  - paragraph [ref=e3641]: List all supported content rating systems (MPAA, TV Parental Guidelines, ESRB, PEGI, Common Sense Media). This endpoint is public.
+                  - generic [ref=e3642]:
+                    - generic [ref=e3645]:
+                      - heading "Response fields" [level=4] [ref=e3646]
+                      - generic [ref=e3649]:
+                        - generic [ref=e3650]:
+                          - generic [ref=e3651]:
+                            - button [ref=e3652] [cursor=pointer]:
+                              - img [ref=e3653]
+                            - code [ref=e3655]: "[]"
+                          - paragraph [ref=e3656]: Array of rating system objects
+                        - generic [ref=e3658]: RatingSystem[]
+                    - generic [ref=e3660]:
+                      - generic [ref=e3661]:
+                        - generic [ref=e3662]:
+                          - generic [ref=e3663]:
+                            - generic [ref=e3664]: Request
+                            - generic [ref=e3665]: curl
+                          - button "Copy" [ref=e3666] [cursor=pointer]:
+                            - img [ref=e3667]
+                            - text: Copy
+                        - code [ref=e3671]: curl http://localhost:8080/api/v1/ratings/systems
+                      - generic [ref=e3672]:
+                        - generic [ref=e3673]:
+                          - generic [ref=e3674]:
+                            - generic [ref=e3675]: Response
+                            - generic [ref=e3676]: json
+                          - button "Copy" [ref=e3677] [cursor=pointer]:
+                            - img [ref=e3678]
+                            - text: Copy
+                        - code [ref=e3682]: "[ { \"id\": \"mpaa\", \"name\": \"MPAA\", \"country\": \"US\", \"media_type\": \"film\" }, { \"id\": \"tv\", \"name\": \"TV Parental Guidelines\", \"country\": \"US\", \"media_type\": \"tv\" }, { \"id\": \"esrb\", \"name\": \"ESRB\", \"country\": \"US/CA\", \"media_type\": \"game\" }, { \"id\": \"pegi\", \"name\": \"PEGI\", \"country\": \"EU\", \"media_type\": \"game\" }, { \"id\": \"csm\", \"name\": \"Common Sense Media\", \"country\": \"US\", \"media_type\": \"general\" } ]"
+                - generic [ref=e3683]:
+                  - generic [ref=e3684]:
+                    - generic [ref=e3685]: GET
+                    - code [ref=e3686]: /ratings/by-age
+                    - button "Copy link" [ref=e3687] [cursor=pointer]:
+                      - img [ref=e3688]
+                  - paragraph [ref=e3691]: Look up the maximum appropriate content rating for a given age across all rating systems. This endpoint is public and useful for previewing age mappings without creating a child profile.
+                  - generic [ref=e3692]:
+                    - generic [ref=e3694]:
+                      - generic [ref=e3695]:
+                        - heading "Request fields" [level=4] [ref=e3696]
+                        - generic [ref=e3699]:
+                          - generic [ref=e3700]:
+                            - code [ref=e3702]: age
+                            - paragraph [ref=e3703]: "Age in years (query parameter: ?age=10)"
+                          - generic [ref=e3704]:
+                            - generic [ref=e3705]: integer
+                            - generic [ref=e3706]: required
+                      - generic [ref=e3707]:
+                        - heading "Response fields" [level=4] [ref=e3708]
+                        - generic [ref=e3709]:
+                          - generic [ref=e3711]:
+                            - generic [ref=e3712]:
+                              - code [ref=e3714]: age
+                              - paragraph [ref=e3715]: Queried age
+                            - generic [ref=e3717]: integer
+                          - generic [ref=e3719]:
+                            - generic [ref=e3720]:
+                              - code [ref=e3722]: ratings
+                              - paragraph [ref=e3723]: Map of rating system ID to maximum allowed rating
+                            - generic [ref=e3725]: object
+                    - generic [ref=e3727]:
+                      - generic [ref=e3728]:
+                        - generic [ref=e3729]:
+                          - generic [ref=e3730]:
+                            - generic [ref=e3731]: Request
+                            - generic [ref=e3732]: curl
+                          - button "Copy" [ref=e3733] [cursor=pointer]:
+                            - img [ref=e3734]
+                            - text: Copy
+                        - code [ref=e3738]: curl "http://localhost:8080/api/v1/ratings/by-age?age=10"
+                      - generic [ref=e3739]:
+                        - generic [ref=e3740]:
+                          - generic [ref=e3741]:
+                            - generic [ref=e3742]: Response
+                            - generic [ref=e3743]: json
+                          - button "Copy" [ref=e3744] [cursor=pointer]:
+                            - img [ref=e3745]
+                            - text: Copy
+                        - code [ref=e3749]: "{ \"age\": 10, \"ratings\": { \"mpaa\": { \"code\": \"PG\", \"name\": \"Parental Guidance Suggested\", \"min_age\": 8 }, \"tv\": { \"code\": \"TV-PG\", \"name\": \"Parental Guidance Suggested\", \"min_age\": 8 }, \"esrb\": { \"code\": \"E10+\", \"name\": \"Everyone 10+\", \"min_age\": 10 }, \"pegi\": { \"code\": \"PEGI 12\", \"name\": \"PEGI 12\", \"min_age\": 12 }, \"csm\": { \"code\": \"10+\", \"name\": \"Age 10+\", \"min_age\": 10 } } }"
+          - generic [ref=e3750]:
+            - heading "8. Event Notifications" [level=2] [ref=e3751]
+            - generic [ref=e3752]:
+              - paragraph [ref=e3753]:
+                - text: Platforms
+                - strong [ref=e3754]: SHOULD
+                - text: register webhook endpoints to receive real-time enforcement notifications. All webhook payloads
+                - strong [ref=e3755]: MUST
+                - text: be signed using HMAC-SHA256 with the webhook secret. Platforms
+                - strong [ref=e3756]: MUST
+                - text: verify the
+                - code [ref=e3757]: X-Phosra-Signature
+                - text: header before processing.
+              - generic [ref=e3758]: "# Signature verification signature = HMAC-SHA256(webhook_secret, request_body) # Compare with X-Phosra-Signature header (hex-encoded)"
+              - paragraph [ref=e3760]:
+                - strong [ref=e3761]: "Supported events:"
+                - code [ref=e3762]: enforcement.completed
+                - code [ref=e3763]: enforcement.failed
+                - code [ref=e3764]: policy.updated
+                - code [ref=e3765]: policy.activated
+                - code [ref=e3766]: compliance.verified
+                - code [ref=e3767]: compliance.failed
+            - generic [ref=e3768]:
+              - generic [ref=e3769]:
+                - generic [ref=e3770]:
+                  - generic [ref=e3771]: POST
+                  - code [ref=e3772]: /webhooks
+                  - button "Copy link" [ref=e3773] [cursor=pointer]:
+                    - img [ref=e3774]
+                - paragraph [ref=e3777]: Register a webhook endpoint to receive real-time notifications for enforcement, policy, and compliance events. All payloads are signed with HMAC-SHA256 using the provided secret.
+                - generic [ref=e3778]:
+                  - generic [ref=e3780]:
+                    - generic [ref=e3781]:
+                      - heading "Request fields" [level=4] [ref=e3782]
+                      - generic [ref=e3783]:
+                        - generic [ref=e3785]:
+                          - generic [ref=e3786]:
+                            - code [ref=e3788]: url
+                            - paragraph [ref=e3789]: HTTPS endpoint URL for delivery
+                          - generic [ref=e3790]:
+                            - generic [ref=e3791]: string
+                            - generic [ref=e3792]: required
+                        - generic [ref=e3794]:
+                          - generic [ref=e3795]:
+                            - code [ref=e3797]: events
+                            - paragraph [ref=e3798]: Event types to subscribe to
+                          - generic [ref=e3799]:
+                            - generic [ref=e3800]: string[]
+                            - generic [ref=e3801]: required
+                        - generic [ref=e3803]:
+                          - generic [ref=e3804]:
+                            - code [ref=e3806]: secret
+                            - paragraph [ref=e3807]: HMAC-SHA256 signing secret
+                          - generic [ref=e3808]:
+                            - generic [ref=e3809]: string
+                            - generic [ref=e3810]: required
+                    - generic [ref=e3811]:
+                      - heading "Response fields" [level=4] [ref=e3812]
+                      - generic [ref=e3813]:
+                        - generic [ref=e3815]:
+                          - generic [ref=e3816]:
+                            - code [ref=e3818]: id
+                            - paragraph [ref=e3819]: Webhook identifier
+                          - generic [ref=e3821]: string
+                        - generic [ref=e3823]:
+                          - generic [ref=e3824]:
+                            - code [ref=e3826]: family_id
+                            - paragraph [ref=e3827]: Owning family identifier
+                          - generic [ref=e3829]: uuid
+                        - generic [ref=e3831]:
+                          - generic [ref=e3832]:
+                            - code [ref=e3834]: url
+                            - paragraph [ref=e3835]: Delivery endpoint URL
+                          - generic [ref=e3837]: string
+                        - generic [ref=e3839]:
+                          - generic [ref=e3840]:
+                            - code [ref=e3842]: events
+                            - paragraph [ref=e3843]: Subscribed event types
+                          - generic [ref=e3845]: string[]
+                        - generic [ref=e3847]:
+                          - generic [ref=e3848]:
+                            - code [ref=e3850]: status
+                            - paragraph [ref=e3851]: "One of: active, paused, failed"
+                          - generic [ref=e3853]: enum
+                        - generic [ref=e3855]:
+                          - generic [ref=e3856]:
+                            - code [ref=e3858]: created_at
+                            - paragraph [ref=e3859]: Webhook creation timestamp
+                          - generic [ref=e3861]: datetime
+                  - generic [ref=e3863]:
+                    - generic [ref=e3864]:
+                      - generic [ref=e3865]:
+                        - generic [ref=e3866]:
+                          - generic [ref=e3867]: Request
+                          - generic [ref=e3868]: curl
+                        - button "Copy" [ref=e3869] [cursor=pointer]:
+                          - img [ref=e3870]
+                          - text: Copy
+                      - code [ref=e3874]: "curl -X POST http://localhost:8080/api/v1/webhooks \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"url\": \"https://api.example.com/webhooks/phosra\", \"events\": [\"enforcement.completed\", \"enforcement.failed\", \"policy.updated\"], \"secret\": \"whsec_your_secret_key\" }'"
+                    - generic [ref=e3875]:
+                      - generic [ref=e3876]:
+                        - generic [ref=e3877]:
+                          - generic [ref=e3878]: Response
+                          - generic [ref=e3879]: json
+                        - button "Copy" [ref=e3880] [cursor=pointer]:
+                          - img [ref=e3881]
+                          - text: Copy
+                      - code [ref=e3885]: "{ \"id\": \"wh_abc123\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"url\": \"https://api.example.com/webhooks/phosra\", \"events\": [ \"enforcement.completed\", \"enforcement.failed\", \"policy.updated\" ], \"status\": \"active\", \"created_at\": \"2025-01-10T10:00:00Z\" }"
+              - generic [ref=e3886]:
+                - generic [ref=e3887]:
+                  - generic [ref=e3888]: GET
+                  - code [ref=e3889]: "/webhooks/{webhookID}"
+                  - button "Copy link" [ref=e3890] [cursor=pointer]:
+                    - img [ref=e3891]
+                - paragraph [ref=e3894]: Retrieve details of a specific webhook including its event subscriptions and delivery statistics.
+                - generic [ref=e3895]:
+                  - generic [ref=e3898]:
+                    - heading "Response fields" [level=4] [ref=e3899]
+                    - generic [ref=e3900]:
+                      - generic [ref=e3902]:
+                        - generic [ref=e3903]:
+                          - code [ref=e3905]: id
+                          - paragraph [ref=e3906]: Webhook identifier
+                        - generic [ref=e3908]: string
+                      - generic [ref=e3910]:
+                        - generic [ref=e3911]:
+                          - code [ref=e3913]: family_id
+                          - paragraph [ref=e3914]: Owning family identifier
+                        - generic [ref=e3916]: uuid
+                      - generic [ref=e3918]:
+                        - generic [ref=e3919]:
+                          - code [ref=e3921]: url
+                          - paragraph [ref=e3922]: Delivery endpoint URL
+                        - generic [ref=e3924]: string
+                      - generic [ref=e3926]:
+                        - generic [ref=e3927]:
+                          - code [ref=e3929]: events
+                          - paragraph [ref=e3930]: Subscribed event types
+                        - generic [ref=e3932]: string[]
+                      - generic [ref=e3934]:
+                        - generic [ref=e3935]:
+                          - code [ref=e3937]: status
+                          - paragraph [ref=e3938]: "One of: active, paused, failed"
+                        - generic [ref=e3940]: enum
+                      - generic [ref=e3942]:
+                        - generic [ref=e3943]:
+                          - code [ref=e3945]: created_at
+                          - paragraph [ref=e3946]: Webhook creation timestamp
+                        - generic [ref=e3948]: datetime
+                  - generic [ref=e3950]:
+                    - generic [ref=e3951]:
+                      - generic [ref=e3952]:
+                        - generic [ref=e3953]:
+                          - generic [ref=e3954]: Request
+                          - generic [ref=e3955]: curl
+                        - button "Copy" [ref=e3956] [cursor=pointer]:
+                          - img [ref=e3957]
+                          - text: Copy
+                      - code [ref=e3961]: "curl http://localhost:8080/api/v1/webhooks/wh_abc123 \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e3962]:
+                      - generic [ref=e3963]:
+                        - generic [ref=e3964]:
+                          - generic [ref=e3965]: Response
+                          - generic [ref=e3966]: json
+                        - button "Copy" [ref=e3967] [cursor=pointer]:
+                          - img [ref=e3968]
+                          - text: Copy
+                      - code [ref=e3972]: "{ \"id\": \"wh_abc123\", \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"url\": \"https://api.example.com/webhooks/phosra\", \"events\": [ \"enforcement.completed\", \"enforcement.failed\", \"policy.updated\" ], \"status\": \"active\", \"created_at\": \"2025-01-10T10:00:00Z\" }"
+              - generic [ref=e3973]:
+                - generic [ref=e3974]:
+                  - generic [ref=e3975]: PUT
+                  - code [ref=e3976]: "/webhooks/{webhookID}"
+                  - button "Copy link" [ref=e3977] [cursor=pointer]:
+                    - img [ref=e3978]
+                - paragraph [ref=e3981]: Update a webhook's URL, event subscriptions, or secret. Changes take effect immediately for the next delivery.
+                - generic [ref=e3982]:
+                  - generic [ref=e3985]:
+                    - heading "Request fields" [level=4] [ref=e3986]
+                    - generic [ref=e3987]:
+                      - generic [ref=e3989]:
+                        - generic [ref=e3990]:
+                          - code [ref=e3992]: url
+                          - paragraph [ref=e3993]: HTTPS endpoint URL for delivery
+                        - generic [ref=e3994]:
+                          - generic [ref=e3995]: string
+                          - generic [ref=e3996]: required
+                      - generic [ref=e3998]:
+                        - generic [ref=e3999]:
+                          - code [ref=e4001]: events
+                          - paragraph [ref=e4002]: Event types to subscribe to
+                        - generic [ref=e4003]:
+                          - generic [ref=e4004]: string[]
+                          - generic [ref=e4005]: required
+                      - generic [ref=e4007]:
+                        - generic [ref=e4008]:
+                          - code [ref=e4010]: secret
+                          - paragraph [ref=e4011]: HMAC-SHA256 signing secret
+                        - generic [ref=e4012]:
+                          - generic [ref=e4013]: string
+                          - generic [ref=e4014]: required
+                  - generic [ref=e4016]:
+                    - generic [ref=e4017]:
+                      - generic [ref=e4018]:
+                        - generic [ref=e4019]:
+                          - generic [ref=e4020]: Request
+                          - generic [ref=e4021]: curl
+                        - button "Copy" [ref=e4022] [cursor=pointer]:
+                          - img [ref=e4023]
+                          - text: Copy
+                      - code [ref=e4027]: "curl -X PUT http://localhost:8080/api/v1/webhooks/wh_abc123 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"events\": [\"enforcement.completed\", \"enforcement.failed\", \"policy.updated\", \"compliance.verified\"] }'"
+                    - generic [ref=e4028]:
+                      - generic [ref=e4029]:
+                        - generic [ref=e4030]:
+                          - generic [ref=e4031]: Response
+                          - generic [ref=e4032]: json
+                        - button "Copy" [ref=e4033] [cursor=pointer]:
+                          - img [ref=e4034]
+                          - text: Copy
+                      - code [ref=e4038]: // 200 OK
+              - generic [ref=e4039]:
+                - generic [ref=e4040]:
+                  - generic [ref=e4041]: DELETE
+                  - code [ref=e4042]: "/webhooks/{webhookID}"
+                  - button "Copy link" [ref=e4043] [cursor=pointer]:
+                    - img [ref=e4044]
+                - paragraph [ref=e4047]: Permanently delete a webhook. No further events will be delivered to this endpoint. Pending deliveries are cancelled.
+                - generic [ref=e4050]:
+                  - generic [ref=e4051]:
+                    - generic [ref=e4052]:
+                      - generic [ref=e4053]:
+                        - generic [ref=e4054]: Request
+                        - generic [ref=e4055]: curl
+                      - button "Copy" [ref=e4056] [cursor=pointer]:
+                        - img [ref=e4057]
+                        - text: Copy
+                    - code [ref=e4061]: "curl -X DELETE http://localhost:8080/api/v1/webhooks/wh_abc123 \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e4062]:
+                    - generic [ref=e4063]:
+                      - generic [ref=e4064]:
+                        - generic [ref=e4065]: Response
+                        - generic [ref=e4066]: json
+                      - button "Copy" [ref=e4067] [cursor=pointer]:
+                        - img [ref=e4068]
+                        - text: Copy
+                    - code [ref=e4072]: // 204 No Content
+              - generic [ref=e4073]:
+                - generic [ref=e4074]:
+                  - generic [ref=e4075]: POST
+                  - code [ref=e4076]: "/webhooks/{webhookID}/test"
+                  - button "Copy link" [ref=e4077] [cursor=pointer]:
+                    - img [ref=e4078]
+                - paragraph [ref=e4081]: Send a test ping event to the webhook endpoint. Returns delivery status, response code, and latency. Use this to verify your endpoint is correctly configured and can handle HMAC signature verification.
+                - generic [ref=e4084]:
+                  - generic [ref=e4085]:
+                    - generic [ref=e4086]:
+                      - generic [ref=e4087]:
+                        - generic [ref=e4088]: Request
+                        - generic [ref=e4089]: curl
+                      - button "Copy" [ref=e4090] [cursor=pointer]:
+                        - img [ref=e4091]
+                        - text: Copy
+                    - code [ref=e4095]: "curl -X POST http://localhost:8080/api/v1/webhooks/wh_abc123/test \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e4096]:
+                    - generic [ref=e4097]:
+                      - generic [ref=e4098]:
+                        - generic [ref=e4099]: Response
+                        - generic [ref=e4100]: json
+                      - button "Copy" [ref=e4101] [cursor=pointer]:
+                        - img [ref=e4102]
+                        - text: Copy
+                    - code [ref=e4106]: "{ \"delivery_id\": \"del_test01\", \"event\": \"test.ping\", \"status\": \"delivered\", \"response_code\": 200, \"response_time_ms\": 145 }"
+              - generic [ref=e4107]:
+                - generic [ref=e4108]:
+                  - generic [ref=e4109]: GET
+                  - code [ref=e4110]: "/webhooks/{webhookID}/deliveries"
+                  - button "Copy link" [ref=e4111] [cursor=pointer]:
+                    - img [ref=e4112]
+                - paragraph [ref=e4115]: List recent webhook deliveries with status, response codes, and timestamps. Failed deliveries are retried with exponential backoff (1min, 5min, 30min). Delivery history is retained for 30 days.
+                - generic [ref=e4118]:
+                  - generic [ref=e4119]:
+                    - generic [ref=e4120]:
+                      - generic [ref=e4121]:
+                        - generic [ref=e4122]: Request
+                        - generic [ref=e4123]: curl
+                      - button "Copy" [ref=e4124] [cursor=pointer]:
+                        - img [ref=e4125]
+                        - text: Copy
+                    - code [ref=e4129]: "curl http://localhost:8080/api/v1/webhooks/wh_abc123/deliveries \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e4130]:
+                    - generic [ref=e4131]:
+                      - generic [ref=e4132]:
+                        - generic [ref=e4133]: Response
+                        - generic [ref=e4134]: json
+                      - button "Copy" [ref=e4135] [cursor=pointer]:
+                        - img [ref=e4136]
+                        - text: Copy
+                    - code [ref=e4140]: "[ { \"id\": \"del_001\", \"event\": \"enforcement.completed\", \"status\": \"delivered\", \"response_code\": 200, \"timestamp\": \"2025-01-12T18:05:00Z\" }, { \"id\": \"del_002\", \"event\": \"policy.updated\", \"status\": \"delivered\", \"response_code\": 200, \"timestamp\": \"2025-01-12T17:30:00Z\" } ]"
+          - generic [ref=e4141]:
+            - heading "9. Compliance Levels" [level=2] [ref=e4142]
+            - generic [ref=e4143]:
+              - paragraph [ref=e4144]:
+                - text: Each platform is classified into one of three compliance levels. Platforms
+                - strong [ref=e4145]: MUST
+                - text: progress toward full compliance. Regression from Compliant to a lower level
+                - strong [ref=e4146]: SHALL
+                - text: trigger regulatory review.
+              - generic [ref=e4147]:
+                - generic [ref=e4148]:
+                  - generic [ref=e4149]: COMPLIANT
+                  - heading "Full API Enforcement" [level=3] [ref=e4151]
+                  - list [ref=e4152]:
+                    - listitem [ref=e4153]:
+                      - text: Platform
+                      - strong [ref=e4154]: MUST
+                      - text: accept all enforcement requests via API
+                    - listitem [ref=e4155]:
+                      - text: Platform
+                      - strong [ref=e4156]: MUST
+                      - text: report per-rule enforcement results
+                    - listitem [ref=e4157]:
+                      - text: Platform
+                      - strong [ref=e4158]: MUST
+                      - text: support credential validation
+                    - listitem [ref=e4159]:
+                      - text: Platform
+                      - strong [ref=e4160]: SHOULD
+                      - text: support webhook notifications
+                - generic [ref=e4161]:
+                  - generic [ref=e4162]: PROVISIONAL
+                  - heading "Limited API Access" [level=3] [ref=e4164]
+                  - list [ref=e4165]:
+                    - listitem [ref=e4166]:
+                      - text: Platform
+                      - strong [ref=e4167]: MUST
+                      - text: provide at least read access to safety settings
+                    - listitem [ref=e4168]:
+                      - text: Platform
+                      - strong [ref=e4169]: SHOULD
+                      - text: accept write requests for supported capabilities
+                    - listitem [ref=e4170]:
+                      - text: Platform
+                      - strong [ref=e4171]: MUST
+                      - text: document unsupported enforcement categories
+                - generic [ref=e4172]:
+                  - generic [ref=e4173]: PENDING COMPLIANCE
+                  - heading "Manual Compliance" [level=3] [ref=e4175]
+                  - list [ref=e4176]:
+                    - listitem [ref=e4177]:
+                      - text: Platform
+                      - strong [ref=e4178]: MUST
+                      - text: provide documented safety configuration steps
+                    - listitem [ref=e4179]:
+                      - text: Platform
+                      - strong [ref=e4180]: SHALL
+                      - text: publish a public API roadmap within 12 months
+                    - listitem [ref=e4181]:
+                      - text: Platform
+                      - strong [ref=e4182]: MUST NOT
+                      - text: remain at Pending level beyond 24 months
+          - generic [ref=e4183]:
+            - heading "10. Enforcement Timeline" [level=2] [ref=e4184]
+            - generic [ref=e4185]:
+              - paragraph [ref=e4186]: The following timeline governs the transition to mandatory PCSS compliance for all regulated platforms.
+              - generic [ref=e4187]:
+                - generic [ref=e4188]:
+                  - generic [ref=e4189]: Phase 1
+                  - generic [ref=e4190]:
+                    - heading "Voluntary Adoption" [level=4] [ref=e4191]
+                    - paragraph [ref=e4192]:
+                      - text: Platforms
+                      - strong [ref=e4193]: MAY
+                      - text: register and begin compliance integration. Early adopters receive Compliant certification.
+                - generic [ref=e4194]:
+                  - generic [ref=e4195]: Phase 2
+                  - generic [ref=e4196]:
+                    - heading "Mandatory Registration" [level=4] [ref=e4197]
+                    - paragraph [ref=e4198]:
+                      - text: All platforms serving minors
+                      - strong [ref=e4199]: MUST
+                      - text: register with the PCSS platform registry. Pending Compliance status assigned.
+                - generic [ref=e4200]:
+                  - generic [ref=e4201]: Phase 3
+                  - generic [ref=e4202]:
+                    - heading "Full Enforcement" [level=4] [ref=e4203]
+                    - paragraph [ref=e4204]:
+                      - text: All platforms
+                      - strong [ref=e4205]: MUST
+                      - text: achieve at least Provisional compliance. Platforms at Pending
+                      - strong [ref=e4206]: SHALL
+                      - text: face regulatory review and potential enforcement action.
+          - generic [ref=e4207]:
+            - generic [ref=e4208]:
+              - heading "45 Mandatory Policy Categories" [level=2] [ref=e4209]
+              - paragraph [ref=e4210]:
+                - text: Complete API reference for all 45 policy categories. Each entry includes the JSON configuration schema, field constraints, age-based defaults, platform support, and usage examples. Platforms claiming capability in a category
+                - strong [ref=e4211]: MUST
+                - text: implement enforcement for all rules within that category.
+              - generic [ref=e4212]:
+                - textbox "Search categories..." [ref=e4213]
+                - generic [ref=e4214]:
+                  - button "Expand All" [ref=e4215] [cursor=pointer]
+                  - button "Collapse All" [ref=e4216] [cursor=pointer]
+              - generic [ref=e4217]:
+                - generic [ref=e4218]:
+                  - generic [ref=e4219]:
+                    - heading "Content" [level=3] [ref=e4220]
+                    - generic [ref=e4221]: 5 categories
+                    - generic [ref=e4222]: Control what media and content children can access across platforms
+                  - generic [ref=e4223]:
+                    - button "#1 content_rating Content Rating Controls the maximum content rating a child can access across five international..." [ref=e4225] [cursor=pointer]:
+                      - generic [ref=e4226]: "#1"
+                      - code [ref=e4227]: content_rating
+                      - generic [ref=e4228]: Content Rating
+                      - generic [ref=e4229]: Controls the maximum content rating a child can access across five international...
+                      - img [ref=e4230]
+                    - button "#2 content_block_title Content Block by Title Blocks specific content titles (movies, shows, games, apps) by name. Provides gr..." [ref=e4233] [cursor=pointer]:
+                      - generic [ref=e4234]: "#2"
+                      - code [ref=e4235]: content_block_title
+                      - generic [ref=e4236]: Content Block by Title
+                      - generic [ref=e4237]: Blocks specific content titles (movies, shows, games, apps) by name. Provides gr...
+                      - img [ref=e4238]
+                    - button "#3 content_allow_title Content Allow by Title Explicitly allows specific content titles that would otherwise be blocked by rat..." [ref=e4241] [cursor=pointer]:
+                      - generic [ref=e4242]: "#3"
+                      - code [ref=e4243]: content_allow_title
+                      - generic [ref=e4244]: Content Allow by Title
+                      - generic [ref=e4245]: Explicitly allows specific content titles that would otherwise be blocked by rat...
+                      - img [ref=e4246]
+                    - button "#4 content_allowlist_mode Content Allowlist Mode When enabled, switches content access to allowlist-only mode — only explicitly a..." [ref=e4249] [cursor=pointer]:
+                      - generic [ref=e4250]: "#4"
+                      - code [ref=e4251]: content_allowlist_mode
+                      - generic [ref=e4252]: Content Allowlist Mode
+                      - generic [ref=e4253]: When enabled, switches content access to allowlist-only mode — only explicitly a...
+                      - img [ref=e4254]
+                    - button "#5 content_descriptor_block Content Descriptor Block Blocks content based on specific content descriptors (violence, language, sexual..." [ref=e4257] [cursor=pointer]:
+                      - generic [ref=e4258]: "#5"
+                      - code [ref=e4259]: content_descriptor_block
+                      - generic [ref=e4260]: Content Descriptor Block
+                      - generic [ref=e4261]: Blocks content based on specific content descriptors (violence, language, sexual...
+                      - img [ref=e4262]
+                - generic [ref=e4264]:
+                  - generic [ref=e4265]:
+                    - heading "Time" [level=3] [ref=e4266]
+                    - generic [ref=e4267]: 4 categories
+                    - generic [ref=e4268]: Manage screen time limits, schedules, and downtime periods
+                  - generic [ref=e4269]:
+                    - button "#6 time_daily_limit Daily Screen Time Limit Sets the maximum total screen time allowed per day in minutes. Enforced across a..." [ref=e4271] [cursor=pointer]:
+                      - generic [ref=e4272]: "#6"
+                      - code [ref=e4273]: time_daily_limit
+                      - generic [ref=e4274]: Daily Screen Time Limit
+                      - generic [ref=e4275]: Sets the maximum total screen time allowed per day in minutes. Enforced across a...
+                      - img [ref=e4276]
+                    - button "#7 time_scheduled_hours Scheduled Usage Hours Defines allowed usage windows for weekdays and weekends. Device access is blocke..." [ref=e4279] [cursor=pointer]:
+                      - generic [ref=e4280]: "#7"
+                      - code [ref=e4281]: time_scheduled_hours
+                      - generic [ref=e4282]: Scheduled Usage Hours
+                      - generic [ref=e4283]: Defines allowed usage windows for weekdays and weekends. Device access is blocke...
+                      - img [ref=e4284]
+                    - button "#8 time_per_app_limit Per-App Time Limit Sets individual time limits for specific apps. Allows parents to restrict time o..." [ref=e4287] [cursor=pointer]:
+                      - generic [ref=e4288]: "#8"
+                      - code [ref=e4289]: time_per_app_limit
+                      - generic [ref=e4290]: Per-App Time Limit
+                      - generic [ref=e4291]: Sets individual time limits for specific apps. Allows parents to restrict time o...
+                      - img [ref=e4292]
+                    - button "#9 time_downtime Scheduled Downtime Defines specific downtime periods where device usage is fully blocked. Supports ..." [ref=e4295] [cursor=pointer]:
+                      - generic [ref=e4296]: "#9"
+                      - code [ref=e4297]: time_downtime
+                      - generic [ref=e4298]: Scheduled Downtime
+                      - generic [ref=e4299]: Defines specific downtime periods where device usage is fully blocked. Supports ...
+                      - img [ref=e4300]
+                - generic [ref=e4302]:
+                  - generic [ref=e4303]:
+                    - heading "Purchase" [level=3] [ref=e4304]
+                    - generic [ref=e4305]: 3 categories
+                    - generic [ref=e4306]: Control digital purchases, spending limits, and in-app transactions
+                  - generic [ref=e4307]:
+                    - button "#10 purchase_approval Purchase Approval Requires parent/guardian approval before any purchase can be completed. Applies ..." [ref=e4309] [cursor=pointer]:
+                      - generic [ref=e4310]: "#10"
+                      - code [ref=e4311]: purchase_approval
+                      - generic [ref=e4312]: Purchase Approval
+                      - generic [ref=e4313]: Requires parent/guardian approval before any purchase can be completed. Applies ...
+                      - img [ref=e4314]
+                    - button "#11 purchase_spending_cap Monthly Spending Cap Sets a maximum monthly spending limit for the child's account across all digital..." [ref=e4317] [cursor=pointer]:
+                      - generic [ref=e4318]: "#11"
+                      - code [ref=e4319]: purchase_spending_cap
+                      - generic [ref=e4320]: Monthly Spending Cap
+                      - generic [ref=e4321]: Sets a maximum monthly spending limit for the child's account across all digital...
+                      - img [ref=e4322]
+                    - button "#12 purchase_block_iap Block In-App Purchases Blocks all in-app purchases (IAP) including consumables, subscriptions, and loot..." [ref=e4325] [cursor=pointer]:
+                      - generic [ref=e4326]: "#12"
+                      - code [ref=e4327]: purchase_block_iap
+                      - generic [ref=e4328]: Block In-App Purchases
+                      - generic [ref=e4329]: Blocks all in-app purchases (IAP) including consumables, subscriptions, and loot...
+                      - img [ref=e4330]
+                - generic [ref=e4332]:
+                  - generic [ref=e4333]:
+                    - heading "Social" [level=3] [ref=e4334]
+                    - generic [ref=e4335]: 3 categories
+                    - generic [ref=e4336]: Manage contacts, chat, and multiplayer interactions
+                  - generic [ref=e4337]:
+                    - button "#13 social_contacts Contact Management Controls who the child can communicate with. In approved-only mode, only parent-..." [ref=e4339] [cursor=pointer]:
+                      - generic [ref=e4340]: "#13"
+                      - code [ref=e4341]: social_contacts
+                      - generic [ref=e4342]: Contact Management
+                      - generic [ref=e4343]: Controls who the child can communicate with. In approved-only mode, only parent-...
+                      - img [ref=e4344]
+                    - button "#14 social_chat_control Chat Control Controls in-app chat functionality. Can be fully disabled, limited to friends on..." [ref=e4347] [cursor=pointer]:
+                      - generic [ref=e4348]: "#14"
+                      - code [ref=e4349]: social_chat_control
+                      - generic [ref=e4350]: Chat Control
+                      - generic [ref=e4351]: Controls in-app chat functionality. Can be fully disabled, limited to friends on...
+                      - img [ref=e4352]
+                    - button "#15 social_multiplayer Multiplayer Gaming Controls access to multiplayer gaming features. Can restrict to approved games o..." [ref=e4355] [cursor=pointer]:
+                      - generic [ref=e4356]: "#15"
+                      - code [ref=e4357]: social_multiplayer
+                      - generic [ref=e4358]: Multiplayer Gaming
+                      - generic [ref=e4359]: Controls access to multiplayer gaming features. Can restrict to approved games o...
+                      - img [ref=e4360]
+                - generic [ref=e4362]:
+                  - generic [ref=e4363]:
+                    - heading "Web" [level=3] [ref=e4364]
+                    - generic [ref=e4365]: 5 categories
+                    - generic [ref=e4366]: Filter web content, enforce safe search, and manage blocklists
+                  - generic [ref=e4367]:
+                    - button "#16 web_safesearch Safe Search Forces safe search mode on supported search engines (Google, Bing, DuckDuckGo, Y..." [ref=e4369] [cursor=pointer]:
+                      - generic [ref=e4370]: "#16"
+                      - code [ref=e4371]: web_safesearch
+                      - generic [ref=e4372]: Safe Search
+                      - generic [ref=e4373]: Forces safe search mode on supported search engines (Google, Bing, DuckDuckGo, Y...
+                      - img [ref=e4374]
+                    - button "#17 web_category_block Web Category Block Blocks access to entire categories of websites. Categories include adult content..." [ref=e4377] [cursor=pointer]:
+                      - generic [ref=e4378]: "#17"
+                      - code [ref=e4379]: web_category_block
+                      - generic [ref=e4380]: Web Category Block
+                      - generic [ref=e4381]: Blocks access to entire categories of websites. Categories include adult content...
+                      - img [ref=e4382]
+                    - button "#18 web_custom_allowlist Web Custom Allowlist Explicitly allows specific URLs/domains that would otherwise be blocked by categ..." [ref=e4385] [cursor=pointer]:
+                      - generic [ref=e4386]: "#18"
+                      - code [ref=e4387]: web_custom_allowlist
+                      - generic [ref=e4388]: Web Custom Allowlist
+                      - generic [ref=e4389]: Explicitly allows specific URLs/domains that would otherwise be blocked by categ...
+                      - img [ref=e4390]
+                    - button "#19 web_custom_blocklist Web Custom Blocklist Blocks specific URLs/domains in addition to category-based blocking. Provides pe..." [ref=e4393] [cursor=pointer]:
+                      - generic [ref=e4394]: "#19"
+                      - code [ref=e4395]: web_custom_blocklist
+                      - generic [ref=e4396]: Web Custom Blocklist
+                      - generic [ref=e4397]: Blocks specific URLs/domains in addition to category-based blocking. Provides pe...
+                      - img [ref=e4398]
+                    - button "#20 web_filter_level Web Filter Level Sets the overall web filtering strictness level. Controls how aggressively conte..." [ref=e4401] [cursor=pointer]:
+                      - generic [ref=e4402]: "#20"
+                      - code [ref=e4403]: web_filter_level
+                      - generic [ref=e4404]: Web Filter Level
+                      - generic [ref=e4405]: Sets the overall web filtering strictness level. Controls how aggressively conte...
+                      - img [ref=e4406]
+                - generic [ref=e4408]:
+                  - generic [ref=e4409]:
+                    - heading "Privacy" [level=3] [ref=e4410]
+                    - generic [ref=e4411]: 4 categories
+                    - generic [ref=e4412]: Control location sharing, profile visibility, and data sharing
+                  - generic [ref=e4413]:
+                    - button "#21 privacy_location Location Sharing Controls location sharing settings. Can be off, shared with family only, or full..." [ref=e4415] [cursor=pointer]:
+                      - generic [ref=e4416]: "#21"
+                      - code [ref=e4417]: privacy_location
+                      - generic [ref=e4418]: Location Sharing
+                      - generic [ref=e4419]: Controls location sharing settings. Can be off, shared with family only, or full...
+                      - img [ref=e4420]
+                    - button "#22 privacy_profile_visibility Profile Visibility Controls the visibility of the child's profile on platforms. Can be set to priva..." [ref=e4423] [cursor=pointer]:
+                      - generic [ref=e4424]: "#22"
+                      - code [ref=e4425]: privacy_profile_visibility
+                      - generic [ref=e4426]: Profile Visibility
+                      - generic [ref=e4427]: Controls the visibility of the child's profile on platforms. Can be set to priva...
+                      - img [ref=e4428]
+                    - button "#23 privacy_data_sharing Data Sharing Controls Controls whether the child's data can be shared with third parties for advertisi..." [ref=e4431] [cursor=pointer]:
+                      - generic [ref=e4432]: "#23"
+                      - code [ref=e4433]: privacy_data_sharing
+                      - generic [ref=e4434]: Data Sharing Controls
+                      - generic [ref=e4435]: Controls whether the child's data can be shared with third parties for advertisi...
+                      - img [ref=e4436]
+                    - button "#24 privacy_account_creation Account Creation Approval Requires parent approval before the child can create new accounts on platforms a..." [ref=e4439] [cursor=pointer]:
+                      - generic [ref=e4440]: "#24"
+                      - code [ref=e4441]: privacy_account_creation
+                      - generic [ref=e4442]: Account Creation Approval
+                      - generic [ref=e4443]: Requires parent approval before the child can create new accounts on platforms a...
+                      - img [ref=e4444]
+                - generic [ref=e4446]:
+                  - generic [ref=e4447]:
+                    - heading "Monitoring" [level=3] [ref=e4448]
+                    - generic [ref=e4449]: 3 categories
+                    - generic [ref=e4450]: Track activity and configure real-time alerts for parents
+                  - generic [ref=e4451]:
+                    - button "#25 monitoring_activity Activity Monitoring Enables activity monitoring to track app usage, screen time, and browsing activi..." [ref=e4453] [cursor=pointer]:
+                      - generic [ref=e4454]: "#25"
+                      - code [ref=e4455]: monitoring_activity
+                      - generic [ref=e4456]: Activity Monitoring
+                      - generic [ref=e4457]: Enables activity monitoring to track app usage, screen time, and browsing activi...
+                      - img [ref=e4458]
+                    - button "#26 monitoring_alerts Monitoring Alerts Configures real-time alerts sent to parents when specific events occur, such as ..." [ref=e4461] [cursor=pointer]:
+                      - generic [ref=e4462]: "#26"
+                      - code [ref=e4463]: monitoring_alerts
+                      - generic [ref=e4464]: Monitoring Alerts
+                      - generic [ref=e4465]: Configures real-time alerts sent to parents when specific events occur, such as ...
+                      - img [ref=e4466]
+                    - button "#43 screen_time_report Screen Time Report Requires platforms to generate and deliver periodic screen time usage reports to... VA SB 854 TN HB 1891 +1" [ref=e4469] [cursor=pointer]:
+                      - generic [ref=e4470]: "#43"
+                      - code [ref=e4471]: screen_time_report
+                      - generic [ref=e4472]: Screen Time Report
+                      - generic [ref=e4473]: Requires platforms to generate and deliver periodic screen time usage reports to...
+                      - generic [ref=e4474]:
+                        - generic [ref=e4475]: VA SB 854
+                        - generic [ref=e4476]: TN HB 1891
+                        - generic [ref=e4477]: "+1"
+                      - img [ref=e4478]
+                - generic [ref=e4480]:
+                  - generic [ref=e4481]:
+                    - heading "Algorithmic Safety" [level=3] [ref=e4482]
+                    - generic [ref=e4483]: 3 categories
+                    - generic [ref=e4484]: Control algorithmic feeds and disable addictive design patterns
+                  - generic [ref=e4485]:
+                    - button "#27 algo_feed_control Algorithm Feed Control Controls whether platforms serve algorithmic or chronological feeds. In chronolo... KOSA KOSMA +2" [ref=e4487] [cursor=pointer]:
+                      - generic [ref=e4488]: "#27"
+                      - code [ref=e4489]: algo_feed_control
+                      - generic [ref=e4490]: Algorithm Feed Control
+                      - generic [ref=e4491]: Controls whether platforms serve algorithmic or chronological feeds. In chronolo...
+                      - generic [ref=e4492]:
+                        - generic [ref=e4493]: KOSA
+                        - generic [ref=e4494]: KOSMA
+                        - generic [ref=e4495]: "+2"
+                      - img [ref=e4496]
+                    - button "#28 addictive_design_control Addictive Design Control Disables addictive design patterns including infinite scroll, autoplay, streaks,... KOSA CT SB 3 +2" [ref=e4499] [cursor=pointer]:
+                      - generic [ref=e4500]: "#28"
+                      - code [ref=e4501]: addictive_design_control
+                      - generic [ref=e4502]: Addictive Design Control
+                      - generic [ref=e4503]: Disables addictive design patterns including infinite scroll, autoplay, streaks,...
+                      - generic [ref=e4504]:
+                        - generic [ref=e4505]: KOSA
+                        - generic [ref=e4506]: CT SB 3
+                        - generic [ref=e4507]: "+2"
+                      - img [ref=e4508]
+                    - button "#45 algorithmic_audit Algorithmic Audit Requires platforms to produce algorithmic transparency reports and undergo indep... KOSA EU DSA +2" [ref=e4511] [cursor=pointer]:
+                      - generic [ref=e4512]: "#45"
+                      - code [ref=e4513]: algorithmic_audit
+                      - generic [ref=e4514]: Algorithmic Audit
+                      - generic [ref=e4515]: Requires platforms to produce algorithmic transparency reports and undergo indep...
+                      - generic [ref=e4516]:
+                        - generic [ref=e4517]: KOSA
+                        - generic [ref=e4518]: EU DSA
+                        - generic [ref=e4519]: "+2"
+                      - img [ref=e4520]
+                - generic [ref=e4522]:
+                  - generic [ref=e4523]:
+                    - heading "Notifications" [level=3] [ref=e4524]
+                    - generic [ref=e4525]: 3 categories
+                    - generic [ref=e4526]: Manage notification curfews and usage timer reminders
+                  - generic [ref=e4527]:
+                    - button "#29 notification_curfew Notification Curfew Suppresses all non-essential notifications during defined quiet hours. Emergency... VA SB 854 NY SAFE for Kids" [ref=e4529] [cursor=pointer]:
+                      - generic [ref=e4530]: "#29"
+                      - code [ref=e4531]: notification_curfew
+                      - generic [ref=e4532]: Notification Curfew
+                      - generic [ref=e4533]: Suppresses all non-essential notifications during defined quiet hours. Emergency...
+                      - generic [ref=e4534]:
+                        - generic [ref=e4535]: VA SB 854
+                        - generic [ref=e4536]: NY SAFE for Kids
+                      - img [ref=e4537]
+                    - button "#30 usage_timer_notification Usage Timer Notification Sends periodic reminders to the child at configurable intervals while they are u... MN HF 2 TN HB 1891" [ref=e4540] [cursor=pointer]:
+                      - generic [ref=e4541]: "#30"
+                      - code [ref=e4542]: usage_timer_notification
+                      - generic [ref=e4543]: Usage Timer Notification
+                      - generic [ref=e4544]: Sends periodic reminders to the child at configurable intervals while they are u...
+                      - generic [ref=e4545]:
+                        - generic [ref=e4546]: MN HF 2
+                        - generic [ref=e4547]: TN HB 1891
+                      - img [ref=e4548]
+                    - button "#42 parental_event_notification Parental Event Notification Requires platforms to notify parents when specific events occur involving their ... LA Act 456 OH HB 33" [ref=e4551] [cursor=pointer]:
+                      - generic [ref=e4552]: "#42"
+                      - code [ref=e4553]: parental_event_notification
+                      - generic [ref=e4554]: Parental Event Notification
+                      - generic [ref=e4555]: Requires platforms to notify parents when specific events occur involving their ...
+                      - generic [ref=e4556]:
+                        - generic [ref=e4557]: LA Act 456
+                        - generic [ref=e4558]: OH HB 33
+                      - img [ref=e4559]
+                - generic [ref=e4561]:
+                  - generic [ref=e4562]:
+                    - heading "Advertising & Data" [level=3] [ref=e4563]
+                    - generic [ref=e4564]: 4 categories
+                    - generic [ref=e4565]: Block targeted ads, enable data deletion, and control geolocation
+                  - generic [ref=e4566]:
+                    - button "#31 targeted_ad_block Targeted Ad Block Blocks all targeted and behavioral advertising for the child's account. Only con... COPPA 2.0 EU DSA +1" [ref=e4568] [cursor=pointer]:
+                      - generic [ref=e4569]: "#31"
+                      - code [ref=e4570]: targeted_ad_block
+                      - generic [ref=e4571]: Targeted Ad Block
+                      - generic [ref=e4572]: Blocks all targeted and behavioral advertising for the child's account. Only con...
+                      - generic [ref=e4573]:
+                        - generic [ref=e4574]: COPPA 2.0
+                        - generic [ref=e4575]: EU DSA
+                        - generic [ref=e4576]: "+1"
+                      - img [ref=e4577]
+                    - button "#32 data_deletion_request Data Deletion Request Enables one-click data deletion request for child accounts. Platforms must honor... COPPA 2.0 NY NYCDPA" [ref=e4580] [cursor=pointer]:
+                      - generic [ref=e4581]: "#32"
+                      - code [ref=e4582]: data_deletion_request
+                      - generic [ref=e4583]: Data Deletion Request
+                      - generic [ref=e4584]: Enables one-click data deletion request for child accounts. Platforms must honor...
+                      - generic [ref=e4585]:
+                        - generic [ref=e4586]: COPPA 2.0
+                        - generic [ref=e4587]: NY NYCDPA
+                      - img [ref=e4588]
+                    - button "#33 geolocation_opt_in Geolocation Opt-In Defaults geolocation sharing to off and requires explicit opt-in. Prevents apps ... CT SB 3 MD Kids Code +1" [ref=e4591] [cursor=pointer]:
+                      - generic [ref=e4592]: "#33"
+                      - code [ref=e4593]: geolocation_opt_in
+                      - generic [ref=e4594]: Geolocation Opt-In
+                      - generic [ref=e4595]: Defaults geolocation sharing to off and requires explicit opt-in. Prevents apps ...
+                      - generic [ref=e4596]:
+                        - generic [ref=e4597]: CT SB 3
+                        - generic [ref=e4598]: MD Kids Code
+                        - generic [ref=e4599]: "+1"
+                      - img [ref=e4600]
+                    - button "#44 commercial_data_ban Commercial Data Ban Prohibits the commercial sale, sharing, or profiling of minor data. Goes beyond ... NY NYCDPA COPPA 2.0 +2" [ref=e4603] [cursor=pointer]:
+                      - generic [ref=e4604]: "#44"
+                      - code [ref=e4605]: commercial_data_ban
+                      - generic [ref=e4606]: Commercial Data Ban
+                      - generic [ref=e4607]: Prohibits the commercial sale, sharing, or profiling of minor data. Goes beyond ...
+                      - generic [ref=e4608]:
+                        - generic [ref=e4609]: NY NYCDPA
+                        - generic [ref=e4610]: COPPA 2.0
+                        - generic [ref=e4611]: "+2"
+                      - img [ref=e4612]
+                - generic [ref=e4614]:
+                  - generic [ref=e4615]:
+                    - heading "Access Control" [level=3] [ref=e4616]
+                    - generic [ref=e4617]: 3 categories
+                    - generic [ref=e4618]: Manage DM restrictions and age verification gates
+                  - generic [ref=e4619]:
+                    - button "#39 dm_restriction DM Restriction Restricts direct messaging capabilities. Can block all DMs, limit to contacts on... CT SB 3 UK OSA" [ref=e4621] [cursor=pointer]:
+                      - generic [ref=e4622]: "#39"
+                      - code [ref=e4623]: dm_restriction
+                      - generic [ref=e4624]: DM Restriction
+                      - generic [ref=e4625]: Restricts direct messaging capabilities. Can block all DMs, limit to contacts on...
+                      - generic [ref=e4626]:
+                        - generic [ref=e4627]: CT SB 3
+                        - generic [ref=e4628]: UK OSA
+                      - img [ref=e4629]
+                    - button "#40 age_gate Age Gate Requires age verification before platform access. Configurable minimum age thres... KOSMA FL HB 3 +1" [ref=e4632] [cursor=pointer]:
+                      - generic [ref=e4633]: "#40"
+                      - code [ref=e4634]: age_gate
+                      - generic [ref=e4635]: Age Gate
+                      - generic [ref=e4636]: Requires age verification before platform access. Configurable minimum age thres...
+                      - generic [ref=e4637]:
+                        - generic [ref=e4638]: KOSMA
+                        - generic [ref=e4639]: FL HB 3
+                        - generic [ref=e4640]: "+1"
+                      - img [ref=e4641]
+                    - button "#41 parental_consent_gate Parental Consent Gate Requires verifiable parental consent before a minor can create an account or bef... COPPA KOSMA +6" [ref=e4644] [cursor=pointer]:
+                      - generic [ref=e4645]: "#41"
+                      - code [ref=e4646]: parental_consent_gate
+                      - generic [ref=e4647]: Parental Consent Gate
+                      - generic [ref=e4648]: Requires verifiable parental consent before a minor can create an account or bef...
+                      - generic [ref=e4649]:
+                        - generic [ref=e4650]: COPPA
+                        - generic [ref=e4651]: KOSMA
+                        - generic [ref=e4652]: "+6"
+                      - img [ref=e4653]
+                - generic [ref=e4655]:
+                  - generic [ref=e4656]:
+                    - heading "Compliance Expansion" [level=3] [ref=e4657]
+                    - generic [ref=e4658]: 5 categories
+                    - generic [ref=e4659]: Extended rule categories for global regulatory compliance
+                  - generic [ref=e4660]:
+                    - button "#34 csam_reporting CSAM Reporting Ensures platforms have CSAM (Child Sexual Abuse Material) detection and reportin... CIPA EARN IT Act +2" [ref=e4662] [cursor=pointer]:
+                      - generic [ref=e4663]: "#34"
+                      - code [ref=e4664]: csam_reporting
+                      - generic [ref=e4665]: CSAM Reporting
+                      - generic [ref=e4666]: Ensures platforms have CSAM (Child Sexual Abuse Material) detection and reportin...
+                      - generic [ref=e4667]:
+                        - generic [ref=e4668]: CIPA
+                        - generic [ref=e4669]: EARN IT Act
+                        - generic [ref=e4670]: "+2"
+                      - img [ref=e4671]
+                    - button "#35 library_filter_compliance Library Filter Compliance Enforces content filtering requirements for schools and libraries receiving E-Ra... CIPA" [ref=e4674] [cursor=pointer]:
+                      - generic [ref=e4675]: "#35"
+                      - code [ref=e4676]: library_filter_compliance
+                      - generic [ref=e4677]: Library Filter Compliance
+                      - generic [ref=e4678]: Enforces content filtering requirements for schools and libraries receiving E-Ra...
+                      - generic [ref=e4680]: CIPA
+                      - img [ref=e4681]
+                    - button "#36 ai_minor_interaction AI Minor Interaction Restricts AI-powered features that could exploit children's vulnerabilities, inc... EU AI Act" [ref=e4684] [cursor=pointer]:
+                      - generic [ref=e4685]: "#36"
+                      - code [ref=e4686]: ai_minor_interaction
+                      - generic [ref=e4687]: AI Minor Interaction
+                      - generic [ref=e4688]: Restricts AI-powered features that could exploit children's vulnerabilities, inc...
+                      - generic [ref=e4690]: EU AI Act
+                      - img [ref=e4691]
+                    - button "#37 social_media_min_age Social Media Minimum Age Enforces hard minimum age requirements for social media access. Unlike age_gate ... AU Social Media Minimum Age Act UT SMRA" [ref=e4694] [cursor=pointer]:
+                      - generic [ref=e4695]: "#37"
+                      - code [ref=e4696]: social_media_min_age
+                      - generic [ref=e4697]: Social Media Minimum Age
+                      - generic [ref=e4698]: Enforces hard minimum age requirements for social media access. Unlike age_gate ...
+                      - generic [ref=e4699]:
+                        - generic [ref=e4700]: AU Social Media Minimum Age Act
+                        - generic [ref=e4701]: UT SMRA
+                      - img [ref=e4702]
+                    - button "#38 image_rights_minor Image Rights Minor Protects minors' image rights by restricting image-sharing capabilities and impl... France SREN" [ref=e4705] [cursor=pointer]:
+                      - generic [ref=e4706]: "#38"
+                      - code [ref=e4707]: image_rights_minor
+                      - generic [ref=e4708]: Image Rights Minor
+                      - generic [ref=e4709]: Protects minors' image rights by restricting image-sharing capabilities and impl...
+                      - generic [ref=e4711]: France SREN
+                      - img [ref=e4712]
+            - generic [ref=e4714]:
+              - heading "Platform Support Matrix" [level=2] [ref=e4715]
+              - paragraph [ref=e4716]: Overview of which category groups are supported by each platform adapter. ✓ = Full support, ◑ = Partial support, — = No support.
+              - table [ref=e4718]:
+                - rowgroup [ref=e4719]:
+                  - row "Category Group NextDNS CleanBrowsing Android Apple MDM Microsoft" [ref=e4720]:
+                    - columnheader "Category Group" [ref=e4721]
+                    - columnheader "NextDNS" [ref=e4722]
+                    - columnheader "CleanBrowsing" [ref=e4723]
+                    - columnheader "Android" [ref=e4724]
+                    - columnheader "Apple MDM" [ref=e4725]
+                    - columnheader "Microsoft" [ref=e4726]
+                - rowgroup [ref=e4727]:
+                  - row "Content(5) — — ✓ ◑ ✓" [ref=e4728]:
+                    - cell "Content(5)" [ref=e4729]:
+                      - link "Content" [ref=e4730] [cursor=pointer]:
+                        - /url: "#cat-group-content"
+                      - generic [ref=e4731]: (5)
+                    - cell "—" [ref=e4732]
+                    - cell "—" [ref=e4733]
+                    - cell "✓" [ref=e4734]
+                    - cell "◑" [ref=e4735]
+                    - cell "✓" [ref=e4736]
+                  - row "Time(4) — — ✓ ◑ ◑" [ref=e4737]:
+                    - cell "Time(4)" [ref=e4738]:
+                      - link "Time" [ref=e4739] [cursor=pointer]:
+                        - /url: "#cat-group-time"
+                      - generic [ref=e4740]: (4)
+                    - cell "—" [ref=e4741]
+                    - cell "—" [ref=e4742]
+                    - cell "✓" [ref=e4743]
+                    - cell "◑" [ref=e4744]
+                    - cell "◑" [ref=e4745]
+                  - row "Purchase(3) — — — — —" [ref=e4746]:
+                    - cell "Purchase(3)" [ref=e4747]:
+                      - link "Purchase" [ref=e4748] [cursor=pointer]:
+                        - /url: "#cat-group-purchase"
+                      - generic [ref=e4749]: (3)
+                    - cell "—" [ref=e4750]
+                    - cell "—" [ref=e4751]
+                    - cell "—" [ref=e4752]
+                    - cell "—" [ref=e4753]
+                    - cell "—" [ref=e4754]
+                  - row "Social(3) — — — — —" [ref=e4755]:
+                    - cell "Social(3)" [ref=e4756]:
+                      - link "Social" [ref=e4757] [cursor=pointer]:
+                        - /url: "#cat-group-social"
+                      - generic [ref=e4758]: (3)
+                    - cell "—" [ref=e4759]
+                    - cell "—" [ref=e4760]
+                    - cell "—" [ref=e4761]
+                    - cell "—" [ref=e4762]
+                    - cell "—" [ref=e4763]
+                  - row "Web(5) ✓ ✓ — ◑ ◑" [ref=e4764]:
+                    - cell "Web(5)" [ref=e4765]:
+                      - link "Web" [ref=e4766] [cursor=pointer]:
+                        - /url: "#cat-group-web"
+                      - generic [ref=e4767]: (5)
+                    - cell "✓" [ref=e4768]
+                    - cell "✓" [ref=e4769]
+                    - cell "—" [ref=e4770]
+                    - cell "◑" [ref=e4771]
+                    - cell "◑" [ref=e4772]
+                  - row "Privacy(4) — — ◑ — —" [ref=e4773]:
+                    - cell "Privacy(4)" [ref=e4774]:
+                      - link "Privacy" [ref=e4775] [cursor=pointer]:
+                        - /url: "#cat-group-privacy"
+                      - generic [ref=e4776]: (4)
+                    - cell "—" [ref=e4777]
+                    - cell "—" [ref=e4778]
+                    - cell "◑" [ref=e4779]
+                    - cell "—" [ref=e4780]
+                    - cell "—" [ref=e4781]
+                  - row "Monitoring(3) — — ◑ — ◑" [ref=e4782]:
+                    - cell "Monitoring(3)" [ref=e4783]:
+                      - link "Monitoring" [ref=e4784] [cursor=pointer]:
+                        - /url: "#cat-group-monitoring"
+                      - generic [ref=e4785]: (3)
+                    - cell "—" [ref=e4786]
+                    - cell "—" [ref=e4787]
+                    - cell "◑" [ref=e4788]
+                    - cell "—" [ref=e4789]
+                    - cell "◑" [ref=e4790]
+                  - row "Algorithmic Safety(3) — — — — —" [ref=e4791]:
+                    - cell "Algorithmic Safety(3)" [ref=e4792]:
+                      - link "Algorithmic Safety" [ref=e4793] [cursor=pointer]:
+                        - /url: "#cat-group-algorithmic_safety"
+                      - generic [ref=e4794]: (3)
+                    - cell "—" [ref=e4795]
+                    - cell "—" [ref=e4796]
+                    - cell "—" [ref=e4797]
+                    - cell "—" [ref=e4798]
+                    - cell "—" [ref=e4799]
+                  - row "Notifications(3) — — — — —" [ref=e4800]:
+                    - cell "Notifications(3)" [ref=e4801]:
+                      - link "Notifications" [ref=e4802] [cursor=pointer]:
+                        - /url: "#cat-group-notifications"
+                      - generic [ref=e4803]: (3)
+                    - cell "—" [ref=e4804]
+                    - cell "—" [ref=e4805]
+                    - cell "—" [ref=e4806]
+                    - cell "—" [ref=e4807]
+                    - cell "—" [ref=e4808]
+                  - row "Advertising & Data(4) — — — — —" [ref=e4809]:
+                    - cell "Advertising & Data(4)" [ref=e4810]:
+                      - link "Advertising & Data" [ref=e4811] [cursor=pointer]:
+                        - /url: "#cat-group-advertising_data"
+                      - generic [ref=e4812]: (4)
+                    - cell "—" [ref=e4813]
+                    - cell "—" [ref=e4814]
+                    - cell "—" [ref=e4815]
+                    - cell "—" [ref=e4816]
+                    - cell "—" [ref=e4817]
+                  - row "Access Control(3) — — — — —" [ref=e4818]:
+                    - cell "Access Control(3)" [ref=e4819]:
+                      - link "Access Control" [ref=e4820] [cursor=pointer]:
+                        - /url: "#cat-group-access_control"
+                      - generic [ref=e4821]: (3)
+                    - cell "—" [ref=e4822]
+                    - cell "—" [ref=e4823]
+                    - cell "—" [ref=e4824]
+                    - cell "—" [ref=e4825]
+                    - cell "—" [ref=e4826]
+                  - row "Compliance Expansion(5) ◑ ◑ — — —" [ref=e4827]:
+                    - cell "Compliance Expansion(5)" [ref=e4828]:
+                      - link "Compliance Expansion" [ref=e4829] [cursor=pointer]:
+                        - /url: "#cat-group-compliance_expansion"
+                      - generic [ref=e4830]: (5)
+                    - cell "◑" [ref=e4831]
+                    - cell "◑" [ref=e4832]
+                    - cell "—" [ref=e4833]
+                    - cell "—" [ref=e4834]
+                    - cell "—" [ref=e4835]
+            - generic [ref=e4836]:
+              - heading "Age-to-Rating Standard" [level=2] [ref=e4837]
+              - paragraph [ref=e4838]:
+                - text: Platforms
+                - strong [ref=e4839]: MUST
+                - text: use the following age-to-rating mappings when computing content restrictions. Used by
+                - code [ref=e4840]: GET /ratings/by-age
+                - text: and
+                - code [ref=e4841]: POST /policies/:id/generate-from-age
+                - text: .
+              - table [ref=e4843]:
+                - rowgroup [ref=e4844]:
+                  - row "Age MPAA TV ESRB PEGI CSM" [ref=e4845]:
+                    - columnheader "Age" [ref=e4846]
+                    - columnheader "MPAA" [ref=e4847]
+                    - columnheader "TV" [ref=e4848]
+                    - columnheader "ESRB" [ref=e4849]
+                    - columnheader "PEGI" [ref=e4850]
+                    - columnheader "CSM" [ref=e4851]
+                - rowgroup [ref=e4852]:
+                  - row "0-6 G TV-Y E 3 5+" [ref=e4853]:
+                    - cell "0-6" [ref=e4854]
+                    - cell "G" [ref=e4855]
+                    - cell "TV-Y" [ref=e4856]
+                    - cell "E" [ref=e4857]
+                    - cell "3" [ref=e4858]
+                    - cell "5+" [ref=e4859]
+                  - row "7-9 PG TV-Y7 E 7 7+" [ref=e4860]:
+                    - cell "7-9" [ref=e4861]
+                    - cell "PG" [ref=e4862]
+                    - cell "TV-Y7" [ref=e4863]
+                    - cell "E" [ref=e4864]
+                    - cell "7" [ref=e4865]
+                    - cell "7+" [ref=e4866]
+                  - row "10-12 PG TV-PG E10+ 7 10+" [ref=e4867]:
+                    - cell "10-12" [ref=e4868]
+                    - cell "PG" [ref=e4869]
+                    - cell "TV-PG" [ref=e4870]
+                    - cell "E10+" [ref=e4871]
+                    - cell "7" [ref=e4872]
+                    - cell "10+" [ref=e4873]
+                  - row "13-16 PG-13 TV-14 T 12 13+" [ref=e4874]:
+                    - cell "13-16" [ref=e4875]
+                    - cell "PG-13" [ref=e4876]
+                    - cell "TV-14" [ref=e4877]
+                    - cell "T" [ref=e4878]
+                    - cell "12" [ref=e4879]
+                    - cell "13+" [ref=e4880]
+                  - row "17 R TV-MA M 16 17+" [ref=e4881]:
+                    - cell "17" [ref=e4882]
+                    - cell "R" [ref=e4883]
+                    - cell "TV-MA" [ref=e4884]
+                    - cell "M" [ref=e4885]
+                    - cell "16" [ref=e4886]
+                    - cell "17+" [ref=e4887]
+                  - row "18+ NC-17 TV-MA AO 18 18+" [ref=e4888]:
+                    - cell "18+" [ref=e4889]
+                    - cell "NC-17" [ref=e4890]
+                    - cell "TV-MA" [ref=e4891]
+                    - cell "AO" [ref=e4892]
+                    - cell "18" [ref=e4893]
+                    - cell "18+" [ref=e4894]
+            - generic [ref=e4895]:
+              - heading "Age-Based Default Policies" [level=2] [ref=e4896]
+              - paragraph [ref=e4897]:
+                - text: Default policy values generated by
+                - code [ref=e4898]: POST /policies/:id/generate-from-age
+                - text: and the Quick Setup API. These defaults represent the "recommended" strictness level. Values are computed from the child's age at policy creation time.
+              - table [ref=e4900]:
+                - rowgroup [ref=e4901]:
+                  - row "Setting 0-6 7-9 10-12 13-16 17+" [ref=e4902]:
+                    - columnheader "Setting" [ref=e4903]
+                    - columnheader "0-6" [ref=e4904]
+                    - columnheader "7-9" [ref=e4905]
+                    - columnheader "10-12" [ref=e4906]
+                    - columnheader "13-16" [ref=e4907]
+                    - columnheader "17+" [ref=e4908]
+                - rowgroup [ref=e4909]:
+                  - row "Screen Time 60 min 90 min 120 min 180 min 240 min" [ref=e4910]:
+                    - cell "Screen Time" [ref=e4911]:
+                      - link "Screen Time" [ref=e4912] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "60 min" [ref=e4913]
+                    - cell "90 min" [ref=e4914]
+                    - cell "120 min" [ref=e4915]
+                    - cell "180 min" [ref=e4916]
+                    - cell "240 min" [ref=e4917]
+                  - row "Bedtime 19:00 20:00 21:00 22:00 23:00" [ref=e4918]:
+                    - cell "Bedtime" [ref=e4919]:
+                      - link "Bedtime" [ref=e4920] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "19:00" [ref=e4921]
+                    - cell "20:00" [ref=e4922]
+                    - cell "21:00" [ref=e4923]
+                    - cell "22:00" [ref=e4924]
+                    - cell "23:00" [ref=e4925]
+                  - row "Web Filter Strict Strict Moderate Light Light" [ref=e4926]:
+                    - cell "Web Filter" [ref=e4927]:
+                      - link "Web Filter" [ref=e4928] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "Strict" [ref=e4929]
+                    - cell "Strict" [ref=e4930]
+                    - cell "Moderate" [ref=e4931]
+                    - cell "Light" [ref=e4932]
+                    - cell "Light" [ref=e4933]
+                  - row "Purchase Approval Yes Yes Yes Yes No" [ref=e4934]:
+                    - cell "Purchase Approval" [ref=e4935]:
+                      - link "Purchase Approval" [ref=e4936] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "Yes" [ref=e4937]
+                    - cell "Yes" [ref=e4938]
+                    - cell "Yes" [ref=e4939]
+                    - cell "Yes" [ref=e4940]
+                    - cell "No" [ref=e4941]
+                  - row "Block IAP Yes Yes Yes No No" [ref=e4942]:
+                    - cell "Block IAP" [ref=e4943]:
+                      - link "Block IAP" [ref=e4944] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "Yes" [ref=e4945]
+                    - cell "Yes" [ref=e4946]
+                    - cell "Yes" [ref=e4947]
+                    - cell "No" [ref=e4948]
+                    - cell "No" [ref=e4949]
+                  - row "Chat Control Disabled Friends only Friends only Friends only Everyone" [ref=e4950]:
+                    - cell "Chat Control" [ref=e4951]:
+                      - link "Chat Control" [ref=e4952] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "Disabled" [ref=e4953]
+                    - cell "Friends only" [ref=e4954]
+                    - cell "Friends only" [ref=e4955]
+                    - cell "Friends only" [ref=e4956]
+                    - cell "Everyone" [ref=e4957]
+                  - row "Feed Algorithm Chrono Chrono Chrono Chrono Chrono" [ref=e4958]:
+                    - cell "Feed Algorithm" [ref=e4959]:
+                      - link "Feed Algorithm" [ref=e4960] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "Chrono" [ref=e4961]
+                    - cell "Chrono" [ref=e4962]
+                    - cell "Chrono" [ref=e4963]
+                    - cell "Chrono" [ref=e4964]
+                    - cell "Chrono" [ref=e4965]
+                  - row "Addictive Design All blocked All blocked All blocked Autoplay+Scroll Off" [ref=e4966]:
+                    - cell "Addictive Design" [ref=e4967]:
+                      - link "Addictive Design" [ref=e4968] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "All blocked" [ref=e4969]
+                    - cell "All blocked" [ref=e4970]
+                    - cell "All blocked" [ref=e4971]
+                    - cell "Autoplay+Scroll" [ref=e4972]
+                    - cell "Off" [ref=e4973]
+                  - row "DM Restriction None None None Contacts only Everyone" [ref=e4974]:
+                    - cell "DM Restriction" [ref=e4975]:
+                      - link "DM Restriction" [ref=e4976] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "None" [ref=e4977]
+                    - cell "None" [ref=e4978]
+                    - cell "None" [ref=e4979]
+                    - cell "Contacts only" [ref=e4980]
+                    - cell "Everyone" [ref=e4981]
+                  - row "Notification Curfew 20-07 20-07 20-07 22-06 00-06" [ref=e4982]:
+                    - cell "Notification Curfew" [ref=e4983]:
+                      - link "Notification Curfew" [ref=e4984] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "20-07" [ref=e4985]
+                    - cell "20-07" [ref=e4986]
+                    - cell "20-07" [ref=e4987]
+                    - cell "22-06" [ref=e4988]
+                    - cell "00-06" [ref=e4989]
+                  - row "Usage Timer 15 min 15 min 15 min 30 min 60 min" [ref=e4990]:
+                    - cell "Usage Timer" [ref=e4991]:
+                      - link "Usage Timer" [ref=e4992] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "15 min" [ref=e4993]
+                    - cell "15 min" [ref=e4994]
+                    - cell "15 min" [ref=e4995]
+                    - cell "30 min" [ref=e4996]
+                    - cell "60 min" [ref=e4997]
+                  - row "Targeted Ads Blocked Blocked Blocked Blocked Blocked" [ref=e4998]:
+                    - cell "Targeted Ads" [ref=e4999]:
+                      - link "Targeted Ads" [ref=e5000] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "Blocked" [ref=e5001]
+                    - cell "Blocked" [ref=e5002]
+                    - cell "Blocked" [ref=e5003]
+                    - cell "Blocked" [ref=e5004]
+                    - cell "Blocked" [ref=e5005]
+                  - row "Geolocation Off Off Off Off Off" [ref=e5006]:
+                    - cell "Geolocation" [ref=e5007]:
+                      - link "Geolocation" [ref=e5008] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "Off" [ref=e5009]
+                    - cell "Off" [ref=e5010]
+                    - cell "Off" [ref=e5011]
+                    - cell "Off" [ref=e5012]
+                    - cell "Off" [ref=e5013]
+                  - row "Age Gate On (13+) On (13+) On (13+) Off Off" [ref=e5014]:
+                    - cell "Age Gate" [ref=e5015]:
+                      - link "Age Gate" [ref=e5016] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "On (13+)" [ref=e5017]
+                    - cell "On (13+)" [ref=e5018]
+                    - cell "On (13+)" [ref=e5019]
+                    - cell "Off" [ref=e5020]
+                    - cell "Off" [ref=e5021]
+                  - row "Data Deletion Enabled Enabled Enabled Enabled Enabled" [ref=e5022]:
+                    - cell "Data Deletion" [ref=e5023]:
+                      - link "Data Deletion" [ref=e5024] [cursor=pointer]:
+                        - /url: "#rule-categories"
+                    - cell "Enabled" [ref=e5025]
+                    - cell "Enabled" [ref=e5026]
+                    - cell "Enabled" [ref=e5027]
+                    - cell "Enabled" [ref=e5028]
+                    - cell "Enabled" [ref=e5029]
+            - generic [ref=e5030]:
+              - heading "API Base URL" [level=2] [ref=e5031]
+              - generic [ref=e5032]:
+                - paragraph [ref=e5033]: "All PCSS API endpoints are served under:"
+                - generic [ref=e5034]: http://localhost:8080/api/v1
+                - paragraph [ref=e5035]:
+                  - text: Platforms
+                  - strong [ref=e5036]: MUST
+                  - text: use HTTPS in production environments. HTTP
+                  - strong [ref=e5037]: MAY
+                  - text: be used only in development.
+            - generic [ref=e5038]:
+              - heading "11. Legislative Compliance Matrix" [level=2] [ref=e5039]
+              - paragraph [ref=e5040]:
+                - text: The following legislation maps to PCSS policy categories. Platforms operating in jurisdictions covered by these laws
+                - strong [ref=e5041]: MUST
+                - text: implement the corresponding categories. Click any entry to see key provisions, jurisdiction details, and legislative status.
+              - generic [ref=e5042]:
+                - button "KOSA (Kids Online Safety Act) Passed Senate (Jul 2024) United States (Federal) Establishes a duty of care for platforms, requiring them to disable addictive features and algorithmic feeds for minors by default. algo_feed_control addictive_design_control targeted_ad_block algorithmic_audit" [ref=e5044] [cursor=pointer]:
+                  - generic [ref=e5045]:
+                    - generic [ref=e5046]:
+                      - generic [ref=e5047]:
+                        - generic [ref=e5048]: KOSA (Kids Online Safety Act)
+                        - generic [ref=e5049]: Passed Senate (Jul 2024)
+                        - generic [ref=e5050]: United States (Federal)
+                      - paragraph [ref=e5051]: Establishes a duty of care for platforms, requiring them to disable addictive features and algorithmic feeds for minors by default.
+                    - generic [ref=e5052]:
+                      - generic [ref=e5053]:
+                        - code [ref=e5054]: algo_feed_control
+                        - code [ref=e5055]: addictive_design_control
+                        - code [ref=e5056]: targeted_ad_block
+                        - code [ref=e5057]: algorithmic_audit
+                      - img [ref=e5058]
+                - button "COPPA 2.0 (Children's Online Privacy Protection Act 2.0) Passed Senate as part of KOSMA (Jul 2024) United States (Federal) Extends COPPA to teens under 17, bans all targeted advertising to minors, and creates an Eraser Button for data deletion. targeted_ad_block data_deletion_request geolocation_opt_in parental_consent_gate commercial_data_ban" [ref=e5061] [cursor=pointer]:
+                  - generic [ref=e5062]:
+                    - generic [ref=e5063]:
+                      - generic [ref=e5064]:
+                        - generic [ref=e5065]: COPPA 2.0 (Children's Online Privacy Protection Act 2.0)
+                        - generic [ref=e5066]: Passed Senate as part of KOSMA (Jul 2024)
+                        - generic [ref=e5067]: United States (Federal)
+                      - paragraph [ref=e5068]: Extends COPPA to teens under 17, bans all targeted advertising to minors, and creates an Eraser Button for data deletion.
+                    - generic [ref=e5069]:
+                      - generic [ref=e5070]:
+                        - code [ref=e5071]: targeted_ad_block
+                        - code [ref=e5072]: data_deletion_request
+                        - code [ref=e5073]: geolocation_opt_in
+                        - code [ref=e5074]: parental_consent_gate
+                        - code [ref=e5075]: commercial_data_ban
+                      - img [ref=e5076]
+                - button "KOSMA (Kids Online Safety & Media Act) Passed Senate (Jul 2024) United States (Federal) Combined KOSA + COPPA 2.0 package extending protections to all minors under 17, with mandatory age verification. algo_feed_control age_gate parental_consent_gate" [ref=e5079] [cursor=pointer]:
+                  - generic [ref=e5080]:
+                    - generic [ref=e5081]:
+                      - generic [ref=e5082]:
+                        - generic [ref=e5083]: KOSMA (Kids Online Safety & Media Act)
+                        - generic [ref=e5084]: Passed Senate (Jul 2024)
+                        - generic [ref=e5085]: United States (Federal)
+                      - paragraph [ref=e5086]: Combined KOSA + COPPA 2.0 package extending protections to all minors under 17, with mandatory age verification.
+                    - generic [ref=e5087]:
+                      - generic [ref=e5088]:
+                        - code [ref=e5089]: algo_feed_control
+                        - code [ref=e5090]: age_gate
+                        - code [ref=e5091]: parental_consent_gate
+                      - img [ref=e5092]
+                - button "FTC COPPA Rule (Federal Trade Commission COPPA Rule) In force (updated 2024) United States (Federal) The original COPPA enforcement rule requiring verifiable parental consent for data collection on children under 13. targeted_ad_block data_deletion_request parental_consent_gate" [ref=e5095] [cursor=pointer]:
+                  - generic [ref=e5096]:
+                    - generic [ref=e5097]:
+                      - generic [ref=e5098]:
+                        - generic [ref=e5099]: FTC COPPA Rule (Federal Trade Commission COPPA Rule)
+                        - generic [ref=e5100]: In force (updated 2024)
+                        - generic [ref=e5101]: United States (Federal)
+                      - paragraph [ref=e5102]: The original COPPA enforcement rule requiring verifiable parental consent for data collection on children under 13.
+                    - generic [ref=e5103]:
+                      - generic [ref=e5104]:
+                        - code [ref=e5105]: targeted_ad_block
+                        - code [ref=e5106]: data_deletion_request
+                        - code [ref=e5107]: parental_consent_gate
+                      - img [ref=e5108]
+                - button "CIPA (Children's Internet Protection Act) In force (enacted 2000) United States (Federal) Requires schools and libraries receiving E-Rate funding to implement internet safety policies and content filters to protect children from harmful online content. web_category_block web_safesearch web_filter_level" [ref=e5111] [cursor=pointer]:
+                  - generic [ref=e5112]:
+                    - generic [ref=e5113]:
+                      - generic [ref=e5114]:
+                        - generic [ref=e5115]: CIPA (Children's Internet Protection Act)
+                        - generic [ref=e5116]: In force (enacted 2000)
+                        - generic [ref=e5117]: United States (Federal)
+                      - paragraph [ref=e5118]: Requires schools and libraries receiving E-Rate funding to implement internet safety policies and content filters to protect children from harmful online content.
+                    - generic [ref=e5119]:
+                      - generic [ref=e5120]:
+                        - code [ref=e5121]: web_category_block
+                        - code [ref=e5122]: web_safesearch
+                        - code [ref=e5123]: web_filter_level
+                      - img [ref=e5124]
+                - button "EARN IT Act (Eliminating Abusive and Rampant Neglect of Interactive Technologies Act) Proposed (reintroduced 2023) United States (Federal) Proposes to hold platforms accountable for CSAM by modifying Section 230 protections and establishing best practices for preventing child exploitation. csam_reporting" [ref=e5127] [cursor=pointer]:
+                  - generic [ref=e5128]:
+                    - generic [ref=e5129]:
+                      - generic [ref=e5130]:
+                        - generic [ref=e5131]: EARN IT Act (Eliminating Abusive and Rampant Neglect of Interactive Technologies Act)
+                        - generic [ref=e5132]: Proposed (reintroduced 2023)
+                        - generic [ref=e5133]: United States (Federal)
+                      - paragraph [ref=e5134]: Proposes to hold platforms accountable for CSAM by modifying Section 230 protections and establishing best practices for preventing child exploitation.
+                    - generic [ref=e5135]:
+                      - code [ref=e5137]: csam_reporting
+                      - img [ref=e5138]
+                - button "FOSTA-SESTA (Allow States and Victims to Fight Online Sex Trafficking Act) Signed into law (Apr 2018) United States (Federal) Amends Section 230 to hold platforms liable for facilitating sex trafficking. Requires platforms to actively monitor for and remove trafficking content involving minors. csam_reporting dm_restriction" [ref=e5141] [cursor=pointer]:
+                  - generic [ref=e5142]:
+                    - generic [ref=e5143]:
+                      - generic [ref=e5144]:
+                        - generic [ref=e5145]: FOSTA-SESTA (Allow States and Victims to Fight Online Sex Trafficking Act)
+                        - generic [ref=e5146]: Signed into law (Apr 2018)
+                        - generic [ref=e5147]: United States (Federal)
+                      - paragraph [ref=e5148]: Amends Section 230 to hold platforms liable for facilitating sex trafficking. Requires platforms to actively monitor for and remove trafficking content involving minors.
+                    - generic [ref=e5149]:
+                      - generic [ref=e5150]:
+                        - code [ref=e5151]: csam_reporting
+                        - code [ref=e5152]: dm_restriction
+                      - img [ref=e5153]
+                - button "CA SB 976 (California Age-Appropriate Design Code) Signed into law (Sep 2024) California, United States Bans addictive feeds and notifications during school hours for minors. Platforms must default to chronological feeds. algo_feed_control addictive_design_control parental_consent_gate" [ref=e5156] [cursor=pointer]:
+                  - generic [ref=e5157]:
+                    - generic [ref=e5158]:
+                      - generic [ref=e5159]:
+                        - generic [ref=e5160]: CA SB 976 (California Age-Appropriate Design Code)
+                        - generic [ref=e5161]: Signed into law (Sep 2024)
+                        - generic [ref=e5162]: California, United States
+                      - paragraph [ref=e5163]: Bans addictive feeds and notifications during school hours for minors. Platforms must default to chronological feeds.
+                    - generic [ref=e5164]:
+                      - generic [ref=e5165]:
+                        - code [ref=e5166]: algo_feed_control
+                        - code [ref=e5167]: addictive_design_control
+                        - code [ref=e5168]: parental_consent_gate
+                      - img [ref=e5169]
+                - button "VA SB 854 (Virginia Child Safety Act) Signed into law (Apr 2024) Virginia, United States Requires platforms to suppress non-essential notifications during nighttime and provide configurable screen time limits. notification_curfew screen_time_report" [ref=e5172] [cursor=pointer]:
+                  - generic [ref=e5173]:
+                    - generic [ref=e5174]:
+                      - generic [ref=e5175]:
+                        - generic [ref=e5176]: VA SB 854 (Virginia Child Safety Act)
+                        - generic [ref=e5177]: Signed into law (Apr 2024)
+                        - generic [ref=e5178]: Virginia, United States
+                      - paragraph [ref=e5179]: Requires platforms to suppress non-essential notifications during nighttime and provide configurable screen time limits.
+                    - generic [ref=e5180]:
+                      - generic [ref=e5181]:
+                        - code [ref=e5182]: notification_curfew
+                        - code [ref=e5183]: screen_time_report
+                      - img [ref=e5184]
+                - button "NY SAFE for Kids (New York SAFE for Kids Act) Signed into law (Jun 2024) New York, United States Prohibits addictive algorithmic feeds for minors without parental consent and mandates notification-free quiet hours. notification_curfew parental_consent_gate" [ref=e5187] [cursor=pointer]:
+                  - generic [ref=e5188]:
+                    - generic [ref=e5189]:
+                      - generic [ref=e5190]:
+                        - generic [ref=e5191]: NY SAFE for Kids (New York SAFE for Kids Act)
+                        - generic [ref=e5192]: Signed into law (Jun 2024)
+                        - generic [ref=e5193]: New York, United States
+                      - paragraph [ref=e5194]: Prohibits addictive algorithmic feeds for minors without parental consent and mandates notification-free quiet hours.
+                    - generic [ref=e5195]:
+                      - generic [ref=e5196]:
+                        - code [ref=e5197]: notification_curfew
+                        - code [ref=e5198]: parental_consent_gate
+                      - img [ref=e5199]
+                - button "CT SB 3 (Connecticut SB 3) Signed into law (Jun 2023) Connecticut, United States Connecticut law protecting minors from addictive platform features and restricting unsolicited contact. Requires platforms to default to safest settings for accounts identified as minors. addictive_design_control dm_restriction geolocation_opt_in" [ref=e5202] [cursor=pointer]:
+                  - generic [ref=e5203]:
+                    - generic [ref=e5204]:
+                      - generic [ref=e5205]:
+                        - generic [ref=e5206]: CT SB 3 (Connecticut SB 3)
+                        - generic [ref=e5207]: Signed into law (Jun 2023)
+                        - generic [ref=e5208]: Connecticut, United States
+                      - paragraph [ref=e5209]: Connecticut law protecting minors from addictive platform features and restricting unsolicited contact. Requires platforms to default to safest settings for accounts identified as minors.
+                    - generic [ref=e5210]:
+                      - generic [ref=e5211]:
+                        - code [ref=e5212]: addictive_design_control
+                        - code [ref=e5213]: dm_restriction
+                        - code [ref=e5214]: geolocation_opt_in
+                      - img [ref=e5215]
+                - button "FL HB 3 (Florida Social Media Act) Signed into law (Mar 2024) Florida, United States Florida law requiring age verification for social media platforms and prohibiting minors under 14 from holding accounts. Minors 14-15 need parental consent. age_gate parental_consent_gate" [ref=e5218] [cursor=pointer]:
+                  - generic [ref=e5219]:
+                    - generic [ref=e5220]:
+                      - generic [ref=e5221]:
+                        - generic [ref=e5222]: FL HB 3 (Florida Social Media Act)
+                        - generic [ref=e5223]: Signed into law (Mar 2024)
+                        - generic [ref=e5224]: Florida, United States
+                      - paragraph [ref=e5225]: Florida law requiring age verification for social media platforms and prohibiting minors under 14 from holding accounts. Minors 14-15 need parental consent.
+                    - generic [ref=e5226]:
+                      - generic [ref=e5227]:
+                        - code [ref=e5228]: age_gate
+                        - code [ref=e5229]: parental_consent_gate
+                      - img [ref=e5230]
+                - button "MN HF 2 (Minnesota Usage Awareness) Introduced Minnesota, United States Minnesota bill requiring platforms to implement usage awareness tools for minor users, including periodic screen time reminders and usage dashboards. usage_timer_notification screen_time_report" [ref=e5233] [cursor=pointer]:
+                  - generic [ref=e5234]:
+                    - generic [ref=e5235]:
+                      - generic [ref=e5236]:
+                        - generic [ref=e5237]: MN HF 2 (Minnesota Usage Awareness)
+                        - generic [ref=e5238]: Introduced
+                        - generic [ref=e5239]: Minnesota, United States
+                      - paragraph [ref=e5240]: Minnesota bill requiring platforms to implement usage awareness tools for minor users, including periodic screen time reminders and usage dashboards.
+                    - generic [ref=e5241]:
+                      - generic [ref=e5242]:
+                        - code [ref=e5243]: usage_timer_notification
+                        - code [ref=e5244]: screen_time_report
+                      - img [ref=e5245]
+                - button "TN HB 1891 (Tennessee Screen Time Act) Signed into law (May 2024) Tennessee, United States Tennessee law requiring social media platforms to implement screen time awareness features for minor users, including configurable usage timer notifications. usage_timer_notification parental_consent_gate screen_time_report" [ref=e5248] [cursor=pointer]:
+                  - generic [ref=e5249]:
+                    - generic [ref=e5250]:
+                      - generic [ref=e5251]:
+                        - generic [ref=e5252]: TN HB 1891 (Tennessee Screen Time Act)
+                        - generic [ref=e5253]: Signed into law (May 2024)
+                        - generic [ref=e5254]: Tennessee, United States
+                      - paragraph [ref=e5255]: Tennessee law requiring social media platforms to implement screen time awareness features for minor users, including configurable usage timer notifications.
+                    - generic [ref=e5256]:
+                      - generic [ref=e5257]:
+                        - code [ref=e5258]: usage_timer_notification
+                        - code [ref=e5259]: parental_consent_gate
+                        - code [ref=e5260]: screen_time_report
+                      - img [ref=e5261]
+                - button "NY NYCDPA (New York Child Data Protection Act) Introduced New York, United States New York Child Data Protection Act focusing on commercial data collection from minors, with strong data minimization and deletion rights for child accounts. data_deletion_request commercial_data_ban" [ref=e5264] [cursor=pointer]:
+                  - generic [ref=e5265]:
+                    - generic [ref=e5266]:
+                      - generic [ref=e5267]:
+                        - generic [ref=e5268]: NY NYCDPA (New York Child Data Protection Act)
+                        - generic [ref=e5269]: Introduced
+                        - generic [ref=e5270]: New York, United States
+                      - paragraph [ref=e5271]: New York Child Data Protection Act focusing on commercial data collection from minors, with strong data minimization and deletion rights for child accounts.
+                    - generic [ref=e5272]:
+                      - generic [ref=e5273]:
+                        - code [ref=e5274]: data_deletion_request
+                        - code [ref=e5275]: commercial_data_ban
+                      - img [ref=e5276]
+                - button "MD Kids Code (Maryland Kids Code) Signed into law (May 2024) Maryland, United States Maryland Age-Appropriate Design Code requiring platforms to default to maximum privacy settings for minors, including geolocation disabled by default and data protection impact assessments. geolocation_opt_in algorithmic_audit" [ref=e5279] [cursor=pointer]:
+                  - generic [ref=e5280]:
+                    - generic [ref=e5281]:
+                      - generic [ref=e5282]:
+                        - generic [ref=e5283]: MD Kids Code (Maryland Kids Code)
+                        - generic [ref=e5284]: Signed into law (May 2024)
+                        - generic [ref=e5285]: Maryland, United States
+                      - paragraph [ref=e5286]: Maryland Age-Appropriate Design Code requiring platforms to default to maximum privacy settings for minors, including geolocation disabled by default and data protection impact assessments.
+                    - generic [ref=e5287]:
+                      - generic [ref=e5288]:
+                        - code [ref=e5289]: geolocation_opt_in
+                        - code [ref=e5290]: algorithmic_audit
+                      - img [ref=e5291]
+                - button "TX SCOPE Act (Texas Securing Children Online through Parental Empowerment Act) Enacted (2023) Texas, United States Texas law requiring parental consent for minors to access social media, with age verification requirements and monitoring provisions for platforms serving minors. age_gate monitoring_activity web_filter_level parental_consent_gate screen_time_report" [ref=e5294] [cursor=pointer]:
+                  - generic [ref=e5295]:
+                    - generic [ref=e5296]:
+                      - generic [ref=e5297]:
+                        - generic [ref=e5298]: TX SCOPE Act (Texas Securing Children Online through Parental Empowerment Act)
+                        - generic [ref=e5299]: Enacted (2023)
+                        - generic [ref=e5300]: Texas, United States
+                      - paragraph [ref=e5301]: Texas law requiring parental consent for minors to access social media, with age verification requirements and monitoring provisions for platforms serving minors.
+                    - generic [ref=e5302]:
+                      - generic [ref=e5303]:
+                        - code [ref=e5304]: age_gate
+                        - code [ref=e5305]: monitoring_activity
+                        - code [ref=e5306]: web_filter_level
+                        - code [ref=e5307]: parental_consent_gate
+                        - code [ref=e5308]: screen_time_report
+                      - img [ref=e5309]
+                - button "UT SMRA (Utah Social Media Regulation Act) Passed (2023) Utah, United States Utah law imposing curfews on minor social media use, requiring age verification, and banning addictive design features targeting minors. social_media_min_age time_scheduled_hours addictive_design_control parental_consent_gate" [ref=e5312] [cursor=pointer]:
+                  - generic [ref=e5313]:
+                    - generic [ref=e5314]:
+                      - generic [ref=e5315]:
+                        - generic [ref=e5316]: UT SMRA (Utah Social Media Regulation Act)
+                        - generic [ref=e5317]: Passed (2023)
+                        - generic [ref=e5318]: Utah, United States
+                      - paragraph [ref=e5319]: Utah law imposing curfews on minor social media use, requiring age verification, and banning addictive design features targeting minors.
+                    - generic [ref=e5320]:
+                      - generic [ref=e5321]:
+                        - code [ref=e5322]: social_media_min_age
+                        - code [ref=e5323]: time_scheduled_hours
+                        - code [ref=e5324]: addictive_design_control
+                        - code [ref=e5325]: parental_consent_gate
+                      - img [ref=e5326]
+                - button "LA Act 456 (Louisiana Act 456) Enacted (2024) Louisiana, United States Louisiana law requiring age verification for social media platforms and restricting minor access without parental consent. age_gate parental_consent_gate parental_event_notification" [ref=e5329] [cursor=pointer]:
+                  - generic [ref=e5330]:
+                    - generic [ref=e5331]:
+                      - generic [ref=e5332]:
+                        - generic [ref=e5333]: LA Act 456 (Louisiana Act 456)
+                        - generic [ref=e5334]: Enacted (2024)
+                        - generic [ref=e5335]: Louisiana, United States
+                      - paragraph [ref=e5336]: Louisiana law requiring age verification for social media platforms and restricting minor access without parental consent.
+                    - generic [ref=e5337]:
+                      - generic [ref=e5338]:
+                        - code [ref=e5339]: age_gate
+                        - code [ref=e5340]: parental_consent_gate
+                        - code [ref=e5341]: parental_event_notification
+                      - img [ref=e5342]
+                - button "OH HB 33 (Ohio Social Media Parental Notification Act) Enacted (2024) Ohio, United States Ohio law requiring platforms to obtain parental consent for users under 16, with restrictions on direct messaging to minor accounts. age_gate dm_restriction parental_consent_gate parental_event_notification" [ref=e5345] [cursor=pointer]:
+                  - generic [ref=e5346]:
+                    - generic [ref=e5347]:
+                      - generic [ref=e5348]:
+                        - generic [ref=e5349]: OH HB 33 (Ohio Social Media Parental Notification Act)
+                        - generic [ref=e5350]: Enacted (2024)
+                        - generic [ref=e5351]: Ohio, United States
+                      - paragraph [ref=e5352]: Ohio law requiring platforms to obtain parental consent for users under 16, with restrictions on direct messaging to minor accounts.
+                    - generic [ref=e5353]:
+                      - generic [ref=e5354]:
+                        - code [ref=e5355]: age_gate
+                        - code [ref=e5356]: dm_restriction
+                        - code [ref=e5357]: parental_consent_gate
+                        - code [ref=e5358]: parental_event_notification
+                      - img [ref=e5359]
+                - button "VT S69 (Vermont Age-Appropriate Design Code) Enacted (2024) Vermont, United States Vermont age-appropriate design code requiring platforms to disable addictive design features, ban targeted ads, and default geolocation to off for minors. addictive_design_control targeted_ad_block geolocation_opt_in" [ref=e5362] [cursor=pointer]:
+                  - generic [ref=e5363]:
+                    - generic [ref=e5364]:
+                      - generic [ref=e5365]:
+                        - generic [ref=e5366]: VT S69 (Vermont Age-Appropriate Design Code)
+                        - generic [ref=e5367]: Enacted (2024)
+                        - generic [ref=e5368]: Vermont, United States
+                      - paragraph [ref=e5369]: Vermont age-appropriate design code requiring platforms to disable addictive design features, ban targeted ads, and default geolocation to off for minors.
+                    - generic [ref=e5370]:
+                      - generic [ref=e5371]:
+                        - code [ref=e5372]: addictive_design_control
+                        - code [ref=e5373]: targeted_ad_block
+                        - code [ref=e5374]: geolocation_opt_in
+                      - img [ref=e5375]
+                - button "MA S2619 (Massachusetts S2619) Passed Senate (2025) Massachusetts, United States Massachusetts bill targeting dark patterns and addictive design in platforms used by minors, with bans on targeted advertising to children. targeted_ad_block addictive_design_control" [ref=e5378] [cursor=pointer]:
+                  - generic [ref=e5379]:
+                    - generic [ref=e5380]:
+                      - generic [ref=e5381]:
+                        - generic [ref=e5382]: MA S2619 (Massachusetts S2619)
+                        - generic [ref=e5383]: Passed Senate (2025)
+                        - generic [ref=e5384]: Massachusetts, United States
+                      - paragraph [ref=e5385]: Massachusetts bill targeting dark patterns and addictive design in platforms used by minors, with bans on targeted advertising to children.
+                    - generic [ref=e5386]:
+                      - generic [ref=e5387]:
+                        - code [ref=e5388]: targeted_ad_block
+                        - code [ref=e5389]: addictive_design_control
+                      - img [ref=e5390]
+                - button "AR Age Verify (Arkansas Social Media Safety Act) Enacted (2023) Arkansas, United States Arkansas law requiring age verification for social media platforms and prohibiting minors under 18 from creating accounts without parental consent. age_gate social_media_min_age parental_consent_gate" [ref=e5393] [cursor=pointer]:
+                  - generic [ref=e5394]:
+                    - generic [ref=e5395]:
+                      - generic [ref=e5396]:
+                        - generic [ref=e5397]: AR Age Verify (Arkansas Social Media Safety Act)
+                        - generic [ref=e5398]: Enacted (2023)
+                        - generic [ref=e5399]: Arkansas, United States
+                      - paragraph [ref=e5400]: Arkansas law requiring age verification for social media platforms and prohibiting minors under 18 from creating accounts without parental consent.
+                    - generic [ref=e5401]:
+                      - generic [ref=e5402]:
+                        - code [ref=e5403]: age_gate
+                        - code [ref=e5404]: social_media_min_age
+                        - code [ref=e5405]: parental_consent_gate
+                      - img [ref=e5406]
+                - button "CA Addiction Act (California Social Media Addiction Act) Enacted (Sep 2024) California, United States California law restricting notification delivery to minors during school hours and banning addictive design features that target children. notification_curfew addictive_design_control" [ref=e5409] [cursor=pointer]:
+                  - generic [ref=e5410]:
+                    - generic [ref=e5411]:
+                      - generic [ref=e5412]:
+                        - generic [ref=e5413]: CA Addiction Act (California Social Media Addiction Act)
+                        - generic [ref=e5414]: Enacted (Sep 2024)
+                        - generic [ref=e5415]: California, United States
+                      - paragraph [ref=e5416]: California law restricting notification delivery to minors during school hours and banning addictive design features that target children.
+                    - generic [ref=e5417]:
+                      - generic [ref=e5418]:
+                        - code [ref=e5419]: notification_curfew
+                        - code [ref=e5420]: addictive_design_control
+                      - img [ref=e5421]
+                - button "PA SB 1014 (Pennsylvania Cell Phone-Free Schools Act) Passed Senate 46-1 (Feb 2026) Pennsylvania, United States Requires all public schools in Pennsylvania to implement bell-to-bell phone-free policies. Students must store devices in lockers or locking pouches during school hours, with exceptions for medical needs, IEP/504 plans, and ELL accommodations. time_scheduled_hours time_downtime" [ref=e5424] [cursor=pointer]:
+                  - generic [ref=e5425]:
+                    - generic [ref=e5426]:
+                      - generic [ref=e5427]:
+                        - generic [ref=e5428]: PA SB 1014 (Pennsylvania Cell Phone-Free Schools Act)
+                        - generic [ref=e5429]: Passed Senate 46-1 (Feb 2026)
+                        - generic [ref=e5430]: Pennsylvania, United States
+                      - paragraph [ref=e5431]: Requires all public schools in Pennsylvania to implement bell-to-bell phone-free policies. Students must store devices in lockers or locking pouches during school hours, with exceptions for medical needs, IEP/504 plans, and ELL accommodations.
+                    - generic [ref=e5432]:
+                      - generic [ref=e5433]:
+                        - code [ref=e5434]: time_scheduled_hours
+                        - code [ref=e5435]: time_downtime
+                      - img [ref=e5436]
+                - button "PA HB 1814 (Pennsylvania Public School Code — Cell Phone Possession and Use) In House Education Committee (since Aug 2025) Pennsylvania, United States Companion bill to SB 1014 amending the Public School Code to establish statewide phone-free school policies. Sponsored by Rep. Mandy Steele with 17 co-sponsors and PSEA (Pennsylvania State Education Association) support. time_scheduled_hours time_downtime" [ref=e5439] [cursor=pointer]:
+                  - generic [ref=e5440]:
+                    - generic [ref=e5441]:
+                      - generic [ref=e5442]:
+                        - generic [ref=e5443]: PA HB 1814 (Pennsylvania Public School Code — Cell Phone Possession and Use)
+                        - generic [ref=e5444]: In House Education Committee (since Aug 2025)
+                        - generic [ref=e5445]: Pennsylvania, United States
+                      - paragraph [ref=e5446]: Companion bill to SB 1014 amending the Public School Code to establish statewide phone-free school policies. Sponsored by Rep. Mandy Steele with 17 co-sponsors and PSEA (Pennsylvania State Education Association) support.
+                    - generic [ref=e5447]:
+                      - generic [ref=e5448]:
+                        - code [ref=e5449]: time_scheduled_hours
+                        - code [ref=e5450]: time_downtime
+                      - img [ref=e5451]
+                - button "PA Online Safety (Pennsylvania Online Safety Protection Act) Co-sponsorship memo circulated (Dec 2025) Pennsylvania, United States Kids Code / KOSA-style legislation requiring platforms to conduct data protection impact assessments before launching services for minors. Prohibits collecting or selling child geolocation data, profiling children by default, and using design patterns that lead children to provide personal information. geolocation_opt_in privacy_data_sharing targeted_ad_block data_deletion_request age_gate commercial_data_ban algorithmic_audit" [ref=e5454] [cursor=pointer]:
+                  - generic [ref=e5455]:
+                    - generic [ref=e5456]:
+                      - generic [ref=e5457]:
+                        - generic [ref=e5458]: PA Online Safety (Pennsylvania Online Safety Protection Act)
+                        - generic [ref=e5459]: Co-sponsorship memo circulated (Dec 2025)
+                        - generic [ref=e5460]: Pennsylvania, United States
+                      - paragraph [ref=e5461]: Kids Code / KOSA-style legislation requiring platforms to conduct data protection impact assessments before launching services for minors. Prohibits collecting or selling child geolocation data, profiling children by default, and using design patterns that lead children to provide personal information.
+                    - generic [ref=e5462]:
+                      - generic [ref=e5463]:
+                        - code [ref=e5464]: geolocation_opt_in
+                        - code [ref=e5465]: privacy_data_sharing
+                        - code [ref=e5466]: targeted_ad_block
+                        - code [ref=e5467]: data_deletion_request
+                        - code [ref=e5468]: age_gate
+                        - code [ref=e5469]: commercial_data_ban
+                        - code [ref=e5470]: algorithmic_audit
+                      - img [ref=e5471]
+                - button "PA AI Children (Pennsylvania Regulating AI for Children Act) Co-sponsorship memo circulated (Jan 2026) Pennsylvania, United States Regulates AI interactions with minors by requiring age verification for AI services, prohibiting minors from using AI companion chatbots, and criminalizing AI systems that solicit sexually explicit content from or encourage self-harm in minors. Penalties up to $100,000 per violation. ai_minor_interaction age_gate csam_reporting" [ref=e5474] [cursor=pointer]:
+                  - generic [ref=e5475]:
+                    - generic [ref=e5476]:
+                      - generic [ref=e5477]:
+                        - generic [ref=e5478]: PA AI Children (Pennsylvania Regulating AI for Children Act)
+                        - generic [ref=e5479]: Co-sponsorship memo circulated (Jan 2026)
+                        - generic [ref=e5480]: Pennsylvania, United States
+                      - paragraph [ref=e5481]: Regulates AI interactions with minors by requiring age verification for AI services, prohibiting minors from using AI companion chatbots, and criminalizing AI systems that solicit sexually explicit content from or encourage self-harm in minors. Penalties up to $100,000 per violation.
+                    - generic [ref=e5482]:
+                      - generic [ref=e5483]:
+                        - code [ref=e5484]: ai_minor_interaction
+                        - code [ref=e5485]: age_gate
+                        - code [ref=e5486]: csam_reporting
+                      - img [ref=e5487]
+                - button "EU DSA (Digital Services Act) In force (Feb 2024) European Union (27 member states) Comprehensive EU regulation banning targeted ads to minors and requiring risk assessments for algorithmic systems. algo_feed_control addictive_design_control targeted_ad_block algorithmic_audit" [ref=e5490] [cursor=pointer]:
+                  - generic [ref=e5491]:
+                    - generic [ref=e5492]:
+                      - generic [ref=e5493]:
+                        - generic [ref=e5494]: EU DSA (Digital Services Act)
+                        - generic [ref=e5495]: In force (Feb 2024)
+                        - generic [ref=e5496]: European Union (27 member states)
+                      - paragraph [ref=e5497]: Comprehensive EU regulation banning targeted ads to minors and requiring risk assessments for algorithmic systems.
+                    - generic [ref=e5498]:
+                      - generic [ref=e5499]:
+                        - code [ref=e5500]: algo_feed_control
+                        - code [ref=e5501]: addictive_design_control
+                        - code [ref=e5502]: targeted_ad_block
+                        - code [ref=e5503]: algorithmic_audit
+                      - img [ref=e5504]
+                - button "GDPR Art. 8 (GDPR Article 8 Child Consent) In force (enacted May 2018) European Union (27 member states) GDPR Article 8 establishes conditions for child consent to data processing, requiring parental consent for children under 16 (or 13, depending on member state). targeted_ad_block data_deletion_request privacy_data_sharing parental_consent_gate algorithmic_audit" [ref=e5507] [cursor=pointer]:
+                  - generic [ref=e5508]:
+                    - generic [ref=e5509]:
+                      - generic [ref=e5510]:
+                        - generic [ref=e5511]: GDPR Art. 8 (GDPR Article 8 Child Consent)
+                        - generic [ref=e5512]: In force (enacted May 2018)
+                        - generic [ref=e5513]: European Union (27 member states)
+                      - paragraph [ref=e5514]: GDPR Article 8 establishes conditions for child consent to data processing, requiring parental consent for children under 16 (or 13, depending on member state).
+                    - generic [ref=e5515]:
+                      - generic [ref=e5516]:
+                        - code [ref=e5517]: targeted_ad_block
+                        - code [ref=e5518]: data_deletion_request
+                        - code [ref=e5519]: privacy_data_sharing
+                        - code [ref=e5520]: parental_consent_gate
+                        - code [ref=e5521]: algorithmic_audit
+                      - img [ref=e5522]
+                - button "EU AI Act (EU AI Act Minor Provisions) Enacted (Dec 2023) European Union (27 member states) The EU AI Act includes specific provisions protecting minors from AI systems that exploit vulnerabilities, manipulate behavior, or use subliminal techniques harmful to children. ai_minor_interaction addictive_design_control algorithmic_audit" [ref=e5525] [cursor=pointer]:
+                  - generic [ref=e5526]:
+                    - generic [ref=e5527]:
+                      - generic [ref=e5528]:
+                        - generic [ref=e5529]: EU AI Act (EU AI Act Minor Provisions)
+                        - generic [ref=e5530]: Enacted (Dec 2023)
+                        - generic [ref=e5531]: European Union (27 member states)
+                      - paragraph [ref=e5532]: The EU AI Act includes specific provisions protecting minors from AI systems that exploit vulnerabilities, manipulate behavior, or use subliminal techniques harmful to children.
+                    - generic [ref=e5533]:
+                      - generic [ref=e5534]:
+                        - code [ref=e5535]: ai_minor_interaction
+                        - code [ref=e5536]: addictive_design_control
+                        - code [ref=e5537]: algorithmic_audit
+                      - img [ref=e5538]
+                - button "FR SREN (France SREN + Image Rights Law) Enacted (2024) France French law requiring age verification for accessing certain online content and establishing image rights protections for minors, including provisions against sharenting. age_gate image_rights_minor" [ref=e5541] [cursor=pointer]:
+                  - generic [ref=e5542]:
+                    - generic [ref=e5543]:
+                      - generic [ref=e5544]:
+                        - generic [ref=e5545]: FR SREN (France SREN + Image Rights Law)
+                        - generic [ref=e5546]: Enacted (2024)
+                        - generic [ref=e5547]: France
+                      - paragraph [ref=e5548]: French law requiring age verification for accessing certain online content and establishing image rights protections for minors, including provisions against sharenting.
+                    - generic [ref=e5549]:
+                      - generic [ref=e5550]:
+                        - code [ref=e5551]: age_gate
+                        - code [ref=e5552]: image_rights_minor
+                      - img [ref=e5553]
+                - button "UK AADC (UK Age Appropriate Design Code) Enacted (Sep 2021) United Kingdom Duty of care requiring platforms to protect children from harmful content, restrict adult-child DMs, and implement age verification. addictive_design_control dm_restriction" [ref=e5556] [cursor=pointer]:
+                  - generic [ref=e5557]:
+                    - generic [ref=e5558]:
+                      - generic [ref=e5559]:
+                        - generic [ref=e5560]: UK AADC (UK Age Appropriate Design Code)
+                        - generic [ref=e5561]: Enacted (Sep 2021)
+                        - generic [ref=e5562]: United Kingdom
+                      - paragraph [ref=e5563]: Duty of care requiring platforms to protect children from harmful content, restrict adult-child DMs, and implement age verification.
+                    - generic [ref=e5564]:
+                      - generic [ref=e5565]:
+                        - code [ref=e5566]: addictive_design_control
+                        - code [ref=e5567]: dm_restriction
+                      - img [ref=e5568]
+                - button "UK OSA (UK Online Safety Act 2023) Enacted (Oct 2023) United Kingdom UK law imposing a duty of care on platforms to protect children from harmful content online. Requires age verification and proactive measures to prevent children encountering harmful material. addictive_design_control dm_restriction age_gate csam_reporting algorithmic_audit" [ref=e5571] [cursor=pointer]:
+                  - generic [ref=e5572]:
+                    - generic [ref=e5573]:
+                      - generic [ref=e5574]:
+                        - generic [ref=e5575]: UK OSA (UK Online Safety Act 2023)
+                        - generic [ref=e5576]: Enacted (Oct 2023)
+                        - generic [ref=e5577]: United Kingdom
+                      - paragraph [ref=e5578]: UK law imposing a duty of care on platforms to protect children from harmful content online. Requires age verification and proactive measures to prevent children encountering harmful material.
+                    - generic [ref=e5579]:
+                      - generic [ref=e5580]:
+                        - code [ref=e5581]: addictive_design_control
+                        - code [ref=e5582]: dm_restriction
+                        - code [ref=e5583]: age_gate
+                        - code [ref=e5584]: csam_reporting
+                        - code [ref=e5585]: algorithmic_audit
+                      - img [ref=e5586]
+                - button "DE JMStV (Germany Youth Media State Treaty) In force (ongoing amendments) Germany German interstate treaty governing youth protection in media, requiring content classification, age verification, and filtering for online services accessible by minors. age_gate content_rating web_filter_level" [ref=e5589] [cursor=pointer]:
+                  - generic [ref=e5590]:
+                    - generic [ref=e5591]:
+                      - generic [ref=e5592]:
+                        - generic [ref=e5593]: DE JMStV (Germany Youth Media State Treaty)
+                        - generic [ref=e5594]: In force (ongoing amendments)
+                        - generic [ref=e5595]: Germany
+                      - paragraph [ref=e5596]: German interstate treaty governing youth protection in media, requiring content classification, age verification, and filtering for online services accessible by minors.
+                    - generic [ref=e5597]:
+                      - generic [ref=e5598]:
+                        - code [ref=e5599]: age_gate
+                        - code [ref=e5600]: content_rating
+                        - code [ref=e5601]: web_filter_level
+                      - img [ref=e5602]
+                - button "IE OSMRA (Ireland Online Safety and Media Regulation Act 2022) Enacted (2022) Ireland Irish law establishing Coimisiún na Meán as online safety regulator, with powers to issue binding online safety codes and designate platforms for compliance obligations protecting children. age_gate addictive_design_control web_filter_level algorithmic_audit" [ref=e5605] [cursor=pointer]:
+                  - generic [ref=e5606]:
+                    - generic [ref=e5607]:
+                      - generic [ref=e5608]:
+                        - generic [ref=e5609]: IE OSMRA (Ireland Online Safety and Media Regulation Act 2022)
+                        - generic [ref=e5610]: Enacted (2022)
+                        - generic [ref=e5611]: Ireland
+                      - paragraph [ref=e5612]: Irish law establishing Coimisiún na Meán as online safety regulator, with powers to issue binding online safety codes and designate platforms for compliance obligations protecting children.
+                    - generic [ref=e5613]:
+                      - generic [ref=e5614]:
+                        - code [ref=e5615]: age_gate
+                        - code [ref=e5616]: addictive_design_control
+                        - code [ref=e5617]: web_filter_level
+                        - code [ref=e5618]: algorithmic_audit
+                      - img [ref=e5619]
+                - button "AU OSA (Australia Online Safety Act) In force (age verification trial) Australia Establishes the eSafety Commissioner with powers to enforce age verification and removal of content harmful to children. age_gate" [ref=e5622] [cursor=pointer]:
+                  - generic [ref=e5623]:
+                    - generic [ref=e5624]:
+                      - generic [ref=e5625]:
+                        - generic [ref=e5626]: AU OSA (Australia Online Safety Act)
+                        - generic [ref=e5627]: In force (age verification trial)
+                        - generic [ref=e5628]: Australia
+                      - paragraph [ref=e5629]: Establishes the eSafety Commissioner with powers to enforce age verification and removal of content harmful to children.
+                    - generic [ref=e5630]:
+                      - code [ref=e5632]: age_gate
+                      - img [ref=e5633]
+                - button "India DPDPA (Digital Personal Data Protection Act) Enacted (Aug 2023) India Complete ban on behavioral monitoring and targeted advertising directed at children. Verifiable parental consent required. targeted_ad_block parental_consent_gate" [ref=e5636] [cursor=pointer]:
+                  - generic [ref=e5637]:
+                    - generic [ref=e5638]:
+                      - generic [ref=e5639]:
+                        - generic [ref=e5640]: India DPDPA (Digital Personal Data Protection Act)
+                        - generic [ref=e5641]: Enacted (Aug 2023)
+                        - generic [ref=e5642]: India
+                      - paragraph [ref=e5643]: Complete ban on behavioral monitoring and targeted advertising directed at children. Verifiable parental consent required.
+                    - generic [ref=e5644]:
+                      - generic [ref=e5645]:
+                        - code [ref=e5646]: targeted_ad_block
+                        - code [ref=e5647]: parental_consent_gate
+                      - img [ref=e5648]
+                - button "AU SMMA (Australia Social Media Minimum Age Act 2024) Enacted (Dec 2024) Australia Australian law establishing a minimum age of 16 for social media access, with significant penalties for platforms that fail to enforce age verification. social_media_min_age age_gate" [ref=e5651] [cursor=pointer]:
+                  - generic [ref=e5652]:
+                    - generic [ref=e5653]:
+                      - generic [ref=e5654]:
+                        - generic [ref=e5655]: AU SMMA (Australia Social Media Minimum Age Act 2024)
+                        - generic [ref=e5656]: Enacted (Dec 2024)
+                        - generic [ref=e5657]: Australia
+                      - paragraph [ref=e5658]: Australian law establishing a minimum age of 16 for social media access, with significant penalties for platforms that fail to enforce age verification.
+                    - generic [ref=e5659]:
+                      - generic [ref=e5660]:
+                        - code [ref=e5661]: social_media_min_age
+                        - code [ref=e5662]: age_gate
+                      - img [ref=e5663]
+                - button "ID GR 17 (Indonesia GR 17/2025 on Child Protection) Enacted (2025) Indonesia Indonesian government regulation requiring platforms to implement age verification, content rating, and privacy protections for children accessing digital services. age_gate content_rating privacy_data_sharing parental_consent_gate commercial_data_ban algorithmic_audit" [ref=e5666] [cursor=pointer]:
+                  - generic [ref=e5667]:
+                    - generic [ref=e5668]:
+                      - generic [ref=e5669]:
+                        - generic [ref=e5670]: ID GR 17 (Indonesia GR 17/2025 on Child Protection)
+                        - generic [ref=e5671]: Enacted (2025)
+                        - generic [ref=e5672]: Indonesia
+                      - paragraph [ref=e5673]: Indonesian government regulation requiring platforms to implement age verification, content rating, and privacy protections for children accessing digital services.
+                    - generic [ref=e5674]:
+                      - generic [ref=e5675]:
+                        - code [ref=e5676]: age_gate
+                        - code [ref=e5677]: content_rating
+                        - code [ref=e5678]: privacy_data_sharing
+                        - code [ref=e5679]: parental_consent_gate
+                        - code [ref=e5680]: commercial_data_ban
+                        - code [ref=e5681]: algorithmic_audit
+                      - img [ref=e5682]
+                - button "SG PDPA (Singapore PDPA Child Guidelines) Guidelines published (2024) Singapore Singapore's Personal Data Protection Commission guidelines on collecting, using, and disclosing personal data of children, emphasizing consent and data protection. privacy_data_sharing targeted_ad_block parental_consent_gate" [ref=e5685] [cursor=pointer]:
+                  - generic [ref=e5686]:
+                    - generic [ref=e5687]:
+                      - generic [ref=e5688]:
+                        - generic [ref=e5689]: SG PDPA (Singapore PDPA Child Guidelines)
+                        - generic [ref=e5690]: Guidelines published (2024)
+                        - generic [ref=e5691]: Singapore
+                      - paragraph [ref=e5692]: Singapore's Personal Data Protection Commission guidelines on collecting, using, and disclosing personal data of children, emphasizing consent and data protection.
+                    - generic [ref=e5693]:
+                      - generic [ref=e5694]:
+                        - code [ref=e5695]: privacy_data_sharing
+                        - code [ref=e5696]: targeted_ad_block
+                        - code [ref=e5697]: parental_consent_gate
+                      - img [ref=e5698]
+                - button "JP YIEA (Japan Youth Internet Environment Act) In force (enacted 2008 Japan Japanese law requiring ISPs and device manufacturers to provide content filtering for minors, promoting a safe internet environment for young people. web_filter_level web_category_block" [ref=e5701] [cursor=pointer]:
+                  - generic [ref=e5702]:
+                    - generic [ref=e5703]:
+                      - generic [ref=e5704]:
+                        - generic [ref=e5705]: JP YIEA (Japan Youth Internet Environment Act)
+                        - generic [ref=e5706]: In force (enacted 2008
+                        - generic [ref=e5707]: Japan
+                      - paragraph [ref=e5708]: Japanese law requiring ISPs and device manufacturers to provide content filtering for minors, promoting a safe internet environment for young people.
+                    - generic [ref=e5709]:
+                      - generic [ref=e5710]:
+                        - code [ref=e5711]: web_filter_level
+                        - code [ref=e5712]: web_category_block
+                      - img [ref=e5713]
+                - button "KR JPA (South Korea Juvenile Protection Act) In force (enacted 2014 South Korea South Korean law restricting minors' access to online games during nighttime hours and requiring content rating for all games and media accessible to juveniles. time_daily_limit content_rating" [ref=e5716] [cursor=pointer]:
+                  - generic [ref=e5717]:
+                    - generic [ref=e5718]:
+                      - generic [ref=e5719]:
+                        - generic [ref=e5720]: KR JPA (South Korea Juvenile Protection Act)
+                        - generic [ref=e5721]: In force (enacted 2014
+                        - generic [ref=e5722]: South Korea
+                      - paragraph [ref=e5723]: South Korean law restricting minors' access to online games during nighttime hours and requiring content rating for all games and media accessible to juveniles.
+                    - generic [ref=e5724]:
+                      - generic [ref=e5725]:
+                        - code [ref=e5726]: time_daily_limit
+                        - code [ref=e5727]: content_rating
+                      - img [ref=e5728]
+                - button "KR PIPA (South Korea Personal Information Protection Act) In force (enacted 2011 South Korea South Korea's comprehensive data protection law with strengthened provisions for children's personal information, requiring parental consent and restricting data processing for minors. privacy_data_sharing data_deletion_request targeted_ad_block parental_consent_gate" [ref=e5731] [cursor=pointer]:
+                  - generic [ref=e5732]:
+                    - generic [ref=e5733]:
+                      - generic [ref=e5734]:
+                        - generic [ref=e5735]: KR PIPA (South Korea Personal Information Protection Act)
+                        - generic [ref=e5736]: In force (enacted 2011
+                        - generic [ref=e5737]: South Korea
+                      - paragraph [ref=e5738]: South Korea's comprehensive data protection law with strengthened provisions for children's personal information, requiring parental consent and restricting data processing for minors.
+                    - generic [ref=e5739]:
+                      - generic [ref=e5740]:
+                        - code [ref=e5741]: privacy_data_sharing
+                        - code [ref=e5742]: data_deletion_request
+                        - code [ref=e5743]: targeted_ad_block
+                        - code [ref=e5744]: parental_consent_gate
+                      - img [ref=e5745]
+                - button "NZ SM Proposal (New Zealand Social Media Age Proposal) Proposed (2024) New Zealand New Zealand government proposal to establish a minimum age for social media access, modeled on Australia's Social Media Minimum Age Act. social_media_min_age age_gate" [ref=e5748] [cursor=pointer]:
+                  - generic [ref=e5749]:
+                    - generic [ref=e5750]:
+                      - generic [ref=e5751]:
+                        - generic [ref=e5752]: NZ SM Proposal (New Zealand Social Media Age Proposal)
+                        - generic [ref=e5753]: Proposed (2024)
+                        - generic [ref=e5754]: New Zealand
+                      - paragraph [ref=e5755]: New Zealand government proposal to establish a minimum age for social media access, modeled on Australia's Social Media Minimum Age Act.
+                    - generic [ref=e5756]:
+                      - generic [ref=e5757]:
+                        - code [ref=e5758]: social_media_min_age
+                        - code [ref=e5759]: age_gate
+                      - img [ref=e5760]
+                - button "CA Bill C-63 (Canada Online Harms Act (Bill C-63)) Proposed (2024) Canada Canadian bill establishing a duty of care for online platforms to protect children from harmful content, with specific provisions for CSAM reporting and addictive design restrictions. csam_reporting addictive_design_control dm_restriction algorithmic_audit" [ref=e5763] [cursor=pointer]:
+                  - generic [ref=e5764]:
+                    - generic [ref=e5765]:
+                      - generic [ref=e5766]:
+                        - generic [ref=e5767]: CA Bill C-63 (Canada Online Harms Act (Bill C-63))
+                        - generic [ref=e5768]: Proposed (2024)
+                        - generic [ref=e5769]: Canada
+                      - paragraph [ref=e5770]: Canadian bill establishing a duty of care for online platforms to protect children from harmful content, with specific provisions for CSAM reporting and addictive design restrictions.
+                    - generic [ref=e5771]:
+                      - generic [ref=e5772]:
+                        - code [ref=e5773]: csam_reporting
+                        - code [ref=e5774]: addictive_design_control
+                        - code [ref=e5775]: dm_restriction
+                        - code [ref=e5776]: algorithmic_audit
+                      - img [ref=e5777]
+                - button "BR LGPD (Brazil LGPD Child Provisions + Digital ECA) LGPD enacted (2018) Brazil Brazil's data protection law includes specific child provisions banning targeted advertising to minors, supplemented by the Digital ECA bill strengthening children's digital rights. targeted_ad_block privacy_data_sharing data_deletion_request parental_consent_gate commercial_data_ban" [ref=e5780] [cursor=pointer]:
+                  - generic [ref=e5781]:
+                    - generic [ref=e5782]:
+                      - generic [ref=e5783]:
+                        - generic [ref=e5784]: BR LGPD (Brazil LGPD Child Provisions + Digital ECA)
+                        - generic [ref=e5785]: LGPD enacted (2018)
+                        - generic [ref=e5786]: Brazil
+                      - paragraph [ref=e5787]: Brazil's data protection law includes specific child provisions banning targeted advertising to minors, supplemented by the Digital ECA bill strengthening children's digital rights.
+                    - generic [ref=e5788]:
+                      - generic [ref=e5789]:
+                        - code [ref=e5790]: targeted_ad_block
+                        - code [ref=e5791]: privacy_data_sharing
+                        - code [ref=e5792]: data_deletion_request
+                        - code [ref=e5793]: parental_consent_gate
+                        - code [ref=e5794]: commercial_data_ban
+                      - img [ref=e5795]
+                - button "MX LFPDPPP (Mexico Data Protection Law 2025) Enacted (March 2025) Mexico Mexican federal data protection law with provisions for minors' personal data, requiring parental consent and data protection measures for children's information. privacy_data_sharing parental_consent_gate" [ref=e5798] [cursor=pointer]:
+                  - generic [ref=e5799]:
+                    - generic [ref=e5800]:
+                      - generic [ref=e5801]:
+                        - generic [ref=e5802]: MX LFPDPPP (Mexico Data Protection Law 2025)
+                        - generic [ref=e5803]: Enacted (March 2025)
+                        - generic [ref=e5804]: Mexico
+                      - paragraph [ref=e5805]: Mexican federal data protection law with provisions for minors' personal data, requiring parental consent and data protection measures for children's information.
+                    - generic [ref=e5806]:
+                      - generic [ref=e5807]:
+                        - code [ref=e5808]: privacy_data_sharing
+                        - code [ref=e5809]: parental_consent_gate
+                      - img [ref=e5810]
+                - button "CL PDP (Chile Personal Data Protection Bill) Passed Congress (Aug 2024) Chile Chilean personal data protection bill with specific provisions for children's data, establishing a data protection authority and rights including data deletion for minors. privacy_data_sharing data_deletion_request parental_consent_gate commercial_data_ban" [ref=e5813] [cursor=pointer]:
+                  - generic [ref=e5814]:
+                    - generic [ref=e5815]:
+                      - generic [ref=e5816]:
+                        - generic [ref=e5817]: CL PDP (Chile Personal Data Protection Bill)
+                        - generic [ref=e5818]: Passed Congress (Aug 2024)
+                        - generic [ref=e5819]: Chile
+                      - paragraph [ref=e5820]: Chilean personal data protection bill with specific provisions for children's data, establishing a data protection authority and rights including data deletion for minors.
+                    - generic [ref=e5821]:
+                      - generic [ref=e5822]:
+                        - code [ref=e5823]: privacy_data_sharing
+                        - code [ref=e5824]: data_deletion_request
+                        - code [ref=e5825]: parental_consent_gate
+                        - code [ref=e5826]: commercial_data_ban
+                      - img [ref=e5827]
+                - button "UAE Decree 26 (UAE Child Digital Safety Law) Enacted (2025) United Arab Emirates UAE law establishing comprehensive child digital safety requirements, including age verification, targeted ad bans, privacy protections, and restrictions on addictive design for platforms serving children under 13. age_gate targeted_ad_block privacy_data_sharing addictive_design_control geolocation_opt_in parental_consent_gate" [ref=e5830] [cursor=pointer]:
+                  - generic [ref=e5831]:
+                    - generic [ref=e5832]:
+                      - generic [ref=e5833]:
+                        - generic [ref=e5834]: UAE Decree 26 (UAE Child Digital Safety Law)
+                        - generic [ref=e5835]: Enacted (2025)
+                        - generic [ref=e5836]: United Arab Emirates
+                      - paragraph [ref=e5837]: UAE law establishing comprehensive child digital safety requirements, including age verification, targeted ad bans, privacy protections, and restrictions on addictive design for platforms serving children under 13.
+                    - generic [ref=e5838]:
+                      - generic [ref=e5839]:
+                        - code [ref=e5840]: age_gate
+                        - code [ref=e5841]: targeted_ad_block
+                        - code [ref=e5842]: privacy_data_sharing
+                        - code [ref=e5843]: addictive_design_control
+                        - code [ref=e5844]: geolocation_opt_in
+                        - code [ref=e5845]: parental_consent_gate
+                      - img [ref=e5846]
+                - button "PH COTG (Philippines Child Transparency Guidelines) Published (Dec 2024) Philippines Philippines National Privacy Commission guidelines on transparency requirements for processing children's personal data, emphasizing best interests and data protection. privacy_data_sharing parental_consent_gate" [ref=e5849] [cursor=pointer]:
+                  - generic [ref=e5850]:
+                    - generic [ref=e5851]:
+                      - generic [ref=e5852]:
+                        - generic [ref=e5853]: PH COTG (Philippines Child Transparency Guidelines)
+                        - generic [ref=e5854]: Published (Dec 2024)
+                        - generic [ref=e5855]: Philippines
+                      - paragraph [ref=e5856]: Philippines National Privacy Commission guidelines on transparency requirements for processing children's personal data, emphasizing best interests and data protection.
+                    - generic [ref=e5857]:
+                      - generic [ref=e5858]:
+                        - code [ref=e5859]: privacy_data_sharing
+                        - code [ref=e5860]: parental_consent_gate
+                      - img [ref=e5861]
+                - button "SA PDPL (Saudi Arabia Personal Data Protection Law) Enacted (Sep 2023) Saudi Arabia Saudi Arabia's comprehensive data protection law with specific provisions for children's data, requiring explicit parental consent and prohibiting processing that harms minors' interests. privacy_data_sharing data_deletion_request parental_consent_gate" [ref=e5864] [cursor=pointer]:
+                  - generic [ref=e5865]:
+                    - generic [ref=e5866]:
+                      - generic [ref=e5867]:
+                        - generic [ref=e5868]: SA PDPL (Saudi Arabia Personal Data Protection Law)
+                        - generic [ref=e5869]: Enacted (Sep 2023)
+                        - generic [ref=e5870]: Saudi Arabia
+                      - paragraph [ref=e5871]: Saudi Arabia's comprehensive data protection law with specific provisions for children's data, requiring explicit parental consent and prohibiting processing that harms minors' interests.
+                    - generic [ref=e5872]:
+                      - generic [ref=e5873]:
+                        - code [ref=e5874]: privacy_data_sharing
+                        - code [ref=e5875]: data_deletion_request
+                        - code [ref=e5876]: parental_consent_gate
+                      - img [ref=e5877]
+                - button "ID Age Verify (Idaho Age Verification Act) Enacted Idaho, United States Idaho law requiring age verification for platforms hosting content harmful to minors, mandating commercially reasonable age verification methods. age_gate" [ref=e5880] [cursor=pointer]:
+                  - generic [ref=e5881]:
+                    - generic [ref=e5882]:
+                      - generic [ref=e5883]:
+                        - generic [ref=e5884]: ID Age Verify (Idaho Age Verification Act)
+                        - generic [ref=e5885]: Enacted
+                        - generic [ref=e5886]: Idaho, United States
+                      - paragraph [ref=e5887]: Idaho law requiring age verification for platforms hosting content harmful to minors, mandating commercially reasonable age verification methods.
+                    - generic [ref=e5888]:
+                      - code [ref=e5890]: age_gate
+                      - img [ref=e5891]
+                - button "KY Age Verify (Kentucky Age Verification Act) Enacted Kentucky, United States Kentucky law requiring age verification for platforms hosting content harmful to minors, with civil liability for non-compliance. age_gate" [ref=e5894] [cursor=pointer]:
+                  - generic [ref=e5895]:
+                    - generic [ref=e5896]:
+                      - generic [ref=e5897]:
+                        - generic [ref=e5898]: KY Age Verify (Kentucky Age Verification Act)
+                        - generic [ref=e5899]: Enacted
+                        - generic [ref=e5900]: Kentucky, United States
+                      - paragraph [ref=e5901]: Kentucky law requiring age verification for platforms hosting content harmful to minors, with civil liability for non-compliance.
+                    - generic [ref=e5902]:
+                      - code [ref=e5904]: age_gate
+                      - img [ref=e5905]
+                - button "NE Age Verify (Nebraska Age Verification Act) Enacted Nebraska, United States Nebraska law requiring age verification for platforms hosting content harmful to minors, establishing obligations for commercial content publishers. age_gate" [ref=e5908] [cursor=pointer]:
+                  - generic [ref=e5909]:
+                    - generic [ref=e5910]:
+                      - generic [ref=e5911]:
+                        - generic [ref=e5912]: NE Age Verify (Nebraska Age Verification Act)
+                        - generic [ref=e5913]: Enacted
+                        - generic [ref=e5914]: Nebraska, United States
+                      - paragraph [ref=e5915]: Nebraska law requiring age verification for platforms hosting content harmful to minors, establishing obligations for commercial content publishers.
+                    - generic [ref=e5916]:
+                      - code [ref=e5918]: age_gate
+                      - img [ref=e5919]
+                - button "SC Age Verify (South Carolina Age Verification Act) Enacted South Carolina, United States South Carolina law requiring age verification for platforms hosting content harmful to minors, with both AG enforcement and private right of action. age_gate" [ref=e5922] [cursor=pointer]:
+                  - generic [ref=e5923]:
+                    - generic [ref=e5924]:
+                      - generic [ref=e5925]:
+                        - generic [ref=e5926]: SC Age Verify (South Carolina Age Verification Act)
+                        - generic [ref=e5927]: Enacted
+                        - generic [ref=e5928]: South Carolina, United States
+                      - paragraph [ref=e5929]: South Carolina law requiring age verification for platforms hosting content harmful to minors, with both AG enforcement and private right of action.
+                    - generic [ref=e5930]:
+                      - code [ref=e5932]: age_gate
+                      - img [ref=e5933]
+            - generic [ref=e5935]:
+              - heading "12. Parent Experience" [level=2] [ref=e5936]
+              - generic [ref=e5937]:
+                - paragraph [ref=e5938]: Phosra provides a guided Quick Setup flow that enables parents to protect their children across all regulated platforms in under one minute. The three-step wizard handles family creation, age-based policy generation, and platform verification.
+                - generic [ref=e5939]:
+                  - generic [ref=e5940]:
+                    - generic [ref=e5941]: "1"
+                    - heading "Tell Us About Your Child" [level=4] [ref=e5942]
+                    - paragraph [ref=e5943]: Enter name, birth date, and choose a protection level (Recommended, Strict, or Relaxed).
+                  - generic [ref=e5944]:
+                    - generic [ref=e5945]: "2"
+                    - heading "Review Protections" [level=4] [ref=e5946]
+                    - paragraph [ref=e5947]: See plain-language summary cards for screen time, content ratings, web filtering, social controls, privacy, and algorithm safety.
+                  - generic [ref=e5948]:
+                    - generic [ref=e5949]: "3"
+                    - heading "Connect Platforms" [level=4] [ref=e5950]
+                    - paragraph [ref=e5951]: Verify compliance on platforms with a progress indicator. Enforce with one click after connecting.
+                - generic [ref=e5952]:
+                  - heading "What Gets Created" [level=4] [ref=e5953]
+                  - list [ref=e5954]:
+                    - listitem [ref=e5955]: Family (if not already created)
+                    - listitem [ref=e5956]: Child profile with age computation
+                    - listitem [ref=e5957]: Active safety policy with ~20-25 enabled rules across all 45 categories
+                    - listitem [ref=e5958]: Age-appropriate content ratings across 5 rating systems
+                    - listitem [ref=e5959]: Legislation-compliant rules for algorithmic safety, notifications, advertising, and data privacy
+            - generic [ref=e5960]:
+              - heading "13. Community Standards" [level=2] [ref=e5961]
+              - generic [ref=e5962]:
+                - paragraph [ref=e5963]:
+                  - text: Phosra supports
+                  - strong [ref=e5964]: community standards
+                  - text: (also called movements) — curated rule sets based on expert guidance, research, and advocacy organizations. Parents
+                  - strong [ref=e5965]: MAY
+                  - text: adopt one or more standards for each child to automatically generate matching policy rules.
+                - paragraph [ref=e5966]:
+                  - text: Standards provide a "one-click" way to align with community guidelines like the
+                  - strong [ref=e5967]: Four Norms
+                  - text: from Jonathan Haidt's Anxious Generation,
+                  - strong [ref=e5968]: Wait Until 8th
+                  - text: ", or"
+                  - strong [ref=e5969]: Common Sense Media
+                  - text: age ratings. When adopted, the standard's rules are merged into the child's active policy.
+                - generic [ref=e5970]:
+                  - generic [ref=e5971]:
+                    - heading "Expert Standards" [level=4] [ref=e5972]
+                    - paragraph [ref=e5973]: Research-backed rule sets from child development experts and psychologists.
+                  - generic [ref=e5974]:
+                    - heading "Community Pledges" [level=4] [ref=e5975]
+                    - paragraph [ref=e5976]: Grassroots movements like Wait Until 8th and Smartphone Free Childhood.
+                  - generic [ref=e5977]:
+                    - heading "Organization Guidelines" [level=4] [ref=e5978]
+                    - paragraph [ref=e5979]: Recommendations from AAP, Common Sense Media, and other organizations.
+                - paragraph [ref=e5981]:
+                  - text: Browse all available standards at
+                  - link "/standards" [ref=e5982] [cursor=pointer]:
+                    - /url: /standards
+                  - text: . The Phosra API currently includes
+                  - strong [ref=e5983]: 21 community standards
+                  - text: spanning expert guidance, parenting pledges, and organizational recommendations.
+              - generic [ref=e5984]:
+                - generic [ref=e5985]:
+                  - generic [ref=e5986]:
+                    - generic [ref=e5987]: GET
+                    - code [ref=e5988]: /standards
+                    - button "Copy link" [ref=e5989] [cursor=pointer]:
+                      - img [ref=e5990]
+                  - paragraph [ref=e5993]: List all available community standards (movements). Each standard defines a set of recommended rules based on expert guidance — e.g. Wait Until 8th, Four Norms (Anxious Generation), Common Sense Media guidelines. This endpoint is public.
+                  - generic [ref=e5994]:
+                    - generic [ref=e5997]:
+                      - heading "Response fields" [level=4] [ref=e5998]
+                      - generic [ref=e6001]:
+                        - generic [ref=e6002]:
+                          - generic [ref=e6003]:
+                            - button [ref=e6004] [cursor=pointer]:
+                              - img [ref=e6005]
+                            - code [ref=e6007]: "[]"
+                          - paragraph [ref=e6008]: Array of community standard objects
+                        - generic [ref=e6010]: Standard[]
+                    - generic [ref=e6012]:
+                      - generic [ref=e6013]:
+                        - generic [ref=e6014]:
+                          - generic [ref=e6015]:
+                            - generic [ref=e6016]: Request
+                            - generic [ref=e6017]: curl
+                          - button "Copy" [ref=e6018] [cursor=pointer]:
+                            - img [ref=e6019]
+                            - text: Copy
+                        - code [ref=e6023]: curl http://localhost:8080/api/v1/standards
+                      - generic [ref=e6024]:
+                        - generic [ref=e6025]:
+                          - generic [ref=e6026]:
+                            - generic [ref=e6027]: Response
+                            - generic [ref=e6028]: json
+                          - button "Copy" [ref=e6029] [cursor=pointer]:
+                            - img [ref=e6030]
+                            - text: Copy
+                        - code [ref=e6034]: "[ { \"id\": \"four-norms\", \"slug\": \"four-norms\", \"name\": \"Four Norms (Anxious Generation)\", \"description\": \"Jonathan Haidt's four foundational norms for childhood in the smartphone age.\", \"rules_count\": 6, \"category\": \"expert\" }, { \"id\": \"wait-until-8th\", \"slug\": \"wait-until-8th\", \"name\": \"Wait Until 8th\", \"description\": \"The pledge to wait until at least 8th grade before giving children a smartphone.\", \"rules_count\": 4, \"category\": \"pledge\" } ]"
+                - generic [ref=e6035]:
+                  - generic [ref=e6036]:
+                    - generic [ref=e6037]: GET
+                    - code [ref=e6038]: "/standards/{slug}"
+                    - button "Copy link" [ref=e6039] [cursor=pointer]:
+                      - img [ref=e6040]
+                  - paragraph [ref=e6043]: Get full details of a community standard including all recommended rules, age thresholds, and supporting research. This endpoint is public.
+                  - generic [ref=e6044]:
+                    - generic [ref=e6047]:
+                      - heading "Response fields" [level=4] [ref=e6048]
+                      - generic [ref=e6049]:
+                        - generic [ref=e6051]:
+                          - generic [ref=e6052]:
+                            - code [ref=e6054]: id
+                            - paragraph [ref=e6055]: Standard identifier
+                          - generic [ref=e6057]: string
+                        - generic [ref=e6059]:
+                          - generic [ref=e6060]:
+                            - code [ref=e6062]: slug
+                            - paragraph [ref=e6063]: URL-friendly slug
+                          - generic [ref=e6065]: string
+                        - generic [ref=e6067]:
+                          - generic [ref=e6068]:
+                            - code [ref=e6070]: name
+                            - paragraph [ref=e6071]: Standard display name
+                          - generic [ref=e6073]: string
+                        - generic [ref=e6075]:
+                          - generic [ref=e6076]:
+                            - code [ref=e6078]: description
+                            - paragraph [ref=e6079]: Summary of the standard's purpose
+                          - generic [ref=e6081]: string
+                        - generic [ref=e6083]:
+                          - generic [ref=e6084]:
+                            - code [ref=e6086]: rules
+                            - paragraph [ref=e6087]: Recommended rules with categories and values
+                          - generic [ref=e6089]: object[]
+                        - generic [ref=e6091]:
+                          - generic [ref=e6092]:
+                            - code [ref=e6094]: rules_count
+                            - paragraph [ref=e6095]: Number of rules in the standard
+                          - generic [ref=e6097]: integer
+                        - generic [ref=e6099]:
+                          - generic [ref=e6100]:
+                            - code [ref=e6102]: category
+                            - paragraph [ref=e6103]: Standard category (expert, pledge, organization)
+                          - generic [ref=e6105]: string
+                    - generic [ref=e6107]:
+                      - generic [ref=e6108]:
+                        - generic [ref=e6109]:
+                          - generic [ref=e6110]:
+                            - generic [ref=e6111]: Request
+                            - generic [ref=e6112]: curl
+                          - button "Copy" [ref=e6113] [cursor=pointer]:
+                            - img [ref=e6114]
+                            - text: Copy
+                        - code [ref=e6118]: curl http://localhost:8080/api/v1/standards/four-norms
+                      - generic [ref=e6119]:
+                        - generic [ref=e6120]:
+                          - generic [ref=e6121]:
+                            - generic [ref=e6122]: Response
+                            - generic [ref=e6123]: json
+                          - button "Copy" [ref=e6124] [cursor=pointer]:
+                            - img [ref=e6125]
+                            - text: Copy
+                        - code [ref=e6129]: "{ \"id\": \"four-norms\", \"slug\": \"four-norms\", \"name\": \"Four Norms (Anxious Generation)\", \"description\": \"Jonathan Haidt's four foundational norms for childhood in the smartphone age.\", \"rules\": [ { \"category\": \"social_media_min_age\", \"value\": \"16\", \"label\": \"No social media before 16\" }, { \"category\": \"time_daily_limit\", \"value\": \"120\", \"label\": \"Phone-free schools\" }, { \"category\": \"time_bedtime\", \"value\": \"enabled\", \"label\": \"Device-free bedrooms\" } ], \"rules_count\": 6, \"category\": \"expert\" }"
+                - generic [ref=e6130]:
+                  - generic [ref=e6131]:
+                    - generic [ref=e6132]: GET
+                    - code [ref=e6133]: "/children/{childID}/standards"
+                    - button "Copy link" [ref=e6134] [cursor=pointer]:
+                      - img [ref=e6135]
+                  - paragraph [ref=e6138]: List all community standards adopted for a specific child. Adopted standards automatically generate corresponding policy rules.
+                  - generic [ref=e6141]:
+                    - generic [ref=e6142]:
+                      - generic [ref=e6143]:
+                        - generic [ref=e6144]:
+                          - generic [ref=e6145]: Request
+                          - generic [ref=e6146]: curl
+                        - button "Copy" [ref=e6147] [cursor=pointer]:
+                          - img [ref=e6148]
+                          - text: Copy
+                      - code [ref=e6152]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e6153]:
+                      - generic [ref=e6154]:
+                        - generic [ref=e6155]:
+                          - generic [ref=e6156]: Response
+                          - generic [ref=e6157]: json
+                        - button "Copy" [ref=e6158] [cursor=pointer]:
+                          - img [ref=e6159]
+                          - text: Copy
+                      - code [ref=e6163]: "[ { \"standard_id\": \"four-norms\", \"name\": \"Four Norms (Anxious Generation)\", \"adopted_at\": \"2025-01-15T10:00:00Z\", \"rules_applied\": 6 } ]"
+                - generic [ref=e6164]:
+                  - generic [ref=e6165]:
+                    - generic [ref=e6166]: POST
+                    - code [ref=e6167]: "/children/{childID}/standards"
+                    - button "Copy link" [ref=e6168] [cursor=pointer]:
+                      - img [ref=e6169]
+                  - paragraph [ref=e6172]: Adopt a community standard for a child. This generates policy rules matching the standard's recommendations and adds them to the child's active policy. If rules for the same categories already exist, they are updated to match the standard.
+                  - generic [ref=e6173]:
+                    - generic [ref=e6176]:
+                      - heading "Request fields" [level=4] [ref=e6177]
+                      - generic [ref=e6180]:
+                        - generic [ref=e6181]:
+                          - code [ref=e6183]: standard_id
+                          - paragraph [ref=e6184]: Slug of the community standard to adopt
+                        - generic [ref=e6185]:
+                          - generic [ref=e6186]: string
+                          - generic [ref=e6187]: required
+                    - generic [ref=e6189]:
+                      - generic [ref=e6190]:
+                        - generic [ref=e6191]:
+                          - generic [ref=e6192]:
+                            - generic [ref=e6193]: Request
+                            - generic [ref=e6194]: curl
+                          - button "Copy" [ref=e6195] [cursor=pointer]:
+                            - img [ref=e6196]
+                            - text: Copy
+                        - code [ref=e6200]: "curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"standard_id\": \"four-norms\" }'"
+                      - generic [ref=e6201]:
+                        - generic [ref=e6202]:
+                          - generic [ref=e6203]:
+                            - generic [ref=e6204]: Response
+                            - generic [ref=e6205]: json
+                          - button "Copy" [ref=e6206] [cursor=pointer]:
+                            - img [ref=e6207]
+                            - text: Copy
+                        - code [ref=e6211]: "{ \"standard_id\": \"four-norms\", \"name\": \"Four Norms (Anxious Generation)\", \"adopted_at\": \"2025-01-15T10:00:00Z\", \"rules_applied\": 6, \"rules_created\": 3, \"rules_updated\": 3 }"
+                - generic [ref=e6212]:
+                  - generic [ref=e6213]:
+                    - generic [ref=e6214]: DELETE
+                    - code [ref=e6215]: "/children/{childID}/standards/{standardID}"
+                    - button "Copy link" [ref=e6216] [cursor=pointer]:
+                      - img [ref=e6217]
+                  - paragraph [ref=e6220]: Remove a community standard from a child. The associated policy rules are not automatically deleted — they remain as manually-configured rules. To remove the rules as well, delete them individually or regenerate the policy from age.
+                  - generic [ref=e6223]:
+                    - generic [ref=e6224]:
+                      - generic [ref=e6225]:
+                        - generic [ref=e6226]:
+                          - generic [ref=e6227]: Request
+                          - generic [ref=e6228]: curl
+                        - button "Copy" [ref=e6229] [cursor=pointer]:
+                          - img [ref=e6230]
+                          - text: Copy
+                      - code [ref=e6234]: "curl -X DELETE http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards/four-norms \\ -H \"Authorization: Bearer <access_token>\""
+                    - generic [ref=e6235]:
+                      - generic [ref=e6236]:
+                        - generic [ref=e6237]:
+                          - generic [ref=e6238]: Response
+                          - generic [ref=e6239]: json
+                        - button "Copy" [ref=e6240] [cursor=pointer]:
+                          - img [ref=e6241]
+                          - text: Copy
+                      - code [ref=e6245]: // 204 No Content
+            - generic [ref=e6246]:
+              - heading "14. Parental Control Sources" [level=2] [ref=e6247]
+              - generic [ref=e6248]:
+                - paragraph [ref=e6249]:
+                  - text: Phosra maintains a registry of
+                  - strong [ref=e6250]: 21 parental control applications and services
+                  - text: that can be connected as
+                  - emphasis [ref=e6251]: sources
+                  - text: — apps parents already use to manage their children's devices. Unlike target platforms that Phosra pushes rules
+                  - emphasis [ref=e6252]: to
+                  - text: ", sources are apps that Phosra integrates"
+                  - emphasis [ref=e6253]: with
+                  - text: to push rules
+                  - emphasis [ref=e6254]: through
+                  - text: .
+                - generic [ref=e6255]:
+                  - generic [ref=e6256]:
+                    - generic [ref=e6257]: Public API
+                    - paragraph [ref=e6258]: Direct API integration. Phosra pushes rules automatically via documented REST endpoints.
+                    - paragraph [ref=e6259]: Qustodio, Apple Screen Time (MDM), Google Family Link
+                  - generic [ref=e6260]:
+                    - generic [ref=e6261]: Partner API
+                    - paragraph [ref=e6262]: Integration via partnership agreement. Automated rule enforcement with partner credentials.
+                    - paragraph [ref=e6263]: Bark, Securly, Canopy
+                  - generic [ref=e6264]:
+                    - generic [ref=e6265]: No API
+                    - paragraph [ref=e6266]: Guided setup mode. Phosra generates step-by-step instructions for manual configuration.
+                    - paragraph [ref=e6267]: Net Nanny, Norton Family, Kaspersky, Circle
+                  - generic [ref=e6268]:
+                    - generic [ref=e6269]: Undocumented
+                    - paragraph [ref=e6270]: Identified integration points. Availability may vary.
+                    - paragraph [ref=e6271]: Bark Phone
+                - paragraph [ref=e6273]:
+                  - text: Each source is mapped to Phosra's 45 rule categories with
+                  - strong [ref=e6274]: full
+                  - text: ","
+                  - strong [ref=e6275]: partial
+                  - text: ", or"
+                  - strong [ref=e6276]: none
+                  - text: support per capability. Browse all sources with their capability matrices at
+                  - link "/parental-controls" [ref=e6277] [cursor=pointer]:
+                    - /url: /parental-controls
+                  - text: .
+                - generic [ref=e6278]:
+                  - heading "Source API Pattern" [level=4] [ref=e6279]
+                  - generic [ref=e6280]:
+                    - paragraph [ref=e6281]: POST /v1/sources — Connect a parental control app to a child
+                    - paragraph [ref=e6282]: "POST /v1/sources/{sourceID}/sync — Push all rules to source"
+                    - paragraph [ref=e6283]: "POST /v1/sources/{sourceID}/rules — Push individual capability"
+                    - paragraph [ref=e6284]: "GET /v1/sources/{sourceID}/guide/{category} — Get guided setup steps (no-API sources)"
+            - generic [ref=e6285]:
+              - heading "15. Family Reports" [level=2] [ref=e6286]
+              - paragraph [ref=e6288]:
+                - text: The reporting API provides family-level overviews of enforcement status, compliance health, and per-child statistics. Reports
+                - strong [ref=e6289]: SHOULD
+                - text: be used by parent-facing applications to surface the current protection state at a glance.
+              - generic [ref=e6291]:
+                - generic [ref=e6292]:
+                  - generic [ref=e6293]: GET
+                  - code [ref=e6294]: "/families/{familyID}/reports/overview"
+                  - button "Copy link" [ref=e6295] [cursor=pointer]:
+                    - img [ref=e6296]
+                - paragraph [ref=e6299]: Get a comprehensive overview report for a family including per-child enforcement status, compliance link health, recent activity, and rule coverage statistics.
+                - generic [ref=e6302]:
+                  - generic [ref=e6303]:
+                    - generic [ref=e6304]:
+                      - generic [ref=e6305]:
+                        - generic [ref=e6306]: Request
+                        - generic [ref=e6307]: curl
+                      - button "Copy" [ref=e6308] [cursor=pointer]:
+                        - img [ref=e6309]
+                        - text: Copy
+                    - code [ref=e6313]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/reports/overview \\ -H \"Authorization: Bearer <access_token>\""
+                  - generic [ref=e6314]:
+                    - generic [ref=e6315]:
+                      - generic [ref=e6316]:
+                        - generic [ref=e6317]: Response
+                        - generic [ref=e6318]: json
+                      - button "Copy" [ref=e6319] [cursor=pointer]:
+                        - img [ref=e6320]
+                        - text: Copy
+                    - code [ref=e6324]: "{ \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"children\": [ { \"id\": \"b2c3d4e5-f6a7-8901-bcde-f12345678901\", \"name\": \"Emma\", \"age\": 6, \"active_policy\": \"School Days\", \"rules_enabled\": 22, \"platforms_connected\": 2, \"last_enforcement\": \"2025-01-12T18:00:00Z\", \"enforcement_status\": \"healthy\" } ], \"compliance_summary\": { \"total_links\": 2, \"verified\": 2, \"failed\": 0 }, \"enforcement_summary\": { \"total_jobs_7d\": 5, \"success_rate\": 1, \"avg_rules_pushed\": 26 } }"
+          - generic [ref=e6325]: Phosra Child Safety Standard (PCSS) v1.0
+        - button "Scroll to top":
+          - img
+  - alert [ref=e6327]

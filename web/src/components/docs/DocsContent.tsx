@@ -1,13 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+import { ChevronUp, Search, X } from "lucide-react"
 import { NEW_CATEGORIES, CATEGORY_REFERENCE, CATEGORY_GROUPS } from "@/lib/docs/categories"
 import { LegislationSection } from "@/components/docs/LegislationSection"
 import { LEGISLATION_REFERENCE } from "@/lib/compliance/adapters/to-legislation"
 import { AGE_DEFAULTS_TABLE, AGE_RATING_TABLE } from "@/lib/docs/ratings"
 import { RECIPES } from "@/lib/docs/recipes"
+import { sections } from "@/lib/docs/sections"
 import { ENDPOINTS, getEndpointsBySection } from "@/lib/docs/endpoints"
 import { EndpointCard } from "@/components/docs/EndpointCard"
 import type { PlatformSupport } from "@/lib/docs/types"
@@ -37,6 +39,127 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
   const [categoryFilter, setCategoryFilter] = useState("")
   const [expandedRecipes, setExpandedRecipes] = useState<Set<string>>(new Set())
   const [expandedLegislation, setExpandedLegislation] = useState<Set<string>>(new Set())
+
+  // Scroll-to-top & progress bar
+  const [showScrollTop, setShowScrollTop] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
+
+  // Cmd+K search
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  // Tab scroll position preservation
+  const scrollPositions = useRef<Record<string, number>>({})
+
+  // Scroll listener for scroll-to-top button and progress bar
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 500)
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight
+      if (scrollHeight > 0) {
+        setScrollProgress(Math.min(window.scrollY / scrollHeight, 1))
+      }
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Listen for sidebar Recipes tab-switch event
+  useEffect(() => {
+    const handleTabSwitch = (e: Event) => {
+      const detail = (e as CustomEvent).detail
+      if (detail === "recipes") {
+        scrollPositions.current[docsTab] = window.scrollY
+        setDocsTab("recipes")
+      }
+    }
+    window.addEventListener("docs-tab-switch", handleTabSwitch)
+    return () => window.removeEventListener("docs-tab-switch", handleTabSwitch)
+  }, [docsTab])
+
+  // Cmd+K keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault()
+        setSearchOpen(prev => !prev)
+      }
+      if (e.key === "Escape") {
+        setSearchOpen(false)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
+
+  // Focus search input when modal opens
+  useEffect(() => {
+    if (searchOpen) {
+      setTimeout(() => searchInputRef.current?.focus(), 50)
+      setSearchQuery("")
+    }
+  }, [searchOpen])
+
+  // Build search index
+  const searchResults = searchQuery.trim().length < 2 ? [] : (() => {
+    const q = searchQuery.toLowerCase()
+    const results: { label: string; sublabel: string; id: string; tab: "specification" | "recipes" }[] = []
+    // Sections
+    for (const s of sections) {
+      if (s.title.toLowerCase().includes(q) || s.id.toLowerCase().includes(q)) {
+        results.push({ label: s.title, sublabel: "Section", id: s.id, tab: "specification" })
+      }
+    }
+    // Endpoints
+    for (const ep of ENDPOINTS) {
+      if (ep.path.toLowerCase().includes(q) || ep.summary.toLowerCase().includes(q) || ep.id.toLowerCase().includes(q)) {
+        results.push({ label: `${ep.method} ${ep.path}`, sublabel: ep.summary, id: ep.id, tab: "specification" })
+      }
+    }
+    // Categories
+    for (const cat of CATEGORY_REFERENCE) {
+      if (cat.id.toLowerCase().includes(q) || cat.name.toLowerCase().includes(q) || cat.description.toLowerCase().includes(q)) {
+        results.push({ label: cat.id, sublabel: cat.name, id: `rule-categories`, tab: "specification" })
+      }
+    }
+    // Legislation
+    for (const leg of LEGISLATION_REFERENCE) {
+      if (leg.law.toLowerCase().includes(q) || leg.summary.toLowerCase().includes(q)) {
+        results.push({ label: leg.law, sublabel: leg.jurisdiction, id: "legislation", tab: "specification" })
+      }
+    }
+    // Recipes
+    for (const r of RECIPES) {
+      if (r.title.toLowerCase().includes(q) || r.summary.toLowerCase().includes(q)) {
+        results.push({ label: r.title, sublabel: "Recipe", id: `recipe-${r.id}`, tab: "recipes" })
+      }
+    }
+    return results.slice(0, 12)
+  })()
+
+  const handleSearchNavigate = (result: { id: string; tab: "specification" | "recipes" }) => {
+    setSearchOpen(false)
+    if (result.tab !== docsTab) {
+      scrollPositions.current[docsTab] = window.scrollY
+      setDocsTab(result.tab)
+    }
+    // Wait for tab switch animation to complete, then scroll
+    setTimeout(() => {
+      const el = document.getElementById(result.id)
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" })
+    }, 200)
+  }
+
+  // Tab switch with scroll position preservation
+  const handleTabSwitch = useCallback((tab: "specification" | "recipes") => {
+    scrollPositions.current[docsTab] = window.scrollY
+    setDocsTab(tab)
+    // Restore scroll position after animation
+    setTimeout(() => {
+      window.scrollTo(0, scrollPositions.current[tab] || 0)
+    }, 200)
+  }, [docsTab])
 
   const toggleRecipe = (id: string) => {
     setExpandedRecipes(prev => {
@@ -79,6 +202,65 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
 
   return (
     <div className={hideHeader ? "" : "min-h-screen bg-background"}>
+      {/* Scroll progress bar */}
+      <div
+        className="fixed top-0 left-0 h-[3px] bg-[hsl(var(--brand-green))] z-50 transition-[width] duration-150 ease-out"
+        style={{ width: `${scrollProgress * 100}%` }}
+      />
+
+      {/* Cmd+K Search Modal */}
+      {searchOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]" onClick={() => setSearchOpen(false)}>
+          <div className="fixed inset-0 bg-black/50" />
+          <div
+            className="relative bg-card border border-border rounded-lg shadow-xl w-full max-w-lg mx-4"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+              <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search sections, endpoints, categories, laws..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+              />
+              <button onClick={() => setSearchOpen(false)} className="text-muted-foreground hover:text-foreground">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            {searchResults.length > 0 ? (
+              <div className="max-h-80 overflow-y-auto py-2">
+                {searchResults.map((result, i) => (
+                  <button
+                    key={`${result.id}-${i}`}
+                    onClick={() => handleSearchNavigate(result)}
+                    className="w-full text-left px-4 py-2.5 hover:bg-muted/50 transition-colors flex items-center gap-3"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-foreground truncate">{result.label}</p>
+                      <p className="text-xs text-muted-foreground truncate">{result.sublabel}</p>
+                    </div>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground flex-shrink-0">
+                      {result.tab === "recipes" ? "Recipes" : "Spec"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : searchQuery.trim().length >= 2 ? (
+              <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+                No results for &quot;{searchQuery}&quot;
+              </div>
+            ) : (
+              <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+                Type at least 2 characters to search
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Header — only shown on public /docs page */}
       {!hideHeader && (
         <header className="bg-card border-b border-border sticky top-0 z-10">
@@ -103,9 +285,9 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
 
       {/* Tab bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 overflow-x-hidden">
-        <div className="relative flex border-b border-border">
+        <div className="relative flex items-center border-b border-border">
           {(["specification", "recipes"] as const).map(t => (
-            <button key={t} onClick={() => setDocsTab(t)}
+            <button key={t} onClick={() => handleTabSwitch(t)}
               className={`relative px-4 sm:px-5 py-3 text-sm font-medium transition-colors ${
                 docsTab === t ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}>
@@ -115,6 +297,14 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
               )}
             </button>
           ))}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="ml-auto flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground bg-muted/50 border border-border rounded-md hover:bg-muted hover:text-foreground transition-colors"
+          >
+            <Search className="w-3 h-3" />
+            <span className="hidden sm:inline">Search...</span>
+            <kbd className="hidden sm:inline text-[10px] bg-background px-1.5 py-0.5 rounded border border-border font-mono">⌘K</kbd>
+          </button>
         </div>
       </div>
 
@@ -172,7 +362,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* RFC 2119 */}
-          <section id="rfc2119">
+          <section id="rfc2119" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">RFC 2119 Keywords</h2>
             <div className="bg-card rounded border border-border p-6">
               <p className="text-sm text-muted-foreground mb-4">
@@ -190,7 +380,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 1: Platform Authentication */}
-          <section id="auth">
+          <section id="auth" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">1. Platform Authentication</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -218,7 +408,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 2: Protected Families */}
-          <section id="families">
+          <section id="families" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">2. Protected Families</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -252,7 +442,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 2.1: Family Members */}
-          <section id="members">
+          <section id="members" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">2.1 Family Members</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -283,7 +473,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 3: Safety Policies */}
-          <section id="policies">
+          <section id="policies" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">3. Safety Policies</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -310,7 +500,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 3.1: 40 Mandatory Policy Categories */}
-          <section id="policy-categories">
+          <section id="policy-categories" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">3.1 45 Mandatory Policy Categories</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -345,7 +535,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 4: Regulated Platforms */}
-          <section id="platforms">
+          <section id="platforms" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">4. Regulated Platforms</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -399,7 +589,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 5: Compliance Verification */}
-          <section id="compliance">
+          <section id="compliance" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">5. Compliance Verification</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -419,7 +609,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 5.1: Compliance Links */}
-          <section id="compliance-links">
+          <section id="compliance-links" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">5.1 Compliance Links</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -439,7 +629,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 5.2: Quick Setup API */}
-          <section id="quick-setup">
+          <section id="quick-setup" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">5.2 Quick Setup API</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -499,7 +689,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 6: Policy Enforcement */}
-          <section id="enforcement">
+          <section id="enforcement" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">6. Policy Enforcement</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -525,7 +715,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 7: Content Rating Standard */}
-          <section id="ratings">
+          <section id="ratings" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">7. Content Rating Standard</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -543,7 +733,7 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
           </section>
 
           {/* Section 8: Event Notifications */}
-          <section id="webhooks">
+          <section id="webhooks" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">8. Event Notifications</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -575,7 +765,7 @@ signature = HMAC-SHA256(webhook_secret, request_body)
           </section>
 
           {/* Section 9: Compliance Levels */}
-          <section id="levels">
+          <section id="levels" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">9. Compliance Levels</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -625,7 +815,7 @@ signature = HMAC-SHA256(webhook_secret, request_body)
           </section>
 
           {/* Section 10: Enforcement Timeline */}
-          <section id="timeline">
+          <section id="timeline" className="border-t border-border/50 pt-10">
             <h2 className="text-xl font-bold text-foreground mb-4">10. Enforcement Timeline</h2>
             <div className="bg-card rounded border border-border p-6 space-y-4">
               <p className="text-sm text-muted-foreground">
@@ -665,7 +855,7 @@ signature = HMAC-SHA256(webhook_secret, request_body)
 
           {/* Reference sections */}
           <div className="space-y-12">
-            <section id="rule-categories">
+            <section id="rule-categories" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">45 Mandatory Policy Categories</h2>
               <p className="text-sm text-muted-foreground mb-4">
                 Complete API reference for all 45 policy categories. Each entry includes the JSON configuration schema,
@@ -837,7 +1027,7 @@ Content-Type: application/json
             </section>
 
             {/* Platform Support Matrix */}
-            <section id="platform-support">
+            <section id="platform-support" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">Platform Support Matrix</h2>
               <p className="text-sm text-muted-foreground mb-4">
                 Overview of which category groups are supported by each platform adapter. <span className="text-emerald-500">&#10003;</span> = Full support,{" "}
@@ -881,7 +1071,7 @@ Content-Type: application/json
               </div>
             </section>
 
-            <section id="age-ratings">
+            <section id="age-ratings" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">Age-to-Rating Standard</h2>
               <p className="text-sm text-muted-foreground mb-4">Platforms <Keyword>MUST</Keyword> use the following age-to-rating mappings when computing content restrictions. Used by <code className="bg-muted px-1 rounded text-xs text-foreground">GET /ratings/by-age</code> and <code className="bg-muted px-1 rounded text-xs text-foreground">POST /policies/:id/generate-from-age</code>.</p>
               <div className="bg-card rounded border border-border overflow-x-auto -mx-4 sm:mx-0">
@@ -904,7 +1094,7 @@ Content-Type: application/json
             </section>
 
             {/* Age-Based Defaults */}
-            <section id="age-defaults">
+            <section id="age-defaults" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">Age-Based Default Policies</h2>
               <p className="text-sm text-muted-foreground mb-4">
                 Default policy values generated by <code className="bg-muted px-1 rounded text-xs text-foreground">POST /policies/:id/generate-from-age</code> and the Quick Setup API.
@@ -938,7 +1128,7 @@ Content-Type: application/json
               </div>
             </section>
 
-            <section id="api-base">
+            <section id="api-base" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">API Base URL</h2>
               <div className="bg-card rounded border border-border p-6">
                 <p className="text-sm text-muted-foreground mb-4">All PCSS API endpoints are served under:</p>
@@ -948,7 +1138,7 @@ Content-Type: application/json
             </section>
 
             {/* Section 11: Legislative Compliance Matrix */}
-            <section id="legislation">
+            <section id="legislation" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">11. Legislative Compliance Matrix</h2>
               <p className="text-sm text-muted-foreground mb-4">
                 The following legislation maps to PCSS policy categories. Platforms operating in jurisdictions
@@ -1052,7 +1242,7 @@ Content-Type: application/json
             </section>
 
             {/* Section 12: Parent Experience */}
-            <section id="parent-experience">
+            <section id="parent-experience" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">12. Parent Experience</h2>
               <div className="bg-card rounded border border-border p-6 space-y-4">
                 <p className="text-sm text-muted-foreground">
@@ -1091,7 +1281,7 @@ Content-Type: application/json
             </section>
 
             {/* Section 13: Community Standards */}
-            <section id="standards">
+            <section id="standards" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">13. Community Standards</h2>
               <div className="bg-card rounded border border-border p-6 space-y-4">
                 <p className="text-sm text-muted-foreground">
@@ -1135,7 +1325,7 @@ Content-Type: application/json
             </section>
 
             {/* Section 14: Parental Control Sources */}
-            <section id="sources">
+            <section id="sources" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">14. Parental Control Sources</h2>
               <div className="bg-card rounded border border-border p-6 space-y-4">
                 <p className="text-sm text-muted-foreground">
@@ -1186,7 +1376,7 @@ Content-Type: application/json
             </section>
 
             {/* Section 15: Family Reports */}
-            <section id="reports">
+            <section id="reports" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">15. Family Reports</h2>
               <div className="bg-card rounded border border-border p-6 space-y-4">
                 <p className="text-sm text-muted-foreground">
@@ -1202,6 +1392,11 @@ Content-Type: application/json
               </div>
             </section>
 
+          </div>
+
+          {/* Page footer */}
+          <div className="border-t border-border/50 mt-12 pt-8 pb-4 text-center text-xs text-muted-foreground">
+            Phosra Child Safety Standard (PCSS) v1.0
           </div>
         </div>
           </>
@@ -1322,6 +1517,17 @@ Content-Type: application/json
 
         </motion.div>
       </AnimatePresence>
+
+      {/* Scroll-to-top button */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-[hsl(var(--brand-green))] text-white shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+          showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+        aria-label="Scroll to top"
+      >
+        <ChevronUp className="w-5 h-5" />
+      </button>
     </div>
   )
 }

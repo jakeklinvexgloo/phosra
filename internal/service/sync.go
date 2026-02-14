@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guardiangate/api/internal/domain"
+	"github.com/guardiangate/api/internal/engine"
 	"github.com/guardiangate/api/internal/provider"
 	"github.com/guardiangate/api/internal/repository"
 )
@@ -28,6 +29,7 @@ type EnforcementService struct {
 	children           repository.ChildRepository
 	members            repository.FamilyMemberRepository
 	registry           *provider.Registry
+	compositeEngine    *engine.CompositeEngine
 }
 
 func NewEnforcementService(
@@ -39,6 +41,7 @@ func NewEnforcementService(
 	children repository.ChildRepository,
 	members repository.FamilyMemberRepository,
 	registry *provider.Registry,
+	compositeEngine *engine.CompositeEngine,
 ) *EnforcementService {
 	return &EnforcementService{
 		enforcementJobs:    enforcementJobs,
@@ -49,6 +52,7 @@ func NewEnforcementService(
 		children:           children,
 		members:            members,
 		registry:           registry,
+		compositeEngine:    compositeEngine,
 	}
 }
 
@@ -103,13 +107,13 @@ func (s *EnforcementService) TriggerEnforcement(ctx context.Context, userID, chi
 		return nil, err
 	}
 
-	// Fan out to all verified platforms
-	go s.executeEnforcementFanOut(context.Background(), job, rules, links, child.Name, child.Age())
+	// Fan out to all verified platforms (with composite engine for overflow rules)
+	go s.executeEnforcementFanOut(context.Background(), job, rules, links, child.FamilyID, child.Name, child.Age())
 
 	return job, nil
 }
 
-func (s *EnforcementService) executeEnforcementFanOut(ctx context.Context, job *domain.EnforcementJob, rules []domain.PolicyRule, links []domain.ComplianceLink, childName string, childAge int) {
+func (s *EnforcementService) executeEnforcementFanOut(ctx context.Context, job *domain.EnforcementJob, rules []domain.PolicyRule, links []domain.ComplianceLink, familyID uuid.UUID, childName string, childAge int) {
 	var hasFailure, hasSuccess bool
 
 	for _, link := range links {
@@ -133,33 +137,78 @@ func (s *EnforcementService) executeEnforcementFanOut(ctx context.Context, job *
 		}
 		_ = s.enforcementResults.Create(ctx, result)
 
-		enfReq := provider.EnforcementRequest{
-			Rules:      rules,
-			AuthConfig: provider.AuthConfig{EncryptedCreds: link.EncryptedCreds},
-			ChildName:  childName,
-			ChildAge:   childAge,
+		// Use composite engine to route rules between native adapter and Phosra services
+		routing := s.compositeEngine.RouteRules(adapter, rules)
+
+		// 1. Native enforcement — send only the rules the adapter can handle
+		var nativeResult *provider.EnforcementResult
+		var nativeErr error
+		if len(routing.NativeRules) > 0 {
+			enfReq := provider.EnforcementRequest{
+				Rules:      routing.NativeRules,
+				AuthConfig: provider.AuthConfig{EncryptedCreds: link.EncryptedCreds},
+				ChildName:  childName,
+				ChildAge:   childAge,
+			}
+			nativeResult, nativeErr = adapter.EnforcePolicy(ctx, enfReq)
 		}
 
-		enfResult, err := adapter.EnforcePolicy(ctx, enfReq)
+		// 2. Phosra service enforcement — handle overflow rules
+		var phosraResult *provider.EnforcementResult
+		var phosraErr error
+		if len(routing.PhosraRules) > 0 {
+			phosraResult, phosraErr = s.compositeEngine.EnforcePhosraRules(ctx, job.ChildID, familyID, routing)
+		}
+
+		// 3. Merge results
 		completedAt := time.Now()
 		result.CompletedAt = &completedAt
 
-		if err != nil {
+		if nativeErr != nil {
 			hasFailure = true
-			errMsg := err.Error()
+			errMsg := nativeErr.Error()
 			result.Status = domain.EnforcementFailed
 			result.ErrorMessage = &errMsg
 		} else {
 			hasSuccess = true
 			result.Status = domain.EnforcementCompleted
-			result.RulesApplied = enfResult.RulesApplied
-			result.RulesSkipped = enfResult.RulesSkipped
-			result.RulesFailed = enfResult.RulesFailed
-			if enfResult.Details != nil {
-				detailsJSON, _ := json.Marshal(enfResult.Details)
+
+			// Merge native + phosra results
+			mergedDetails := make(map[string]any)
+			totalApplied := 0
+			totalSkipped := 0
+			totalFailed := 0
+
+			if nativeResult != nil {
+				totalApplied += nativeResult.RulesApplied
+				totalSkipped += nativeResult.RulesSkipped
+				totalFailed += nativeResult.RulesFailed
+				for k, v := range nativeResult.Details {
+					mergedDetails[k] = v
+				}
+			}
+
+			if phosraResult != nil && phosraErr == nil {
+				totalApplied += phosraResult.RulesApplied
+				totalFailed += phosraResult.RulesFailed
+				for k, v := range phosraResult.Details {
+					mergedDetails[k] = v
+				}
+			} else if phosraErr != nil {
+				// Phosra service error — count overflow rules as failed
+				for _, phosraRules := range routing.PhosraRules {
+					totalFailed += len(phosraRules)
+				}
+			}
+
+			result.RulesApplied = totalApplied
+			result.RulesSkipped = totalSkipped
+			result.RulesFailed = totalFailed
+			if len(mergedDetails) > 0 {
+				detailsJSON, _ := json.Marshal(mergedDetails)
 				result.Details = detailsJSON
 			}
-			if enfResult.RulesFailed > 0 {
+			if totalFailed > 0 {
 				result.Status = domain.EnforcementPartial
 				hasFailure = true
 			}

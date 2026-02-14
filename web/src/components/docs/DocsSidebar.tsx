@@ -136,7 +136,7 @@ export function DocsSidebar() {
   }
 
   return (
-    <aside className="w-full lg:w-[220px] flex-shrink-0 lg:sticky lg:top-[120px] lg:self-start lg:h-[calc(100vh-120px)] overflow-y-auto">
+    <aside className="w-full lg:w-[240px] flex-shrink-0 lg:sticky lg:top-[120px] lg:max-h-[calc(100vh-120px)] overflow-y-auto">
       {/* Specification sections */}
       <div className="mb-6">
         <p className="px-3 mb-2 text-[11px] font-semibold text-muted-foreground tracking-widest uppercase">
@@ -225,7 +225,10 @@ export function DocsSidebar() {
         </p>
         <div className="space-y-px">
           <button
-            onClick={() => handleNavigate("recipes")}
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent("docs-tab-switch", { detail: "recipes" }))
+              handleNavigate("recipes")
+            }}
             className={`w-full px-3 py-1.5 rounded text-[13px] ml-5 text-left transition-colors ${
               activeId === "recipes"
                 ? "text-foreground font-medium bg-muted"

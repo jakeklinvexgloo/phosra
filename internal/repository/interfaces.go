@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guardiangate/api/internal/domain"
@@ -138,4 +139,62 @@ type StandardAdoptionRepository interface {
 	Unadopt(ctx context.Context, childID, standardID uuid.UUID) error
 	ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.StandardAdoption, error)
 	IsAdopted(ctx context.Context, childID, standardID uuid.UUID) (bool, error)
+}
+
+// ── Phosra Service Layer Repositories ────────────────────────────
+
+type NotificationScheduleRepository interface {
+	Upsert(ctx context.Context, schedule *domain.NotificationSchedule) error
+	GetByChildAndCategory(ctx context.Context, childID uuid.UUID, category domain.RuleCategory) (*domain.NotificationSchedule, error)
+	ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.NotificationSchedule, error)
+	Delete(ctx context.Context, id uuid.UUID) error
+}
+
+type ActivityLogRepository interface {
+	Create(ctx context.Context, entry *domain.ActivityLog) error
+	ListByChild(ctx context.Context, childID uuid.UUID, limit int) ([]domain.ActivityLog, error)
+	ListByChildAndTimeRange(ctx context.Context, childID uuid.UUID, from, to time.Time) ([]domain.ActivityLog, error)
+}
+
+type AgeVerificationRepository interface {
+	Upsert(ctx context.Context, record *domain.AgeVerificationRecord) error
+	GetByChildAndPlatform(ctx context.Context, childID uuid.UUID, platformID string) (*domain.AgeVerificationRecord, error)
+	ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.AgeVerificationRecord, error)
+}
+
+type PrivacyRequestRepository interface {
+	Create(ctx context.Context, req *domain.PrivacyRequest) error
+	GetByID(ctx context.Context, id uuid.UUID) (*domain.PrivacyRequest, error)
+	ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.PrivacyRequest, error)
+	UpdateStatus(ctx context.Context, id uuid.UUID, status string) error
+}
+
+type ComplianceAttestationRepository interface {
+	Upsert(ctx context.Context, att *domain.ComplianceAttestation) error
+	ListByFamily(ctx context.Context, familyID uuid.UUID) ([]domain.ComplianceAttestation, error)
+	UpdateStatus(ctx context.Context, id uuid.UUID, status string) error
+}
+
+type SocialPolicyRepository interface {
+	Upsert(ctx context.Context, policy *domain.SocialPolicy) error
+	ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.SocialPolicy, error)
+	Delete(ctx context.Context, id uuid.UUID) error
+}
+
+type LocationLogRepository interface {
+	Create(ctx context.Context, entry *domain.LocationLog) error
+	GetLatest(ctx context.Context, childID uuid.UUID) (*domain.LocationLog, error)
+	ListByChildAndTimeRange(ctx context.Context, childID uuid.UUID, from, to time.Time) ([]domain.LocationLog, error)
+}
+
+type PurchaseApprovalRepository interface {
+	Create(ctx context.Context, req *domain.PurchaseApproval) error
+	GetByID(ctx context.Context, id uuid.UUID) (*domain.PurchaseApproval, error)
+	ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.PurchaseApproval, error)
+	UpdateStatus(ctx context.Context, id uuid.UUID, status string, resolvedBy *uuid.UUID) error
+}
+
+type ContentClassificationRepository interface {
+	Upsert(ctx context.Context, c *domain.ContentClassification) error
+	GetByContentID(ctx context.Context, contentType, contentID, ratingSystem string) (*domain.ContentClassification, error)
 }

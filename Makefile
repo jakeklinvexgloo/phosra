@@ -10,7 +10,7 @@ run: build
 	./bin/server
 
 dev:
-	go run ./cmd/server
+	air
 
 migrate:
 	go run ./cmd/migrate

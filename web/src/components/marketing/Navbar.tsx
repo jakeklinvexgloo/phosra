@@ -6,11 +6,11 @@ import { Menu, X } from "lucide-react"
 
 const NAV_LINKS = [
   { href: "/docs", label: "Docs" },
-  { href: "/platforms", label: "Platforms" },
+  { href: "/parental-controls", label: "Parental Controls" },
+  { href: "/technology-services", label: "Services" },
   { href: "/compliance", label: "Compliance" },
-  { href: "/standards", label: "Standards" },
+  { href: "/movements", label: "Movements" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/playground", label: "Playground" },
 ]
 
 export function Navbar() {

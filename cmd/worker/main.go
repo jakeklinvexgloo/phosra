@@ -11,6 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/guardiangate/api/internal/config"
+	"github.com/guardiangate/api/internal/engine"
 	"github.com/guardiangate/api/internal/provider"
 	"github.com/guardiangate/api/internal/provider/android"
 	"github.com/guardiangate/api/internal/provider/apple"
@@ -56,7 +57,34 @@ func main() {
 	childRepo := &postgres.ChildRepo{DB: db}
 	memberRepo := &postgres.FamilyMemberRepo{DB: db}
 
-	enforcementSvc := service.NewEnforcementService(enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, policyRepo, ruleRepo, childRepo, memberRepo, registry)
+	// Phosra service-layer repositories
+	notificationScheduleRepo := postgres.NewNotificationScheduleRepo(db)
+	activityLogRepo := postgres.NewActivityLogRepo(db)
+	ageVerificationRepo := postgres.NewAgeVerificationRepo(db)
+	privacyRequestRepo := postgres.NewPrivacyRequestRepo(db)
+	complianceAttestRepo := postgres.NewComplianceAttestationRepo(db)
+	socialPolicyRepo := postgres.NewSocialPolicyRepo(db)
+	locationLogRepo := postgres.NewLocationLogRepo(db)
+	purchaseApprovalRepo := postgres.NewPurchaseApprovalRepo(db)
+	contentClassRepo := postgres.NewContentClassificationRepo(db)
+
+	// Phosra service layer
+	notificationSvc := service.NewPhosraNotificationService(notificationScheduleRepo)
+	analyticsSvc := service.NewPhosraAnalyticsService(activityLogRepo)
+	ageVerifySvc := service.NewPhosraAgeVerificationService(ageVerificationRepo, childRepo)
+	contentClassSvc := service.NewPhosraContentClassifyService(contentClassRepo)
+	privacyConsentSvc := service.NewPhosraPrivacyConsentService(privacyRequestRepo)
+	complianceAttestSvc := service.NewPhosraComplianceAttestService(complianceAttestRepo)
+	socialSvc := service.NewPhosraSocialService(socialPolicyRepo)
+	locationSvc := service.NewPhosraLocationService(locationLogRepo)
+	purchaseSvc := service.NewPhosraPurchaseService(purchaseApprovalRepo)
+
+	compositeEng := engine.NewCompositeEngine(
+		notificationSvc, analyticsSvc, ageVerifySvc, contentClassSvc,
+		privacyConsentSvc, complianceAttestSvc, socialSvc, locationSvc, purchaseSvc,
+	)
+
+	enforcementSvc := service.NewEnforcementService(enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, policyRepo, ruleRepo, childRepo, memberRepo, registry, compositeEng)
 
 	// Worker pool
 	pool := syncpkg.NewWorkerPool(5)
