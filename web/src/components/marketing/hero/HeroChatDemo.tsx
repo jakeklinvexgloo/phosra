@@ -86,7 +86,10 @@ export function HeroChatDemo() {
 
   // Auto-scroll chat pane to bottom when content changes
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    const container = chatScrollRef.current
+    if (container) {
+      container.scrollTop = container.scrollHeight
+    }
   }, [messages, tools, resultCardText, showThinking])
 
   // Typewriter: incrementally reveal text in a message
