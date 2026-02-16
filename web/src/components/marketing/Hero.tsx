@@ -1,11 +1,15 @@
 "use client"
 
+import { useState, useCallback } from "react"
 import Link from "next/link"
 import { WaveTexture } from "./shared/WaveTexture"
 import { GradientMesh } from "./shared/GradientMesh"
 import { PhosraBurst } from "./shared/PhosraBurst"
 import { AnimatedSection } from "./shared/AnimatedSection"
 import { HeroChatDemo } from "./hero/HeroChatDemo"
+import { HeroPromptBar } from "./hero/HeroPromptBar"
+import { LiquidGlassModal } from "./hero/LiquidGlassModal"
+import { HeroSandboxChat } from "./hero/HeroSandboxChat"
 import { PLATFORM_STATS } from "@/lib/platforms"
 
 const PLATFORM_NAMES = [
@@ -17,6 +21,14 @@ const PLATFORM_NAMES = [
 ]
 
 export function Hero() {
+  const [modalPrompt, setModalPrompt] = useState<string | null>(null)
+
+  const handleCloseModal = useCallback(() => setModalPrompt(null), [])
+  const handleTryAnother = useCallback(() => {
+    setModalPrompt(null)
+    // Focus returns to prompt bar naturally since modal unmounts
+  }, [])
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A]">
       {/* Layered background textures */}
@@ -72,6 +84,11 @@ export function Hero() {
                 </Link>
               </div>
             </AnimatedSection>
+
+            {/* Prompt bar */}
+            <AnimatedSection delay={0.4}>
+              <HeroPromptBar onSubmit={setModalPrompt} />
+            </AnimatedSection>
           </div>
 
           {/* Right / below — animated split demo */}
@@ -106,6 +123,17 @@ export function Hero() {
           </div>
         </div>
       </div>
+
+      {/* Liquid glass modal with live AI chat */}
+      <LiquidGlassModal open={!!modalPrompt} onClose={handleCloseModal}>
+        {modalPrompt && (
+          <HeroSandboxChat
+            prompt={modalPrompt}
+            onClose={handleCloseModal}
+            onTryAnother={handleTryAnother}
+          />
+        )}
+      </LiquidGlassModal>
     </section>
   )
 }
