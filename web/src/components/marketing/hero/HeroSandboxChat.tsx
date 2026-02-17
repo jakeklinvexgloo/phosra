@@ -10,7 +10,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { useHeroSession } from "./useHeroSession"
 import type { ToolCallInfo } from "@/lib/playground/types"
-import { type EntityMap, extractEntities, summarizeToolCall, annotateInput, formatPlatformId } from "@/lib/playground/entity-registry"
+import { type EntityMap, extractEntities, summarizeToolCall, annotateInput, formatPlatformId, PLATFORM_DISPLAY_NAMES } from "@/lib/playground/entity-registry"
 
 interface HeroSandboxChatProps {
   prompt: string
@@ -28,6 +28,157 @@ const ENTITY_COLORS: Record<string, string> = {
   platform_link: "bg-cyan-500/20 text-cyan-300",
   rule: "bg-rose-500/20 text-rose-300",
   webhook: "bg-orange-500/20 text-orange-300",
+}
+
+/* ── Platform upsell detection ─────────────────────────────────── */
+
+interface UpsellDetection {
+  isUpsell: boolean
+  platformIds: string[]
+  childName: string | null
+}
+
+// Build reverse map sorted by display name length descending (so "YouTube TV" matches before "YouTube")
+const REVERSE_PLATFORM_MAP: [string, string][] = Object.entries(PLATFORM_DISPLAY_NAMES)
+  .map(([id, display]) => [display.toLowerCase(), id] as [string, string])
+  .sort((a, b) => b[0].length - a[0].length)
+
+function detectPlatformUpsell(
+  text: string,
+  entities: EntityMap,
+  toolCalls: ToolCallInfo[],
+): UpsellDetection {
+  const empty: UpsellDetection = { isUpsell: false, platformIds: [], childName: null }
+
+  // Must contain a question pattern about pushing/expanding
+  if (!/(?:want|would you like|interested|push|apply|expand|enforce|protection)/i.test(text) || !text.includes("?")) {
+    return empty
+  }
+
+  // Scan for platform display names
+  const textLower = text.toLowerCase()
+  const found: string[] = []
+  for (const [display, id] of REVERSE_PLATFORM_MAP) {
+    if (textLower.includes(display) && !found.includes(id)) {
+      found.push(id)
+    }
+  }
+
+  if (found.length < 2) return empty
+
+  // Exclude platforms already targeted in the most recent trigger_enforcement
+  const lastEnforcement = [...toolCalls]
+    .reverse()
+    .find(tc => tc.name === "trigger_enforcement" && tc.status === "complete")
+  const alreadyEnforced = (lastEnforcement?.input?.platform_ids as string[] | undefined) ?? []
+  const upsellPlatforms = alreadyEnforced.length > 0
+    ? found.filter(id => !alreadyEnforced.includes(id))
+    : found
+
+  // Find the child name from entities
+  let childName: string | null = null
+  entities.forEach((entity) => {
+    if (entity.type === "child") childName = entity.label
+  })
+
+  return {
+    isUpsell: upsellPlatforms.length >= 2,
+    platformIds: upsellPlatforms,
+    childName,
+  }
+}
+
+/* ── PlatformActionPanel ──────────────────────────────────────── */
+
+function PlatformActionPanel({
+  platformIds,
+  childName,
+  onPush,
+  onPushAll,
+  disabled,
+}: {
+  platformIds: string[]
+  childName: string | null
+  onPush: (platformId: string) => void
+  onPushAll: () => void
+  disabled: boolean
+}) {
+  const [clicked, setClicked] = useState<Set<string>>(() => new Set())
+  const [allClicked, setAllClicked] = useState(false)
+
+  const handlePush = (id: string) => {
+    if (clicked.has(id) || allClicked || disabled) return
+    setClicked(prev => new Set(prev).add(id))
+    onPush(id)
+  }
+
+  const handlePushAll = () => {
+    if (allClicked || disabled) return
+    setAllClicked(true)
+    onPushAll()
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2, delay: 0.1 }}
+      className="mt-3 bg-white/[0.04] border border-white/[0.08] rounded-xl p-3 space-y-2.5"
+    >
+      <p className="text-[10px] font-semibold text-white/30 uppercase tracking-wider">
+        Expand protection
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {platformIds.map((id) => {
+          const isDone = clicked.has(id) || allClicked
+          const isWaiting = isDone && disabled
+          return (
+            <button
+              key={id}
+              onClick={() => handlePush(id)}
+              disabled={isDone || disabled}
+              className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-lg transition-all ${
+                isDone
+                  ? "bg-brand-green/10 text-brand-green/60 cursor-default"
+                  : "bg-white/[0.06] hover:bg-white/[0.10] text-white/70 hover:text-white/90"
+              }`}
+            >
+              <span>{formatPlatformId(id)}</span>
+              {isWaiting ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : isDone ? (
+                <CheckCircle2 className="w-3 h-3" />
+              ) : (
+                <ArrowRight className="w-3 h-3 opacity-40" />
+              )}
+            </button>
+          )
+        })}
+        {/* Enforce All */}
+        <button
+          onClick={handlePushAll}
+          disabled={allClicked || disabled}
+          className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all ${
+            allClicked
+              ? "bg-brand-green/10 text-brand-green/60 cursor-default"
+              : "bg-brand-green/10 text-brand-green hover:bg-brand-green/20 border border-brand-green/20"
+          }`}
+        >
+          {allClicked ? (
+            <>
+              {disabled ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+              <span>All pushed</span>
+            </>
+          ) : (
+            <>
+              <span>Enforce all</span>
+              <ArrowRight className="w-3 h-3" />
+            </>
+          )}
+        </button>
+      </div>
+    </motion.div>
+  )
 }
 
 /* ── describeToolResult ─────────────────────────────────────────── */
@@ -489,6 +640,28 @@ export function HeroSandboxChat({ prompt, onClose, onTryAnother }: HeroSandboxCh
                       })}
                     </div>
                   )}
+
+                  {/* Platform action panel — upsell */}
+                  {!isStreaming && i === lastAssistantIndex && (() => {
+                    const upsell = detectPlatformUpsell(text, entities, toolCalls)
+                    if (!upsell.isUpsell) return null
+                    return (
+                      <PlatformActionPanel
+                        platformIds={upsell.platformIds}
+                        childName={upsell.childName}
+                        onPush={(platformId) => {
+                          const name = upsell.childName || "the child"
+                          const platName = formatPlatformId(platformId)
+                          sendMessage({ text: `Yes, push ${name}'s protections to ${platName}` })
+                        }}
+                        onPushAll={() => {
+                          const name = upsell.childName || "the child"
+                          sendMessage({ text: `Yes, push ${name}'s protections to all remaining platforms` })
+                        }}
+                        disabled={isLoading}
+                      />
+                    )
+                  })()}
                 </div>
               )}
             </motion.div>
@@ -604,8 +777,10 @@ function ToolCallDetail({
 
   const summary = summarizeToolCall(toolCall.name, toolCall.input, entities)
   let resultDesc = "Pending..."
-  if (toolCall.result) {
+  if (toolCall.result != null) {
     resultDesc = describeToolResult(toolCall.name, toolCall.result, entities)
+  } else if (toolCall.status === "complete") {
+    resultDesc = "Completed successfully."
   } else if (toolCall.status === "running") {
     resultDesc = "In progress..."
   } else if (toolCall.status === "error") {

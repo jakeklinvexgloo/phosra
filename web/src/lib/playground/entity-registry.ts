@@ -424,7 +424,7 @@ function formatCategory(category: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-const PLATFORM_DISPLAY_NAMES: Record<string, string> = {
+export const PLATFORM_DISPLAY_NAMES: Record<string, string> = {
   netflix: "Netflix",
   paramount_plus: "Paramount+",
   youtube_tv: "YouTube TV",
