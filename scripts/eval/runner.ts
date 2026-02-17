@@ -71,7 +71,8 @@ interface Transcript {
 
 const API_URL = process.env.EVAL_API_URL || "https://www.phosra.com/api/playground/chat"
 const DELAY_BETWEEN_TURNS_MS = 2000
-const DELAY_BETWEEN_PROMPTS_MS = 3000
+const DEFAULT_CONCURRENCY = 1 // Each request is ~40k input tokens, rate limit is 50k/min — must run sequentially
+const STAGGER_DELAY_MS = 35000 // Stagger worker starts to spread out rate limit usage
 const RESULTS_DIR = resolve(dirname(new URL(import.meta.url).pathname), "results")
 
 // ─── SSE Stream Parser ──────────────────────────────────────────────────────
@@ -207,6 +208,65 @@ function buildUIMessages(messages: Message[]): unknown[] {
   })
 }
 
+// ─── Send a single turn with retry on rate limits ──────────────────────────
+
+async function sendTurnWithRetry(
+  uiMessages: unknown[],
+  sessionId: string,
+  maxRetries = 3
+): Promise<{ text: string; toolCalls: ToolCall[] } | { error: string }> {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: uiMessages,
+          sessionId,
+        }),
+      })
+
+      if (!response.ok) {
+        const errText = await response.text()
+        if (response.status === 429 || errText.includes("rate_limit")) {
+          const backoff = (attempt + 1) * 30000 // 30s, 60s, 90s
+          console.log(`    Rate limited (HTTP ${response.status}), waiting ${backoff / 1000}s...`)
+          await new Promise((r) => setTimeout(r, backoff))
+          continue
+        }
+        return { error: `HTTP ${response.status}: ${errText.slice(0, 500)}` }
+      }
+
+      const { text, toolCalls } = await parseSSEStream(response)
+
+      // Check if the stream itself contained rate limit errors with minimal content
+      if (text.length < 100 && toolCalls.length <= 2) {
+        // Might be a partial response due to rate limit mid-stream
+        // Only retry if we got very little back
+        const hasRateLimitError = text.includes("rate limit") || text.includes("rate_limit")
+        if (hasRateLimitError && attempt < maxRetries - 1) {
+          const backoff = (attempt + 1) * 30000
+          console.log(`    Stream rate limited, waiting ${backoff / 1000}s...`)
+          await new Promise((r) => setTimeout(r, backoff))
+          continue
+        }
+      }
+
+      return { text, toolCalls }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err)
+      if (errMsg.includes("rate") && attempt < maxRetries - 1) {
+        const backoff = (attempt + 1) * 30000
+        console.log(`    Network error (rate limit?), waiting ${backoff / 1000}s...`)
+        await new Promise((r) => setTimeout(r, backoff))
+        continue
+      }
+      return { error: errMsg }
+    }
+  }
+  return { error: "Max retries exceeded (rate limit)" }
+}
+
 // ─── Run One Prompt ─────────────────────────────────────────────────────────
 
 async function runPrompt(prompt: EvalPrompt): Promise<Transcript> {
@@ -231,53 +291,10 @@ async function runPrompt(prompt: EvalPrompt): Promise<Transcript> {
 
     // Build the messages payload
     const uiMessages = buildUIMessages(messages)
+    const result = await sendTurnWithRetry(uiMessages, sessionId)
 
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: uiMessages,
-          sessionId,
-        }),
-      })
-
-      if (!response.ok) {
-        const errText = await response.text()
-        console.error(`  HTTP ${response.status}: ${errText.slice(0, 200)}`)
-        return {
-          promptId: prompt.id,
-          category: prompt.category,
-          title: prompt.title,
-          sessionId,
-          messages,
-          totalToolCalls,
-          toolNames: allToolNames,
-          durationMs: Date.now() - startTime,
-          error: `HTTP ${response.status}: ${errText.slice(0, 500)}`,
-        }
-      }
-
-      const { text, toolCalls } = await parseSSEStream(response)
-
-      const assistantMsg: AssistantMessage = {
-        role: "assistant",
-        id: `eval-asst-${i}-${Date.now()}`,
-        text,
-        toolCalls,
-      }
-      messages.push(assistantMsg)
-
-      totalToolCalls += toolCalls.length
-      allToolNames.push(...toolCalls.map((tc) => tc.toolName))
-
-      console.log(`  → ${toolCalls.length} tool calls, ${text.length} chars text`)
-      if (toolCalls.length > 0) {
-        console.log(`    Tools: ${toolCalls.map((tc) => tc.toolName).join(", ")}`)
-      }
-    } catch (err) {
-      const errMsg = err instanceof Error ? err.message : String(err)
-      console.error(`  Error: ${errMsg}`)
+    if ("error" in result) {
+      console.error(`  Error: ${result.error}`)
       return {
         promptId: prompt.id,
         category: prompt.category,
@@ -287,8 +304,26 @@ async function runPrompt(prompt: EvalPrompt): Promise<Transcript> {
         totalToolCalls,
         toolNames: allToolNames,
         durationMs: Date.now() - startTime,
-        error: errMsg,
+        error: result.error,
       }
+    }
+
+    const { text, toolCalls } = result
+
+    const assistantMsg: AssistantMessage = {
+      role: "assistant",
+      id: `eval-asst-${i}-${Date.now()}`,
+      text,
+      toolCalls,
+    }
+    messages.push(assistantMsg)
+
+    totalToolCalls += toolCalls.length
+    allToolNames.push(...toolCalls.map((tc) => tc.toolName))
+
+    console.log(`  → ${toolCalls.length} tool calls, ${text.length} chars text`)
+    if (toolCalls.length > 0) {
+      console.log(`    Tools: ${toolCalls.map((tc) => tc.toolName).join(", ")}`)
     }
 
     // Delay between turns
@@ -312,14 +347,62 @@ async function runPrompt(prompt: EvalPrompt): Promise<Transcript> {
   }
 }
 
+// ─── Concurrent Worker Pool ─────────────────────────────────────────────────
+
+async function runWithConcurrency(prompts: EvalPrompt[], concurrency: number) {
+  let completed = 0
+  let errors = 0
+  const total = prompts.length
+  const queue = [...prompts]
+
+  async function worker(workerId: number) {
+    while (queue.length > 0) {
+      const prompt = queue.shift()
+      if (!prompt) break
+
+      try {
+        const transcript = await runPrompt(prompt)
+
+        // Save transcript
+        const outPath = resolve(RESULTS_DIR, `${prompt.id}.json`)
+        writeFileSync(outPath, JSON.stringify(transcript, null, 2))
+
+        if (transcript.error) errors++
+        completed++
+
+        console.log(`  [W${workerId}] Progress: ${completed}/${total} (${errors} errors)`)
+      } catch (err) {
+        errors++
+        completed++
+        console.error(`  [W${workerId}] Fatal error on ${prompt.id}: ${err}`)
+      }
+    }
+  }
+
+  // Stagger worker starts to avoid hammering rate limits
+  const workers = Array.from({ length: Math.min(concurrency, prompts.length) }, (_, i) =>
+    new Promise<void>((resolve) => {
+      setTimeout(async () => {
+        await worker(i + 1)
+        resolve()
+      }, i * STAGGER_DELAY_MS)
+    })
+  )
+  await Promise.all(workers)
+
+  return { completed, errors }
+}
+
 // ─── Main ───────────────────────────────────────────────────────────────────
 
 async function main() {
   const args = process.argv.slice(2)
   const idFlag = args.indexOf("--id")
   const catFlag = args.indexOf("--category")
+  const concFlag = args.indexOf("--concurrency")
   const filterId = idFlag !== -1 ? args[idFlag + 1] : null
   const filterCat = catFlag !== -1 ? args[catFlag + 1] : null
+  const concurrency = concFlag !== -1 ? parseInt(args[concFlag + 1], 10) : DEFAULT_CONCURRENCY
 
   // Load prompts
   const promptsPath = resolve(dirname(new URL(import.meta.url).pathname), "prompts.json")
@@ -353,29 +436,16 @@ async function main() {
   console.log(`Total prompts: ${prompts.length}`)
   console.log(`Already done: ${prompts.length - toRun.length}`)
   console.log(`To run: ${toRun.length}`)
+  console.log(`Concurrency: ${concurrency}`)
   console.log(`API: ${API_URL}`)
   console.log(`═══════════════════════════\n`)
 
-  let completed = 0
-  let errors = 0
-
-  for (const prompt of toRun) {
-    const transcript = await runPrompt(prompt)
-
-    // Save transcript
-    const outPath = resolve(RESULTS_DIR, `${prompt.id}.json`)
-    writeFileSync(outPath, JSON.stringify(transcript, null, 2))
-
-    if (transcript.error) errors++
-    completed++
-
-    console.log(`  Progress: ${completed}/${toRun.length} (${errors} errors)`)
-
-    // Delay between prompts
-    if (completed < toRun.length) {
-      await new Promise((r) => setTimeout(r, DELAY_BETWEEN_PROMPTS_MS))
-    }
+  if (toRun.length === 0) {
+    console.log("All prompts already completed!")
+    return
   }
+
+  const { completed, errors } = await runWithConcurrency(toRun, concurrency)
 
   console.log(`\n═══ Complete ═══`)
   console.log(`Ran: ${completed}`)
