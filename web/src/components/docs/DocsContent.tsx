@@ -1393,7 +1393,7 @@ Content-Type: application/json
             </section>
 
             {/* API Reference: Feedback */}
-            <section id="feedback-section" className="border-t border-border/50 pt-10">
+            <section id="feedback" className="border-t border-border/50 pt-10">
               <h2 className="text-xl font-bold text-foreground mb-4">Feedback</h2>
               <div className="bg-card rounded border border-border p-6 space-y-4">
                 <p className="text-sm text-muted-foreground">

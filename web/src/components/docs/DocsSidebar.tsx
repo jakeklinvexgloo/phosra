@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { ChevronDown, ChevronRight } from "lucide-react"
 import { sections } from "@/lib/docs/sections"
 import { ENDPOINTS, ENDPOINT_SECTIONS } from "@/lib/docs/endpoints"
@@ -100,18 +100,54 @@ function SidebarSection({ id, title, activeId, onNavigate }: SidebarSectionProps
 
 export function DocsSidebar() {
   const [activeId, setActiveId] = useState("")
+  const isNavigatingRef = useRef(false)
+
+  // Update URL hash without triggering a scroll (replaceState, not pushState)
+  const updateHash = useCallback((id: string) => {
+    if (id && typeof window !== "undefined") {
+      window.history.replaceState(null, "", `#${id}`)
+    }
+  }, [])
+
+  // On mount: read hash from URL and scroll to that section
+  useEffect(() => {
+    const hash = window.location.hash.slice(1)
+    if (!hash) return
+
+    // Small delay to ensure DOM is fully rendered
+    const timer = setTimeout(() => {
+      const el = document.getElementById(hash)
+      if (el) {
+        isNavigatingRef.current = true
+        el.scrollIntoView({ behavior: "instant", block: "start" })
+        setActiveId(hash)
+        // Reset navigation lock after scroll settles
+        setTimeout(() => { isNavigatingRef.current = false }, 200)
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   // Track active section via IntersectionObserver
   useEffect(() => {
+    // Include section container IDs for API Reference groups (e.g. "apple-device-sync")
+    const apiRefSectionIds = ENDPOINT_SECTIONS
+      .filter((s) => !Object.values(sectionEndpointMap).includes(s))
+      .map((s) => s.toLowerCase().replace(/\s+/g, "-"))
     const allIds = [
       ...sections.map((s) => s.id),
       ...ENDPOINTS.map((e) => e.id),
+      ...apiRefSectionIds,
     ]
     const observer = new IntersectionObserver(
       (entries) => {
+        // Skip hash updates during programmatic navigation
+        if (isNavigatingRef.current) return
         for (const entry of entries) {
           if (entry.isIntersecting) {
             setActiveId(entry.target.id)
+            updateHash(entry.target.id)
             break
           }
         }
@@ -125,13 +161,17 @@ export function DocsSidebar() {
     }
 
     return () => observer.disconnect()
-  }, [])
+  }, [updateHash])
 
   const handleNavigate = (id: string) => {
     const el = document.getElementById(id)
     if (el) {
+      isNavigatingRef.current = true
       el.scrollIntoView({ behavior: "smooth", block: "start" })
       setActiveId(id)
+      updateHash(id)
+      // Reset navigation lock after smooth scroll completes (~500ms)
+      setTimeout(() => { isNavigatingRef.current = false }, 600)
     }
   }
 
@@ -165,10 +205,15 @@ export function DocsSidebar() {
             (s) => !Object.values(sectionEndpointMap).includes(s),
           ).map((section) => {
             const eps = ENDPOINTS.filter((e) => e.section === section)
+            const sectionSlug = section.toLowerCase().replace(/\s+/g, "-")
             return (
               <div key={section}>
                 <button
-                  onClick={() => handleNavigate(eps[0]?.id || "")}
+                  onClick={() => {
+                    // Prefer section container element for cleaner hash URLs, fall back to first endpoint
+                    const sectionEl = document.getElementById(sectionSlug)
+                    handleNavigate(sectionEl ? sectionSlug : (eps[0]?.id || ""))
+                  }}
                   className="w-full flex items-center gap-2 px-3 py-1.5 rounded text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors text-left ml-5"
                 >
                   {section}
