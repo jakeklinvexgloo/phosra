@@ -1,0 +1,16 @@
+{
+  "name": "phosra-eval",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "run": "tsx runner.ts",
+    "score": "tsx scorer.ts",
+    "report": "tsx report.ts",
+    "eval": "tsx runner.ts && tsx scorer.ts && tsx report.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "tsx": "^4.19.0"
+  }
+}
