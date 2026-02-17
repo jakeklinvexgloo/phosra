@@ -5,6 +5,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
@@ -43,23 +44,38 @@ type APNsService struct {
 
 // APNsConfig holds the configuration needed to connect to Apple's push service.
 type APNsConfig struct {
-	TeamID      string
-	KeyID       string
-	AuthKeyPath string
-	BundleID    string
-	Production  bool
+	TeamID        string
+	KeyID         string
+	AuthKeyPath   string // local dev: path to .p8 file
+	AuthKeyBase64 string // production: base64-encoded .p8 file contents
+	BundleID      string
+	Production    bool
 }
 
 // NewAPNsService creates an APNs service from config.
 // Returns nil if config is incomplete (allows no-op when APNs is not configured).
+// Accepts the .p8 key via either AuthKeyBase64 (preferred, for Railway/cloud)
+// or AuthKeyPath (local dev). Base64 takes precedence if both are set.
 func NewAPNsService(cfg APNsConfig, devices repository.DeviceRegistrationRepository) (*APNsService, error) {
-	if cfg.TeamID == "" || cfg.KeyID == "" || cfg.AuthKeyPath == "" || cfg.BundleID == "" {
+	if cfg.TeamID == "" || cfg.KeyID == "" || cfg.BundleID == "" {
 		return nil, nil // not configured — caller checks for nil
 	}
+	if cfg.AuthKeyBase64 == "" && cfg.AuthKeyPath == "" {
+		return nil, nil // no key provided
+	}
 
-	keyData, err := os.ReadFile(cfg.AuthKeyPath)
-	if err != nil {
-		return nil, fmt.Errorf("read APNs auth key: %w", err)
+	var keyData []byte
+	var err error
+	if cfg.AuthKeyBase64 != "" {
+		keyData, err = base64.StdEncoding.DecodeString(cfg.AuthKeyBase64)
+		if err != nil {
+			return nil, fmt.Errorf("decode APNs auth key from base64: %w", err)
+		}
+	} else {
+		keyData, err = os.ReadFile(cfg.AuthKeyPath)
+		if err != nil {
+			return nil, fmt.Errorf("read APNs auth key: %w", err)
+		}
 	}
 
 	key, err := parseP8Key(keyData)

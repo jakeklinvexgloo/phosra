@@ -107,11 +107,12 @@ func main() {
 	// APNs silent push (optional — only created when APNS_TEAM_ID is set)
 	var pushSvc service.PolicyUpdateNotifier
 	apnsSvc, err := push.NewAPNsService(push.APNsConfig{
-		TeamID:      cfg.APNsTeamID,
-		KeyID:       cfg.APNsKeyID,
-		AuthKeyPath: cfg.APNsAuthKeyPath,
-		BundleID:    cfg.APNsBundleID,
-		Production:  cfg.APNsProduction,
+		TeamID:        cfg.APNsTeamID,
+		KeyID:         cfg.APNsKeyID,
+		AuthKeyPath:   cfg.APNsAuthKeyPath,
+		AuthKeyBase64: cfg.APNsAuthKeyBase64,
+		BundleID:      cfg.APNsBundleID,
+		Production:    cfg.APNsProduction,
 	}, deviceRegRepo)
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to initialize APNs service")

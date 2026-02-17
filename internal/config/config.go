@@ -32,11 +32,12 @@ type Config struct {
 	AutoMigrate bool
 
 	// APNs (Apple Push Notification service)
-	APNsTeamID      string
-	APNsKeyID       string
-	APNsAuthKeyPath string
-	APNsBundleID    string
-	APNsProduction  bool
+	APNsTeamID         string
+	APNsKeyID          string
+	APNsAuthKeyPath    string // local dev: path to .p8 file
+	APNsAuthKeyBase64  string // production: base64-encoded .p8 contents
+	APNsBundleID       string
+	APNsProduction     bool
 
 	// Sandbox / MCP Playground
 	SandboxMode    bool
@@ -68,11 +69,12 @@ func Load() *Config {
 
 		AutoMigrate:    getBool("AUTO_MIGRATE", false),
 
-		APNsTeamID:      getEnv("APNS_TEAM_ID", ""),
-		APNsKeyID:       getEnv("APNS_KEY_ID", ""),
-		APNsAuthKeyPath: getEnv("APNS_AUTH_KEY_PATH", ""),
-		APNsBundleID:    getEnv("APNS_BUNDLE_ID", ""),
-		APNsProduction:  getBool("APNS_PRODUCTION", false),
+		APNsTeamID:        getEnv("APNS_TEAM_ID", ""),
+		APNsKeyID:         getEnv("APNS_KEY_ID", ""),
+		APNsAuthKeyPath:   getEnv("APNS_AUTH_KEY_PATH", ""),
+		APNsAuthKeyBase64: getEnv("APNS_AUTH_KEY_BASE64", ""),
+		APNsBundleID:      getEnv("APNS_BUNDLE_ID", ""),
+		APNsProduction:    getBool("APNS_PRODUCTION", false),
 
 		SandboxMode:    getBool("SANDBOX_MODE", false),
 		AnthropicAPIKey: getEnv("ANTHROPIC_API_KEY", ""),
