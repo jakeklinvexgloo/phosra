@@ -49,9 +49,10 @@ type Handlers struct {
 	Setup       *handler.SetupHandler
 	Feedback    *handler.FeedbackHandler
 	Standard    *handler.StandardHandler
+	Device      *handler.DeviceHandler
 }
 
-func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts ...Option) http.Handler {
+func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.DeviceAuthenticator, rateLimitRPS int, opts ...Option) http.Handler {
 	o := &options{}
 	for _, opt := range opts {
 		opt(o)
@@ -70,7 +71,7 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   corsOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Sandbox-Session"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Sandbox-Session", "X-Device-Key"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300,
@@ -115,6 +116,9 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 			r.Get("/standards/{slug}", h.Standard.GetBySlug)
 			r.Get("/movements", h.Standard.List)
 			r.Get("/movements/{slug}", h.Standard.GetBySlug)
+
+			// Public platform mappings (Apple bundle IDs, age ratings, etc.)
+			r.Get("/platform-mappings/{platformID}", h.Device.GetMappings)
 		})
 
 		// Protected routes
@@ -173,6 +177,10 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 				r.Get("/policies", h.Policy.List)
 				r.Post("/policies", h.Policy.Create)
 
+				// Device registrations under child (parent-auth)
+				r.Post("/devices", h.Device.RegisterDevice)
+				r.Get("/devices", h.Device.ListDevices)
+
 				// Community standards/movements under child
 				r.Get("/standards", h.Standard.ListByChild)
 				r.Post("/standards", h.Standard.Adopt)
@@ -184,6 +192,12 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 				// Enforcement for child
 				r.Post("/enforce", h.Enforcement.TriggerChildEnforcement)
 				r.Get("/enforcement/jobs", h.Enforcement.ListChildJobs)
+			})
+
+			// Device direct access (parent-auth)
+			r.Route("/devices/{deviceID}", func(r chi.Router) {
+				r.Put("/", h.Device.UpdateDevice)
+				r.Delete("/", h.Device.RevokeDevice)
 			})
 
 			// Policies (direct access)
@@ -234,6 +248,15 @@ func New(h Handlers, userRepo repository.UserRepository, rateLimitRPS int, opts 
 				r.Post("/test", h.Webhook.Test)
 				r.Get("/deliveries", h.Webhook.ListDeliveries)
 			})
+		})
+
+		// Device-auth routes (X-Device-Key header)
+		r.Group(func(r chi.Router) {
+			r.Use(middleware.DeviceAuth(deviceAuth))
+
+			r.Get("/device/policy", h.Device.GetPolicy)
+			r.Post("/device/report", h.Device.IngestReport)
+			r.Post("/device/ack", h.Device.AckVersion)
 		})
 	})
 

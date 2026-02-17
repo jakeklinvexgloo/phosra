@@ -18,11 +18,12 @@ var (
 )
 
 type PolicyService struct {
-	policies repository.PolicyRepository
-	rules    repository.PolicyRuleRepository
-	children repository.ChildRepository
-	members  repository.FamilyMemberRepository
-	ratings  repository.RatingRepository
+	policies   repository.PolicyRepository
+	rules      repository.PolicyRuleRepository
+	children   repository.ChildRepository
+	members    repository.FamilyMemberRepository
+	ratings    repository.RatingRepository
+	webhookSvc *WebhookService
 }
 
 func NewPolicyService(
@@ -31,13 +32,15 @@ func NewPolicyService(
 	children repository.ChildRepository,
 	members repository.FamilyMemberRepository,
 	ratings repository.RatingRepository,
+	webhookSvc *WebhookService,
 ) *PolicyService {
 	return &PolicyService{
-		policies: policies,
-		rules:    rules,
-		children: children,
-		members:  members,
-		ratings:  ratings,
+		policies:   policies,
+		rules:      rules,
+		children:   children,
+		members:    members,
+		ratings:    ratings,
+		webhookSvc: webhookSvc,
 	}
 }
 
@@ -145,6 +148,9 @@ func (s *PolicyService) setStatus(ctx context.Context, userID, policyID uuid.UUI
 	if err := s.policies.Update(ctx, policy); err != nil {
 		return nil, err
 	}
+	// Re-read to get updated version from DB trigger
+	policy, _ = s.policies.GetByID(ctx, policyID)
+	s.dispatchPolicyUpdated(ctx, child.FamilyID, policy)
 	return policy, nil
 }
 
@@ -413,6 +419,7 @@ func (s *PolicyService) CreateRule(ctx context.Context, userID, policyID uuid.UU
 	if err := s.rules.Create(ctx, rule); err != nil {
 		return nil, fmt.Errorf("create rule: %w", err)
 	}
+	s.dispatchPolicyUpdatedByPolicy(ctx, policyID)
 	return rule, nil
 }
 
@@ -430,6 +437,7 @@ func (s *PolicyService) UpdateRule(ctx context.Context, userID, ruleID uuid.UUID
 	if err := s.rules.Update(ctx, rule); err != nil {
 		return nil, err
 	}
+	s.dispatchPolicyUpdatedByPolicy(ctx, rule.PolicyID)
 	return rule, nil
 }
 
@@ -441,7 +449,12 @@ func (s *PolicyService) DeleteRule(ctx context.Context, userID, ruleID uuid.UUID
 	if _, err := s.GetByID(ctx, userID, rule.PolicyID); err != nil {
 		return err
 	}
-	return s.rules.Delete(ctx, ruleID)
+	policyID := rule.PolicyID
+	if err := s.rules.Delete(ctx, ruleID); err != nil {
+		return err
+	}
+	s.dispatchPolicyUpdatedByPolicy(ctx, policyID)
+	return nil
 }
 
 func (s *PolicyService) ListRules(ctx context.Context, userID, policyID uuid.UUID) ([]domain.PolicyRule, error) {
@@ -458,6 +471,7 @@ func (s *PolicyService) BulkUpsertRules(ctx context.Context, userID, policyID uu
 	if err := s.rules.BulkUpsert(ctx, policyID, rules); err != nil {
 		return nil, err
 	}
+	s.dispatchPolicyUpdatedByPolicy(ctx, policyID)
 	return s.rules.ListByPolicy(ctx, policyID)
 }
 
@@ -478,4 +492,32 @@ func (s *PolicyService) checkParentRole(ctx context.Context, familyID, userID uu
 		return ErrInsufficientRole
 	}
 	return nil
+}
+
+// dispatchPolicyUpdated fires a policy.updated webhook if webhookSvc is available.
+func (s *PolicyService) dispatchPolicyUpdated(ctx context.Context, familyID uuid.UUID, policy *domain.ChildPolicy) {
+	if s.webhookSvc == nil || policy == nil {
+		return
+	}
+	s.webhookSvc.Dispatch(ctx, familyID, "policy.updated", map[string]any{
+		"child_id":  policy.ChildID.String(),
+		"policy_id": policy.ID.String(),
+		"version":   policy.Version,
+	})
+}
+
+// dispatchPolicyUpdatedByPolicy looks up the policy and its child to dispatch the webhook.
+func (s *PolicyService) dispatchPolicyUpdatedByPolicy(ctx context.Context, policyID uuid.UUID) {
+	if s.webhookSvc == nil {
+		return
+	}
+	policy, err := s.policies.GetByID(ctx, policyID)
+	if err != nil || policy == nil {
+		return
+	}
+	child, err := s.children.GetByID(ctx, policy.ChildID)
+	if err != nil || child == nil {
+		return
+	}
+	s.dispatchPolicyUpdated(ctx, child.FamilyID, policy)
 }

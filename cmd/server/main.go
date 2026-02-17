@@ -78,6 +78,9 @@ func main() {
 	standardRepo := postgres.NewStandardRepo(db)
 	standardAdoptionRepo := postgres.NewStandardAdoptionRepo(db)
 
+	deviceRegRepo := postgres.NewDeviceRegistrationRepo(db)
+	deviceReportRepo := postgres.NewDeviceReportRepo(db)
+
 	// Phosra service-layer repositories
 	notificationScheduleRepo := postgres.NewNotificationScheduleRepo(db)
 	activityLogRepo := postgres.NewActivityLogRepo(db)
@@ -104,9 +107,11 @@ func main() {
 	authSvc := service.NewAuthService(userRepo)
 	familySvc := service.NewFamilyService(familyRepo, memberRepo)
 	childSvc := service.NewChildService(childRepo, familyRepo, memberRepo, ratingRepo)
-	policySvc := service.NewPolicyService(policyRepo, ruleRepo, childRepo, memberRepo, ratingRepo)
+	webhookSvc := service.NewWebhookService(webhookRepo, webhookDeliveryRepo, memberRepo)
+	policySvc := service.NewPolicyService(policyRepo, ruleRepo, childRepo, memberRepo, ratingRepo, webhookSvc)
 	ratingSvc := service.NewRatingService(ratingRepo)
 	platformSvc := service.NewPlatformService(platformRepo, complianceLinkRepo, memberRepo, registry)
+	devicePolicySvc := service.NewDevicePolicyService(childRepo, policyRepo, ruleRepo, deviceRegRepo, deviceReportRepo, activityLogRepo, memberRepo)
 
 	// Phosra service layer
 	notificationSvc := service.NewPhosraNotificationService(notificationScheduleRepo)
@@ -126,7 +131,6 @@ func main() {
 	log.Info().Msg("composite enforcement engine initialized with 9 Phosra services")
 
 	enforcementSvc := service.NewEnforcementService(enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, policyRepo, ruleRepo, childRepo, memberRepo, registry, compositeEng)
-	webhookSvc := service.NewWebhookService(webhookRepo, webhookDeliveryRepo, memberRepo)
 	reportSvc := service.NewReportService(childRepo, policyRepo, enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, memberRepo)
 	setupSvc := service.NewQuickSetupService(familyRepo, memberRepo, childRepo, policyRepo, ruleRepo, ratingRepo, policySvc, complianceLinkRepo)
 	standardSvc := service.NewStandardService(standardRepo, standardAdoptionRepo, childRepo, memberRepo)
@@ -145,6 +149,7 @@ func main() {
 		Setup:       handler.NewSetupHandler(setupSvc),
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 		Standard:    handler.NewStandardHandler(standardSvc),
+		Device:      handler.NewDeviceHandler(devicePolicySvc),
 	}
 
 	// Router
@@ -160,7 +165,7 @@ func main() {
 		routerOpts = append(routerOpts, router.WithCORSOrigins(cfg.CORSOrigins))
 		log.Info().Str("origins", cfg.CORSOrigins).Msg("CORS origins configured")
 	}
-	r := router.New(handlers, userRepo, cfg.RateLimitRPS, routerOpts...)
+	r := router.New(handlers, userRepo, devicePolicySvc, cfg.RateLimitRPS, routerOpts...)
 
 	// Server
 	srv := &http.Server{

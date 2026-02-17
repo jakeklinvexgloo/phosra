@@ -198,3 +198,22 @@ type ContentClassificationRepository interface {
 	Upsert(ctx context.Context, c *domain.ContentClassification) error
 	GetByContentID(ctx context.Context, contentType, contentID, ratingSystem string) (*domain.ContentClassification, error)
 }
+
+// ── Device Sync (Apple On-Device Integration) ───────────────────
+
+type DeviceRegistrationRepository interface {
+	Create(ctx context.Context, reg *domain.DeviceRegistration) error
+	GetByID(ctx context.Context, id uuid.UUID) (*domain.DeviceRegistration, error)
+	GetByAPIKeyHash(ctx context.Context, hash string) (*domain.DeviceRegistration, error)
+	Update(ctx context.Context, reg *domain.DeviceRegistration) error
+	Delete(ctx context.Context, id uuid.UUID) error
+	ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.DeviceRegistration, error)
+	ListByFamily(ctx context.Context, familyID uuid.UUID) ([]domain.DeviceRegistration, error)
+}
+
+type DeviceReportRepository interface {
+	Create(ctx context.Context, report *domain.DeviceReport) error
+	ListByChild(ctx context.Context, childID uuid.UUID, limit int) ([]domain.DeviceReport, error)
+	ListByDevice(ctx context.Context, deviceID uuid.UUID, limit int) ([]domain.DeviceReport, error)
+	ListByChildAndTimeRange(ctx context.Context, childID uuid.UUID, from, to time.Time) ([]domain.DeviceReport, error)
+}

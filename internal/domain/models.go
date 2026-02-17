@@ -139,6 +139,7 @@ type ChildPolicy struct {
 	Name      string       `json:"name"`
 	Status    PolicyStatus `json:"status"`
 	Priority  int          `json:"priority"`
+	Version   int          `json:"version"`
 	CreatedAt time.Time    `json:"created_at"`
 	UpdatedAt time.Time    `json:"updated_at"`
 }
@@ -535,4 +536,36 @@ type ContentClassification struct {
 	Confidence   float64   `json:"confidence"`
 	Source       string    `json:"source"`
 	ClassifiedAt time.Time `json:"classified_at"`
+}
+
+// ── Device Sync (Apple On-Device Integration) ───────────────────
+
+// DeviceRegistration represents a registered iOS app instance for a child.
+type DeviceRegistration struct {
+	ID                uuid.UUID  `json:"id"`
+	ChildID           uuid.UUID  `json:"child_id"`
+	FamilyID          uuid.UUID  `json:"family_id"`
+	PlatformID        string     `json:"platform_id"`
+	DeviceName        string     `json:"device_name"`
+	DeviceModel       string     `json:"device_model"`
+	OSVersion         string     `json:"os_version"`
+	AppVersion        string     `json:"app_version"`
+	APNsToken         *string    `json:"apns_token,omitempty"`
+	APIKeyHash        string     `json:"-"`
+	LastSeenAt        *time.Time `json:"last_seen_at,omitempty"`
+	LastPolicyVersion int        `json:"last_policy_version"`
+	Status            string     `json:"status"`
+	CreatedAt         time.Time  `json:"created_at"`
+	UpdatedAt         time.Time  `json:"updated_at"`
+}
+
+// DeviceReport represents an activity or status report from a device.
+type DeviceReport struct {
+	ID         uuid.UUID       `json:"id"`
+	DeviceID   uuid.UUID       `json:"device_id"`
+	ChildID    uuid.UUID       `json:"child_id"`
+	ReportType string          `json:"report_type"`
+	Payload    json.RawMessage `json:"payload"`
+	ReportedAt time.Time       `json:"reported_at"`
+	CreatedAt  time.Time       `json:"created_at"`
 }

@@ -28,9 +28,9 @@ func (r *PolicyRepo) Create(ctx context.Context, policy *domain.ChildPolicy) err
 	policy.UpdatedAt = now
 
 	_, err := r.Pool.Exec(ctx,
-		`INSERT INTO child_policies (id, child_id, name, status, priority, created_at, updated_at)
-		 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-		policy.ID, policy.ChildID, policy.Name, policy.Status, policy.Priority, policy.CreatedAt, policy.UpdatedAt,
+		`INSERT INTO child_policies (id, child_id, name, status, priority, version, created_at, updated_at)
+		 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+		policy.ID, policy.ChildID, policy.Name, policy.Status, policy.Priority, 1, policy.CreatedAt, policy.UpdatedAt,
 	)
 	return err
 }
@@ -38,9 +38,9 @@ func (r *PolicyRepo) Create(ctx context.Context, policy *domain.ChildPolicy) err
 func (r *PolicyRepo) GetByID(ctx context.Context, id uuid.UUID) (*domain.ChildPolicy, error) {
 	var p domain.ChildPolicy
 	err := r.Pool.QueryRow(ctx,
-		`SELECT id, child_id, name, status, priority, created_at, updated_at
+		`SELECT id, child_id, name, status, priority, version, created_at, updated_at
 		 FROM child_policies WHERE id = $1`, id,
-	).Scan(&p.ID, &p.ChildID, &p.Name, &p.Status, &p.Priority, &p.CreatedAt, &p.UpdatedAt)
+	).Scan(&p.ID, &p.ChildID, &p.Name, &p.Status, &p.Priority, &p.Version, &p.CreatedAt, &p.UpdatedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
@@ -69,7 +69,7 @@ func (r *PolicyRepo) Delete(ctx context.Context, id uuid.UUID) error {
 
 func (r *PolicyRepo) ListByChild(ctx context.Context, childID uuid.UUID) ([]domain.ChildPolicy, error) {
 	rows, err := r.Pool.Query(ctx,
-		`SELECT id, child_id, name, status, priority, created_at, updated_at
+		`SELECT id, child_id, name, status, priority, version, created_at, updated_at
 		 FROM child_policies WHERE child_id = $1
 		 ORDER BY priority, created_at`, childID,
 	)
@@ -81,7 +81,7 @@ func (r *PolicyRepo) ListByChild(ctx context.Context, childID uuid.UUID) ([]doma
 	var policies []domain.ChildPolicy
 	for rows.Next() {
 		var p domain.ChildPolicy
-		if err := rows.Scan(&p.ID, &p.ChildID, &p.Name, &p.Status, &p.Priority, &p.CreatedAt, &p.UpdatedAt); err != nil {
+		if err := rows.Scan(&p.ID, &p.ChildID, &p.Name, &p.Status, &p.Priority, &p.Version, &p.CreatedAt, &p.UpdatedAt); err != nil {
 			return nil, err
 		}
 		policies = append(policies, p)

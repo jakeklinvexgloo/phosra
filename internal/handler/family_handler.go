@@ -177,7 +177,7 @@ func handleServiceError(w http.ResponseWriter, err error) {
 	case service.ErrFamilyNotFound, service.ErrChildNotFound, service.ErrPolicyNotFound,
 		service.ErrRuleNotFound, service.ErrPlatformNotFound, service.ErrComplianceLinkNotFound,
 		service.ErrEnforcementJobNotFound, service.ErrWebhookNotFound, service.ErrUserNotFound,
-		service.ErrRatingNotFound, service.ErrStandardNotFound:
+		service.ErrRatingNotFound, service.ErrStandardNotFound, service.ErrDeviceNotFound:
 		httputil.Error(w, http.StatusNotFound, err.Error())
 	case service.ErrNotFamilyMember:
 		httputil.Error(w, http.StatusForbidden, err.Error())
@@ -185,6 +185,8 @@ func handleServiceError(w http.ResponseWriter, err error) {
 		httputil.Error(w, http.StatusForbidden, err.Error())
 	case service.ErrNoActivePolicy:
 		httputil.Error(w, http.StatusBadRequest, err.Error())
+	case service.ErrDeviceRevoked, service.ErrInvalidAPIKey:
+		httputil.Error(w, http.StatusUnauthorized, err.Error())
 	default:
 		httputil.Error(w, http.StatusInternalServerError, "internal server error")
 	}
