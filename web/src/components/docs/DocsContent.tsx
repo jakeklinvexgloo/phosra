@@ -1392,6 +1392,53 @@ Content-Type: application/json
               </div>
             </section>
 
+            {/* API Reference: Feedback */}
+            <section id="feedback-section" className="border-t border-border/50 pt-10">
+              <h2 className="text-xl font-bold text-foreground mb-4">Feedback</h2>
+              <div className="bg-card rounded border border-border p-6 space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Anonymous feedback endpoint for collecting user experience data. No authentication required.
+                </p>
+              </div>
+              <div className="mt-6">
+                {getEndpointsBySection("Feedback").map((ep) => (
+                  <EndpointCard key={ep.id} endpoint={ep} />
+                ))}
+              </div>
+            </section>
+
+            {/* API Reference: Apple Device Sync */}
+            <section id="apple-device-sync" className="border-t border-border/50 pt-10">
+              <h2 className="text-xl font-bold text-foreground mb-4">Apple Device Sync</h2>
+              <div className="bg-card rounded border border-border p-6 space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Native iOS integration endpoints for Apple Screen Time enforcement via FamilyControls,
+                  ManagedSettings, and DeviceActivity frameworks. Devices register with parent authorization,
+                  pull versioned policies with <code className="text-xs bg-muted px-1 py-0.5 rounded">304 Not Modified</code> support,
+                  and report per-category enforcement results back to the API.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+                  <div className="bg-emerald-500/5 border border-emerald-500/20 rounded p-3">
+                    <span className="text-xs font-bold text-emerald-500">Device Registration</span>
+                    <p className="text-xs text-muted-foreground mt-1">Parent-authenticated CRUD for managing child devices and capabilities</p>
+                  </div>
+                  <div className="bg-blue-500/5 border border-blue-500/20 rounded p-3">
+                    <span className="text-xs font-bold text-blue-500">Policy Sync</span>
+                    <p className="text-xs text-muted-foreground mt-1">Versioned policy pull with APNs silent push notifications on changes</p>
+                  </div>
+                  <div className="bg-amber-500/5 border border-amber-500/20 rounded p-3">
+                    <span className="text-xs font-bold text-amber-500">Enforcement Reports</span>
+                    <p className="text-xs text-muted-foreground mt-1">Per-category enforcement status reporting with framework context</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6">
+                {getEndpointsBySection("Apple Device Sync").map((ep) => (
+                  <EndpointCard key={ep.id} endpoint={ep} />
+                ))}
+              </div>
+            </section>
+
           </div>
 
           {/* Page footer */}
