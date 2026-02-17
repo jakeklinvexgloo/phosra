@@ -27,7 +27,18 @@ func (h *EnforcementHandler) TriggerChildEnforcement(w http.ResponseWriter, r *h
 		return
 	}
 
-	job, err := h.enforcement.TriggerEnforcement(r.Context(), userID, childID, "manual")
+	// Parse optional request body for platform filter
+	var platformIDs []string
+	if r.Body != nil && r.ContentLength != 0 {
+		var req struct {
+			PlatformIDs []string `json:"platform_ids"`
+		}
+		if err := httputil.DecodeJSON(r, &req); err == nil {
+			platformIDs = req.PlatformIDs
+		}
+	}
+
+	job, err := h.enforcement.TriggerEnforcement(r.Context(), userID, childID, "manual", platformIDs)
 	if err != nil {
 		handleServiceError(w, err)
 		return

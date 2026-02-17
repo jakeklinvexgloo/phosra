@@ -26,7 +26,7 @@ export const SCENARIO_POOL: Scenario[] = [
     title: "Protect Chap on Netflix",
     description: "Set up age-appropriate streaming controls for a 10-year-old",
     prompt:
-      "Chap is 10 years old and has no parental controls on Netflix yet. Set up a protection policy for him with preteen-appropriate content ratings, then push the rules to Netflix and all other connected streaming platforms. Show me exactly what he can and can't watch.",
+      "Chap is 10 years old and has no parental controls on Netflix yet. Set up a protection policy for him with preteen-appropriate content ratings, then push the rules to Netflix. Show me exactly what he can and can't watch.",
     icon: Tv,
   },
   {
@@ -35,7 +35,7 @@ export const SCENARIO_POOL: Scenario[] = [
     title: "Bedtime for the twins",
     description: "Lock Samson and Mona's Fire Tablets at 8:30 PM",
     prompt:
-      "Samson and Mona are both 9 years old and their Fire Tablets have no restrictions right now. Set up protection policies for both of them with a bedtime lockout at 8:30 PM on school nights and 9:30 PM on weekends. Also cap their daily screen time at 2 hours. Show me the enforcement results.",
+      "Samson and Mona are both 9 years old and their Fire Tablets have no restrictions right now. Set up protection policies for both of them with a bedtime lockout at 8:30 PM on school nights and 9:30 PM on weekends. Also cap their daily screen time at 2 hours. Push the rules to their Fire Tablets and show me the enforcement results.",
     icon: Clock,
   },
   {
@@ -44,7 +44,7 @@ export const SCENARIO_POOL: Scenario[] = [
     title: "Lock down Coldy's YouTube",
     description: "She's 5 — YouTube Kids only with no search",
     prompt:
-      "Coldy is only 5 and currently has zero protections in place. Set up the strictest possible controls — YouTube Kids only (no regular YouTube), disable search, turn off autoplay, cap screen time at 30 minutes per day, and make sure content is restricted to G-rated only. Push to all platforms and show me what changed.",
+      "Coldy is only 5 and currently has zero protections in place. Set up the strictest possible controls — YouTube Kids only (no regular YouTube), disable search, turn off autoplay, cap screen time at 30 minutes per day, and make sure content is restricted to G-rated only. Push the rules to YouTube and show me what changed.",
     icon: Eye,
   },
   {
@@ -53,7 +53,7 @@ export const SCENARIO_POOL: Scenario[] = [
     title: "Ramsay's TV time",
     description: "Limit what a 7-year-old can watch on the Fire TV Stick",
     prompt:
-      "Ramsay is 7 and watches shows on the living room Fire TV Stick with no restrictions. Set up his protection policy — content ratings should be G and PG only, block anything TV-PG or above, and set a 1-hour daily limit. Enforce it across Fire TV and all streaming platforms.",
+      "Ramsay is 7 and watches shows on the living room Fire TV Stick with no restrictions. Set up his protection policy — content ratings should be G and PG only, block anything TV-PG or above, and set a 1-hour daily limit. Enforce it on the Fire TV Stick.",
     icon: Tv,
   },
   {

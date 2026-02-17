@@ -453,10 +453,18 @@ export const TOOLS: ToolDefinition[] = [
   {
     name: "trigger_enforcement",
     description:
-      "Push the child's active policy rules to ALL connected platforms. Creates an enforcement job that fans out to every verified compliance link. Returns the job ID for tracking.",
+      "Push the child's active policy rules to connected platforms. If platform_ids is provided, only those platforms are targeted; otherwise enforcement fans out to ALL connected platforms. Returns the job ID for tracking.",
     input_schema: {
       type: "object",
-      properties: { child_id: str("Child UUID") },
+      properties: {
+        child_id: str("Child UUID"),
+        platform_ids: {
+          type: "array",
+          items: { type: "string" },
+          description:
+            "Optional list of platform IDs to target (e.g., ['netflix', 'youtube']). If omitted, pushes to ALL connected platforms. Valid IDs: netflix, paramount_plus, youtube_tv, peacock, prime_video, youtube, nextdns, android, fire_tablet, apple_watch, fire_tv_stick.",
+        },
+      },
       required: ["child_id"],
     },
     http: { method: "POST", path: "/children/{child_id}/enforce" },

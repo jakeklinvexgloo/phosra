@@ -56,7 +56,7 @@ func NewEnforcementService(
 	}
 }
 
-func (s *EnforcementService) TriggerEnforcement(ctx context.Context, userID, childID uuid.UUID, triggerType string) (*domain.EnforcementJob, error) {
+func (s *EnforcementService) TriggerEnforcement(ctx context.Context, userID, childID uuid.UUID, triggerType string, platformIDs []string) (*domain.EnforcementJob, error) {
 	child, err := s.children.GetByID(ctx, childID)
 	if err != nil || child == nil {
 		return nil, ErrChildNotFound
@@ -108,16 +108,20 @@ func (s *EnforcementService) TriggerEnforcement(ctx context.Context, userID, chi
 	}
 
 	// Fan out to all verified platforms (with composite engine for overflow rules)
-	go s.executeEnforcementFanOut(context.Background(), job, rules, links, child.FamilyID, child.Name, child.Age())
+	go s.executeEnforcementFanOut(context.Background(), job, rules, links, child.FamilyID, child.Name, child.Age(), platformIDs)
 
 	return job, nil
 }
 
-func (s *EnforcementService) executeEnforcementFanOut(ctx context.Context, job *domain.EnforcementJob, rules []domain.PolicyRule, links []domain.ComplianceLink, familyID uuid.UUID, childName string, childAge int) {
+func (s *EnforcementService) executeEnforcementFanOut(ctx context.Context, job *domain.EnforcementJob, rules []domain.PolicyRule, links []domain.ComplianceLink, familyID uuid.UUID, childName string, childAge int, platformIDs []string) {
 	var hasFailure, hasSuccess bool
 
 	for _, link := range links {
 		if link.Status != "verified" {
+			continue
+		}
+		// Skip platforms not in the requested filter (if specified)
+		if len(platformIDs) > 0 && !containsString(platformIDs, link.PlatformID) {
 			continue
 		}
 
@@ -252,7 +256,7 @@ func (s *EnforcementService) TriggerLinkEnforcement(ctx context.Context, userID,
 		return nil, ErrChildNotFound
 	}
 	// Enforce the first child as representative (full enforcement would iterate all)
-	return s.TriggerEnforcement(ctx, userID, children[0].ID, "manual")
+	return s.TriggerEnforcement(ctx, userID, children[0].ID, "manual", nil)
 }
 
 func (s *EnforcementService) GetJob(ctx context.Context, userID, jobID uuid.UUID) (*domain.EnforcementJob, error) {
@@ -272,7 +276,16 @@ func (s *EnforcementService) RetryJob(ctx context.Context, userID, jobID uuid.UU
 	if err != nil || oldJob == nil {
 		return nil, ErrEnforcementJobNotFound
 	}
-	return s.TriggerEnforcement(ctx, userID, oldJob.ChildID, "manual")
+	return s.TriggerEnforcement(ctx, userID, oldJob.ChildID, "manual", nil)
+}
+
+func containsString(slice []string, s string) bool {
+	for _, v := range slice {
+		if v == s {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *EnforcementService) checkMembership(ctx context.Context, familyID, userID uuid.UUID) error {

@@ -242,6 +242,11 @@ export function summarizeToolCall(
     }
     case "trigger_enforcement": {
       const child = resolve("child_id")
+      const platformIds = input.platform_ids as string[] | undefined
+      if (platformIds?.length) {
+        const names = platformIds.map(formatPlatformId).join(", ")
+        return child ? `Push rules to ${names} for ${child}` : `Push rules to ${names}`
+      }
       return child ? `Push rules to all platforms for ${child}` : null
     }
     case "get_enforcement_job": {
@@ -417,4 +422,22 @@ function formatCategory(category: string): string {
   return category
     .replace(/_/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+const PLATFORM_DISPLAY_NAMES: Record<string, string> = {
+  netflix: "Netflix",
+  paramount_plus: "Paramount+",
+  youtube_tv: "YouTube TV",
+  peacock: "Peacock",
+  prime_video: "Prime Video",
+  youtube: "YouTube",
+  nextdns: "NextDNS",
+  android: "Android",
+  fire_tablet: "Fire Tablet",
+  apple_watch: "Apple Watch",
+  fire_tv_stick: "Fire TV Stick",
+}
+
+export function formatPlatformId(id: string): string {
+  return PLATFORM_DISPLAY_NAMES[id] || formatCategory(id)
 }

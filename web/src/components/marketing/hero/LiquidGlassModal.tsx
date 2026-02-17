@@ -49,44 +49,46 @@ export function LiquidGlassModal({ open, onClose, children }: LiquidGlassModalPr
     <AnimatePresence>
       {open && (
         <>
-          {/* Overlay */}
+          {/* Overlay + centering wrapper */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[9999] liquid-glass-overlay"
+            className="fixed inset-0 z-[9999] liquid-glass-overlay flex items-start justify-center pt-[5vh] px-4"
             onClick={onClose}
-            aria-hidden
-          />
-
-          {/* Glass panel */}
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Phosra AI sandbox"
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, y: 5 }}
-            transition={{
-              type: "spring",
-              damping: 30,
-              stiffness: 400,
-              mass: 0.8,
-            }}
-            className="fixed inset-4 sm:inset-auto sm:top-[5vh] sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-2xl sm:max-h-[85vh] z-[10000] flex flex-col liquid-glass overflow-hidden"
+            aria-hidden="true"
           >
-            {/* Close button */}
-            <button
-              onClick={onClose}
-              className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center bg-white/[0.08] hover:bg-white/[0.15] text-white/50 hover:text-white/80 transition-colors"
-              aria-label="Close"
+            {/* Glass panel */}
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Phosra AI sandbox"
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.97, y: 5 }}
+              transition={{
+                type: "spring",
+                damping: 30,
+                stiffness: 400,
+                mass: 0.8,
+              }}
+              className="relative w-full max-w-2xl max-h-[85vh] z-[10000] flex flex-col liquid-glass overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+              aria-hidden={false}
             >
-              <X className="w-4 h-4" />
-            </button>
+              {/* Close button */}
+              <button
+                onClick={onClose}
+                className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center bg-white/[0.08] hover:bg-white/[0.15] text-white/50 hover:text-white/80 transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
 
-            {/* Content */}
-            {children}
+              {/* Content */}
+              {children}
+            </motion.div>
           </motion.div>
         </>
       )}

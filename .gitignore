@@ -40,3 +40,5 @@ web/out/
 web/test-results/
 web/playwright-report/
 web/tsconfig.tsbuildinfo
+.vercel
+.env*.local
