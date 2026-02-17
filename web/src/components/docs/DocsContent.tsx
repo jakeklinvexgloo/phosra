@@ -1432,6 +1432,124 @@ Content-Type: application/json
                   </div>
                 </div>
               </div>
+
+              {/* APNs Silent Push Payload */}
+              <div id="apns-push-payload" className="mt-8 bg-card rounded border border-border overflow-hidden">
+                <div className="px-6 py-4 border-b border-border bg-muted/30">
+                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
+                    APNs Silent Push Payload
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    When a policy is updated, Phosra sends a silent push notification to all active devices registered for that child.
+                    Your app <Keyword>MUST</Keyword> handle this in <code className="text-xs bg-muted px-1 py-0.5 rounded">application(_:didReceiveRemoteNotification:fetchCompletionHandler:)</code> and
+                    trigger a policy refresh via <code className="text-xs bg-muted px-1 py-0.5 rounded">GET /device/policy</code>.
+                  </p>
+                </div>
+                <div className="p-6 space-y-5">
+                  {/* Payload JSON */}
+                  <div>
+                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Push Payload</h4>
+                    <div className="bg-zinc-900 rounded p-4 font-mono text-xs text-zinc-200 overflow-x-auto">
+                      <pre>{`{
+  "aps": {
+    "content-available": 1
+  },
+  "phosra": {
+    "event": "policy.updated",
+    "version": 3
+  }
+}`}</pre>
+                    </div>
+                  </div>
+
+                  {/* Field descriptions */}
+                  <div>
+                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Fields</h4>
+                    <div className="border border-border rounded divide-y divide-border text-sm">
+                      <div className="flex px-4 py-2.5">
+                        <code className="text-xs text-blue-400 font-mono w-52 flex-shrink-0">aps.content-available</code>
+                        <span className="text-xs text-muted-foreground">Always <code className="bg-muted px-1 py-0.5 rounded">1</code> — marks this as a silent/background push. No alert, sound, or badge.</span>
+                      </div>
+                      <div className="flex px-4 py-2.5">
+                        <code className="text-xs text-blue-400 font-mono w-52 flex-shrink-0">phosra.event</code>
+                        <span className="text-xs text-muted-foreground">Event type. Currently always <code className="bg-muted px-1 py-0.5 rounded">&quot;policy.updated&quot;</code>.</span>
+                      </div>
+                      <div className="flex px-4 py-2.5">
+                        <code className="text-xs text-blue-400 font-mono w-52 flex-shrink-0">phosra.version</code>
+                        <span className="text-xs text-muted-foreground">The new policy version number. Compare with your cached version — if higher, call <code className="bg-muted px-1 py-0.5 rounded">GET /device/policy</code>.</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* APNs Headers */}
+                  <div>
+                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">APNs HTTP/2 Headers (Server → Apple)</h4>
+                    <div className="border border-border rounded divide-y divide-border text-sm">
+                      <div className="flex px-4 py-2.5">
+                        <code className="text-xs text-emerald-400 font-mono w-52 flex-shrink-0">apns-push-type</code>
+                        <span className="text-xs text-muted-foreground"><code className="bg-muted px-1 py-0.5 rounded">background</code></span>
+                      </div>
+                      <div className="flex px-4 py-2.5">
+                        <code className="text-xs text-emerald-400 font-mono w-52 flex-shrink-0">apns-priority</code>
+                        <span className="text-xs text-muted-foreground"><code className="bg-muted px-1 py-0.5 rounded">5</code> — required for silent push (priority 10 would require an alert)</span>
+                      </div>
+                      <div className="flex px-4 py-2.5">
+                        <code className="text-xs text-emerald-400 font-mono w-52 flex-shrink-0">apns-topic</code>
+                        <span className="text-xs text-muted-foreground">Your app&apos;s bundle ID (e.g. <code className="bg-muted px-1 py-0.5 rounded">com.downtime.downtime</code>)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Swift handler example */}
+                  <div>
+                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Swift Handler Example</h4>
+                    <div className="bg-zinc-900 rounded p-4 font-mono text-xs text-zinc-200 overflow-x-auto">
+                      <pre>{`func application(
+  _ application: UIApplication,
+  didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+  fetchCompletionHandler handler: @escaping (UIBackgroundFetchResult) -> Void
+) {
+  guard let phosra = userInfo["phosra"] as? [String: Any],
+        let event = phosra["event"] as? String,
+        event == "policy.updated",
+        let version = phosra["version"] as? Int else {
+    handler(.noData)
+    return
+  }
+
+  // Only refresh if the pushed version is newer than our cached version
+  guard version > PolicyCache.shared.currentVersion else {
+    handler(.noData)
+    return
+  }
+
+  Task {
+    do {
+      let policy = try await PhosraAPI.fetchPolicy()
+      PolicyEnforcer.shared.apply(policy)
+      handler(.newData)
+    } catch {
+      handler(.failed)
+    }
+  }
+}`}</pre>
+                    </div>
+                  </div>
+
+                  {/* Important notes */}
+                  <div className="bg-amber-500/5 border border-amber-500/20 rounded p-4">
+                    <h4 className="text-xs font-semibold text-amber-500 uppercase tracking-wider mb-2">Important</h4>
+                    <ul className="text-xs text-muted-foreground space-y-1.5 list-disc list-inside">
+                      <li>Enable <strong>Background Modes → Remote notifications</strong> in your Xcode project capabilities.</li>
+                      <li>Silent push is best-effort — iOS may throttle or delay delivery. Always implement periodic polling as a fallback (recommended: every 15 minutes via <code className="bg-muted px-1 py-0.5 rounded">BGAppRefreshTask</code>).</li>
+                      <li>The push is sent to <strong>all active devices</strong> for the child, not just the device that last polled.</li>
+                      <li>If the device token changes (e.g. after app reinstall), update it via <code className="bg-muted px-1 py-0.5 rounded">PUT /devices/{'{'}deviceID{'}'}</code> with the new <code className="bg-muted px-1 py-0.5 rounded">apns_token</code>.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-6">
                 {getEndpointsBySection("Apple Device Sync").map((ep) => (
                   <EndpointCard key={ep.id} endpoint={ep} />

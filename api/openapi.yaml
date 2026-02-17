@@ -610,6 +610,34 @@ components:
           type: string
           description: "Implementation hints for the iOS app"
 
+    APNsPushPayload:
+      type: object
+      description: "Silent push notification sent to iOS devices when a child's policy is updated. Delivered via APNs HTTP/2 with push-type=background and priority=5."
+      properties:
+        aps:
+          type: object
+          properties:
+            content-available:
+              type: integer
+              description: "Always 1 — marks as silent/background push"
+              enum: [1]
+        phosra:
+          type: object
+          properties:
+            event:
+              type: string
+              description: "Event type — currently always policy.updated"
+              enum: ["policy.updated"]
+            version:
+              type: integer
+              description: "New policy version number. Compare with cached version to decide whether to call GET /device/policy."
+      example:
+        aps:
+          content-available: 1
+        phosra:
+          event: "policy.updated"
+          version: 3
+
     ApplePlatformMappings:
       type: object
       properties:
