@@ -1,12 +1,14 @@
 import { streamText, convertToModelMessages, stepCountIs, type UIMessage } from "ai"
 import { createAnthropic } from "@ai-sdk/anthropic"
+import { observe, updateActiveTrace } from "@langfuse/tracing"
 import { SYSTEM_PROMPT } from "@/lib/playground/system-prompt"
 import { buildTools, type ToolHttpCapture } from "@/lib/playground/tools-ai-sdk"
+import { langfuseSpanProcessor } from "@/instrumentation"
 
 export const runtime = "nodejs"
 export const maxDuration = 120
 
-export async function POST(req: Request) {
+const handler = async (req: Request) => {
   const apiKey =
     process.env.PLAYGROUND_ANTHROPIC_KEY || process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
@@ -20,6 +22,13 @@ export async function POST(req: Request) {
   const uiMessages: UIMessage[] = body.messages ?? []
   const sessionId: string = body.chatId ?? body.sessionId ?? "default"
   const sandboxToken = `sandbox-${sessionId}`
+
+  // Tag this trace with the session so all messages in one chat are grouped
+  updateActiveTrace({
+    name: "playground-chat",
+    sessionId,
+    metadata: { messageCount: uiMessages.length },
+  })
 
   // On first message, pre-populate the Klinvex Family (children + platforms, no policies)
   const isFirstMessage = uiMessages.length <= 1
@@ -53,7 +62,17 @@ export async function POST(req: Request) {
     messages: modelMessages,
     tools,
     stopWhen: stepCountIs(20),
+    experimental_telemetry: { isEnabled: true },
+    onFinish: async () => {
+      // Flush Langfuse traces after the AI finishes generating
+      await langfuseSpanProcessor.forceFlush()
+    },
   })
 
   return result.toUIMessageStreamResponse()
 }
+
+export const POST = observe(handler, {
+  name: "playground-chat",
+  endOnExit: false,
+})
