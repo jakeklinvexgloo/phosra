@@ -50,10 +50,11 @@ function detectPlatformUpsell(
 ): UpsellDetection {
   const empty: UpsellDetection = { isUpsell: false, platformIds: [], childName: null }
 
-  // Must contain a question pattern about pushing/expanding
-  if (!/(?:want|would you like|interested|push|apply|expand|enforce|protection)/i.test(text) || !text.includes("?")) {
-    return empty
-  }
+  // Must specifically be an offer to push/expand to other platforms
+  // Tighter pattern: look for "push", "apply", "expand" near "platform/protection/rule" + question mark
+  const hasOffer = /(?:push|apply|expand|enforce)[\s\S]*(?:platform|protection|service|device|rule)[\s\S]*\?/i.test(text)
+    || /(?:would you like|want me to|interested in)[\s\S]*(?:push|apply|expand|enforce|protection)/i.test(text)
+  if (!hasOffer) return empty
 
   // Scan for platform display names
   const textLower = text.toLowerCase()
@@ -66,14 +67,24 @@ function detectPlatformUpsell(
 
   if (found.length < 2) return empty
 
-  // Exclude platforms already targeted in the most recent trigger_enforcement
-  const lastEnforcement = [...toolCalls]
-    .reverse()
-    .find(tc => tc.name === "trigger_enforcement" && tc.status === "complete")
-  const alreadyEnforced = (lastEnforcement?.input?.platform_ids as string[] | undefined) ?? []
-  const upsellPlatforms = alreadyEnforced.length > 0
-    ? found.filter(id => !alreadyEnforced.includes(id))
+  // Collect ALL platforms from ALL completed trigger_enforcement calls
+  const allEnforced = new Set<string>()
+  for (const tc of toolCalls) {
+    if (tc.name === "trigger_enforcement" && tc.status === "complete") {
+      const ids = tc.input?.platform_ids as string[] | undefined
+      if (ids?.length) {
+        ids.forEach(id => allEnforced.add(id))
+      } else {
+        // No platform_ids means it pushed to ALL platforms — nothing left to upsell
+        return empty
+      }
+    }
+  }
+  const upsellPlatforms = allEnforced.size > 0
+    ? found.filter(id => !allEnforced.has(id))
     : found
+
+  if (upsellPlatforms.length < 2) return empty
 
   // Find the child name from entities
   let childName: string | null = null
@@ -82,7 +93,7 @@ function detectPlatformUpsell(
   })
 
   return {
-    isUpsell: upsellPlatforms.length >= 2,
+    isUpsell: true,
     platformIds: upsellPlatforms,
     childName,
   }
