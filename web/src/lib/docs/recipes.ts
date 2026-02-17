@@ -716,90 +716,161 @@ export const RECIPES: Recipe[] = [
     keyTeachingPoint: "Defense in depth: block both the DNS domain and the app package. DNS blocking covers all devices on the network, app blocking covers the specific device even on other networks."
   },
   {
-    id: "apple-manual",
-    title: "Apple Device (Manual Flow)",
-    summary: "Set up iPad protection via MDM profile \u2014 Apple requires manual steps",
+    id: "apple-device-sync",
+    title: "Apple Device (On-Device Sync)",
+    summary: "Set up iPad protection via the Phosra iOS app \u2014 register, poll, enforce locally",
     icon: "\u{1F34E}",
-    tags: ["Apple MDM", "Manual", "Guided Steps"],
-    scenario: "Mom wants to protect her daughter's iPad. Unlike NextDNS and Android which have push APIs, Apple's MDM requires manual installation of a configuration profile. The Phosra API generates the profile and provides step-by-step instructions for the parent.",
-    actors: ["Parent App", "Phosra API", "Apple MDM"],
-    flowDiagram: `Parent App          Phosra API         Apple iPad
+    tags: ["Apple", "iOS App", "Device Sync", "FamilyControls"],
+    scenario: "Mom wants to protect her daughter Sofia's iPad. The Phosra iOS app uses Apple's FamilyControls, ManagedSettings, and DeviceActivity frameworks to enforce parental controls locally on-device. At registration, the app advertises its capabilities (which Apple frameworks it supports). The API sends APNs silent pushes when policies change, and the app reports per-category enforcement results back to Phosra so the parent dashboard shows what's actually enforced.",
+    actors: ["Parent Dashboard", "Phosra API", "iOS App (on iPad)"],
+    flowDiagram: `Parent Dashboard     Phosra API         iOS App (iPad)
     |                       |                        |
-    |── POST /compliance ──>|                        |
-    |   (apple_mdm)         |                        |
-    |<── 200 status:manual ─|                        |
-    |── POST /enforce ─────>|                        |
-    |   (apple_mdm)         |── generate profile ──  |
-    |<── 200 manual_steps ──|                        |
-    |                       |                        |
-    |   [Parent follows steps on iPad]               |
-    |                       |                        |
-    |── GET /results ──────>|                        |
-    |<── 200 pending_manual─|                        |`,
+    |\u2500\u2500 POST /devices \u2500\u2500\u2500\u2500>|                        |
+    |<\u2500\u2500 201 + api_key \u2500\u2500\u2500\u2500\u2500|                        |
+    |   [Parent gives key to app]                    |
+    |                       |<\u2500\u2500 GET /device/policy \u2500\u2500|
+    |                       |\u2500\u2500 200 compiled policy \u2500>|
+    |                       |                        |\u2500\u2500 enforce via
+    |                       |                        |   FamilyControls
+    |                       |<\u2500\u2500 POST /device/ack \u2500\u2500\u2500\u2500|
+    |                       |<\u2500\u2500 POST /device/report \u2500|
+    |                       |\u2500\u2500 202 accepted \u2500\u2500\u2500\u2500\u2500\u2500>|`,
     steps: [
       {
         number: 1,
         method: "POST",
-        endpoint: "/api/v1/compliance",
-        description: "Register the Apple device \u2014 returns 'manual' status instead of 'verified'",
+        endpoint: "/api/v1/children/child_sofia/devices",
+        description: "Parent registers Sofia's iPad \u2014 receives a one-time device API key",
         requestBody: `{
-  "platform": "apple_mdm",
-  "credentials": { "device_name": "Sofia's iPad", "apple_id_hint": "sofia@icloud.com" },
-  "child_id": "child_sofia"
+  "device_name": "Sofia's iPad",
+  "device_model": "iPad Pro 11-inch",
+  "os_version": "18.2",
+  "app_version": "1.0.0",
+  "capabilities": ["FamilyControls", "ManagedSettings", "DeviceActivity", "WebContentFilter"],
+  "apns_token": "abc123def456..."
 }`,
         responseBody: `{
-  "id": "comp_apple01",
-  "platform": "apple_mdm",
-  "status": "manual",
-  "capabilities": ["content_rating", "app_block", "screen_time", "web_filter"],
-  "note": "Apple MDM requires manual profile installation"
+  "device": {
+    "id": "dev_ipad01",
+    "child_id": "child_sofia",
+    "platform_id": "apple",
+    "device_name": "Sofia's iPad",
+    "capabilities": ["FamilyControls", "ManagedSettings", "DeviceActivity", "WebContentFilter"],
+    "enforcement_summary": {},
+    "status": "active",
+    "last_policy_version": 0
+  },
+  "api_key": "a3f8b2c1d4e5f6789012345678abcdef0123456789abcdef0123456789abcdef"
 }`,
-        whatHappens: "Unlike NextDNS which returns 'verified', Apple returns 'manual' status. The API can't auto-verify Apple devices \u2014 parent must install a configuration profile on the device."
+        whatHappens: "API generates a random 32-byte API key, stores only its SHA-256 hash. The plaintext key is returned once \u2014 the iOS app stores it in Keychain. This key replaces JWT auth for all device-to-API communication."
       },
       {
         number: 2,
-        method: "POST",
-        endpoint: "/api/v1/enforce",
-        description: "Request enforcement \u2014 API generates an MDM profile and manual steps",
-        requestBody: `{
-  "policy_id": "pol_sofia",
-  "platforms": ["comp_apple01"]
-}`,
+        method: "GET",
+        endpoint: "/api/v1/device/policy",
+        description: "iOS app polls for the compiled policy document using its device API key",
         responseBody: `{
-  "results": [{
-    "platform": "apple_mdm",
-    "status": "manual_steps",
-    "profile_url": "https://api.phosra.dev/profiles/mdm_abc123.mobileconfig",
-    "manual_steps": [
-      "1. On the iPad, open Safari and go to the profile URL",
-      "2. Tap 'Allow' when prompted to download the configuration profile",
-      "3. Open Settings \u2192 General \u2192 VPN & Device Management",
-      "4. Tap the Phosra profile and tap 'Install'",
-      "5. Enter the iPad passcode when prompted",
-      "6. Tap 'Install' again to confirm"
-    ],
-    "expires_at": "2026-02-07T11:00:00Z"
-  }]
+  "version": 3,
+  "child_age": 7,
+  "age_group": "Child",
+  "content_filter": {
+    "age_rating": "4+",
+    "max_ratings": { "apple": "4+", "mpaa": "PG" },
+    "blocked_apps": ["com.epic.fortnite"]
+  },
+  "screen_time": {
+    "daily_limit_minutes": 120,
+    "downtime_windows": [{ "days_of_week": ["mon","tue","wed","thu","fri"], "start_time": "20:00", "end_time": "07:00" }],
+    "always_allowed_apps": ["com.apple.mobilephone", "com.apple.MobileSMS"]
+  },
+  "purchases": { "require_approval": true, "block_iap": true },
+  "web_filter": { "level": "strict", "safe_search": true }
 }`,
-        whatHappens: "API generates an MDM .mobileconfig file with all policy rules embedded. The profile URL is time-limited (30 minutes). Manual steps guide the parent through installation."
+        whatHappens: "The API compiles the child's active policy + all rules into a structured JSON document. The iOS app maps this to FamilyControls shields, ManagedSettings restrictions, and DeviceActivity schedules. Supports conditional polling with ?since_version=N for efficient background refresh."
       },
       {
         number: 3,
-        method: "GET",
-        endpoint: "/api/v1/enforce/results?compliance_id=comp_apple01",
-        description: "Check if the manual installation was completed",
-        responseBody: `{
-  "compliance_id": "comp_apple01",
-  "platform": "apple_mdm",
-  "enforcement_status": "pending_manual",
-  "profile_installed": false,
-  "last_checked": "2026-02-07T10:35:00Z",
-  "instructions": "Awaiting manual profile installation on device"
+        method: "POST",
+        endpoint: "/api/v1/device/ack",
+        description: "iOS app confirms it applied policy version 3",
+        requestBody: `{
+  "version": 3
 }`,
-        whatHappens: "The API can't confirm installation until the device checks in. Status remains 'pending_manual' until the MDM profile phones home, at which point it changes to 'enforced'."
+        responseBody: `{
+  "acknowledged_version": 3
+}`,
+        whatHappens: "The device's last_policy_version is updated to 3. The parent dashboard can now verify that Sofia's iPad is running the latest policy. If the parent updates rules, the version bumps automatically and the app will pick up the change on its next poll."
+      },
+      {
+        number: 4,
+        method: "POST",
+        endpoint: "/api/v1/device/report",
+        description: "iOS app submits a daily screen time report",
+        requestBody: `{
+  "report_type": "screen_time",
+  "payload": {
+    "total_minutes": 95,
+    "by_category": { "games": 40, "education": 30, "social": 25 },
+    "top_apps": [
+      { "bundle_id": "com.mojang.minecraftpe", "minutes": 35 },
+      { "bundle_id": "com.duolingo", "minutes": 30 }
+    ]
+  },
+  "reported_at": "2026-02-17T20:00:00Z"
+}`,
+        responseBody: `{
+  "status": "accepted"
+}`,
+        whatHappens: "Report is stored in device_reports and fanned out to the activity_logs table. The parent sees Sofia's screen time in the Phosra dashboard alongside data from other platforms (NextDNS, Android), creating a unified activity view."
+      },
+      {
+        number: 5,
+        method: "POST",
+        endpoint: "/api/v1/device/report",
+        description: "iOS app reports per-category enforcement results after applying the policy",
+        requestBody: `{
+  "report_type": "enforcement_status",
+  "payload": {
+    "policy_version": 3,
+    "results": [
+      { "category": "content_rating", "status": "enforced", "framework": "ManagedSettings" },
+      { "category": "time_daily_limit", "status": "enforced", "framework": "DeviceActivity" },
+      { "category": "web_safesearch", "status": "enforced", "framework": "ManagedSettings" },
+      { "category": "purchase_block_iap", "status": "enforced", "framework": "ManagedSettings" },
+      { "category": "algo_feed_control", "status": "unsupported", "framework": "none", "detail": "No Apple API" }
+    ]
+  },
+  "reported_at": "2026-02-17T20:05:00Z"
+}`,
+        responseBody: `{
+  "status": "accepted"
+}`,
+        whatHappens: "The enforcement_status report is parsed into structured results. The device's enforcement_summary is updated so the parent dashboard can show exactly which policy categories are being enforced, partially enforced, or unsupported on this device."
+      },
+      {
+        number: 6,
+        method: "GET",
+        endpoint: "/api/v1/platform-mappings/apple",
+        description: "iOS app fetches Apple-specific identifier + framework mappings at startup",
+        responseBody: `{
+  "age_ratings": { "G": "4+", "PG": "9+", "PG-13": "12+", "R": "17+" },
+  "app_categories": {
+    "social-media": { "bundle_ids": ["com.burbn.instagram", "com.atebits.Tweetie2"], "app_store_category": "Social Networking" }
+  },
+  "system_apps": { "phone": "com.apple.mobilephone", "messages": "com.apple.MobileSMS" },
+  "always_allowed": ["com.apple.mobilephone", "com.apple.MobileSMS", "com.apple.facetime"],
+  "category_frameworks": {
+    "content_rating": { "framework": "ManagedSettings", "api_class": "ManagedSettingsStore.application", "min_os": "16.0" },
+    "time_daily_limit": { "framework": "DeviceActivity", "api_class": "DeviceActivitySchedule", "min_os": "16.0" },
+    "web_safesearch": { "framework": "ManagedSettings", "api_class": "ManagedSettingsStore.webContent.autoFilter", "min_os": "16.0" },
+    "social_contacts": { "framework": "FamilyControls", "api_class": "AuthorizationCenter", "min_os": "16.0" },
+    "algo_feed_control": { "framework": "none", "api_class": "", "min_os": "", "notes": "No Apple API" }
+  }
+}`,
+        whatHappens: "Static mapping table that translates Phosra's cross-platform categories into Apple bundle IDs and age ratings. The category_frameworks map tells the iOS app which Apple framework and API class to use for each of the 45 Phosra rule categories. Categories mapped to 'none' have no Apple API and the app should report them as 'unsupported'."
       }
     ],
-    keyTeachingPoint: "Not all platforms support push-based enforcement. Apple MDM uses a 'manual_steps' flow where the API generates instructions and a configuration profile for the parent to install."
+    keyTeachingPoint: "Apple devices enforce locally using FamilyControls, ManagedSettings, and DeviceActivity \u2014 the API serves policy documents and sends APNs silent pushes when they change. The iOS app uses category_frameworks to know which Apple framework handles each rule, reports enforcement_status back so the parent dashboard shows what's actually enforced, and authenticates with a long-lived device API key (stored in Keychain) instead of the parent's JWT."
   },
   {
     id: "re-verification",

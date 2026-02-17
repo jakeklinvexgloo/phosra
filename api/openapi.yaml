@@ -18,6 +18,11 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+    DeviceKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Device-Key
+      description: Device API key issued at registration (stored in iOS Keychain)
 
   schemas:
     Error:
@@ -309,6 +314,333 @@ components:
           type: object
           additionalProperties:
             $ref: "#/components/schemas/Rating"
+
+    DeviceRegistration:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        child_id:
+          type: string
+          format: uuid
+        family_id:
+          type: string
+          format: uuid
+        platform_id:
+          type: string
+        device_name:
+          type: string
+        device_model:
+          type: string
+        os_version:
+          type: string
+        app_version:
+          type: string
+        apns_token:
+          type: string
+          nullable: true
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: "Apple frameworks the device supports (e.g. FamilyControls, ManagedSettings, DeviceActivity)"
+        enforcement_summary:
+          type: object
+          description: "Per-category enforcement results from the device's last enforcement_status report"
+        last_seen_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_policy_version:
+          type: integer
+        status:
+          type: string
+          enum: [active, inactive, revoked]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    RegisterDeviceRequest:
+      type: object
+      required: [device_name, device_model, os_version, app_version]
+      properties:
+        device_name:
+          type: string
+        device_model:
+          type: string
+        os_version:
+          type: string
+        app_version:
+          type: string
+        apns_token:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+          description: "Apple frameworks the device supports (e.g. FamilyControls, ManagedSettings, DeviceActivity)"
+
+    RegisterDeviceResponse:
+      type: object
+      properties:
+        device:
+          $ref: "#/components/schemas/DeviceRegistration"
+        api_key:
+          type: string
+          description: One-time device API key (store in Keychain)
+
+    UpdateDeviceRequest:
+      type: object
+      properties:
+        device_name:
+          type: string
+        apns_token:
+          type: string
+        app_version:
+          type: string
+        os_version:
+          type: string
+
+    CompiledPolicy:
+      type: object
+      properties:
+        version:
+          type: integer
+        child_id:
+          type: string
+          format: uuid
+        child_age:
+          type: integer
+        age_group:
+          type: string
+        policy_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        generated_at:
+          type: string
+          format: date-time
+        content_filter:
+          type: object
+          properties:
+            age_rating:
+              type: string
+            max_ratings:
+              type: object
+              additionalProperties:
+                type: string
+            blocked_apps:
+              type: array
+              items:
+                type: string
+            allowed_apps:
+              type: array
+              items:
+                type: string
+            allowlist_mode:
+              type: boolean
+        screen_time:
+          type: object
+          properties:
+            daily_limit_minutes:
+              type: integer
+            per_app_limits:
+              type: array
+              items:
+                type: object
+                properties:
+                  bundle_id:
+                    type: string
+                  daily_minutes:
+                    type: integer
+            downtime_windows:
+              type: array
+              items:
+                type: object
+                properties:
+                  days_of_week:
+                    type: array
+                    items:
+                      type: string
+                  start_time:
+                    type: string
+                  end_time:
+                    type: string
+            always_allowed_apps:
+              type: array
+              items:
+                type: string
+            schedule:
+              type: object
+              properties:
+                weekday:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                    end:
+                      type: string
+                weekend:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                    end:
+                      type: string
+        purchases:
+          type: object
+          properties:
+            require_approval:
+              type: boolean
+            block_iap:
+              type: boolean
+            spending_cap_usd:
+              type: number
+        privacy:
+          type: object
+          properties:
+            location_sharing_enabled:
+              type: boolean
+            profile_visibility:
+              type: string
+            account_creation_approval:
+              type: boolean
+            data_sharing_restricted:
+              type: boolean
+        social:
+          type: object
+          properties:
+            chat_mode:
+              type: string
+            dm_restriction:
+              type: string
+            multiplayer_mode:
+              type: string
+        notifications:
+          type: object
+          properties:
+            curfew_start:
+              type: string
+            curfew_end:
+              type: string
+            usage_timer_minutes:
+              type: integer
+        web_filter:
+          type: object
+          properties:
+            level:
+              type: string
+            safe_search:
+              type: boolean
+            blocked_domains:
+              type: array
+              items:
+                type: string
+            allowed_domains:
+              type: array
+              items:
+                type: string
+            blocked_categories:
+              type: array
+              items:
+                type: string
+
+    DeviceReportRequest:
+      type: object
+      required: [report_type, payload, reported_at]
+      properties:
+        report_type:
+          type: string
+          enum: [screen_time, app_usage, web_activity, blocked_attempt, enforcement_status]
+        payload:
+          type: object
+          description: "Report data (varies by report_type). For enforcement_status see EnforcementStatusPayload."
+        reported_at:
+          type: string
+          format: date-time
+
+    EnforcementStatusPayload:
+      type: object
+      description: "Payload for report_type: enforcement_status — per-category enforcement results"
+      properties:
+        policy_version:
+          type: integer
+          description: "The policy version these results correspond to"
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategoryEnforcementResult"
+
+    CategoryEnforcementResult:
+      type: object
+      properties:
+        category:
+          type: string
+          description: "Phosra rule category (e.g. content_rating, time_daily_limit)"
+        status:
+          type: string
+          enum: [enforced, partial, failed, unsupported]
+          description: "Enforcement outcome on this device"
+        framework:
+          type: string
+          description: "Apple framework used (ManagedSettings, DeviceActivity, FamilyControls, none)"
+        detail:
+          type: string
+          description: "Optional error message or implementation note"
+
+    CategoryFrameworkMapping:
+      type: object
+      description: "Maps a Phosra rule category to the Apple framework and API class needed to enforce it"
+      properties:
+        framework:
+          type: string
+          description: "Apple framework: ManagedSettings, DeviceActivity, FamilyControls, or none"
+        api_class:
+          type: string
+          description: "Specific API class (e.g. ManagedSettingsStore.webContent, DeviceActivitySchedule)"
+        min_os:
+          type: string
+          description: "Minimum iOS version required (e.g. 16.0)"
+        notes:
+          type: string
+          description: "Implementation hints for the iOS app"
+
+    ApplePlatformMappings:
+      type: object
+      properties:
+        age_ratings:
+          type: object
+          additionalProperties:
+            type: string
+        app_categories:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              bundle_ids:
+                type: array
+                items:
+                  type: string
+              app_store_category:
+                type: string
+        system_apps:
+          type: object
+          additionalProperties:
+            type: string
+        always_allowed:
+          type: array
+          items:
+            type: string
+        category_frameworks:
+          type: object
+          description: "Phosra rule category → Apple framework mapping for on-device enforcement"
+          additionalProperties:
+            $ref: "#/components/schemas/CategoryFrameworkMapping"
 
 paths:
   /auth/register:
@@ -814,3 +1146,175 @@ paths:
       responses:
         "200":
           description: Age-appropriate ratings
+
+  # ── Apple Device Sync ────────────────────────────────────────────
+
+  /children/{childID}/devices:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Register an Apple device
+      tags: [Apple Device Sync]
+      description: Register a device for on-device policy enforcement. Returns a one-time API key the iOS app stores in Keychain.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterDeviceRequest"
+      responses:
+        "201":
+          description: Device registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterDeviceResponse"
+        "404":
+          description: Child not found
+    get:
+      summary: List registered devices for a child
+      tags: [Apple Device Sync]
+      responses:
+        "200":
+          description: Device list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeviceRegistration"
+
+  /devices/{deviceID}:
+    parameters:
+      - name: deviceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    put:
+      summary: Update device metadata
+      tags: [Apple Device Sync]
+      description: Update APNs token, app version, or device name. All fields are optional.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDeviceRequest"
+      responses:
+        "200":
+          description: Device updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceRegistration"
+        "404":
+          description: Device not found
+    delete:
+      summary: Revoke a device
+      tags: [Apple Device Sync]
+      description: Revoke the device's API key. The device will receive 401 on its next request.
+      responses:
+        "204":
+          description: Device revoked
+
+  /device/policy:
+    get:
+      summary: Get compiled policy for device
+      tags: [Apple Device Sync]
+      security:
+        - DeviceKeyAuth: []
+      description: Returns a structured policy document the iOS app interprets to configure FamilyControls/ManagedSettings. Supports conditional polling via since_version query parameter.
+      parameters:
+        - name: since_version
+          in: query
+          description: Return 304 if policy version is <= this value
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Compiled policy document
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompiledPolicy"
+        "304":
+          description: Policy unchanged since the given version
+        "401":
+          description: Invalid or revoked device key
+
+  /device/report:
+    post:
+      summary: Submit activity report from device
+      tags: [Apple Device Sync]
+      security:
+        - DeviceKeyAuth: []
+      description: "Submit screen time, app usage, or other activity data. Stored in device_reports and fanned out to activity_logs. Use report_type: enforcement_status with an EnforcementStatusPayload to report per-category enforcement results; this also updates the device's enforcement_summary for the parent dashboard."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceReportRequest"
+      responses:
+        "202":
+          description: Report accepted
+        "401":
+          description: Invalid or revoked device key
+
+  /device/ack:
+    post:
+      summary: Acknowledge policy version
+      tags: [Apple Device Sync]
+      security:
+        - DeviceKeyAuth: []
+      description: Confirm that the device has successfully applied a specific policy version.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [version]
+              properties:
+                version:
+                  type: integer
+      responses:
+        "200":
+          description: Version acknowledged
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  acknowledged_version:
+                    type: integer
+        "401":
+          description: Invalid or revoked device key
+
+  /platform-mappings/{platformID}:
+    parameters:
+      - name: platformID
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get platform-specific identifier mappings
+      tags: [Apple Device Sync]
+      security: []
+      description: "Returns Apple bundle IDs, age ratings, system apps, always-allowed apps, and category_frameworks mapping (which Apple framework + API class to use for each Phosra rule category). Currently only supports platformID=apple."
+      responses:
+        "200":
+          description: Platform mappings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplePlatformMappings"
+        "404":
+          description: Platform not supported

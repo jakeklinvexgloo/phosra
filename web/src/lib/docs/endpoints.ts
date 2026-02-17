@@ -69,6 +69,98 @@ const connectionFields: FieldDef[] = [
   { name: "connected_at", type: "datetime", description: "Initial connection timestamp" },
 ]
 
+const deviceRegistrationFields: FieldDef[] = [
+  { name: "id", type: "uuid", description: "Device registration identifier" },
+  { name: "child_id", type: "uuid", description: "Associated child identifier" },
+  { name: "family_id", type: "uuid", description: "Parent family identifier" },
+  { name: "platform_id", type: "string", description: "Platform slug (always 'apple')" },
+  { name: "device_name", type: "string", description: "Human-readable device name (e.g. 'Sofia\\'s iPad')" },
+  { name: "device_model", type: "string", description: "Device model identifier (e.g. 'iPad Pro 11-inch')" },
+  { name: "os_version", type: "string", description: "iOS version (e.g. '18.2')" },
+  { name: "app_version", type: "string", description: "Phosra iOS app version (e.g. '1.0.0')" },
+  { name: "apns_token", type: "string", description: "Apple Push Notification token (optional)" },
+  { name: "capabilities", type: "string[]", description: "Apple frameworks the device supports (e.g. FamilyControls, ManagedSettings, DeviceActivity, WebContentFilter)" },
+  { name: "enforcement_summary", type: "object", description: "Per-category enforcement results from the device's last enforcement_status report" },
+  { name: "last_seen_at", type: "datetime", description: "Last time the device contacted the API" },
+  { name: "last_policy_version", type: "integer", description: "Last policy version the device acknowledged" },
+  { name: "status", type: "enum", description: "One of: active, inactive, revoked" },
+  { name: "created_at", type: "datetime", description: "Registration timestamp" },
+  { name: "updated_at", type: "datetime", description: "Last update timestamp" },
+]
+
+const compiledPolicyFields: FieldDef[] = [
+  { name: "version", type: "integer", description: "Policy version (auto-increments on changes)" },
+  { name: "child_id", type: "uuid", description: "Child this policy applies to" },
+  { name: "child_age", type: "integer", description: "Child's current age in years" },
+  { name: "age_group", type: "string", description: "Age group label (e.g. 'Child', 'Teen')" },
+  { name: "policy_id", type: "uuid", description: "Source policy identifier" },
+  { name: "status", type: "string", description: "Policy status (active)" },
+  { name: "generated_at", type: "datetime", description: "When the compiled document was generated" },
+  {
+    name: "content_filter", type: "object", description: "Content restriction settings",
+    children: [
+      { name: "age_rating", type: "string", description: "Apple age rating (4+, 9+, 12+, 17+)" },
+      { name: "max_ratings", type: "object", description: "Max rating per system (mpaa, tvpg, esrb, pegi, csm, apple)" },
+      { name: "blocked_apps", type: "string[]", description: "Blocked app bundle IDs" },
+      { name: "allowed_apps", type: "string[]", description: "Allowed app bundle IDs (if allowlist mode)" },
+      { name: "allowlist_mode", type: "boolean", description: "If true, only allowed_apps are permitted" },
+    ],
+  },
+  {
+    name: "screen_time", type: "object", description: "Screen time limits",
+    children: [
+      { name: "daily_limit_minutes", type: "integer", description: "Daily screen time cap in minutes" },
+      { name: "per_app_limits", type: "object[]", description: "Per-app time limits (bundle_id + daily_minutes)" },
+      { name: "downtime_windows", type: "object[]", description: "Scheduled downtime (days_of_week, start_time, end_time)" },
+      { name: "always_allowed_apps", type: "string[]", description: "Apps exempt from screen time (e.g. Phone, Maps)" },
+      { name: "schedule", type: "object", description: "Weekday/weekend allowed hours" },
+    ],
+  },
+  {
+    name: "purchases", type: "object", description: "Purchase controls",
+    children: [
+      { name: "require_approval", type: "boolean", description: "Require parent approval for purchases" },
+      { name: "block_iap", type: "boolean", description: "Block in-app purchases entirely" },
+      { name: "spending_cap_usd", type: "number", description: "Monthly spending cap in USD" },
+    ],
+  },
+  {
+    name: "privacy", type: "object", description: "Privacy settings",
+    children: [
+      { name: "location_sharing_enabled", type: "boolean", description: "Share location with family" },
+      { name: "profile_visibility", type: "string", description: "One of: private, friends_only, public" },
+      { name: "account_creation_approval", type: "boolean", description: "Require approval for new accounts" },
+      { name: "data_sharing_restricted", type: "boolean", description: "Restrict data sharing with third parties" },
+    ],
+  },
+  {
+    name: "social", type: "object", description: "Social interaction controls",
+    children: [
+      { name: "chat_mode", type: "string", description: "Chat restriction (e.g. contacts_only, disabled)" },
+      { name: "dm_restriction", type: "string", description: "DM restriction level" },
+      { name: "multiplayer_mode", type: "string", description: "Multiplayer restriction (e.g. friends_only)" },
+    ],
+  },
+  {
+    name: "notifications", type: "object", description: "Notification controls",
+    children: [
+      { name: "curfew_start", type: "string", description: "Notification curfew start (HH:MM)" },
+      { name: "curfew_end", type: "string", description: "Notification curfew end (HH:MM)" },
+      { name: "usage_timer_minutes", type: "integer", description: "Show usage reminder every N minutes" },
+    ],
+  },
+  {
+    name: "web_filter", type: "object", description: "Web filtering settings",
+    children: [
+      { name: "level", type: "string", description: "Filter level (e.g. strict, moderate, off)" },
+      { name: "safe_search", type: "boolean", description: "Enforce SafeSearch on search engines" },
+      { name: "blocked_domains", type: "string[]", description: "Custom blocked domains" },
+      { name: "allowed_domains", type: "string[]", description: "Custom allowed domains" },
+      { name: "blocked_categories", type: "string[]", description: "Blocked web categories (e.g. gambling, dating)" },
+    ],
+  },
+]
+
 const syncJobFields: FieldDef[] = [
   { name: "id", type: "uuid", description: "Sync job identifier" },
   { name: "child_id", type: "uuid", description: "Target child identifier" },
@@ -1861,6 +1953,368 @@ export const ENDPOINTS: EndpointDef[] = [
       2,
     ),
   },
+
+  // ─── Apple Device Sync ──────────────────────────────────────────────────
+  {
+    id: "post-register-device",
+    method: "POST",
+    path: "/children/{childID}/devices",
+    section: "Apple Device Sync",
+    summary: "Register device",
+    description:
+      "Register an Apple device for on-device policy enforcement. Returns a one-time API key that the iOS app stores in Keychain. The API key is used for all subsequent device-auth requests (policy polling, reports, ack). The plaintext key is never stored server-side — only its SHA-256 hash.",
+    requestFields: [
+      { name: "device_name", type: "string", required: true, description: "Human-readable name (e.g. 'Sofia\\'s iPad')" },
+      { name: "device_model", type: "string", required: true, description: "Device model (e.g. 'iPad Pro 11-inch')" },
+      { name: "os_version", type: "string", required: true, description: "iOS version (e.g. '18.2')" },
+      { name: "app_version", type: "string", required: true, description: "Phosra app version (e.g. '1.0.0')" },
+      { name: "apns_token", type: "string", description: "Apple Push Notification token (optional)" },
+      { name: "capabilities", type: "string[]", description: "Apple frameworks the device supports (e.g. ['FamilyControls', 'ManagedSettings', 'DeviceActivity'])" },
+    ],
+    responseFields: [
+      { name: "device", type: "DeviceRegistration", description: "The registered device", children: deviceRegistrationFields },
+      { name: "api_key", type: "string", description: "One-time device API key — store in Keychain immediately" },
+    ],
+    curlExample: `curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/devices \\
+  -H "Authorization: Bearer <access_token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "device_name": "Sofia'\\''s iPad",
+    "device_model": "iPad Pro 11-inch",
+    "os_version": "18.2",
+    "app_version": "1.0.0"
+  }'`,
+    responseExample: JSON.stringify(
+      {
+        device: {
+          id: "d1e2f3a4-b5c6-7890-abcd-ef1234567890",
+          child_id: "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+          family_id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          platform_id: "apple",
+          device_name: "Sofia's iPad",
+          device_model: "iPad Pro 11-inch",
+          os_version: "18.2",
+          app_version: "1.0.0",
+          apns_token: null,
+          capabilities: ["FamilyControls", "ManagedSettings", "DeviceActivity"],
+          enforcement_summary: {},
+          last_seen_at: null,
+          last_policy_version: 0,
+          status: "active",
+          created_at: "2026-02-17T10:00:00Z",
+          updated_at: "2026-02-17T10:00:00Z",
+        },
+        api_key: "a3f8b2c1d4e5f6789012345678abcdef0123456789abcdef0123456789abcdef",
+      },
+      null,
+      2,
+    ),
+  },
+  {
+    id: "get-child-devices",
+    method: "GET",
+    path: "/children/{childID}/devices",
+    section: "Apple Device Sync",
+    summary: "List devices",
+    description:
+      "List all registered Apple devices for a child. Shows each device's status, last seen time, and which policy version it last acknowledged. Useful for the parent dashboard to monitor device health.",
+    responseFields: [
+      {
+        name: "[]",
+        type: "DeviceRegistration[]",
+        description: "Registered devices for this child",
+        children: deviceRegistrationFields,
+      },
+    ],
+    curlExample: `curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/devices \\
+  -H "Authorization: Bearer <access_token>"`,
+    responseExample: JSON.stringify(
+      [
+        {
+          id: "d1e2f3a4-b5c6-7890-abcd-ef1234567890",
+          child_id: "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+          family_id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          platform_id: "apple",
+          device_name: "Sofia's iPad",
+          device_model: "iPad Pro 11-inch",
+          os_version: "18.2",
+          app_version: "1.0.0",
+          capabilities: ["FamilyControls", "ManagedSettings", "DeviceActivity"],
+          enforcement_summary: {
+            content_rating: { status: "enforced", framework: "ManagedSettings" },
+            time_daily_limit: { status: "enforced", framework: "DeviceActivity" },
+            web_safesearch: { status: "enforced", framework: "ManagedSettings" },
+          },
+          last_seen_at: "2026-02-17T14:30:00Z",
+          last_policy_version: 3,
+          status: "active",
+          created_at: "2026-02-17T10:00:00Z",
+          updated_at: "2026-02-17T14:30:00Z",
+        },
+      ],
+      null,
+      2,
+    ),
+  },
+  {
+    id: "put-update-device",
+    method: "PUT",
+    path: "/devices/{deviceID}",
+    section: "Apple Device Sync",
+    summary: "Update device",
+    description:
+      "Update device metadata such as APNs token, app version, or device name. All fields are optional — only provided fields are updated. Typically called when the iOS app updates or the APNs token rotates.",
+    requestFields: [
+      { name: "device_name", type: "string", description: "Updated device name" },
+      { name: "apns_token", type: "string", description: "Updated Apple Push Notification token" },
+      { name: "app_version", type: "string", description: "Updated app version after upgrade" },
+      { name: "os_version", type: "string", description: "Updated iOS version after OS update" },
+    ],
+    responseFields: deviceRegistrationFields,
+    curlExample: `curl -X PUT http://localhost:8080/api/v1/devices/d1e2f3a4-b5c6-7890-abcd-ef1234567890 \\
+  -H "Authorization: Bearer <access_token>" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "apns_token": "new_apns_token_abc123",
+    "app_version": "1.1.0"
+  }'`,
+    responseExample: JSON.stringify(
+      {
+        id: "d1e2f3a4-b5c6-7890-abcd-ef1234567890",
+        child_id: "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        platform_id: "apple",
+        device_name: "Sofia's iPad",
+        device_model: "iPad Pro 11-inch",
+        os_version: "18.2",
+        app_version: "1.1.0",
+        apns_token: "new_apns_token_abc123",
+        last_policy_version: 3,
+        status: "active",
+        updated_at: "2026-02-17T15:00:00Z",
+      },
+      null,
+      2,
+    ),
+  },
+  {
+    id: "delete-revoke-device",
+    method: "DELETE",
+    path: "/devices/{deviceID}",
+    section: "Apple Device Sync",
+    summary: "Revoke device",
+    description:
+      "Revoke a device's API key, preventing it from polling for policies or submitting reports. The device registration is kept for audit purposes but marked as 'revoked'. The iOS app will receive 401 on its next request.",
+    curlExample: `curl -X DELETE http://localhost:8080/api/v1/devices/d1e2f3a4-b5c6-7890-abcd-ef1234567890 \\
+  -H "Authorization: Bearer <access_token>"`,
+    responseExample: "",
+  },
+  {
+    id: "get-device-policy",
+    method: "GET",
+    path: "/device/policy",
+    section: "Apple Device Sync",
+    summary: "Get compiled policy",
+    description:
+      "Fetch the compiled policy document for the authenticated device's child. Returns a structured JSON document the iOS app interprets to configure FamilyControls, ManagedSettings, and DeviceActivity. Supports conditional polling: pass ?since_version=N to get a 304 Not Modified if the policy hasn't changed. Auth: X-Device-Key header (not Bearer JWT).",
+    requestFields: [
+      { name: "since_version", type: "integer", description: "Return 304 if current version is <= this value (query parameter)" },
+    ],
+    responseFields: compiledPolicyFields,
+    curlExample: `curl http://localhost:8080/api/v1/device/policy?since_version=2 \\
+  -H "X-Device-Key: <device_api_key>"`,
+    responseExample: JSON.stringify(
+      {
+        version: 3,
+        child_id: "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        child_age: 7,
+        age_group: "Child",
+        policy_id: "c3d4e5f6-a7b8-9012-cdef-123456789012",
+        status: "active",
+        generated_at: "2026-02-17T15:00:00Z",
+        content_filter: {
+          age_rating: "4+",
+          max_ratings: { mpaa: "PG", tvpg: "TV-Y7", esrb: "E", pegi: "7", csm: "7+", apple: "4+" },
+          blocked_apps: ["com.epic.fortnite"],
+          allowed_apps: [],
+          allowlist_mode: false,
+        },
+        screen_time: {
+          daily_limit_minutes: 120,
+          per_app_limits: [{ bundle_id: "com.google.youtube", daily_minutes: 30 }],
+          downtime_windows: [{ days_of_week: ["mon", "tue", "wed", "thu", "fri"], start_time: "20:00", end_time: "07:00" }],
+          always_allowed_apps: ["com.apple.mobilephone", "com.apple.MobileSMS", "com.apple.Maps"],
+          schedule: { weekday: { start: "07:00", end: "20:00" }, weekend: { start: "08:00", end: "21:00" } },
+        },
+        purchases: {
+          require_approval: true,
+          block_iap: true,
+          spending_cap_usd: 0,
+        },
+        privacy: {
+          location_sharing_enabled: true,
+          profile_visibility: "private",
+          account_creation_approval: true,
+          data_sharing_restricted: true,
+        },
+        social: {
+          chat_mode: "contacts_only",
+          dm_restriction: "disabled",
+          multiplayer_mode: "friends_only",
+        },
+        notifications: {
+          curfew_start: "20:00",
+          curfew_end: "07:00",
+          usage_timer_minutes: 30,
+        },
+        web_filter: {
+          level: "strict",
+          safe_search: true,
+          blocked_domains: ["reddit.com", "4chan.org"],
+          allowed_domains: [],
+          blocked_categories: ["gambling", "dating", "adult"],
+        },
+      },
+      null,
+      2,
+    ),
+  },
+  {
+    id: "post-device-report",
+    method: "POST",
+    path: "/device/report",
+    section: "Apple Device Sync",
+    summary: "Submit activity report",
+    description:
+      "Submit an activity report from the iOS app. Reports are stored in device_reports and fanned out to the activity_logs table for unified analytics. Report types: screen_time (daily usage), app_usage (per-app breakdown), web_activity (browsing history), blocked_attempt (enforcement events), enforcement_status (per-category enforcement results — also updates the device's enforcement_summary for the parent dashboard). Auth: X-Device-Key header.",
+    requestFields: [
+      { name: "report_type", type: "string", required: true, description: "One of: screen_time, app_usage, web_activity, blocked_attempt, enforcement_status" },
+      { name: "payload", type: "object", required: true, description: "Report data (varies by report_type). For enforcement_status: { policy_version, results: [{ category, status, framework, detail }] }" },
+      { name: "reported_at", type: "datetime", required: true, description: "When the activity occurred on-device" },
+    ],
+    curlExample: `curl -X POST http://localhost:8080/api/v1/device/report \\
+  -H "X-Device-Key: <device_api_key>" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "report_type": "screen_time",
+    "payload": {
+      "total_minutes": 95,
+      "by_category": { "games": 40, "education": 30, "social": 25 },
+      "top_apps": [
+        { "bundle_id": "com.mojang.minecraftpe", "minutes": 35 },
+        { "bundle_id": "com.duolingo", "minutes": 30 }
+      ]
+    },
+    "reported_at": "2026-02-17T20:00:00Z"
+  }'`,
+    responseExample: JSON.stringify(
+      { status: "accepted" },
+      null,
+      2,
+    ),
+  },
+  {
+    id: "post-device-ack",
+    method: "POST",
+    path: "/device/ack",
+    section: "Apple Device Sync",
+    summary: "Acknowledge policy version",
+    description:
+      "Confirm that the iOS app has successfully applied a specific policy version. Updates the device's last_policy_version so the parent dashboard can verify enforcement is current. Auth: X-Device-Key header.",
+    requestFields: [
+      { name: "version", type: "integer", required: true, description: "The policy version that was successfully applied" },
+    ],
+    curlExample: `curl -X POST http://localhost:8080/api/v1/device/ack \\
+  -H "X-Device-Key: <device_api_key>" \\
+  -H "Content-Type: application/json" \\
+  -d '{ "version": 3 }'`,
+    responseExample: JSON.stringify(
+      { acknowledged_version: 3 },
+      null,
+      2,
+    ),
+  },
+  {
+    id: "get-platform-mappings",
+    method: "GET",
+    path: "/platform-mappings/{platformID}",
+    section: "Apple Device Sync",
+    summary: "Get platform mappings",
+    description:
+      "Get platform-specific identifier mappings. Currently supports 'apple' — returns Apple age ratings, App Store category bundle IDs, system app bundle IDs, default always-allowed apps, and a category-to-framework mapping that tells the iOS app which Apple framework (ManagedSettings, DeviceActivity, FamilyControls) to use for each Phosra rule category. This endpoint is public and does not require authentication.",
+    responseFields: [
+      {
+        name: "age_ratings", type: "object", description: "MPAA/TVPG rating to Apple age rating mapping",
+      },
+      {
+        name: "app_categories", type: "object", description: "Category → bundle IDs and App Store categories",
+        children: [
+          { name: "{category}", type: "object", description: "Category mapping (e.g. social-media, gaming)" },
+        ],
+      },
+      {
+        name: "system_apps", type: "object", description: "System app name → bundle ID (e.g. phone → com.apple.mobilephone)",
+      },
+      {
+        name: "always_allowed", type: "string[]", description: "Default always-allowed bundle IDs (Phone, Messages, etc.)",
+      },
+      {
+        name: "category_frameworks", type: "object", description: "Phosra rule category → Apple framework mapping for on-device enforcement",
+        children: [
+          { name: "{category}", type: "object", description: "Framework mapping per rule category",
+            children: [
+              { name: "framework", type: "string", description: "Apple framework: ManagedSettings, DeviceActivity, FamilyControls, or none" },
+              { name: "api_class", type: "string", description: "Specific API class (e.g. ManagedSettingsStore.webContent)" },
+              { name: "min_os", type: "string", description: "Minimum iOS version required (e.g. 16.0)" },
+              { name: "notes", type: "string", description: "Implementation hints for the iOS app" },
+            ],
+          },
+        ],
+      },
+    ],
+    curlExample: `curl http://localhost:8080/api/v1/platform-mappings/apple`,
+    responseExample: JSON.stringify(
+      {
+        age_ratings: {
+          G: "4+", PG: "9+", "PG-13": "12+", R: "17+", "NC-17": "17+",
+          "TV-Y": "4+", "TV-Y7": "4+", "TV-PG": "9+", "TV-14": "12+", "TV-MA": "17+",
+          E: "4+", "E10+": "9+", T: "12+", M: "17+", AO: "17+",
+        },
+        app_categories: {
+          "social-media": {
+            bundle_ids: ["com.burbn.instagram", "com.atebits.Tweetie2", "com.toyopagroup.picaboo"],
+            app_store_category: "Social Networking",
+          },
+          gaming: {
+            bundle_ids: ["com.supercell.laser", "com.epic.fortnite", "com.mojang.minecraftpe"],
+            app_store_category: "Games",
+          },
+        },
+        system_apps: {
+          phone: "com.apple.mobilephone",
+          messages: "com.apple.MobileSMS",
+          facetime: "com.apple.facetime",
+          maps: "com.apple.Maps",
+          camera: "com.apple.camera",
+        },
+        always_allowed: [
+          "com.apple.mobilephone",
+          "com.apple.MobileSMS",
+          "com.apple.facetime",
+          "com.apple.Maps",
+        ],
+        category_frameworks: {
+          content_rating: { framework: "ManagedSettings", api_class: "ManagedSettingsStore.application", min_os: "16.0" },
+          time_daily_limit: { framework: "DeviceActivity", api_class: "DeviceActivitySchedule", min_os: "16.0" },
+          web_safesearch: { framework: "ManagedSettings", api_class: "ManagedSettingsStore.webContent.autoFilter", min_os: "16.0" },
+          purchase_block_iap: { framework: "ManagedSettings", api_class: "ManagedSettingsStore.appStore.denyInAppPurchases", min_os: "16.0" },
+          social_contacts: { framework: "FamilyControls", api_class: "AuthorizationCenter", min_os: "16.0" },
+          algo_feed_control: { framework: "none", api_class: "", min_os: "", notes: "Platform-level — no Apple API; enforce by blocking/limiting social apps" },
+        },
+      },
+      null,
+      2,
+    ),
+  },
 ]
 
 // ── Helper: group endpoints by section ─────────────────────────────────────
@@ -1883,6 +2337,7 @@ export const ENDPOINT_SECTIONS = [
   "Ratings",
   "Reports",
   "Feedback",
+  "Apple Device Sync",
 ] as const
 
 export type EndpointSection = (typeof ENDPOINT_SECTIONS)[number]

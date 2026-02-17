@@ -359,11 +359,12 @@ func (s *DevicePolicyService) applyRuleToPolicy(cp *CompiledPolicy, rule domain.
 // ── Device Registration ─────────────────────────────────────────
 
 type RegisterDeviceRequest struct {
-	DeviceName  string  `json:"device_name"`
-	DeviceModel string  `json:"device_model"`
-	OSVersion   string  `json:"os_version"`
-	AppVersion  string  `json:"app_version"`
-	APNsToken   *string `json:"apns_token,omitempty"`
+	DeviceName   string   `json:"device_name"`
+	DeviceModel  string   `json:"device_model"`
+	OSVersion    string   `json:"os_version"`
+	AppVersion   string   `json:"app_version"`
+	APNsToken    *string  `json:"apns_token,omitempty"`
+	Capabilities []string `json:"capabilities,omitempty"`
 }
 
 type RegisterDeviceResponse struct {
@@ -391,18 +392,25 @@ func (s *DevicePolicyService) RegisterDevice(ctx context.Context, userID, childI
 	hash := sha256.Sum256([]byte(apiKey))
 	hashHex := hex.EncodeToString(hash[:])
 
+	caps := req.Capabilities
+	if caps == nil {
+		caps = []string{}
+	}
+
 	reg := &domain.DeviceRegistration{
-		ID:         uuid.New(),
-		ChildID:    childID,
-		FamilyID:   child.FamilyID,
-		PlatformID: "apple",
-		DeviceName: req.DeviceName,
-		DeviceModel: req.DeviceModel,
-		OSVersion:  req.OSVersion,
-		AppVersion: req.AppVersion,
-		APNsToken:  req.APNsToken,
-		APIKeyHash: hashHex,
-		Status:     "active",
+		ID:                 uuid.New(),
+		ChildID:            childID,
+		FamilyID:           child.FamilyID,
+		PlatformID:         "apple",
+		DeviceName:         req.DeviceName,
+		DeviceModel:        req.DeviceModel,
+		OSVersion:          req.OSVersion,
+		AppVersion:         req.AppVersion,
+		APNsToken:          req.APNsToken,
+		APIKeyHash:         hashHex,
+		Capabilities:       caps,
+		EnforcementSummary: json.RawMessage("{}"),
+		Status:             "active",
 	}
 
 	if err := s.devices.Create(ctx, reg); err != nil {
@@ -505,6 +513,20 @@ type DeviceReportRequest struct {
 	ReportedAt time.Time       `json:"reported_at"`
 }
 
+// EnforcementStatusReport is the structured payload for report_type "enforcement_status".
+type EnforcementStatusReport struct {
+	PolicyVersion int                         `json:"policy_version"`
+	Results       []CategoryEnforcementResult `json:"results"`
+}
+
+// CategoryEnforcementResult describes the outcome of enforcing a single rule category.
+type CategoryEnforcementResult struct {
+	Category  string `json:"category"`              // e.g. "time_daily_limit"
+	Status    string `json:"status"`                // "enforced", "partial", "failed", "unsupported"
+	Framework string `json:"framework"`             // "DeviceActivity", "ManagedSettings", "FamilyControls"
+	Detail    string `json:"detail,omitempty"`       // error message or note
+}
+
 func (s *DevicePolicyService) IngestReport(ctx context.Context, device *domain.DeviceRegistration, req DeviceReportRequest) error {
 	report := &domain.DeviceReport{
 		ID:         uuid.New(),
@@ -529,6 +551,18 @@ func (s *DevicePolicyService) IngestReport(ctx context.Context, device *domain.D
 		RecordedAt: req.ReportedAt,
 	}
 	_ = s.activityLog.Create(ctx, activityLog)
+
+	// For enforcement_status reports, update the device's enforcement summary
+	if req.ReportType == "enforcement_status" {
+		var esr EnforcementStatusReport
+		if err := json.Unmarshal(req.Payload, &esr); err == nil {
+			device.EnforcementSummary = req.Payload
+			device.LastPolicyVersion = esr.PolicyVersion
+			now := time.Now()
+			device.LastSeenAt = &now
+			_ = s.devices.Update(ctx, device)
+		}
+	}
 
 	return nil
 }

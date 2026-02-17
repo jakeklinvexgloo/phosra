@@ -17,6 +17,12 @@ var (
 	ErrRuleNotFound   = errors.New("policy rule not found")
 )
 
+// PolicyUpdateNotifier sends push notifications when policies change.
+// Implemented by APNsService; nil means no push (device falls back to polling).
+type PolicyUpdateNotifier interface {
+	NotifyPolicyUpdate(ctx context.Context, childID uuid.UUID, version int)
+}
+
 type PolicyService struct {
 	policies   repository.PolicyRepository
 	rules      repository.PolicyRuleRepository
@@ -24,6 +30,7 @@ type PolicyService struct {
 	members    repository.FamilyMemberRepository
 	ratings    repository.RatingRepository
 	webhookSvc *WebhookService
+	pushSvc    PolicyUpdateNotifier
 }
 
 func NewPolicyService(
@@ -33,6 +40,7 @@ func NewPolicyService(
 	members repository.FamilyMemberRepository,
 	ratings repository.RatingRepository,
 	webhookSvc *WebhookService,
+	pushSvc PolicyUpdateNotifier,
 ) *PolicyService {
 	return &PolicyService{
 		policies:   policies,
@@ -41,6 +49,7 @@ func NewPolicyService(
 		members:    members,
 		ratings:    ratings,
 		webhookSvc: webhookSvc,
+		pushSvc:    pushSvc,
 	}
 }
 
@@ -494,21 +503,26 @@ func (s *PolicyService) checkParentRole(ctx context.Context, familyID, userID uu
 	return nil
 }
 
-// dispatchPolicyUpdated fires a policy.updated webhook if webhookSvc is available.
+// dispatchPolicyUpdated fires a policy.updated webhook and APNs silent push.
 func (s *PolicyService) dispatchPolicyUpdated(ctx context.Context, familyID uuid.UUID, policy *domain.ChildPolicy) {
-	if s.webhookSvc == nil || policy == nil {
+	if policy == nil {
 		return
 	}
-	s.webhookSvc.Dispatch(ctx, familyID, "policy.updated", map[string]any{
-		"child_id":  policy.ChildID.String(),
-		"policy_id": policy.ID.String(),
-		"version":   policy.Version,
-	})
+	if s.webhookSvc != nil {
+		s.webhookSvc.Dispatch(ctx, familyID, "policy.updated", map[string]any{
+			"child_id":  policy.ChildID.String(),
+			"policy_id": policy.ID.String(),
+			"version":   policy.Version,
+		})
+	}
+	if s.pushSvc != nil {
+		s.pushSvc.NotifyPolicyUpdate(ctx, policy.ChildID, policy.Version)
+	}
 }
 
-// dispatchPolicyUpdatedByPolicy looks up the policy and its child to dispatch the webhook.
+// dispatchPolicyUpdatedByPolicy looks up the policy and its child to dispatch the webhook + push.
 func (s *PolicyService) dispatchPolicyUpdatedByPolicy(ctx context.Context, policyID uuid.UUID) {
-	if s.webhookSvc == nil {
+	if s.webhookSvc == nil && s.pushSvc == nil {
 		return
 	}
 	policy, err := s.policies.GetByID(ctx, policyID)

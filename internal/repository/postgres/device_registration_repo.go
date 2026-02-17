@@ -27,12 +27,12 @@ func (r *DeviceRegistrationRepo) Create(ctx context.Context, reg *domain.DeviceR
 
 	_, err := r.Pool.Exec(ctx,
 		`INSERT INTO device_registrations
-		 (id, child_id, family_id, platform_id, device_name, device_model, os_version, app_version, apns_token, api_key_hash, last_seen_at, last_policy_version, status, created_at, updated_at)
-		 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+		 (id, child_id, family_id, platform_id, device_name, device_model, os_version, app_version, apns_token, api_key_hash, last_seen_at, last_policy_version, status, capabilities, enforcement_summary, created_at, updated_at)
+		 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
 		reg.ID, reg.ChildID, reg.FamilyID, reg.PlatformID,
 		reg.DeviceName, reg.DeviceModel, reg.OSVersion, reg.AppVersion,
 		reg.APNsToken, reg.APIKeyHash, reg.LastSeenAt, reg.LastPolicyVersion,
-		reg.Status, reg.CreatedAt, reg.UpdatedAt,
+		reg.Status, reg.Capabilities, reg.EnforcementSummary, reg.CreatedAt, reg.UpdatedAt,
 	)
 	return err
 }
@@ -42,13 +42,13 @@ func (r *DeviceRegistrationRepo) GetByID(ctx context.Context, id uuid.UUID) (*do
 	err := r.Pool.QueryRow(ctx,
 		`SELECT id, child_id, family_id, platform_id, device_name, device_model,
 		        os_version, app_version, apns_token, api_key_hash, last_seen_at,
-		        last_policy_version, status, created_at, updated_at
+		        last_policy_version, status, capabilities, enforcement_summary, created_at, updated_at
 		 FROM device_registrations WHERE id = $1`, id,
 	).Scan(
 		&reg.ID, &reg.ChildID, &reg.FamilyID, &reg.PlatformID,
 		&reg.DeviceName, &reg.DeviceModel, &reg.OSVersion, &reg.AppVersion,
 		&reg.APNsToken, &reg.APIKeyHash, &reg.LastSeenAt,
-		&reg.LastPolicyVersion, &reg.Status, &reg.CreatedAt, &reg.UpdatedAt,
+		&reg.LastPolicyVersion, &reg.Status, &reg.Capabilities, &reg.EnforcementSummary, &reg.CreatedAt, &reg.UpdatedAt,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
@@ -64,13 +64,13 @@ func (r *DeviceRegistrationRepo) GetByAPIKeyHash(ctx context.Context, hash strin
 	err := r.Pool.QueryRow(ctx,
 		`SELECT id, child_id, family_id, platform_id, device_name, device_model,
 		        os_version, app_version, apns_token, api_key_hash, last_seen_at,
-		        last_policy_version, status, created_at, updated_at
+		        last_policy_version, status, capabilities, enforcement_summary, created_at, updated_at
 		 FROM device_registrations WHERE api_key_hash = $1 AND status = 'active'`, hash,
 	).Scan(
 		&reg.ID, &reg.ChildID, &reg.FamilyID, &reg.PlatformID,
 		&reg.DeviceName, &reg.DeviceModel, &reg.OSVersion, &reg.AppVersion,
 		&reg.APNsToken, &reg.APIKeyHash, &reg.LastSeenAt,
-		&reg.LastPolicyVersion, &reg.Status, &reg.CreatedAt, &reg.UpdatedAt,
+		&reg.LastPolicyVersion, &reg.Status, &reg.Capabilities, &reg.EnforcementSummary, &reg.CreatedAt, &reg.UpdatedAt,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
@@ -86,10 +86,12 @@ func (r *DeviceRegistrationRepo) Update(ctx context.Context, reg *domain.DeviceR
 	_, err := r.Pool.Exec(ctx,
 		`UPDATE device_registrations
 		 SET device_name = $1, device_model = $2, os_version = $3, app_version = $4,
-		     apns_token = $5, last_seen_at = $6, last_policy_version = $7, status = $8, updated_at = $9
-		 WHERE id = $10`,
+		     apns_token = $5, last_seen_at = $6, last_policy_version = $7, status = $8,
+		     capabilities = $9, enforcement_summary = $10, updated_at = $11
+		 WHERE id = $12`,
 		reg.DeviceName, reg.DeviceModel, reg.OSVersion, reg.AppVersion,
-		reg.APNsToken, reg.LastSeenAt, reg.LastPolicyVersion, reg.Status, reg.UpdatedAt,
+		reg.APNsToken, reg.LastSeenAt, reg.LastPolicyVersion, reg.Status,
+		reg.Capabilities, reg.EnforcementSummary, reg.UpdatedAt,
 		reg.ID,
 	)
 	return err
@@ -104,7 +106,7 @@ func (r *DeviceRegistrationRepo) ListByChild(ctx context.Context, childID uuid.U
 	return r.list(ctx,
 		`SELECT id, child_id, family_id, platform_id, device_name, device_model,
 		        os_version, app_version, apns_token, api_key_hash, last_seen_at,
-		        last_policy_version, status, created_at, updated_at
+		        last_policy_version, status, capabilities, enforcement_summary, created_at, updated_at
 		 FROM device_registrations WHERE child_id = $1 ORDER BY created_at`, childID)
 }
 
@@ -112,7 +114,7 @@ func (r *DeviceRegistrationRepo) ListByFamily(ctx context.Context, familyID uuid
 	return r.list(ctx,
 		`SELECT id, child_id, family_id, platform_id, device_name, device_model,
 		        os_version, app_version, apns_token, api_key_hash, last_seen_at,
-		        last_policy_version, status, created_at, updated_at
+		        last_policy_version, status, capabilities, enforcement_summary, created_at, updated_at
 		 FROM device_registrations WHERE family_id = $1 ORDER BY created_at`, familyID)
 }
 

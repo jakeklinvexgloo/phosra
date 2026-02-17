@@ -24,6 +24,7 @@ import (
 	"github.com/guardiangate/api/internal/provider/microsoft"
 	"github.com/guardiangate/api/internal/provider/nextdns"
 	"github.com/guardiangate/api/internal/provider/stubs"
+	"github.com/guardiangate/api/internal/push"
 	"github.com/guardiangate/api/internal/repository/postgres"
 	"github.com/guardiangate/api/internal/router"
 	"github.com/guardiangate/api/internal/service"
@@ -103,12 +104,29 @@ func main() {
 	stubs.RegisterAll(registry.Register)
 	log.Info().Int("platforms", len(registry.List())).Msg("registered platform adapters")
 
+	// APNs silent push (optional — only created when APNS_TEAM_ID is set)
+	var pushSvc service.PolicyUpdateNotifier
+	apnsSvc, err := push.NewAPNsService(push.APNsConfig{
+		TeamID:      cfg.APNsTeamID,
+		KeyID:       cfg.APNsKeyID,
+		AuthKeyPath: cfg.APNsAuthKeyPath,
+		BundleID:    cfg.APNsBundleID,
+		Production:  cfg.APNsProduction,
+	}, deviceRegRepo)
+	if err != nil {
+		log.Fatal().Err(err).Msg("failed to initialize APNs service")
+	}
+	if apnsSvc != nil {
+		pushSvc = apnsSvc
+		log.Info().Str("bundle_id", cfg.APNsBundleID).Msg("APNs silent push enabled")
+	}
+
 	// Services
 	authSvc := service.NewAuthService(userRepo)
 	familySvc := service.NewFamilyService(familyRepo, memberRepo)
 	childSvc := service.NewChildService(childRepo, familyRepo, memberRepo, ratingRepo)
 	webhookSvc := service.NewWebhookService(webhookRepo, webhookDeliveryRepo, memberRepo)
-	policySvc := service.NewPolicyService(policyRepo, ruleRepo, childRepo, memberRepo, ratingRepo, webhookSvc)
+	policySvc := service.NewPolicyService(policyRepo, ruleRepo, childRepo, memberRepo, ratingRepo, webhookSvc, pushSvc)
 	ratingSvc := service.NewRatingService(ratingRepo)
 	platformSvc := service.NewPlatformService(platformRepo, complianceLinkRepo, memberRepo, registry)
 	devicePolicySvc := service.NewDevicePolicyService(childRepo, policyRepo, ruleRepo, deviceRegRepo, deviceReportRepo, activityLogRepo, memberRepo)

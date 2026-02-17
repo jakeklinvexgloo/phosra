@@ -542,21 +542,23 @@ type ContentClassification struct {
 
 // DeviceRegistration represents a registered iOS app instance for a child.
 type DeviceRegistration struct {
-	ID                uuid.UUID  `json:"id"`
-	ChildID           uuid.UUID  `json:"child_id"`
-	FamilyID          uuid.UUID  `json:"family_id"`
-	PlatformID        string     `json:"platform_id"`
-	DeviceName        string     `json:"device_name"`
-	DeviceModel       string     `json:"device_model"`
-	OSVersion         string     `json:"os_version"`
-	AppVersion        string     `json:"app_version"`
-	APNsToken         *string    `json:"apns_token,omitempty"`
-	APIKeyHash        string     `json:"-"`
-	LastSeenAt        *time.Time `json:"last_seen_at,omitempty"`
-	LastPolicyVersion int        `json:"last_policy_version"`
-	Status            string     `json:"status"`
-	CreatedAt         time.Time  `json:"created_at"`
-	UpdatedAt         time.Time  `json:"updated_at"`
+	ID                   uuid.UUID       `json:"id"`
+	ChildID              uuid.UUID       `json:"child_id"`
+	FamilyID             uuid.UUID       `json:"family_id"`
+	PlatformID           string          `json:"platform_id"`
+	DeviceName           string          `json:"device_name"`
+	DeviceModel          string          `json:"device_model"`
+	OSVersion            string          `json:"os_version"`
+	AppVersion           string          `json:"app_version"`
+	APNsToken            *string         `json:"apns_token,omitempty"`
+	APIKeyHash           string          `json:"-"`
+	LastSeenAt           *time.Time      `json:"last_seen_at,omitempty"`
+	LastPolicyVersion    int             `json:"last_policy_version"`
+	Status               string          `json:"status"`
+	Capabilities         []string        `json:"capabilities"`
+	EnforcementSummary   json.RawMessage `json:"enforcement_summary"`
+	CreatedAt            time.Time       `json:"created_at"`
+	UpdatedAt            time.Time       `json:"updated_at"`
 }
 
 // DeviceReport represents an activity or status report from a device.
