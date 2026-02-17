@@ -94,7 +94,8 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("linewize", "Linewize", "school_institutional", "source", "planned"),
   p("hapara", "Hapara", "school_institutional", "source", "planned"),
 
-  // ─── Targets: Streaming (20) ───
+  // ─── Targets: Streaming (21) ───
+  p("youtube", "YouTube", "streaming", "target", "planned", "siYoutube", "FF0000", { marquee: true }),
   p("netflix", "Netflix", "streaming", "target", "stub", "siNetflix", "E50914", { marquee: true, dbPlatformId: "netflix" }),
   p("disney_plus", "Disney+", "streaming", "target", "stub", "siDisney", "113CCF", { marquee: true, dbPlatformId: "disney_plus" }),
   p("hulu", "Hulu", "streaming", "target", "stub", null, null, { marquee: true, dbPlatformId: "hulu" }),
@@ -116,7 +117,7 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("bet_plus", "BET+", "streaming", "target", "planned"),
   p("roku_channel", "Roku Channel", "streaming", "target", "planned", "siRoku", "6F1AB1"),
 
-  // ─── Targets: Social Media (15) ───
+  // ─── Targets: Social Media (16) ───
   p("tiktok", "TikTok", "social_media", "target", "planned", "siTiktok", "000000", { marquee: true }),
   p("instagram", "Instagram", "social_media", "target", "planned", "siInstagram", "FF0069", { marquee: true }),
   p("snapchat", "Snapchat", "social_media", "target", "planned", "siSnapchat", "FFFC00", { marquee: true }),
@@ -132,8 +133,9 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("lemon8", "Lemon8", "social_media", "target", "planned"),
   p("bluesky", "Bluesky", "social_media", "target", "planned", "siBluesky", "0285FF"),
   p("discord", "Discord", "social_media", "target", "planned", "siDiscord", "5865F2"),
+  p("messenger_kids", "Messenger Kids", "social_media", "target", "planned", "siFacebookmessenger", "168AFF"),
 
-  // ─── Targets: Gaming (16) ───
+  // ─── Targets: Gaming (22) ───
   p("roblox", "Roblox", "gaming", "target", "planned", "siRoblox", "000000", { marquee: true }),
   p("minecraft", "Minecraft", "gaming", "target", "planned", null, null, { marquee: true }),
   p("fortnite", "Fortnite", "gaming", "target", "planned", "siFortnite", "000000", { marquee: true }),
@@ -150,22 +152,59 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("rec_room", "Rec Room", "gaming", "target", "planned"),
   p("among_us", "Among Us", "gaming", "target", "planned"),
   p("brawl_stars", "Brawl Stars", "gaming", "target", "planned"),
+  p("steam_deck", "Steam Deck", "gaming", "target", "planned", "siSteamdeck", "1A9FFF"),
+  p("playstation_portal", "PlayStation Portal", "gaming", "target", "planned", "siPlaystation", "0070D1"),
+  p("ea_play", "EA Play", "gaming", "target", "planned", "siEa", "000000"),
+  p("battle_net", "Battle.net", "gaming", "target", "planned", "siBattledotnet", "148EFF"),
+  p("apple_vision_pro", "Apple Vision Pro", "gaming", "target", "planned", "siApple", "000000"),
+  p("psvr2", "PlayStation VR2", "gaming", "target", "planned", "siPlaystation", "0070D1"),
 
-  // ─── Targets: Devices & OS (14) ───
+  // ─── Targets: Devices & OS (39) ───
+  // ── Mainstream Phones ──
+  p("iphone", "iPhone", "devices_os", "target", "planned", "siApple", "000000", { marquee: true }),
+  p("samsung_galaxy", "Samsung Galaxy", "devices_os", "target", "planned", "siSamsung", "1428A0", { marquee: true }),
   p("android", "Android", "devices_os", "target", "live", "siAndroid", "34A853", { marquee: true, dbPlatformId: "android" }),
+  // ── Kid-Specific Phones ──
+  p("gabb_phone", "Gabb Phone", "devices_os", "target", "planned"),
+  p("bark_phone", "Bark Phone", "devices_os", "target", "planned"),
+  p("pinwheel", "Pinwheel", "devices_os", "target", "planned"),
+  p("troomi", "Troomi Phone", "devices_os", "target", "planned"),
+  p("relay", "Relay", "devices_os", "target", "planned"),
+  p("light_phone", "Light Phone", "devices_os", "target", "planned"),
+  p("wisephone", "Wisephone", "devices_os", "target", "planned"),
+  // ── Smartwatches ──
+  p("apple_watch", "Apple Watch", "devices_os", "target", "planned", "siApple", "000000"),
+  p("gabb_watch", "Gabb Watch", "devices_os", "target", "planned"),
+  p("xplora_watch", "Xplora Watch", "devices_os", "target", "planned"),
+  p("ticktalk_watch", "TickTalk Watch", "devices_os", "target", "planned"),
+  p("cosmo_jrtrack", "Cosmo JrTrack Watch", "devices_os", "target", "planned"),
+  p("gizmo_watch", "Verizon GizmoWatch", "devices_os", "target", "planned"),
+  p("syncup_kids", "T-Mobile SyncUP KIDS Watch", "devices_os", "target", "planned"),
+  p("samsung_galaxy_watch", "Samsung Galaxy Watch", "devices_os", "target", "planned", "siSamsung", "1428A0"),
+  p("garmin_bounce", "Garmin Bounce", "devices_os", "target", "planned", "siGarmin", "000000"),
+  // ── Tablets ──
+  p("ipad", "iPad", "devices_os", "target", "planned", "siApple", "000000"),
+  p("samsung_galaxy_tab", "Samsung Galaxy Tab", "devices_os", "target", "planned", "siSamsung", "1428A0"),
+  p("google_pixel_tablet", "Google Pixel Tablet", "devices_os", "target", "planned", "siGoogle", "4285F4"),
+  p("lenovo_tab", "Lenovo Tab", "devices_os", "target", "planned", "siLenovo", "E2231A"),
+  p("surface_go", "Microsoft Surface Go", "devices_os", "target", "planned", "siMicrosoft", "5E5E5E"),
+  p("fire_tablet", "Fire Tablet", "devices_os", "target", "planned"),
+  p("leapfrog", "LeapFrog LeapPad", "devices_os", "target", "planned"),
+  p("kurio", "Kurio Tablet", "devices_os", "target", "planned"),
+  p("dragon_touch", "Dragon Touch KidzPad", "devices_os", "target", "planned"),
+  p("contixo", "Contixo Kids Tablet", "devices_os", "target", "planned"),
+  // ── E-Readers ──
+  p("kindle", "Kindle", "devices_os", "target", "planned"),
+  p("kindle_kids", "Kindle Kids", "devices_os", "target", "planned"),
+  p("kobo", "Kobo E-Reader", "devices_os", "target", "planned"),
+  p("nook", "Nook E-Reader", "devices_os", "target", "planned"),
+  // ── Operating Systems ──
   p("ios", "iOS", "devices_os", "target", "planned", "siApple", "000000"),
   p("ipados", "iPadOS", "devices_os", "target", "planned", "siApple", "000000"),
   p("windows", "Windows", "devices_os", "target", "planned", "siWindows", "0078D4"),
   p("macos", "macOS", "devices_os", "target", "planned", "siMacos", "000000"),
   p("chromeos", "ChromeOS", "devices_os", "target", "planned", "siGooglechrome", "4285F4"),
   p("fire_os", "Fire OS", "devices_os", "target", "planned"),
-  p("kindle", "Kindle", "devices_os", "target", "planned"),
-  p("fire_tablet", "Fire Tablet", "devices_os", "target", "planned"),
-  p("apple_watch", "Apple Watch", "devices_os", "target", "planned", "siApple", "000000"),
-  p("gabb_watch", "Gabb Watch", "devices_os", "target", "planned"),
-  p("gabb_phone", "Gabb Phone", "devices_os", "target", "planned"),
-  p("pinwheel", "Pinwheel", "devices_os", "target", "planned"),
-  p("bark_phone", "Bark Phone", "devices_os", "target", "planned"),
 
   // ─── Targets: Smart TV & Streaming Devices (10) ───
   p("samsung_tizen", "Samsung Tizen", "smart_tv", "target", "planned", "siSamsung", "1428A0"),
@@ -179,7 +218,7 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("vizio_smartcast", "Vizio SmartCast", "smart_tv", "target", "planned"),
   p("nvidia_shield", "NVIDIA Shield", "smart_tv", "target", "planned", "siNvidia", "76B900"),
 
-  // ─── Targets: Music & Audio (9) ───
+  // ─── Targets: Music & Audio (10) ───
   p("spotify", "Spotify", "music_audio", "target", "planned", "siSpotify", "1ED760", { marquee: true }),
   p("apple_music", "Apple Music", "music_audio", "target", "planned", "siApplemusic", "FA243C", { marquee: true }),
   p("youtube_music", "YouTube Music", "music_audio", "target", "planned", "siYoutubemusic", "FF0000", { marquee: true }),
@@ -189,6 +228,7 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("tidal", "Tidal", "music_audio", "target", "planned", "siTidal", "000000"),
   p("deezer", "Deezer", "music_audio", "target", "planned", "siDeezer", "A238FF"),
   p("audible", "Audible", "music_audio", "target", "planned", "siAudible", "F8991C"),
+  p("iheart_radio", "iHeartRadio", "music_audio", "target", "planned", "siIheart", "C6002B"),
 
   // ─── Targets: Messaging (10) ───
   p("whatsapp", "WhatsApp", "messaging", "target", "planned", "siWhatsapp", "25D366", { marquee: true }),
@@ -214,7 +254,7 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("midjourney", "Midjourney", "ai_chatbots", "target", "planned"),
   p("dall_e", "DALL-E", "ai_chatbots", "target", "planned"),
 
-  // ─── Targets: Network & DNS (10) ───
+  // ─── Targets: Network & DNS (14) ───
   p("nextdns", "NextDNS", "network_dns", "target", "live", null, null, { marquee: true, dbPlatformId: "nextdns" }),
   p("cleanbrowsing", "CleanBrowsing", "network_dns", "target", "live", null, null, { marquee: true, dbPlatformId: "cleanbrowsing" }),
   p("controld", "Control D", "network_dns", "target", "live", null, null, { marquee: true, dbPlatformId: "controld" }),
@@ -226,6 +266,9 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("circle", "Circle", "network_dns", "target", "planned"),
   p("gryphon", "Gryphon", "network_dns", "target", "planned"),
   p("firewalla", "Firewalla", "network_dns", "target", "planned"),
+  p("netgear_armor", "Netgear Armor", "network_dns", "target", "planned"),
+  p("tp_link_homecare", "TP-Link HomeCare", "network_dns", "target", "planned"),
+  p("ubiquiti", "Ubiquiti", "network_dns", "target", "planned"),
 
   // ─── Targets: Browsers & Search (9) ───
   p("chrome", "Chrome", "browsers_search", "target", "planned", "siGooglechrome", "4285F4", { marquee: true }),
@@ -238,7 +281,7 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("duckduckgo", "DuckDuckGo", "browsers_search", "target", "planned", "siDuckduckgo", "DE5833"),
   p("kiddle", "Kiddle", "browsers_search", "target", "planned"),
 
-  // ─── Targets: Education (10) ───
+  // ─── Targets: Education (13) ───
   p("khan_academy", "Khan Academy", "education", "target", "planned", "siKhanacademy", "14BF96"),
   p("youtube_kids", "YouTube Kids", "education", "target", "planned", "siYoutube", "FF0000"),
   p("duolingo", "Duolingo", "education", "target", "planned", "siDuolingo", "58CC02"),
@@ -249,6 +292,9 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("ixl", "IXL", "education", "target", "planned"),
   p("epic_reading", "Epic!", "education", "target", "planned"),
   p("outschool", "Outschool", "education", "target", "planned"),
+  p("google_workspace_edu", "Google Workspace for Education", "education", "target", "planned", "siGoogle", "4285F4"),
+  p("apple_school_manager", "Apple School Manager", "education", "target", "planned", "siApple", "000000"),
+  p("microsoft_365_edu", "Microsoft 365 Education", "education", "target", "planned", "siMicrosoft", "5E5E5E"),
 
   // ─── Targets: Shopping & Payments (8) ───
   p("amazon", "Amazon", "shopping_payments", "target", "planned"),
