@@ -250,7 +250,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "user", type: "object", description: "Created user", children: userFields },
       { name: "tokens", type: "object", description: "JWT token pair", children: tokenFields },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/auth/register \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/auth/register \\
   -H "Content-Type: application/json" \\
   -d '{
     "email": "parent@example.com",
@@ -291,7 +291,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "user", type: "object", description: "Authenticated user", children: userFields },
       { name: "tokens", type: "object", description: "JWT token pair", children: tokenFields },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/auth/login \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/auth/login \\
   -H "Content-Type: application/json" \\
   -d '{
     "email": "parent@example.com",
@@ -332,7 +332,7 @@ export const ENDPOINTS: EndpointDef[] = [
       },
     ],
     responseFields: tokenFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/auth/refresh \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/auth/refresh \\
   -H "Content-Type: application/json" \\
   -d '{
     "refresh_token": "dGhpcyBpcyBhIHJlZnJl..."
@@ -355,7 +355,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Logout",
     description:
       "Revoke all refresh tokens for the current user. The access token remains valid until its TTL expires (15 min). Requires a valid access token.",
-    curlExample: `curl -X POST http://localhost:8080/api/v1/auth/logout \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/auth/logout \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 204 No Content",
   },
@@ -367,7 +367,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Get current user",
     description: "Return the authenticated user's profile. Requires a valid access token.",
     responseFields: userFields,
-    curlExample: `curl http://localhost:8080/api/v1/auth/me \\
+    curlExample: `curl https://api.phosra.com/api/v1/auth/me \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -397,7 +397,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: familyFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/families \\
+    curlExample: `curl https://api.phosra.com/api/v1/families \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -423,7 +423,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "name", type: "string", required: true, description: "Family display name" },
     ],
     responseFields: familyFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/families \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/families \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{ "name": "Smith Family" }'`,
@@ -445,7 +445,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Get family",
     description: "Retrieve details of a specific family. Caller must be a member of the family.",
     responseFields: familyFields,
-    curlExample: `curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\
+    curlExample: `curl https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -467,7 +467,7 @@ export const ENDPOINTS: EndpointDef[] = [
     requestFields: [
       { name: "name", type: "string", description: "New family display name" },
     ],
-    curlExample: `curl -X PUT http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\
+    curlExample: `curl -X PUT https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{ "name": "Smith-Jones Family" }'`,
@@ -481,7 +481,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Delete family",
     description:
       "Permanently delete a family and all associated children, policies, and connections. Only the family owner can delete. This action cannot be undone.",
-    curlExample: `curl -X DELETE http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\
+    curlExample: `curl -X DELETE https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 204 No Content",
   },
@@ -502,7 +502,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: childFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\
+    curlExample: `curl https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -537,7 +537,7 @@ export const ENDPOINTS: EndpointDef[] = [
       },
     ],
     responseFields: childFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -565,7 +565,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Get child",
     description: "Retrieve details of a specific child. Caller must be a member of the child's family.",
     responseFields: childFields,
-    curlExample: `curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\
+    curlExample: `curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -591,7 +591,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "name", type: "string", description: "Updated display name" },
       { name: "birth_date", type: "date", description: "Updated date of birth" },
     ],
-    curlExample: `curl -X PUT http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\
+    curlExample: `curl -X PUT https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{ "name": "Alexander" }'`,
@@ -605,7 +605,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Delete child",
     description:
       "Remove a child and all associated policies and sync history. Only the family owner can delete children.",
-    curlExample: `curl -X DELETE http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\
+    curlExample: `curl -X DELETE https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 204 No Content",
   },
@@ -631,7 +631,7 @@ export const ENDPOINTS: EndpointDef[] = [
         ],
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/age-ratings \\
+    curlExample: `curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/age-ratings \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -666,7 +666,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: policyFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\
+    curlExample: `curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -695,7 +695,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "name", type: "string", required: true, description: "Policy display name (e.g. \"School Days\", \"Weekend\")" },
     ],
     responseFields: policyFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{ "name": "School Days" }'`,
@@ -720,7 +720,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Activate policy",
     description:
       "Transition a policy from draft or paused to active. An active policy's rules will be enforced on the next sync. Only one policy per child can be active at a time; activating one pauses others.",
-    curlExample: `curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/activate \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/activate \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 200 OK",
   },
@@ -732,7 +732,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Pause policy",
     description:
       "Pause an active policy. Rules remain configured but will not be enforced until reactivated. Pausing does not remove already-pushed rules from providers.",
-    curlExample: `curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/pause \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/pause \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 200 OK",
   },
@@ -752,7 +752,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: policyRuleFields,
       },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/generate-from-age \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/generate-from-age \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -794,7 +794,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: policyRuleFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\
+    curlExample: `curl https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -835,7 +835,7 @@ export const ENDPOINTS: EndpointDef[] = [
       },
     ],
     responseFields: policyRuleFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -879,7 +879,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "config", type: "object", description: "Updated category-specific configuration" },
     ],
     responseFields: policyRuleFields,
-    curlExample: `curl -X PUT http://localhost:8080/api/v1/rules/d4e5f6a7-b8c9-0123-def0-123456789abc \\
+    curlExample: `curl -X PUT https://api.phosra.com/api/v1/rules/d4e5f6a7-b8c9-0123-def0-123456789abc \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -907,7 +907,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Delete rule",
     description:
       "Remove a rule from a policy. The rule is permanently deleted. To temporarily disable a rule, set enabled to false instead.",
-    curlExample: `curl -X DELETE http://localhost:8080/api/v1/rules/d4e5f6a7-b8c9-0123-def0-123456789abc \\
+    curlExample: `curl -X DELETE https://api.phosra.com/api/v1/rules/d4e5f6a7-b8c9-0123-def0-123456789abc \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 204 No Content",
   },
@@ -936,7 +936,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "created", type: "integer", description: "Number of new rules created" },
       { name: "updated", type: "integer", description: "Number of existing rules updated" },
     ],
-    curlExample: `curl -X PUT http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules/bulk \\
+    curlExample: `curl -X PUT https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules/bulk \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -966,7 +966,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: providerFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/providers`,
+    curlExample: `curl https://api.phosra.com/api/v1/providers`,
     responseExample: JSON.stringify(
       [
         {
@@ -1007,7 +1007,7 @@ export const ENDPOINTS: EndpointDef[] = [
     description:
       "Get detailed information about a specific provider including capabilities, authentication method, and integration tier. This endpoint is public.",
     responseFields: providerFields,
-    curlExample: `curl http://localhost:8080/api/v1/platforms/nextdns`,
+    curlExample: `curl https://api.phosra.com/api/v1/platforms/nextdns`,
     responseExample: JSON.stringify(
       {
         id: "nextdns",
@@ -1033,7 +1033,7 @@ export const ENDPOINTS: EndpointDef[] = [
     requestFields: [
       { name: "category", type: "string", required: true, description: "Platform category filter (query parameter)" },
     ],
-    curlExample: `curl "http://localhost:8080/api/v1/platforms/by-category?category=dns"`,
+    curlExample: `curl "https://api.phosra.com/api/v1/platforms/by-category?category=dns"`,
     responseExample: JSON.stringify(
       [
         { id: "nextdns", name: "NextDNS", tier: "live" },
@@ -1054,7 +1054,7 @@ export const ENDPOINTS: EndpointDef[] = [
     requestFields: [
       { name: "capability", type: "string", required: true, description: "Rule category to filter by (query parameter)" },
     ],
-    curlExample: `curl "http://localhost:8080/api/v1/platforms/by-capability?capability=web_filter_level"`,
+    curlExample: `curl "https://api.phosra.com/api/v1/platforms/by-capability?capability=web_filter_level"`,
     responseExample: JSON.stringify(
       [
         { id: "nextdns", name: "NextDNS", tier: "live", support: "full" },
@@ -1090,7 +1090,7 @@ export const ENDPOINTS: EndpointDef[] = [
       },
     ],
     responseFields: connectionFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/connections \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/connections \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -1123,7 +1123,7 @@ export const ENDPOINTS: EndpointDef[] = [
     description:
       "Trigger enforcement sync for a child across all connected providers. Pushes the active policy's rules to each provider. Returns a sync job that can be polled for status.",
     responseFields: syncJobFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/sync \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/sync \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -1149,7 +1149,7 @@ export const ENDPOINTS: EndpointDef[] = [
     description:
       "Check the status of a sync job. Poll this endpoint until status is completed, failed, or partial.",
     responseFields: syncJobFields,
-    curlExample: `curl http://localhost:8080/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde \\
+    curlExample: `curl https://api.phosra.com/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -1182,7 +1182,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: syncJobResultFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/results \\
+    curlExample: `curl https://api.phosra.com/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/results \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -1211,7 +1211,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Retry failed job",
     description:
       "Retry a failed or partial enforcement job. Only failed providers are retried — providers that previously succeeded are skipped. Requires the original job to be in failed or partial status.",
-    curlExample: `curl -X POST http://localhost:8080/api/v1/enforcement/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/retry \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/enforcement/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/retry \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -1249,7 +1249,7 @@ export const ENDPOINTS: EndpointDef[] = [
         ],
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/ratings/systems`,
+    curlExample: `curl https://api.phosra.com/api/v1/ratings/systems`,
     responseExample: JSON.stringify(
       [
         { id: "mpaa", name: "MPAA", country: "US", media_type: "film" },
@@ -1286,7 +1286,7 @@ export const ENDPOINTS: EndpointDef[] = [
         description: "Map of rating system ID to maximum allowed rating",
       },
     ],
-    curlExample: `curl "http://localhost:8080/api/v1/ratings/by-age?age=10"`,
+    curlExample: `curl "https://api.phosra.com/api/v1/ratings/by-age?age=10"`,
     responseExample: JSON.stringify(
       {
         age: 10,
@@ -1319,7 +1319,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: memberFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members \\
+    curlExample: `curl https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -1350,7 +1350,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "role", type: "enum", required: true, description: "One of: parent, guardian" },
     ],
     responseFields: memberFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -1379,7 +1379,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Remove member",
     description:
       "Remove a member from a family. Only the family owner can remove members. The owner cannot remove themselves — use Delete Family instead. Removed members immediately lose access to all family data.",
-    curlExample: `curl -X DELETE http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members/m2b3c4d5-e6f7-8901-bcde-f12345678901 \\
+    curlExample: `curl -X DELETE https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/members/m2b3c4d5-e6f7-8901-bcde-f12345678901 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 204 No Content",
   },
@@ -1401,7 +1401,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: standardFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/standards`,
+    curlExample: `curl https://api.phosra.com/api/v1/standards`,
     responseExample: JSON.stringify(
       [
         {
@@ -1434,7 +1434,7 @@ export const ENDPOINTS: EndpointDef[] = [
     description:
       "Get full details of a community standard including all recommended rules, age thresholds, and supporting research. This endpoint is public.",
     responseFields: standardFields,
-    curlExample: `curl http://localhost:8080/api/v1/standards/four-norms`,
+    curlExample: `curl https://api.phosra.com/api/v1/standards/four-norms`,
     responseExample: JSON.stringify(
       {
         id: "four-norms",
@@ -1461,7 +1461,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "List adopted standards",
     description:
       "List all community standards adopted for a specific child. Adopted standards automatically generate corresponding policy rules.",
-    curlExample: `curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards \\
+    curlExample: `curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -1487,7 +1487,7 @@ export const ENDPOINTS: EndpointDef[] = [
     requestFields: [
       { name: "standard_id", type: "string", required: true, description: "Slug of the community standard to adopt" },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{ "standard_id": "four-norms" }'`,
@@ -1512,7 +1512,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Unadopt standard",
     description:
       "Remove a community standard from a child. The associated policy rules are not automatically deleted — they remain as manually-configured rules. To remove the rules as well, delete them individually or regenerate the policy from age.",
-    curlExample: `curl -X DELETE http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards/four-norms \\
+    curlExample: `curl -X DELETE https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/standards/four-norms \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 204 No Content",
   },
@@ -1532,7 +1532,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "child_id", type: "uuid", required: true, description: "Child to link the platform to" },
     ],
     responseFields: complianceLinkFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/compliance \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/compliance \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -1569,7 +1569,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: complianceLinkFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/compliance \\
+    curlExample: `curl https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/compliance \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -1598,7 +1598,7 @@ export const ENDPOINTS: EndpointDef[] = [
     requestFields: [
       { name: "credentials", type: "object", description: "Updated platform credentials (optional — re-verifies existing if omitted)" },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/compliance/cl_abc123/verify \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/compliance/cl_abc123/verify \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -1624,7 +1624,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Revoke certification",
     description:
       "Permanently remove a compliance link. Encrypted credentials are deleted. Future enforcement will skip this platform. Active rules on the platform are not automatically removed — run enforcement with the platform disconnected to clear them.",
-    curlExample: `curl -X DELETE http://localhost:8080/api/v1/compliance/cl_abc123 \\
+    curlExample: `curl -X DELETE https://api.phosra.com/api/v1/compliance/cl_abc123 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 204 No Content",
   },
@@ -1636,7 +1636,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Enforce on link",
     description:
       "Trigger enforcement on a single compliance link. Unlike child-wide enforcement which pushes to all linked platforms, this targets a specific platform connection. Useful for re-pushing rules after re-verification.",
-    curlExample: `curl -X POST http://localhost:8080/api/v1/compliance/cl_abc123/enforce \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/compliance/cl_abc123/enforce \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -1661,7 +1661,7 @@ export const ENDPOINTS: EndpointDef[] = [
       "Register a webhook endpoint to receive real-time notifications for enforcement, policy, and compliance events. All payloads are signed with HMAC-SHA256 using the provided secret.",
     requestFields: webhookRequestFields,
     responseFields: webhookFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/webhooks \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/webhooks \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -1690,7 +1690,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Get webhook",
     description: "Retrieve details of a specific webhook including its event subscriptions and delivery statistics.",
     responseFields: webhookFields,
-    curlExample: `curl http://localhost:8080/api/v1/webhooks/wh_abc123 \\
+    curlExample: `curl https://api.phosra.com/api/v1/webhooks/wh_abc123 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -1713,7 +1713,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Update webhook",
     description: "Update a webhook's URL, event subscriptions, or secret. Changes take effect immediately for the next delivery.",
     requestFields: webhookRequestFields,
-    curlExample: `curl -X PUT http://localhost:8080/api/v1/webhooks/wh_abc123 \\
+    curlExample: `curl -X PUT https://api.phosra.com/api/v1/webhooks/wh_abc123 \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -1728,7 +1728,7 @@ export const ENDPOINTS: EndpointDef[] = [
     section: "Webhooks",
     summary: "Delete webhook",
     description: "Permanently delete a webhook. No further events will be delivered to this endpoint. Pending deliveries are cancelled.",
-    curlExample: `curl -X DELETE http://localhost:8080/api/v1/webhooks/wh_abc123 \\
+    curlExample: `curl -X DELETE https://api.phosra.com/api/v1/webhooks/wh_abc123 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "// 204 No Content",
   },
@@ -1740,7 +1740,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Test webhook",
     description:
       "Send a test ping event to the webhook endpoint. Returns delivery status, response code, and latency. Use this to verify your endpoint is correctly configured and can handle HMAC signature verification.",
-    curlExample: `curl -X POST http://localhost:8080/api/v1/webhooks/wh_abc123/test \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/webhooks/wh_abc123/test \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -1762,7 +1762,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "List deliveries",
     description:
       "List recent webhook deliveries with status, response codes, and timestamps. Failed deliveries are retried with exponential backoff (1min, 5min, 30min). Delivery history is retained for 30 days.",
-    curlExample: `curl http://localhost:8080/api/v1/webhooks/wh_abc123/deliveries \\
+    curlExample: `curl https://api.phosra.com/api/v1/webhooks/wh_abc123/deliveries \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -1798,7 +1798,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "age_group", type: "string", description: "Computed age group (toddler, child, tween, teen)" },
       { name: "max_ratings", type: "object", description: "Age-appropriate content ratings across 5 systems" },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/setup/quick \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/setup/quick \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -1829,7 +1829,7 @@ export const ENDPOINTS: EndpointDef[] = [
     description:
       "Push the child's active policy rules to all verified compliance links (platform connections). Creates an enforcement job that fans out to each connected platform concurrently. Returns the job for status polling.",
     responseFields: syncJobFields,
-    curlExample: `curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/enforce \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/enforce \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -1859,7 +1859,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: syncJobFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/enforcement/jobs \\
+    curlExample: `curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/enforcement/jobs \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -1887,7 +1887,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Family overview report",
     description:
       "Get a comprehensive overview report for a family including per-child enforcement status, compliance link health, recent activity, and rule coverage statistics.",
-    curlExample: `curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/reports/overview \\
+    curlExample: `curl https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/reports/overview \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       {
@@ -1934,7 +1934,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "message", type: "string", required: true, description: "Feedback message (max 2000 characters)" },
       { name: "email", type: "string", description: "Optional contact email for follow-up" },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/feedback \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/feedback \\
   -H "Content-Type: application/json" \\
   -d '{
     "type": "feature",
@@ -1975,7 +1975,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "device", type: "DeviceRegistration", description: "The registered device", children: deviceRegistrationFields },
       { name: "api_key", type: "string", description: "One-time device API key — store in Keychain immediately" },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/devices \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/devices \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -2026,7 +2026,7 @@ export const ENDPOINTS: EndpointDef[] = [
         children: deviceRegistrationFields,
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/devices \\
+    curlExample: `curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/devices \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: JSON.stringify(
       [
@@ -2071,7 +2071,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "os_version", type: "string", description: "Updated iOS version after OS update" },
     ],
     responseFields: deviceRegistrationFields,
-    curlExample: `curl -X PUT http://localhost:8080/api/v1/devices/d1e2f3a4-b5c6-7890-abcd-ef1234567890 \\
+    curlExample: `curl -X PUT https://api.phosra.com/api/v1/devices/d1e2f3a4-b5c6-7890-abcd-ef1234567890 \\
   -H "Authorization: Bearer <access_token>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -2104,7 +2104,7 @@ export const ENDPOINTS: EndpointDef[] = [
     summary: "Revoke device",
     description:
       "Revoke a device's API key, preventing it from polling for policies or submitting reports. The device registration is kept for audit purposes but marked as 'revoked'. The iOS app will receive 401 on its next request.",
-    curlExample: `curl -X DELETE http://localhost:8080/api/v1/devices/d1e2f3a4-b5c6-7890-abcd-ef1234567890 \\
+    curlExample: `curl -X DELETE https://api.phosra.com/api/v1/devices/d1e2f3a4-b5c6-7890-abcd-ef1234567890 \\
   -H "Authorization: Bearer <access_token>"`,
     responseExample: "",
   },
@@ -2120,7 +2120,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "since_version", type: "integer", description: "Return 304 if current version is <= this value (query parameter)" },
     ],
     responseFields: compiledPolicyFields,
-    curlExample: `curl http://localhost:8080/api/v1/device/policy?since_version=2 \\
+    curlExample: `curl https://api.phosra.com/api/v1/device/policy?since_version=2 \\
   -H "X-Device-Key: <device_api_key>"`,
     responseExample: JSON.stringify(
       {
@@ -2191,7 +2191,7 @@ export const ENDPOINTS: EndpointDef[] = [
       { name: "payload", type: "object", required: true, description: "Report data (varies by report_type). For enforcement_status: { policy_version, results: [{ category, status, framework, detail }] }" },
       { name: "reported_at", type: "datetime", required: true, description: "When the activity occurred on-device" },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/device/report \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/device/report \\
   -H "X-Device-Key: <device_api_key>" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -2223,7 +2223,7 @@ export const ENDPOINTS: EndpointDef[] = [
     requestFields: [
       { name: "version", type: "integer", required: true, description: "The policy version that was successfully applied" },
     ],
-    curlExample: `curl -X POST http://localhost:8080/api/v1/device/ack \\
+    curlExample: `curl -X POST https://api.phosra.com/api/v1/device/ack \\
   -H "X-Device-Key: <device_api_key>" \\
   -H "Content-Type: application/json" \\
   -d '{ "version": 3 }'`,
@@ -2271,7 +2271,7 @@ export const ENDPOINTS: EndpointDef[] = [
         ],
       },
     ],
-    curlExample: `curl http://localhost:8080/api/v1/platform-mappings/apple`,
+    curlExample: `curl https://api.phosra.com/api/v1/platform-mappings/apple`,
     responseExample: JSON.stringify(
       {
         age_ratings: {

@@ -51,7 +51,7 @@ test.describe("Settings", () => {
 
     // API section
     await expect(page.getByRole("heading", { name: "API" })).toBeVisible({ timeout: 10_000 })
-    await expect(page.getByText(/localhost:8080/)).toBeVisible()
+    await expect(page.getByText(/api\.phosra\.com/)).toBeVisible()
     await expect(page.getByRole("link", { name: /View PCSS/i })).toBeVisible()
   })
 })

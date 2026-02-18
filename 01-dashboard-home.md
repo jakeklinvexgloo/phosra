@@ -225,7 +225,7 @@
                         - button "Copy" [ref=e245] [cursor=pointer]:
                           - img [ref=e246]
                           - text: Copy
-                      - code [ref=e250]: "curl -X POST http://localhost:8080/api/v1/auth/register \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"parent@example.com\", \"password\": \"securepass123\", \"name\": \"Jane Parent\" }'"
+                      - code [ref=e250]: "curl -X POST https://api.phosra.com/api/v1/auth/register \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"parent@example.com\", \"password\": \"securepass123\", \"name\": \"Jane Parent\" }'"
                     - generic [ref=e251]:
                       - generic [ref=e252]:
                         - generic [ref=e253]:
@@ -287,7 +287,7 @@
                         - button "Copy" [ref=e323] [cursor=pointer]:
                           - img [ref=e324]
                           - text: Copy
-                      - code [ref=e328]: "curl -X POST http://localhost:8080/api/v1/auth/login \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"parent@example.com\", \"password\": \"securepass123\" }'"
+                      - code [ref=e328]: "curl -X POST https://api.phosra.com/api/v1/auth/login \\ -H \"Content-Type: application/json\" \\ -d '{ \"email\": \"parent@example.com\", \"password\": \"securepass123\" }'"
                     - generic [ref=e329]:
                       - generic [ref=e330]:
                         - generic [ref=e331]:
@@ -340,7 +340,7 @@
                         - button "Copy" [ref=e394] [cursor=pointer]:
                           - img [ref=e395]
                           - text: Copy
-                      - code [ref=e399]: "curl -X POST http://localhost:8080/api/v1/auth/refresh \\ -H \"Content-Type: application/json\" \\ -d '{ \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJl...\" }'"
+                      - code [ref=e399]: "curl -X POST https://api.phosra.com/api/v1/auth/refresh \\ -H \"Content-Type: application/json\" \\ -d '{ \"refresh_token\": \"dGhpcyBpcyBhIHJlZnJl...\" }'"
                     - generic [ref=e400]:
                       - generic [ref=e401]:
                         - generic [ref=e402]:
@@ -364,7 +364,7 @@
                       - button "Copy" [ref=e424] [cursor=pointer]:
                         - img [ref=e425]
                         - text: Copy
-                    - code [ref=e429]: "curl -X POST http://localhost:8080/api/v1/auth/logout \\ -H \"Authorization: Bearer <access_token>\""
+                    - code [ref=e429]: "curl -X POST https://api.phosra.com/api/v1/auth/logout \\ -H \"Authorization: Bearer <access_token>\""
                   - generic [ref=e430]:
                     - generic [ref=e431]:
                       - generic [ref=e432]:
@@ -412,7 +412,7 @@
                         - button "Copy" [ref=e491] [cursor=pointer]:
                           - img [ref=e492]
                           - text: Copy
-                      - code [ref=e496]: "curl http://localhost:8080/api/v1/auth/me \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e496]: "curl https://api.phosra.com/api/v1/auth/me \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e497]:
                       - generic [ref=e498]:
                         - generic [ref=e499]:
@@ -475,7 +475,7 @@
                         - button "Copy" [ref=e557] [cursor=pointer]:
                           - img [ref=e558]
                           - text: Copy
-                      - code [ref=e562]: "curl http://localhost:8080/api/v1/families \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e562]: "curl https://api.phosra.com/api/v1/families \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e563]:
                       - generic [ref=e564]:
                         - generic [ref=e565]:
@@ -528,7 +528,7 @@
                         - button "Copy" [ref=e628] [cursor=pointer]:
                           - img [ref=e629]
                           - text: Copy
-                      - code [ref=e633]: "curl -X POST http://localhost:8080/api/v1/families \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Smith Family\" }'"
+                      - code [ref=e633]: "curl -X POST https://api.phosra.com/api/v1/families \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Smith Family\" }'"
                     - generic [ref=e634]:
                       - generic [ref=e635]:
                         - generic [ref=e636]:
@@ -571,7 +571,7 @@
                         - button "Copy" [ref=e687] [cursor=pointer]:
                           - img [ref=e688]
                           - text: Copy
-                      - code [ref=e692]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e692]: "curl https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e693]:
                       - generic [ref=e694]:
                         - generic [ref=e695]:
@@ -603,7 +603,7 @@
                         - button "Copy" [ref=e730] [cursor=pointer]:
                           - img [ref=e731]
                           - text: Copy
-                      - code [ref=e735]: "curl -X PUT http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Smith-Jones Family\" }'"
+                      - code [ref=e735]: "curl -X PUT https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Smith-Jones Family\" }'"
                     - generic [ref=e736]:
                       - generic [ref=e737]:
                         - generic [ref=e738]:
@@ -627,7 +627,7 @@
                       - button "Copy" [ref=e760] [cursor=pointer]:
                         - img [ref=e761]
                         - text: Copy
-                    - code [ref=e765]: "curl -X DELETE http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\""
+                    - code [ref=e765]: "curl -X DELETE https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \\ -H \"Authorization: Bearer <access_token>\""
                   - generic [ref=e766]:
                     - generic [ref=e767]:
                       - generic [ref=e768]:
@@ -662,7 +662,7 @@
                         - button "Copy" [ref=e806] [cursor=pointer]:
                           - img [ref=e807]
                           - text: Copy
-                      - code [ref=e811]: "curl http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e811]: "curl https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e812]:
                       - generic [ref=e813]:
                         - generic [ref=e814]:
@@ -738,7 +738,7 @@
                         - button "Copy" [ref=e910] [cursor=pointer]:
                           - img [ref=e911]
                           - text: Copy
-                      - code [ref=e915]: "curl -X POST http://localhost:8080/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Alex\", \"birth_date\": \"2015-06-20\" }'"
+                      - code [ref=e915]: "curl -X POST https://api.phosra.com/api/v1/families/a1b2c3d4-e5f6-7890-abcd-ef1234567890/children \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Alex\", \"birth_date\": \"2015-06-20\" }'"
                     - generic [ref=e916]:
                       - generic [ref=e917]:
                         - generic [ref=e918]:
@@ -796,7 +796,7 @@
                         - button "Copy" [ref=e993] [cursor=pointer]:
                           - img [ref=e994]
                           - text: Copy
-                      - code [ref=e998]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e998]: "curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e999]:
                       - generic [ref=e1000]:
                         - generic [ref=e1001]:
@@ -834,7 +834,7 @@
                         - button "Copy" [ref=e1044] [cursor=pointer]:
                           - img [ref=e1045]
                           - text: Copy
-                      - code [ref=e1049]: "curl -X PUT http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Alexander\" }'"
+                      - code [ref=e1049]: "curl -X PUT https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"Alexander\" }'"
                     - generic [ref=e1050]:
                       - generic [ref=e1051]:
                         - generic [ref=e1052]:
@@ -858,7 +858,7 @@
                       - button "Copy" [ref=e1074] [cursor=pointer]:
                         - img [ref=e1075]
                         - text: Copy
-                    - code [ref=e1079]: "curl -X DELETE http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
+                    - code [ref=e1079]: "curl -X DELETE https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901 \\ -H \"Authorization: Bearer <access_token>\""
                   - generic [ref=e1080]:
                     - generic [ref=e1081]:
                       - generic [ref=e1082]:
@@ -899,7 +899,7 @@
                         - button "Copy" [ref=e1128] [cursor=pointer]:
                           - img [ref=e1129]
                           - text: Copy
-                      - code [ref=e1133]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/age-ratings \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e1133]: "curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/age-ratings \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e1134]:
                       - generic [ref=e1135]:
                         - generic [ref=e1136]:
@@ -954,7 +954,7 @@
                         - button "Copy" [ref=e1186] [cursor=pointer]:
                           - img [ref=e1187]
                           - text: Copy
-                      - code [ref=e1191]: "curl http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e1191]: "curl https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e1192]:
                       - generic [ref=e1193]:
                         - generic [ref=e1194]:
@@ -1022,7 +1022,7 @@
                         - button "Copy" [ref=e1281] [cursor=pointer]:
                           - img [ref=e1282]
                           - text: Copy
-                      - code [ref=e1286]: "curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"School Days\" }'"
+                      - code [ref=e1286]: "curl -X POST https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/policies \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"name\": \"School Days\" }'"
                     - generic [ref=e1287]:
                       - generic [ref=e1288]:
                         - generic [ref=e1289]:
@@ -1046,7 +1046,7 @@
                       - button "Copy" [ref=e1311] [cursor=pointer]:
                         - img [ref=e1312]
                         - text: Copy
-                    - code [ref=e1316]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/activate \\ -H \"Authorization: Bearer <access_token>\""
+                    - code [ref=e1316]: "curl -X POST https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/activate \\ -H \"Authorization: Bearer <access_token>\""
                   - generic [ref=e1317]:
                     - generic [ref=e1318]:
                       - generic [ref=e1319]:
@@ -1070,7 +1070,7 @@
                       - button "Copy" [ref=e1341] [cursor=pointer]:
                         - img [ref=e1342]
                         - text: Copy
-                    - code [ref=e1346]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/pause \\ -H \"Authorization: Bearer <access_token>\""
+                    - code [ref=e1346]: "curl -X POST https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/pause \\ -H \"Authorization: Bearer <access_token>\""
                   - generic [ref=e1347]:
                     - generic [ref=e1348]:
                       - generic [ref=e1349]:
@@ -1105,7 +1105,7 @@
                         - button "Copy" [ref=e1387] [cursor=pointer]:
                           - img [ref=e1388]
                           - text: Copy
-                      - code [ref=e1392]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/generate-from-age \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e1392]: "curl -X POST https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/generate-from-age \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e1393]:
                       - generic [ref=e1394]:
                         - generic [ref=e1395]:
@@ -1140,7 +1140,7 @@
                         - button "Copy" [ref=e1433] [cursor=pointer]:
                           - img [ref=e1434]
                           - text: Copy
-                      - code [ref=e1438]: "curl http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\ -H \"Authorization: Bearer <access_token>\""
+                      - code [ref=e1438]: "curl https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\ -H \"Authorization: Bearer <access_token>\""
                     - generic [ref=e1439]:
                       - generic [ref=e1440]:
                         - generic [ref=e1441]:
@@ -1221,7 +1221,7 @@
                         - button "Copy" [ref=e1545] [cursor=pointer]:
                           - img [ref=e1546]
                           - text: Copy
-                      - code [ref=e1550]: "curl -X POST http://localhost:8080/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"category\": \"screen_time\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 120, \"bedtime\": \"21:00\", \"wake_time\": \"07:00\" } }'"
+                      - code [ref=e1550]: "curl -X POST https://api.phosra.com/api/v1/policies/c3d4e5f6-a7b8-9012-cdef-123456789012/rules \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"category\": \"screen_time\", \"enabled\": true, \"config\": { \"daily_limit_minutes\": 120, \"bedtime\": \"21:00\", \"wake_time\": \"07:00\" } }'"
                     - generic [ref=e1551]:
                       - generic [ref=e1552]:
                         - generic [ref=e1553]:
@@ -1420,7 +1420,7 @@
                         - button "Copy" [ref=e1772] [cursor=pointer]:
                           - img [ref=e1773]
                           - text: Copy
-                      - code [ref=e1777]: curl http://localhost:8080/api/v1/providers
+                      - code [ref=e1777]: curl https://api.phosra.com/api/v1/providers
                     - generic [ref=e1778]:
                       - generic [ref=e1779]:
                         - generic [ref=e1780]:
@@ -1545,7 +1545,7 @@
                         - button "Copy" [ref=e1929] [cursor=pointer]:
                           - img [ref=e1930]
                           - text: Copy
-                      - code [ref=e1934]: "curl -X POST http://localhost:8080/api/v1/connections \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"provider_id\": \"nextdns\", \"credentials\": \"your-nextdns-api-key\" }'"
+                      - code [ref=e1934]: "curl -X POST https://api.phosra.com/api/v1/connections \\ -H \"Authorization: Bearer <access_token>\" \\ -H \"Content-Type: application/json\" \\ -d '{ \"family_id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"provider_id\": \"nextdns\", \"credentials\": \"your-nextdns-api-key\" }'"
                     - generic [ref=e1935]:
                       - generic [ref=e1936]:
                         - generic [ref=e1937]:
@@ -1655,7 +1655,7 @@
                           - button "Copy" [ref=e2059] [cursor=pointer]:
                             - img [ref=e2060]
                             - text: Copy
-                        - code [ref=e2064]: "curl -X POST http://localhost:8080/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/sync \\ -H \"Authorization: Bearer <access_token>\""
+                        - code [ref=e2064]: "curl -X POST https://api.phosra.com/api/v1/children/b2c3d4e5-f6a7-8901-bcde-f12345678901/sync \\ -H \"Authorization: Bearer <access_token>\""
                       - generic [ref=e2065]:
                         - generic [ref=e2066]:
                           - generic [ref=e2067]:
@@ -1723,7 +1723,7 @@
                           - button "Copy" [ref=e2158] [cursor=pointer]:
                             - img [ref=e2159]
                             - text: Copy
-                        - code [ref=e2163]: "curl http://localhost:8080/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde \\ -H \"Authorization: Bearer <access_token>\""
+                        - code [ref=e2163]: "curl https://api.phosra.com/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde \\ -H \"Authorization: Bearer <access_token>\""
                       - generic [ref=e2164]:
                         - generic [ref=e2165]:
                           - generic [ref=e2166]:
@@ -1758,7 +1758,7 @@
                           - button "Copy" [ref=e2204] [cursor=pointer]:
                             - img [ref=e2205]
                             - text: Copy
-                        - code [ref=e2209]: "curl http://localhost:8080/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/results \\ -H \"Authorization: Bearer <access_token>\""
+                        - code [ref=e2209]: "curl https://api.phosra.com/api/v1/sync/jobs/f6a7b8c9-d0e1-2345-f012-3456789abcde/results \\ -H \"Authorization: Bearer <access_token>\""
                       - generic [ref=e2210]:
                         - generic [ref=e2211]:
                           - generic [ref=e2212]:
@@ -1803,7 +1803,7 @@
                           - button "Copy" [ref=e2257] [cursor=pointer]:
                             - img [ref=e2258]
                             - text: Copy
-                        - code [ref=e2262]: curl http://localhost:8080/api/v1/ratings/systems
+                        - code [ref=e2262]: curl https://api.phosra.com/api/v1/ratings/systems
                       - generic [ref=e2263]:
                         - generic [ref=e2264]:
                           - generic [ref=e2265]:
@@ -1851,7 +1851,7 @@
                           - button "Copy" [ref=e2320] [cursor=pointer]:
                             - img [ref=e2321]
                             - text: Copy
-                        - code [ref=e2325]: curl "http://localhost:8080/api/v1/ratings/by-age?age=10"
+                        - code [ref=e2325]: curl "https://api.phosra.com/api/v1/ratings/by-age?age=10"
                       - generic [ref=e2326]:
                         - generic [ref=e2327]:
                           - generic [ref=e2328]:
@@ -2739,7 +2739,7 @@
               - heading "API Base URL" [level=2] [ref=e3241]
               - generic [ref=e3242]:
                 - paragraph [ref=e3243]: "All PCSS API endpoints are served under:"
-                - generic [ref=e3244]: https://guardiangate-production.up.railway.app/api/v1
+                - generic [ref=e3244]: https://api.phosra.com/api/v1
                 - paragraph [ref=e3245]:
                   - text: Platforms
                   - strong [ref=e3246]: MUST

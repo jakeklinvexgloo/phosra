@@ -6,6 +6,8 @@ info:
   contact:
     name: Phosra
 servers:
+  - url: https://api.phosra.com/api/v1
+    description: Production
   - url: http://localhost:8080/api/v1
     description: Local development
 
