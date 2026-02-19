@@ -194,7 +194,7 @@ export function ParentalControlDetailTemplate({ entry }: { entry: ParentalContro
             {entry.apiAvailability === "public_api" &&
               `${entry.name}'s public API lets Phosra push rules directly. Connect once, sync automatically.`}
             {entry.apiAvailability === "partner_api" &&
-              `Phosra integrates with ${entry.name} via their partner API. Connect through Phosra for automated rule enforcement.`}
+              `Phosra supports ${entry.name} rule translation. Connect your existing ${entry.name} account to push rules through Phosra's unified API.`}
             {entry.apiAvailability === "no_api" &&
               `${entry.name} doesn't offer an API. Phosra provides step-by-step guided setup that mirrors your active rules.`}
             {entry.apiAvailability === "undocumented" &&

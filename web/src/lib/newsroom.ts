@@ -39,7 +39,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Today we're launching Phosra to fix this. Phosra is infrastructure — a universal control layer that connects to 190+ platforms through a single API. Parents set their rules once, and those rules enforce everywhere automatically. Companies like Bark and Qustodio can plug into Phosra to extend their reach from a handful of platforms to all of them.",
+        text: "Today we're launching Phosra to fix this. Phosra is infrastructure — a universal control layer that connects to 190+ platforms through a single API. Parents set their rules once, and those rules enforce everywhere automatically. Parental control providers can plug into Phosra to extend their reach from a handful of platforms to all of them.",
       },
       {
         type: "quote",
@@ -52,7 +52,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "The platform is available today for developers and enterprise partners. Visit phosra.com/docs for the full API reference and integration guides.",
+        text: "The platform is available today for developers and enterprise customers. Visit phosra.com/docs for the full API reference and integration guides.",
       },
     ],
   },
@@ -79,7 +79,7 @@ export const NEWSROOM: NewsEntry[] = [
     ],
   },
   {
-    slug: "community-standards-partnership",
+    slug: "community-standards-enforcement",
     title: "28 Community Standards, 50,000 Families: Making Pledges Enforceable",
     date: "2025-02-08",
     category: "company",

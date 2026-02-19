@@ -87,7 +87,7 @@ const SCENARIO_NETFLIX: DemoScenario = {
     {
       type: "tool-start",
       toolName: "trigger_enforcement",
-      toolLabel: "Pushing to Netflix...",
+      toolLabel: "Pushing to platforms...",
       duration: 200,
     },
     {

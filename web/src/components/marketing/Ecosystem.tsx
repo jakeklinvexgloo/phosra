@@ -133,6 +133,9 @@ export function Ecosystem() {
           </AnimatedSection>
 
           <CategoryGrid categories={ENFORCEMENT_TARGETS} marqueeTargets={MARQUEE_TARGETS} />
+          <p className="text-center text-xs text-muted-foreground/50 mt-6">
+            Platform support varies by integration tier and availability. Logos represent ecosystem coverage, not endorsement.
+          </p>
         </div>
 
       </div>

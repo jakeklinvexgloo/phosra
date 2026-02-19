@@ -326,9 +326,9 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
             <div className="bg-accent/5 border border-accent/20 rounded p-4 sm:p-8">
               <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4">Phosra Child Safety Standard (PCSS) v1.0</h2>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                This document defines the <strong className="text-foreground">Phosra Child Safety Standard (PCSS)</strong>, a mandatory regulatory framework
-                for technology platforms that serve minors. All regulated platforms <Keyword>MUST</Keyword> implement this standard
-                to achieve and maintain compliance certification.
+                This document defines the <strong className="text-foreground">Phosra Child Safety Standard (PCSS)</strong>, an open technical framework
+                for technology platforms that serve minors. Platforms <Keyword>SHOULD</Keyword> implement this standard
+                to align with emerging child safety regulations and industry best practices.
               </p>
               <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                 PCSS establishes a universal policy framework spanning 45 safety categories across 12 domains: Content, Time, Purchase,
@@ -337,8 +337,8 @@ export function DocsContent({ hideHeader = false }: { hideHeader?: boolean } = {
                 enforcement requests from the Phosra Enforcement Engine.
               </p>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                This standard is administered by Phosra in coordination with government child safety authorities.
-                Non-compliance may result in regulatory action as defined in Section 10.
+                This standard is published by Phosra and designed to align with current and emerging child safety regulations.
+                Platforms adopting this standard position themselves ahead of regulatory requirements.
               </p>
               <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="text-center">
@@ -836,8 +836,8 @@ signature = HMAC-SHA256(webhook_secret, request_body)
                     <span className="text-xs font-bold text-warning bg-warning/10 px-2 py-1 rounded">Phase 2</span>
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-foreground">Mandatory Registration</h4>
-                    <p className="text-xs text-muted-foreground">All platforms serving minors <Keyword>MUST</Keyword> register with the PCSS platform registry. Pending Compliance status assigned.</p>
+                    <h4 className="text-sm font-medium text-foreground">Platform Registration</h4>
+                    <p className="text-xs text-muted-foreground">Platforms serving minors <Keyword>SHOULD</Keyword> register with the PCSS platform registry to track compliance status.</p>
                   </div>
                 </div>
                 <div className="flex gap-3 sm:gap-4 items-start">
@@ -1341,9 +1341,9 @@ Content-Type: application/json
                     <p className="text-xs text-foreground mt-1">Qustodio, Apple Screen Time (MDM), Google Family Link</p>
                   </div>
                   <div className="bg-blue-500/5 border border-blue-500/20 rounded p-4">
-                    <span className="inline-flex items-center gap-1.5 bg-blue-500/10 text-blue-500 px-2 py-1 rounded-full text-xs font-bold border border-blue-500/30">Partner API</span>
-                    <p className="text-xs text-muted-foreground mt-2">Integration via partnership agreement. Automated rule enforcement with partner credentials.</p>
-                    <p className="text-xs text-foreground mt-1">Bark, Securly, Canopy</p>
+                    <span className="inline-flex items-center gap-1.5 bg-blue-500/10 text-blue-500 px-2 py-1 rounded-full text-xs font-bold border border-blue-500/30">Managed API</span>
+                    <p className="text-xs text-muted-foreground mt-2">Integration with platforms offering documented APIs. Phosra translates rules into each platform&apos;s native format.</p>
+                    <p className="text-xs text-foreground mt-1">Platforms with REST or MDM APIs</p>
                   </div>
                   <div className="bg-muted/50 border border-border rounded p-4">
                     <span className="inline-flex items-center gap-1.5 bg-muted text-muted-foreground px-2 py-1 rounded-full text-xs font-bold border border-border">No API</span>

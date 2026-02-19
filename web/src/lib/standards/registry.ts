@@ -13,9 +13,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Jonathan Haidt's four foundational norms for a phone-free childhood.",
     longDescription:
-      "Based on The Anxious Generation by Jonathan Haidt, the Four Norms represent a research-backed framework for protecting children from the harms of smartphone-based childhood. When adopted through Phosra, these norms are automatically translated into enforceable rules across every connected platform — turning a social pledge into verified, cross-platform protection.",
+      "Based on The Anxious Generation by Jonathan Haidt, the Four Norms represent a research-backed framework for protecting children from the harms of smartphone-based childhood. Families who adopt these norms can use Phosra to translate them into enforceable rules across every connected platform — turning a social pledge into verified, cross-platform protection.",
     iconEmoji: "📱",
-    iconUrl: "/standards/icons/four-norms.png",
+    iconUrl: "/movements/icons/four-norms.png",
     accentColor: "#E85D3A",
     rules: [
       { category: "social_media_min_age", label: "No social media", value: "Until age 16", maxAge: 16 },
@@ -38,9 +38,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "A community pledge to delay smartphones until at least 8th grade.",
     longDescription:
-      "Wait Until 8th is a grassroots movement of over 130,000 families who pledge to wait until at least 8th grade before giving their children a smartphone. When enforced through Phosra, this pledge becomes real at the device level — restricting smartphone app access, social media, and mature content across all connected platforms until the child reaches 8th grade age.",
+      "Wait Until 8th is a grassroots movement of over 130,000 families who pledge to wait until at least 8th grade before giving their children a smartphone. Phosra can enforce this pledge at the device level for families who adopt it — restricting smartphone app access, social media, and mature content across all connected platforms until the child reaches 8th grade age.",
     iconEmoji: "✋",
-    iconUrl: "/standards/icons/wait-until-8th.png",
+    iconUrl: "/movements/icons/wait-until-8th.png",
     accentColor: "#4A90D9",
     rules: [
       { category: "privacy_account_creation", label: "No smartphone apps", value: "Until 8th grade (~14)", maxAge: 14 },
@@ -92,7 +92,7 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     longDescription:
       "The Screen-Free Schools standard enforces phone-free policies during school hours, blocking social media, gaming, and non-educational content during the school day. Designed for school-wide adoption, it activates when 10 or more families in a grade level adopt it — creating community-wide accountability for distraction-free learning.",
     iconEmoji: "🏫",
-    iconUrl: "/standards/icons/screen-free-schools.png",
+    iconUrl: "/movements/icons/screen-free-schools.png",
     accentColor: "#7B5CB8",
     rules: [
       { category: "time_scheduled_hours", label: "School hours", value: "All non-educational blocked" },
@@ -119,9 +119,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "UK-based parent movement to delay smartphone access and build phone-free communities.",
     longDescription:
-      "Smartphone Free Childhood is one of the fastest-growing parental movements in the UK, with over 100,000 parents joining local WhatsApp groups to collectively delay smartphone access. Founded in 2024 by Daisy Greenwell and Clare Fernyhough, it provides community support for families choosing to resist peer pressure around early smartphone adoption. Through Phosra, the pledge becomes enforceable — restricting app installs, social media, and web browsing across all devices.",
+      "Smartphone Free Childhood is one of the fastest-growing parental movements in the UK, with over 100,000 parents joining local WhatsApp groups to collectively delay smartphone access. Founded in 2024 by Daisy Greenwell and Clare Fernyhough, it provides community support for families choosing to resist peer pressure around early smartphone adoption. Families using Phosra can enforce this pledge as platform-level rules — restricting app installs, social media, and web browsing across all devices.",
     iconEmoji: "🇬🇧",
-    iconUrl: "/standards/icons/smartphone-free-childhood.png",
+    iconUrl: "/movements/icons/smartphone-free-childhood.png",
     accentColor: "#1D4ED8",
     rules: [
       { category: "privacy_account_creation", label: "No smartphone apps", value: "Until secondary school", maxAge: 11 },
@@ -145,9 +145,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Family-centered framework balancing tech use with real-world connection and play.",
     longDescription:
-      "The Balance Project helps families find a sustainable middle ground on technology — not banning screens entirely, but building intentional habits around when, where, and how devices are used. Their framework emphasizes tech-free meals, bedtime routines, and outdoor time. Through Phosra, these habits become automated rules: scheduled downtime, per-app limits, and notification curfews enforced consistently across platforms.",
+      "The Balance Project helps families find a sustainable middle ground on technology — not banning screens entirely, but building intentional habits around when, where, and how devices are used. Their framework emphasizes tech-free meals, bedtime routines, and outdoor time. Families following this standard can use Phosra to turn these habits into automated rules: scheduled downtime, per-app limits, and notification curfews enforced consistently across platforms.",
     iconEmoji: "⚖️",
-    iconUrl: "/standards/icons/the-balance-project.png",
+    iconUrl: "/movements/icons/the-balance-project.png",
     accentColor: "#059669",
     rules: [
       { category: "time_daily_limit", label: "Balanced screen time", value: "Age-appropriate daily caps" },
@@ -175,9 +175,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Protecting children from manipulative design, exploitative marketing, and commercial surveillance.",
     longDescription:
-      "Fairplay (formerly the Campaign for a Commercial-Free Childhood) has been at the forefront of child protection advocacy for over 25 years, winning landmark victories against companies like Facebook and Google. Their standard focuses on shielding children from manipulative design patterns, targeted advertising, and commercial data exploitation. Through Phosra, these protections are enforced at the platform level — blocking targeted ads, disabling addictive design features, and restricting data collection.",
+      "Fairplay (formerly the Campaign for a Commercial-Free Childhood) has been at the forefront of child protection advocacy for over 25 years, winning landmark victories against companies like Facebook and Google. Their standard focuses on shielding children from manipulative design patterns, targeted advertising, and commercial data exploitation. Families using Phosra can enforce these protections at the platform level — blocking targeted ads, disabling addictive design features, and restricting data collection.",
     iconEmoji: "🎯",
-    iconUrl: "/standards/icons/fairplay-commercial-free.png",
+    iconUrl: "/movements/icons/fairplay-commercial-free.png",
     accentColor: "#DC2626",
     rules: [
       { category: "targeted_ad_block", label: "Block targeted ads", value: "All platforms" },
@@ -202,9 +202,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Age-based media ratings and digital citizenship framework for every platform.",
     longDescription:
-      "Common Sense Media is the largest media rating organization for families, providing age-based ratings for movies, games, apps, and websites used by over 100 million families worldwide. Their standard enforces age-appropriate content ratings, digital citizenship principles, and privacy protections based on their expert reviews. Through Phosra, Common Sense ratings are automatically applied as content filtering rules across streaming, gaming, and social platforms.",
+      "Common Sense Media is the largest media rating organization for families, providing age-based ratings for movies, games, apps, and websites used by over 100 million families worldwide. Their standard enforces age-appropriate content ratings, digital citizenship principles, and privacy protections based on their expert reviews. Phosra can translate these ratings into enforceable content filtering rules across streaming, gaming, and social platforms for families who adopt them.",
     iconEmoji: "⭐",
-    iconUrl: "/standards/icons/common-sense-media.png",
+    iconUrl: "/movements/icons/common-sense-media.png",
     accentColor: "#F59E0B",
     rules: [
       { category: "content_rating", label: "Common Sense ratings", value: "Age-matched filtering" },
@@ -228,7 +228,7 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Multi-million member parent network focused on Big Tech accountability and child safety.",
     longDescription:
-      "ParentsTogether is a 3-million-member parent organization that campaigns for Big Tech accountability, child online safety legislation, and family-friendly platform design. Their standard combines strong privacy protections with algorithmic transparency requirements — pushing platforms to prioritize child wellbeing over engagement metrics. Through Phosra, their advocacy becomes enforceable platform rules.",
+      "ParentsTogether is a 3-million-member parent organization that campaigns for Big Tech accountability, child online safety legislation, and family-friendly platform design. Their standard combines strong privacy protections with algorithmic transparency requirements — pushing platforms to prioritize child wellbeing over engagement metrics. With Phosra, families can turn these advocacy goals into enforceable platform rules.",
     iconEmoji: "👨‍👩‍👧‍👦",
     accentColor: "#8B5CF6",
     rules: [
@@ -256,7 +256,7 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     longDescription:
       "Protect Young Eyes provides families and schools with actionable digital safety education, including app reviews, device setup guides, and age-based technology roadmaps. Founded by Chris McKenna, they have presented to over 500,000 parents and 300,000 students. Their standard translates their device safety recommendations into enforceable rules — from web filtering and safe search to app restrictions and monitoring.",
     iconEmoji: "👁️",
-    iconUrl: "/standards/icons/protect-young-eyes.png",
+    iconUrl: "/movements/icons/protect-young-eyes.png",
     accentColor: "#0EA5E9",
     rules: [
       { category: "web_filter_level", label: "DNS-level filtering", value: "Strict" },
@@ -285,7 +285,7 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Pediatrician-backed screen time and media guidelines from the American Academy of Pediatrics.",
     longDescription:
-      "The AAP Family Media Plan is the gold standard in pediatric screen time guidance, developed by the American Academy of Pediatrics based on decades of child development research. It recommends zero screen time under 18 months, co-viewing for ages 2–5, and consistent limits with media-free zones for older children. Through Phosra, these clinical recommendations become real device-level rules — enforcing age-tiered time limits, content restrictions, and device-free periods.",
+      "The AAP Family Media Plan is the gold standard in pediatric screen time guidance, developed by the American Academy of Pediatrics based on decades of child development research. It recommends zero screen time under 18 months, co-viewing for ages 2–5, and consistent limits with media-free zones for older children. Families following these guidelines can use Phosra to enforce them as real device-level rules — including age-tiered time limits, content restrictions, and device-free periods.",
     iconEmoji: "🩺",
     accentColor: "#0891B2",
     rules: [
@@ -310,9 +310,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "World Health Organization guidelines on physical activity, sedentary behavior, and screen time for under-5s.",
     longDescription:
-      "The WHO Guidelines on Physical Activity, Sedentary Behaviour and Sleep for Children Under 5 provide evidence-based limits on screen exposure for the youngest children. They recommend zero sedentary screen time for infants under 1, no more than 1 hour for ages 2–4, and emphasize active play and quality sleep. Through Phosra, these international health standards are enforced as hard device limits during a child's earliest years.",
+      "The WHO Guidelines on Physical Activity, Sedentary Behaviour and Sleep for Children Under 5 provide evidence-based limits on screen exposure for the youngest children. They recommend zero sedentary screen time for infants under 1, no more than 1 hour for ages 2–4, and emphasize active play and quality sleep. With Phosra, families can enforce these international health standards as hard device limits during a child's earliest years.",
     iconEmoji: "🌍",
-    iconUrl: "/standards/icons/who-screen-time-guidelines.png",
+    iconUrl: "/movements/icons/who-screen-time-guidelines.png",
     accentColor: "#2563EB",
     rules: [
       { category: "time_daily_limit", label: "Screen time limits", value: "0 min (<1yr), 60 min (2–4yr)" },
@@ -335,9 +335,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Research institute providing evidence-based guidelines on children's digital media use.",
     longDescription:
-      "Children and Screens is the leading interdisciplinary research institute studying the effects of digital media on child development, founded by Dr. Pamela Hurst-Della Pietra. Their recommendations synthesize findings from neuroscience, psychology, and pediatrics into actionable guidelines covering screen time, social media, gaming, and sleep. Through Phosra, these research-based recommendations translate into measurable platform rules.",
+      "Children and Screens is the leading interdisciplinary research institute studying the effects of digital media on child development, founded by Dr. Pamela Hurst-Della Pietra. Their recommendations synthesize findings from neuroscience, psychology, and pediatrics into actionable guidelines covering screen time, social media, gaming, and sleep. Phosra can translate these research-based recommendations into measurable platform rules for families who adopt them.",
     iconEmoji: "🔬",
-    iconUrl: "/standards/icons/children-and-screens.png",
+    iconUrl: "/movements/icons/children-and-screens.png",
     accentColor: "#6366F1",
     rules: [
       { category: "time_daily_limit", label: "Evidence-based time caps", value: "Age-tiered limits" },
@@ -365,9 +365,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Advocating for technology that protects attention, mental health, and democratic values.",
     longDescription:
-      "The Center for Humane Technology, founded by former Google design ethicist Tristan Harris and featured in The Social Dilemma, works to realign technology with humanity. Their standard focuses on dismantling the attention economy for children — disabling algorithmic feeds, removing engagement-driven notifications, and blocking persuasive design patterns. Through Phosra, the humane technology vision becomes real protection at the device level.",
+      "The Center for Humane Technology, founded by former Google design ethicist Tristan Harris and featured in The Social Dilemma, works to realign technology with humanity. Their standard focuses on dismantling the attention economy for children — disabling algorithmic feeds, removing engagement-driven notifications, and blocking persuasive design patterns. With Phosra, families can enforce these protections at the device level.",
     iconEmoji: "🧠",
-    iconUrl: "/standards/icons/center-for-humane-technology.png",
+    iconUrl: "/movements/icons/center-for-humane-technology.png",
     accentColor: "#7C3AED",
     rules: [
       { category: "algo_feed_control", label: "No algorithmic feeds", value: "Chronological or off" },
@@ -392,9 +392,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Youth-led coalition demanding platforms be designed with young people's safety in mind.",
     longDescription:
-      "Design It For Us is a coalition of youth-led organizations including teens who have testified before Congress about the harms of social media. They demand that platforms be designed with young people's safety as a priority, not an afterthought. Their standard enforces the protections they have personally advocated for — strict privacy defaults, anti-exploitation safeguards, and meaningful age verification. Through Phosra, their generation's demands become platform-level rules.",
+      "Design It For Us is a coalition of youth-led organizations including teens who have testified before Congress about the harms of social media. They demand that platforms be designed with young people's safety as a priority, not an afterthought. Their standard enforces the protections they have personally advocated for — strict privacy defaults, anti-exploitation safeguards, and meaningful age verification. Families using Phosra can enforce these demands as platform-level rules.",
     iconEmoji: "🗣️",
-    iconUrl: "/standards/icons/design-it-for-us.png",
+    iconUrl: "/movements/icons/design-it-for-us.png",
     accentColor: "#EC4899",
     rules: [
       { category: "privacy_profile_visibility", label: "Private by default", value: "No public profiles" },
@@ -419,9 +419,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "beta",
     description: "Youth-founded organization promoting healthy social media habits and digital wellbeing.",
     longDescription:
-      "Log Off is a youth-founded nonprofit that empowers young people to take control of their digital lives through education, peer support, and advocacy. Founded by Emma Lembke at age 16 after personally experiencing the negative effects of social media, the organization has grown into a national movement. Their standard focuses on breaking compulsive usage patterns and building intentional digital habits. Through Phosra, these principles become scheduled breaks, usage caps, and feed controls.",
+      "Log Off is a youth-founded nonprofit that empowers young people to take control of their digital lives through education, peer support, and advocacy. Founded by Emma Lembke at age 16 after personally experiencing the negative effects of social media, the organization has grown into a national movement. Their standard focuses on breaking compulsive usage patterns and building intentional digital habits. Families following this standard can use Phosra to translate these principles into scheduled breaks, usage caps, and feed controls.",
     iconEmoji: "📴",
-    iconUrl: "/standards/icons/log-off-movement.png",
+    iconUrl: "/movements/icons/log-off-movement.png",
     accentColor: "#F97316",
     rules: [
       { category: "time_per_app_limit", label: "Social media caps", value: "30 min/day per app" },
@@ -449,9 +449,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "International framework ensuring children's digital rights, architects of the UK Age Appropriate Design Code.",
     longDescription:
-      "The 5Rights Foundation, led by Baroness Beeban Kidron, developed the framework behind the UK's Age Appropriate Design Code (Children's Code) — the most influential piece of child online safety regulation globally. Their five rights — to remove, to know, to safety, to digital literacy, and to agency — have shaped legislation in the UK, EU, and California. Through Phosra, these rights become enforceable platform rules: data deletion requests, algorithmic transparency, and privacy-by-default settings.",
+      "The 5Rights Foundation, led by Baroness Beeban Kidron, developed the framework behind the UK's Age Appropriate Design Code (Children's Code) — the most influential piece of child online safety regulation globally. Their five rights — to remove, to know, to safety, to digital literacy, and to agency — have shaped legislation in the UK, EU, and California. Phosra can translate these rights into enforceable platform rules for families who adopt them — including data deletion requests, algorithmic transparency, and privacy-by-default settings.",
     iconEmoji: "🔑",
-    iconUrl: "/standards/icons/5rights-foundation.png",
+    iconUrl: "/movements/icons/5rights-foundation.png",
     accentColor: "#14B8A6",
     rules: [
       { category: "data_deletion_request", label: "Right to remove", value: "Data erasure on demand" },
@@ -476,9 +476,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Campaigning to end online harms to children, founded after the death of Molly Russell.",
     longDescription:
-      "The Molly Rose Foundation was established by Ian Russell after his daughter Molly took her own life at age 14, influenced by harmful content on social media. The foundation campaigns to make the internet a safer place for children and was instrumental in shaping the UK Online Safety Act. Their standard focuses on blocking self-harm content, restricting algorithmic recommendation of harmful material, and ensuring platforms have robust CSAM reporting. Through Phosra, these protections are enforced across every connected platform.",
+      "The Molly Rose Foundation was established by Ian Russell after his daughter Molly took her own life at age 14, influenced by harmful content on social media. The foundation campaigns to make the internet a safer place for children and was instrumental in shaping the UK Online Safety Act. Their standard focuses on blocking self-harm content, restricting algorithmic recommendation of harmful material, and ensuring platforms have robust CSAM reporting. Families can use Phosra to enforce these protections across every connected platform.",
     iconEmoji: "🌹",
-    iconUrl: "/standards/icons/molly-rose-foundation.png",
+    iconUrl: "/movements/icons/molly-rose-foundation.png",
     accentColor: "#BE185D",
     rules: [
       { category: "web_category_block", label: "Block harmful content", value: "Self-harm, suicide, eating disorders" },
@@ -502,9 +502,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Australia's official online safety framework with age verification and platform accountability requirements.",
     longDescription:
-      "The Australian eSafety Commissioner is the world's first government agency dedicated to online safety, led by Commissioner Julie Inman Grant. Their framework includes mandatory age verification for social media (16+ under the Online Safety Amendment Act), industry codes of practice, and a complaints system for cyberbullying and harmful content. Through Phosra, the eSafety framework's protections are applied as platform-level rules — including strict age gating, content filtering, and cyberbullying safeguards.",
+      "The Australian eSafety Commissioner is the world's first government agency dedicated to online safety, led by Commissioner Julie Inman Grant. Their framework includes mandatory age verification for social media (16+ under the Online Safety Amendment Act), industry codes of practice, and a complaints system for cyberbullying and harmful content. Families using Phosra can apply these protections as platform-level rules — including strict age gating, content filtering, and cyberbullying safeguards.",
     iconEmoji: "🦘",
-    iconUrl: "/standards/icons/australian-esafety.png",
+    iconUrl: "/movements/icons/australian-esafety.png",
     accentColor: "#D97706",
     rules: [
       { category: "social_media_min_age", label: "Social media age gate", value: "16+ (Australian law)", maxAge: 16 },
@@ -528,9 +528,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "beta",
     description: "European strategy for a Better Internet for Kids with age-appropriate digital services.",
     longDescription:
-      "The EU Better Internet for Kids+ (BIK+) strategy is the European Commission's comprehensive framework for protecting children online while ensuring they can fully benefit from the digital world. Building on the EU's Digital Services Act and GDPR protections, BIK+ emphasizes age-appropriate design, digital literacy, and cross-border cooperation. Through Phosra, the BIK+ principles are enforced as GDPR-aligned privacy rules, age-appropriate content delivery, and transparent algorithmic controls.",
+      "The EU Better Internet for Kids+ (BIK+) strategy is the European Commission's comprehensive framework for protecting children online while ensuring they can fully benefit from the digital world. Building on the EU's Digital Services Act and GDPR protections, BIK+ emphasizes age-appropriate design, digital literacy, and cross-border cooperation. Families can use Phosra to enforce BIK+ principles as GDPR-aligned privacy rules, age-appropriate content delivery, and transparent algorithmic controls.",
     iconEmoji: "🇪🇺",
-    iconUrl: "/standards/icons/eu-better-internet-kids.png",
+    iconUrl: "/movements/icons/eu-better-internet-kids.png",
     accentColor: "#1E40AF",
     rules: [
       { category: "parental_consent_gate", label: "GDPR parental consent", value: "Required under 16" },
@@ -559,9 +559,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "National push for phone-free school policies using Yondr pouches and platform-level enforcement.",
     longDescription:
-      "The Phone-Free Schools movement has gained bipartisan political support across the US, UK, and Australia, with school districts implementing policies using Yondr magnetic pouches and platform-level restrictions. Governor Gavin Newsom signed the Phone-Free School Act in California (2024), and UNESCO recommended a global ban on smartphones in schools. Through Phosra, phone-free school policies extend beyond the physical pouch — enforcing app and notification blocks during school hours across every connected platform.",
+      "The Phone-Free Schools movement has gained bipartisan political support across the US, UK, and Australia, with school districts implementing policies using Yondr magnetic pouches and platform-level restrictions. Governor Gavin Newsom signed the Phone-Free School Act in California (2024), and UNESCO recommended a global ban on smartphones in schools. With Phosra, families and schools can extend phone-free policies beyond the physical pouch — enforcing app and notification blocks during school hours across every connected platform.",
     iconEmoji: "🔒",
-    iconUrl: "/standards/icons/phone-free-schools.png",
+    iconUrl: "/movements/icons/phone-free-schools.png",
     accentColor: "#4338CA",
     rules: [
       { category: "time_scheduled_hours", label: "School-day lockdown", value: "8 AM–3 PM block" },
@@ -585,9 +585,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Evidence-based campaign for school phone policies backed by research on academic achievement.",
     longDescription:
-      "Away For The Day provides schools and parents with research-backed resources to implement phone-free school policies. Their studies show that schools banning phones see improvements in test scores, social interaction, and mental health. Unlike enforcement-only approaches, Away For The Day includes parent education and community buy-in strategies. Through Phosra, the Away For The Day standard enforces school-hour restrictions while giving families data on how the policy impacts their child's device usage patterns.",
+      "Away For The Day provides schools and parents with research-backed resources to implement phone-free school policies. Their studies show that schools banning phones see improvements in test scores, social interaction, and mental health. Unlike enforcement-only approaches, Away For The Day includes parent education and community buy-in strategies. Families adopting this standard can use Phosra to enforce school-hour restrictions while getting data on how the policy impacts their child's device usage patterns.",
     iconEmoji: "📵",
-    iconUrl: "/standards/icons/away-for-the-day.png",
+    iconUrl: "/movements/icons/away-for-the-day.png",
     accentColor: "#EA580C",
     rules: [
       { category: "time_scheduled_hours", label: "School hours block", value: "Bell-to-bell restriction" },
@@ -614,9 +614,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Technology-driven approach to defending children from online sexual exploitation.",
     longDescription:
-      "Thorn, founded by Ashton Kutcher and Demi Moore, builds technology to defend children from sexual abuse and exploitation. Their tools help platforms detect CSAM (child sexual abuse material), identify victims, and disrupt trafficking networks. The Thorn Digital Defenders standard focuses on maximum protection against exploitation — strict contact controls, CSAM compliance, predator detection alerts, and image protection. Through Phosra, these critical safeguards are enforced across every connected platform.",
+      "Thorn, founded by Ashton Kutcher and Demi Moore, builds technology to defend children from sexual abuse and exploitation. Their tools help platforms detect CSAM (child sexual abuse material), identify victims, and disrupt trafficking networks. The Thorn Digital Defenders standard focuses on maximum protection against exploitation — strict contact controls, CSAM compliance, predator detection alerts, and image protection. Phosra can enforce these critical safeguards across every connected platform for families who adopt them.",
     iconEmoji: "🌳",
-    iconUrl: "/standards/icons/thorn-digital-defenders.png",
+    iconUrl: "/movements/icons/thorn-digital-defenders.png",
     accentColor: "#16A34A",
     rules: [
       { category: "csam_reporting", label: "CSAM detection", value: "Platform compliance mandatory" },
@@ -641,9 +641,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "beta",
     description: "Holding platforms accountable for facilitating sexual exploitation through their Dirty Dozen List.",
     longDescription:
-      "The National Center on Sexual Exploitation (NCOSE) publishes the annual Dirty Dozen List naming the top 12 facilitators of sexual exploitation, pressuring companies like Twitter/X, Amazon, and Pornhub to implement stronger protections. Their standard applies the most stringent exploitation-prevention rules available — blocking access to platforms with poor safety records, enforcing strict content filtering, and requiring verified age gates. Through Phosra, NCOSE's advocacy becomes real platform-level enforcement.",
+      "The National Center on Sexual Exploitation (NCOSE) publishes the annual Dirty Dozen List naming the top 12 facilitators of sexual exploitation, pressuring companies like Twitter/X, Amazon, and Pornhub to implement stronger protections. Their standard applies the most stringent exploitation-prevention rules available — blocking access to platforms with poor safety records, enforcing strict content filtering, and requiring verified age gates. Families using Phosra can turn NCOSE's advocacy into real platform-level enforcement.",
     iconEmoji: "🚫",
-    iconUrl: "/standards/icons/ncose-standard.png",
+    iconUrl: "/movements/icons/ncose-standard.png",
     accentColor: "#991B1B",
     rules: [
       { category: "web_category_block", label: "Block exploitation vectors", value: "Adult content, dating apps" },
@@ -671,9 +671,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Challenge families to match outdoor time with screen time — 1,000 hours per year outside.",
     longDescription:
-      "1000 Hours Outside, founded by Ginny Yurich, challenges families to spend as much time outdoors as the average child spends on screens — roughly 1,000 hours per year. The movement has grown to millions of participating families worldwide. Their standard enforces screen time reciprocity: for every hour of screen time, an equal amount of outdoor or active play time is encouraged. Through Phosra, this becomes real enforcement — daily screen limits calibrated to promote outdoor time, with scheduled device-free windows for outdoor play.",
+      "1000 Hours Outside, founded by Ginny Yurich, challenges families to spend as much time outdoors as the average child spends on screens — roughly 1,000 hours per year. The movement has grown to millions of participating families worldwide. Their standard enforces screen time reciprocity: for every hour of screen time, an equal amount of outdoor or active play time is encouraged. Families who adopt this challenge can use Phosra to enforce it — daily screen limits calibrated to promote outdoor time, with scheduled device-free windows for outdoor play.",
     iconEmoji: "🌲",
-    iconUrl: "/standards/icons/1000-hours-outside.png",
+    iconUrl: "/movements/icons/1000-hours-outside.png",
     accentColor: "#15803D",
     rules: [
       { category: "time_daily_limit", label: "Screen time budget", value: "Match outdoor hour-for-hour" },
@@ -697,9 +697,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "beta",
     description: "Richard Louv's movement connecting children with nature to combat 'Nature Deficit Disorder.'",
     longDescription:
-      "The Children & Nature Network (C&NN), co-founded by Richard Louv, author of Last Child in the Woods, works to reverse 'Nature Deficit Disorder' by connecting children with the natural world. Their research shows that outdoor time reduces ADHD symptoms, improves academic performance, and builds resilience. Their standard promotes device-free outdoor time, limits indoor entertainment, and encourages family nature experiences. Through Phosra, nature time is protected with scheduled device-free blocks.",
+      "The Children & Nature Network (C&NN), co-founded by Richard Louv, author of Last Child in the Woods, works to reverse 'Nature Deficit Disorder' by connecting children with the natural world. Their research shows that outdoor time reduces ADHD symptoms, improves academic performance, and builds resilience. Their standard promotes device-free outdoor time, limits indoor entertainment, and encourages family nature experiences. With Phosra, families can protect nature time with scheduled device-free blocks.",
     iconEmoji: "🍃",
-    iconUrl: "/standards/icons/children-nature-network.png",
+    iconUrl: "/movements/icons/children-nature-network.png",
     accentColor: "#166534",
     rules: [
       { category: "time_daily_limit", label: "Indoor screen limits", value: "Reduced daily caps" },
@@ -726,9 +726,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Promoting childhood independence and resilience by fighting overprotection — online and off.",
     longDescription:
-      "Let Grow, co-founded by Lenore Skenazy (author of Free-Range Kids) and Jonathan Haidt, advocates for giving children age-appropriate independence rather than wrapping them in bubble wrap. Their philosophy applies to digital life too — not zero screens, but graduated autonomy. Their standard starts strict for younger children and progressively loosens restrictions as kids demonstrate responsibility. Through Phosra, the Let Grow approach means age-adaptive rules that automatically relax as children mature.",
+      "Let Grow, co-founded by Lenore Skenazy (author of Free-Range Kids) and Jonathan Haidt, advocates for giving children age-appropriate independence rather than wrapping them in bubble wrap. Their philosophy applies to digital life too — not zero screens, but graduated autonomy. Their standard starts strict for younger children and progressively loosens restrictions as kids demonstrate responsibility. Families following this approach can use Phosra to set age-adaptive rules that automatically relax as children mature.",
     iconEmoji: "🌱",
-    iconUrl: "/standards/icons/let-grow.png",
+    iconUrl: "/movements/icons/let-grow.png",
     accentColor: "#65A30D",
     rules: [
       { category: "time_daily_limit", label: "Graduated time limits", value: "Relaxes with age" },
@@ -756,7 +756,7 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "Canada's centre for digital and media literacy, promoting critical thinking about online content.",
     longDescription:
-      "MediaSmarts is Canada's premier centre for digital and media literacy, providing educators and families with research-based resources to develop children's critical thinking skills around media, technology, and the internet. Their standard combines content literacy with practical protections — age-appropriate filtering paired with graduated exposure to help children develop their own judgment. Through Phosra, MediaSmarts' approach means smart filtering that teaches while it protects.",
+      "MediaSmarts is Canada's premier centre for digital and media literacy, providing educators and families with research-based resources to develop children's critical thinking skills around media, technology, and the internet. Their standard combines content literacy with practical protections — age-appropriate filtering paired with graduated exposure to help children develop their own judgment. Families can use Phosra to apply this approach as smart filtering that teaches while it protects.",
     iconEmoji: "🍁",
     accentColor: "#DC2626",
     rules: [
@@ -785,9 +785,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "beta",
     description: "Legal advocacy representing families harmed by social media, setting the strictest platform safety requirements.",
     longDescription:
-      "The Social Media Victims Law Center (SMVLC) represents families of children who have been harmed or died as a result of social media use, filing landmark lawsuits against Meta, TikTok, Snap, and other platforms. Their standard reflects the maximum protections that their legal cases have argued platforms should provide — the strictest possible safety configuration. Through Phosra, the SMVLC standard applies maximum-strength protections across all platforms.",
+      "The Social Media Victims Law Center (SMVLC) represents families of children who have been harmed or died as a result of social media use, filing landmark lawsuits against Meta, TikTok, Snap, and other platforms. Their standard reflects the maximum protections that their legal cases have argued platforms should provide — the strictest possible safety configuration. Families using Phosra can apply these maximum-strength protections across all platforms.",
     iconEmoji: "⚖️",
-    iconUrl: "/standards/icons/social-media-victims-law-center.png",
+    iconUrl: "/movements/icons/social-media-victims-law-center.png",
     accentColor: "#78350F",
     rules: [
       { category: "social_media_min_age", label: "Social media delay", value: "Until age 16", maxAge: 16 },
@@ -817,7 +817,7 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "active",
     description: "US Surgeon General's advisory on social media and youth mental health — translated into enforceable rules.",
     longDescription:
-      "In May 2023, US Surgeon General Dr. Vivek Murthy issued an unprecedented advisory declaring social media a 'profound risk of harm' to children's mental health, followed by a 2024 call for tobacco-style warning labels on social media platforms. The advisory recommends delaying social media, limiting usage, and requiring industry accountability. Through Phosra, the Surgeon General's recommendations become enforceable platform rules — not just suggestions, but real protections.",
+      "In May 2023, US Surgeon General Dr. Vivek Murthy issued an unprecedented advisory declaring social media a 'profound risk of harm' to children's mental health, followed by a 2024 call for tobacco-style warning labels on social media platforms. The advisory recommends delaying social media, limiting usage, and requiring industry accountability. Families can use Phosra to turn the Surgeon General's recommendations into enforceable platform rules — not just suggestions, but real protections.",
     iconEmoji: "🏛️",
     accentColor: "#1E3A5F",
     rules: [
@@ -847,9 +847,9 @@ export const STANDARDS_REGISTRY: StandardEntry[] = [
     status: "coming_soon",
     description: "Annual celebration where families, schools, and communities swap screen time for creative play.",
     longDescription:
-      "Screen-Free Week (formerly TV Turnoff Week) is an annual international event organized by Fairplay where families, schools, and communities unplug from entertainment screens for seven days and rediscover play, nature, and face-to-face connection. Through Phosra, Screen-Free Week can be adopted as a time-limited standard that automatically activates during the event week — enforcing strict entertainment blocks while still allowing educational and communication tools.",
+      "Screen-Free Week (formerly TV Turnoff Week) is an annual international event organized by Fairplay where families, schools, and communities unplug from entertainment screens for seven days and rediscover play, nature, and face-to-face connection. Families participating in Screen-Free Week can use Phosra to adopt it as a time-limited standard that automatically activates during the event week — enforcing strict entertainment blocks while still allowing educational and communication tools.",
     iconEmoji: "🎉",
-    iconUrl: "/standards/icons/screen-free-week.png",
+    iconUrl: "/movements/icons/screen-free-week.png",
     accentColor: "#A855F7",
     rules: [
       { category: "time_daily_limit", label: "Entertainment blackout", value: "0 min entertainment screens" },

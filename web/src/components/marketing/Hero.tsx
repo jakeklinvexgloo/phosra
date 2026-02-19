@@ -64,7 +64,7 @@ export function Hero() {
 
             <AnimatedSection delay={0.2}>
               <p className="text-lg sm:text-xl text-white/50 leading-relaxed mb-10 max-w-lg">
-                The enforcement layer for child safety. Set rules through one API {"\u2014"} Phosra pushes them to Netflix, YouTube, and {PLATFORM_STATS.marketingTotal} platforms, with built-in compliance for KOSA, COPPA, and the EU&nbsp;DSA.
+                The enforcement layer for child safety. Set rules through one API {"\u2014"} Phosra pushes them across {PLATFORM_STATS.marketingTotal} platforms, from streaming and gaming to devices and browsers, with built-in compliance for KOSA, COPPA, and the EU&nbsp;DSA.
               </p>
             </AnimatedSection>
 

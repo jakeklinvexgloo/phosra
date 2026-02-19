@@ -1397,15 +1397,15 @@ export const RECIPES: Recipe[] = [
   {
     id: "connect-parental-source",
     title: "Connecting a Parental Control App",
-    summary: "Link Bark as a source and push rules through its partner API",
+    summary: "Link a parental control source and push rules through its API",
     icon: "\u{1F4F1}",
-    tags: ["Sources", "Bark", "Partner API"],
-    scenario: "The Martinez family already uses Bark to monitor their daughter Mia's phone. Now they want to connect Bark to Phosra so they can push Phosra's policy rules through Bark's partner API. Since Bark has a partner_api integration, Phosra can automate the rule push. For apps without an API (like Net Nanny), Phosra would instead generate guided setup steps.",
-    actors: ["Parent App", "Phosra API", "Bark"],
-    flowDiagram: `Parent App          Phosra API            Bark
+    tags: ["Sources", "Managed API"],
+    scenario: "The Martinez family already uses a monitoring app to watch their daughter Mia's phone. Now they want to connect it to Phosra so they can push Phosra's policy rules through the app's API. Since this app has a managed API integration, Phosra can automate the rule push. For apps without an API (like Net Nanny), Phosra would instead generate guided setup steps.",
+    actors: ["Parent App", "Phosra API", "Source Provider"],
+    flowDiagram: `Parent App          Phosra API         Source Provider
     |                       |                       |
     |\u2500\u2500 POST /v1/sources \u2500\u2500>|                       |
-    |   (bark, creds)       |\u2500\u2500 verify partner \u2500\u2500\u2500>|
+    |   (source, creds)     |\u2500\u2500 verify credentials \u2500>|
     |                       |<\u2500\u2500 200 connected \u2500\u2500\u2500\u2500|
     |<\u2500\u2500 201 connected \u2500\u2500\u2500\u2500\u2500|                       |
     |\u2500\u2500 POST /sources/      |                       |
@@ -1420,30 +1420,30 @@ export const RECIPES: Recipe[] = [
         number: 1,
         method: "POST",
         endpoint: "/api/v1/sources",
-        description: "Connect Bark as a parental control source for Mia",
+        description: "Connect a parental control source for Mia",
         requestBody: `{
   "child_id": "ch_mia_01",
-  "source": "bark",
+  "source": "example-monitor",
   "credentials": {
-    "partner_token": "bark_ptr_abc123..."
+    "api_token": "tok_abc123..."
   },
   "auto_sync": true
 }`,
         responseBody: `{
-  "source_id": "src_bark_01",
+  "source_id": "src_monitor_01",
   "status": "connected",
-  "source": "bark",
-  "api_tier": "partner",
+  "source": "example-monitor",
+  "api_tier": "managed",
   "capabilities_linked": 9,
-  "note": "Connected via partner integration"
+  "note": "Connected via platform API"
 }`,
-        whatHappens: "Bark partner token is verified via the Bark Partner API. Phosra identifies 9 capabilities that Bark supports (monitoring, web filtering, screen time scheduling, etc.) and links them to Mia's profile."
+        whatHappens: "API credentials are verified with the source provider. Phosra identifies 9 capabilities that the source supports (monitoring, web filtering, screen time scheduling, etc.) and links them to Mia's profile."
       },
       {
         number: 2,
         method: "POST",
-        endpoint: "/api/v1/sources/src_bark_01/sync",
-        description: "Push all active rules to Bark in a single sync",
+        endpoint: "/api/v1/sources/src_monitor_01/sync",
+        description: "Push all active rules to the source in a single sync",
         requestBody: `{
   "sync_mode": "full"
 }`,
@@ -1458,13 +1458,13 @@ export const RECIPES: Recipe[] = [
     { "category": "purchase_approval", "status": "skipped" }
   ]
 }`,
-        whatHappens: "Full sync pushes all applicable rules. 9 rules were applied (some with limitations where Bark has partial support), 4 were skipped (capabilities Bark doesn't support like purchase approval). Each result shows the exact status."
+        whatHappens: "Full sync pushes all applicable rules. 9 rules were applied (some with limitations where the source has partial support), 4 were skipped (capabilities the source doesn't support like purchase approval). Each result shows the exact status."
       },
       {
         number: 3,
         method: "POST",
-        endpoint: "/api/v1/sources/src_bark_01/rules",
-        description: "Push an individual rule to Bark for fine-grained control",
+        endpoint: "/api/v1/sources/src_monitor_01/rules",
+        description: "Push an individual rule for fine-grained control",
         requestBody: `{
   "category": "web_filter_level",
   "value": "enabled"
@@ -1474,9 +1474,9 @@ export const RECIPES: Recipe[] = [
   "status": "applied",
   "support": "full",
   "verified": true,
-  "note": "Applied via partner integration"
+  "note": "Applied via platform API"
 }`,
-        whatHappens: "Individual rule push for more granular control. Bark confirms the web filter is applied with full support. The 'verified' flag confirms the rule is active on the Bark side."
+        whatHappens: "Individual rule push for more granular control. The source confirms the web filter is applied with full support. The 'verified' flag confirms the rule is active on the source side."
       }
     ],
     keyTeachingPoint: "Parental control apps are 'sources' that Phosra pushes rules through. Apps with APIs get automated syncing; apps without APIs get guided setup instructions. The API handles both transparently."

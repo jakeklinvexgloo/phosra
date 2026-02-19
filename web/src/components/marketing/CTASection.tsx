@@ -4,12 +4,11 @@ import Link from "next/link"
 import { AnimatedSection, WaveTexture, GradientMesh, PhosraBurst } from "./shared"
 import { getMovementsStats } from "@/lib/movements"
 
-const { totalAdoptions } = getMovementsStats()
+const { total: movementCount } = getMovementsStats()
 
 const TRUST_BADGES = [
   { icon: "🔒", label: "AES-256 Encrypted" },
-  { icon: "✓", label: "SOC 2 Type II" },
-  { icon: "✓", label: "COPPA Compliant" },
+  { icon: "✓", label: "COPPA Aligned" },
 ]
 
 export function CTASection() {
@@ -89,7 +88,7 @@ export function CTASection() {
                 <div className="mt-6 pt-6 border-t border-white/[0.06] flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
                   <p className="text-xs text-white/40">
-                    Trusted by {totalAdoptions.toLocaleString()}+ families and growing
+                    Supporting families across {movementCount} community movements
                   </p>
                 </div>
               </div>

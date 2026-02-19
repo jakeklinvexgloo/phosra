@@ -37,7 +37,7 @@ const VALUES = [
 ]
 
 const TRUST_BADGES = [
-  { label: "SOC 2 Type II", sublabel: "Compliant" },
+  { label: "SOC 2 Type II", sublabel: "In Progress" },
   { label: "COPPA", sublabel: "Verified" },
   { label: "AES-256-GCM", sublabel: "Encryption" },
   { label: "GDPR", sublabel: "Ready" },
@@ -168,7 +168,7 @@ export default function AboutPage() {
                 Define once, protect everywhere
               </h2>
               <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
-                Phosra is an open standard and infrastructure API for child safety. Parent-facing apps like Bark, Qustodio, and Aura integrate once with the Phosra API. Phosra then translates and enforces policies across every connected platform — from Netflix parental locks to NextDNS web filters to Android device restrictions. One set of rules. Every platform. Always in sync.
+                Phosra is an open standard and infrastructure API for child safety. Parent-facing apps integrate once with the Phosra API to extend enforcement everywhere. Phosra translates and enforces policies across every connected platform — from streaming parental locks to DNS-level web filters to mobile device restrictions. One set of rules. Every platform. Always in sync.
               </p>
             </div>
           </AnimatedSection>
@@ -183,18 +183,18 @@ export default function AboutPage() {
               Community Standards
             </p>
             <h2 className="text-2xl sm:text-3xl font-display text-foreground mb-6">
-              The enforcement engine behind the movements parents trust
+              The enforcement engine for the standards families follow
             </h2>
             <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
-              Phosra isn&apos;t just infrastructure — it&apos;s the technology that makes social pledges stick. When Wait Until 8th says &ldquo;no smartphones before 8th grade,&rdquo; Phosra is the enforcement layer that makes that promise real at the device level. When The Anxious Generation defines Four Norms for phone-free childhood, Phosra translates those norms into verified, cross-platform protection.
+              Phosra isn&apos;t just infrastructure — it&apos;s the technology that makes social pledges stick. When a family commits to &ldquo;no smartphones before 8th grade,&rdquo; Phosra is the enforcement layer that makes that commitment stick at the device level. When families adopt norms for phone-free childhood, Phosra translates those norms into verified, cross-platform protection.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-6">
             {[
               {
-                title: "Movements define",
-                description: "Organizations like Wait Until 8th and The Anxious Generation define standards — packaged rule sets based on their values and research.",
+                title: "Standards exist",
+                description: "Community standards like screen-free schools and delayed smartphone access set the bar for families — packaged rule sets based on research and shared values.",
               },
               {
                 title: "Families adopt",

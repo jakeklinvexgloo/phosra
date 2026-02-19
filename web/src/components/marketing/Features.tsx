@@ -297,11 +297,11 @@ function ContentFilterMockup() {
 
 function EnforcementMockup() {
   const platforms = [
-    { name: "Netflix", status: "applied", rules: 6, time: "2s ago", laws: ["KOSA", "EU DSA"] },
-    { name: "Kindle Fire", status: "applied", rules: 8, time: "2s ago", laws: ["COPPA"] },
-    { name: "NextDNS", status: "applied", rules: 5, time: "5s ago", laws: ["KOSA", "COPPA"] },
-    { name: "YouTube", status: "applied", rules: 5, time: "3s ago", laws: ["KOSA", "COPPA", "DSA"] },
-    { name: "Microsoft", status: "pending", rules: 4, time: "retrying...", laws: ["COPPA"] },
+    { name: "Streaming", status: "applied", rules: 6, time: "2s ago", laws: ["KOSA", "EU DSA"] },
+    { name: "Devices", status: "applied", rules: 8, time: "2s ago", laws: ["COPPA"] },
+    { name: "DNS Filter", status: "applied", rules: 5, time: "5s ago", laws: ["KOSA", "COPPA"] },
+    { name: "Video", status: "applied", rules: 5, time: "3s ago", laws: ["KOSA", "COPPA", "DSA"] },
+    { name: "Family Link", status: "pending", rules: 4, time: "retrying...", laws: ["COPPA"] },
   ]
 
   return (

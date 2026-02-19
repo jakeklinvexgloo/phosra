@@ -22,7 +22,7 @@ export const PARENTAL_CONTROLS_REGISTRY: ParentalControlEntry[] = [
       "Bark Jr (free) covers basic monitoring. Bark Premium starts at $14/mo or $99/yr and includes full monitoring, screen time management, and location tracking.",
     apiAvailability: "partner_api",
     apiDetails:
-      "Bark offers a partner integration API for managed device platforms and school districts. Access requires a partnership agreement.",
+      "Bark offers a documented API for managed device platforms and school districts. Access may require an integration agreement.",
     devices: {
       iOS: true,
       android: true,
@@ -71,7 +71,7 @@ export const PARENTAL_CONTROLS_REGISTRY: ParentalControlEntry[] = [
       "Free plan covers 1 device with basic features. Premium Small ($54.95/yr) covers 5 devices; Premium Medium ($96.95/yr) covers 10; Premium Large ($137.95/yr) covers 15.",
     apiAvailability: "public_api",
     apiDetails:
-      "Qustodio provides a documented REST API for partners and enterprise customers. Endpoints cover device management, rule configuration, and activity reports.",
+      "Qustodio provides a documented REST API for integrators and enterprise customers. Endpoints cover device management, rule configuration, and activity reports.",
     devices: {
       iOS: true,
       android: true,
@@ -212,7 +212,7 @@ export const PARENTAL_CONTROLS_REGISTRY: ParentalControlEntry[] = [
       "Monthly plans starting at $49/mo (includes device, cellular plan, and Bark Premium). No upfront device cost.",
     apiAvailability: "partner_api",
     apiDetails:
-      "Inherits Bark's partner API capabilities. Device-level controls are managed through the Bark platform.",
+      "Inherits Bark's managed API capabilities. Device-level controls are managed through the Bark platform.",
     devices: {
       iOS: false,
       android: true,
@@ -306,7 +306,7 @@ export const PARENTAL_CONTROLS_REGISTRY: ParentalControlEntry[] = [
       "Enterprise pricing for schools (per-student licensing). Securly Home is included for parents of enrolled students at no additional cost.",
     apiAvailability: "partner_api",
     apiDetails:
-      "Securly provides partner APIs for SIS integration, Google Workspace, and Microsoft 365 for Education environments.",
+      "Securly provides documented APIs for SIS integration, Google Workspace, and Microsoft 365 for Education environments.",
     devices: {
       iOS: true,
       android: true,
@@ -626,7 +626,7 @@ export const PARENTAL_CONTROLS_REGISTRY: ParentalControlEntry[] = [
       "Gabb Phone Plus at $99.99 (device) + monthly plans starting at $24.99/mo (includes cellular service and parental controls).",
     apiAvailability: "partner_api",
     apiDetails:
-      "Gabb offers a partner API for integration with school and family management platforms. Access is available through partnership agreements.",
+      "Gabb offers a documented API for integration with school and family management platforms. Access may require an API access agreement.",
     devices: {
       iOS: false,
       android: true,
@@ -673,7 +673,7 @@ export const PARENTAL_CONTROLS_REGISTRY: ParentalControlEntry[] = [
       "Pinwheel phones from $99 (device). Caregiver subscription at $9.98/mo (includes app curation, controls, and cellular plan add-on).",
     apiAvailability: "partner_api",
     apiDetails:
-      "Pinwheel offers partner API access for curated app providers and child safety platforms seeking integration.",
+      "Pinwheel offers managed API access for curated app providers and child safety platforms seeking integration.",
     devices: {
       iOS: false,
       android: true,

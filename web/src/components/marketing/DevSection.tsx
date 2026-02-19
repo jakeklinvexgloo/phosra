@@ -45,16 +45,16 @@ const result = await client.setup.quick({
 
 console.log(\`\${result.rulesGenerated} rules enforced\`);`,
 
-  response: `// 200 OK — 24 rules enforced across 4 platforms
+  response: `// 200 OK — 24 rules generated across 4 platform categories
 {
   "family_id": "fam_8x2kP4nL",
   "child": { "name": "Emma", "age": 8 },
   "rules_generated": 24,
   "enforcement": [
-    { "Netflix":     "applied", "rules": 6 },
-    { "Kindle Fire": "applied", "rules": 8 },
-    { "NextDNS":     "applied", "rules": 5 },
-    { "YouTube":     "applied", "rules": 5 }
+    { "Streaming":   "supported", "rules": 6 },
+    { "Devices":     "supported", "rules": 8 },
+    { "DNS Filter":  "supported", "rules": 5 },
+    { "Video":       "supported", "rules": 5 }
   ]
 }`,
 }
@@ -70,7 +70,7 @@ const LANG_TABS: { key: LangTab; label: string }[] = [
 const METRICS = [
   { value: "< 100ms", label: "p50 latency" },
   { value: "99.9%", label: "uptime" },
-  { value: "SOC 2", label: "certified" },
+  { value: "45", label: "safety categories" },
 ]
 
 /* ── Syntax highlighting ────────────────── */
@@ -414,7 +414,7 @@ export function DevSection() {
             </h2>
 
             <p className="text-white/60 text-base sm:text-lg leading-relaxed mb-10 max-w-sm sm:max-w-lg">
-              Quick Setup creates a family, adds a child, generates 24 age-appropriate rules, and pushes them to every connected platform &mdash; Netflix, Kindle Fire, NextDNS, YouTube &mdash; all in a single request.
+              Quick Setup creates a family, adds a child, generates 24 age-appropriate rules, and pushes them to every connected platform &mdash; across streaming, devices, DNS filters, and more &mdash; all in a single request.
             </p>
 
             <div className="flex flex-wrap gap-4">

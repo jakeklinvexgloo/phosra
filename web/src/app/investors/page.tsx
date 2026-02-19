@@ -126,7 +126,7 @@ export default function InvestorsPage() {
 
             <p>
               Phosra is the infrastructure that makes this possible. We&apos;re not another parental control
-              app — we&apos;re the layer underneath. Parents set rules once. Apps like Bark and Qustodio
+              app — we&apos;re the layer underneath. Parents set rules once. Parental control apps
               plug in to extend their reach. Platforms connect to offer compliant, interoperable controls.
               Rules enforce across 190+ services automatically.
             </p>
@@ -142,10 +142,10 @@ export default function InvestorsPage() {
 
             <p>
               Today, Phosra tracks 67 of these child safety laws across 25+ jurisdictions and maps each
-              one to specific enforcement actions. We support 28 community movements — from Four Norms to
-              Wait Until 8th — adopted by over 50,000 families and 2,000 schools. We&apos;ve published PCSS
-              v1.0, the open specification for how parental controls should work across platforms. The
-              technical standard exists. The infrastructure is live.
+              one to specific enforcement actions. Our rule engine maps to 28 community standards — from
+              screen-free classrooms to delayed smartphone access — representing a growing movement of
+              families and schools. We&apos;ve published PCSS v1.0, the open specification for how parental
+              controls should work across platforms. The technical standard exists. The infrastructure is live.
             </p>
 
             <p>
@@ -349,7 +349,7 @@ export default function InvestorsPage() {
               Interested in learning more?
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              We&apos;re building the infrastructure for a safer internet. If you&apos;re an investor, partner, or policy maker, we&apos;d love to connect.
+              We&apos;re building the infrastructure for a safer internet. If you&apos;re an investor, collaborator, or policy maker, we&apos;d love to connect.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button

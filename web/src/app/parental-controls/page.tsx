@@ -176,7 +176,7 @@ export default function ParentalControlsHubPage() {
                 icon: Smartphone,
                 title: "Connect your apps",
                 description:
-                  "Link your existing parental control apps — Bark, Qustodio, Apple Screen Time, and more — to Phosra via API or guided setup.",
+                  "Connect your existing parental control tools to Phosra via API or guided setup — from monitoring apps to built-in device controls.",
               },
               {
                 number: "02",

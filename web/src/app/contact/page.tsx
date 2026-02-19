@@ -20,10 +20,10 @@ const CHANNELS = [
   },
   {
     icon: Handshake,
-    title: "Partnerships",
+    title: "Integrations",
     description: "Integrate Phosra into your parental control app, EdTech platform, or device management system.",
     email: "partners@phosra.com",
-    cta: "Explore Partnership",
+    cta: "Discuss Integration",
   },
   {
     icon: Users,
@@ -44,7 +44,7 @@ const CHANNELS = [
   {
     icon: Newspaper,
     title: "Media & Press",
-    description: "Press inquiries, media kits, spokesperson requests, and partnership announcements.",
+    description: "Press inquiries, media kits, spokesperson requests, and product announcements.",
     email: "press@phosra.com",
     cta: "Press Inquiries",
   },

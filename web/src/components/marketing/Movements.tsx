@@ -154,8 +154,8 @@ export function Movements() {
               {[
                 {
                   step: "01",
-                  title: "Movements define",
-                  description: "Organizations like Wait Until 8th and The Anxious Generation define rule sets based on their values and research.",
+                  title: "Standards exist",
+                  description: "Community standards like screen-free schools and delayed smartphone access define rule sets based on research and shared values.",
                 },
                 {
                   step: "02",
@@ -165,7 +165,7 @@ export function Movements() {
                 {
                   step: "03",
                   title: "Phosra enforces",
-                  description: "Rules push to every connected platform — Netflix, YouTube, NextDNS, and more. Verified, not just promised.",
+                  description: "Rules push to every connected platform — across streaming, gaming, devices, and more. Verified, not just promised.",
                 },
               ].map((item) => (
                 <div key={item.step} className="text-center sm:text-left">
