@@ -223,13 +223,28 @@ export default function OutreachPipeline() {
       setExpandedActivities([])
     }
 
-    // Fetch Gmail threads if connected and contact has email
+    // Fetch Gmail threads + drafts if connected and contact has email
     if (gmailConnected && contact.email) {
       setGmailLoading(true)
       try {
         const token = (await getToken()) ?? undefined
-        const result: GmailListResponse = await api.searchGmail(`to:${contact.email} OR from:${contact.email}`, 5, token)
-        setGmailThreads(result.messages || [])
+        // Search sent/received messages AND drafts in parallel
+        const [messagesResult, draftsResult] = await Promise.allSettled([
+          api.searchGmail(`to:${contact.email} OR from:${contact.email}`, 10, token),
+          api.searchGmail(`is:draft to:${contact.email}`, 10, token),
+        ])
+        const messages: GmailMessage[] = messagesResult.status === "fulfilled" ? (messagesResult.value as GmailListResponse).messages || [] : []
+        const drafts: GmailMessage[] = draftsResult.status === "fulfilled" ? (draftsResult.value as GmailListResponse).messages || [] : []
+        // Merge and deduplicate by ID, drafts first
+        const seen = new Set<string>()
+        const merged: GmailMessage[] = []
+        for (const msg of [...drafts, ...messages]) {
+          if (!seen.has(msg.id)) {
+            seen.add(msg.id)
+            merged.push(msg)
+          }
+        }
+        setGmailThreads(merged)
       } catch {
         setGmailThreads([])
       } finally {

@@ -188,7 +188,7 @@ export function ContactDetail({
           {gmailConnected && contact.email && (
             <div>
               <div className="text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider mb-2">
-                Email History
+                {contact.email_status === "draft_ready" ? "Drafts & Email History" : "Email History"}
               </div>
               {gmailLoading ? (
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -196,13 +196,19 @@ export function ContactDetail({
                   Loading threads...
                 </div>
               ) : gmailThreads.length === 0 ? (
-                <div className="text-xs text-muted-foreground">No email history found.</div>
+                <div className="text-xs text-muted-foreground">
+                  {contact.email_status === "draft_ready"
+                    ? "No drafts found. Compose a new email below or create a draft in Gmail."
+                    : "No email history found."}
+                </div>
               ) : (
                 <div className="space-y-0.5 rounded-lg border border-border overflow-hidden">
-                  {gmailThreads.map((msg) => (
+                  {gmailThreads.map((msg) => {
+                    const isDraft = msg.labels?.includes("DRAFT")
+                    return (
                     <div key={msg.id}>
                       <div
-                        className="flex items-center gap-2 px-3 py-2 text-xs cursor-pointer hover:bg-muted/30 transition-colors"
+                        className={`flex items-center gap-2 px-3 py-2 text-xs cursor-pointer hover:bg-muted/30 transition-colors ${isDraft ? "bg-purple-50/50 dark:bg-purple-900/5" : ""}`}
                         onClick={() => onExpandMessage(msg)}
                       >
                         <div className="flex items-center w-4 flex-shrink-0">
@@ -212,10 +218,15 @@ export function ContactDetail({
                             <ChevronRight className="w-3 h-3 text-muted-foreground" />
                           )}
                         </div>
+                        {isDraft && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 flex-shrink-0">
+                            DRAFT
+                          </span>
+                        )}
                         <div className="w-20 flex-shrink-0 truncate font-medium text-foreground">
-                          {extractName(msg.from)}
+                          {isDraft ? "Me" : extractName(msg.from)}
                         </div>
-                        <div className="flex-1 truncate text-muted-foreground">{msg.subject}</div>
+                        <div className="flex-1 truncate text-muted-foreground">{msg.subject || "(no subject)"}</div>
                         <div className="text-muted-foreground tabular-nums flex-shrink-0">{formatGmailDate(msg.date)}</div>
                       </div>
                       {expandedMessageId === msg.id && expandedMessage && (
@@ -233,18 +244,29 @@ export function ContactDetail({
                             <div className="text-xs text-muted-foreground border-t border-border pt-2">{expandedMessage.snippet}</div>
                           ) : null}
                           <div className="flex gap-3 mt-2 pt-2 border-t border-border">
-                            <button
-                              onClick={() => {
-                                setShowCompose(true)
-                                setComposeSubject(`Re: ${expandedMessage.subject}`)
-                              }}
-                              className="text-xs text-foreground hover:underline flex items-center gap-1"
-                            >
-                              <Send className="w-2.5 h-2.5" /> Reply
-                            </button>
+                            {expandedMessage.labels?.includes("DRAFT") ? (
+                              <a
+                                href={`https://mail.google.com/mail/u/0/#drafts/${expandedMessage.id}`}
+                                target="_blank"
+                                rel="noopener"
+                                className="text-xs text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 font-medium"
+                              >
+                                <ExternalLink className="w-2.5 h-2.5" /> Edit draft in Gmail
+                              </a>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setShowCompose(true)
+                                  setComposeSubject(`Re: ${expandedMessage.subject}`)
+                                }}
+                                className="text-xs text-foreground hover:underline flex items-center gap-1"
+                              >
+                                <Send className="w-2.5 h-2.5" /> Reply
+                              </button>
+                            )}
                             {expandedMessage.thread_id && (
                               <a
-                                href={`https://mail.google.com/mail/u/0/#inbox/${expandedMessage.thread_id}`}
+                                href={`https://mail.google.com/mail/u/0/#${expandedMessage.labels?.includes("DRAFT") ? "drafts" : "inbox"}/${expandedMessage.thread_id}`}
                                 target="_blank"
                                 rel="noopener"
                                 className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
@@ -256,7 +278,8 @@ export function ContactDetail({
                         </div>
                       )}
                     </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>
