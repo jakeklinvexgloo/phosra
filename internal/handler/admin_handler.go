@@ -1,9 +1,16 @@
 package handler
 
 import (
+	"bytes"
+	"context"
 	"errors"
+	"fmt"
 	"net/http"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -242,8 +249,24 @@ func (h *AdminHandler) ListWorkerRuns(w http.ResponseWriter, r *http.Request) {
 	httputil.JSON(w, http.StatusOK, runs)
 }
 
+// workerScripts maps worker IDs to their script paths (relative to repo root).
+var workerScripts = map[string]string{
+	"legislation-monitor":  "scripts/legislation-scanner.mjs",
+	"outreach-tracker":     "scripts/workers/outreach-tracker.mjs",
+	"news-monitor":         "scripts/workers/news-monitor.mjs",
+	"competitive-intel":    "scripts/workers/competitive-intel.mjs",
+	"compliance-alerter":   "scripts/workers/compliance-alerter.mjs",
+	"provider-api-monitor": "scripts/workers/provider-api-monitor.mjs",
+}
+
 func (h *AdminHandler) TriggerWorker(w http.ResponseWriter, r *http.Request) {
 	workerID := chi.URLParam(r, "workerID")
+
+	scriptPath, ok := workerScripts[workerID]
+	if !ok {
+		httputil.Error(w, http.StatusBadRequest, "unknown worker: "+workerID)
+		return
+	}
 
 	run := &domain.WorkerRun{
 		WorkerID:    workerID,
@@ -255,7 +278,73 @@ func (h *AdminHandler) TriggerWorker(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Spawn the worker script in a background goroutine.
+	go h.executeWorker(run.ID, workerID, scriptPath)
+
 	httputil.Created(w, run)
+}
+
+// executeWorker runs the Node.js worker script as a subprocess and records the result.
+func (h *AdminHandler) executeWorker(runID uuid.UUID, workerID, scriptPath string) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	// Resolve script path relative to working directory
+	absPath, err := filepath.Abs(scriptPath)
+	if err != nil {
+		h.completeWorkerRun(runID, domain.WorkerFailed, "", 0, "failed to resolve script path: "+err.Error())
+		return
+	}
+
+	if _, err := os.Stat(absPath); os.IsNotExist(err) {
+		h.completeWorkerRun(runID, domain.WorkerFailed, "", 0, "script not found: "+scriptPath)
+		return
+	}
+
+	cmd := exec.CommandContext(ctx, "node", absPath)
+	cmd.Env = append(os.Environ(),
+		fmt.Sprintf("RUN_ID=%s", runID.String()),
+		fmt.Sprintf("WORKER_ID=%s", workerID),
+	)
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	log.Info().Str("worker", workerID).Str("run_id", runID.String()).Msg("executing worker script")
+
+	if err := cmd.Run(); err != nil {
+		errMsg := strings.TrimSpace(stderr.String())
+		if errMsg == "" {
+			errMsg = err.Error()
+		}
+		// Truncate to 2000 chars
+		if len(errMsg) > 2000 {
+			errMsg = errMsg[:2000]
+		}
+		h.completeWorkerRun(runID, domain.WorkerFailed, strings.TrimSpace(stdout.String()), 0, errMsg)
+		log.Error().Str("worker", workerID).Err(err).Str("stderr", errMsg).Msg("worker script failed")
+		return
+	}
+
+	// The script itself updates the run record with output_summary and items_processed.
+	// But if it didn't (e.g. for simple scripts), we mark it completed here as a fallback.
+	latest, _ := h.workers.GetLatestRun(context.Background(), workerID)
+	if latest != nil && latest.ID == runID && latest.Status == domain.WorkerRunning {
+		output := strings.TrimSpace(stdout.String())
+		if len(output) > 2000 {
+			output = output[:2000]
+		}
+		h.completeWorkerRun(runID, domain.WorkerCompleted, output, 0, "")
+	}
+
+	log.Info().Str("worker", workerID).Str("run_id", runID.String()).Msg("worker script completed")
+}
+
+func (h *AdminHandler) completeWorkerRun(runID uuid.UUID, status domain.WorkerRunStatus, summary string, items int, errMsg string) {
+	if err := h.workers.CompleteRun(context.Background(), runID, status, summary, items, errMsg); err != nil {
+		log.Error().Err(err).Str("run_id", runID.String()).Msg("failed to update worker run status")
+	}
 }
 
 // ── Google OAuth ────────────────────────────────────────────────

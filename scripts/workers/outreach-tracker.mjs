@@ -4,15 +4,14 @@
  * outreach-tracker.mjs
  *
  * Daily worker that identifies contacts needing follow-up and generates
- * a summary of overdue outreach items. Optionally uses Claude API to
- * draft follow-up messages.
+ * a summary of overdue outreach items.
  *
  * Usage:
  *   DATABASE_URL=postgres://... node scripts/workers/outreach-tracker.mjs
  *
  * Environment:
- *   DATABASE_URL       — Postgres connection string
- *   ANTHROPIC_API_KEY  — (optional) for Claude-powered follow-up drafts
+ *   DATABASE_URL  — Postgres connection string
+ *   RUN_ID        — (optional) Existing run ID from the API trigger
  */
 
 import pg from "pg"
@@ -23,15 +22,18 @@ const DATABASE_URL =
 
 async function main() {
   const pool = new pg.Pool({ connectionString: DATABASE_URL })
-  const runId = crypto.randomUUID()
+  const runId = process.env.RUN_ID || crypto.randomUUID()
+  const hasExistingRun = !!process.env.RUN_ID
 
   try {
-    // Record worker run start
-    await pool.query(
-      `INSERT INTO admin_worker_runs (id, worker_id, status, trigger_type)
-       VALUES ($1, 'outreach-tracker', 'running', $2)`,
-      [runId, process.env.GITHUB_ACTIONS ? "cron" : "manual"]
-    )
+    // Only create a new run record if one wasn't passed in from the API
+    if (!hasExistingRun) {
+      await pool.query(
+        `INSERT INTO admin_worker_runs (id, worker_id, status, trigger_type, started_at)
+         VALUES ($1, 'outreach-tracker', 'running', $2, NOW())`,
+        [runId, process.env.GITHUB_ACTIONS ? "cron" : "manual"]
+      )
+    }
 
     // Find contacts past their follow-up date
     const { rows: overdue } = await pool.query(
@@ -41,7 +43,7 @@ async function main() {
        ORDER BY next_followup_at ASC`
     )
 
-    // Find contacts in active pipeline (reached_out, in_conversation) with no recent activity
+    // Find contacts in active pipeline with no recent activity
     const { rows: stale } = await pool.query(
       `SELECT id, name, org, status, last_contact_at
        FROM admin_outreach_contacts
@@ -70,22 +72,20 @@ async function main() {
     }
 
     const outputSummary = summary.join("\n")
-    console.log("\n📋 Outreach Tracker Report\n")
-    console.log(outputSummary)
+    const itemCount = overdue.length + stale.length
 
     // Complete worker run
     await pool.query(
       `UPDATE admin_worker_runs
        SET status = 'completed', completed_at = NOW(), output_summary = $1, items_processed = $2
        WHERE id = $3`,
-      [outputSummary, overdue.length + stale.length, runId]
+      [outputSummary, itemCount, runId]
     )
 
-    console.log(`\n✅ Outreach tracker complete. ${overdue.length} overdue, ${stale.length} stale.`)
+    console.log(outputSummary)
   } catch (err) {
-    console.error("❌ Outreach tracker failed:", err)
+    console.error("Outreach tracker failed:", err.message)
 
-    // Record failure
     await pool
       .query(
         `UPDATE admin_worker_runs SET status = 'failed', completed_at = NOW(), error_message = $1 WHERE id = $2`,

@@ -214,68 +214,116 @@ function generateReport(scanResult, currentLawCount) {
   return report
 }
 
+// DB run tracking (optional — used when triggered from admin API)
+async function updateRun(runId, status, summary, items, errMsg) {
+  if (!runId) return
+  try {
+    // pg is installed in scripts/workers/node_modules
+    const { createRequire } = await import("module")
+    const require = createRequire(resolve(__dirname, "workers/package.json"))
+    const pg = require("pg")
+    const DATABASE_URL = process.env.DATABASE_URL ||
+      "postgres://guardiangate:guardiangate_dev@localhost:5432/guardiangate"
+    const pool = new pg.Pool({ connectionString: DATABASE_URL })
+    await pool.query(
+      `UPDATE admin_worker_runs
+       SET status = $1, completed_at = NOW(), output_summary = $2, items_processed = $3, error_message = $4
+       WHERE id = $5`,
+      [status, summary || "", items || 0, errMsg || "", runId]
+    )
+    await pool.end()
+  } catch {
+    // Non-fatal: run tracking is optional
+  }
+}
+
 // Main
 async function main() {
-  console.log("🔍 Starting legislation scan...")
+  const runId = process.env.RUN_ID || null
+
+  console.log("Starting legislation scan...")
 
   // 1. Extract current laws
   const currentLaws = extractCurrentLaws()
-  console.log(`📋 Found ${currentLaws.length} laws in registry`)
+  console.log(`Found ${currentLaws.length} laws in registry`)
 
-  // 2. Build research prompt
+  // 2. Check for API key
+  if (!process.env.ANTHROPIC_API_KEY) {
+    const msg = `Scanned registry: ${currentLaws.length} laws present. Claude API key not configured — skipping live research. Set ANTHROPIC_API_KEY to enable.`
+    console.log(msg)
+    await updateRun(runId, "completed", msg, currentLaws.length, "")
+    return
+  }
+
+  // 3. Build research prompt
   const prompt = buildResearchPrompt(currentLaws)
 
-  // 3. Call Claude API
-  console.log("🤖 Querying Claude API for legislation updates...")
+  // 4. Call Claude API
+  console.log("Querying Claude API for legislation updates...")
   let responseText
   try {
     responseText = await callClaude(prompt)
   } catch (error) {
-    console.error(`❌ API call failed: ${error.message}`)
+    const errMsg = `API call failed: ${error.message}`
+    console.error(errMsg)
+    await updateRun(runId, "failed", "", 0, errMsg)
     process.exit(1)
   }
 
-  // 4. Parse response
-  console.log("📝 Parsing response...")
+  // 5. Parse response
+  console.log("Parsing response...")
   const scanResult = parseResponse(responseText)
   if (!scanResult) {
-    console.error("❌ Could not parse scan results")
+    const errMsg = "Could not parse scan results"
+    console.error(errMsg)
+    await updateRun(runId, "failed", "", 0, errMsg)
     process.exit(1)
   }
 
-  // 5. Generate report
+  // 6. Generate report
   const hasChanges =
     (scanResult.newLaws?.length > 0) ||
     (scanResult.statusChanges?.length > 0)
 
   const forceReport = process.env.FORCE_REPORT === "true"
 
+  const summaryLines = []
+  let itemCount = 0
+
   if (hasChanges || forceReport) {
     const report = generateReport(scanResult, currentLaws.length)
     writeFileSync(REPORT_PATH, report, "utf-8")
-    console.log(`📄 Report written to ${REPORT_PATH}`)
+    console.log(`Report written to ${REPORT_PATH}`)
 
     if (scanResult.newLaws?.length > 0) {
-      console.log(`\n🆕 New laws found: ${scanResult.newLaws.length}`)
+      summaryLines.push(`${scanResult.newLaws.length} new laws found:`)
       for (const law of scanResult.newLaws) {
-        console.log(`   - ${law.shortName} (${law.jurisdiction}) [${law.significance}]`)
+        summaryLines.push(`  - ${law.shortName} (${law.jurisdiction}) [${law.significance}]`)
       }
+      itemCount += scanResult.newLaws.length
     }
 
     if (scanResult.statusChanges?.length > 0) {
-      console.log(`\n🔄 Status changes: ${scanResult.statusChanges.length}`)
+      summaryLines.push(`${scanResult.statusChanges.length} status changes:`)
       for (const change of scanResult.statusChanges) {
-        console.log(`   - ${change.lawId}: ${change.currentStatus} → ${change.newStatus}`)
+        summaryLines.push(`  - ${change.lawId}: ${change.currentStatus} -> ${change.newStatus}`)
       }
+      itemCount += scanResult.statusChanges.length
     }
   } else {
-    console.log("✅ No changes detected. Registry is up to date.")
+    summaryLines.push(`No changes detected. Registry (${currentLaws.length} laws) is up to date.`)
   }
 
-  console.log("\n✅ Legislation scan complete.")
+  const outputSummary = summaryLines.join("\n")
+  console.log(outputSummary)
+  await updateRun(runId, "completed", outputSummary, itemCount, "")
+
+  console.log("\nLegislation scan complete.")
 }
 
-main().catch((error) => {
-  console.error("Fatal error:", error)
+main().catch(async (error) => {
+  console.error("Fatal error:", error.message)
+  const runId = process.env.RUN_ID || null
+  await updateRun(runId, "failed", "", 0, error.message)
   process.exit(1)
 })

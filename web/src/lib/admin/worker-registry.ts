@@ -2,7 +2,7 @@ import type { WorkerDef } from "./types"
 
 /**
  * Static registry of all automated workers.
- * Worker scripts live in scripts/workers/ and are triggered via GitHub Actions or manual API call.
+ * Worker scripts live in scripts/workers/ and are triggered via admin API or GitHub Actions.
  */
 export const workerRegistry: WorkerDef[] = [
   {
@@ -24,10 +24,10 @@ export const workerRegistry: WorkerDef[] = [
   {
     id: "news-monitor",
     name: "News Monitor",
-    description: "Scans child safety and parental controls industry news from key sources",
+    description: "Scans child safety and parental controls industry news from RSS feeds",
     script: "scripts/workers/news-monitor.mjs",
     cron: "Daily (7am UTC)",
-    enabled: false,
+    enabled: true,
   },
   {
     id: "competitive-intel",
@@ -35,7 +35,7 @@ export const workerRegistry: WorkerDef[] = [
     description: "Tracks competitor feature releases, pricing changes, and market positioning",
     script: "scripts/workers/competitive-intel.mjs",
     cron: "Weekly (Wed 8am UTC)",
-    enabled: false,
+    enabled: true,
   },
   {
     id: "compliance-alerter",
@@ -43,15 +43,15 @@ export const workerRegistry: WorkerDef[] = [
     description: "Monitors compliance deadlines and generates urgency alerts at 90/60/30/7 day thresholds",
     script: "scripts/workers/compliance-alerter.mjs",
     cron: "Weekly (Mon 9am UTC)",
-    enabled: false,
+    enabled: true,
   },
   {
     id: "provider-api-monitor",
     name: "Provider API Monitor",
-    description: "Checks changelogs for live provider APIs (NextDNS, CleanBrowsing, Google, Microsoft, Apple)",
+    description: "Checks health and documentation status of live provider APIs (NextDNS, CleanBrowsing, etc.)",
     script: "scripts/workers/provider-api-monitor.mjs",
     cron: "Weekly (Fri 8am UTC)",
-    enabled: false,
+    enabled: true,
   },
 ]
 
