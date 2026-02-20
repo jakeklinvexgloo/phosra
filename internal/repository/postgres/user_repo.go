@@ -83,9 +83,9 @@ func (r *UserRepo) GetByExternalAuthID(ctx context.Context, externalAuthID strin
 func (r *UserRepo) Update(ctx context.Context, user *domain.User) error {
 	user.UpdatedAt = time.Now()
 	_, err := r.Pool.Exec(ctx,
-		`UPDATE users SET email = $1, password_hash = $2, name = $3, updated_at = $4
-		 WHERE id = $5 AND deleted_at IS NULL`,
-		user.Email, user.PasswordHash, user.Name, user.UpdatedAt, user.ID,
+		`UPDATE users SET email = $1, password_hash = $2, name = $3, is_admin = $4, updated_at = $5
+		 WHERE id = $6 AND deleted_at IS NULL`,
+		user.Email, user.PasswordHash, user.Name, user.IsAdmin, user.UpdatedAt, user.ID,
 	)
 	return err
 }

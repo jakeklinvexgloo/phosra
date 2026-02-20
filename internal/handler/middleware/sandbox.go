@@ -57,7 +57,14 @@ func SandboxAuth(userRepo repository.UserRepository) func(http.Handler) http.Han
 				existing, _ := userRepo.GetByExternalAuthID(r.Context(), user.ExternalAuthID)
 				if existing != nil {
 					user = existing
+					// Ensure sandbox users are admins
+					if !user.IsAdmin {
+						user.IsAdmin = true
+						_ = userRepo.Update(r.Context(), user)
+					}
 				} else {
+					// Sandbox users are always admins (playground environment)
+					user.IsAdmin = true
 					if err := userRepo.Create(r.Context(), user); err != nil {
 						httputil.Error(w, http.StatusInternalServerError, "failed to create sandbox user")
 						return
