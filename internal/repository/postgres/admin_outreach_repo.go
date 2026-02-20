@@ -91,10 +91,10 @@ func (r *AdminOutreachRepo) Update(ctx context.Context, c *domain.OutreachContac
 	_, err := r.Pool.Exec(ctx,
 		`UPDATE admin_outreach_contacts
 		 SET status = $1, notes = $2, last_contact_at = $3, next_followup_at = $4,
-		     email_status = $5, priority_tier = $6, updated_at = $7
-		 WHERE id = $8`,
+		     email_status = $5, priority_tier = $6, email = $7, updated_at = $8
+		 WHERE id = $9`,
 		c.Status, c.Notes, c.LastContactAt, c.NextFollowupAt,
-		c.EmailStatus, c.PriorityTier, c.UpdatedAt, c.ID,
+		c.EmailStatus, c.PriorityTier, c.Email, c.UpdatedAt, c.ID,
 	)
 	return err
 }

@@ -158,6 +158,7 @@ func (h *AdminHandler) UpdateOutreach(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Status         *string    `json:"status"`
 		Notes          *string    `json:"notes"`
+		Email          *string    `json:"email"`
 		EmailStatus    *string    `json:"email_status"`
 		PriorityTier   *int       `json:"priority_tier"`
 		LastContactAt  *time.Time `json:"last_contact_at"`
@@ -179,6 +180,9 @@ func (h *AdminHandler) UpdateOutreach(w http.ResponseWriter, r *http.Request) {
 	}
 	if req.Notes != nil {
 		contact.Notes = req.Notes
+	}
+	if req.Email != nil {
+		contact.Email = req.Email
 	}
 	if req.EmailStatus != nil {
 		contact.EmailStatus = domain.EmailStatus(*req.EmailStatus)

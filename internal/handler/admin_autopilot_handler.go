@@ -694,6 +694,7 @@ func (h *AdminHandler) WorkerUpdateContact(w http.ResponseWriter, r *http.Reques
 
 	var req struct {
 		Status         *string    `json:"status"`
+		Email          *string    `json:"email"`
 		EmailStatus    *string    `json:"email_status"`
 		LastContactAt  *time.Time `json:"last_contact_at"`
 		NextFollowupAt *time.Time `json:"next_followup_at"`
@@ -711,6 +712,9 @@ func (h *AdminHandler) WorkerUpdateContact(w http.ResponseWriter, r *http.Reques
 
 	if req.Status != nil {
 		contact.Status = domain.OutreachStatus(*req.Status)
+	}
+	if req.Email != nil {
+		contact.Email = req.Email
 	}
 	if req.EmailStatus != nil {
 		contact.EmailStatus = domain.EmailStatus(*req.EmailStatus)
