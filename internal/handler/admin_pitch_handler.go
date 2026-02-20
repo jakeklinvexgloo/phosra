@@ -7,6 +7,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -19,17 +22,31 @@ import (
 	"github.com/guardiangate/api/internal/domain"
 	"github.com/guardiangate/api/internal/handler/middleware"
 	"github.com/guardiangate/api/internal/repository/postgres"
+	"github.com/guardiangate/api/internal/service"
 	"github.com/guardiangate/api/pkg/httputil"
+)
+
+const (
+	// recordingDir is the local directory for pitch session recordings.
+	recordingDir = "./data/pitch-recordings"
+	// maxRecordingSize is the maximum upload size (500 MB).
+	maxRecordingSize = 500 << 20
 )
 
 // AdminPitchHandler handles pitch coaching sessions and WebSocket relay.
 type AdminPitchHandler struct {
-	repo      *postgres.AdminPitchRepo
-	openaiKey string
+	repo             *postgres.AdminPitchRepo
+	openaiKey        string
+	transcriptionSvc *service.TranscriptionService // nil if AssemblyAI key not set
+	emotionSvc       *service.EmotionService       // nil if Hume AI key not set
 }
 
-func NewAdminPitchHandler(repo *postgres.AdminPitchRepo, openaiKey string) *AdminPitchHandler {
-	return &AdminPitchHandler{repo: repo, openaiKey: openaiKey}
+func NewAdminPitchHandler(repo *postgres.AdminPitchRepo, openaiKey string, transcriptionSvc *service.TranscriptionService, emotionSvc *service.EmotionService) *AdminPitchHandler {
+	// Ensure recording directory exists
+	if err := os.MkdirAll(recordingDir, 0755); err != nil {
+		log.Warn().Err(err).Msg("failed to create pitch recordings directory")
+	}
+	return &AdminPitchHandler{repo: repo, openaiKey: openaiKey, transcriptionSvc: transcriptionSvc, emotionSvc: emotionSvc}
 }
 
 // ── Persona System Prompts ─────────────────────────────────────
@@ -37,42 +54,157 @@ func NewAdminPitchHandler(repo *postgres.AdminPitchRepo, openaiKey string) *Admi
 var personaPrompts = map[domain.PitchPersona]string{
 	domain.PersonaInvestor: `You are a Series A venture capital partner at a top-tier firm. You're taking a first meeting with a founder pitching their child safety technology startup called "Phosra" (formerly GuardianGate).
 
-Your approach:
-- Be interested but appropriately skeptical
-- Ask probing questions about market size, unit economics, competitive moat, team, and go-to-market
-- Push back on vague claims — ask for specifics and data
-- Evaluate whether this is a venture-scale opportunity
-- Keep your responses conversational and under 30 seconds
-- Occasionally reference comparable companies or market dynamics
-- If the founder makes a strong point, acknowledge it before moving on
+CONVERSATION STYLE — THIS IS A REAL CONVERSATION, NOT AN INTERVIEW:
+- You are having a natural, flowing dialogue — not reading from a script
+- React authentically to what the founder says before asking your next question
+- If they say something interesting, dig deeper with follow-up questions
+- If they're vague, push for specifics: "Can you put a number on that?" or "Walk me through a specific example"
+- Occasionally share your own observations: "We see a lot of companies in this space doing X..."
+- If there's a pause, fill it naturally — "Take your time" or ask a related question
+- Don't ask more than one question at a time — let the conversation breathe
+- Keep your turns SHORT — 1-2 sentences max, like a real conversation
+- Reference what they just said before pivoting topics
 
-Start by saying something like "Thanks for coming in. I've been looking forward to hearing about what you're building. Why don't you give me the quick overview?"`,
+KEY TOPICS TO COVER (work these in naturally, don't rush):
+- Market size and timing — why now?
+- Unit economics and business model
+- Competitive moat — what stops incumbents?
+- Team and relevant experience
+- Go-to-market strategy
+- Current traction and metrics
+
+BEGIN THE CALL by greeting them warmly and asking them to give you the quick overview.`,
 
 	domain.PersonaPartner: `You are a VP of Trust & Safety at a major social media platform (think TikTok, Instagram, or YouTube scale). You're evaluating Phosra as a potential technology partner for child safety compliance.
 
-Your approach:
-- Focus on technical integration — API reliability, latency, data handling
-- Ask about compliance coverage — which specific regulations does this address?
-- Evaluate pricing model and ROI vs building in-house
-- Be concerned about false positives and user experience impact
-- Ask about scale — can this handle millions of daily active users?
-- Keep responses practical and under 30 seconds
-- You've seen many vendors; you need to be convinced this is different
+CONVERSATION STYLE — THIS IS A REAL CONVERSATION, NOT AN INTERVIEW:
+- You are having a natural, flowing dialogue between two professionals
+- React to what they say — "Interesting, so you're saying..." or "That's actually a pain point for us too"
+- Share context about YOUR challenges: "We've been struggling with X" or "Our current vendor does Y but..."
+- Ask follow-up questions based on their answers, don't just move to the next topic
+- Be direct and practical — you're a busy executive, not a polite listener
+- If something sounds too good to be true, say so: "Every vendor says that. What makes you different?"
+- Keep your turns SHORT — 1-2 sentences, like texting but spoken
+- One question at a time, let them answer fully
 
-Start by saying something like "I appreciate you taking the time. We get pitched by a lot of child safety vendors. Walk me through what makes Phosra different from what we've already evaluated."`,
+KEY TOPICS TO COVER (weave in naturally):
+- Technical integration — API, latency, reliability
+- Compliance coverage — COPPA, KOSA, EU regulations
+- Scale — can this handle your volume?
+- Build vs buy — why shouldn't we build this ourselves?
+- Pricing and ROI
+- False positive rates and UX impact
 
-	domain.PersonaLegislator: `You are a United States Senator on the Commerce Committee with a focus on child safety legislation. You're in a meeting to understand how technology can support enforcement of laws like COPPA, KOSA, and state-level child safety bills.
+BEGIN THE CALL by introducing yourself and explaining what you're looking for.`,
 
-Your approach:
-- Ask about specific legislation — how does this technology map to COPPA, KOSA, state AG enforcement?
-- Be concerned about privacy implications — does this create new surveillance risks?
-- Ask about age verification methods and their accuracy
-- Want to understand what platforms are currently doing vs what they should be doing
-- Ask about the enforcement gap — why aren't existing laws enough?
-- Keep responses formal but conversational, under 30 seconds
-- You want concrete examples and data points you can reference
+	domain.PersonaLegislator: `You are a United States Senator on the Commerce Committee focused on child safety legislation. You're meeting with a technology company to understand how their tools can support enforcement of COPPA, KOSA, and state-level child safety bills.
 
-Start by saying something like "Thank you for meeting with us today. I've been hearing a lot about the enforcement challenges with our existing child safety laws. Tell me about your technology and how it addresses these gaps."`,
+CONVERSATION STYLE — THIS IS A REAL CONVERSATION, NOT A HEARING:
+- You're in a private meeting, not a public hearing — be conversational, not formal
+- React to what they say: "That's concerning" or "My colleagues have been asking about exactly that"
+- Share your perspective: "The challenge we face is..." or "When I talk to parents in my state, they tell me..."
+- Ask follow-up questions — don't jump between topics
+- If they use jargon, ask them to explain it simply: "Break that down for me — how would you explain that to a parent?"
+- Be genuinely curious — you want to understand this deeply enough to draft policy
+- Keep your turns SHORT — 1-2 sentences, conversational
+- One question at a time
+
+KEY TOPICS TO COVER (weave in naturally):
+- Specific legislation mapping — COPPA, KOSA, state AG enforcement
+- Privacy implications — surveillance risks, data collection
+- Age verification accuracy and methods
+- The enforcement gap — why existing laws fall short
+- What platforms are doing vs should be doing
+- Concrete examples and data for your committee
+
+BEGIN THE CALL by thanking them for coming in and asking about the problem they're solving.`,
+}
+
+// Difficulty modifiers appended to persona prompts
+var difficultyModifiers = map[string]string{
+	"easy": `
+
+DIFFICULTY: EASY
+- Be warm, friendly, and encouraging
+- Ask softball questions that give the founder an easy win
+- Nod along and validate their points generously
+- If they stumble, gently help them get back on track
+- Compliment specific aspects of their pitch
+- Ask one or two light probing questions but don't push back hard`,
+
+	"medium": `
+
+DIFFICULTY: MEDIUM (default)
+- Be professional and interested but appropriately probing
+- Ask standard due diligence questions
+- Push back gently on unsupported claims
+- Balance skepticism with genuine curiosity`,
+
+	"hard": `
+
+DIFFICULTY: HARD
+- Be highly skeptical and challenge every claim
+- Interrupt occasionally when answers are too long or vague
+- Ask gotcha questions — "What happens when a competitor with 10x your resources enters this market?"
+- Push back forcefully on weak points — "Those numbers don't add up."
+- Show impatience if the founder rambles
+- Reference specific competitors and ask why they can't just do this
+- Make the founder earn every point they make`,
+}
+
+// Scenario context modifiers
+var scenarioModifiers = map[string]string{
+	"cold_pitch":               "\nSCENARIO: This is a cold first meeting. You have no prior context about the founder or their company. Start from zero.",
+	"warm_intro":               "\nSCENARIO: You were introduced to this founder by a trusted mutual connection. You're positively predisposed but still need to be convinced on the merits.",
+	"board_update":             "\nSCENARIO: This is a board meeting / investor update. You already invested and want to hear about progress, challenges, and how runway is being managed. Ask about metrics, burn rate, and milestones.",
+	"committee_hearing":        "\nSCENARIO: This is a formal committee hearing. Multiple people may ask questions. Be formal, structured, and focused on policy implications. Ask about enforcement mechanisms and measurable outcomes.",
+	"partnership_negotiation":  "\nSCENARIO: You're past the pitch phase and discussing specific partnership terms. Focus on pricing, SLAs, integration timeline, data handling, and competitive exclusivity.",
+}
+
+// buildPersonaPrompt constructs the full system prompt from base persona + config modifiers.
+func buildPersonaPrompt(persona domain.PitchPersona, personaConfig json.RawMessage) string {
+	base, ok := personaPrompts[persona]
+	if !ok {
+		base = personaPrompts[domain.PersonaInvestor]
+	}
+
+	// Parse persona config
+	var cfg struct {
+		Difficulty    string   `json:"difficulty"`
+		Scenario      string   `json:"scenario"`
+		CustomContext string   `json:"custom_context"`
+		FocusAreas    []string `json:"focus_areas"`
+	}
+	if len(personaConfig) > 0 && string(personaConfig) != "{}" {
+		json.Unmarshal(personaConfig, &cfg)
+	}
+
+	prompt := base
+
+	// Apply difficulty modifier
+	if mod, ok := difficultyModifiers[cfg.Difficulty]; ok {
+		prompt += mod
+	}
+
+	// Apply scenario modifier
+	if mod, ok := scenarioModifiers[cfg.Scenario]; ok {
+		prompt += mod
+	}
+
+	// Apply custom context
+	if cfg.CustomContext != "" {
+		prompt += fmt.Sprintf("\n\nADDITIONAL CONTEXT FROM USER: %s", cfg.CustomContext)
+	}
+
+	// Apply focus areas
+	if len(cfg.FocusAreas) > 0 {
+		prompt += "\n\nFOCUS YOUR QUESTIONS ON THESE AREAS:"
+		for _, area := range cfg.FocusAreas {
+			prompt += fmt.Sprintf("\n- %s", area)
+		}
+	}
+
+	return prompt
 }
 
 // ── REST Endpoints ─────────────────────────────────────────────
@@ -219,6 +351,245 @@ func (h *AdminPitchHandler) EndSession(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// ── Recording Upload / Stream ──────────────────────────────────
+
+// UploadRecording accepts a multipart file upload for a session recording.
+func (h *AdminPitchHandler) UploadRecording(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "sessionID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid session ID")
+		return
+	}
+
+	session, err := h.repo.GetByID(r.Context(), id)
+	if err != nil || session == nil {
+		httputil.Error(w, http.StatusNotFound, "session not found")
+		return
+	}
+
+	// Parse multipart (max 500MB)
+	if err := r.ParseMultipartForm(maxRecordingSize); err != nil {
+		httputil.Error(w, http.StatusBadRequest, "file too large or invalid multipart")
+		return
+	}
+
+	file, header, err := r.FormFile("recording")
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "missing 'recording' file field")
+		return
+	}
+	defer file.Close()
+
+	// Write to disk
+	filename := id.String() + ".webm"
+	destPath := filepath.Join(recordingDir, filename)
+
+	dst, err := os.Create(destPath)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to create recording file")
+		httputil.Error(w, http.StatusInternalServerError, "failed to save recording")
+		return
+	}
+	defer dst.Close()
+
+	written, err := io.Copy(dst, file)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to write recording file")
+		httputil.Error(w, http.StatusInternalServerError, "failed to save recording")
+		return
+	}
+
+	// Save metadata in DB
+	if err := h.repo.SaveRecordingMeta(r.Context(), id, destPath, written); err != nil {
+		log.Error().Err(err).Msg("failed to save recording metadata")
+	}
+
+	log.Info().
+		Str("session_id", id.String()).
+		Str("filename", header.Filename).
+		Int64("size_bytes", written).
+		Msg("pitch recording uploaded")
+
+	// If AssemblyAI is configured, trigger transcription in background
+	if h.transcriptionSvc != nil {
+		go h.runAssemblyAITranscription(id, destPath)
+	}
+
+	// If Hume AI is configured, trigger emotion analysis in background
+	if h.emotionSvc != nil {
+		go h.runEmotionAnalysis(id, destPath)
+	}
+
+	httputil.JSON(w, http.StatusOK, map[string]interface{}{
+		"path":       destPath,
+		"size_bytes": written,
+	})
+}
+
+// StreamRecording serves a recording file with support for Range requests (video seeking).
+func (h *AdminPitchHandler) StreamRecording(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "sessionID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid session ID")
+		return
+	}
+
+	session, err := h.repo.GetByID(r.Context(), id)
+	if err != nil || session == nil {
+		httputil.Error(w, http.StatusNotFound, "session not found")
+		return
+	}
+
+	var recordingPath string
+	if session.RecordingPath != nil {
+		recordingPath = *session.RecordingPath
+	}
+	if recordingPath == "" {
+		httputil.Error(w, http.StatusNotFound, "no recording for this session")
+		return
+	}
+
+	// Open file
+	f, err := os.Open(recordingPath)
+	if err != nil {
+		httputil.Error(w, http.StatusNotFound, "recording file not found")
+		return
+	}
+	defer f.Close()
+
+	stat, err := f.Stat()
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to stat recording")
+		return
+	}
+
+	w.Header().Set("Content-Type", "video/webm")
+	w.Header().Set("Accept-Ranges", "bytes")
+
+	// Handle Range header for seeking
+	rangeHeader := r.Header.Get("Range")
+	if rangeHeader != "" {
+		// Parse "bytes=start-end"
+		rangeHeader = strings.TrimPrefix(rangeHeader, "bytes=")
+		parts := strings.SplitN(rangeHeader, "-", 2)
+		start, _ := strconv.ParseInt(parts[0], 10, 64)
+		end := stat.Size() - 1
+		if len(parts) > 1 && parts[1] != "" {
+			end, _ = strconv.ParseInt(parts[1], 10, 64)
+		}
+
+		if start > stat.Size()-1 {
+			w.Header().Set("Content-Range", fmt.Sprintf("bytes */%d", stat.Size()))
+			w.WriteHeader(http.StatusRequestedRangeNotSatisfiable)
+			return
+		}
+
+		contentLen := end - start + 1
+		w.Header().Set("Content-Range", fmt.Sprintf("bytes %d-%d/%d", start, end, stat.Size()))
+		w.Header().Set("Content-Length", strconv.FormatInt(contentLen, 10))
+		w.WriteHeader(http.StatusPartialContent)
+
+		f.Seek(start, io.SeekStart)
+		io.CopyN(w, f, contentLen)
+		return
+	}
+
+	// Full file response
+	w.Header().Set("Content-Length", strconv.FormatInt(stat.Size(), 10))
+	io.Copy(w, f)
+}
+
+// runAssemblyAITranscription transcribes the recording with AssemblyAI and updates metrics.
+func (h *AdminPitchHandler) runAssemblyAITranscription(sessionID uuid.UUID, recordingPath string) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute) // transcription can take a while
+	defer cancel()
+
+	log.Info().
+		Str("session_id", sessionID.String()).
+		Str("path", recordingPath).
+		Msg("starting AssemblyAI transcription")
+
+	result, err := h.transcriptionSvc.TranscribeFile(ctx, recordingPath)
+	if err != nil {
+		log.Error().Err(err).Str("session_id", sessionID.String()).Msg("AssemblyAI transcription failed")
+		return
+	}
+
+	log.Info().
+		Str("session_id", sessionID.String()).
+		Int("word_count", len(result.Words)).
+		Float64("duration_sec", result.AudioDurationSec).
+		Int("filler_words", result.FillerWordCount).
+		Msg("AssemblyAI transcription complete")
+
+	// Update metrics with precise AssemblyAI data
+	existing, _ := h.repo.GetMetrics(ctx, sessionID)
+	if existing != nil {
+		// Update with more accurate data from AssemblyAI
+		existing.FillerWordCount = result.FillerWordCount
+		fillerJSON, _ := json.Marshal(result.FillerWords)
+		existing.FillerWords = fillerJSON
+		existing.WordsPerMinute = &result.WordsPerMinute
+		silPct := result.SilencePct
+		existing.SilencePercentage = &silPct
+
+		// Delete old + re-insert (simpler than partial update for JSONB)
+		h.repo.DeleteMetrics(ctx, sessionID)
+		if err := h.repo.SaveMetrics(ctx, existing); err != nil {
+			log.Error().Err(err).Msg("failed to update metrics with AssemblyAI data")
+		}
+	}
+}
+
+// runEmotionAnalysis sends the recording to Hume AI for vocal emotion analysis.
+func (h *AdminPitchHandler) runEmotionAnalysis(sessionID uuid.UUID, recordingPath string) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
+
+	log.Info().
+		Str("session_id", sessionID.String()).
+		Str("path", recordingPath).
+		Msg("starting Hume AI emotion analysis")
+
+	analysis, err := h.emotionSvc.AnalyzeFile(ctx, recordingPath)
+	if err != nil {
+		log.Error().Err(err).Str("session_id", sessionID.String()).Msg("Hume AI emotion analysis failed")
+		return
+	}
+
+	log.Info().
+		Str("session_id", sessionID.String()).
+		Int("frames", len(analysis.Frames)).
+		Float64("confidence_avg", analysis.ConfidenceAvg).
+		Float64("nervousness_avg", analysis.NervousnessAvg).
+		Msg("Hume AI emotion analysis complete")
+
+	// Marshal emotion data for storage
+	emotionDataJSON, _ := json.Marshal(analysis)
+	dominantJSON, _ := json.Marshal(analysis.DominantEmotions)
+
+	// Update metrics — get existing or create new
+	existing, _ := h.repo.GetMetrics(ctx, sessionID)
+	if existing != nil {
+		existing.EmotionData = emotionDataJSON
+		existing.DominantEmotions = dominantJSON
+		h.repo.DeleteMetrics(ctx, sessionID)
+		if err := h.repo.SaveMetrics(ctx, existing); err != nil {
+			log.Error().Err(err).Msg("failed to update metrics with emotion data")
+		}
+	} else {
+		// Create a new metrics record with just emotion data
+		metrics := &domain.PitchSessionMetrics{
+			SessionID:        sessionID,
+			EmotionData:      emotionDataJSON,
+			DominantEmotions: dominantJSON,
+		}
+		if err := h.repo.SaveMetrics(ctx, metrics); err != nil {
+			log.Error().Err(err).Msg("failed to save emotion metrics")
+		}
+	}
+}
+
 // ── WebSocket Relay ────────────────────────────────────────────
 
 // HandleRealtimeWS establishes a bidirectional WebSocket relay between
@@ -282,12 +653,9 @@ func (h *AdminPitchHandler) HandleRealtimeWS(w http.ResponseWriter, r *http.Requ
 		log.Error().Err(err).Msg("failed to mark pitch session as active")
 	}
 
-	// Send session.update with persona prompt and voice config
+	// Send session.update with persona prompt and voice config (including difficulty/scenario)
 	persona := session.Persona
-	systemPrompt, ok := personaPrompts[persona]
-	if !ok {
-		systemPrompt = personaPrompts[domain.PersonaInvestor]
-	}
+	systemPrompt := buildPersonaPrompt(persona, session.PersonaConfig)
 
 	sessionUpdate := map[string]interface{}{
 		"type": "session.update",
@@ -297,11 +665,14 @@ func (h *AdminPitchHandler) HandleRealtimeWS(w http.ResponseWriter, r *http.Requ
 			"voice":               "alloy",
 			"input_audio_format":  "pcm16",
 			"output_audio_format": "pcm16",
+			"input_audio_transcription": map[string]interface{}{
+				"model": "whisper-1",
+			},
 			"turn_detection": map[string]interface{}{
 				"type":                "server_vad",
 				"threshold":           0.5,
 				"prefix_padding_ms":   300,
-				"silence_duration_ms": 500,
+				"silence_duration_ms": 700,
 			},
 		},
 	}
@@ -313,10 +684,22 @@ func (h *AdminPitchHandler) HandleRealtimeWS(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+	// Trigger the AI to speak first — kick off the conversation
+	responseCreate := map[string]interface{}{
+		"type": "response.create",
+		"response": map[string]interface{}{
+			"modalities": []string{"text", "audio"},
+		},
+	}
+	responseJSON, _ := json.Marshal(responseCreate)
+	if err := openaiConn.Write(r.Context(), websocket.MessageText, responseJSON); err != nil {
+		log.Error().Err(err).Msg("failed to send response.create to OpenAI")
+	}
+
 	log.Info().
 		Str("session_id", sessionID.String()).
 		Str("persona", string(persona)).
-		Msg("pitch coaching WebSocket relay established")
+		Msg("pitch coaching WebSocket relay established — AI will speak first")
 
 	// Transcript accumulator
 	var (
@@ -470,6 +853,43 @@ func (h *AdminPitchHandler) runFeedbackPipeline(sessionID uuid.UUID) {
 		transcriptText.WriteString(fmt.Sprintf("[%s]: %s\n\n", speaker, entry.Text))
 	}
 
+	// Check if emotion data is available from a prior Hume AI analysis
+	var emotionContext string
+	existingMetrics, _ := h.repo.GetMetrics(ctx, sessionID)
+	if existingMetrics != nil && len(existingMetrics.EmotionData) > 0 && string(existingMetrics.EmotionData) != "null" {
+		var emotionAnalysis service.EmotionAnalysis
+		if err := json.Unmarshal(existingMetrics.EmotionData, &emotionAnalysis); err == nil {
+			emotionContext = fmt.Sprintf(`
+
+=== VOCAL EMOTION DATA (from Hume AI) ===
+Average Confidence: %.1f/100
+Average Enthusiasm: %.1f/100
+Average Nervousness: %.1f/100
+Average Calmness: %.1f/100
+Lowest Confidence Point: %.1f/100 at %dms
+Nervousness Spike Count: %d
+Top Dominant Emotions: `,
+				emotionAnalysis.ConfidenceAvg,
+				emotionAnalysis.EnthusiasmAvg,
+				emotionAnalysis.NervousnessAvg,
+				emotionAnalysis.CalmAvg,
+				emotionAnalysis.ConfidenceMin,
+				emotionAnalysis.ConfidenceMinMs,
+				len(emotionAnalysis.NervousnessPeaks))
+
+			for i, e := range emotionAnalysis.DominantEmotions {
+				if i > 0 {
+					emotionContext += ", "
+				}
+				emotionContext += fmt.Sprintf("%s (%.2f)", e.Name, e.Score)
+			}
+			emotionContext += `
+=== END EMOTION DATA ===
+
+Use this vocal emotion data to provide richer coaching insights about the user's vocal delivery, confidence levels, and emotional state during the pitch.`
+		}
+	}
+
 	// Build coaching prompt
 	coachingPrompt := fmt.Sprintf(`You are an expert pitch coach and communication trainer. Analyze the following pitch practice conversation where the user was pitching to an AI playing the role of a %s.
 
@@ -497,12 +917,12 @@ Provide structured coaching feedback as JSON with exactly this schema:
 }
 
 Be constructive but honest. Give specific, actionable feedback. Reference specific things the user said when possible.
-
+%s
 === TRANSCRIPT ===
 %s
 === END TRANSCRIPT ===
 
-Respond with ONLY the JSON object, no markdown formatting.`, session.Persona, transcriptText.String())
+Respond with ONLY the JSON object, no markdown formatting.`, session.Persona, emotionContext, transcriptText.String())
 
 	// Call GPT-4o for coaching analysis
 	feedbackJSON, err := h.callGPT4o(ctx, coachingPrompt)
