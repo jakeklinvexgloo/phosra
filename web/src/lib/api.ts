@@ -157,6 +157,64 @@ class ApiClient {
     return this.fetch(`/admin/workers/${workerId}/trigger`, { method: "POST" }, token)
   }
 
+  // ── Google Workspace ──────────────────────────────────────────
+  async getGoogleAuthURL(token?: string) { return this.fetch("/admin/google/auth-url", {}, token) }
+  async submitGoogleCallback(code: string, token?: string) {
+    return this.fetch("/admin/google/callback", { method: "POST", body: JSON.stringify({ code }) }, token)
+  }
+  async getGoogleStatus(token?: string) { return this.fetch("/admin/google/status", {}, token) }
+  async disconnectGoogle(token?: string) { return this.fetch("/admin/google/disconnect", { method: "DELETE" }, token) }
+
+  // Gmail
+  async listGmailMessages(query?: string, pageToken?: string, maxResults?: number, token?: string) {
+    const params = new URLSearchParams()
+    if (query) params.set("q", query)
+    if (pageToken) params.set("pageToken", pageToken)
+    if (maxResults) params.set("maxResults", String(maxResults))
+    const qs = params.toString() ? `?${params.toString()}` : ""
+    return this.fetch(`/admin/gmail/messages${qs}`, {}, token)
+  }
+  async getGmailMessage(id: string, token?: string) { return this.fetch(`/admin/gmail/messages/${id}`, {}, token) }
+  async getGmailThread(threadId: string, token?: string) { return this.fetch(`/admin/gmail/threads/${threadId}`, {}, token) }
+  async sendGmailMessage(data: { to: string; subject: string; body: string; reply_to_message_id?: string; contact_id?: string }, token?: string) {
+    return this.fetch("/admin/gmail/send", { method: "POST", body: JSON.stringify(data) }, token)
+  }
+  async searchGmail(query: string, maxResults?: number, token?: string) {
+    const params = new URLSearchParams({ q: query })
+    if (maxResults) params.set("maxResults", String(maxResults))
+    return this.fetch(`/admin/gmail/search?${params.toString()}`, {}, token)
+  }
+
+  // Google Contacts
+  async listGoogleContacts(pageToken?: string, pageSize?: number, token?: string) {
+    const params = new URLSearchParams()
+    if (pageToken) params.set("pageToken", pageToken)
+    if (pageSize) params.set("pageSize", String(pageSize))
+    const qs = params.toString() ? `?${params.toString()}` : ""
+    return this.fetch(`/admin/google/contacts${qs}`, {}, token)
+  }
+  async searchGoogleContacts(query: string, token?: string) {
+    return this.fetch(`/admin/google/contacts/search?q=${encodeURIComponent(query)}`, {}, token)
+  }
+  async syncContactsPreview(token?: string) { return this.fetch("/admin/google/contacts/sync/preview", {}, token) }
+  async syncContacts(token?: string) { return this.fetch("/admin/google/contacts/sync", { method: "POST" }, token) }
+
+  // Google Calendar
+  async listCalendarEvents(timeMin?: string, timeMax?: string, maxResults?: number, token?: string) {
+    const params = new URLSearchParams()
+    if (timeMin) params.set("timeMin", timeMin)
+    if (timeMax) params.set("timeMax", timeMax)
+    if (maxResults) params.set("maxResults", String(maxResults))
+    const qs = params.toString() ? `?${params.toString()}` : ""
+    return this.fetch(`/admin/calendar/events${qs}`, {}, token)
+  }
+  async createCalendarEvent(data: { summary: string; description?: string; location?: string; start: string; end: string; attendees?: string[]; contact_id?: string }, token?: string) {
+    return this.fetch("/admin/calendar/events", { method: "POST", body: JSON.stringify(data) }, token)
+  }
+  async deleteCalendarEvent(eventId: string, token?: string) {
+    return this.fetch(`/admin/calendar/events/${eventId}`, { method: "DELETE" }, token)
+  }
+
   async listFeedback(status?: string) {
     const qs = status ? `?status=${status}` : ""
     const res = await window.fetch(`${this.baseUrl}/feedback${qs}`, {

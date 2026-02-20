@@ -1,13 +1,17 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
 
 	"github.com/guardiangate/api/internal/domain"
+	"github.com/guardiangate/api/internal/google"
 	"github.com/guardiangate/api/internal/repository/postgres"
 	"github.com/guardiangate/api/pkg/httputil"
 )
@@ -16,10 +20,11 @@ import (
 type AdminHandler struct {
 	outreach *postgres.AdminOutreachRepo
 	workers  *postgres.AdminWorkerRepo
+	google   *google.Client // nil when Google is not configured
 }
 
-func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo) *AdminHandler {
-	return &AdminHandler{outreach: outreach, workers: workers}
+func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, googleClient *google.Client) *AdminHandler {
+	return &AdminHandler{outreach: outreach, workers: workers, google: googleClient}
 }
 
 // ── Stats ───────────────────────────────────────────────────────
@@ -241,9 +246,577 @@ func (h *AdminHandler) TriggerWorker(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Actually trigger the worker script via exec or GitHub API
-	// For now we just record the run — the worker scripts themselves will
-	// pick up pending runs or be triggered by GitHub Actions.
-
 	httputil.Created(w, run)
+}
+
+// ── Google OAuth ────────────────────────────────────────────────
+
+func (h *AdminHandler) requireGoogle(w http.ResponseWriter) bool {
+	if h.google == nil {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google integration not configured")
+		return false
+	}
+	return true
+}
+
+// GetGoogleAuthURL returns the OAuth consent URL for Google.
+func (h *AdminHandler) GetGoogleAuthURL(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+	state := "phosra-admin-google" // simple state; single-admin, no CSRF concern
+	url := h.google.AuthorizeURL(state)
+	httputil.JSON(w, http.StatusOK, map[string]string{"url": url})
+}
+
+// GoogleCallback exchanges the OAuth code for tokens.
+func (h *AdminHandler) GoogleCallback(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	var req struct {
+		Code string `json:"code"`
+	}
+	if err := httputil.DecodeJSON(r, &req); err != nil || req.Code == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing authorization code")
+		return
+	}
+
+	tokens, err := h.google.ExchangeCode(r.Context(), req.Code)
+	if err != nil {
+		log.Error().Err(err).Msg("Google OAuth code exchange failed")
+		httputil.Error(w, http.StatusBadRequest, "failed to exchange code: "+err.Error())
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, map[string]interface{}{
+		"connected": true,
+		"email":     tokens.GoogleEmail,
+		"scopes":    tokens.Scopes,
+	})
+}
+
+// GetGoogleStatus returns the current Google connection status.
+func (h *AdminHandler) GetGoogleStatus(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	connected, email, err := h.google.IsConnected(r.Context())
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to check Google status")
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, map[string]interface{}{
+		"connected": connected,
+		"email":     email,
+		"scopes":    google.Scopes(),
+	})
+}
+
+// DisconnectGoogle removes stored Google tokens.
+func (h *AdminHandler) DisconnectGoogle(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	if err := h.google.Disconnect(r.Context()); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to disconnect Google")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, map[string]string{"status": "disconnected"})
+}
+
+// ── Gmail ───────────────────────────────────────────────────────
+
+func (h *AdminHandler) ListGmailMessages(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	query := r.URL.Query().Get("q")
+	pageToken := r.URL.Query().Get("pageToken")
+	maxResults := 20
+	if n, err := strconv.Atoi(r.URL.Query().Get("maxResults")); err == nil && n > 0 && n <= 100 {
+		maxResults = n
+	}
+
+	msgs, err := h.google.ListMessages(r.Context(), query, maxResults, pageToken)
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to list Gmail messages")
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, msgs)
+}
+
+func (h *AdminHandler) GetGmailMessage(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	messageID := chi.URLParam(r, "messageID")
+	if messageID == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing message ID")
+		return
+	}
+
+	msg, err := h.google.GetMessage(r.Context(), messageID)
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to get Gmail message")
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, msg)
+}
+
+func (h *AdminHandler) GetGmailThread(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	threadID := chi.URLParam(r, "threadID")
+	if threadID == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing thread ID")
+		return
+	}
+
+	messages, err := h.google.GetThread(r.Context(), threadID)
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to get Gmail thread")
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, messages)
+}
+
+func (h *AdminHandler) SendGmailMessage(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	var req struct {
+		To               string `json:"to"`
+		Subject          string `json:"subject"`
+		Body             string `json:"body"`
+		ReplyToMessageID string `json:"reply_to_message_id,omitempty"`
+		ContactID        string `json:"contact_id,omitempty"` // optional outreach contact link
+	}
+	if err := httputil.DecodeJSON(r, &req); err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	if req.To == "" || req.Subject == "" {
+		httputil.Error(w, http.StatusBadRequest, "to and subject are required")
+		return
+	}
+
+	sent, err := h.google.SendMessage(r.Context(), req.To, req.Subject, req.Body, req.ReplyToMessageID)
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to send Gmail message")
+		return
+	}
+
+	// Optionally log as outreach activity
+	if req.ContactID != "" {
+		contactUUID, err := uuid.Parse(req.ContactID)
+		if err == nil {
+			activity := &domain.OutreachActivity{
+				ContactID:    contactUUID,
+				ActivityType: domain.ActivityEmailSent,
+				Subject:      req.Subject,
+				Body:         req.Body,
+			}
+			if createErr := h.outreach.CreateActivity(r.Context(), activity); createErr != nil {
+				log.Warn().Err(createErr).Str("contact_id", req.ContactID).Msg("failed to log outreach activity for sent email")
+			}
+		}
+	}
+
+	httputil.JSON(w, http.StatusOK, sent)
+}
+
+func (h *AdminHandler) SearchGmail(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	query := r.URL.Query().Get("q")
+	if query == "" {
+		httputil.Error(w, http.StatusBadRequest, "query parameter 'q' is required")
+		return
+	}
+	maxResults := 20
+	if n, err := strconv.Atoi(r.URL.Query().Get("maxResults")); err == nil && n > 0 && n <= 100 {
+		maxResults = n
+	}
+
+	msgs, err := h.google.SearchMessages(r.Context(), query, maxResults)
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to search Gmail")
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, msgs)
+}
+
+// ── Google Contacts ─────────────────────────────────────────────
+
+func (h *AdminHandler) ListGoogleContacts(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	pageToken := r.URL.Query().Get("pageToken")
+	pageSize := 100
+	if n, err := strconv.Atoi(r.URL.Query().Get("pageSize")); err == nil && n > 0 && n <= 1000 {
+		pageSize = n
+	}
+
+	contacts, err := h.google.ListContacts(r.Context(), pageSize, pageToken)
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to list Google contacts")
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, contacts)
+}
+
+func (h *AdminHandler) SearchGoogleContacts(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	query := r.URL.Query().Get("q")
+	if query == "" {
+		httputil.Error(w, http.StatusBadRequest, "query parameter 'q' is required")
+		return
+	}
+
+	contacts, err := h.google.SearchContacts(r.Context(), query, 30)
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to search Google contacts")
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, contacts)
+}
+
+// SyncGoogleContactsPreview returns a dry-run preview of what a contact sync would do.
+func (h *AdminHandler) SyncGoogleContactsPreview(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	// Fetch all Google contacts
+	allContacts := []google.GoogleContact{}
+	pageToken := ""
+	for {
+		page, err := h.google.ListContacts(r.Context(), 500, pageToken)
+		if err != nil {
+			if errors.Is(err, google.ErrGoogleDisconnected) {
+				httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+				return
+			}
+			httputil.Error(w, http.StatusInternalServerError, "failed to fetch Google contacts")
+			return
+		}
+		allContacts = append(allContacts, page.Contacts...)
+		if page.NextPageToken == "" {
+			break
+		}
+		pageToken = page.NextPageToken
+	}
+
+	// Get existing outreach contacts for matching
+	existingContacts, err := h.outreach.List(r.Context(), "", "")
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to list outreach contacts")
+		return
+	}
+
+	// Build email→contact map for matching
+	emailMap := make(map[string]*domain.OutreachContact)
+	for i := range existingContacts {
+		if existingContacts[i].Email != "" {
+			emailMap[existingContacts[i].Email] = &existingContacts[i]
+		}
+	}
+
+	preview := google.ContactSyncPreview{}
+	for _, gc := range allContacts {
+		if gc.Email == "" && gc.Name == "" {
+			preview.Skipped++
+			continue
+		}
+		if gc.Email != "" {
+			if existing, ok := emailMap[gc.Email]; ok {
+				preview.ToUpdate = append(preview.ToUpdate, struct {
+					Contact    google.GoogleContact `json:"contact"`
+					ExistingID string               `json:"existing_id"`
+				}{Contact: gc, ExistingID: existing.ID.String()})
+				continue
+			}
+		}
+		preview.ToCreate = append(preview.ToCreate, gc)
+	}
+
+	httputil.JSON(w, http.StatusOK, preview)
+}
+
+// SyncGoogleContacts imports Google Contacts into the outreach pipeline.
+func (h *AdminHandler) SyncGoogleContacts(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	// Fetch all Google contacts
+	allContacts := []google.GoogleContact{}
+	pageToken := ""
+	for {
+		page, err := h.google.ListContacts(r.Context(), 500, pageToken)
+		if err != nil {
+			if errors.Is(err, google.ErrGoogleDisconnected) {
+				httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+				return
+			}
+			httputil.Error(w, http.StatusInternalServerError, "failed to fetch Google contacts")
+			return
+		}
+		allContacts = append(allContacts, page.Contacts...)
+		if page.NextPageToken == "" {
+			break
+		}
+		pageToken = page.NextPageToken
+	}
+
+	// Get existing outreach contacts for matching
+	existingContacts, err := h.outreach.List(r.Context(), "", "")
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to list outreach contacts")
+		return
+	}
+
+	emailMap := make(map[string]*domain.OutreachContact)
+	for i := range existingContacts {
+		if existingContacts[i].Email != "" {
+			emailMap[existingContacts[i].Email] = &existingContacts[i]
+		}
+	}
+
+	var created, updated, skipped int
+	for _, gc := range allContacts {
+		if gc.Email == "" && gc.Name == "" {
+			skipped++
+			continue
+		}
+
+		if gc.Email != "" {
+			if _, ok := emailMap[gc.Email]; ok {
+				// Update existing — just skip for now (could update org/title)
+				updated++
+				continue
+			}
+		}
+
+		// Create new outreach contact
+		newContact := &domain.OutreachContact{
+			Name:        gc.Name,
+			Org:         gc.Org,
+			Title:       gc.Title,
+			ContactType: domain.ContactTypeOther,
+			Email:       gc.Email,
+			Phone:       gc.Phone,
+			Status:      domain.OutreachNotContacted,
+		}
+		if err := h.outreach.Create(r.Context(), newContact); err != nil {
+			log.Warn().Err(err).Str("email", gc.Email).Msg("failed to create outreach contact from Google sync")
+			skipped++
+			continue
+		}
+		created++
+	}
+
+	httputil.JSON(w, http.StatusOK, map[string]int{
+		"created": created,
+		"updated": updated,
+		"skipped": skipped,
+		"total":   len(allContacts),
+	})
+}
+
+// ── Google Calendar ─────────────────────────────────────────────
+
+func (h *AdminHandler) ListCalendarEvents(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	// Default: next 30 days
+	timeMin := time.Now()
+	timeMax := timeMin.AddDate(0, 1, 0)
+
+	if v := r.URL.Query().Get("timeMin"); v != "" {
+		if t, err := time.Parse(time.RFC3339, v); err == nil {
+			timeMin = t
+		}
+	}
+	if v := r.URL.Query().Get("timeMax"); v != "" {
+		if t, err := time.Parse(time.RFC3339, v); err == nil {
+			timeMax = t
+		}
+	}
+
+	maxResults := 50
+	if n, err := strconv.Atoi(r.URL.Query().Get("maxResults")); err == nil && n > 0 && n <= 250 {
+		maxResults = n
+	}
+
+	events, err := h.google.ListEvents(r.Context(), timeMin, timeMax, maxResults, r.URL.Query().Get("pageToken"))
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to list calendar events")
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, events)
+}
+
+func (h *AdminHandler) CreateCalendarEvent(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	var req struct {
+		Summary     string   `json:"summary"`
+		Description string   `json:"description,omitempty"`
+		Location    string   `json:"location,omitempty"`
+		Start       string   `json:"start"` // RFC3339
+		End         string   `json:"end"`   // RFC3339
+		Attendees   []string `json:"attendees,omitempty"`
+		ContactID   string   `json:"contact_id,omitempty"` // optional outreach contact link
+	}
+	if err := httputil.DecodeJSON(r, &req); err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	if req.Summary == "" || req.Start == "" || req.End == "" {
+		httputil.Error(w, http.StatusBadRequest, "summary, start, and end are required")
+		return
+	}
+
+	startTime, err := time.Parse(time.RFC3339, req.Start)
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid start time format (use RFC3339)")
+		return
+	}
+	endTime, err := time.Parse(time.RFC3339, req.End)
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid end time format (use RFC3339)")
+		return
+	}
+
+	// If contact_id provided, add their email as attendee
+	if req.ContactID != "" {
+		contactUUID, parseErr := uuid.Parse(req.ContactID)
+		if parseErr == nil {
+			contact, getErr := h.outreach.GetByID(r.Context(), contactUUID)
+			if getErr == nil && contact != nil && contact.Email != "" {
+				req.Attendees = append(req.Attendees, contact.Email)
+			}
+		}
+	}
+
+	event := google.CalendarEvent{
+		Summary:     req.Summary,
+		Description: req.Description,
+		Location:    req.Location,
+		Start:       startTime,
+		End:         endTime,
+		Attendees:   req.Attendees,
+	}
+
+	created, err := h.google.CreateEvent(r.Context(), event)
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to create calendar event")
+		return
+	}
+
+	// Log as outreach meeting activity
+	if req.ContactID != "" {
+		contactUUID, parseErr := uuid.Parse(req.ContactID)
+		if parseErr == nil {
+			activity := &domain.OutreachActivity{
+				ContactID:    contactUUID,
+				ActivityType: domain.ActivityMeeting,
+				Subject:      req.Summary,
+				Body:         req.Description,
+			}
+			if createErr := h.outreach.CreateActivity(r.Context(), activity); createErr != nil {
+				log.Warn().Err(createErr).Str("contact_id", req.ContactID).Msg("failed to log outreach activity for calendar event")
+			}
+		}
+	}
+
+	httputil.Created(w, created)
+}
+
+func (h *AdminHandler) DeleteCalendarEvent(w http.ResponseWriter, r *http.Request) {
+	if !h.requireGoogle(w) {
+		return
+	}
+
+	eventID := chi.URLParam(r, "eventID")
+	if eventID == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing event ID")
+		return
+	}
+
+	if err := h.google.DeleteEvent(r.Context(), eventID); err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")
+			return
+		}
+		httputil.Error(w, http.StatusInternalServerError, "failed to delete calendar event")
+		return
+	}
+
+	httputil.NoContent(w)
 }

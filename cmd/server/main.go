@@ -14,6 +14,7 @@ import (
 
 	"github.com/guardiangate/api/internal/config"
 	"github.com/guardiangate/api/internal/engine"
+	googleapi "github.com/guardiangate/api/internal/google"
 	"github.com/guardiangate/api/internal/handler"
 	"github.com/guardiangate/api/internal/migrate"
 	"github.com/guardiangate/api/internal/provider"
@@ -85,6 +86,7 @@ func main() {
 	// Admin repositories
 	adminOutreachRepo := postgres.NewAdminOutreachRepo(db)
 	adminWorkerRepo := postgres.NewAdminWorkerRepo(db)
+	adminGoogleRepo := postgres.NewAdminGoogleRepo(db)
 
 	// Phosra service-layer repositories
 	notificationScheduleRepo := postgres.NewNotificationScheduleRepo(db)
@@ -158,6 +160,19 @@ func main() {
 	setupSvc := service.NewQuickSetupService(familyRepo, memberRepo, childRepo, policyRepo, ruleRepo, ratingRepo, policySvc, complianceLinkRepo)
 	standardSvc := service.NewStandardService(standardRepo, standardAdoptionRepo, childRepo, memberRepo)
 
+	// Google Workspace client (optional — only configured when GOOGLE_CLIENT_ID is set)
+	var googleClient *googleapi.Client
+	if cfg.GoogleClientID != "" {
+		googleClient = googleapi.NewClient(
+			cfg.GoogleClientID,
+			cfg.GoogleClientSecret,
+			cfg.GoogleRedirectURI,
+			cfg.EncryptionKey,
+			adminGoogleRepo,
+		)
+		log.Info().Str("redirect_uri", cfg.GoogleRedirectURI).Msg("Google Workspace integration enabled")
+	}
+
 	// Handlers
 	handlers := router.Handlers{
 		Auth:        handler.NewAuthHandler(authSvc),
@@ -173,7 +188,7 @@ func main() {
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 		Standard:    handler.NewStandardHandler(standardSvc),
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
-		Admin:       handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo),
+		Admin:       handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, googleClient),
 	}
 
 	// Router

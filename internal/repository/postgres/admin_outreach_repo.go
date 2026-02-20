@@ -93,6 +93,27 @@ func (r *AdminOutreachRepo) Update(ctx context.Context, c *domain.OutreachContac
 	return err
 }
 
+// Create inserts a new outreach contact (e.g. from Google Contacts sync).
+func (r *AdminOutreachRepo) Create(ctx context.Context, c *domain.OutreachContact) error {
+	if c.ID == uuid.Nil {
+		c.ID = uuid.New()
+	}
+	now := time.Now()
+	c.CreatedAt = now
+	c.UpdatedAt = now
+	_, err := r.Pool.Exec(ctx,
+		`INSERT INTO admin_outreach_contacts
+		 (id, name, org, title, contact_type, email, linkedin_url, twitter_handle, phone,
+		  status, notes, relevance_score, tags, last_contact_at, next_followup_at, created_at, updated_at)
+		 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)`,
+		c.ID, c.Name, c.Org, c.Title, c.ContactType, c.Email,
+		c.LinkedinURL, c.TwitterHandle, c.Phone, c.Status, c.Notes,
+		c.RelevanceScore, c.Tags, c.LastContactAt, c.NextFollowupAt,
+		c.CreatedAt, c.UpdatedAt,
+	)
+	return err
+}
+
 func (r *AdminOutreachRepo) CreateActivity(ctx context.Context, a *domain.OutreachActivity) error {
 	if a.ID == uuid.Nil {
 		a.ID = uuid.New()

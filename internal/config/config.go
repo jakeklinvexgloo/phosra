@@ -22,6 +22,10 @@ type Config struct {
 	MicrosoftClientID     string
 	MicrosoftClientSecret string
 
+	GoogleClientID     string
+	GoogleClientSecret string
+	GoogleRedirectURI  string
+
 	RateLimitRPS int
 	LogLevel     string
 
@@ -61,6 +65,10 @@ func Load() *Config {
 
 		MicrosoftClientID:     getEnv("MICROSOFT_CLIENT_ID", ""),
 		MicrosoftClientSecret: getEnv("MICROSOFT_CLIENT_SECRET", ""),
+
+		GoogleClientID:     getEnv("GOOGLE_CLIENT_ID", ""),
+		GoogleClientSecret: getEnv("GOOGLE_CLIENT_SECRET", ""),
+		GoogleRedirectURI:  getEnv("GOOGLE_REDIRECT_URI", "http://localhost:3000/dashboard/admin/gmail/callback"),
 
 		RateLimitRPS: getInt("RATE_LIMIT_RPS", 100),
 		LogLevel:     getEnv("LOG_LEVEL", "info"),

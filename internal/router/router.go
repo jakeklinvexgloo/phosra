@@ -274,6 +274,30 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Get("/workers", h.Admin.ListWorkers)
 			r.Get("/workers/{workerID}/runs", h.Admin.ListWorkerRuns)
 			r.Post("/workers/{workerID}/trigger", h.Admin.TriggerWorker)
+
+			// Google OAuth
+			r.Get("/google/auth-url", h.Admin.GetGoogleAuthURL)
+			r.Post("/google/callback", h.Admin.GoogleCallback)
+			r.Get("/google/status", h.Admin.GetGoogleStatus)
+			r.Delete("/google/disconnect", h.Admin.DisconnectGoogle)
+
+			// Gmail
+			r.Get("/gmail/messages", h.Admin.ListGmailMessages)
+			r.Get("/gmail/messages/{messageID}", h.Admin.GetGmailMessage)
+			r.Get("/gmail/threads/{threadID}", h.Admin.GetGmailThread)
+			r.Post("/gmail/send", h.Admin.SendGmailMessage)
+			r.Get("/gmail/search", h.Admin.SearchGmail)
+
+			// Google Contacts
+			r.Get("/google/contacts", h.Admin.ListGoogleContacts)
+			r.Get("/google/contacts/search", h.Admin.SearchGoogleContacts)
+			r.Get("/google/contacts/sync/preview", h.Admin.SyncGoogleContactsPreview)
+			r.Post("/google/contacts/sync", h.Admin.SyncGoogleContacts)
+
+			// Google Calendar
+			r.Get("/calendar/events", h.Admin.ListCalendarEvents)
+			r.Post("/calendar/events", h.Admin.CreateCalendarEvent)
+			r.Delete("/calendar/events/{eventID}", h.Admin.DeleteCalendarEvent)
 		})
 
 		// Device-auth routes (X-Device-Key header)

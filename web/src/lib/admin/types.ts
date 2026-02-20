@@ -119,6 +119,84 @@ export interface AdminStats {
   workers: AdminWorkerStats
 }
 
+// ── Google Workspace ────────────────────────────────────────────
+
+export interface GoogleConnectionStatus {
+  connected: boolean
+  email: string
+  scopes: string[]
+}
+
+export interface GmailMessage {
+  id: string
+  thread_id: string
+  from: string
+  to: string[]
+  subject: string
+  snippet: string
+  body_html?: string
+  body_text?: string
+  date: string
+  labels: string[]
+  has_attachments: boolean
+}
+
+export interface GmailListResponse {
+  messages: GmailMessage[]
+  next_page_token?: string
+  total_estimate: number
+}
+
+export interface GmailSendResponse {
+  id: string
+  thread_id: string
+}
+
+export interface GoogleContact {
+  resource_name: string
+  name: string
+  email?: string
+  phone?: string
+  org?: string
+  title?: string
+}
+
+export interface ContactListResponse {
+  contacts: GoogleContact[]
+  next_page_token?: string
+  total_people: number
+}
+
+export interface ContactSyncPreview {
+  to_create: GoogleContact[]
+  to_update: { contact: GoogleContact; existing_id: string }[]
+  skipped: number
+}
+
+export interface ContactSyncResult {
+  created: number
+  updated: number
+  skipped: number
+  total: number
+}
+
+export interface CalendarEvent {
+  id?: string
+  summary: string
+  description?: string
+  location?: string
+  start: string
+  end: string
+  attendees?: string[]
+  html_link?: string
+  status?: string
+}
+
+export interface CalendarListResponse {
+  events: CalendarEvent[]
+  next_page_token?: string
+}
+
 // ── Status Display Helpers ──────────────────────────────────────
 
 export const OUTREACH_STATUS_META: Record<OutreachStatus, { label: string; color: string; dotColor: string }> = {
