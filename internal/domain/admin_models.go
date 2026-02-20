@@ -50,12 +50,12 @@ type OutreachContact struct {
 	Org            string              `json:"org"`
 	Title          string              `json:"title"`
 	ContactType    OutreachContactType `json:"contact_type"`
-	Email          string              `json:"email,omitempty"`
-	LinkedinURL    string              `json:"linkedin_url,omitempty"`
-	TwitterHandle  string              `json:"twitter_handle,omitempty"`
-	Phone          string              `json:"phone,omitempty"`
+	Email          *string             `json:"email,omitempty"`
+	LinkedinURL    *string             `json:"linkedin_url,omitempty"`
+	TwitterHandle  *string             `json:"twitter_handle,omitempty"`
+	Phone          *string             `json:"phone,omitempty"`
 	Status         OutreachStatus      `json:"status"`
-	Notes          string              `json:"notes,omitempty"`
+	Notes          *string             `json:"notes,omitempty"`
 	RelevanceScore *int                `json:"relevance_score,omitempty"`
 	Tags           []string            `json:"tags,omitempty"`
 	EmailStatus    EmailStatus         `json:"email_status"`

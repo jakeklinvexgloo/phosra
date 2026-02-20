@@ -98,6 +98,7 @@ func (h *AdminHandler) ListOutreach(w http.ResponseWriter, r *http.Request) {
 
 	contacts, err := h.outreach.List(r.Context(), contactType, status)
 	if err != nil {
+		log.Error().Err(err).Msg("failed to list outreach contacts")
 		httputil.Error(w, http.StatusInternalServerError, "failed to list contacts")
 		return
 	}
@@ -165,7 +166,7 @@ func (h *AdminHandler) UpdateOutreach(w http.ResponseWriter, r *http.Request) {
 		contact.Status = domain.OutreachStatus(*req.Status)
 	}
 	if req.Notes != nil {
-		contact.Notes = *req.Notes
+		contact.Notes = req.Notes
 	}
 	if req.EmailStatus != nil {
 		contact.EmailStatus = domain.EmailStatus(*req.EmailStatus)
@@ -576,8 +577,8 @@ func (h *AdminHandler) SyncGoogleContactsPreview(w http.ResponseWriter, r *http.
 	// Build email→contact map for matching
 	emailMap := make(map[string]*domain.OutreachContact)
 	for i := range existingContacts {
-		if existingContacts[i].Email != "" {
-			emailMap[existingContacts[i].Email] = &existingContacts[i]
+		if existingContacts[i].Email != nil && *existingContacts[i].Email != "" {
+			emailMap[*existingContacts[i].Email] = &existingContacts[i]
 		}
 	}
 
@@ -637,8 +638,8 @@ func (h *AdminHandler) SyncGoogleContacts(w http.ResponseWriter, r *http.Request
 
 	emailMap := make(map[string]*domain.OutreachContact)
 	for i := range existingContacts {
-		if existingContacts[i].Email != "" {
-			emailMap[existingContacts[i].Email] = &existingContacts[i]
+		if existingContacts[i].Email != nil && *existingContacts[i].Email != "" {
+			emailMap[*existingContacts[i].Email] = &existingContacts[i]
 		}
 	}
 
@@ -658,13 +659,15 @@ func (h *AdminHandler) SyncGoogleContacts(w http.ResponseWriter, r *http.Request
 		}
 
 		// Create new outreach contact
+		gcEmail := gc.Email
+		gcPhone := gc.Phone
 		newContact := &domain.OutreachContact{
 			Name:        gc.Name,
 			Org:         gc.Org,
 			Title:       gc.Title,
 			ContactType: domain.ContactTypeOther,
-			Email:       gc.Email,
-			Phone:       gc.Phone,
+			Email:       &gcEmail,
+			Phone:       &gcPhone,
 			Status:      domain.OutreachNotContacted,
 		}
 		if err := h.outreach.Create(r.Context(), newContact); err != nil {
@@ -762,8 +765,8 @@ func (h *AdminHandler) CreateCalendarEvent(w http.ResponseWriter, r *http.Reques
 		contactUUID, parseErr := uuid.Parse(req.ContactID)
 		if parseErr == nil {
 			contact, getErr := h.outreach.GetByID(r.Context(), contactUUID)
-			if getErr == nil && contact != nil && contact.Email != "" {
-				req.Attendees = append(req.Attendees, contact.Email)
+			if getErr == nil && contact != nil && contact.Email != nil && *contact.Email != "" {
+				req.Attendees = append(req.Attendees, *contact.Email)
 			}
 		}
 	}
