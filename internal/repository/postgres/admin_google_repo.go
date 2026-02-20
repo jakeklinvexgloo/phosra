@@ -9,7 +9,7 @@ import (
 	"github.com/guardiangate/api/internal/google"
 )
 
-// AdminGoogleRepo manages the admin_google_tokens single-row table.
+// AdminGoogleRepo manages the admin_google_tokens table (multi-account).
 type AdminGoogleRepo struct {
 	*DB
 }
@@ -18,15 +18,16 @@ func NewAdminGoogleRepo(db *DB) *AdminGoogleRepo {
 	return &AdminGoogleRepo{DB: db}
 }
 
-// GetTokens returns the stored Google OAuth tokens, or nil if none exist.
-func (r *AdminGoogleRepo) GetTokens(ctx context.Context) (*google.GoogleTokens, error) {
+// GetTokens returns the stored Google OAuth tokens for the given account key, or nil if none exist.
+func (r *AdminGoogleRepo) GetTokens(ctx context.Context, accountKey string) (*google.GoogleTokens, error) {
 	var t google.GoogleTokens
 	err := r.Pool.QueryRow(ctx, `
-		SELECT google_email, access_token_encrypted, refresh_token_encrypted,
+		SELECT account_key, google_email, access_token_encrypted, refresh_token_encrypted,
 		       token_expiry, scopes, created_at, updated_at
 		FROM admin_google_tokens
-		WHERE id = 1
-	`).Scan(
+		WHERE account_key = $1
+	`, accountKey).Scan(
+		&t.AccountKey,
 		&t.GoogleEmail,
 		&t.AccessTokenEncrypted,
 		&t.RefreshTokenEncrypted,
@@ -44,12 +45,12 @@ func (r *AdminGoogleRepo) GetTokens(ctx context.Context) (*google.GoogleTokens, 
 	return &t, nil
 }
 
-// UpsertTokens inserts or updates the single-row Google token record.
+// UpsertTokens inserts or updates a Google token record by account key.
 func (r *AdminGoogleRepo) UpsertTokens(ctx context.Context, tokens *google.GoogleTokens) error {
 	_, err := r.Pool.Exec(ctx, `
-		INSERT INTO admin_google_tokens (id, google_email, access_token_encrypted, refresh_token_encrypted, token_expiry, scopes, created_at, updated_at)
-		VALUES (1, $1, $2, $3, $4, $5, $6, $7)
-		ON CONFLICT (id) DO UPDATE SET
+		INSERT INTO admin_google_tokens (account_key, google_email, access_token_encrypted, refresh_token_encrypted, token_expiry, scopes, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+		ON CONFLICT (account_key) DO UPDATE SET
 			google_email = EXCLUDED.google_email,
 			access_token_encrypted = EXCLUDED.access_token_encrypted,
 			refresh_token_encrypted = EXCLUDED.refresh_token_encrypted,
@@ -57,6 +58,7 @@ func (r *AdminGoogleRepo) UpsertTokens(ctx context.Context, tokens *google.Googl
 			scopes = EXCLUDED.scopes,
 			updated_at = EXCLUDED.updated_at
 	`,
+		tokens.AccountKey,
 		tokens.GoogleEmail,
 		tokens.AccessTokenEncrypted,
 		tokens.RefreshTokenEncrypted,
@@ -68,8 +70,8 @@ func (r *AdminGoogleRepo) UpsertTokens(ctx context.Context, tokens *google.Googl
 	return err
 }
 
-// DeleteTokens removes the Google token record (disconnect).
-func (r *AdminGoogleRepo) DeleteTokens(ctx context.Context) error {
-	_, err := r.Pool.Exec(ctx, `DELETE FROM admin_google_tokens WHERE id = 1`)
+// DeleteTokens removes the Google token record for the given account key (disconnect).
+func (r *AdminGoogleRepo) DeleteTokens(ctx context.Context, accountKey string) error {
+	_, err := r.Pool.Exec(ctx, `DELETE FROM admin_google_tokens WHERE account_key = $1`, accountKey)
 	return err
 }

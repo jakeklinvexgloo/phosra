@@ -28,12 +28,12 @@ func (r *AdminOutreachRepo) List(ctx context.Context, contactType string, status
 	argIdx := 1
 
 	if contactType != "" {
-		query += ` AND contact_type = $` + placeholder(argIdx)
+		query += ` AND contact_type = ` + placeholder(argIdx)
 		args = append(args, contactType)
 		argIdx++
 	}
 	if status != "" {
-		query += ` AND status = $` + placeholder(argIdx)
+		query += ` AND status = ` + placeholder(argIdx)
 		args = append(args, status)
 		argIdx++
 	}
@@ -137,7 +137,7 @@ func (r *AdminOutreachRepo) CreateActivity(ctx context.Context, a *domain.Outrea
 
 func (r *AdminOutreachRepo) ListActivities(ctx context.Context, contactID uuid.UUID) ([]domain.OutreachActivity, error) {
 	rows, err := r.Pool.Query(ctx,
-		`SELECT id, contact_id, activity_type, subject, body, created_at
+		`SELECT id, contact_id, activity_type, subject, body, intent_classification, confidence_score, created_at
 		 FROM admin_outreach_activities WHERE contact_id = $1
 		 ORDER BY created_at DESC`, contactID,
 	)
@@ -149,7 +149,7 @@ func (r *AdminOutreachRepo) ListActivities(ctx context.Context, contactID uuid.U
 	var activities []domain.OutreachActivity
 	for rows.Next() {
 		var a domain.OutreachActivity
-		if err := rows.Scan(&a.ID, &a.ContactID, &a.ActivityType, &a.Subject, &a.Body, &a.CreatedAt); err != nil {
+		if err := rows.Scan(&a.ID, &a.ContactID, &a.ActivityType, &a.Subject, &a.Body, &a.IntentClassification, &a.ConfidenceScore, &a.CreatedAt); err != nil {
 			return nil, err
 		}
 		activities = append(activities, a)

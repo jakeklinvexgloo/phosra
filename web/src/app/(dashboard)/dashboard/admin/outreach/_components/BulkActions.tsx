@@ -11,11 +11,12 @@ interface BulkActionsProps {
   selectedCount: number
   onBulkStatusUpdate: (status: OutreachStatus) => void
   onBulkEmailStatusUpdate: (emailStatus: EmailStatus) => void
+  onBulkStartSequences?: () => void
   onClear: () => void
   updating: boolean
 }
 
-export function BulkActions({ selectedCount, onBulkStatusUpdate, onBulkEmailStatusUpdate, onClear, updating }: BulkActionsProps) {
+export function BulkActions({ selectedCount, onBulkStatusUpdate, onBulkEmailStatusUpdate, onBulkStartSequences, onClear, updating }: BulkActionsProps) {
   if (selectedCount === 0) return null
 
   return (
@@ -51,6 +52,15 @@ export function BulkActions({ selectedCount, onBulkStatusUpdate, onBulkEmailStat
             <option key={s} value={s}>{EMAIL_STATUS_META[s].label}</option>
           ))}
         </select>
+        {onBulkStartSequences && (
+          <button
+            onClick={onBulkStartSequences}
+            disabled={updating}
+            className="text-xs bg-blue-500 text-white px-3 py-1.5 rounded-lg hover:bg-blue-600 disabled:opacity-50"
+          >
+            Start Sequences
+          </button>
+        )}
         <button
           onClick={onClear}
           className="p-1 rounded-md hover:bg-background/10 transition-colors"

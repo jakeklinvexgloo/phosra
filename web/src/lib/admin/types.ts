@@ -3,7 +3,7 @@
 export type OutreachContactType = "advocacy" | "tech_company" | "legislator" | "academic" | "other"
 export type OutreachStatus = "not_contacted" | "draft_ready" | "reached_out" | "in_conversation" | "partnership" | "declined"
 export type EmailStatus = "none" | "draft_ready" | "emailed" | "awaiting_reply" | "replied" | "bounced"
-export type OutreachActivityType = "email_sent" | "linkedin_message" | "call" | "meeting" | "note"
+export type OutreachActivityType = "email_sent" | "linkedin_message" | "call" | "meeting" | "note" | "auto_followup_sent" | "intent_classified" | "meeting_proposed" | "email_received"
 
 export interface OutreachContact {
   id: string
@@ -34,7 +34,69 @@ export interface OutreachActivity {
   activity_type: OutreachActivityType
   subject?: string
   body?: string
+  intent_classification?: string
+  confidence_score?: number
   created_at: string
+}
+
+// ── Outreach Autopilot ─────────────────────────────────────────
+
+export type SequenceStatus = "active" | "paused" | "completed" | "cancelled"
+export type PendingEmailStatus = "pending_review" | "approved" | "rejected" | "sent" | "failed"
+
+export interface OutreachSequence {
+  id: string
+  contact_id: string
+  status: SequenceStatus
+  current_step: number
+  next_action_at?: string
+  last_sent_at?: string
+  gmail_thread_id?: string
+  created_at: string
+  updated_at: string
+  contact_name?: string
+  contact_org?: string
+  contact_email?: string
+}
+
+export interface OutreachPendingEmail {
+  id: string
+  contact_id: string
+  sequence_id?: string
+  step_number: number
+  to_email: string
+  subject: string
+  body: string
+  status: PendingEmailStatus
+  gmail_message_id?: string
+  generation_model?: string
+  created_at: string
+  updated_at: string
+  contact_name?: string
+  contact_org?: string
+}
+
+export interface OutreachConfig {
+  autopilot_enabled: boolean
+  sender_name: string
+  sender_title: string
+  sender_email: string
+  company_brief: string
+  email_signature: string
+  send_hour_utc: number
+  max_emails_per_day: number
+  follow_up_delay_days: number
+  google_account_key: string
+  created_at: string
+  updated_at: string
+}
+
+export interface AutopilotStats {
+  active_sequences: number
+  pending_review: number
+  sent_today: number
+  total_replies: number
+  total_meetings: number
 }
 
 export interface OutreachStats {

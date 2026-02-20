@@ -25,15 +25,17 @@ import (
 
 // AdminHandler serves the admin dashboard API endpoints.
 type AdminHandler struct {
-	outreach *postgres.AdminOutreachRepo
-	workers  *postgres.AdminWorkerRepo
-	news     *postgres.AdminNewsRepo
-	alerts   *postgres.AdminAlertsRepo
-	google   *google.Client // nil when Google is not configured
+	outreach       *postgres.AdminOutreachRepo
+	workers        *postgres.AdminWorkerRepo
+	news           *postgres.AdminNewsRepo
+	alerts         *postgres.AdminAlertsRepo
+	google         *google.Client // personal Google account (nil when not configured)
+	googleOutreach *google.Client // outreach Google account (nil when not configured)
+	workerAPIKey   string
 }
 
-func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, news *postgres.AdminNewsRepo, alerts *postgres.AdminAlertsRepo, googleClient *google.Client) *AdminHandler {
-	return &AdminHandler{outreach: outreach, workers: workers, news: news, alerts: alerts, google: googleClient}
+func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, news *postgres.AdminNewsRepo, alerts *postgres.AdminAlertsRepo, googleClient *google.Client, googleOutreach *google.Client, workerAPIKey string) *AdminHandler {
+	return &AdminHandler{outreach: outreach, workers: workers, news: news, alerts: alerts, google: googleClient, googleOutreach: googleOutreach, workerAPIKey: workerAPIKey}
 }
 
 // ── Stats ───────────────────────────────────────────────────────
@@ -65,6 +67,7 @@ func (h *AdminHandler) GetStats(w http.ResponseWriter, r *http.Request) {
 	workerIDs := []string{
 		"legislation-monitor", "outreach-tracker", "news-monitor",
 		"competitive-intel", "compliance-alerter", "provider-api-monitor",
+		"outreach-sequencer", "reply-scanner", "meeting-booker",
 	}
 	for _, wid := range workerIDs {
 		run, ok := latestRuns[wid]
@@ -259,6 +262,9 @@ var workerScripts = map[string]string{
 	"competitive-intel":    "scripts/workers/competitive-intel.mjs",
 	"compliance-alerter":   "scripts/workers/compliance-alerter.mjs",
 	"provider-api-monitor": "scripts/workers/provider-api-monitor.mjs",
+	"outreach-sequencer":   "scripts/workers/outreach-sequencer.mjs",
+	"reply-scanner":        "scripts/workers/reply-scanner.mjs",
+	"meeting-booker":       "scripts/workers/meeting-booker.mjs",
 }
 
 func (h *AdminHandler) TriggerWorker(w http.ResponseWriter, r *http.Request) {

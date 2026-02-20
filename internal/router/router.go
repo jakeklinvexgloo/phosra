@@ -16,6 +16,7 @@ type options struct {
 	sandboxMode    bool
 	corsOrigins    string
 	workosClientID string
+	workerAPIKey   string
 }
 
 // Option configures the router.
@@ -34,6 +35,11 @@ func WithWorkOSClientID(clientID string) Option {
 // WithCORSOrigins sets the allowed CORS origins (comma-separated).
 func WithCORSOrigins(origins string) Option {
 	return func(o *options) { o.corsOrigins = origins }
+}
+
+// WithWorkerAPIKey sets the shared secret for worker authentication.
+func WithWorkerAPIKey(key string) Option {
+	return func(o *options) { o.workerAPIKey = key }
 }
 
 type Handlers struct {
@@ -73,7 +79,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   corsOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Sandbox-Session", "X-Device-Key"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Sandbox-Session", "X-Device-Key", "X-Worker-Key"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300,
@@ -310,6 +316,32 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Post("/calendar/events", h.Admin.CreateCalendarEvent)
 			r.Delete("/calendar/events/{eventID}", h.Admin.DeleteCalendarEvent)
 
+			// Autopilot Config
+			r.Get("/outreach/autopilot/config", h.Admin.GetAutopilotConfig)
+			r.Put("/outreach/autopilot/config", h.Admin.UpdateAutopilotConfig)
+			r.Post("/outreach/autopilot/toggle", h.Admin.ToggleAutopilot)
+			r.Get("/outreach/autopilot/stats", h.Admin.GetAutopilotStats)
+
+			// Sequences
+			r.Get("/outreach/sequences", h.Admin.ListSequences)
+			r.Post("/outreach/{contactID}/sequence", h.Admin.StartSequence)
+			r.Post("/outreach/sequences/{sequenceID}/pause", h.Admin.PauseSequence)
+			r.Post("/outreach/sequences/{sequenceID}/resume", h.Admin.ResumeSequence)
+			r.Post("/outreach/sequences/{sequenceID}/cancel", h.Admin.CancelSequence)
+			r.Post("/outreach/sequences/bulk-start", h.Admin.BulkStartSequences)
+
+			// Pending Emails
+			r.Get("/outreach/pending-emails", h.Admin.ListPendingEmails)
+			r.Post("/outreach/pending-emails/{emailID}/approve", h.Admin.ApprovePendingEmail)
+			r.Post("/outreach/pending-emails/{emailID}/reject", h.Admin.RejectPendingEmail)
+			r.Put("/outreach/pending-emails/{emailID}", h.Admin.EditPendingEmail)
+
+			// Outreach Google OAuth
+			r.Get("/outreach/google/auth-url", h.Admin.GetOutreachGoogleAuthURL)
+			r.Post("/outreach/google/callback", h.Admin.OutreachGoogleCallback)
+			r.Get("/outreach/google/status", h.Admin.GetOutreachGoogleStatus)
+			r.Delete("/outreach/google/disconnect", h.Admin.DisconnectOutreachGoogle)
+
 			// Pitch Coaching
 			r.Route("/pitch", func(r chi.Router) {
 				r.Post("/sessions", h.AdminPitch.CreateSession)
@@ -323,6 +355,36 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 					r.Get("/recording", h.AdminPitch.StreamRecording)
 				})
 			})
+		})
+
+		// Worker API routes (X-Worker-Key auth)
+		r.Route("/worker", func(r chi.Router) {
+			r.Use(middleware.WorkerAuth(o.workerAPIKey))
+
+			// Gmail (via outreach account)
+			r.Post("/gmail/send", h.Admin.WorkerSendGmail)
+			r.Get("/gmail/search", h.Admin.WorkerSearchGmail)
+			r.Get("/gmail/messages/{messageID}", h.Admin.WorkerGetGmailMessage)
+
+			// Calendar (via outreach account)
+			r.Get("/calendar/events", h.Admin.WorkerListCalendarEvents)
+			r.Post("/calendar/events", h.Admin.WorkerCreateCalendarEvent)
+
+			// Sequences
+			r.Get("/outreach/sequences/active", h.Admin.WorkerListActiveSequences)
+			r.Post("/outreach/sequences/{sequenceID}/advance", h.Admin.WorkerAdvanceSequence)
+
+			// Pending emails
+			r.Post("/outreach/pending-emails", h.Admin.WorkerCreatePendingEmail)
+			r.Get("/outreach/sent-today", h.Admin.WorkerCountSentToday)
+
+			// Contact management
+			r.Get("/outreach/{contactID}", h.Admin.WorkerGetContact)
+			r.Patch("/outreach/{contactID}", h.Admin.WorkerUpdateContact)
+			r.Post("/outreach/{contactID}/activity", h.Admin.WorkerCreateActivity)
+
+			// Config
+			r.Get("/outreach/config", h.Admin.WorkerGetConfig)
 		})
 
 		// Device-auth routes (X-Device-Key header)

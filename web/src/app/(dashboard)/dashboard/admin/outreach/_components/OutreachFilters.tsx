@@ -61,7 +61,7 @@ export function OutreachFilters({
           <button
             key={t}
             onClick={() => setTypeFilter(t)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+            className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
               typeFilter === t
                 ? "bg-foreground text-background"
                 : "bg-muted text-muted-foreground hover:text-foreground"
@@ -78,7 +78,7 @@ export function OutreachFilters({
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+            className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
               statusFilter === s
                 ? "bg-foreground/10 text-foreground"
                 : "bg-muted text-muted-foreground hover:text-foreground"
@@ -96,7 +96,7 @@ export function OutreachFilters({
           <button
             key={es}
             onClick={() => setEmailStatusFilter(es)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+            className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
               emailStatusFilter === es
                 ? "bg-foreground/10 text-foreground"
                 : "bg-muted text-muted-foreground hover:text-foreground"

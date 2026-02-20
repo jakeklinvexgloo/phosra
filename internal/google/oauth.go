@@ -18,9 +18,9 @@ import (
 
 // TokenStore is the interface for persisting Google OAuth tokens.
 type TokenStore interface {
-	GetTokens(ctx context.Context) (*GoogleTokens, error)
+	GetTokens(ctx context.Context, accountKey string) (*GoogleTokens, error)
 	UpsertTokens(ctx context.Context, tokens *GoogleTokens) error
-	DeleteTokens(ctx context.Context) error
+	DeleteTokens(ctx context.Context, accountKey string) error
 }
 
 // ErrGoogleDisconnected signals that the refresh token has been revoked.
@@ -37,17 +37,19 @@ type Client struct {
 	clientSecret string
 	redirectURI  string
 	encryptKey   string
+	accountKey   string
 	tokenStore   TokenStore
 	httpClient   *http.Client
 }
 
-// NewClient creates a new Google API client.
-func NewClient(clientID, clientSecret, redirectURI, encryptKey string, store TokenStore) *Client {
+// NewClient creates a new Google API client for the given account key.
+func NewClient(clientID, clientSecret, redirectURI, encryptKey, accountKey string, store TokenStore) *Client {
 	return &Client{
 		clientID:     clientID,
 		clientSecret: clientSecret,
 		redirectURI:  redirectURI,
 		encryptKey:   encryptKey,
+		accountKey:   accountKey,
 		tokenStore:   store,
 		httpClient:   &http.Client{Timeout: 30 * time.Second},
 	}
@@ -144,6 +146,7 @@ func (c *Client) ExchangeCode(ctx context.Context, code string) (*GoogleTokens, 
 
 	now := time.Now()
 	tokens := &GoogleTokens{
+		AccountKey:            c.accountKey,
 		GoogleEmail:           email,
 		AccessTokenEncrypted:  accessEnc,
 		RefreshTokenEncrypted: refreshEnc,
@@ -162,7 +165,7 @@ func (c *Client) ExchangeCode(ctx context.Context, code string) (*GoogleTokens, 
 
 // IsConnected checks whether a Google account is linked.
 func (c *Client) IsConnected(ctx context.Context) (bool, string, error) {
-	tokens, err := c.tokenStore.GetTokens(ctx)
+	tokens, err := c.tokenStore.GetTokens(ctx, c.accountKey)
 	if err != nil {
 		return false, "", err
 	}
@@ -174,12 +177,12 @@ func (c *Client) IsConnected(ctx context.Context) (bool, string, error) {
 
 // Disconnect removes stored Google tokens.
 func (c *Client) Disconnect(ctx context.Context) error {
-	return c.tokenStore.DeleteTokens(ctx)
+	return c.tokenStore.DeleteTokens(ctx, c.accountKey)
 }
 
 // GetAccessToken returns a valid access token, refreshing if necessary.
 func (c *Client) GetAccessToken(ctx context.Context) (string, error) {
-	tokens, err := c.tokenStore.GetTokens(ctx)
+	tokens, err := c.tokenStore.GetTokens(ctx, c.accountKey)
 	if err != nil {
 		return "", fmt.Errorf("get tokens: %w", err)
 	}
@@ -203,7 +206,7 @@ func (c *Client) GetAccessToken(ctx context.Context) (string, error) {
 		newAccessToken, newExpiry, err := c.refreshAccessToken(ctx, refreshToken)
 		if err != nil {
 			if strings.Contains(err.Error(), "invalid_grant") {
-				_ = c.tokenStore.DeleteTokens(ctx)
+				_ = c.tokenStore.DeleteTokens(ctx, c.accountKey)
 				return "", ErrGoogleDisconnected
 			}
 			return "", fmt.Errorf("refresh token: %w", err)

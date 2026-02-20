@@ -86,6 +86,7 @@ type CalendarListResponse struct {
 
 // GoogleTokens holds encrypted OAuth tokens.
 type GoogleTokens struct {
+	AccountKey            string    `json:"account_key"`
 	GoogleEmail           string    `json:"google_email"`
 	AccessTokenEncrypted  string    `json:"-"`
 	RefreshTokenEncrypted string    `json:"-"`

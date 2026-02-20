@@ -26,6 +26,9 @@ type Config struct {
 	GoogleClientSecret string
 	GoogleRedirectURI  string
 
+	GoogleOutreachRedirectURI string
+	WorkerAPIKey              string
+
 	RateLimitRPS int
 	LogLevel     string
 
@@ -78,6 +81,9 @@ func Load() *Config {
 		GoogleClientID:     getEnv("GOOGLE_CLIENT_ID", ""),
 		GoogleClientSecret: getEnv("GOOGLE_CLIENT_SECRET", ""),
 		GoogleRedirectURI:  getEnv("GOOGLE_REDIRECT_URI", "http://localhost:3000/dashboard/admin/gmail/callback"),
+
+		GoogleOutreachRedirectURI: getEnv("GOOGLE_OUTREACH_REDIRECT_URI", "http://localhost:3000/dashboard/admin/outreach/gmail-callback"),
+		WorkerAPIKey:              getEnv("WORKER_API_KEY", ""),
 
 		RateLimitRPS: getInt("RATE_LIMIT_RPS", 100),
 		LogLevel:     getEnv("LOG_LEVEL", "info"),

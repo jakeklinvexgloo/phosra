@@ -10,6 +10,9 @@ import { OutreachTable, type SortField } from "./_components/OutreachTable"
 import { ContactDetail } from "./_components/ContactDetail"
 import { BulkActions } from "./_components/BulkActions"
 import { KanbanBoard } from "./_components/KanbanBoard"
+import { AutopilotPanel } from "./_components/AutopilotPanel"
+import { PendingReviewQueue } from "./_components/PendingReviewQueue"
+import { SenderConfig } from "./_components/SenderConfig"
 
 export default function OutreachPipeline() {
   const { getToken } = useApi()
@@ -47,6 +50,10 @@ export default function OutreachPipeline() {
   // ── View ──────────────────────────────────────────────────────
   const [viewMode, setViewMode] = useState<ViewMode>("table")
   const [focusedIndex, setFocusedIndex] = useState(-1)
+
+  // ── Autopilot ───────────────────────────────────────────────
+  const [showSettings, setShowSettings] = useState(false)
+  const [showPending, setShowPending] = useState(false)
 
   // ── Refs ──────────────────────────────────────────────────────
   const containerRef = useRef<HTMLDivElement>(null)
@@ -336,6 +343,27 @@ export default function OutreachPipeline() {
     }
   }, [getToken, selectedIds, fetchContacts])
 
+  // ── Sequence handlers ──────────────────────────────────────────
+  const handleStartSequence = useCallback(async (contactId: string) => {
+    try {
+      const token = (await getToken()) ?? undefined
+      await api.startSequence(contactId, token)
+      fetchContacts()
+    } catch { /* ignore */ }
+  }, [getToken, fetchContacts])
+
+  const handleBulkStartSequences = useCallback(async () => {
+    setBulkUpdating(true)
+    try {
+      const token = (await getToken()) ?? undefined
+      await api.bulkStartSequences(Array.from(selectedIds), token)
+      setSelectedIds(new Set())
+      fetchContacts()
+    } catch { /* ignore */ } finally {
+      setBulkUpdating(false)
+    }
+  }, [getToken, selectedIds, fetchContacts])
+
   const handleBulkEmailStatusUpdate = useCallback(async (emailStatus: EmailStatus) => {
     setBulkUpdating(true)
     try {
@@ -415,13 +443,29 @@ export default function OutreachPipeline() {
 
   // ── Render ────────────────────────────────────────────────────
   return (
-    <div ref={containerRef} className="space-y-6">
+    <div ref={containerRef} className="space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold text-foreground">Outreach Pipeline</h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <h1 className="text-xl font-semibold text-foreground">Outreach Pipeline</h1>
+        <p className="text-[13px] text-muted-foreground mt-0.5">
           Manage partner outreach, track conversations, and close partnerships.
         </p>
       </div>
+
+      <AutopilotPanel
+        onOpenSettings={() => setShowSettings(true)}
+        onOpenPending={() => setShowPending(true)}
+      />
+
+      <PendingReviewQueue
+        open={showPending}
+        onToggle={() => setShowPending((prev) => !prev)}
+        onRefresh={fetchContacts}
+      />
+
+      <SenderConfig
+        open={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
 
       <OutreachStats
         total={stats.total}
@@ -474,6 +518,7 @@ export default function OutreachPipeline() {
           onStatusChange={handleStatusChange}
           onEmailStatusChange={handleEmailStatusChange}
           onTagClick={handleTagClick}
+          onStartSequence={handleStartSequence}
           expandedActivities={expandedActivities}
           gmailThreads={gmailThreads}
           gmailLoading={gmailLoading}
@@ -498,6 +543,7 @@ export default function OutreachPipeline() {
         selectedCount={selectedIds.size}
         onBulkStatusUpdate={handleBulkStatusUpdate}
         onBulkEmailStatusUpdate={handleBulkEmailStatusUpdate}
+        onBulkStartSequences={handleBulkStartSequences}
         onClear={() => setSelectedIds(new Set())}
         updating={bulkUpdating}
       />

@@ -70,21 +70,113 @@ type OutreachContact struct {
 type OutreachActivityType string
 
 const (
-	ActivityEmailSent       OutreachActivityType = "email_sent"
-	ActivityLinkedInMessage OutreachActivityType = "linkedin_message"
-	ActivityCall            OutreachActivityType = "call"
-	ActivityMeeting         OutreachActivityType = "meeting"
-	ActivityNote            OutreachActivityType = "note"
+	ActivityEmailSent        OutreachActivityType = "email_sent"
+	ActivityLinkedInMessage  OutreachActivityType = "linkedin_message"
+	ActivityCall             OutreachActivityType = "call"
+	ActivityMeeting          OutreachActivityType = "meeting"
+	ActivityNote             OutreachActivityType = "note"
+	ActivityAutoFollowup     OutreachActivityType = "auto_followup_sent"
+	ActivityIntentClassified OutreachActivityType = "intent_classified"
+	ActivityMeetingProposed  OutreachActivityType = "meeting_proposed"
+	ActivityEmailReceived    OutreachActivityType = "email_received"
 )
 
 // OutreachActivity records a single touchpoint with a contact.
 type OutreachActivity struct {
-	ID           uuid.UUID            `json:"id"`
-	ContactID    uuid.UUID            `json:"contact_id"`
-	ActivityType OutreachActivityType `json:"activity_type"`
-	Subject      string               `json:"subject,omitempty"`
-	Body         string               `json:"body,omitempty"`
-	CreatedAt    time.Time            `json:"created_at"`
+	ID                   uuid.UUID            `json:"id"`
+	ContactID            uuid.UUID            `json:"contact_id"`
+	ActivityType         OutreachActivityType `json:"activity_type"`
+	Subject              string               `json:"subject,omitempty"`
+	Body                 string               `json:"body,omitempty"`
+	IntentClassification *string              `json:"intent_classification,omitempty"`
+	ConfidenceScore      *float64             `json:"confidence_score,omitempty"`
+	CreatedAt            time.Time            `json:"created_at"`
+}
+
+// ── Outreach Autopilot ─────────────────────────────────────────
+
+// SequenceStatus tracks the state of an outreach sequence.
+type SequenceStatus string
+
+const (
+	SequenceActive    SequenceStatus = "active"
+	SequencePaused    SequenceStatus = "paused"
+	SequenceCompleted SequenceStatus = "completed"
+	SequenceCancelled SequenceStatus = "cancelled"
+)
+
+// OutreachSequence tracks an automated email sequence for a contact.
+type OutreachSequence struct {
+	ID            uuid.UUID      `json:"id"`
+	ContactID     uuid.UUID      `json:"contact_id"`
+	Status        SequenceStatus `json:"status"`
+	CurrentStep   int            `json:"current_step"`
+	NextActionAt  *time.Time     `json:"next_action_at,omitempty"`
+	LastSentAt    *time.Time     `json:"last_sent_at,omitempty"`
+	GmailThreadID *string        `json:"gmail_thread_id,omitempty"`
+	CreatedAt     time.Time      `json:"created_at"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+
+	// Joined fields (from contact)
+	ContactName  string  `json:"contact_name,omitempty"`
+	ContactOrg   string  `json:"contact_org,omitempty"`
+	ContactEmail *string `json:"contact_email,omitempty"`
+}
+
+// PendingEmailStatus tracks approval workflow.
+type PendingEmailStatus string
+
+const (
+	PendingReview  PendingEmailStatus = "pending_review"
+	PendingApproved PendingEmailStatus = "approved"
+	PendingRejected PendingEmailStatus = "rejected"
+	PendingSent     PendingEmailStatus = "sent"
+	PendingFailed   PendingEmailStatus = "failed"
+)
+
+// OutreachPendingEmail represents an email awaiting review/approval.
+type OutreachPendingEmail struct {
+	ID              uuid.UUID          `json:"id"`
+	ContactID       uuid.UUID          `json:"contact_id"`
+	SequenceID      *uuid.UUID         `json:"sequence_id,omitempty"`
+	StepNumber      int                `json:"step_number"`
+	ToEmail         string             `json:"to_email"`
+	Subject         string             `json:"subject"`
+	Body            string             `json:"body"`
+	Status          PendingEmailStatus `json:"status"`
+	GmailMessageID  *string            `json:"gmail_message_id,omitempty"`
+	GenerationModel *string            `json:"generation_model,omitempty"`
+	CreatedAt       time.Time          `json:"created_at"`
+	UpdatedAt       time.Time          `json:"updated_at"`
+
+	// Joined fields
+	ContactName string `json:"contact_name,omitempty"`
+	ContactOrg  string `json:"contact_org,omitempty"`
+}
+
+// OutreachConfig holds the autopilot configuration.
+type OutreachConfig struct {
+	AutopilotEnabled  bool   `json:"autopilot_enabled"`
+	SenderName        string `json:"sender_name"`
+	SenderTitle       string `json:"sender_title"`
+	SenderEmail       string `json:"sender_email"`
+	CompanyBrief      string `json:"company_brief"`
+	EmailSignature    string `json:"email_signature"`
+	SendHourUTC       int    `json:"send_hour_utc"`
+	MaxEmailsPerDay   int    `json:"max_emails_per_day"`
+	FollowUpDelayDays int    `json:"follow_up_delay_days"`
+	GoogleAccountKey  string `json:"google_account_key"`
+	CreatedAt         time.Time `json:"created_at"`
+	UpdatedAt         time.Time `json:"updated_at"`
+}
+
+// AutopilotStats aggregates autopilot metrics for the dashboard.
+type AutopilotStats struct {
+	ActiveSequences int `json:"active_sequences"`
+	PendingReview   int `json:"pending_review"`
+	SentToday       int `json:"sent_today"`
+	TotalReplies    int `json:"total_replies"`
+	TotalMeetings   int `json:"total_meetings"`
 }
 
 // OutreachStats holds aggregate counts for the outreach pipeline.

@@ -287,6 +287,55 @@ class ApiClient {
     return `${this.baseUrl}/admin/pitch/sessions/${sessionId}/recording`
   }
 
+  // ── Outreach Autopilot ──────────────────────────────────────
+  async getAutopilotConfig(token?: string) { return this.fetch("/admin/outreach/autopilot/config", {}, token) }
+  async updateAutopilotConfig(data: Record<string, unknown>, token?: string) {
+    return this.fetch("/admin/outreach/autopilot/config", { method: "PUT", body: JSON.stringify(data) }, token)
+  }
+  async toggleAutopilot(token?: string) { return this.fetch("/admin/outreach/autopilot/toggle", { method: "POST" }, token) }
+  async getAutopilotStats(token?: string) { return this.fetch("/admin/outreach/autopilot/stats", {}, token) }
+
+  // Sequences
+  async listSequences(token?: string) { return this.fetch("/admin/outreach/sequences", {}, token) }
+  async startSequence(contactId: string, token?: string) {
+    return this.fetch(`/admin/outreach/${contactId}/sequence`, { method: "POST" }, token)
+  }
+  async pauseSequence(id: string, token?: string) {
+    return this.fetch(`/admin/outreach/sequences/${id}/pause`, { method: "POST" }, token)
+  }
+  async resumeSequence(id: string, token?: string) {
+    return this.fetch(`/admin/outreach/sequences/${id}/resume`, { method: "POST" }, token)
+  }
+  async cancelSequence(id: string, token?: string) {
+    return this.fetch(`/admin/outreach/sequences/${id}/cancel`, { method: "POST" }, token)
+  }
+  async bulkStartSequences(contactIds: string[], token?: string) {
+    return this.fetch("/admin/outreach/sequences/bulk-start", { method: "POST", body: JSON.stringify({ contact_ids: contactIds }) }, token)
+  }
+
+  // Pending Emails
+  async listPendingEmails(status?: string, token?: string) {
+    const qs = status ? `?status=${status}` : ""
+    return this.fetch(`/admin/outreach/pending-emails${qs}`, {}, token)
+  }
+  async approvePendingEmail(id: string, token?: string) {
+    return this.fetch(`/admin/outreach/pending-emails/${id}/approve`, { method: "POST" }, token)
+  }
+  async rejectPendingEmail(id: string, token?: string) {
+    return this.fetch(`/admin/outreach/pending-emails/${id}/reject`, { method: "POST" }, token)
+  }
+  async editPendingEmail(id: string, data: { subject?: string; body?: string }, token?: string) {
+    return this.fetch(`/admin/outreach/pending-emails/${id}`, { method: "PUT", body: JSON.stringify(data) }, token)
+  }
+
+  // Outreach Google OAuth
+  async getOutreachGoogleAuthURL(token?: string) { return this.fetch("/admin/outreach/google/auth-url", {}, token) }
+  async submitOutreachGoogleCallback(code: string, token?: string) {
+    return this.fetch("/admin/outreach/google/callback", { method: "POST", body: JSON.stringify({ code }) }, token)
+  }
+  async getOutreachGoogleStatus(token?: string) { return this.fetch("/admin/outreach/google/status", {}, token) }
+  async disconnectOutreachGoogle(token?: string) { return this.fetch("/admin/outreach/google/disconnect", { method: "DELETE" }, token) }
+
   async listFeedback(status?: string) {
     const qs = status ? `?status=${status}` : ""
     const res = await window.fetch(`${this.baseUrl}/feedback${qs}`, {

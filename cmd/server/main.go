@@ -163,17 +163,26 @@ func main() {
 	setupSvc := service.NewQuickSetupService(familyRepo, memberRepo, childRepo, policyRepo, ruleRepo, ratingRepo, policySvc, complianceLinkRepo)
 	standardSvc := service.NewStandardService(standardRepo, standardAdoptionRepo, childRepo, memberRepo)
 
-	// Google Workspace client (optional — only configured when GOOGLE_CLIENT_ID is set)
-	var googleClient *googleapi.Client
+	// Google Workspace clients (optional — only configured when GOOGLE_CLIENT_ID is set)
+	var googlePersonal, googleOutreach *googleapi.Client
 	if cfg.GoogleClientID != "" {
-		googleClient = googleapi.NewClient(
+		googlePersonal = googleapi.NewClient(
 			cfg.GoogleClientID,
 			cfg.GoogleClientSecret,
 			cfg.GoogleRedirectURI,
 			cfg.EncryptionKey,
+			"personal",
 			adminGoogleRepo,
 		)
-		log.Info().Str("redirect_uri", cfg.GoogleRedirectURI).Msg("Google Workspace integration enabled")
+		googleOutreach = googleapi.NewClient(
+			cfg.GoogleClientID,
+			cfg.GoogleClientSecret,
+			cfg.GoogleOutreachRedirectURI,
+			cfg.EncryptionKey,
+			"outreach",
+			adminGoogleRepo,
+		)
+		log.Info().Str("redirect_uri", cfg.GoogleRedirectURI).Msg("Google Workspace integration enabled (personal + outreach)")
 	}
 
 	// Handlers
@@ -191,7 +200,7 @@ func main() {
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 		Standard:    handler.NewStandardHandler(standardSvc),
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
-		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googleClient),
+		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googlePersonal, googleOutreach, cfg.WorkerAPIKey),
 		AdminPitch: handler.NewAdminPitchHandler(adminPitchRepo, cfg.OpenAIAPIKey, service.NewTranscriptionService(cfg.AssemblyAIKey), service.NewEmotionService(cfg.HumeAIKey)),
 	}
 
@@ -207,6 +216,10 @@ func main() {
 	if cfg.CORSOrigins != "" {
 		routerOpts = append(routerOpts, router.WithCORSOrigins(cfg.CORSOrigins))
 		log.Info().Str("origins", cfg.CORSOrigins).Msg("CORS origins configured")
+	}
+	if cfg.WorkerAPIKey != "" {
+		routerOpts = append(routerOpts, router.WithWorkerAPIKey(cfg.WorkerAPIKey))
+		log.Info().Msg("Worker API key configured")
 	}
 	r := router.New(handlers, userRepo, devicePolicySvc, cfg.RateLimitRPS, routerOpts...)
 
