@@ -50,7 +50,8 @@ type Handlers struct {
 	Feedback    *handler.FeedbackHandler
 	Standard    *handler.StandardHandler
 	Device      *handler.DeviceHandler
-	Admin       *handler.AdminHandler
+	Admin      *handler.AdminHandler
+	AdminPitch *handler.AdminPitchHandler
 }
 
 func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.DeviceAuthenticator, rateLimitRPS int, opts ...Option) http.Handler {
@@ -298,6 +299,18 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Get("/calendar/events", h.Admin.ListCalendarEvents)
 			r.Post("/calendar/events", h.Admin.CreateCalendarEvent)
 			r.Delete("/calendar/events/{eventID}", h.Admin.DeleteCalendarEvent)
+
+			// Pitch Coaching
+			r.Route("/pitch", func(r chi.Router) {
+				r.Post("/sessions", h.AdminPitch.CreateSession)
+				r.Get("/sessions", h.AdminPitch.ListSessions)
+				r.Route("/sessions/{sessionID}", func(r chi.Router) {
+					r.Get("/", h.AdminPitch.GetSession)
+					r.Delete("/", h.AdminPitch.DeleteSession)
+					r.Get("/ws", h.AdminPitch.HandleRealtimeWS)
+					r.Post("/end", h.AdminPitch.EndSession)
+				})
+			})
 		})
 
 		// Device-auth routes (X-Device-Key header)

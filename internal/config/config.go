@@ -46,6 +46,9 @@ type Config struct {
 	// Sandbox / MCP Playground
 	SandboxMode    bool
 	AnthropicAPIKey string
+
+	// OpenAI (Pitch Coaching — Realtime API + GPT-4o feedback)
+	OpenAIAPIKey string
 }
 
 func Load() *Config {
@@ -86,6 +89,8 @@ func Load() *Config {
 
 		SandboxMode:    getBool("SANDBOX_MODE", false),
 		AnthropicAPIKey: getEnv("ANTHROPIC_API_KEY", ""),
+
+		OpenAIAPIKey: getEnv("OPENAI_API_KEY", ""),
 	}
 }
 

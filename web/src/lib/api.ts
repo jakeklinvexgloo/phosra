@@ -215,6 +215,29 @@ class ApiClient {
     return this.fetch(`/admin/calendar/events/${eventId}`, { method: "DELETE" }, token)
   }
 
+  // ── Pitch Coaching ──────────────────────────────────────────
+  async createPitchSession(persona: string, personaConfig?: Record<string, unknown>, token?: string) {
+    return this.fetch("/admin/pitch/sessions", {
+      method: "POST",
+      body: JSON.stringify({ persona, persona_config: personaConfig || {} }),
+    }, token)
+  }
+  async listPitchSessions(token?: string) { return this.fetch("/admin/pitch/sessions", {}, token) }
+  async getPitchSession(id: string, token?: string) { return this.fetch(`/admin/pitch/sessions/${id}`, {}, token) }
+  async deletePitchSession(id: string, token?: string) {
+    return this.fetch(`/admin/pitch/sessions/${id}`, { method: "DELETE" }, token)
+  }
+  async endPitchSession(id: string, token?: string) {
+    return this.fetch(`/admin/pitch/sessions/${id}/end`, { method: "POST" }, token)
+  }
+
+  /** Returns the WebSocket URL for the pitch session relay. */
+  getPitchWSUrl(sessionId: string, token?: string): string {
+    const base = this.baseUrl.replace(/^http/, "ws")
+    const qs = token ? `?token=${encodeURIComponent(token)}` : ""
+    return `${base}/admin/pitch/sessions/${sessionId}/ws${qs}`
+  }
+
   async listFeedback(status?: string) {
     const qs = status ? `?status=${status}` : ""
     const res = await window.fetch(`${this.baseUrl}/feedback${qs}`, {

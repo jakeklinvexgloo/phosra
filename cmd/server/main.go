@@ -87,6 +87,7 @@ func main() {
 	adminOutreachRepo := postgres.NewAdminOutreachRepo(db)
 	adminWorkerRepo := postgres.NewAdminWorkerRepo(db)
 	adminGoogleRepo := postgres.NewAdminGoogleRepo(db)
+	adminPitchRepo := postgres.NewAdminPitchRepo(db)
 
 	// Phosra service-layer repositories
 	notificationScheduleRepo := postgres.NewNotificationScheduleRepo(db)
@@ -188,7 +189,8 @@ func main() {
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 		Standard:    handler.NewStandardHandler(standardSvc),
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
-		Admin:       handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, googleClient),
+		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, googleClient),
+		AdminPitch: handler.NewAdminPitchHandler(adminPitchRepo, cfg.OpenAIAPIKey),
 	}
 
 	// Router
@@ -207,11 +209,13 @@ func main() {
 	r := router.New(handlers, userRepo, devicePolicySvc, cfg.RateLimitRPS, routerOpts...)
 
 	// Server
+	// Note: WriteTimeout set to 0 to support long-running WebSocket connections
+	// (pitch coaching relay). Individual HTTP handlers still have request-level timeouts.
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%s", cfg.Port),
 		Handler:      r,
 		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 15 * time.Second,
+		WriteTimeout: 0,
 		IdleTimeout:  60 * time.Second,
 	}
 

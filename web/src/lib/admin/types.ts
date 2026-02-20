@@ -200,6 +200,104 @@ export interface CalendarListResponse {
   next_page_token?: string
 }
 
+// ── Pitch Coaching ─────────────────────────────────────────────
+
+export type PitchPersona = "investor" | "partner" | "legislator"
+export type PitchSessionStatus = "configuring" | "active" | "processing" | "completed" | "failed"
+
+export interface PitchSession {
+  id: string
+  user_id: string
+  persona: PitchPersona
+  persona_config: Record<string, unknown>
+  status: PitchSessionStatus
+  started_at?: string
+  ended_at?: string
+  duration_seconds?: number
+  recording_path?: string
+  recording_size_bytes?: number
+  transcript?: TranscriptEntry[]
+  feedback?: PitchFeedback
+  overall_score?: number
+  created_at: string
+  updated_at: string
+  metrics?: PitchSessionMetrics
+}
+
+export interface TranscriptEntry {
+  speaker: "user" | "ai"
+  text: string
+  start_ms?: number
+  end_ms?: number
+}
+
+export interface PitchFeedback {
+  summary: string
+  strengths: string[]
+  improvements: string[]
+  specific_moments: FeedbackMoment[]
+  recommended_practice: string
+}
+
+export interface FeedbackMoment {
+  timestamp_ms: number
+  note: string
+}
+
+export interface PitchSessionMetrics {
+  id: string
+  session_id: string
+  filler_word_count: number
+  filler_words: string[]
+  words_per_minute?: number
+  silence_percentage?: number
+  clarity_score?: number
+  persuasion_score?: number
+  confidence_score?: number
+  structure_score?: number
+  emotion_data?: unknown
+  dominant_emotions?: unknown
+  created_at: string
+}
+
+export const PERSONA_META: Record<PitchPersona, {
+  label: string
+  description: string
+  icon: string
+  bgColor: string
+  textColor: string
+}> = {
+  investor: {
+    label: "VC Investor",
+    description: "Series A partner evaluating market size, unit economics, team, and competitive moat",
+    icon: "💰",
+    bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
+    textColor: "text-emerald-700 dark:text-emerald-300",
+  },
+  partner: {
+    label: "Tech Partner",
+    description: "VP of Trust & Safety evaluating API integration, reliability, compliance coverage",
+    icon: "🤝",
+    bgColor: "bg-blue-100 dark:bg-blue-900/30",
+    textColor: "text-blue-700 dark:text-blue-300",
+  },
+  legislator: {
+    label: "Legislator",
+    description: "US Senator on Commerce Committee focused on child safety enforcement gaps",
+    icon: "🏛️",
+    bgColor: "bg-purple-100 dark:bg-purple-900/30",
+    textColor: "text-purple-700 dark:text-purple-300",
+  },
+}
+
+export const PITCH_STATUS_META: Record<PitchSessionStatus, { label: string; color: string }> = {
+  configuring: { label: "Setting Up", color: "text-muted-foreground" },
+  active: { label: "In Progress", color: "text-blue-600 dark:text-blue-400" },
+  processing: { label: "Generating Feedback", color: "text-amber-600 dark:text-amber-400" },
+  completed: { label: "Completed", color: "text-brand-green" },
+  failed: { label: "Failed", color: "text-destructive" },
+}
+
 // ── Status Display Helpers ──────────────────────────────────────
 
 export const OUTREACH_STATUS_META: Record<OutreachStatus, { label: string; color: string; dotColor: string }> = {
