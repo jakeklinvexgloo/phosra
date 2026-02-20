@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
-import { Mic, MicOff, PhoneOff, Loader2 } from "lucide-react"
+import { Mic, MicOff, PhoneOff, Loader2, Video, Upload } from "lucide-react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import type { PitchSession, TranscriptEntry } from "@/lib/admin/types"
@@ -19,19 +19,27 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
   const [connecting, setConnecting] = useState(true)
   const [muted, setMuted] = useState(false)
   const [ending, setEnding] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState("")
   const [elapsed, setElapsed] = useState(0)
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([])
   const [aiSpeaking, setAiSpeaking] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [cameraEnabled, setCameraEnabled] = useState(true)
 
   const wsRef = useRef<WebSocket | null>(null)
   const audioCtxRef = useRef<AudioContext | null>(null)
   const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null)
   const workletRef = useRef<AudioWorkletNode | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
+  const videoStreamRef = useRef<MediaStream | null>(null)
   const playbackCtxRef = useRef<AudioContext | null>(null)
+  const nextPlayTimeRef = useRef<number>(0)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const transcriptEndRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const recordedChunksRef = useRef<Blob[]>([])
 
   // Timer
   useEffect(() => {
@@ -54,10 +62,11 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
     return `${m}:${s.toString().padStart(2, "0")}`
   }
 
-  // Play PCM16 audio from base64
+  // Play PCM16 audio from base64 — queued sequentially to prevent overlap
   const playAudio = useCallback((base64Data: string) => {
     if (!playbackCtxRef.current) {
       playbackCtxRef.current = new AudioContext({ sampleRate: 24000 })
+      nextPlayTimeRef.current = 0
     }
     const ctx = playbackCtxRef.current
 
@@ -80,10 +89,14 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
     const source = ctx.createBufferSource()
     source.buffer = buffer
     source.connect(ctx.destination)
-    source.start()
+
+    // Schedule this chunk right after the previous one ends
+    const startTime = Math.max(ctx.currentTime, nextPlayTimeRef.current)
+    source.start(startTime)
+    nextPlayTimeRef.current = startTime + buffer.duration
   }, [])
 
-  // Connect WebSocket and set up audio
+  // Connect WebSocket and set up audio + video recording
   const connect = useCallback(async () => {
     try {
       setConnecting(true)
@@ -92,18 +105,75 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
       // Get auth token
       const token = (await getToken()) ?? undefined
 
-      // Request microphone access
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          sampleRate: 24000,
-          channelCount: 1,
-          echoCancellation: true,
-          noiseSuppression: true,
-        },
-      })
-      streamRef.current = stream
+      // Request microphone + camera access
+      let videoStream: MediaStream | null = null
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            sampleRate: 24000,
+            channelCount: 1,
+            echoCancellation: true,
+            noiseSuppression: true,
+          },
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: "user",
+          },
+        })
+      } catch {
+        // Fallback: audio only if camera is denied
+        videoStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            sampleRate: 24000,
+            channelCount: 1,
+            echoCancellation: true,
+            noiseSuppression: true,
+          },
+        })
+        setCameraEnabled(false)
+      }
 
-      // Set up AudioContext for mic capture
+      videoStreamRef.current = videoStream
+      streamRef.current = videoStream
+
+      // Show self-preview
+      if (videoRef.current && videoStream.getVideoTracks().length > 0) {
+        videoRef.current.srcObject = videoStream
+      }
+
+      // Start MediaRecorder for the full stream (audio + video)
+      try {
+        const recorder = new MediaRecorder(videoStream, {
+          mimeType: "video/webm;codecs=vp9,opus",
+        })
+        mediaRecorderRef.current = recorder
+        recordedChunksRef.current = []
+
+        recorder.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            recordedChunksRef.current.push(e.data)
+          }
+        }
+        recorder.start(1000) // collect chunks every second
+      } catch {
+        // If VP9 isn't supported, try default
+        try {
+          const recorder = new MediaRecorder(videoStream)
+          mediaRecorderRef.current = recorder
+          recordedChunksRef.current = []
+          recorder.ondataavailable = (e) => {
+            if (e.data.size > 0) {
+              recordedChunksRef.current.push(e.data)
+            }
+          }
+          recorder.start(1000)
+        } catch {
+          console.warn("MediaRecorder not supported — recording disabled")
+        }
+      }
+
+      // Set up AudioContext for mic capture at 24kHz (for OpenAI)
       const audioCtx = new AudioContext({ sampleRate: 24000 })
       audioCtxRef.current = audioCtx
 
@@ -131,7 +201,7 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
       await audioCtx.audioWorklet.addModule(url)
       URL.revokeObjectURL(url)
 
-      const sourceNode = audioCtx.createMediaStreamSource(stream)
+      const sourceNode = audioCtx.createMediaStreamSource(videoStream)
       sourceNodeRef.current = sourceNode
 
       const workletNode = new AudioWorkletNode(audioCtx, "pcm16-processor")
@@ -198,6 +268,8 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
 
       case "response.audio.done":
         setAiSpeaking(false)
+        // Reset queue so next response starts immediately
+        nextPlayTimeRef.current = 0
         break
 
       case "response.audio_transcript.done":
@@ -229,16 +301,49 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
       streamRef.current?.getTracks().forEach((t) => t.stop())
       audioCtxRef.current?.close()
       playbackCtxRef.current?.close()
+      mediaRecorderRef.current?.stop()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEnd = async () => {
     setEnding(true)
     wsRef.current?.close()
+
+    // Stop MediaRecorder and collect the recording blob
+    const recorder = mediaRecorderRef.current
+    if (recorder && recorder.state !== "inactive") {
+      await new Promise<void>((resolve) => {
+        recorder.onstop = () => resolve()
+        recorder.stop()
+      })
+    }
+
+    // Stop all media tracks
     streamRef.current?.getTracks().forEach((t) => t.stop())
     audioCtxRef.current?.close()
     playbackCtxRef.current?.close()
+
+    // Trigger feedback pipeline
     await onEnd()
+
+    // Upload the recording in the background
+    if (recordedChunksRef.current.length > 0) {
+      setUploading(true)
+      setUploadProgress("Preparing recording...")
+      const recordingBlob = new Blob(recordedChunksRef.current, { type: "video/webm" })
+      const sizeMB = (recordingBlob.size / (1024 * 1024)).toFixed(1)
+      setUploadProgress(`Uploading ${sizeMB} MB...`)
+
+      try {
+        const token = (await getToken()) ?? undefined
+        await api.uploadPitchRecording(session.id, recordingBlob, token)
+        setUploadProgress("Upload complete!")
+      } catch (err) {
+        console.error("Failed to upload recording:", err)
+        setUploadProgress("Upload failed — feedback still available")
+      }
+      // Don't wait for upload to complete — review page will show regardless
+    }
   }
 
   const toggleMute = () => {
@@ -293,6 +398,15 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
                   </span>
                   <span className="text-muted-foreground/50">|</span>
                   <span className="tabular-nums">{formatTime(elapsed)}</span>
+                  {cameraEnabled && (
+                    <>
+                      <span className="text-muted-foreground/50">|</span>
+                      <span className="flex items-center gap-1">
+                        <Video className="w-3 h-3" />
+                        Recording
+                      </span>
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -319,44 +433,75 @@ export function LiveSession({ session, onEnd, onBack }: LiveSessionProps) {
         )}
       </div>
 
-      {/* Transcript */}
-      <div className="plaid-card h-[400px] overflow-y-auto">
-        {transcript.length === 0 && connected && (
-          <p className="text-sm text-muted-foreground text-center py-12">
-            Start speaking to begin the conversation...
-          </p>
-        )}
-        {transcript.length === 0 && connecting && (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />
-          </div>
-        )}
-        <div className="space-y-3">
-          {transcript.map((entry, i) => (
-            <div key={i} className={`flex gap-3 ${entry.speaker === "user" ? "flex-row-reverse" : ""}`}>
-              <div
-                className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium ${
-                  entry.speaker === "user"
-                    ? "bg-foreground text-background"
-                    : `${persona.bgColor} ${persona.textColor}`
-                }`}
-              >
-                {entry.speaker === "user" ? "You" : "AI"}
-              </div>
-              <div
-                className={`max-w-[75%] rounded-lg px-3 py-2 text-sm ${
-                  entry.speaker === "user"
-                    ? "bg-foreground text-background"
-                    : "bg-muted text-foreground"
-                }`}
-              >
-                {entry.text}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Self-preview (webcam pip) */}
+        {cameraEnabled && (
+          <div className="lg:col-span-1">
+            <div className="plaid-card p-2 aspect-video relative overflow-hidden">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover rounded-md transform -scale-x-100"
+              />
+              <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-red-600 text-white text-[10px] font-medium flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                REC
               </div>
             </div>
-          ))}
-          <div ref={transcriptEndRef} />
+          </div>
+        )}
+
+        {/* Transcript */}
+        <div className={`${cameraEnabled ? "lg:col-span-2" : "lg:col-span-3"}`}>
+          <div className="plaid-card h-[350px] overflow-y-auto">
+            {transcript.length === 0 && connected && (
+              <p className="text-sm text-muted-foreground text-center py-12">
+                Waiting for your conversation partner to start...
+              </p>
+            )}
+            {transcript.length === 0 && connecting && (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-5 h-5 text-muted-foreground animate-spin" />
+              </div>
+            )}
+            <div className="space-y-3">
+              {transcript.map((entry, i) => (
+                <div key={i} className={`flex gap-3 ${entry.speaker === "user" ? "flex-row-reverse" : ""}`}>
+                  <div
+                    className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium ${
+                      entry.speaker === "user"
+                        ? "bg-foreground text-background"
+                        : `${persona.bgColor} ${persona.textColor}`
+                    }`}
+                  >
+                    {entry.speaker === "user" ? "You" : "AI"}
+                  </div>
+                  <div
+                    className={`max-w-[75%] rounded-lg px-3 py-2 text-sm ${
+                      entry.speaker === "user"
+                        ? "bg-foreground text-background"
+                        : "bg-muted text-foreground"
+                    }`}
+                  >
+                    {entry.text}
+                  </div>
+                </div>
+              ))}
+              <div ref={transcriptEndRef} />
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Upload progress (shown after ending) */}
+      {uploading && (
+        <div className="plaid-card flex items-center gap-3">
+          <Upload className="w-4 h-4 text-muted-foreground animate-pulse" />
+          <span className="text-sm text-muted-foreground">{uploadProgress}</span>
+        </div>
+      )}
 
       {/* Controls */}
       <div className="flex items-center justify-center gap-4">

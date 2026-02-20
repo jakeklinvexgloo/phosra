@@ -319,6 +319,8 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 					r.Delete("/", h.AdminPitch.DeleteSession)
 					r.Get("/ws", h.AdminPitch.HandleRealtimeWS)
 					r.Post("/end", h.AdminPitch.EndSession)
+					r.Post("/recording", h.AdminPitch.UploadRecording)
+					r.Get("/recording", h.AdminPitch.StreamRecording)
 				})
 			})
 		})

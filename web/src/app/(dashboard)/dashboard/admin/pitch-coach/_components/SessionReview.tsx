@@ -1,14 +1,15 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   ArrowLeft, RotateCcw, CheckCircle2, AlertTriangle, Loader2,
-  MessageSquare, Target, Lightbulb, TrendingUp, Volume2,
+  MessageSquare, Target, Lightbulb, TrendingUp, Volume2, Play, Heart,
 } from "lucide-react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import type { PitchSession } from "@/lib/admin/types"
-import { PERSONA_META, PITCH_STATUS_META } from "@/lib/admin/types"
+import { PERSONA_META } from "@/lib/admin/types"
+import { EmotionTimeline } from "./EmotionTimeline"
 
 interface SessionReviewProps {
   sessionId: string
@@ -20,6 +21,10 @@ export function SessionReview({ sessionId, onBack, onPracticeAgain }: SessionRev
   const { getToken } = useApi()
   const [session, setSession] = useState<PitchSession | null>(null)
   const [loading, setLoading] = useState(true)
+  const [videoPlaying, setVideoPlaying] = useState(false)
+  const [activeTab, setActiveTab] = useState<"feedback" | "transcript" | "metrics" | "emotions">("feedback")
+  const [videoTimeMs, setVideoTimeMs] = useState(0)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   const fetchSession = useCallback(async () => {
     try {
@@ -41,6 +46,16 @@ export function SessionReview({ sessionId, onBack, onPracticeAgain }: SessionRev
   useEffect(() => {
     fetchSession()
   }, [fetchSession])
+
+  const toggleVideo = () => {
+    if (!videoRef.current) return
+    if (videoPlaying) {
+      videoRef.current.pause()
+    } else {
+      videoRef.current.play()
+    }
+    setVideoPlaying(!videoPlaying)
+  }
 
   if (loading || !session || session.status === "processing") {
     return (
@@ -91,6 +106,29 @@ export function SessionReview({ sessionId, onBack, onPracticeAgain }: SessionRev
   const feedback = session.feedback
   const metrics = session.metrics
   const persona = PERSONA_META[session.persona]
+  const hasRecording = !!session.recording_path
+
+  // Build filler word breakdown data for the chart
+  const fillerBreakdown: { word: string; count: number }[] = []
+  if (metrics?.filler_words && Array.isArray(metrics.filler_words)) {
+    const counts: Record<string, number> = {}
+    for (const w of metrics.filler_words) {
+      counts[w] = (counts[w] || 0) + 1
+    }
+    for (const [word, count] of Object.entries(counts)) {
+      fillerBreakdown.push({ word, count })
+    }
+    fillerBreakdown.sort((a, b) => b.count - a.count)
+  }
+
+  // WPM classification
+  const getWpmLabel = (wpm: number) => {
+    if (wpm < 110) return { label: "Slow — try speaking a bit faster", color: "text-amber-500" }
+    if (wpm < 130) return { label: "Good conversational pace", color: "text-brand-green" }
+    if (wpm < 160) return { label: "Ideal pitch pace", color: "text-brand-green" }
+    if (wpm < 180) return { label: "A bit fast — breathe more", color: "text-amber-500" }
+    return { label: "Too fast — slow down", color: "text-red-500" }
+  }
 
   return (
     <div className="space-y-8">
@@ -124,92 +162,124 @@ export function SessionReview({ sessionId, onBack, onPracticeAgain }: SessionRev
         </div>
       </div>
 
-      {/* Overall Score */}
-      {session.overall_score != null && (
-        <div className="plaid-card flex items-center gap-6">
-          <div className="relative w-20 h-20">
-            <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
-              <circle cx="40" cy="40" r="35" stroke="currentColor" strokeWidth="6" fill="none" className="text-muted/50" />
-              <circle
-                cx="40" cy="40" r="35"
-                stroke="currentColor"
-                strokeWidth="6"
-                fill="none"
-                className="text-brand-green"
-                strokeDasharray={`${(session.overall_score / 100) * 220} 220`}
-                strokeLinecap="round"
-              />
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-xl font-bold text-foreground">{session.overall_score}</span>
+      {/* Video Player + Overall Score */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Video Player */}
+        {hasRecording && (
+          <div className="lg:col-span-2">
+            <div className="plaid-card p-0 overflow-hidden">
+              <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
+                <video
+                  ref={videoRef}
+                  src={api.getPitchRecordingUrl(session.id)}
+                  className="w-full h-full object-contain"
+                  controls
+                  preload="metadata"
+                  onPlay={() => setVideoPlaying(true)}
+                  onPause={() => setVideoPlaying(false)}
+                  onEnded={() => setVideoPlaying(false)}
+                  onTimeUpdate={(e) => setVideoTimeMs(Math.round(e.currentTarget.currentTime * 1000))}
+                />
+                {!videoPlaying && (
+                  <button
+                    onClick={toggleVideo}
+                    className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors group"
+                  >
+                    <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Play className="w-6 h-6 text-black ml-0.5" />
+                    </div>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-          <div>
-            <div className="text-lg font-semibold text-foreground">Overall Score</div>
-            <div className="text-sm text-muted-foreground">
-              {session.overall_score >= 80 ? "Excellent pitch!" : session.overall_score >= 60 ? "Good pitch with room for improvement" : "Keep practicing — you're getting better!"}
+        )}
+
+        {/* Overall Score */}
+        <div className={hasRecording ? "lg:col-span-1" : "lg:col-span-3"}>
+          {session.overall_score != null && (
+            <div className={`plaid-card flex ${hasRecording ? "flex-col items-center justify-center h-full gap-4 py-8" : "items-center gap-6"}`}>
+              <div className="relative w-24 h-24">
+                <svg className="w-24 h-24 -rotate-90" viewBox="0 0 96 96">
+                  <circle cx="48" cy="48" r="42" stroke="currentColor" strokeWidth="7" fill="none" className="text-muted/50" />
+                  <circle
+                    cx="48" cy="48" r="42"
+                    stroke="currentColor"
+                    strokeWidth="7"
+                    fill="none"
+                    className="text-brand-green"
+                    strokeDasharray={`${(session.overall_score / 100) * 264} 264`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-foreground">{session.overall_score}</span>
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-base font-semibold text-foreground">Overall Score</div>
+                <div className="text-xs text-muted-foreground mt-0.5">
+                  {session.overall_score >= 80 ? "Excellent pitch!" : session.overall_score >= 60 ? "Good with room to improve" : "Keep practicing!"}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Sub-Scores */}
       {metrics && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Clarity", score: metrics.clarity_score, icon: Target },
-            { label: "Persuasion", score: metrics.persuasion_score, icon: TrendingUp },
-            { label: "Confidence", score: metrics.confidence_score, icon: Volume2 },
-            { label: "Structure", score: metrics.structure_score, icon: Lightbulb },
-          ].map(({ label, score, icon: Icon }) => (
+            { label: "Clarity", score: metrics.clarity_score, icon: Target, color: "text-blue-500" },
+            { label: "Persuasion", score: metrics.persuasion_score, icon: TrendingUp, color: "text-emerald-500" },
+            { label: "Confidence", score: metrics.confidence_score, icon: Volume2, color: "text-purple-500" },
+            { label: "Structure", score: metrics.structure_score, icon: Lightbulb, color: "text-amber-500" },
+          ].map(({ label, score, icon: Icon, color }) => (
             <div key={label} className="plaid-card text-center">
-              <Icon className="w-4 h-4 text-muted-foreground mx-auto mb-2" />
+              <Icon className={`w-4 h-4 ${color} mx-auto mb-2`} />
               <div className="text-2xl font-bold text-foreground tabular-nums">{score ?? "—"}</div>
               <div className="text-xs text-muted-foreground mt-0.5">{label}</div>
+              {score != null && (
+                <div className="mt-2 h-1.5 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      score >= 80 ? "bg-brand-green" : score >= 60 ? "bg-amber-400" : "bg-red-400"
+                    }`}
+                    style={{ width: `${score}%` }}
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>
       )}
 
-      {/* Speech Metrics */}
-      {metrics && (
-        <div className="grid grid-cols-3 gap-4">
-          <div className="plaid-card text-center">
-            <div className="text-xl font-bold text-foreground tabular-nums">{metrics.filler_word_count}</div>
-            <div className="text-xs text-muted-foreground mt-0.5">Filler Words</div>
-            {metrics.filler_words && metrics.filler_words.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1 justify-center">
-                {metrics.filler_words.map((w: string, i: number) => (
-                  <span key={i} className="px-1.5 py-0.5 text-[10px] rounded bg-muted text-muted-foreground">
-                    {w}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="plaid-card text-center">
-            <div className="text-xl font-bold text-foreground tabular-nums">
-              {metrics.words_per_minute ? Math.round(metrics.words_per_minute) : "—"}
-            </div>
-            <div className="text-xs text-muted-foreground mt-0.5">Words/Minute</div>
-            {metrics.words_per_minute && (
-              <div className="text-[10px] text-muted-foreground mt-1">
-                {metrics.words_per_minute < 120 ? "A bit slow" : metrics.words_per_minute > 170 ? "A bit fast" : "Good pace"}
-              </div>
-            )}
-          </div>
-          <div className="plaid-card text-center">
-            <div className="text-xl font-bold text-foreground tabular-nums">
-              {metrics.silence_percentage != null ? `${Math.round(metrics.silence_percentage)}%` : "—"}
-            </div>
-            <div className="text-xs text-muted-foreground mt-0.5">Silence</div>
-          </div>
-        </div>
-      )}
+      {/* Tab Navigation */}
+      <div className="flex border-b border-border">
+        {[
+          { key: "feedback" as const, label: "Feedback" },
+          { key: "metrics" as const, label: "Speech Metrics" },
+          ...(metrics?.emotion_data ? [{ key: "emotions" as const, label: "Vocal Emotions" }] : []),
+          { key: "transcript" as const, label: "Transcript" },
+        ].map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setActiveTab(key)}
+            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === key
+                ? "border-foreground text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-      {/* Feedback */}
-      {feedback && (
-        <>
+      {/* Tab Content: Feedback */}
+      {activeTab === "feedback" && feedback && (
+        <div className="space-y-6">
           {/* Summary */}
           <div className="plaid-card">
             <div className="flex items-center gap-2 mb-3">
@@ -252,6 +322,38 @@ export function SessionReview({ sessionId, onBack, onPracticeAgain }: SessionRev
             </div>
           </div>
 
+          {/* Specific Moments */}
+          {feedback.specific_moments && feedback.specific_moments.length > 0 && (
+            <div className="plaid-card">
+              <h3 className="text-sm font-semibold text-foreground mb-3">Key Moments</h3>
+              <div className="space-y-2">
+                {feedback.specific_moments.map((moment, i) => (
+                  <div
+                    key={i}
+                    className={`flex items-start gap-3 p-2 rounded-md transition-colors ${
+                      hasRecording ? "hover:bg-muted/50 cursor-pointer" : ""
+                    }`}
+                    onClick={() => {
+                      if (videoRef.current && hasRecording) {
+                        videoRef.current.currentTime = moment.timestamp_ms / 1000
+                        videoRef.current.play()
+                        setVideoPlaying(true)
+                        window.scrollTo({ top: 0, behavior: "smooth" })
+                      }
+                    }}
+                  >
+                    {hasRecording && (
+                      <span className="text-xs font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded flex-shrink-0">
+                        {Math.floor(moment.timestamp_ms / 60000)}:{String(Math.floor((moment.timestamp_ms % 60000) / 1000)).padStart(2, "0")}
+                      </span>
+                    )}
+                    <span className="text-sm text-muted-foreground">{moment.note}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Recommended Practice */}
           {feedback.recommended_practice && (
             <div className="plaid-card bg-brand-green/5 border-brand-green/20">
@@ -262,17 +364,113 @@ export function SessionReview({ sessionId, onBack, onPracticeAgain }: SessionRev
               <p className="text-sm text-muted-foreground">{feedback.recommended_practice}</p>
             </div>
           )}
-        </>
+        </div>
       )}
 
-      {/* Transcript */}
-      {session.transcript && session.transcript.length > 0 && (
+      {/* Tab Content: Speech Metrics */}
+      {activeTab === "metrics" && metrics && (
+        <div className="space-y-6">
+          {/* Key Metrics Row */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="plaid-card text-center">
+              <div className="text-3xl font-bold text-foreground tabular-nums">{metrics.filler_word_count}</div>
+              <div className="text-xs text-muted-foreground mt-1">Filler Words</div>
+            </div>
+            <div className="plaid-card text-center">
+              <div className="text-3xl font-bold text-foreground tabular-nums">
+                {metrics.words_per_minute ? Math.round(metrics.words_per_minute) : "—"}
+              </div>
+              <div className="text-xs text-muted-foreground mt-1">Words/Minute</div>
+              {metrics.words_per_minute && (
+                <div className={`text-[10px] mt-1 ${getWpmLabel(metrics.words_per_minute).color}`}>
+                  {getWpmLabel(metrics.words_per_minute).label}
+                </div>
+              )}
+            </div>
+            <div className="plaid-card text-center">
+              <div className="text-3xl font-bold text-foreground tabular-nums">
+                {metrics.silence_percentage != null ? `${Math.round(metrics.silence_percentage)}%` : "—"}
+              </div>
+              <div className="text-xs text-muted-foreground mt-1">Silence</div>
+              {metrics.silence_percentage != null && (
+                <div className={`text-[10px] mt-1 ${
+                  metrics.silence_percentage < 20 ? "text-brand-green" : metrics.silence_percentage < 40 ? "text-amber-500" : "text-red-500"
+                }`}>
+                  {metrics.silence_percentage < 20 ? "Good flow" : metrics.silence_percentage < 40 ? "Some pauses" : "Lots of silence"}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Filler Word Breakdown Chart */}
+          {fillerBreakdown.length > 0 && (
+            <div className="plaid-card">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Filler Word Breakdown</h3>
+              <div className="space-y-2.5">
+                {fillerBreakdown.map(({ word, count }) => {
+                  const maxCount = Math.max(...fillerBreakdown.map((f) => f.count))
+                  const pct = maxCount > 0 ? (count / maxCount) * 100 : 0
+                  return (
+                    <div key={word} className="flex items-center gap-3">
+                      <span className="text-sm text-muted-foreground w-20 text-right font-mono">&ldquo;{word}&rdquo;</span>
+                      <div className="flex-1 h-6 rounded bg-muted overflow-hidden">
+                        <div
+                          className="h-full rounded bg-amber-400/70 flex items-center px-2"
+                          style={{ width: `${Math.max(pct, 8)}%` }}
+                        >
+                          <span className="text-xs font-medium text-amber-900">{count}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* WPM Gauge */}
+          {metrics.words_per_minute && (
+            <div className="plaid-card">
+              <h3 className="text-sm font-semibold text-foreground mb-4">Speaking Pace</h3>
+              <div className="relative h-8 rounded-full bg-gradient-to-r from-blue-200 via-green-200 to-red-200 overflow-hidden">
+                {/* Marker */}
+                <div
+                  className="absolute top-0 bottom-0 w-1 bg-foreground rounded-full"
+                  style={{
+                    left: `${Math.min(Math.max(((metrics.words_per_minute - 80) / (220 - 80)) * 100, 2), 98)}%`,
+                  }}
+                />
+              </div>
+              <div className="flex justify-between mt-1 text-[10px] text-muted-foreground">
+                <span>80 WPM (Slow)</span>
+                <span>130-160 (Ideal)</span>
+                <span>220 WPM (Fast)</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab Content: Vocal Emotions */}
+      {activeTab === "emotions" && metrics?.emotion_data && (
+        <EmotionTimeline
+          emotionData={metrics.emotion_data}
+          currentTimeMs={videoTimeMs}
+          onSeek={(timeMs) => {
+            if (videoRef.current && hasRecording) {
+              videoRef.current.currentTime = timeMs / 1000
+              videoRef.current.play()
+              setVideoPlaying(true)
+              window.scrollTo({ top: 0, behavior: "smooth" })
+            }
+          }}
+        />
+      )}
+
+      {/* Tab Content: Transcript */}
+      {activeTab === "transcript" && session.transcript && session.transcript.length > 0 && (
         <div className="plaid-card">
-          <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-muted-foreground" />
-            Full Transcript
-          </h3>
-          <div className="space-y-3 max-h-[400px] overflow-y-auto">
+          <div className="space-y-3 max-h-[500px] overflow-y-auto">
             {session.transcript.map((entry, i) => (
               <div key={i} className="flex gap-3">
                 <span className={`text-xs font-medium flex-shrink-0 w-8 pt-0.5 ${

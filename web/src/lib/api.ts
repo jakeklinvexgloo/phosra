@@ -234,7 +234,8 @@ class ApiClient {
   }
 
   // ── Pitch Coaching ──────────────────────────────────────────
-  async createPitchSession(persona: string, personaConfig?: Record<string, unknown>, token?: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async createPitchSession(persona: string, personaConfig?: Record<string, any>, token?: string) {
     return this.fetch("/admin/pitch/sessions", {
       method: "POST",
       body: JSON.stringify({ persona, persona_config: personaConfig || {} }),
@@ -254,6 +255,36 @@ class ApiClient {
     const base = this.baseUrl.replace(/^http/, "ws")
     const qs = token ? `?token=${encodeURIComponent(token)}` : ""
     return `${base}/admin/pitch/sessions/${sessionId}/ws${qs}`
+  }
+
+  /** Upload a recording blob for a pitch session. */
+  async uploadPitchRecording(sessionId: string, blob: Blob, token?: string): Promise<{ path: string; size_bytes: number }> {
+    const formData = new FormData()
+    formData.append("recording", blob, "recording.webm")
+
+    const headers: Record<string, string> = {}
+    const sandboxSession = typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
+    if (sandboxSession) {
+      headers["X-Sandbox-Session"] = sandboxSession
+    } else if (token) {
+      headers["Authorization"] = `Bearer ${token}`
+    }
+
+    const res = await fetch(`${this.baseUrl}/admin/pitch/sessions/${sessionId}/recording`, {
+      method: "POST",
+      headers,
+      body: formData,
+    })
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({ message: res.statusText }))
+      throw new Error(body.message || body.error || res.statusText)
+    }
+    return res.json()
+  }
+
+  /** Get the URL for streaming a pitch session recording. */
+  getPitchRecordingUrl(sessionId: string): string {
+    return `${this.baseUrl}/admin/pitch/sessions/${sessionId}/recording`
   }
 
   async listFeedback(status?: string) {

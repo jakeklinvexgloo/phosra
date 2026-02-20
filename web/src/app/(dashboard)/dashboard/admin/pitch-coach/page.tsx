@@ -3,13 +3,15 @@
 import { useCallback, useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
-import type { PitchSession, PitchPersona } from "@/lib/admin/types"
+import type { PitchSession, PitchPersona, PitchPersonaConfig } from "@/lib/admin/types"
 import { SessionSetup } from "./_components/SessionSetup"
 import { LiveSession } from "./_components/LiveSession"
 import { SessionReview } from "./_components/SessionReview"
 import { SessionHistory } from "./_components/SessionHistory"
+import { SessionTrends } from "./_components/SessionTrends"
+import { CoachingPlan } from "./_components/CoachingPlan"
 
-type Phase = "list" | "setup" | "live" | "review"
+type Phase = "list" | "setup" | "live" | "review" | "trends" | "coaching"
 
 export default function PitchCoachPage() {
   const { getToken } = useApi()
@@ -34,9 +36,9 @@ export default function PitchCoachPage() {
     fetchSessions()
   }, [fetchSessions])
 
-  const handleStartSession = async (persona: PitchPersona) => {
+  const handleStartSession = async (persona: PitchPersona, config?: PitchPersonaConfig) => {
     const token = (await getToken()) ?? undefined
-    const session = await api.createPitchSession(persona, {}, token)
+    const session = await api.createPitchSession(persona, config ?? {}, token)
     setActiveSession(session)
     setPhase("live")
   }
@@ -77,6 +79,8 @@ export default function PitchCoachPage() {
           onNewSession={() => setPhase("setup")}
           onViewSession={handleViewSession}
           onDeleteSession={handleDeleteSession}
+          onViewTrends={() => setPhase("trends")}
+          onViewCoaching={() => setPhase("coaching")}
         />
       )
 
@@ -105,6 +109,23 @@ export default function PitchCoachPage() {
           onPracticeAgain={() => setPhase("setup")}
         />
       ) : null
+
+    case "trends":
+      return (
+        <SessionTrends
+          sessions={sessions}
+          onBack={handleBackToList}
+        />
+      )
+
+    case "coaching":
+      return (
+        <CoachingPlan
+          sessions={sessions}
+          onBack={handleBackToList}
+          onPractice={() => setPhase("setup")}
+        />
+      )
 
     default:
       return null

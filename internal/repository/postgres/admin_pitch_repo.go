@@ -202,6 +202,13 @@ func (r *AdminPitchRepo) Delete(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+// DeleteMetrics removes the metrics row for a session (used before re-inserting updated metrics).
+func (r *AdminPitchRepo) DeleteMetrics(ctx context.Context, sessionID uuid.UUID) error {
+	_, err := r.Pool.Exec(ctx,
+		`DELETE FROM admin_pitch_session_metrics WHERE session_id = $1`, sessionID)
+	return err
+}
+
 // SaveRecordingMeta updates the recording path and size after upload.
 func (r *AdminPitchRepo) SaveRecordingMeta(ctx context.Context, id uuid.UUID, path string, sizeBytes int64) error {
 	_, err := r.Pool.Exec(ctx,

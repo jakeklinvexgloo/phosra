@@ -49,6 +49,12 @@ type Config struct {
 
 	// OpenAI (Pitch Coaching — Realtime API + GPT-4o feedback)
 	OpenAIAPIKey string
+
+	// AssemblyAI (Pitch Coaching — word-level transcription, Phase 2)
+	AssemblyAIKey string
+
+	// Hume AI (Pitch Coaching — vocal emotion analysis, Phase 3)
+	HumeAIKey string
 }
 
 func Load() *Config {
@@ -91,6 +97,10 @@ func Load() *Config {
 		AnthropicAPIKey: getEnv("ANTHROPIC_API_KEY", ""),
 
 		OpenAIAPIKey: getEnv("OPENAI_API_KEY", ""),
+
+		AssemblyAIKey: getEnv("ASSEMBLYAI_API_KEY", ""),
+
+		HumeAIKey: getEnv("HUME_API_KEY", ""),
 	}
 }
 

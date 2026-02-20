@@ -192,7 +192,7 @@ func main() {
 		Standard:    handler.NewStandardHandler(standardSvc),
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
 		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googleClient),
-		AdminPitch: handler.NewAdminPitchHandler(adminPitchRepo, cfg.OpenAIAPIKey),
+		AdminPitch: handler.NewAdminPitchHandler(adminPitchRepo, cfg.OpenAIAPIKey, service.NewTranscriptionService(cfg.AssemblyAIKey), service.NewEmotionService(cfg.HumeAIKey)),
 	}
 
 	// Router

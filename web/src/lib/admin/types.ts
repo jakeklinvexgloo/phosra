@@ -255,9 +255,87 @@ export interface PitchSessionMetrics {
   persuasion_score?: number
   confidence_score?: number
   structure_score?: number
-  emotion_data?: unknown
-  dominant_emotions?: unknown
+  emotion_data?: EmotionAnalysis | null
+  dominant_emotions?: EmotionDimension[] | null
   created_at: string
+}
+
+// ── Emotion Analysis (Hume AI) ──────────────────────────────────
+
+export interface EmotionDimension {
+  name: string
+  score: number
+}
+
+export interface EmotionFrame {
+  start_ms: number
+  end_ms: number
+  emotions: EmotionDimension[]
+}
+
+export interface EmotionAnalysis {
+  frames: EmotionFrame[]
+  dominant_emotions: EmotionDimension[]
+  confidence_avg: number
+  confidence_min: number
+  confidence_min_ms: number
+  enthusiasm_avg: number
+  nervousness_avg: number
+  nervousness_peaks: number[]
+  calm_avg: number
+}
+
+// ── Pitch Difficulty & Scenario Config ──────────────────────────
+
+export type PitchDifficulty = "easy" | "medium" | "hard"
+export type PitchScenario = "cold_pitch" | "warm_intro" | "board_update" | "committee_hearing" | "partnership_negotiation"
+
+export interface PitchPersonaConfig {
+  difficulty?: PitchDifficulty
+  scenario?: PitchScenario
+  custom_context?: string
+  focus_areas?: string[]
+}
+
+export const DIFFICULTY_META: Record<PitchDifficulty, { label: string; description: string; color: string }> = {
+  easy: {
+    label: "Easy",
+    description: "Friendly and encouraging, softball questions",
+    color: "text-brand-green",
+  },
+  medium: {
+    label: "Medium",
+    description: "Interested but probing, standard due diligence",
+    color: "text-amber-500",
+  },
+  hard: {
+    label: "Hard",
+    description: "Skeptical, interrupts, pushes back hard",
+    color: "text-red-500",
+  },
+}
+
+export const SCENARIO_META: Record<PitchScenario, { label: string; description: string }> = {
+  cold_pitch: {
+    label: "Cold Pitch",
+    description: "First meeting — they don't know you or your product",
+  },
+  warm_intro: {
+    label: "Warm Introduction",
+    description: "Introduced through a mutual connection, some context already shared",
+  },
+  board_update: {
+    label: "Board Update",
+    description: "Presenting to existing investors or board members on progress",
+  },
+  committee_hearing: {
+    label: "Committee Hearing",
+    description: "Formal legislative setting with multiple questioners",
+  },
+  partnership_negotiation: {
+    label: "Partnership Negotiation",
+    description: "Discussing specific terms and integration details",
+  },
 }
 
 export const PERSONA_META: Record<PitchPersona, {

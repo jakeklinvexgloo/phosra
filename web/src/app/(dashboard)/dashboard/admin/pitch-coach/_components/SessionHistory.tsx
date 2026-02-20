@@ -1,6 +1,6 @@
 "use client"
 
-import { Mic, Trash2, Plus, Loader2 } from "lucide-react"
+import { Mic, Trash2, Plus, Loader2, TrendingUp, GraduationCap } from "lucide-react"
 import type { PitchSession } from "@/lib/admin/types"
 import { PERSONA_META, PITCH_STATUS_META } from "@/lib/admin/types"
 
@@ -10,6 +10,8 @@ interface SessionHistoryProps {
   onNewSession: () => void
   onViewSession: (id: string) => void
   onDeleteSession: (id: string) => void
+  onViewTrends?: () => void
+  onViewCoaching?: () => void
 }
 
 export function SessionHistory({
@@ -18,6 +20,8 @@ export function SessionHistory({
   onNewSession,
   onViewSession,
   onDeleteSession,
+  onViewTrends,
+  onViewCoaching,
 }: SessionHistoryProps) {
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr)
@@ -31,6 +35,8 @@ export function SessionHistory({
     return `${m}m ${s}s`
   }
 
+  const completedCount = sessions.filter((s) => s.status === "completed").length
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -41,13 +47,33 @@ export function SessionHistory({
             Practice pitching Phosra with realistic AI mock calls and get coaching feedback.
           </p>
         </div>
-        <button
-          onClick={onNewSession}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground text-background font-medium text-sm hover:opacity-90 transition-opacity"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          New Session
-        </button>
+        <div className="flex items-center gap-2">
+          {completedCount >= 3 && onViewCoaching && (
+            <button
+              onClick={onViewCoaching}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-brand-green/40 text-brand-green font-medium text-sm hover:bg-brand-green/5 transition-colors"
+            >
+              <GraduationCap className="w-3.5 h-3.5" />
+              Coaching Plan
+            </button>
+          )}
+          {completedCount >= 2 && onViewTrends && (
+            <button
+              onClick={onViewTrends}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-foreground font-medium text-sm hover:bg-muted/50 transition-colors"
+            >
+              <TrendingUp className="w-3.5 h-3.5" />
+              Trends
+            </button>
+          )}
+          <button
+            onClick={onNewSession}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground text-background font-medium text-sm hover:opacity-90 transition-opacity"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            New Session
+          </button>
+        </div>
       </div>
 
       {/* Loading */}
@@ -99,6 +125,9 @@ export function SessionHistory({
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-foreground">{persona.label}</span>
                     <span className={`text-xs ${status.color}`}>{status.label}</span>
+                    {session.recording_path && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">📹 Recorded</span>
+                    )}
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5">
                     {formatDate(session.created_at)}
