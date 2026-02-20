@@ -18,6 +18,18 @@ func NewAdminWorkerRepo(db *DB) *AdminWorkerRepo {
 	return &AdminWorkerRepo{DB: db}
 }
 
+// workerRunCols is the SELECT column list with COALESCE for nullable text fields.
+const workerRunCols = `id, worker_id, status, trigger_type, started_at, completed_at,
+	COALESCE(output_summary, ''), items_processed, COALESCE(error_message, '')`
+
+func scanWorkerRun(row interface{ Scan(dest ...any) error }, run *domain.WorkerRun) error {
+	return row.Scan(
+		&run.ID, &run.WorkerID, &run.Status, &run.TriggerType,
+		&run.StartedAt, &run.CompletedAt, &run.OutputSummary,
+		&run.ItemsProcessed, &run.ErrorMessage,
+	)
+}
+
 func (r *AdminWorkerRepo) CreateRun(ctx context.Context, run *domain.WorkerRun) error {
 	if run.ID == uuid.Nil {
 		run.ID = uuid.New()
@@ -44,7 +56,7 @@ func (r *AdminWorkerRepo) CompleteRun(ctx context.Context, id uuid.UUID, status 
 
 func (r *AdminWorkerRepo) ListRuns(ctx context.Context, workerID string, limit int) ([]domain.WorkerRun, error) {
 	rows, err := r.Pool.Query(ctx,
-		`SELECT id, worker_id, status, trigger_type, started_at, completed_at, output_summary, items_processed, error_message
+		`SELECT `+workerRunCols+`
 		 FROM admin_worker_runs WHERE worker_id = $1
 		 ORDER BY started_at DESC LIMIT $2`, workerID, limit,
 	)
@@ -56,11 +68,7 @@ func (r *AdminWorkerRepo) ListRuns(ctx context.Context, workerID string, limit i
 	var runs []domain.WorkerRun
 	for rows.Next() {
 		var run domain.WorkerRun
-		if err := rows.Scan(
-			&run.ID, &run.WorkerID, &run.Status, &run.TriggerType,
-			&run.StartedAt, &run.CompletedAt, &run.OutputSummary,
-			&run.ItemsProcessed, &run.ErrorMessage,
-		); err != nil {
+		if err := scanWorkerRun(rows, &run); err != nil {
 			return nil, err
 		}
 		runs = append(runs, run)
@@ -71,7 +79,7 @@ func (r *AdminWorkerRepo) ListRuns(ctx context.Context, workerID string, limit i
 func (r *AdminWorkerRepo) LatestRunPerWorker(ctx context.Context) (map[string]*domain.WorkerRun, error) {
 	rows, err := r.Pool.Query(ctx,
 		`SELECT DISTINCT ON (worker_id)
-		   id, worker_id, status, trigger_type, started_at, completed_at, output_summary, items_processed, error_message
+		   `+workerRunCols+`
 		 FROM admin_worker_runs
 		 ORDER BY worker_id, started_at DESC`,
 	)
@@ -83,11 +91,7 @@ func (r *AdminWorkerRepo) LatestRunPerWorker(ctx context.Context) (map[string]*d
 	result := make(map[string]*domain.WorkerRun)
 	for rows.Next() {
 		var run domain.WorkerRun
-		if err := rows.Scan(
-			&run.ID, &run.WorkerID, &run.Status, &run.TriggerType,
-			&run.StartedAt, &run.CompletedAt, &run.OutputSummary,
-			&run.ItemsProcessed, &run.ErrorMessage,
-		); err != nil {
+		if err := scanWorkerRun(rows, &run); err != nil {
 			return nil, err
 		}
 		result[run.WorkerID] = &run
@@ -98,7 +102,7 @@ func (r *AdminWorkerRepo) LatestRunPerWorker(ctx context.Context) (map[string]*d
 func (r *AdminWorkerRepo) GetLatestRun(ctx context.Context, workerID string) (*domain.WorkerRun, error) {
 	var run domain.WorkerRun
 	err := r.Pool.QueryRow(ctx,
-		`SELECT id, worker_id, status, trigger_type, started_at, completed_at, output_summary, items_processed, error_message
+		`SELECT `+workerRunCols+`
 		 FROM admin_worker_runs WHERE worker_id = $1
 		 ORDER BY started_at DESC LIMIT 1`, workerID,
 	).Scan(
