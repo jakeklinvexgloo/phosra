@@ -24,10 +24,23 @@ type OutreachStatus string
 
 const (
 	OutreachNotContacted  OutreachStatus = "not_contacted"
+	OutreachDraftReady    OutreachStatus = "draft_ready"
 	OutreachReachedOut    OutreachStatus = "reached_out"
 	OutreachInConversation OutreachStatus = "in_conversation"
 	OutreachPartnership   OutreachStatus = "partnership"
 	OutreachDeclined      OutreachStatus = "declined"
+)
+
+// EmailStatus tracks per-contact email workflow.
+type EmailStatus string
+
+const (
+	EmailNone         EmailStatus = "none"
+	EmailDraftReady   EmailStatus = "draft_ready"
+	EmailEmailed      EmailStatus = "emailed"
+	EmailAwaitingReply EmailStatus = "awaiting_reply"
+	EmailReplied      EmailStatus = "replied"
+	EmailBounced      EmailStatus = "bounced"
 )
 
 // OutreachContact represents a person in the outreach pipeline.
@@ -45,6 +58,8 @@ type OutreachContact struct {
 	Notes          string              `json:"notes,omitempty"`
 	RelevanceScore *int                `json:"relevance_score,omitempty"`
 	Tags           []string            `json:"tags,omitempty"`
+	EmailStatus    EmailStatus         `json:"email_status"`
+	PriorityTier   int                 `json:"priority_tier"`
 	LastContactAt  *time.Time          `json:"last_contact_at,omitempty"`
 	NextFollowupAt *time.Time          `json:"next_followup_at,omitempty"`
 	CreatedAt      time.Time           `json:"created_at"`

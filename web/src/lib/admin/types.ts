@@ -1,7 +1,8 @@
 // ── Admin Dashboard Types ───────────────────────────────────────
 
 export type OutreachContactType = "advocacy" | "tech_company" | "legislator" | "academic" | "other"
-export type OutreachStatus = "not_contacted" | "reached_out" | "in_conversation" | "partnership" | "declined"
+export type OutreachStatus = "not_contacted" | "draft_ready" | "reached_out" | "in_conversation" | "partnership" | "declined"
+export type EmailStatus = "none" | "draft_ready" | "emailed" | "awaiting_reply" | "replied" | "bounced"
 export type OutreachActivityType = "email_sent" | "linkedin_message" | "call" | "meeting" | "note"
 
 export interface OutreachContact {
@@ -15,6 +16,8 @@ export interface OutreachContact {
   twitter_handle?: string
   phone?: string
   status: OutreachStatus
+  email_status: EmailStatus
+  priority_tier: number
   notes?: string
   relevance_score?: number
   tags?: string[]
@@ -201,10 +204,20 @@ export interface CalendarListResponse {
 
 export const OUTREACH_STATUS_META: Record<OutreachStatus, { label: string; color: string; dotColor: string }> = {
   not_contacted: { label: "Not Contacted", color: "bg-muted text-muted-foreground", dotColor: "bg-muted-foreground" },
+  draft_ready: { label: "Draft Ready", color: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", dotColor: "bg-purple-500" },
   reached_out: { label: "Reached Out", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", dotColor: "bg-blue-500" },
   in_conversation: { label: "In Conversation", color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", dotColor: "bg-amber-500" },
   partnership: { label: "Partnership", color: "bg-brand-green/10 text-brand-green", dotColor: "bg-brand-green" },
   declined: { label: "Declined", color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", dotColor: "bg-red-500" },
+}
+
+export const EMAIL_STATUS_META: Record<EmailStatus, { label: string; color: string }> = {
+  none: { label: "—", color: "text-muted-foreground" },
+  draft_ready: { label: "Draft Ready", color: "text-purple-600 dark:text-purple-400" },
+  emailed: { label: "Emailed", color: "text-blue-600 dark:text-blue-400" },
+  awaiting_reply: { label: "Awaiting Reply", color: "text-amber-600 dark:text-amber-400" },
+  replied: { label: "Replied", color: "text-brand-green" },
+  bounced: { label: "Bounced", color: "text-red-600 dark:text-red-400" },
 }
 
 export const CONTACT_TYPE_LABELS: Record<OutreachContactType, string> = {

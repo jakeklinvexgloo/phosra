@@ -21,7 +21,8 @@ func NewAdminOutreachRepo(db *DB) *AdminOutreachRepo {
 
 func (r *AdminOutreachRepo) List(ctx context.Context, contactType string, status string) ([]domain.OutreachContact, error) {
 	query := `SELECT id, name, org, title, contact_type, email, linkedin_url, twitter_handle, phone,
-	           status, notes, relevance_score, tags, last_contact_at, next_followup_at, created_at, updated_at
+	           status, notes, relevance_score, tags, email_status, priority_tier,
+	           last_contact_at, next_followup_at, created_at, updated_at
 	           FROM admin_outreach_contacts WHERE 1=1`
 	args := []interface{}{}
 	argIdx := 1
@@ -37,7 +38,7 @@ func (r *AdminOutreachRepo) List(ctx context.Context, contactType string, status
 		argIdx++
 	}
 
-	query += ` ORDER BY relevance_score DESC NULLS LAST, name ASC`
+	query += ` ORDER BY priority_tier ASC, relevance_score DESC NULLS LAST, name ASC`
 
 	rows, err := r.Pool.Query(ctx, query, args...)
 	if err != nil {
@@ -51,7 +52,8 @@ func (r *AdminOutreachRepo) List(ctx context.Context, contactType string, status
 		if err := rows.Scan(
 			&c.ID, &c.Name, &c.Org, &c.Title, &c.ContactType, &c.Email,
 			&c.LinkedinURL, &c.TwitterHandle, &c.Phone, &c.Status, &c.Notes,
-			&c.RelevanceScore, &c.Tags, &c.LastContactAt, &c.NextFollowupAt,
+			&c.RelevanceScore, &c.Tags, &c.EmailStatus, &c.PriorityTier,
+			&c.LastContactAt, &c.NextFollowupAt,
 			&c.CreatedAt, &c.UpdatedAt,
 		); err != nil {
 			return nil, err
@@ -65,12 +67,14 @@ func (r *AdminOutreachRepo) GetByID(ctx context.Context, id uuid.UUID) (*domain.
 	var c domain.OutreachContact
 	err := r.Pool.QueryRow(ctx,
 		`SELECT id, name, org, title, contact_type, email, linkedin_url, twitter_handle, phone,
-		 status, notes, relevance_score, tags, last_contact_at, next_followup_at, created_at, updated_at
+		 status, notes, relevance_score, tags, email_status, priority_tier,
+		 last_contact_at, next_followup_at, created_at, updated_at
 		 FROM admin_outreach_contacts WHERE id = $1`, id,
 	).Scan(
 		&c.ID, &c.Name, &c.Org, &c.Title, &c.ContactType, &c.Email,
 		&c.LinkedinURL, &c.TwitterHandle, &c.Phone, &c.Status, &c.Notes,
-		&c.RelevanceScore, &c.Tags, &c.LastContactAt, &c.NextFollowupAt,
+		&c.RelevanceScore, &c.Tags, &c.EmailStatus, &c.PriorityTier,
+		&c.LastContactAt, &c.NextFollowupAt,
 		&c.CreatedAt, &c.UpdatedAt,
 	)
 	if err == pgx.ErrNoRows {
@@ -86,9 +90,11 @@ func (r *AdminOutreachRepo) Update(ctx context.Context, c *domain.OutreachContac
 	c.UpdatedAt = time.Now()
 	_, err := r.Pool.Exec(ctx,
 		`UPDATE admin_outreach_contacts
-		 SET status = $1, notes = $2, last_contact_at = $3, next_followup_at = $4, updated_at = $5
-		 WHERE id = $6`,
-		c.Status, c.Notes, c.LastContactAt, c.NextFollowupAt, c.UpdatedAt, c.ID,
+		 SET status = $1, notes = $2, last_contact_at = $3, next_followup_at = $4,
+		     email_status = $5, priority_tier = $6, updated_at = $7
+		 WHERE id = $8`,
+		c.Status, c.Notes, c.LastContactAt, c.NextFollowupAt,
+		c.EmailStatus, c.PriorityTier, c.UpdatedAt, c.ID,
 	)
 	return err
 }
@@ -104,11 +110,13 @@ func (r *AdminOutreachRepo) Create(ctx context.Context, c *domain.OutreachContac
 	_, err := r.Pool.Exec(ctx,
 		`INSERT INTO admin_outreach_contacts
 		 (id, name, org, title, contact_type, email, linkedin_url, twitter_handle, phone,
-		  status, notes, relevance_score, tags, last_contact_at, next_followup_at, created_at, updated_at)
-		 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)`,
+		  status, notes, relevance_score, tags, email_status, priority_tier,
+		  last_contact_at, next_followup_at, created_at, updated_at)
+		 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)`,
 		c.ID, c.Name, c.Org, c.Title, c.ContactType, c.Email,
 		c.LinkedinURL, c.TwitterHandle, c.Phone, c.Status, c.Notes,
-		c.RelevanceScore, c.Tags, c.LastContactAt, c.NextFollowupAt,
+		c.RelevanceScore, c.Tags, c.EmailStatus, c.PriorityTier,
+		c.LastContactAt, c.NextFollowupAt,
 		c.CreatedAt, c.UpdatedAt,
 	)
 	return err
