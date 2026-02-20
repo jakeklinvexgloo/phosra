@@ -182,7 +182,7 @@ export function OutreachTable({
                     />
                   </div>
 
-                  {/* Name + priority + title + action */}
+                  {/* Name + priority + email + title + action */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       <span className={`text-[10px] font-bold px-1 py-px rounded flex-shrink-0 ${PRIORITY_COLORS[contact.priority_tier] || PRIORITY_COLORS[3]}`}>
@@ -199,8 +199,19 @@ export function OutreachTable({
                         </button>
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 mt-px">
-                      <span className="text-[11px] text-muted-foreground truncate">{contact.title}</span>
+                    <div className="flex items-center gap-1.5 mt-px min-w-0">
+                      {contact.email && (
+                        <a
+                          href={`mailto:${contact.email}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-[11px] text-blue-600 dark:text-blue-400 hover:underline truncate flex-shrink"
+                          title={contact.email}
+                        >
+                          {contact.email}
+                        </a>
+                      )}
+                      {contact.email && contact.title && <span className="text-muted-foreground/40 flex-shrink-0">&middot;</span>}
+                      {contact.title && <span className="text-[11px] text-muted-foreground truncate">{contact.title}</span>}
                       <span className={`text-[10px] font-medium ${action.className} whitespace-nowrap flex-shrink-0`}>{action.label}</span>
                     </div>
                   </div>
