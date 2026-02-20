@@ -27,11 +27,13 @@ import (
 type AdminHandler struct {
 	outreach *postgres.AdminOutreachRepo
 	workers  *postgres.AdminWorkerRepo
+	news     *postgres.AdminNewsRepo
+	alerts   *postgres.AdminAlertsRepo
 	google   *google.Client // nil when Google is not configured
 }
 
-func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, googleClient *google.Client) *AdminHandler {
-	return &AdminHandler{outreach: outreach, workers: workers, google: googleClient}
+func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, news *postgres.AdminNewsRepo, alerts *postgres.AdminAlertsRepo, googleClient *google.Client) *AdminHandler {
+	return &AdminHandler{outreach: outreach, workers: workers, news: news, alerts: alerts, google: googleClient}
 }
 
 // ── Stats ───────────────────────────────────────────────────────
@@ -345,6 +347,113 @@ func (h *AdminHandler) completeWorkerRun(runID uuid.UUID, status domain.WorkerRu
 	if err := h.workers.CompleteRun(context.Background(), runID, status, summary, items, errMsg); err != nil {
 		log.Error().Err(err).Str("run_id", runID.String()).Msg("failed to update worker run status")
 	}
+}
+
+// ── News ─────────────────────────────────────────────────────────
+
+func (h *AdminHandler) ListNews(w http.ResponseWriter, r *http.Request) {
+	limit := 50
+	if n, err := strconv.Atoi(r.URL.Query().Get("limit")); err == nil && n > 0 && n <= 200 {
+		limit = n
+	}
+	saved := r.URL.Query().Get("saved") == "true"
+
+	items, err := h.news.List(r.Context(), limit, saved)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to list news items")
+		httputil.Error(w, http.StatusInternalServerError, "failed to list news items")
+		return
+	}
+	if items == nil {
+		items = []domain.NewsItem{}
+	}
+	httputil.JSON(w, http.StatusOK, items)
+}
+
+func (h *AdminHandler) MarkNewsRead(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "newsID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid news item ID")
+		return
+	}
+	if err := h.news.MarkRead(r.Context(), id); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to mark news item as read")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+func (h *AdminHandler) ToggleNewsSaved(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "newsID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid news item ID")
+		return
+	}
+	if err := h.news.ToggleSaved(r.Context(), id); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to toggle news item saved status")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+func (h *AdminHandler) DeleteNewsItem(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "newsID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid news item ID")
+		return
+	}
+	if err := h.news.Delete(r.Context(), id); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to delete news item")
+		return
+	}
+	httputil.NoContent(w)
+}
+
+// ── Compliance Alerts ────────────────────────────────────────────
+
+func (h *AdminHandler) ListAlerts(w http.ResponseWriter, r *http.Request) {
+	alerts, err := h.alerts.List(r.Context())
+	if err != nil {
+		log.Error().Err(err).Msg("failed to list compliance alerts")
+		httputil.Error(w, http.StatusInternalServerError, "failed to list compliance alerts")
+		return
+	}
+	if alerts == nil {
+		alerts = []domain.ComplianceAlert{}
+	}
+	httputil.JSON(w, http.StatusOK, alerts)
+}
+
+func (h *AdminHandler) UpdateAlertStatus(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "alertID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid alert ID")
+		return
+	}
+
+	var req struct {
+		Status string `json:"status"`
+	}
+	if err := httputil.DecodeJSON(r, &req); err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	// Validate status value
+	status := domain.ComplianceAlertStatus(req.Status)
+	switch status {
+	case domain.AlertPending, domain.AlertAcknowledged, domain.AlertActionNeeded, domain.AlertResolved:
+		// valid
+	default:
+		httputil.Error(w, http.StatusBadRequest, "invalid status: must be pending, acknowledged, action_needed, or resolved")
+		return
+	}
+
+	if err := h.alerts.UpdateStatus(r.Context(), id, status); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to update alert status")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }
 
 // ── Google OAuth ────────────────────────────────────────────────

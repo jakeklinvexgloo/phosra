@@ -157,6 +157,24 @@ class ApiClient {
     return this.fetch(`/admin/workers/${workerId}/trigger`, { method: "POST" }, token)
   }
 
+  // ── News ────────────────────────────────────────────────────────
+  async listNews(limit?: number, saved?: boolean, token?: string) {
+    const params = new URLSearchParams()
+    if (limit) params.set("limit", String(limit))
+    if (saved) params.set("saved", "true")
+    const qs = params.toString() ? `?${params.toString()}` : ""
+    return this.fetch(`/admin/news${qs}`, {}, token)
+  }
+  async markNewsRead(id: string, token?: string) { return this.fetch(`/admin/news/${id}/read`, { method: "POST" }, token) }
+  async toggleNewsSaved(id: string, token?: string) { return this.fetch(`/admin/news/${id}/save`, { method: "POST" }, token) }
+  async deleteNewsItem(id: string, token?: string) { return this.fetch(`/admin/news/${id}`, { method: "DELETE" }, token) }
+
+  // ── Compliance Alerts ──────────────────────────────────────────
+  async listAlerts(token?: string) { return this.fetch("/admin/alerts", {}, token) }
+  async updateAlertStatus(id: string, status: string, token?: string) {
+    return this.fetch(`/admin/alerts/${id}`, { method: "PATCH", body: JSON.stringify({ status }) }, token)
+  }
+
   // ── Google Workspace ──────────────────────────────────────────
   async getGoogleAuthURL(token?: string) { return this.fetch("/admin/google/auth-url", {}, token) }
   async submitGoogleCallback(code: string, token?: string) {

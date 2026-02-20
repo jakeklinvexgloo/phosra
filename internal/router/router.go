@@ -276,6 +276,16 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Get("/workers/{workerID}/runs", h.Admin.ListWorkerRuns)
 			r.Post("/workers/{workerID}/trigger", h.Admin.TriggerWorker)
 
+			// News
+			r.Get("/news", h.Admin.ListNews)
+			r.Post("/news/{newsID}/read", h.Admin.MarkNewsRead)
+			r.Post("/news/{newsID}/save", h.Admin.ToggleNewsSaved)
+			r.Delete("/news/{newsID}", h.Admin.DeleteNewsItem)
+
+			// Compliance Alerts
+			r.Get("/alerts", h.Admin.ListAlerts)
+			r.Patch("/alerts/{alertID}", h.Admin.UpdateAlertStatus)
+
 			// Google OAuth
 			r.Get("/google/auth-url", h.Admin.GetGoogleAuthURL)
 			r.Post("/google/callback", h.Admin.GoogleCallback)

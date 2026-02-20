@@ -86,6 +86,8 @@ func main() {
 	// Admin repositories
 	adminOutreachRepo := postgres.NewAdminOutreachRepo(db)
 	adminWorkerRepo := postgres.NewAdminWorkerRepo(db)
+	adminNewsRepo := postgres.NewAdminNewsRepo(db)
+	adminAlertsRepo := postgres.NewAdminAlertsRepo(db)
 	adminGoogleRepo := postgres.NewAdminGoogleRepo(db)
 	adminPitchRepo := postgres.NewAdminPitchRepo(db)
 
@@ -189,7 +191,7 @@ func main() {
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 		Standard:    handler.NewStandardHandler(standardSvc),
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
-		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, googleClient),
+		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googleClient),
 		AdminPitch: handler.NewAdminPitchHandler(adminPitchRepo, cfg.OpenAIAPIKey),
 	}
 
