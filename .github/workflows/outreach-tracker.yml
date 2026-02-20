@@ -1,0 +1,30 @@
+name: Outreach Tracker
+
+on:
+  schedule:
+    - cron: "0 14 * * *" # Daily at 2pm UTC (9am EST)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  track-outreach:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install pg
+        working-directory: scripts/workers
+
+      - name: Run outreach tracker
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/workers/outreach-tracker.mjs

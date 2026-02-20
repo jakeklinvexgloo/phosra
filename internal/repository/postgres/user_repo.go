@@ -28,9 +28,9 @@ func (r *UserRepo) Create(ctx context.Context, user *domain.User) error {
 	user.UpdatedAt = now
 
 	_, err := r.Pool.Exec(ctx,
-		`INSERT INTO users (id, external_auth_id, email, password_hash, name, created_at, updated_at)
-		 VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-		user.ID, user.ExternalAuthID, user.Email, user.PasswordHash, user.Name, user.CreatedAt, user.UpdatedAt,
+		`INSERT INTO users (id, external_auth_id, email, password_hash, name, is_admin, created_at, updated_at)
+		 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+		user.ID, user.ExternalAuthID, user.Email, user.PasswordHash, user.Name, user.IsAdmin, user.CreatedAt, user.UpdatedAt,
 	)
 	return err
 }
@@ -38,9 +38,9 @@ func (r *UserRepo) Create(ctx context.Context, user *domain.User) error {
 func (r *UserRepo) GetByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
 	var u domain.User
 	err := r.Pool.QueryRow(ctx,
-		`SELECT id, external_auth_id, email, password_hash, name, created_at, updated_at, deleted_at
+		`SELECT id, external_auth_id, email, password_hash, name, is_admin, created_at, updated_at, deleted_at
 		 FROM users WHERE id = $1 AND deleted_at IS NULL`, id,
-	).Scan(&u.ID, &u.ExternalAuthID, &u.Email, &u.PasswordHash, &u.Name, &u.CreatedAt, &u.UpdatedAt, &u.DeletedAt)
+	).Scan(&u.ID, &u.ExternalAuthID, &u.Email, &u.PasswordHash, &u.Name, &u.IsAdmin, &u.CreatedAt, &u.UpdatedAt, &u.DeletedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
@@ -53,9 +53,9 @@ func (r *UserRepo) GetByID(ctx context.Context, id uuid.UUID) (*domain.User, err
 func (r *UserRepo) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
 	var u domain.User
 	err := r.Pool.QueryRow(ctx,
-		`SELECT id, external_auth_id, email, password_hash, name, created_at, updated_at, deleted_at
+		`SELECT id, external_auth_id, email, password_hash, name, is_admin, created_at, updated_at, deleted_at
 		 FROM users WHERE email = $1 AND deleted_at IS NULL`, email,
-	).Scan(&u.ID, &u.ExternalAuthID, &u.Email, &u.PasswordHash, &u.Name, &u.CreatedAt, &u.UpdatedAt, &u.DeletedAt)
+	).Scan(&u.ID, &u.ExternalAuthID, &u.Email, &u.PasswordHash, &u.Name, &u.IsAdmin, &u.CreatedAt, &u.UpdatedAt, &u.DeletedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}
@@ -68,9 +68,9 @@ func (r *UserRepo) GetByEmail(ctx context.Context, email string) (*domain.User, 
 func (r *UserRepo) GetByExternalAuthID(ctx context.Context, externalAuthID string) (*domain.User, error) {
 	var u domain.User
 	err := r.Pool.QueryRow(ctx,
-		`SELECT id, external_auth_id, email, password_hash, name, created_at, updated_at, deleted_at
+		`SELECT id, external_auth_id, email, password_hash, name, is_admin, created_at, updated_at, deleted_at
 		 FROM users WHERE external_auth_id = $1 AND deleted_at IS NULL`, externalAuthID,
-	).Scan(&u.ID, &u.ExternalAuthID, &u.Email, &u.PasswordHash, &u.Name, &u.CreatedAt, &u.UpdatedAt, &u.DeletedAt)
+	).Scan(&u.ID, &u.ExternalAuthID, &u.Email, &u.PasswordHash, &u.Name, &u.IsAdmin, &u.CreatedAt, &u.UpdatedAt, &u.DeletedAt)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return nil, nil
 	}

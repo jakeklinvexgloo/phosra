@@ -82,6 +82,10 @@ func main() {
 	deviceRegRepo := postgres.NewDeviceRegistrationRepo(db)
 	deviceReportRepo := postgres.NewDeviceReportRepo(db)
 
+	// Admin repositories
+	adminOutreachRepo := postgres.NewAdminOutreachRepo(db)
+	adminWorkerRepo := postgres.NewAdminWorkerRepo(db)
+
 	// Phosra service-layer repositories
 	notificationScheduleRepo := postgres.NewNotificationScheduleRepo(db)
 	activityLogRepo := postgres.NewActivityLogRepo(db)
@@ -169,6 +173,7 @@ func main() {
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 		Standard:    handler.NewStandardHandler(standardSvc),
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
+		Admin:       handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo),
 	}
 
 	// Router

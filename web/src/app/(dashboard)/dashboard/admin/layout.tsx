@@ -1,0 +1,50 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@workos-inc/authkit-nextjs/components"
+import { useApi } from "@/lib/useApi"
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
+  const { user } = useAuth()
+  const { fetch: authedFetch } = useApi()
+  const [authorized, setAuthorized] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    const sandbox = typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
+
+    if (!user && !sandbox) {
+      setAuthorized(false)
+      return
+    }
+
+    authedFetch("/auth/me")
+      .then((me: { is_admin?: boolean }) => {
+        if (me?.is_admin) {
+          setAuthorized(true)
+        } else {
+          setAuthorized(false)
+        }
+      })
+      .catch(() => setAuthorized(false))
+  }, [user, authedFetch])
+
+  useEffect(() => {
+    if (authorized === false) {
+      router.push("/dashboard")
+    }
+  }, [authorized, router])
+
+  if (authorized === null) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-pulse text-muted-foreground text-sm">Verifying admin access...</div>
+      </div>
+    )
+  }
+
+  if (!authorized) return null
+
+  return <>{children}</>
+}

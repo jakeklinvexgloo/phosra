@@ -9,14 +9,15 @@ import (
 
 // User represents an authenticated account.
 type User struct {
-	ID           uuid.UUID  `json:"id"`
-	ExternalAuthID string   `json:"external_auth_id,omitempty"`
-	Email        string     `json:"email"`
-	PasswordHash string     `json:"-"`
-	Name         string     `json:"name"`
-	CreatedAt    time.Time  `json:"created_at"`
-	UpdatedAt    time.Time  `json:"updated_at"`
-	DeletedAt    *time.Time `json:"deleted_at,omitempty"`
+	ID             uuid.UUID  `json:"id"`
+	ExternalAuthID string     `json:"external_auth_id,omitempty"`
+	Email          string     `json:"email"`
+	PasswordHash   string     `json:"-"`
+	Name           string     `json:"name"`
+	IsAdmin        bool       `json:"is_admin"`
+	CreatedAt      time.Time  `json:"created_at"`
+	UpdatedAt      time.Time  `json:"updated_at"`
+	DeletedAt      *time.Time `json:"deleted_at,omitempty"`
 }
 
 // RefreshToken stores issued refresh tokens for session management.

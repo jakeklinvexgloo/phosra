@@ -2,20 +2,23 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { navGroups } from "@/lib/navigation"
+import { navGroups, adminNavGroups } from "@/lib/navigation"
 import { EnvironmentBadge } from "./EnvironmentBadge"
 
 interface DashboardSidebarProps {
   isSandbox: boolean
+  isAdmin?: boolean
 }
 
-export function DashboardSidebar({ isSandbox }: DashboardSidebarProps) {
+export function DashboardSidebar({ isSandbox, isAdmin }: DashboardSidebarProps) {
   const pathname = usePathname()
 
   const isActive = (href: string, exact?: boolean) => {
     if (exact) return pathname === href
     return pathname.startsWith(href)
   }
+
+  const allGroups = isAdmin ? [...navGroups, ...adminNavGroups] : navGroups
 
   return (
     <aside className="hidden lg:block w-[200px] xl:w-[220px] flex-shrink-0">
@@ -25,10 +28,12 @@ export function DashboardSidebar({ isSandbox }: DashboardSidebarProps) {
           <EnvironmentBadge isSandbox={isSandbox} />
         </div>
 
-        {navGroups.map((group, gi) => (
+        {allGroups.map((group, gi) => (
           <div key={gi}>
             {group.label && (
-              <p className="px-3 mb-1.5 text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider">
+              <p className={`px-3 mb-1.5 text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider ${
+                group.label === "Admin" ? "mt-4 pt-4 border-t border-border" : ""
+              }`}>
                 {group.label}
               </p>
             )}

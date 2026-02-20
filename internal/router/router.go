@@ -50,6 +50,7 @@ type Handlers struct {
 	Feedback    *handler.FeedbackHandler
 	Standard    *handler.StandardHandler
 	Device      *handler.DeviceHandler
+	Admin       *handler.AdminHandler
 }
 
 func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.DeviceAuthenticator, rateLimitRPS int, opts ...Option) http.Handler {
@@ -248,6 +249,31 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 				r.Post("/test", h.Webhook.Test)
 				r.Get("/deliveries", h.Webhook.ListDeliveries)
 			})
+		})
+
+		// Admin routes (auth + admin role required)
+		r.Route("/admin", func(r chi.Router) {
+			if o.sandboxMode {
+				r.Use(middleware.SandboxAuth(userRepo))
+			} else {
+				r.Use(middleware.HybridAuth(o.workosClientID, userRepo))
+			}
+			r.Use(middleware.RequireAdmin(userRepo))
+
+			r.Get("/stats", h.Admin.GetStats)
+
+			// Outreach CRM
+			r.Get("/outreach", h.Admin.ListOutreach)
+			r.Route("/outreach/{contactID}", func(r chi.Router) {
+				r.Get("/", h.Admin.GetOutreachContact)
+				r.Patch("/", h.Admin.UpdateOutreach)
+				r.Post("/activity", h.Admin.CreateOutreachActivity)
+			})
+
+			// Workers
+			r.Get("/workers", h.Admin.ListWorkers)
+			r.Get("/workers/{workerID}/runs", h.Admin.ListWorkerRuns)
+			r.Post("/workers/{workerID}/trigger", h.Admin.TriggerWorker)
 		})
 
 		// Device-auth routes (X-Device-Key header)

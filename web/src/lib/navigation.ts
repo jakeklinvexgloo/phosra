@@ -1,4 +1,4 @@
-import { Home, Zap, Globe, Shield, Users, Settings, Rocket } from "lucide-react"
+import { Home, Zap, Globe, Shield, Users, Settings, Rocket, LayoutDashboard, Send, Newspaper, Bot, Bell } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 export interface NavItem {
@@ -42,7 +42,22 @@ export const navGroups: NavGroup[] = [
   },
 ]
 
+/** Admin-only navigation — only rendered when user.is_admin is true. */
+export const adminNavGroups: NavGroup[] = [
+  {
+    label: "Admin",
+    items: [
+      { href: "/dashboard/admin", label: "Command Center", icon: LayoutDashboard, exact: true },
+      { href: "/dashboard/admin/outreach", label: "Outreach", icon: Send },
+      { href: "/dashboard/admin/news", label: "News Feed", icon: Newspaper },
+      { href: "/dashboard/admin/workers", label: "Workers", icon: Bot },
+      { href: "/dashboard/admin/compliance-alerts", label: "Alerts", icon: Bell },
+    ],
+  },
+]
+
 /** Flatten all nav items for search */
-export function getAllNavItems(): NavItem[] {
-  return navGroups.flatMap((g) => g.items)
+export function getAllNavItems(includeAdmin = false): NavItem[] {
+  const groups = includeAdmin ? [...navGroups, ...adminNavGroups] : navGroups
+  return groups.flatMap((g) => g.items)
 }

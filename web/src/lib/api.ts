@@ -132,6 +132,31 @@ class ApiClient {
     return res.json()
   }
 
+  // Auth / current user
+  async getMe(token?: string) { return this.fetch("/auth/me", {}, token) }
+
+  // Admin endpoints
+  async getAdminStats(token?: string) { return this.fetch("/admin/stats", {}, token) }
+  async listOutreach(token?: string, type?: string, status?: string) {
+    const params = new URLSearchParams()
+    if (type) params.set("type", type)
+    if (status) params.set("status", status)
+    const qs = params.toString() ? `?${params.toString()}` : ""
+    return this.fetch(`/admin/outreach${qs}`, {}, token)
+  }
+  async getOutreachContact(id: string, token?: string) { return this.fetch(`/admin/outreach/${id}`, {}, token) }
+  async updateOutreach(id: string, data: Record<string, unknown>, token?: string) {
+    return this.fetch(`/admin/outreach/${id}`, { method: "PATCH", body: JSON.stringify(data) }, token)
+  }
+  async createOutreachActivity(contactId: string, data: Record<string, unknown>, token?: string) {
+    return this.fetch(`/admin/outreach/${contactId}/activity`, { method: "POST", body: JSON.stringify(data) }, token)
+  }
+  async listWorkers(token?: string) { return this.fetch("/admin/workers", {}, token) }
+  async listWorkerRuns(workerId: string, token?: string) { return this.fetch(`/admin/workers/${workerId}/runs`, {}, token) }
+  async triggerWorker(workerId: string, token?: string) {
+    return this.fetch(`/admin/workers/${workerId}/trigger`, { method: "POST" }, token)
+  }
+
   async listFeedback(status?: string) {
     const qs = status ? `?status=${status}` : ""
     const res = await window.fetch(`${this.baseUrl}/feedback${qs}`, {

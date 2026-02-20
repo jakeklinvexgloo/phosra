@@ -9,14 +9,17 @@ import { CommandPalette } from "@/components/ui/command-palette"
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar"
+import { useApi } from "@/lib/useApi"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
   const { user, loading } = useAuth()
   const [isSandbox, setIsSandbox] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [cmdkOpen, setCmdkOpen] = useState(false)
+  const { fetch: authedFetch } = useApi()
 
   useEffect(() => {
     const sandbox = localStorage.getItem("sandbox-session")
@@ -28,6 +31,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.push("/login")
     }
   }, [loading, user, router])
+
+  // Fetch admin status from backend
+  useEffect(() => {
+    if (!user && !isSandbox) return
+    authedFetch("/auth/me").then((me: { is_admin?: boolean }) => {
+      if (me?.is_admin) setIsAdmin(true)
+    }).catch(() => {
+      // Non-critical — just hide admin nav
+    })
+  }, [user, isSandbox, authedFetch])
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
@@ -79,7 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex gap-6 xl:gap-8">
               {/* Sidebar — hidden on mobile unless toggled */}
               <div className={`${sidebarOpen ? "block" : "hidden"} lg:block`}>
-                <DashboardSidebar isSandbox={isSandbox} />
+                <DashboardSidebar isSandbox={isSandbox} isAdmin={isAdmin} />
               </div>
 
               {/* Main content */}
