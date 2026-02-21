@@ -1,0 +1,965 @@
+"use client"
+
+import { useState } from "react"
+import {
+  Target, Calendar, DollarSign, TrendingUp,
+  Users, FileText, Megaphone, Code2, Search, Mail,
+  BarChart3, Linkedin, PenTool, Brain, Globe,
+  Handshake, Presentation, Phone, ChevronDown, ChevronRight,
+  CheckCircle2, Circle, Clock, ArrowRight, Sparkles,
+  Bot, User, AlertTriangle,
+} from "lucide-react"
+
+/* ═══════════════════════════════════════════════════════════════
+   DATA: Fundraise plan — milestones, agents, founder tasks
+   ═══════════════════════════════════════════════════════════════ */
+
+const RAISE_TARGET = 1_000_000
+const DEADLINE = new Date("2026-05-31")
+const START = new Date("2026-02-21")
+
+type Phase = {
+  id: string
+  name: string
+  dates: string
+  color: string
+  dotColor: string
+  milestones: Milestone[]
+}
+
+type Milestone = {
+  id: string
+  title: string
+  description: string
+  owner: "founder" | "agent" | "both"
+  status: "done" | "active" | "upcoming"
+  dueDate: string
+  agentId?: string
+}
+
+type Agent = {
+  id: string
+  name: string
+  role: string
+  description: string
+  icon: typeof Bot
+  color: string
+  bgColor: string
+  automationLevel: number // 0-100
+  tasks: string[]
+  tools: string[]
+  cadence: string
+}
+
+type FounderTask = {
+  id: string
+  title: string
+  why: string
+  timePerWeek: string
+  icon: typeof User
+}
+
+const PHASES: Phase[] = [
+  {
+    id: "foundation",
+    name: "Phase 1: Foundation",
+    dates: "Feb 21 — Mar 7",
+    color: "text-blue-600 dark:text-blue-400",
+    dotColor: "bg-blue-500",
+    milestones: [
+      {
+        id: "m1", title: "Fix homepage zero-counter animation bug",
+        description: "Stats sections show '0' instead of actual numbers — undermines credibility with investors",
+        owner: "agent", status: "upcoming", dueDate: "Feb 24", agentId: "product-dev",
+      },
+      {
+        id: "m2", title: "Finalize pitch deck (10-12 slides)",
+        description: "Problem, solution, market ($5-8B), regulatory tailwind (COPPA 2.0 Apr 22), team (3 exits), product, ask",
+        owner: "both", status: "upcoming", dueDate: "Feb 28", agentId: "pitch-deck",
+      },
+      {
+        id: "m3", title: "Build data room in DocSend",
+        description: "Deck, financial model, cap table, incorporation docs, product demo access, compliance registry export",
+        owner: "both", status: "upcoming", dueDate: "Mar 1", agentId: "financial-model",
+      },
+      {
+        id: "m4", title: "3-year financial model",
+        description: "Conservative / moderate / aggressive scenarios. Path to $1M ARR. Benchmark against SaaS comps",
+        owner: "both", status: "upcoming", dueDate: "Mar 3", agentId: "financial-model",
+      },
+      {
+        id: "m5", title: "Map warm intro network (100+ paths)",
+        description: "2nd/3rd-degree LinkedIn connections to target investors. Warm intros convert 10-15x vs cold",
+        owner: "both", status: "upcoming", dueDate: "Mar 5", agentId: "investor-research",
+      },
+      {
+        id: "m6", title: "Launch public API sandbox & developer docs",
+        description: "Developers can hit your API in a sandbox. Key traction metric for pre-seed",
+        owner: "agent", status: "upcoming", dueDate: "Mar 7", agentId: "product-dev",
+      },
+    ],
+  },
+  {
+    id: "content-pilots",
+    name: "Phase 2: Content & Pilots",
+    dates: "Mar 8 — Mar 28",
+    color: "text-amber-600 dark:text-amber-400",
+    dotColor: "bg-amber-500",
+    milestones: [
+      {
+        id: "m7", title: "Begin regulatory content publishing (2x/week)",
+        description: "Blog posts analyzing new legislation. Your law registry (52 laws) is a content asset",
+        owner: "agent", status: "upcoming", dueDate: "Mar 10", agentId: "content-engine",
+      },
+      {
+        id: "m8", title: "COPPA 2.0 compliance guide (flagship content)",
+        description: "April 22 deadline = massive content hook. Target: 'COPPA 2.0 compliance guide' keyword",
+        owner: "both", status: "upcoming", dueDate: "Mar 14", agentId: "content-engine",
+      },
+      {
+        id: "m9", title: "Identify & outreach to 10 pilot targets",
+        description: "Mid-size platforms facing April 2026 COPPA deadline. Free pilot in exchange for LOI + case study",
+        owner: "both", status: "upcoming", dueDate: "Mar 14", agentId: "lead-gen",
+      },
+      {
+        id: "m10", title: "Get deck feedback from 5-10 advisors",
+        description: "Steve Haggerty + trusted network. Iterate based on feedback before going live",
+        owner: "founder", status: "upcoming", dueDate: "Mar 17",
+      },
+      {
+        id: "m11", title: "Add 1-2 advisory board members",
+        description: "Target: regulatory expertise (FTC alumni, child safety), trust & safety, enterprise sales",
+        owner: "founder", status: "upcoming", dueDate: "Mar 21",
+      },
+      {
+        id: "m12", title: "Begin scheduling investor meetings",
+        description: "Target regtech funds, impact angels, edtech-adjacent (Emerge, Reach Capital), solo-founder-friendly (Hustle Fund, Precursor)",
+        owner: "both", status: "upcoming", dueDate: "Mar 21", agentId: "investor-research",
+      },
+      {
+        id: "m13", title: "Submit FTC/state AG public comments",
+        description: "Position as regulatory resource. Enormous credibility builder with investors and customers",
+        owner: "both", status: "upcoming", dueDate: "Mar 28", agentId: "regulatory-intel",
+      },
+      {
+        id: "m14", title: "LinkedIn thought leadership cadence (daily)",
+        description: "Consistent posting builds visibility. Regulatory analysis, product updates, market commentary",
+        owner: "agent", status: "upcoming", dueDate: "Mar 10", agentId: "social-media",
+      },
+    ],
+  },
+  {
+    id: "active-raise",
+    name: "Phase 3: Active Fundraise",
+    dates: "Mar 29 — Apr 25",
+    color: "text-brand-green",
+    dotColor: "bg-brand-green",
+    milestones: [
+      {
+        id: "m15", title: "Run 4-6 investor meetings per week",
+        description: "Target 20-30 meetings this month. Focus on warm intros (68% of seed rounds start this way)",
+        owner: "founder", status: "upcoming", dueDate: "Apr 25",
+      },
+      {
+        id: "m16", title: "Close first pilot customer LOI",
+        description: "Even 1 LOI from a recognizable platform transforms narrative from 'nice idea' to 'fundable company'",
+        owner: "founder", status: "upcoming", dueDate: "Apr 7",
+      },
+      {
+        id: "m17", title: "COPPA 2.0 deadline content blitz (Apr 22)",
+        description: "The hard compliance deadline. Every piece of content, every sales convo should reference this",
+        owner: "both", status: "upcoming", dueDate: "Apr 22", agentId: "content-engine",
+      },
+      {
+        id: "m18", title: "Weekly investor updates to warm leads",
+        description: "Momentum signals. Product updates, pilot progress, content traction, regulatory news",
+        owner: "both", status: "upcoming", dueDate: "Apr 25", agentId: "outreach-seq",
+      },
+      {
+        id: "m19", title: "Attend 1+ relevant conference or event",
+        description: "TSPA, FTC workshop, RSA (compliance track), child safety summit. Live-tweet analysis",
+        owner: "founder", status: "upcoming", dueDate: "Apr 18",
+      },
+      {
+        id: "m20", title: "Secure lead investor commitment",
+        description: "Target: $200-300K check from lead angel or micro-fund. Creates urgency for followers",
+        owner: "founder", status: "upcoming", dueDate: "Apr 25",
+      },
+      {
+        id: "m21", title: "Close 2-3 total pilot LOIs",
+        description: "Build pipeline from 10 targets. Social proof + case study material for remaining angels",
+        owner: "founder", status: "upcoming", dueDate: "Apr 25",
+      },
+    ],
+  },
+  {
+    id: "close",
+    name: "Phase 4: Close",
+    dates: "Apr 26 — May 31",
+    color: "text-purple-600 dark:text-purple-400",
+    dotColor: "bg-purple-500",
+    milestones: [
+      {
+        id: "m22", title: "Close lead investor SAFE",
+        description: "Post-money SAFE, $8-12M cap. Use YC standard template",
+        owner: "founder", status: "upcoming", dueDate: "May 5",
+      },
+      {
+        id: "m23", title: "Run parallel angel closing (5-10 angels)",
+        description: "Use lead commitment to create urgency. Target $25-100K checks from 5-10 angels",
+        owner: "founder", status: "upcoming", dueDate: "May 20",
+      },
+      {
+        id: "m24", title: "Publish pilot case study",
+        description: "How [Platform X] achieved COPPA 2.0 compliance with Phosra in [X] weeks",
+        owner: "both", status: "upcoming", dueDate: "May 15", agentId: "content-engine",
+      },
+      {
+        id: "m25", title: "Execute remaining SAFEs & wire funds",
+        description: "Target: 8-16 total checks to reach $1M. Mix of lead + angels + syndicates",
+        owner: "founder", status: "upcoming", dueDate: "May 28",
+      },
+      {
+        id: "m26", title: "Announce raise (optional) for seed momentum",
+        description: "Public announcement drives inbound for seed round. Time with product milestone",
+        owner: "both", status: "upcoming", dueDate: "May 31", agentId: "social-media",
+      },
+    ],
+  },
+]
+
+const AGENTS: Agent[] = [
+  {
+    id: "regulatory-intel",
+    name: "Regulatory Intel",
+    role: "Legislation Monitor",
+    description: "Monitors child safety legislation across 50+ jurisdictions. Tracks bill introductions, committee votes, FTC enforcement actions, EU DSA updates. Generates investor-ready regulatory landscape reports.",
+    icon: Globe,
+    color: "text-red-600 dark:text-red-400",
+    bgColor: "bg-red-100 dark:bg-red-900/30",
+    automationLevel: 85,
+    tasks: [
+      "Scan congress.gov, state legislatures, FTC.gov, EU digital strategy daily",
+      "Alert on new child safety bills, amendments, enforcement actions",
+      "Generate weekly regulatory brief for investor updates",
+      "Draft public comment submissions for FTC/AG proceedings",
+      "Maintain and update law-registry.ts with new legislation",
+    ],
+    tools: ["Claude API", "Web scraping", "RSS feeds", "GitHub Actions"],
+    cadence: "Daily scans, weekly reports",
+  },
+  {
+    id: "investor-research",
+    name: "Investor Research",
+    role: "Deal Flow Intelligence",
+    description: "Builds and maintains investor database. Maps warm intro paths through 2nd/3rd-degree connections. Tracks fund activity, thesis alignment, portfolio companies. Generates personalized outreach drafts.",
+    icon: Search,
+    color: "text-blue-600 dark:text-blue-400",
+    bgColor: "bg-blue-100 dark:bg-blue-900/30",
+    automationLevel: 75,
+    tasks: [
+      "Build database: fund thesis, check size, portfolio, contact info",
+      "Map warm intro paths through LinkedIn network analysis",
+      "Track who just raised new funds or invested in adjacent spaces",
+      "Generate personalized outreach drafts per investor",
+      "Monitor Crunchbase/PitchBook for regtech/child-safety deals",
+    ],
+    tools: ["Clay", "Apollo", "LinkedIn Sales Navigator", "Crunchbase"],
+    cadence: "Weekly database refresh, real-time alerts",
+  },
+  {
+    id: "content-engine",
+    name: "Content Engine",
+    role: "Thought Leadership Writer",
+    description: "Produces regulatory analysis blog posts, compliance guides, newsletters, and whitepapers. Leverages the 52-law registry as source material. Targets SEO keywords around COPPA 2.0, KOSA, age verification.",
+    icon: PenTool,
+    color: "text-amber-600 dark:text-amber-400",
+    bgColor: "bg-amber-100 dark:bg-amber-900/30",
+    automationLevel: 70,
+    tasks: [
+      "Draft 2x/week blog posts analyzing legislation changes",
+      "Create COPPA 2.0 compliance guide (flagship content piece)",
+      "Write weekly newsletter for subscriber list",
+      "Draft case studies from pilot customer data",
+      "Generate SEO-optimized landing pages per law",
+    ],
+    tools: ["Claude API", "WordPress/Ghost", "Ahrefs", "Mailchimp"],
+    cadence: "2 posts/week, 1 newsletter/week",
+  },
+  {
+    id: "competitive-intel",
+    name: "Competitive Intel",
+    role: "Market Monitor",
+    description: "Continuously monitors competitor websites, funding announcements, product launches, job postings, and partnership announcements. Maintains living competitive matrix for investor conversations.",
+    icon: BarChart3,
+    color: "text-purple-600 dark:text-purple-400",
+    bgColor: "bg-purple-100 dark:bg-purple-900/30",
+    automationLevel: 80,
+    tasks: [
+      "Monitor Bark, Qustodio, Yoti, Veriff, SuperAwesome websites weekly",
+      "Track funding announcements in age verification / child safety",
+      "Analyze competitor job postings for strategic direction signals",
+      "Generate weekly competitive brief",
+      "Maintain investor-ready competitive positioning matrix",
+    ],
+    tools: ["Web scraping", "Crunchbase alerts", "Google Alerts", "Claude API"],
+    cadence: "Weekly briefs, real-time alerts",
+  },
+  {
+    id: "lead-gen",
+    name: "Lead Generation",
+    role: "Pipeline Builder",
+    description: "Identifies platforms needing child safety compliance. Monitors buying signals: job postings for 'trust & safety' roles, recent funding (compliance pressure), regulatory deadlines. Enriches and scores leads.",
+    icon: Target,
+    color: "text-emerald-600 dark:text-emerald-400",
+    bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
+    automationLevel: 65,
+    tasks: [
+      "Identify platforms facing COPPA 2.0 April deadline",
+      "Monitor job boards for 'trust and safety' / 'compliance' hiring",
+      "Track recent funding rounds (freshly funded = compliance pressure)",
+      "Enrich leads with company size, tech stack, decision makers",
+      "Score and prioritize pipeline by urgency and fit",
+    ],
+    tools: ["Apollo", "Clay", "LinkedIn", "BuiltWith", "Claude API"],
+    cadence: "Weekly pipeline refresh, daily alerts",
+  },
+  {
+    id: "social-media",
+    name: "Social Presence",
+    role: "Brand Builder",
+    description: "Maintains consistent LinkedIn and X/Twitter presence. Drafts thought leadership posts, regulatory commentary, product updates. Monitors relevant conversations for engagement opportunities.",
+    icon: Linkedin,
+    color: "text-sky-600 dark:text-sky-400",
+    bgColor: "bg-sky-100 dark:bg-sky-900/30",
+    automationLevel: 60,
+    tasks: [
+      "Draft daily LinkedIn posts (regulatory analysis, product insights)",
+      "Draft 3-5x/week X/Twitter posts and threads",
+      "Monitor #childsafety, #KOSA, #COPPA hashtags for engagement",
+      "Schedule and optimize posting times",
+      "Track engagement metrics and iterate on content strategy",
+    ],
+    tools: ["Buffer/Typefully", "Claude API", "LinkedIn", "X/Twitter"],
+    cadence: "Daily LinkedIn, 3-5x/week Twitter",
+  },
+  {
+    id: "outreach-seq",
+    name: "Outreach Sequencer",
+    role: "Email Campaign Manager",
+    description: "Manages multi-step email sequences for both investor and customer outreach. Personalizes at scale. Handles follow-ups, CRM updates, and meeting scheduling logistics.",
+    icon: Mail,
+    color: "text-indigo-600 dark:text-indigo-400",
+    bgColor: "bg-indigo-100 dark:bg-indigo-900/30",
+    automationLevel: 55,
+    tasks: [
+      "Build personalized investor email sequences (3-5 touch cadence)",
+      "Draft customer outreach for pilot targets",
+      "Manage follow-up scheduling and reminders",
+      "Update CRM with meeting outcomes and next steps",
+      "Generate weekly investor update emails",
+    ],
+    tools: ["Instantly.ai", "Attio/Notion CRM", "Calendly", "Claude API"],
+    cadence: "Continuous sequences, weekly updates",
+  },
+  {
+    id: "financial-model",
+    name: "Financial Modeler",
+    role: "Numbers & Projections",
+    description: "Builds and iterates the 3-year financial model. Scenario analysis across conservative/moderate/aggressive. Benchmarks against comparable SaaS companies. Generates investor-ready outputs.",
+    icon: DollarSign,
+    color: "text-green-600 dark:text-green-400",
+    bgColor: "bg-green-100 dark:bg-green-900/30",
+    automationLevel: 70,
+    tasks: [
+      "Build 3-year P&L with SaaS metrics (ARR, churn, LTV, CAC)",
+      "Model 3 scenarios: conservative, moderate, aggressive",
+      "Benchmark against Qustodio, Bark, age verification comps",
+      "Generate use-of-funds slide with $1M allocation",
+      "Iterate model based on investor feedback",
+    ],
+    tools: ["Claude API", "Google Sheets", "Excel"],
+    cadence: "Weekly iteration during active raise",
+  },
+  {
+    id: "pitch-deck",
+    name: "Pitch Deck",
+    role: "Narrative Designer",
+    description: "Iterates pitch deck based on investor feedback. A/B tests messaging angles. Creates data visualizations from compliance registry and market data. Maintains multiple deck versions for different audiences.",
+    icon: Presentation,
+    color: "text-orange-600 dark:text-orange-400",
+    bgColor: "bg-orange-100 dark:bg-orange-900/30",
+    automationLevel: 50,
+    tasks: [
+      "Draft initial 10-12 slide deck structure and content",
+      "Create market size / regulatory timeline visualizations",
+      "Generate appendix slides (competitive matrix, law coverage)",
+      "Iterate messaging based on meeting feedback",
+      "Maintain 'enterprise' vs 'angel' deck variants",
+    ],
+    tools: ["Gamma/Canva", "Claude API", "Figma"],
+    cadence: "Weekly iteration, post-meeting updates",
+  },
+  {
+    id: "product-dev",
+    name: "Product Dev",
+    role: "Engineering Agent",
+    description: "Ships features, fixes bugs, builds integrations. Currently: fix zero-counter bug, complete Clerk auth, expand platform adapters. Claude Code as the primary development tool.",
+    icon: Code2,
+    color: "text-cyan-600 dark:text-cyan-400",
+    bgColor: "bg-cyan-100 dark:bg-cyan-900/30",
+    automationLevel: 80,
+    tasks: [
+      "Fix homepage zero-counter animation bug (critical)",
+      "Complete Clerk auth integration",
+      "Build public API sandbox and developer playground",
+      "Expand platform adapter coverage (Netflix, Disney+ stubs → partial)",
+      "Ship features that drive pilot customer conversations",
+    ],
+    tools: ["Claude Code", "GitHub", "Vercel", "Railway"],
+    cadence: "Continuous development",
+  },
+]
+
+const FOUNDER_FOCUS: FounderTask[] = [
+  {
+    id: "f1", title: "Investor Meetings & Relationship Building",
+    why: "You ARE the product at pre-seed. No agent can replace the trust, conviction, and founder-market fit that investors evaluate in person. Warm intros convert at 58%+ vs 2-4% cold.",
+    timePerWeek: "10-15 hrs/week (Phase 3-4)",
+    icon: Handshake,
+  },
+  {
+    id: "f2", title: "Customer Discovery Calls",
+    why: "This is where you learn what to build and how to position. Pattern recognition across discovery conversations shapes your entire product strategy. No substitute.",
+    timePerWeek: "5-8 hrs/week",
+    icon: Phone,
+  },
+  {
+    id: "f3", title: "Strategic Decisions & Positioning",
+    why: "Pricing, packaging, which pilots to prioritize, which advisors to add, how to frame the narrative. Agents provide data; you provide judgment.",
+    timePerWeek: "3-5 hrs/week",
+    icon: Brain,
+  },
+  {
+    id: "f4", title: "Partnership Negotiations",
+    why: "Age verification providers (Yoti, Veriff), law firms advising on COPPA, child safety nonprofits (NCMEC, FOSI). Trust-based relationships that require a human.",
+    timePerWeek: "2-4 hrs/week",
+    icon: Users,
+  },
+  {
+    id: "f5", title: "The Pitch Itself",
+    why: "Regulatory tailwind story, product demo, team credibility, the ask. Review and approve all agent-drafted content. Your voice, your conviction.",
+    timePerWeek: "5-10 hrs/week",
+    icon: Megaphone,
+  },
+]
+
+const ROUND_STRUCTURE = [
+  { type: "Lead angel or micro-fund", checkSize: "$200-300K", count: "1", total: "$200-300K" },
+  { type: "Angel investors", checkSize: "$25-100K", count: "5-10", total: "$250-500K" },
+  { type: "Angel syndicates", checkSize: "$100-250K", count: "1-2", total: "$200-350K" },
+  { type: "Strategic angels (T&S, compliance)", checkSize: "$25-50K", count: "2-4", total: "$50-200K" },
+]
+
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT
+   ═══════════════════════════════════════════════════════════════ */
+
+export default function FundraiseCommandCenter() {
+  const [expandedPhase, setExpandedPhase] = useState<string | null>("foundation")
+  const [expandedAgent, setExpandedAgent] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<"timeline" | "agents" | "founder">("timeline")
+
+  // Calculate days remaining
+  const now = new Date()
+  const daysRemaining = Math.max(0, Math.ceil((DEADLINE.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
+  const totalDays = Math.ceil((DEADLINE.getTime() - START.getTime()) / (1000 * 60 * 60 * 24))
+  const elapsed = totalDays - daysRemaining
+  const progressPct = Math.min(100, Math.round((elapsed / totalDays) * 100))
+
+  // Count milestones
+  const allMilestones = PHASES.flatMap((p) => p.milestones)
+  const doneMilestones = allMilestones.filter((m) => m.status === "done").length
+  const activeMilestones = allMilestones.filter((m) => m.status === "active").length
+
+  const TABS = [
+    { key: "timeline" as const, label: "Timeline", icon: Calendar },
+    { key: "agents" as const, label: "Agent Workforce", icon: Bot },
+    { key: "founder" as const, label: "Your Focus", icon: User },
+  ]
+
+  return (
+    <div className="space-y-8">
+      {/* ── Header ──────────────────────────────────────────── */}
+      <div>
+        <div className="flex items-center gap-3 mb-1">
+          <h1 className="text-2xl font-semibold text-foreground">Fundraise Command Center</h1>
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-brand-green/10 text-brand-green uppercase tracking-wider">
+            Pre-Seed
+          </span>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          $1M raise by May 31, 2026 — milestones, agent workforce, and your high-value work
+        </p>
+      </div>
+
+      {/* ── Top Stats ───────────────────────────────────────── */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="plaid-card !py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 rounded-md bg-brand-green/10">
+              <DollarSign className="w-3.5 h-3.5 text-brand-green" />
+            </div>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Target</span>
+          </div>
+          <div className="text-xl font-semibold tabular-nums">$1,000,000</div>
+          <div className="text-[10px] text-muted-foreground mt-0.5">Post-money SAFE, $8-12M cap</div>
+        </div>
+
+        <div className="plaid-card !py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 rounded-md bg-red-100 dark:bg-red-900/30">
+              <Calendar className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+            </div>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Deadline</span>
+          </div>
+          <div className="text-xl font-semibold tabular-nums">{daysRemaining}</div>
+          <div className="text-[10px] text-muted-foreground mt-0.5">days remaining</div>
+        </div>
+
+        <div className="plaid-card !py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 rounded-md bg-amber-100 dark:bg-amber-900/30">
+              <Target className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+            </div>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Milestones</span>
+          </div>
+          <div className="text-xl font-semibold tabular-nums">{doneMilestones}/{allMilestones.length}</div>
+          <div className="text-[10px] text-muted-foreground mt-0.5">{activeMilestones} in progress</div>
+        </div>
+
+        <div className="plaid-card !py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 rounded-md bg-purple-100 dark:bg-purple-900/30">
+              <Bot className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            </div>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Agents</span>
+          </div>
+          <div className="text-xl font-semibold tabular-nums">{AGENTS.length}</div>
+          <div className="text-[10px] text-muted-foreground mt-0.5">in workforce</div>
+        </div>
+
+        <div className="plaid-card !py-3 col-span-2 lg:col-span-1">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/30">
+              <TrendingUp className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">COPPA 2.0</span>
+          </div>
+          <div className="text-xl font-semibold tabular-nums text-red-600 dark:text-red-400">Apr 22</div>
+          <div className="text-[10px] text-muted-foreground mt-0.5">compliance deadline</div>
+        </div>
+      </div>
+
+      {/* ── Progress Bar ─────────────────────────────────────── */}
+      <div className="plaid-card !py-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-medium text-muted-foreground">Sprint Progress</span>
+          <span className="text-xs text-muted-foreground tabular-nums">{progressPct}% elapsed</span>
+        </div>
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
+          <div
+            className="h-full bg-brand-green rounded-full transition-all duration-500"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+        <div className="flex justify-between mt-2 text-[10px] text-muted-foreground">
+          <span>Feb 21</span>
+          <span className="text-red-500 font-medium">Apr 22 COPPA</span>
+          <span>May 31</span>
+        </div>
+      </div>
+
+      {/* ── Tab Bar ──────────────────────────────────────────── */}
+      <div className="flex items-center bg-muted/60 rounded-lg p-0.5 w-fit">
+        {TABS.map((t) => {
+          const active = activeTab === t.key
+          return (
+            <button
+              key={t.key}
+              onClick={() => setActiveTab(t.key)}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-medium transition-all ${
+                active
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <t.icon className="w-3.5 h-3.5" />
+              {t.label}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* ═══ TIMELINE TAB ══════════════════════════════════════ */}
+      {activeTab === "timeline" && (
+        <div className="space-y-4">
+          {/* Round structure summary */}
+          <div className="plaid-card">
+            <h3 className="text-sm font-semibold text-foreground mb-3">Target Round Structure</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2 text-muted-foreground font-medium">Investor Type</th>
+                    <th className="text-left py-2 text-muted-foreground font-medium">Check Size</th>
+                    <th className="text-left py-2 text-muted-foreground font-medium">Count</th>
+                    <th className="text-right py-2 text-muted-foreground font-medium">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ROUND_STRUCTURE.map((r) => (
+                    <tr key={r.type} className="border-b border-border/50">
+                      <td className="py-2 text-foreground">{r.type}</td>
+                      <td className="py-2 text-muted-foreground tabular-nums">{r.checkSize}</td>
+                      <td className="py-2 text-muted-foreground tabular-nums">{r.count}</td>
+                      <td className="py-2 text-foreground font-medium tabular-nums text-right">{r.total}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td className="pt-2 text-foreground font-semibold">Total target</td>
+                    <td></td>
+                    <td className="pt-2 text-muted-foreground tabular-nums">8-16 checks</td>
+                    <td className="pt-2 text-foreground font-semibold tabular-nums text-right">$1,000,000</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          {/* Phase timeline */}
+          {PHASES.map((phase) => {
+            const isExpanded = expandedPhase === phase.id
+            const doneCount = phase.milestones.filter((m) => m.status === "done").length
+            return (
+              <div key={phase.id} className="plaid-card p-0 overflow-hidden">
+                <button
+                  onClick={() => setExpandedPhase(isExpanded ? null : phase.id)}
+                  className="w-full flex items-center gap-3 px-5 py-4 hover:bg-muted/30 transition-colors text-left"
+                >
+                  <div className={`w-2.5 h-2.5 rounded-full ${phase.dotColor} flex-shrink-0`} />
+                  <div className="flex-1 min-w-0">
+                    <div className={`text-sm font-semibold ${phase.color}`}>{phase.name}</div>
+                    <div className="text-xs text-muted-foreground">{phase.dates}</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground tabular-nums mr-2">
+                    {doneCount}/{phase.milestones.length} done
+                  </div>
+                  {isExpanded ? (
+                    <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  )}
+                </button>
+                {isExpanded && (
+                  <div className="border-t border-border divide-y divide-border/50">
+                    {phase.milestones.map((m) => (
+                      <div key={m.id} className="px-5 py-3 hover:bg-muted/20 transition-colors">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-0.5 flex-shrink-0">
+                            {m.status === "done" ? (
+                              <CheckCircle2 className="w-4 h-4 text-brand-green" />
+                            ) : m.status === "active" ? (
+                              <Clock className="w-4 h-4 text-amber-500 animate-pulse" />
+                            ) : (
+                              <Circle className="w-4 h-4 text-muted-foreground/40" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className={`text-sm font-medium ${m.status === "done" ? "text-muted-foreground line-through" : "text-foreground"}`}>
+                                {m.title}
+                              </span>
+                              <span className={`inline-flex items-center gap-1 text-[9px] font-medium px-1.5 py-0.5 rounded-full ${
+                                m.owner === "agent"
+                                  ? "bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400"
+                                  : m.owner === "founder"
+                                  ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
+                                  : "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400"
+                              }`}>
+                                {m.owner === "agent" ? (
+                                  <><Bot className="w-2.5 h-2.5" /> Agent</>
+                                ) : m.owner === "founder" ? (
+                                  <><User className="w-2.5 h-2.5" /> You</>
+                                ) : (
+                                  <><Sparkles className="w-2.5 h-2.5" /> You + Agent</>
+                                )}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">{m.description}</p>
+                            <div className="flex items-center gap-3 mt-1.5">
+                              <span className="text-[10px] text-muted-foreground">Due: {m.dueDate}</span>
+                              {m.agentId && (
+                                <span className="text-[10px] text-muted-foreground/70">
+                                  Agent: {AGENTS.find((a) => a.id === m.agentId)?.name}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+
+          {/* The Narrative */}
+          <div className="plaid-card border-l-2 border-l-brand-green">
+            <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+              <Megaphone className="w-4 h-4 text-brand-green" />
+              The Pitch Narrative
+            </h3>
+            <div className="space-y-2 text-xs text-muted-foreground leading-relaxed">
+              <p>
+                <strong className="text-foreground">The problem:</strong> 52+ child safety laws are now in effect or pending. Platforms face a compliance cliff — COPPA 2.0 enforcement hits April 2026, half of US states mandate age gating, EU DSA enforcement is ramping. Every platform is building bespoke compliance solutions because no unified API exists.
+              </p>
+              <p>
+                <strong className="text-foreground">The solution:</strong> Phosra is the Stripe for child safety compliance — a single API that maps 45 enforcement rule categories across 52+ laws and pushes controls to 15+ provider adapters. Define once, enforce everywhere.
+              </p>
+              <p>
+                <strong className="text-foreground">The market:</strong> $5-8B combined market (parental controls + age verification + compliance tooling) growing at 12%+ CAGR, driven by regulatory mandate, not discretionary spend.
+              </p>
+              <p>
+                <strong className="text-foreground">The timing:</strong> COPPA 2.0 compliance deadline is April 22, 2026. Platforms are panicking now. Every month of delay increases their regulatory risk and our urgency-driven sales motion.
+              </p>
+              <p>
+                <strong className="text-foreground">The ask:</strong> $1M pre-seed to sign 10 pilot customers, expand law coverage to 75+ jurisdictions, and build the sales motion for seed.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ AGENTS TAB ════════════════════════════════════════ */}
+      {activeTab === "agents" && (
+        <div className="space-y-4">
+          {/* Key insight */}
+          <div className="plaid-card border-l-2 border-l-amber-500 !py-3">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-xs text-foreground font-medium">Agents are your co-founder substitute for execution, not for relationships.</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">
+                  Use them aggressively for content, research, competitive analysis, and outreach prep. The investor meetings, customer discovery calls, and partnership handshakes are yours alone.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Automation summary */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="plaid-card !py-3 text-center">
+              <div className="text-2xl font-semibold text-brand-green tabular-nums">
+                {Math.round(AGENTS.reduce((sum, a) => sum + a.automationLevel, 0) / AGENTS.length)}%
+              </div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">Avg automation level</div>
+            </div>
+            <div className="plaid-card !py-3 text-center">
+              <div className="text-2xl font-semibold text-foreground tabular-nums">~$300</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">Est. monthly tool cost</div>
+            </div>
+            <div className="plaid-card !py-3 text-center">
+              <div className="text-2xl font-semibold text-foreground tabular-nums">40+</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">hrs/week saved</div>
+            </div>
+          </div>
+
+          {/* Agent cards */}
+          <div className="space-y-2">
+            {AGENTS.map((agent) => {
+              const isExpanded = expandedAgent === agent.id
+              return (
+                <div key={agent.id} className="plaid-card p-0 overflow-hidden">
+                  <button
+                    onClick={() => setExpandedAgent(isExpanded ? null : agent.id)}
+                    className="w-full flex items-center gap-3 px-5 py-3.5 hover:bg-muted/30 transition-colors text-left"
+                  >
+                    <div className={`p-1.5 rounded-md ${agent.bgColor} flex-shrink-0`}>
+                      <agent.icon className={`w-3.5 h-3.5 ${agent.color}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-foreground">{agent.name}</div>
+                      <div className="text-xs text-muted-foreground">{agent.role}</div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="hidden sm:flex items-center gap-1.5">
+                        <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-brand-green rounded-full"
+                            style={{ width: `${agent.automationLevel}%` }}
+                          />
+                        </div>
+                        <span className="text-[10px] text-muted-foreground tabular-nums w-8">{agent.automationLevel}%</span>
+                      </div>
+                      {isExpanded ? (
+                        <ChevronDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      )}
+                    </div>
+                  </button>
+                  {isExpanded && (
+                    <div className="border-t border-border px-5 py-4 space-y-4">
+                      <p className="text-xs text-muted-foreground leading-relaxed">{agent.description}</p>
+
+                      <div>
+                        <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-2">Tasks</div>
+                        <ul className="space-y-1.5">
+                          {agent.tasks.map((task, i) => (
+                            <li key={i} className="flex items-start gap-2 text-xs text-foreground">
+                              <ArrowRight className="w-3 h-3 text-muted-foreground flex-shrink-0 mt-0.5" />
+                              {task}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="flex flex-wrap gap-4">
+                        <div>
+                          <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">Tools</div>
+                          <div className="flex flex-wrap gap-1">
+                            {agent.tools.map((tool) => (
+                              <span key={tool} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-1">Cadence</div>
+                          <span className="text-xs text-foreground">{agent.cadence}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ FOUNDER FOCUS TAB ═════════════════════════════════ */}
+      {activeTab === "founder" && (
+        <div className="space-y-4">
+          {/* Time allocation */}
+          <div className="plaid-card">
+            <h3 className="text-sm font-semibold text-foreground mb-3">Your Weekly Time Budget</h3>
+            <p className="text-xs text-muted-foreground mb-4">
+              These are the activities where your time creates 10x+ more value than any agent.
+              Everything else gets delegated.
+            </p>
+            <div className="space-y-3">
+              {FOUNDER_FOCUS.map((task) => (
+                <div key={task.id} className="flex items-start gap-3 py-3 border-b border-border/50 last:border-0 last:pb-0">
+                  <div className="p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/30 flex-shrink-0 mt-0.5">
+                    <task.icon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-medium text-foreground">{task.title}</span>
+                      <span className="text-[10px] text-muted-foreground whitespace-nowrap tabular-nums">{task.timePerWeek}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{task.why}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Key principles */}
+          <div className="plaid-card border-l-2 border-l-brand-green">
+            <h3 className="text-sm font-semibold text-foreground mb-3">Operating Principles</h3>
+            <div className="space-y-3 text-xs text-muted-foreground">
+              <div className="flex items-start gap-2">
+                <span className="text-brand-green font-bold">1.</span>
+                <p><strong className="text-foreground">COPPA 2.0 April 22 is your #1 asset.</strong> Every content piece, every sales convo, every investor meeting should reference this deadline. Urgency sells.</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-brand-green font-bold">2.</span>
+                <p><strong className="text-foreground">Pilot customers unlock everything.</strong> Even 2-3 LOIs from recognizable platforms transform a &quot;nice idea&quot; into a &quot;fundable company.&quot; Prioritize this above everything except the product itself.</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-brand-green font-bold">3.</span>
+                <p><strong className="text-foreground">Your law registry is a moat.</strong> 52 laws with full metadata, mapped to 45 rule categories — months of domain work that competitors would need to replicate. Make this visible in your pitch.</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-brand-green font-bold">4.</span>
+                <p><strong className="text-foreground">Warm intros are 10-15x more effective than cold outreach.</strong> Spend time mapping your network before blasting cold emails. Ask every advisor, friend, and existing contact for introductions to 2-3 investors.</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-brand-green font-bold">5.</span>
+                <p><strong className="text-foreground">You are the product at pre-seed.</strong> Investors buy founder-market fit. Your 3 exits, Mastercard infrastructure experience, and 5 kids dog-fooding the product IS the moat. Agents draft; you deliver.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Target investor profiles */}
+          <div className="plaid-card">
+            <h3 className="text-sm font-semibold text-foreground mb-3">Target Investor Profiles</h3>
+            <div className="space-y-2">
+              {[
+                { type: "Regtech / compliance-focused funds", why: "Understand compliance buying motion", priority: "High" },
+                { type: "Impact / safety-focused angels", why: "Trust & Safety leaders at major platforms", priority: "High" },
+                { type: "EdTech-adjacent funds", why: "Emerge Education, Reach Capital, Brighteye Ventures", priority: "Medium" },
+                { type: "Solo-founder-friendly funds", why: "a16z Speedrun, Hustle Fund, Precursor Ventures", priority: "Medium" },
+                { type: "Strategic angels", why: "FTC alumni, COPPA enforcers, child safety nonprofit leaders", priority: "High" },
+              ].map((inv) => (
+                <div key={inv.type} className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
+                  <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${
+                    inv.priority === "High"
+                      ? "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400"
+                      : "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400"
+                  }`}>
+                    {inv.priority}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-medium text-foreground">{inv.type}</div>
+                    <div className="text-[11px] text-muted-foreground">{inv.why}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Key metrics to hit */}
+          <div className="plaid-card">
+            <h3 className="text-sm font-semibold text-foreground mb-3">Pre-Seed Benchmarks to Hit</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { metric: "Pilot customers / LOIs", target: "2-5", current: "0" },
+                { metric: "Laws mapped to enforcement", target: "52+", current: "52" },
+                { metric: "Advisory board members", target: "3-4", current: "1" },
+                { metric: "Published content pieces", target: "10+", current: "0" },
+                { metric: "Developer waitlist signups", target: "50-200", current: "0" },
+                { metric: "Investor meetings taken", target: "40-60", current: "0" },
+              ].map((b) => (
+                <div key={b.metric} className="flex flex-col gap-1 py-2 border-b border-border/50">
+                  <div className="text-[10px] text-muted-foreground">{b.metric}</div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-sm font-semibold text-foreground tabular-nums">{b.current}</span>
+                    <span className="text-[10px] text-muted-foreground">/ {b.target}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

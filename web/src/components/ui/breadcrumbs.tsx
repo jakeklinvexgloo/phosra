@@ -16,6 +16,7 @@ const segmentLabels: Record<string, string> = {
   deploy: "Deploy",
   enforcement: "Enforcement",
   policies: "Policies",
+  fundraise: "Fundraise",
 }
 
 export function Breadcrumbs() {
