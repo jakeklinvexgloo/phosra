@@ -1,4 +1,4 @@
-import { Home, Zap, Globe, Shield, Users, Settings, Rocket, LayoutDashboard, Send, Newspaper, Bot, Bell, Mail, Contact, CalendarDays, Mic } from "lucide-react"
+import { Home, Zap, Globe, Shield, Users, Settings, Rocket, LayoutDashboard, Send, Newspaper, Bot, Bell, Mail, Contact, CalendarDays, Mic, Monitor } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 export interface NavItem {
@@ -53,6 +53,7 @@ export const adminNavGroups: NavGroup[] = [
       { href: "/dashboard/admin/workers", label: "Workers", icon: Bot },
       { href: "/dashboard/admin/compliance-alerts", label: "Alerts", icon: Bell },
       { href: "/dashboard/admin/pitch-coach", label: "Pitch Coach", icon: Mic },
+      { href: "/dashboard/admin/provider-sandbox", label: "Provider Sandbox", icon: Monitor },
     ],
   },
   {
