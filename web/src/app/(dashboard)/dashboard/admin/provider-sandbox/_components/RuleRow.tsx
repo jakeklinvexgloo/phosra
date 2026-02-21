@@ -9,8 +9,11 @@ interface RuleRowProps {
   profiles: NetflixProfile[]
   disabled: boolean
   ruleProfileChangeCounts: Map<string, number> | undefined
+  configProfileId: string
+  profileRuleOverrides: Record<string, Record<string, Record<string, unknown>>>
   onToggle: (category: string) => void
   onUpdateConfig: (category: string, config: Record<string, unknown>) => void
+  onUpdateProfileRuleConfig: (profileId: string, category: string, config: Record<string, unknown>) => void
 }
 
 export function RuleRow({
@@ -18,8 +21,11 @@ export function RuleRow({
   profiles,
   disabled,
   ruleProfileChangeCounts,
+  configProfileId,
+  profileRuleOverrides,
   onToggle,
   onUpdateConfig,
+  onUpdateProfileRuleConfig,
 }: RuleRowProps) {
   const isPhosraManaged = rule.category === "time_daily_limit"
   const cap = getCapability(rule.category)
@@ -42,6 +48,10 @@ export function RuleRow({
       isAffected,
     }
   })
+
+  // Get the effective config for the currently selected profile
+  const profileConfig = profileRuleOverrides[configProfileId]?.[rule.category]
+  const effectiveConfig = profileConfig ? { ...rule.config, ...profileConfig } : rule.config
 
   return (
     <div>
@@ -75,9 +85,16 @@ export function RuleRow({
         <ProfileAvatarBadges badges={badges} />
       </label>
 
-      {/* Inline config when rule is enabled and applicable */}
+      {/* Inline config when rule is enabled and applicable — per-profile */}
       {rule.enabled && (rule.appliesToProvider || isPhosraManaged) && (
-        <RuleConfig rule={rule} onUpdateConfig={onUpdateConfig} />
+        <RuleConfig
+          rule={rule}
+          effectiveConfig={effectiveConfig}
+          configProfileId={configProfileId}
+          profiles={profiles}
+          onUpdateConfig={onUpdateConfig}
+          onUpdateProfileRuleConfig={onUpdateProfileRuleConfig}
+        />
       )}
     </div>
   )
@@ -85,29 +102,47 @@ export function RuleRow({
 
 function RuleConfig({
   rule,
+  effectiveConfig,
+  configProfileId,
+  profiles,
   onUpdateConfig,
+  onUpdateProfileRuleConfig,
 }: {
   rule: SandboxRule
+  effectiveConfig: Record<string, unknown>
+  configProfileId: string
+  profiles: NetflixProfile[]
   onUpdateConfig: (category: string, config: Record<string, unknown>) => void
+  onUpdateProfileRuleConfig: (profileId: string, category: string, config: Record<string, unknown>) => void
 }) {
+  const configProfile = profiles.find((p) => p.id === configProfileId)
+  const profileLabel = configProfile?.name || configProfileId
+
+  // Helper to update config for the current profile
+  const updateConfig = (newConfig: Record<string, unknown>) => {
+    onUpdateProfileRuleConfig(configProfileId, rule.category, newConfig)
+  }
+
   switch (rule.category) {
     case "content_rating":
       return (
         <div className="ml-8 mt-1 mb-2">
-          <label className="text-[11px] text-muted-foreground">Max rating</label>
-          <select
-            value={(rule.config.maxRating as string) || "PG-13"}
-            onChange={(e) =>
-              onUpdateConfig(rule.category, { ...rule.config, maxRating: e.target.value })
-            }
-            className="ml-2 rounded border border-border bg-background px-2 py-1 text-[12px] text-foreground"
-          >
-            <option value="G">G (All)</option>
-            <option value="PG">PG (7+)</option>
-            <option value="PG-13">PG-13 (13+)</option>
-            <option value="R">R (16+)</option>
-            <option value="NC-17">NC-17 (18+)</option>
-          </select>
+          <div className="flex items-center gap-2">
+            <label className="text-[11px] text-muted-foreground">
+              Max rating for <span className="font-medium text-foreground">{profileLabel}</span>
+            </label>
+            <select
+              value={(effectiveConfig.maxRating as string) || "PG-13"}
+              onChange={(e) => updateConfig({ maxRating: e.target.value })}
+              className="rounded border border-border bg-background px-2 py-1 text-[12px] text-foreground"
+            >
+              <option value="G">G (All)</option>
+              <option value="PG">PG (7+)</option>
+              <option value="PG-13">PG-13 (13+)</option>
+              <option value="R">R (16+)</option>
+              <option value="NC-17">NC-17 (18+)</option>
+            </select>
+          </div>
         </div>
       )
 
@@ -115,17 +150,17 @@ function RuleConfig({
       return (
         <div className="ml-8 mt-1 mb-2">
           <label className="text-[11px] text-muted-foreground">
-            Titles to block (comma-separated)
+            Titles to block for <span className="font-medium text-foreground">{profileLabel}</span> (comma-separated)
           </label>
           <input
             type="text"
-            value={((rule.config.titles as string[]) || []).join(", ")}
+            value={((effectiveConfig.titles as string[]) || []).join(", ")}
             onChange={(e) => {
               const titles = e.target.value
                 .split(",")
                 .map((t) => t.trim())
                 .filter(Boolean)
-              onUpdateConfig(rule.category, { ...rule.config, titles })
+              updateConfig({ titles })
             }}
             className="mt-1 w-full rounded border border-border bg-background px-2 py-1 text-[12px] text-foreground"
             placeholder="Squid Game, Dahmer"
@@ -137,17 +172,15 @@ function RuleConfig({
       return (
         <div className="ml-8 mt-1 mb-2">
           <label className="text-[11px] text-muted-foreground">
-            Daily limit: {(rule.config.minutes as number) || 120} min
+            Daily limit for <span className="font-medium text-foreground">{profileLabel}</span>: {(effectiveConfig.minutes as number) || 120} min
           </label>
           <input
             type="range"
             min={15}
             max={480}
             step={15}
-            value={(rule.config.minutes as number) || 120}
-            onChange={(e) =>
-              onUpdateConfig(rule.category, { ...rule.config, minutes: Number(e.target.value) })
-            }
+            value={(effectiveConfig.minutes as number) || 120}
+            onChange={(e) => updateConfig({ minutes: Number(e.target.value) })}
             className="mt-1 w-full"
           />
         </div>

@@ -8,8 +8,11 @@ interface ApplicableRulesSectionProps {
   profiles: NetflixProfile[]
   disabled: boolean
   ruleProfileChangeCounts: Map<string, Map<string, number>>
+  configProfileId: string
+  profileRuleOverrides: Record<string, Record<string, Record<string, unknown>>>
   onToggle: (category: string) => void
   onUpdateConfig: (category: string, config: Record<string, unknown>) => void
+  onUpdateProfileRuleConfig: (profileId: string, category: string, config: Record<string, unknown>) => void
 }
 
 export function ApplicableRulesSection({
@@ -17,8 +20,11 @@ export function ApplicableRulesSection({
   profiles,
   disabled,
   ruleProfileChangeCounts,
+  configProfileId,
+  profileRuleOverrides,
   onToggle,
   onUpdateConfig,
+  onUpdateProfileRuleConfig,
 }: ApplicableRulesSectionProps) {
   return (
     <div className="space-y-2">
@@ -33,8 +39,11 @@ export function ApplicableRulesSection({
             profiles={profiles}
             disabled={disabled}
             ruleProfileChangeCounts={ruleProfileChangeCounts.get(rule.category)}
+            configProfileId={configProfileId}
+            profileRuleOverrides={profileRuleOverrides}
             onToggle={onToggle}
             onUpdateConfig={onUpdateConfig}
+            onUpdateProfileRuleConfig={onUpdateProfileRuleConfig}
           />
         ))}
       </div>

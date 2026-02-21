@@ -31,6 +31,10 @@ function createInitialState(): SandboxState {
     rules: buildNetflixSandboxRules(),
     selectedProfileId: "emma",
 
+    // Per-profile rule configuration
+    configProfileId: "emma",
+    profileRuleOverrides: {},
+
     // Preview/diff state
     previewMode: false,
     previousProfiles: null,
@@ -124,6 +128,22 @@ function sandboxReducer(state: SandboxState, action: SandboxAction): SandboxStat
         previewChanges: null,
       }
 
+    case "UPDATE_PROFILE_RULE_CONFIG":
+      if (state.previewMode) return state
+      return {
+        ...state,
+        profileRuleOverrides: {
+          ...state.profileRuleOverrides,
+          [action.profileId]: {
+            ...(state.profileRuleOverrides[action.profileId] || {}),
+            [action.category]: action.config,
+          },
+        },
+      }
+
+    case "SELECT_CONFIG_PROFILE":
+      return { ...state, configProfileId: action.profileId }
+
     case "SELECT_PROFILE":
       return { ...state, selectedProfileId: action.profileId }
 
@@ -180,7 +200,8 @@ import type { NetflixProfile, SandboxRule } from "@/lib/sandbox/types"
  */
 function computeRuleProfileChangeCounts(
   rules: SandboxRule[],
-  profiles: NetflixProfile[]
+  profiles: NetflixProfile[],
+  profileOverrides?: Record<string, Record<string, Record<string, unknown>>>
 ): Map<string, Map<string, number>> {
   const result = new Map<string, Map<string, number>>()
 
@@ -191,7 +212,7 @@ function computeRuleProfileChangeCounts(
     const singleRuleSet = rules.map((r) =>
       r.category === rule.category ? r : { ...r, enabled: false }
     )
-    const enforcement = enforceRules(singleRuleSet, profiles)
+    const enforcement = enforceRules(singleRuleSet, profiles, profileOverrides)
 
     const profileCounts = new Map<string, number>()
     for (const change of enforcement.changes) {
@@ -232,7 +253,7 @@ export default function ProviderSandboxPage() {
     dispatch({ type: "PREVIEW_START" })
     setTimeout(() => {
       const current = stateRef.current
-      const result = enforceRules(current.rules, current.profiles)
+      const result = enforceRules(current.rules, current.profiles, current.profileRuleOverrides)
       const phosraManaged = result.changes.some(
         (c) => c.field === "timeLimitManaged"
       )
@@ -289,30 +310,30 @@ export default function ProviderSandboxPage() {
   const profileChangeSummaries = useMemo((): ProfileChangeSummary[] => {
     if (!state.previewMode || !state.previewChanges) {
       // In configure mode, compute prospective changes for badge display
-      const result = enforceRules(state.rules, state.profiles)
+      const result = enforceRules(state.rules, state.profiles, state.profileRuleOverrides)
       return groupChangesByProfile(result.changes, state.profiles)
     }
     // In preview mode, use actual computed changes
     return groupChangesByProfile(state.previewChanges, state.profiles)
-  }, [state.previewMode, state.previewChanges, state.rules, state.profiles])
+  }, [state.previewMode, state.previewChanges, state.rules, state.profiles, state.profileRuleOverrides])
 
   // 3. Per-rule, per-profile change counts (for ProfileAvatarBadges)
   const ruleProfileChangeCounts = useMemo(
-    () => computeRuleProfileChangeCounts(state.rules, state.profiles),
-    [state.rules, state.profiles]
+    () => computeRuleProfileChangeCounts(state.rules, state.profiles, state.profileRuleOverrides),
+    [state.rules, state.profiles, state.profileRuleOverrides]
   )
 
   // 4. Whether there are any unpreviewed changes (for button state)
   const hasUnpreviewedChanges = useMemo(() => {
-    const result = enforceRules(state.rules, state.profiles)
+    const result = enforceRules(state.rules, state.profiles, state.profileRuleOverrides)
     return result.changes.length > 0
-  }, [state.rules, state.profiles])
+  }, [state.rules, state.profiles, state.profileRuleOverrides])
 
   // 5. Total change count for the button label
   const totalChangeCount = useMemo(() => {
-    const result = enforceRules(state.rules, state.profiles)
+    const result = enforceRules(state.rules, state.profiles, state.profileRuleOverrides)
     return result.changes.length
-  }, [state.rules, state.profiles])
+  }, [state.rules, state.profiles, state.profileRuleOverrides])
 
   // ─── Render ──────────────────────────────────────────────────────────────
 
@@ -339,9 +360,17 @@ export default function ProviderSandboxPage() {
               changeCount={totalChangeCount}
               hasChanges={hasUnpreviewedChanges}
               ruleProfileChangeCounts={ruleProfileChangeCounts}
+              configProfileId={state.configProfileId}
+              profileRuleOverrides={state.profileRuleOverrides}
               onToggleRule={(category) => dispatch({ type: "TOGGLE_RULE", category })}
               onUpdateRuleConfig={(category, config) =>
                 dispatch({ type: "UPDATE_RULE_CONFIG", category, config })
+              }
+              onUpdateProfileRuleConfig={(profileId, category, config) =>
+                dispatch({ type: "UPDATE_PROFILE_RULE_CONFIG", profileId, category, config })
+              }
+              onSelectConfigProfile={(profileId) =>
+                dispatch({ type: "SELECT_CONFIG_PROFILE", profileId })
               }
               onPreview={handlePreview}
               onApply={handleCommit}

@@ -89,6 +89,10 @@ export interface SandboxState {
   rules: SandboxRule[]
   selectedProfileId: string
 
+  // Per-profile rule configuration
+  configProfileId: string // which profile we're configuring in the rules panel
+  profileRuleOverrides: Record<string, Record<string, Record<string, unknown>>> // profileId -> category -> config
+
   // Preview/diff state
   previewMode: boolean
   previousProfiles: NetflixProfile[] | null // snapshot before preview
@@ -108,7 +112,9 @@ export interface SandboxState {
 export type SandboxAction =
   | { type: "TOGGLE_RULE"; category: string }
   | { type: "UPDATE_RULE_CONFIG"; category: string; config: Record<string, unknown> }
+  | { type: "UPDATE_PROFILE_RULE_CONFIG"; profileId: string; category: string; config: Record<string, unknown> }
   | { type: "SELECT_PROFILE"; profileId: string }
+  | { type: "SELECT_CONFIG_PROFILE"; profileId: string }
   | { type: "RESET" }
   // Three-phase enforcement
   | { type: "PREVIEW_START" }

@@ -10,10 +10,11 @@ const MPAA_TO_NETFLIX: Record<string, NetflixMaturityTier> = {
   "NC-17": "18+",
 }
 
-/** Enforce enabled rules against profiles. Returns new profiles + change deltas. */
+/** Enforce enabled rules against profiles with optional per-profile config overrides. */
 export function enforceRules(
   rules: SandboxRule[],
-  profiles: NetflixProfile[]
+  profiles: NetflixProfile[],
+  profileOverrides?: Record<string, Record<string, Record<string, unknown>>>
 ): { profiles: NetflixProfile[]; changes: ChangeDelta[]; applied: number; skipped: number } {
   const changes: ChangeDelta[] = []
   let applied = 0
@@ -44,15 +45,15 @@ export function enforceRules(
 
     switch (rule.category) {
       case "content_rating":
-        updated = applyContentRating(updated, rule, changes)
+        updated = applyContentRating(updated, rule, changes, profileOverrides)
         applied++
         break
       case "content_block_title":
-        updated = applyBlockTitles(updated, rule, changes)
+        updated = applyBlockTitles(updated, rule, changes, profileOverrides)
         applied++
         break
       case "content_allow_title":
-        updated = applyAllowTitles(updated, rule, changes)
+        updated = applyAllowTitles(updated, rule, changes, profileOverrides)
         applied++
         break
       case "purchase_approval":
@@ -82,13 +83,16 @@ export function enforceRules(
 function applyContentRating(
   profiles: NetflixProfile[],
   rule: SandboxRule,
-  changes: ChangeDelta[]
+  changes: ChangeDelta[],
+  profileOverrides?: Record<string, Record<string, Record<string, unknown>>>
 ): NetflixProfile[] {
-  const mpaaRating = (rule.config.maxRating as string) || "PG-13"
-  const netflixTier = MPAA_TO_NETFLIX[mpaaRating] || "13+"
-
   return profiles.map((p) => {
     if (p.type === "adult") return p
+
+    // Use per-profile config override if available, otherwise fall back to rule.config
+    const profileConfig = profileOverrides?.[p.id]?.[rule.category]
+    const mpaaRating = (profileConfig?.maxRating as string) || (rule.config.maxRating as string) || "PG-13"
+    const netflixTier = MPAA_TO_NETFLIX[mpaaRating] || "13+"
 
     const oldRating = p.maturityRating
     if (oldRating === netflixTier) return p
@@ -109,13 +113,15 @@ function applyContentRating(
 function applyBlockTitles(
   profiles: NetflixProfile[],
   rule: SandboxRule,
-  changes: ChangeDelta[]
+  changes: ChangeDelta[],
+  profileOverrides?: Record<string, Record<string, Record<string, unknown>>>
 ): NetflixProfile[] {
-  const titles = (rule.config.titles as string[]) || []
-  if (titles.length === 0) return profiles
-
   return profiles.map((p) => {
     if (p.type === "adult") return p
+
+    const profileConfig = profileOverrides?.[p.id]?.[rule.category]
+    const titles = (profileConfig?.titles as string[]) || (rule.config.titles as string[]) || []
+    if (titles.length === 0) return p
 
     const newTitles = titles.filter((t) => !p.blockedTitles.includes(t))
     if (newTitles.length === 0) return p
@@ -136,13 +142,15 @@ function applyBlockTitles(
 function applyAllowTitles(
   profiles: NetflixProfile[],
   rule: SandboxRule,
-  changes: ChangeDelta[]
+  changes: ChangeDelta[],
+  profileOverrides?: Record<string, Record<string, Record<string, unknown>>>
 ): NetflixProfile[] {
-  const titles = (rule.config.titles as string[]) || []
-  if (titles.length === 0) return profiles
-
   return profiles.map((p) => {
     if (p.type === "adult") return p
+
+    const profileConfig = profileOverrides?.[p.id]?.[rule.category]
+    const titles = (profileConfig?.titles as string[]) || (rule.config.titles as string[]) || []
+    if (titles.length === 0) return p
 
     const removedTitles = titles.filter((t) => p.blockedTitles.includes(t))
     if (removedTitles.length === 0) return p
