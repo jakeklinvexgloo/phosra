@@ -1,6 +1,7 @@
 "use client"
 
 import type { NetflixProfile } from "@/lib/sandbox/types"
+import { DiffSection } from "./DiffSection"
 import { NetflixMaturitySlider } from "./NetflixMaturitySlider"
 import { NetflixBlockedTitles } from "./NetflixBlockedTitles"
 import { NetflixProfileLock } from "./NetflixProfileLock"
@@ -9,11 +10,33 @@ import { NetflixViewingActivity } from "./NetflixViewingActivity"
 
 interface NetflixProfileSettingsProps {
   profile: NetflixProfile
+  previousProfile: NetflixProfile | null
+  previewMode: boolean
   isHighlighted: (key: string) => boolean
 }
 
-export function NetflixProfileSettings({ profile, isHighlighted }: NetflixProfileSettingsProps) {
+export function NetflixProfileSettings({
+  profile,
+  previousProfile,
+  previewMode,
+  isHighlighted,
+}: NetflixProfileSettingsProps) {
   const hk = (field: string) => isHighlighted(`${profile.id}:${field}`)
+
+  const inDiffMode = previewMode && previousProfile !== null
+
+  // Determine diff variants for each section
+  const maturityChanged = inDiffMode && previousProfile.maturityRating !== profile.maturityRating
+  const blockedTitlesChanged = inDiffMode && (
+    previousProfile.blockedTitles.length !== profile.blockedTitles.length ||
+    previousProfile.blockedTitles.some((t, i) => profile.blockedTitles[i] !== t) ||
+    profile.blockedTitles.some((t) => !previousProfile.blockedTitles.includes(t))
+  )
+  const lockChanged = inDiffMode && (
+    previousProfile.profileLock.enabled !== profile.profileLock.enabled ||
+    previousProfile.profileLock.pin !== profile.profileLock.pin
+  )
+  const timeLimitChanged = inDiffMode && previousProfile.timeLimitManaged !== profile.timeLimitManaged
 
   return (
     <div
@@ -52,7 +75,7 @@ export function NetflixProfileSettings({ profile, isHighlighted }: NetflixProfil
       </div>
 
       {/* Time limit managed badge */}
-      {profile.timeLimitManaged && (
+      {profile.timeLimitManaged && !inDiffMode && (
         <div
           style={{
             display: "flex",
@@ -76,32 +99,188 @@ export function NetflixProfileSettings({ profile, isHighlighted }: NetflixProfil
         </div>
       )}
 
-      {/* Settings sections */}
-      <NetflixMaturitySlider
-        value={profile.maturityRating}
-        isHighlighted={hk("maturityRating")}
-      />
+      {/* Time limit diff when in preview mode */}
+      {inDiffMode && timeLimitChanged && (
+        <DiffSection
+          title="Time Limit"
+          variant={previousProfile.timeLimitManaged ? "changed" : "new"}
+          beforeContent={
+            <span style={{ fontSize: "13px" }}>
+              {previousProfile.timeLimitManaged ? "Phosra-managed" : "(no limit)"}
+            </span>
+          }
+          afterContent={
+            <span style={{ fontSize: "13px" }}>
+              {profile.timeLimitManaged ? "Phosra-managed" : "(no limit)"}
+            </span>
+          }
+        />
+      )}
 
-      <NetflixBlockedTitles
-        titles={profile.blockedTitles}
-        isHighlighted={hk("blockedTitles")}
-      />
+      {/* Maturity Rating */}
+      {inDiffMode ? (
+        maturityChanged ? (
+          <DiffSection
+            title="Maturity Rating"
+            variant="changed"
+            beforeContent={
+              <NetflixMaturitySlider
+                value={previousProfile.maturityRating}
+                previousValue={null}
+                isHighlighted={false}
+              />
+            }
+            afterContent={
+              <NetflixMaturitySlider
+                value={profile.maturityRating}
+                previousValue={null}
+                isHighlighted={false}
+              />
+            }
+          />
+        ) : (
+          <DiffSection
+            title="Maturity Rating"
+            variant="unchanged"
+            beforeContent={null}
+            afterContent={
+              <span style={{ fontSize: "12px" }}>
+                {profile.maturityRating} and below (no changes)
+              </span>
+            }
+          />
+        )
+      ) : (
+        <NetflixMaturitySlider
+          value={profile.maturityRating}
+          previousValue={null}
+          isHighlighted={hk("maturityRating")}
+        />
+      )}
 
-      <NetflixProfileLock
-        enabled={profile.profileLock.enabled}
-        pin={profile.profileLock.pin}
-        isHighlighted={hk("profileLock")}
-      />
+      {/* Blocked Titles */}
+      {inDiffMode ? (
+        blockedTitlesChanged ? (
+          <DiffSection
+            title="Blocked Titles"
+            variant={previousProfile.blockedTitles.length === 0 && profile.blockedTitles.length > 0 ? "new" : "changed"}
+            beforeContent={
+              <NetflixBlockedTitles
+                titles={previousProfile.blockedTitles}
+                previousTitles={null}
+                isHighlighted={false}
+              />
+            }
+            afterContent={
+              <NetflixBlockedTitles
+                titles={profile.blockedTitles}
+                previousTitles={null}
+                isHighlighted={false}
+              />
+            }
+          />
+        ) : (
+          <DiffSection
+            title="Blocked Titles"
+            variant="unchanged"
+            beforeContent={null}
+            afterContent={
+              <span style={{ fontSize: "12px" }}>
+                {profile.blockedTitles.length === 0
+                  ? "No blocked titles (no changes)"
+                  : `${profile.blockedTitles.length} blocked titles (no changes)`}
+              </span>
+            }
+          />
+        )
+      ) : (
+        <NetflixBlockedTitles
+          titles={profile.blockedTitles}
+          previousTitles={null}
+          isHighlighted={hk("blockedTitles")}
+        />
+      )}
 
-      <NetflixAutoplayToggles
-        nextEpisode={profile.autoplayNextEpisode}
-        previews={profile.autoplayPreviews}
-      />
+      {/* Profile Lock */}
+      {inDiffMode ? (
+        lockChanged ? (
+          <DiffSection
+            title="Profile Lock"
+            variant="changed"
+            beforeContent={
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontSize: "13px" }}>
+                  {previousProfile.profileLock.enabled ? "ON" : "OFF"}
+                </span>
+              </div>
+            }
+            afterContent={
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontSize: "13px" }}>
+                  {profile.profileLock.enabled ? "ON" : "OFF"}
+                </span>
+              </div>
+            }
+          />
+        ) : (
+          <DiffSection
+            title="Profile Lock"
+            variant="unchanged"
+            beforeContent={null}
+            afterContent={
+              <span style={{ fontSize: "12px" }}>
+                {profile.profileLock.enabled ? "ON" : "OFF"} (no changes)
+              </span>
+            }
+          />
+        )
+      ) : (
+        <NetflixProfileLock
+          enabled={profile.profileLock.enabled}
+          pin={profile.profileLock.pin}
+          previousEnabled={null}
+          previousPin={null}
+          isHighlighted={hk("profileLock")}
+        />
+      )}
 
-      <NetflixViewingActivity
-        entries={profile.viewingActivity}
-        isHighlighted={hk("viewingActivity")}
-      />
+      {/* Autoplay - always unchanged in diff mode */}
+      {inDiffMode ? (
+        <DiffSection
+          title="Autoplay"
+          variant="unchanged"
+          beforeContent={null}
+          afterContent={
+            <span style={{ fontSize: "12px" }}>
+              Next Episode: {profile.autoplayNextEpisode ? "ON" : "OFF"} | Previews: {profile.autoplayPreviews ? "ON" : "OFF"} (no changes)
+            </span>
+          }
+        />
+      ) : (
+        <NetflixAutoplayToggles
+          nextEpisode={profile.autoplayNextEpisode}
+          previews={profile.autoplayPreviews}
+        />
+      )}
+
+      {/* Viewing Activity - always unchanged in diff mode */}
+      {inDiffMode ? (
+        <DiffSection
+          title="Viewing Activity"
+          variant="unchanged"
+          beforeContent={null}
+          afterContent={
+            <span style={{ fontSize: "12px" }}>
+              {profile.viewingActivity.length} entries (no changes)
+            </span>
+          }
+        />
+      ) : (
+        <NetflixViewingActivity
+          entries={profile.viewingActivity}
+          isHighlighted={hk("viewingActivity")}
+        />
+      )}
     </div>
   )
 }

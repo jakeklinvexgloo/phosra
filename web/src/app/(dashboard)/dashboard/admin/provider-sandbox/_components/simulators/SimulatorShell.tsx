@@ -2,10 +2,11 @@
 
 interface SimulatorShellProps {
   provider: string
+  previewMode: boolean
   children: React.ReactNode
 }
 
-export function SimulatorShell({ provider, children }: SimulatorShellProps) {
+export function SimulatorShell({ provider, previewMode, children }: SimulatorShellProps) {
   return (
     <div className="flex flex-col gap-3">
       {/* Provider selector */}
@@ -52,11 +53,30 @@ export function SimulatorShell({ provider, children }: SimulatorShellProps) {
             textTransform: "uppercase" as const,
           }}
         >
-          <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#d97706" }} />
-          Sandbox Simulation
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              backgroundColor: "#d97706",
+              display: "inline-block",
+              animation: previewMode ? "pulse-dot 1.5s ease-in-out infinite" : "none",
+            }}
+          />
+          {previewMode ? "Sandbox Simulation \u2014 Preview Mode" : "Sandbox Simulation"}
         </div>
 
         {children}
+
+        {/* Pulsing dot animation for preview mode */}
+        {previewMode && (
+          <style>{`
+            @keyframes pulse-dot {
+              0%, 100% { opacity: 1; transform: scale(1); }
+              50% { opacity: 0.4; transform: scale(1.4); }
+            }
+          `}</style>
+        )}
       </div>
     </div>
   )

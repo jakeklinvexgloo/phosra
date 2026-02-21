@@ -80,7 +80,7 @@ export function getCapability(category: string): ProviderCapability | undefined 
 }
 
 /** Human-readable labels for rule categories */
-const RULE_LABELS: Record<string, string> = {
+export const RULE_LABELS: Record<string, string> = {
   content_rating: "Content Rating",
   content_block_title: "Block Specific Titles",
   content_allow_title: "Allow Specific Titles",
