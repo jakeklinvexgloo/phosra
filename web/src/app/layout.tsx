@@ -2,18 +2,21 @@ import type { Metadata, Viewport } from "next"
 import dynamic from "next/dynamic"
 import { AuthKitProvider } from "@workos-inc/authkit-nextjs/components"
 import { ThemeProvider } from "@/components/ui/theme-provider"
-import { Inter, DM_Serif_Display, JetBrains_Mono } from "next/font/google"
+import localFont from "next/font/local"
+import { JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 
-const inter = Inter({
-  subsets: ["latin"],
+const generalSans = localFont({
+  src: [
+    { path: "../../public/fonts/GeneralSans-Variable.woff2", style: "normal" },
+    { path: "../../public/fonts/GeneralSans-VariableItalic.woff2", style: "italic" },
+  ],
   variable: "--font-sans",
   display: "swap",
 })
 
-const dmSerif = DM_Serif_Display({
-  weight: "400",
-  subsets: ["latin"],
+const cabinetGrotesk = localFont({
+  src: "../../public/fonts/CabinetGrotesk-Variable.woff2",
   variable: "--font-display",
   display: "swap",
 })
@@ -68,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <AuthKitProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.variable} ${dmSerif.variable} ${jetbrainsMono.variable} antialiased bg-[#0D1B2A]`}>
+        <body className={`${generalSans.variable} ${cabinetGrotesk.variable} ${jetbrainsMono.variable} antialiased bg-[#0D1B2A]`}>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             {children}
             <Toaster />
