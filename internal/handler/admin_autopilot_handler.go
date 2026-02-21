@@ -696,6 +696,10 @@ func (h *AdminHandler) WorkerUpdateContact(w http.ResponseWriter, r *http.Reques
 		Status         *string    `json:"status"`
 		Email          *string    `json:"email"`
 		EmailStatus    *string    `json:"email_status"`
+		LinkedinURL    *string    `json:"linkedin_url"`
+		TwitterHandle  *string    `json:"twitter_handle"`
+		Title          *string    `json:"title"`
+		Notes          *string    `json:"notes"`
 		LastContactAt  *time.Time `json:"last_contact_at"`
 		NextFollowupAt *time.Time `json:"next_followup_at"`
 	}
@@ -718,6 +722,18 @@ func (h *AdminHandler) WorkerUpdateContact(w http.ResponseWriter, r *http.Reques
 	}
 	if req.EmailStatus != nil {
 		contact.EmailStatus = domain.EmailStatus(*req.EmailStatus)
+	}
+	if req.LinkedinURL != nil {
+		contact.LinkedinURL = req.LinkedinURL
+	}
+	if req.TwitterHandle != nil {
+		contact.TwitterHandle = req.TwitterHandle
+	}
+	if req.Title != nil {
+		contact.Title = *req.Title
+	}
+	if req.Notes != nil {
+		contact.Notes = req.Notes
 	}
 	if req.LastContactAt != nil {
 		contact.LastContactAt = req.LastContactAt
