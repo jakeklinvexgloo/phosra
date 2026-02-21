@@ -38,13 +38,11 @@ export function Compliance() {
         {/* Header */}
         <AnimatedSection className="text-center mb-10 sm:mb-14">
           <h2 className="font-display text-4xl sm:text-5xl text-white leading-tight mb-5">
-            Parents shouldn{"'"}t need a law degree.{" "}
-            <span className="bg-gradient-to-r from-[#00D47E] to-[#26A8C9] bg-clip-text text-transparent">
-              Regulators agree.
-            </span>
+            Built for the laws that protect children
           </h2>
           <p className="text-white/50 text-lg max-w-2xl mx-auto mb-8">
-            Governments worldwide are passing child safety laws because setting up parental controls across platforms is unreasonably hard. Phosra translates every regulation into enforceable rules {"\u2014"} so platforms stay compliant and parents stay&nbsp;sane.
+            Phosra maps every rule category to specific legislative
+            requirements across 25+ jurisdictions worldwide.
           </p>
 
           <LawCounter
