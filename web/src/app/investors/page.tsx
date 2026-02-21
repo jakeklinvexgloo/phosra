@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowRight, FileText, Globe, Layers, TrendingUp, Lock } from "lucide-react"
+import { ArrowRight, FileText, Globe, Layers, TrendingUp, Lock, Shield, BadgeCheck, DollarSign } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 import { getRecentNews, CATEGORY_CONFIG } from "@/lib/newsroom"
 import { InterestModal } from "@/components/investors/InterestModal"
@@ -18,6 +18,14 @@ const METRICS = [
   { value: "50K+", label: "Families" },
   { value: "2K+", label: "Schools" },
   { value: "25+", label: "Jurisdictions" },
+]
+
+const PROBLEM_STEPS = [
+  { platform: "Netflix", task: "Set up TV-G profile, password-protect other accounts", time: "30 min" },
+  { platform: "Disney+", task: "Different system, \"6+\" rating (not TV-G)", time: "20 min" },
+  { platform: "Prime Video", task: "\"Family\" content — no clear age mapping", time: "20 min" },
+  { platform: "iPad Screen Time", task: "Configure app limits, sites, downloads", time: "40 min" },
+  { platform: "WiFi Router", task: "Buy and configure DNS filter", time: "2 hours" },
 ]
 
 const MARKET_CARDS = [
@@ -38,6 +46,39 @@ const MARKET_CARDS = [
     title: "The Platform Demand",
     description:
       "Platforms need compliance solutions. Parental control apps need broader reach. Schools need enforcement behind their pledges. Phosra serves all three through a single API — creating network effects as each new connection makes the platform more valuable.",
+  },
+]
+
+const REVENUE_STREAMS = [
+  {
+    icon: BadgeCheck,
+    title: "Parental Controls Providers",
+    subtitle: "Bark, Qustodio, Net Nanny, Circle, etc.",
+    price: "$0.25\u2013$0.50",
+    unit: "/user/mo",
+    description: "Providers pay per active user for Phosra\u2019s cross-platform enforcement API. Like Visa charging per transaction, Phosra charges per user protected.",
+    example: "Bark (500K users) \u00d7 $0.50/mo = $3M/year",
+    features: [
+      "\"Phosra Verified\" trust badge",
+      "Cross-platform enforcement reach",
+      "Pre-qualified leads from Phosra families",
+      "Future-proof for API-mandate legislation",
+    ],
+  },
+  {
+    icon: Shield,
+    title: "Technology Platforms",
+    subtitle: "Netflix, YouTube, Roblox, Discord, etc.",
+    price: "$0.10\u2013$0.25",
+    unit: "/minor/mo",
+    description: "Platforms pay per monthly active minor for the Phosra Certified\u2122 badge — demonstrating compliance with KOSA, COPPA 2.0, and the EU DSA to parents and regulators alike.",
+    example: "Platform with 2M minors \u00d7 $0.15/mo = $3.6M/year",
+    features: [
+      "Phosra Certified\u2122 badge & assets",
+      "Automated regulatory reporting",
+      "Compliance dashboard & audit trail",
+      "Differentiation signal to parents",
+    ],
   },
 ]
 
@@ -169,9 +210,55 @@ export default function InvestorsPage() {
       </section>
 
       {/* ============================================================ */}
-      {/*  By the Numbers                                               */}
+      {/*  The Problem                                                   */}
       {/* ============================================================ */}
       <section className="bg-gradient-to-b from-[#0D1B2A] to-[#060D16] text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-20 lg:py-28">
+          <AnimatedSection>
+            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
+              The Problem
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-display text-white mb-3 max-w-2xl">
+              Parents care deeply. The complexity defeats them.
+            </h2>
+            <p className="text-white/50 leading-relaxed max-w-2xl mb-12">
+              A parent with a 7-year-old wants age-appropriate content across every app. Here&apos;s what it takes today:
+            </p>
+          </AnimatedSection>
+
+          <StaggerChildren className="space-y-3 mb-10" staggerDelay={0.06}>
+            {PROBLEM_STEPS.map((step) => (
+              <div key={step.platform} className="flex items-center gap-4 px-5 py-4 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+                <span className="text-sm font-semibold text-white w-28 sm:w-36 flex-shrink-0">{step.platform}</span>
+                <span className="text-sm text-white/50 flex-1">{step.task}</span>
+                <span className="text-xs font-mono text-white/30 flex-shrink-0">{step.time}</span>
+              </div>
+            ))}
+          </StaggerChildren>
+
+          <AnimatedSection delay={0.4}>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 px-5 py-5 rounded-xl bg-white/[0.06] border border-white/[0.08]">
+              <div className="flex-1">
+                <p className="text-white text-sm font-semibold mb-1">
+                  Total: 4+ hours per child. Settings don&apos;t match across platforms.
+                </p>
+                <p className="text-white/40 text-sm">
+                  When the child turns 9, the parent does it all over again. Most parents give up after two apps. Governments worldwide are legislating because this fragmentation is a systemic failure, not a parenting failure.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-green/10 border border-brand-green/20 flex-shrink-0">
+                <span className="text-brand-green text-sm font-semibold">67 laws</span>
+                <span className="text-white/40 text-xs">and counting</span>
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  By the Numbers                                               */}
+      {/* ============================================================ */}
+      <section className="bg-gradient-to-b from-[#060D16] to-[#0D1B2A] text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-8 py-20 lg:py-28">
           <AnimatedSection>
             <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
@@ -220,6 +307,74 @@ export default function InvestorsPage() {
             </div>
           ))}
         </StaggerChildren>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Business Model                                               */}
+      {/* ============================================================ */}
+      <section className="bg-gradient-to-b from-[#0D1B2A] to-[#060D16] text-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-8 py-20 lg:py-28">
+          <AnimatedSection>
+            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
+              Business Model
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-display text-white mb-3 max-w-2xl">
+              The Visa/Mastercard of child safety
+            </h2>
+            <p className="text-white/50 leading-relaxed max-w-2xl mb-12">
+              Like Visa charges per transaction to process payments, Phosra charges per user to enforce child safety. Parents always free. Providers and platforms pay for the infrastructure.
+            </p>
+          </AnimatedSection>
+
+          <StaggerChildren className="grid md:grid-cols-2 gap-6 mb-10" staggerDelay={0.1}>
+            {REVENUE_STREAMS.map((stream) => (
+              <div key={stream.title} className="rounded-xl bg-white/[0.04] border border-white/[0.08] p-6 sm:p-8">
+                <div className="flex items-center gap-2.5 mb-4">
+                  <stream.icon className="w-5 h-5 text-brand-green" strokeWidth={1.5} />
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">{stream.title}</h3>
+                    <p className="text-xs text-white/40">{stream.subtitle}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-baseline gap-1 mb-4">
+                  <span className="text-3xl font-display text-white">{stream.price}</span>
+                  <span className="text-sm text-white/40">{stream.unit}</span>
+                </div>
+
+                <p className="text-sm text-white/50 leading-relaxed mb-4">{stream.description}</p>
+
+                <div className="rounded-lg bg-brand-green/10 border border-brand-green/20 px-4 py-3 mb-6">
+                  <p className="text-sm text-brand-green font-medium">{stream.example}</p>
+                </div>
+
+                <ul className="space-y-2.5">
+                  {stream.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2.5 text-sm text-white/50">
+                      <svg className="w-4 h-4 text-brand-green flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </StaggerChildren>
+
+          <AnimatedSection delay={0.2}>
+            <div className="rounded-xl bg-white/[0.04] border border-white/[0.08] p-6 text-center">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <DollarSign className="w-4 h-4 text-brand-green" strokeWidth={1.5} />
+                <p className="text-sm font-semibold text-white">For Parents &amp; Families</p>
+              </div>
+              <p className="text-3xl font-display text-white mb-2">Free</p>
+              <p className="text-sm text-white/40 max-w-md mx-auto">
+                Parents never pay for Phosra. They get protection through partner apps and platforms. The Phosra Certified&#8482; badge tells parents an app enforces their rules everywhere.
+              </p>
+            </div>
+          </AnimatedSection>
+        </div>
       </section>
 
       {/* ============================================================ */}
