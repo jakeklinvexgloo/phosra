@@ -64,7 +64,7 @@ export function Hero() {
 
             <AnimatedSection delay={0.2}>
               <p className="text-lg sm:text-xl text-white/50 leading-relaxed mb-10 max-w-lg">
-                The enforcement layer for child safety. Set rules through one API {"\u2014"} Phosra pushes them across {PLATFORM_STATS.marketingTotal} platforms, from streaming and gaming to devices and browsers, with built-in compliance for KOSA, COPPA, and the EU&nbsp;DSA.
+                Kids use 7+ apps daily, each with different parental controls. Parents care deeply but the complexity defeats them. Governments see it too {"\u2014"} 50+ new laws now mandate platforms protect children. Phosra enforces your rules across {PLATFORM_STATS.marketingTotal} platforms through one&nbsp;API.
               </p>
             </AnimatedSection>
 

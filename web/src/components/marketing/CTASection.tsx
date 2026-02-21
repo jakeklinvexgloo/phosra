@@ -9,6 +9,7 @@ const { total: movementCount } = getMovementsStats()
 const TRUST_BADGES = [
   { icon: "🔒", label: "AES-256 Encrypted" },
   { icon: "✓", label: "COPPA Aligned" },
+  { icon: "🛡️", label: "Phosra Certified\u2122" },
 ]
 
 export function CTASection() {
@@ -41,7 +42,7 @@ export function CTASection() {
               today
             </h2>
             <p className="text-white/50 text-lg leading-relaxed mb-8 max-w-lg">
-              Free for families. Pay only when you build. Get started in under five minutes.
+              Free for families. Per-user pricing for apps and platforms. Look for the Phosra Certified{"\u2122"} badge on the apps your kids&nbsp;use.
             </p>
 
             {/* Trust badges */}
