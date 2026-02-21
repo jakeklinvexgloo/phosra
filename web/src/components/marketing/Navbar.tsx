@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: "/compliance", label: "Compliance" },
   { href: "/movements", label: "Movements" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/about", label: "About" },
 ]
 
 export function Navbar() {

@@ -9,6 +9,12 @@ interface HeroPromptBarProps {
   onSubmit: (prompt: string) => void
 }
 
+const EXAMPLE_CHIPS = [
+  { label: "COPPA 2.0 compliant", prompt: "Make us COPPA 2.0 compliant" },
+  { label: "Netflix for my 7-yr-old", prompt: "Set up Netflix for my 7-year-old" },
+  { label: "Follow Four Norms", prompt: "Follow the Four Norms for all my kids" },
+]
+
 export function HeroPromptBar({ onSubmit }: HeroPromptBarProps) {
   const [value, setValue] = useState("")
   const [focused, setFocused] = useState(false)
@@ -113,51 +119,86 @@ export function HeroPromptBar({ onSubmit }: HeroPromptBarProps) {
 
   return (
     <div ref={containerRef} className="relative max-w-lg w-full mt-6">
-      {/* Input bar */}
-      <div
-        className={`relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 ${
-          focused
-            ? "bg-white/[0.1] border border-white/[0.15] shadow-[0_0_30px_-8px_rgba(0,212,126,0.2)]"
-            : "bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.12]"
-        }`}
-      >
-        <Sparkles className="w-4 h-4 text-brand-green flex-shrink-0" />
-        <input
-          ref={inputRef}
-          type="text"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onFocus={() => setFocused(true)}
-          onKeyDown={handleKeyDown}
-          placeholder={value || focused ? "Describe your parental control needs..." : ""}
-          className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 focus:outline-none"
-          role="combobox"
-          aria-expanded={showSuggestions}
-          aria-autocomplete="list"
-          aria-controls="hero-suggestions"
-          aria-activedescendant={
-            selectedIndex >= 0 ? `hero-suggestion-${selectedIndex}` : undefined
-          }
+      {/* Live Demo badge */}
+      <div className="flex items-center gap-1.5 mb-2.5 ml-1">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-green opacity-60" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-green" />
+        </span>
+        <span className="text-[10px] text-brand-green/70 uppercase tracking-widest font-medium">
+          Live Demo
+        </span>
+      </div>
+
+      {/* Glow wrapper — animated gradient border */}
+      <div className="relative rounded-2xl p-[1px] group">
+        {/* Animated gradient border layer */}
+        <div
+          className={`absolute inset-0 rounded-2xl transition-opacity duration-300 ${
+            focused ? "opacity-100" : "opacity-60"
+          }`}
+          style={{
+            background: "linear-gradient(135deg, rgba(0,212,126,0.4), rgba(0,180,216,0.2), rgba(0,212,126,0.1), rgba(0,212,126,0.4))",
+            backgroundSize: "300% 300%",
+            animation: "gradient-shift 4s ease infinite",
+          }}
         />
 
-        {/* Animated placeholder (only when no value and not focused) */}
-        {!value && !focused && (
-          <span className="absolute left-11 text-sm text-white/35 pointer-events-none select-none">
-            {placeholderText}
-            {isTyping && (
-              <span className="inline-block w-[2px] h-[1em] bg-white/40 animate-pulse ml-0.5 align-text-bottom" />
-            )}
-          </span>
-        )}
+        {/* Outer glow */}
+        <div
+          className={`absolute -inset-[1px] rounded-2xl transition-all duration-500 ${
+            focused
+              ? "shadow-[0_0_30px_-4px_rgba(0,212,126,0.3)]"
+              : "shadow-[0_0_20px_-4px_rgba(0,212,126,0.12)] animate-[glow-pulse_3s_ease-in-out_infinite]"
+          }`}
+        />
 
-        <button
-          onClick={() => handleSubmit()}
-          disabled={!value.trim()}
-          className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-brand-green text-[#0D1B2A] disabled:opacity-20 disabled:bg-white/10 disabled:text-white/30 hover:opacity-90 transition-all"
-          aria-label="Try it"
+        {/* Input bar — solid bg masks the gradient, leaving 1px border visible */}
+        <div
+          className={`relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 ${
+            focused
+              ? "bg-[#0f2235]"
+              : "bg-[#0f1f30] group-hover:bg-[#112438]"
+          }`}
         >
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+          <Sparkles className="w-4 h-4 text-brand-green flex-shrink-0" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onKeyDown={handleKeyDown}
+            placeholder={value || focused ? "Describe your parental control needs..." : ""}
+            className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 focus:outline-none"
+            role="combobox"
+            aria-expanded={showSuggestions}
+            aria-autocomplete="list"
+            aria-controls="hero-suggestions"
+            aria-activedescendant={
+              selectedIndex >= 0 ? `hero-suggestion-${selectedIndex}` : undefined
+            }
+          />
+
+          {/* Animated placeholder (only when no value and not focused) */}
+          {!value && !focused && (
+            <span className="absolute left-11 text-sm text-white/35 pointer-events-none select-none">
+              {placeholderText}
+              {isTyping && (
+                <span className="inline-block w-[2px] h-[1em] bg-white/40 animate-pulse ml-0.5 align-text-bottom" />
+              )}
+            </span>
+          )}
+
+          <button
+            onClick={() => handleSubmit()}
+            disabled={!value.trim()}
+            className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-brand-green text-[#0D1B2A] disabled:opacity-20 disabled:bg-white/10 disabled:text-white/30 hover:opacity-90 transition-all"
+            aria-label="Try it"
+          >
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* Suggestions dropdown */}
@@ -196,10 +237,35 @@ export function HeroPromptBar({ onSubmit }: HeroPromptBarProps) {
         )}
       </AnimatePresence>
 
-      {/* Subtle helper text */}
-      <p className="mt-2.5 text-[11px] text-white/20 text-center">
-        Try it free — powered by live AI with real API calls
+      {/* Example prompt chips */}
+      <div className="flex flex-wrap gap-2 mt-3 justify-center">
+        {EXAMPLE_CHIPS.map((chip) => (
+          <button
+            key={chip.label}
+            onClick={() => handleSubmit(chip.prompt)}
+            className="bg-white/[0.06] border border-white/[0.1] rounded-full px-3 py-1 text-[11px] text-white/40 hover:text-white/70 hover:bg-white/[0.1] hover:border-brand-green/30 cursor-pointer transition-all duration-200"
+          >
+            {chip.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Helper text */}
+      <p className="mt-2 text-[12px] text-white/30 text-center">
+        Type a command or try an example — powered by live AI
       </p>
+
+      {/* Keyframe styles */}
+      <style jsx>{`
+        @keyframes gradient-shift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        @keyframes glow-pulse {
+          0%, 100% { box-shadow: 0 0 20px -4px rgba(0,212,126,0.12); }
+          50% { box-shadow: 0 0 25px -2px rgba(0,212,126,0.2); }
+        }
+      `}</style>
     </div>
   )
 }

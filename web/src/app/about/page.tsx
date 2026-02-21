@@ -90,13 +90,14 @@ const ADVISORS = [
     role: "Board Member",
     image: "/team/steve-haggerty.jpg",
     linkedin: "https://www.linkedin.com/in/stephen-dawson-haggerty-7188a161/",
-    bio: "Co-founded Comfy, the workplace platform acquired by Siemens in 2018, where it was deployed across 600+ global offices. Berkeley CS PhD under David Culler with 3,300+ citations and a 2022 ACM Test of Time Award. Currently CEO of Normal Software. Advises Phosra on platform architecture, IoT infrastructure, and scaling enterprise deployments.",
+    bio: "First intern at Facebook. Co-founded Comfy, the workplace platform acquired by Siemens in 2018, where it was deployed across 600+ global offices. Berkeley CS PhD under David Culler with 3,300+ citations and a 2022 ACM Test of Time Award. Currently CEO of Normal Software. Steve and his wife Sara have five children. Advises Phosra on platform architecture, IoT infrastructure, and scaling enterprise deployments.",
     highlights: [
       { metric: "PhD", label: "UC Berkeley Computer Science" },
       { metric: "3.3K+", label: "Academic Citations" },
       { metric: "600+", label: "Siemens Offices on Comfy" },
     ],
     career: [
+      { company: "Facebook", logo: "/logos/facebook.svg" },
       { company: "Siemens", logo: "/logos/siemens.svg" },
       { company: "UC Berkeley", logo: "/logos/berkeley.svg" },
       { company: "Normal Software", logo: "/logos/normal.svg" },
