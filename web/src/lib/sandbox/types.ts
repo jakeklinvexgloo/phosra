@@ -168,6 +168,7 @@ export interface ProviderCapability {
   category: string
   supported: boolean
   netflixSetting?: string
-  targetProfiles: ("adult" | "standard" | "kids")[]
+  providerSetting?: string
+  targetProfiles: ("adult" | "standard" | "teen" | "kids")[]
   description: string
 }
