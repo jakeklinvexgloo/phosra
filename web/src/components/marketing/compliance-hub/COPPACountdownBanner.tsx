@@ -46,8 +46,11 @@ export function COPPACountdownBanner() {
   return (
     <Link
       href="/coppa-deadline"
-      className="group relative block rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/15 via-red-500/10 to-amber-500/5 backdrop-blur-sm p-4 sm:p-5 transition hover:border-amber-500/50 hover:bg-gradient-to-r hover:from-amber-500/20 hover:via-red-500/15 hover:to-amber-500/10"
+      className="group relative block rounded-xl bg-[#1C1017] border border-amber-500/40 p-5 sm:p-6 transition hover:border-amber-400/60 hover:shadow-[0_0_30px_-8px_rgba(245,158,11,0.25)] overflow-hidden"
     >
+      {/* Subtle warm glow behind content */}
+      <div className="absolute inset-0 bg-gradient-to-r from-red-900/30 via-amber-900/20 to-red-900/10 pointer-events-none" />
+
       {/* Dismiss button */}
       <button
         type="button"
@@ -56,68 +59,61 @@ export function COPPACountdownBanner() {
           e.stopPropagation()
           setDismissed(true)
         }}
-        className="absolute top-2.5 right-2.5 p-1 rounded-md text-white/40 hover:text-white/80 hover:bg-white/10 transition z-10"
+        className="absolute top-3 right-3 p-1.5 rounded-md text-white/40 hover:text-white/80 hover:bg-white/10 transition z-10"
         aria-label="Dismiss banner"
       >
         <X className="w-4 h-4" />
       </button>
 
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-        {/* Left: Warning label */}
-        <div className="flex items-center gap-2.5 shrink-0">
-          <div className="relative">
-            <AlertTriangle className="w-5 h-5 text-amber-400" />
-            <div className="absolute inset-0 animate-ping">
-              <AlertTriangle className="w-5 h-5 text-amber-400 opacity-40" />
-            </div>
+      <div className="relative flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-8">
+        {/* Left: Label + Date */}
+        <div className="shrink-0">
+          <div className="flex items-center gap-2 mb-1.5">
+            <AlertTriangle className="w-4 h-4 text-amber-400" />
+            <span className="text-[11px] font-bold tracking-wider uppercase text-amber-400">
+              FTC COPPA Enforcement
+            </span>
           </div>
-          <span className="text-[11px] font-bold tracking-wider uppercase text-amber-300">
-            FTC COPPA Enforcement
-          </span>
+          <p className="text-lg font-display font-bold text-white">
+            April 22, 2026
+          </p>
         </div>
 
-        {/* Center: Countdown */}
-        <div className="flex-1 flex items-center justify-center gap-3 sm:gap-4">
+        {/* Center: Countdown boxes */}
+        <div className="flex-1 flex items-center justify-center gap-2.5 sm:gap-3">
           {time.expired ? (
             <p className="text-lg font-bold text-red-400">
               Enforcement Active
             </p>
           ) : (
             <>
-              <div className="text-center">
-                <p className="text-2xl sm:text-3xl font-display font-bold text-white tabular-nums">
-                  {mounted ? time.days : "--"}
-                </p>
-                <p className="text-[10px] uppercase tracking-wider text-white/50 mt-0.5">Days</p>
-              </div>
-              <span className="text-white/30 text-xl font-light">:</span>
-              <div className="text-center">
-                <p className="text-2xl sm:text-3xl font-display font-bold text-white tabular-nums">
-                  {mounted ? pad(time.hours) : "--"}
-                </p>
-                <p className="text-[10px] uppercase tracking-wider text-white/50 mt-0.5">Hours</p>
-              </div>
-              <span className="text-white/30 text-xl font-light">:</span>
-              <div className="text-center">
-                <p className="text-2xl sm:text-3xl font-display font-bold text-white tabular-nums">
-                  {mounted ? pad(time.minutes) : "--"}
-                </p>
-                <p className="text-[10px] uppercase tracking-wider text-white/50 mt-0.5">Min</p>
-              </div>
-              <span className="text-white/30 text-xl font-light">:</span>
-              <div className="text-center">
-                <p className="text-2xl sm:text-3xl font-display font-bold text-white tabular-nums">
-                  {mounted ? pad(time.seconds) : "--"}
-                </p>
-                <p className="text-[10px] uppercase tracking-wider text-white/50 mt-0.5">Sec</p>
-              </div>
+              {[
+                { value: mounted ? String(time.days) : "--", label: "Days" },
+                { value: mounted ? pad(time.hours) : "--", label: "Hours" },
+                { value: mounted ? pad(time.minutes) : "--", label: "Min" },
+                { value: mounted ? pad(time.seconds) : "--", label: "Sec" },
+              ].map((unit, i) => (
+                <div key={unit.label} className="flex items-center gap-2.5 sm:gap-3">
+                  {i > 0 && (
+                    <span className="text-amber-500/50 text-lg font-light select-none">:</span>
+                  )}
+                  <div className="text-center min-w-[3rem] sm:min-w-[3.5rem] rounded-lg bg-white/[0.07] border border-white/[0.08] py-2 px-1">
+                    <p className="text-xl sm:text-2xl font-display font-bold text-white tabular-nums leading-none">
+                      {unit.value}
+                    </p>
+                    <p className="text-[9px] uppercase tracking-widest text-amber-400/70 mt-1.5 font-medium">
+                      {unit.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </>
           )}
         </div>
 
         {/* Right: CTA */}
         <div className="shrink-0 flex justify-center sm:justify-end">
-          <span className="inline-flex items-center gap-1.5 bg-brand-green text-foreground text-sm font-semibold px-5 py-2 rounded-full group-hover:shadow-[0_0_24px_-4px_rgba(0,212,126,0.5)] transition">
+          <span className="inline-flex items-center gap-1.5 bg-brand-green text-foreground text-sm font-semibold px-5 py-2.5 rounded-full group-hover:shadow-[0_0_24px_-4px_rgba(0,212,126,0.5)] transition">
             Get Compliant
             <ArrowRight className="w-3.5 h-3.5" />
           </span>
