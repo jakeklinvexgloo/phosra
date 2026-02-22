@@ -5,7 +5,7 @@ import { Footer } from "@/components/marketing/Footer"
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden">
       <PublicPageHeader />
       <main className="flex-1 pt-14">
         {children}

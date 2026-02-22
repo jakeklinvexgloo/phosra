@@ -52,7 +52,7 @@ export default function PolicyEditorPage() {
   return (
     <div>
       <div className="mb-8">
-        <h2 className="text-h2 text-foreground">{policy.name}</h2>
+        <h2 className="text-xl sm:text-h2 text-foreground">{policy.name}</h2>
         <p className="text-muted-foreground">Policy Editor - Configure rules for each category</p>
       </div>
 

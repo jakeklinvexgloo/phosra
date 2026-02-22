@@ -79,7 +79,7 @@ function SidebarSection({ id, title, activeId, onNavigate }: SidebarSectionProps
               <button
                 key={ep.id}
                 onClick={() => onNavigate(ep.id)}
-                className={`w-full flex items-center gap-2 px-3 py-1 rounded text-[12px] font-mono transition-colors text-left ${
+                className={`w-full flex items-center gap-2 px-3 py-2 rounded text-[12px] font-mono transition-colors text-left ${
                   activeId === ep.id
                     ? "text-foreground bg-muted/70"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
@@ -98,7 +98,7 @@ function SidebarSection({ id, title, activeId, onNavigate }: SidebarSectionProps
   )
 }
 
-export function DocsSidebar() {
+export function DocsSidebar({ onNavigate: onMobileNavigate }: { onNavigate?: () => void } = {}) {
   const [activeId, setActiveId] = useState("")
   const isNavigatingRef = useRef(false)
 
@@ -170,6 +170,7 @@ export function DocsSidebar() {
       el.scrollIntoView({ behavior: "smooth", block: "start" })
       setActiveId(id)
       updateHash(id)
+      onMobileNavigate?.()
       // Reset navigation lock after smooth scroll completes (~500ms)
       setTimeout(() => { isNavigatingRef.current = false }, 600)
     }

@@ -109,7 +109,7 @@ export function SessionSetup({ onStart, onBack }: SessionSetupProps) {
       {/* Difficulty Selector */}
       <div>
         <h2 className="text-sm font-semibold text-foreground mb-3">Difficulty Level</h2>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {difficulties.map((d) => {
             const meta = DIFFICULTY_META[d]
             const isActive = difficulty === d

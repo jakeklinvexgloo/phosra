@@ -192,7 +192,7 @@ export default function COPPADeadlinePage() {
             <span className="text-xs font-medium text-muted-foreground">Live Countdown</span>
           </div>
 
-          <div className="grid grid-cols-4 gap-3 sm:gap-6 max-w-xl mx-auto mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 max-w-xl mx-auto mb-8">
             {[
               { value: timeLeft.days, label: "Days" },
               { value: timeLeft.hours, label: "Hours" },
@@ -287,7 +287,7 @@ export default function COPPADeadlinePage() {
             </h2>
           </AnimatedSection>
 
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-start">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-14 items-start">
             {/* Left — checklist */}
             <AnimatedSection direction="left" delay={0.1}>
               <div className="space-y-4">
@@ -400,7 +400,7 @@ export default function COPPADeadlinePage() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-20 items-center">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 xl:gap-20 items-center">
             {/* Left — headline */}
             <AnimatedSection direction="left">
               <h2 className="font-display text-4xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-white leading-[1.15] mb-6">

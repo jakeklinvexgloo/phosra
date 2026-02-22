@@ -371,7 +371,7 @@ export function SessionReview({ sessionId, onBack, onPracticeAgain }: SessionRev
       {activeTab === "metrics" && metrics && (
         <div className="space-y-6">
           {/* Key Metrics Row */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="plaid-card text-center">
               <div className="text-3xl font-bold text-foreground tabular-nums">{metrics.filler_word_count}</div>
               <div className="text-xs text-muted-foreground mt-1">Filler Words</div>

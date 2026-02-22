@@ -27,7 +27,7 @@ export default function PublicDocsLayout({ children }: { children: React.ReactNo
           <div className="docs-three-col">
             {/* Left sidebar — hidden on mobile unless toggled */}
             <div className={`${sidebarOpen ? "block" : "hidden"} lg:block lg:self-stretch`}>
-              <DocsSidebar />
+              <DocsSidebar onNavigate={() => setSidebarOpen(false)} />
             </div>
             {/* Center content + Right code panel */}
             <div className="docs-content-area min-w-0">{children}</div>

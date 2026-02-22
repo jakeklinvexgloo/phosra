@@ -64,7 +64,7 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="sm:hidden p-1 -ml-1 text-foreground"
+            className="md:hidden p-2.5 -ml-1 text-foreground"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -74,7 +74,7 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden sm:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1">
             {NAV_LINKS.map((link) => {
               const isActive = isNavActive(link.href)
               return (
@@ -181,7 +181,7 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
 
       {/* Mobile nav panel */}
       {mobileOpen && (
-        <div className="sm:hidden border-b border-border bg-background px-4 py-3 space-y-1">
+        <div className="md:hidden border-b border-border bg-background px-4 py-3 space-y-1">
           {NAV_LINKS.map((link) => {
             const isActive = isNavActive(link.href)
             return (

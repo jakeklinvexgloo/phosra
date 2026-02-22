@@ -42,7 +42,7 @@ export function CodePanel({ title, code, language = "bash", alternatives }: Code
                 <button
                   key={tab.label}
                   onClick={() => setActiveTab(i)}
-                  className={`text-[11px] font-mono px-2 py-0.5 rounded transition-colors ${
+                  className={`text-[11px] font-mono px-2.5 py-1.5 rounded transition-colors ${
                     activeTab === i
                       ? "bg-zinc-700 text-zinc-200"
                       : "text-zinc-500 hover:text-zinc-300"
@@ -58,7 +58,7 @@ export function CodePanel({ title, code, language = "bash", alternatives }: Code
         </div>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-zinc-200 transition-colors"
+          className="flex items-center gap-1.5 p-1.5 text-[11px] text-zinc-400 hover:text-zinc-200 transition-colors"
         >
           {copied ? (
             <>

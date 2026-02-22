@@ -263,10 +263,10 @@ function CustomSection({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 pr-6 font-semibold text-foreground">
+                <th className="text-left py-3 pr-3 sm:pr-6 font-semibold text-foreground">
                   Provision
                 </th>
-                <th className="text-left py-3 pr-6 font-semibold text-foreground">
+                <th className="text-left py-3 pr-3 sm:pr-6 font-semibold text-foreground">
                   Original COPPA (1998)
                 </th>
                 <th className="text-left py-3 font-semibold text-foreground">
@@ -276,33 +276,33 @@ function CustomSection({
             </thead>
             <tbody className="divide-y divide-border">
               <tr>
-                <td className="py-3 pr-6 text-muted-foreground">Age coverage</td>
-                <td className="py-3 pr-6 text-muted-foreground">Under 13</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Age coverage</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Under 13</td>
                 <td className="py-3 text-foreground font-medium">Under 17</td>
               </tr>
               <tr>
-                <td className="py-3 pr-6 text-muted-foreground">Targeted ads</td>
-                <td className="py-3 pr-6 text-muted-foreground">Consent required</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Targeted ads</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Consent required</td>
                 <td className="py-3 text-foreground font-medium">Banned entirely</td>
               </tr>
               <tr>
-                <td className="py-3 pr-6 text-muted-foreground">Data deletion</td>
-                <td className="py-3 pr-6 text-muted-foreground">On parent request</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Data deletion</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">On parent request</td>
                 <td className="py-3 text-foreground font-medium">Eraser button required</td>
               </tr>
               <tr>
-                <td className="py-3 pr-6 text-muted-foreground">Data minimization</td>
-                <td className="py-3 pr-6 text-muted-foreground">Not specified</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Data minimization</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Not specified</td>
                 <td className="py-3 text-foreground font-medium">Mandatory</td>
               </tr>
               <tr>
-                <td className="py-3 pr-6 text-muted-foreground">Enforcement</td>
-                <td className="py-3 pr-6 text-muted-foreground">FTC general authority</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Enforcement</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">FTC general authority</td>
                 <td className="py-3 text-foreground font-medium">Dedicated FTC division</td>
               </tr>
               <tr>
-                <td className="py-3 pr-6 text-muted-foreground">Penalties</td>
-                <td className="py-3 pr-6 text-muted-foreground">Up to $50k per violation</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Penalties</td>
+                <td className="py-3 pr-3 sm:pr-6 text-muted-foreground">Up to $50k per violation</td>
                 <td className="py-3 text-foreground font-medium">Substantially increased</td>
               </tr>
             </tbody>

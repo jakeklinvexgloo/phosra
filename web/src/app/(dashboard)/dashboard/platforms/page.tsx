@@ -176,7 +176,7 @@ export default function PlatformsPage() {
   return (
     <div>
       {/* Header */}
-      <h2 className="text-h2 text-foreground mb-2">Platform Coverage Explorer</h2>
+      <h2 className="text-xl sm:text-h2 text-foreground mb-2">Platform Coverage Explorer</h2>
       <p className="text-muted-foreground mb-8">Search for capability coverage by platform</p>
 
       {/* Filters */}
@@ -185,7 +185,7 @@ export default function PlatformsPage() {
         <div ref={capsRef} className="relative">
           <button
             onClick={() => setCapsOpen(!capsOpen)}
-            className="plaid-input flex items-center gap-2 min-w-[180px] cursor-pointer"
+            className="plaid-input flex items-center gap-2 min-w-0 w-full sm:min-w-[180px] sm:w-auto cursor-pointer"
           >
             <span className="text-sm text-muted-foreground">
               {selectedCaps.length === 0 ? "Select Capabilities" : `${selectedCaps.length} selected`}
@@ -216,7 +216,7 @@ export default function PlatformsPage() {
         <select
           value={categoryFilter}
           onChange={e => setCategoryFilter(e.target.value)}
-          className="plaid-input !w-auto text-sm min-w-[160px] cursor-pointer"
+          className="plaid-input !w-auto text-sm min-w-0 w-full sm:min-w-[160px] sm:w-auto cursor-pointer"
         >
           <option value="all">All Categories</option>
           {categories.map(c => (
@@ -228,7 +228,7 @@ export default function PlatformsPage() {
         <select
           value={tierFilter}
           onChange={e => setTierFilter(e.target.value)}
-          className="plaid-input !w-auto text-sm min-w-[140px] cursor-pointer"
+          className="plaid-input !w-auto text-sm min-w-0 w-full sm:min-w-[140px] sm:w-auto cursor-pointer"
         >
           <option value="all">All Tiers</option>
           <option value="compliant">Compliant</option>

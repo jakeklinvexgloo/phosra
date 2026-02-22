@@ -167,7 +167,7 @@ export default function PricingPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/30">
-                <th className="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Feature</th>
+                <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider sticky left-0 bg-muted/30 z-10">Feature</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider">Family</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider">Developer</th>
                 <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider">Enterprise</th>
@@ -176,7 +176,7 @@ export default function PricingPage() {
             <tbody>
               {COMPARISON.map((row) => (
                 <tr key={row.feature} className="border-b border-border last:border-0">
-                  <td className="px-6 py-3 text-sm text-foreground">{row.feature}</td>
+                  <td className="px-3 sm:px-6 py-3 text-sm text-foreground sticky left-0 bg-card z-10">{row.feature}</td>
                   <td className="px-4 py-3 text-sm text-center text-muted-foreground">
                     {row.family === "\u2713" ? <Check className="w-4 h-4 text-brand-green mx-auto" /> : row.family}
                   </td>

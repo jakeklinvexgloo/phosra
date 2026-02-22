@@ -157,7 +157,7 @@ export function CodeBlock({ title, language, code, response }: CodeBlockProps) {
           </span>
           <button
             onClick={handleCopy}
-            className="p-1 rounded hover:bg-white/10 transition-colors"
+            className="p-2 rounded hover:bg-white/10 transition-colors"
             aria-label="Copy code"
           >
             {copied ? (
@@ -174,7 +174,7 @@ export function CodeBlock({ title, language, code, response }: CodeBlockProps) {
         <div className="flex border-b border-white/[0.06]">
           <button
             onClick={() => setActiveTab("request")}
-            className={`px-4 py-1.5 text-[11px] font-medium transition-colors ${
+            className={`px-4 py-2.5 text-[11px] font-medium transition-colors ${
               activeTab === "request"
                 ? "text-brand-green border-b border-brand-green bg-white/[0.03]"
                 : "text-white/30 hover:text-white/50"
@@ -184,7 +184,7 @@ export function CodeBlock({ title, language, code, response }: CodeBlockProps) {
           </button>
           <button
             onClick={() => setActiveTab("response")}
-            className={`px-4 py-1.5 text-[11px] font-medium transition-colors ${
+            className={`px-4 py-2.5 text-[11px] font-medium transition-colors ${
               activeTab === "response"
                 ? "text-brand-green border-b border-brand-green bg-white/[0.03]"
                 : "text-white/30 hover:text-white/50"

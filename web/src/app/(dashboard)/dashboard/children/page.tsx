@@ -50,7 +50,7 @@ export default function ChildrenPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-h2 text-foreground">Children</h2>
+        <h2 className="text-xl sm:text-h2 text-foreground">Children</h2>
         <div className="flex gap-3">
           {families.length > 1 && (
             <select value={selectedFamily} onChange={(e) => loadChildren(e.target.value)} className="rounded border border-input bg-background px-3 py-2 text-sm text-foreground">

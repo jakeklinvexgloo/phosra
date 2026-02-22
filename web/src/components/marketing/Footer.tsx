@@ -70,7 +70,7 @@ export function Footer() {
           {FOOTER_SECTIONS.map((section) => (
             <div key={section.title}>
               <h3 className="text-sm font-semibold text-white mb-4">{section.title}</h3>
-              <ul className="space-y-2.5">
+              <ul className="space-y-3.5">
                 {section.links.map((link) => (
                   <li key={link.label}>
                     <Link
@@ -107,7 +107,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/30 hover:text-white/60 transition-colors"
+                  className="p-2 text-white/30 hover:text-white/60 transition-colors"
                   aria-label={social.label}
                 >
                   <social.icon className="w-4 h-4" />

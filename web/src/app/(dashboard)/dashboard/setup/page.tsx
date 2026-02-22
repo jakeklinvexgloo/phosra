@@ -141,7 +141,7 @@ export default function QuickSetupPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
-        <h2 className="text-h2 text-foreground">Quick Setup</h2>
+        <h2 className="text-xl sm:text-h2 text-foreground">Quick Setup</h2>
         <p className="text-muted-foreground mt-1">Set up protection for your child in under a minute.</p>
       </div>
 

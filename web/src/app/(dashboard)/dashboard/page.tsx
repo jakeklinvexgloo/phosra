@@ -40,7 +40,7 @@ export default function DashboardHome() {
     <div>
       {/* Hero */}
       <div className="mb-10">
-        <h1 className="text-h1 text-foreground">Welcome to Phosra</h1>
+        <h1 className="text-2xl sm:text-h2 lg:text-h1 text-foreground">Welcome to Phosra</h1>
         <p className="text-lg text-muted-foreground mt-3 max-w-xl">
           Define parental controls once, push them everywhere. Protect your children across every platform and device.
         </p>

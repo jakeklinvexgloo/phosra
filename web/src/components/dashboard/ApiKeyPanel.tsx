@@ -58,14 +58,14 @@ export function ApiKeyPanel() {
         </code>
         <button
           onClick={() => setRevealed(!revealed)}
-          className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+          className="p-2.5 text-muted-foreground hover:text-foreground transition-colors"
           title={revealed ? "Hide" : "Reveal"}
         >
           {revealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
         </button>
         <button
           onClick={handleCopy}
-          className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+          className="p-2.5 text-muted-foreground hover:text-foreground transition-colors"
           title="Copy"
         >
           {copied ? <Check className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4" />}
@@ -78,7 +78,7 @@ export function ApiKeyPanel() {
         </p>
         <button
           onClick={handleRegenerate}
-          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1.5 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <RotateCw className="w-3 h-3" />
           Regenerate

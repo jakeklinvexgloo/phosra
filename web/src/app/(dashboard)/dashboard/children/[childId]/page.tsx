@@ -73,7 +73,7 @@ export default function ChildDetailPage() {
             {child.name.charAt(0)}
           </div>
           <div>
-            <h2 className="text-h2 text-foreground">{child.name}</h2>
+            <h2 className="text-xl sm:text-h2 text-foreground">{child.name}</h2>
             <p className="text-muted-foreground">Age {getAge(child.birth_date)}</p>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function ChildDetailPage() {
                             <span className={`text-xs font-medium ${s.text}`}>{policy.status}</span>
                           </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           <button onClick={() => generateFromAge(policy.id)} className="text-xs px-3 py-1.5 rounded-full border border-foreground text-foreground hover:bg-muted transition">Generate from Age</button>
                           {policy.status !== "active" && <button onClick={() => activatePolicy(policy.id)} className="text-xs px-3 py-1.5 rounded-full bg-success text-success-foreground hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">Activate</button>}
                           <Link href={`/dashboard/children/${childId}/policies/${policy.id}`} className="text-xs px-3 py-1.5 rounded-full bg-foreground text-background hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">Edit Rules</Link>

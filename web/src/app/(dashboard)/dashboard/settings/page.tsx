@@ -11,7 +11,7 @@ export default function SettingsPage() {
 
   return (
     <div>
-      <h2 className="text-h2 text-foreground mb-8">Settings</h2>
+      <h2 className="text-xl sm:text-h2 text-foreground mb-8">Settings</h2>
 
       <div className="space-y-6">
         {/* Account */}

@@ -38,7 +38,7 @@ export function ComplianceSidebarTOC({ items }: ComplianceSidebarTOCProps) {
     <>
       {/* Mobile: horizontal scrollable pill bar */}
       <nav
-        className="lg:hidden sticky top-14 z-10 flex overflow-x-auto gap-2 pb-3 mb-6 border-b border-border -mx-4 px-4 bg-background/95 backdrop-blur-sm no-scrollbar"
+        className="lg:hidden sticky top-14 z-10 flex overflow-x-auto gap-2 pb-3 mb-6 border-b border-border -mx-4 px-4 bg-background backdrop-blur-sm no-scrollbar"
         aria-label="Table of contents"
       >
         {items.map((item) => {
@@ -47,7 +47,7 @@ export function ComplianceSidebarTOC({ items }: ComplianceSidebarTOCProps) {
             <a
               key={item.id}
               href={`#${item.id}`}
-              className={`flex-shrink-0 px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
+              className={`flex-shrink-0 px-3.5 py-2.5 text-xs font-medium rounded-full transition-colors ${
                 isActive
                   ? "bg-brand-green/10 text-brand-green"
                   : "bg-muted text-muted-foreground"

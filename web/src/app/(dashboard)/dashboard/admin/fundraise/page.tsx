@@ -875,7 +875,7 @@ export default function FundraiseCommandCenter() {
       </div>
 
       {/* ── Tab Bar ──────────────────────────────────────────── */}
-      <div className="flex items-center bg-muted/60 rounded-lg p-0.5 w-fit">
+      <div className="flex items-center bg-muted/60 rounded-lg p-0.5 w-fit overflow-x-auto max-w-full">
         {TABS.map((t) => {
           const active = activeTab === t.key
           return (

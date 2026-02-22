@@ -50,7 +50,7 @@ export default function EnforcementPage() {
 
   return (
     <div>
-      <h2 className="text-h2 text-foreground mb-2">Enforcement Status</h2>
+      <h2 className="text-xl sm:text-h2 text-foreground mb-2">Enforcement Status</h2>
       <p className="text-sm text-muted-foreground mb-8">Policy enforcement status across all verified platforms and protected children.</p>
 
       {children.length === 0 || links.length === 0 ? (
@@ -102,7 +102,7 @@ export default function EnforcementPage() {
                             <span className={`text-xs ${s.text}`}>{s.label}</span>
                           </button>
                           {isExpanded && (
-                            <div className="absolute z-10 left-1/2 -translate-x-1/2 top-full mt-1 bg-background rounded shadow-plaid-card p-3 text-left w-48 sm:w-56">
+                            <div className="absolute z-10 left-0 sm:left-1/2 sm:-translate-x-1/2 top-full mt-1 bg-background rounded shadow-plaid-card p-3 text-left w-48 sm:w-56">
                               {results ? (
                                 results.filter(r => r.platform_id === link.platform_id).length > 0 ? (
                                   results.filter(r => r.platform_id === link.platform_id).map(result => (
@@ -151,7 +151,7 @@ export default function EnforcementPage() {
         </div>
       )}
 
-      <div className="mt-6 flex gap-4 text-xs text-muted-foreground">
+      <div className="mt-6 flex flex-wrap gap-3 text-xs text-muted-foreground">
         {Object.entries(statusConfig).filter(([k]) => k !== "unknown").map(([key, s]) => (
           <div key={key} className="flex items-center gap-1.5">
             <span className={`status-dot ${s.dot.replace(" status-dot-pulse", "")}`} />

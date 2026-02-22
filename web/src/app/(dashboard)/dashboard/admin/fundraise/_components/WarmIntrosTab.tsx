@@ -50,7 +50,7 @@ export default function WarmIntrosTab() {
   return (
     <div className="space-y-4">
       {/* Stats row */}
-      <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="plaid-card !py-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="p-1.5 rounded-md bg-brand-green/10">

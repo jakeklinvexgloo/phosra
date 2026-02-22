@@ -110,7 +110,7 @@ export function SenderConfig({ open, onClose }: SenderConfigProps) {
             {/* Scheduling */}
             <div className="space-y-3">
               <h3 className="text-sm font-medium">Scheduling</h3>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="text-xs text-muted-foreground">Send Hour (UTC)</label>
                   <input

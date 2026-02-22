@@ -33,7 +33,7 @@ export function ComplianceChecklist({ items }: ComplianceChecklistProps) {
             </span>
 
             {/* Feature badge */}
-            <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded flex-shrink-0">
+            <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded flex-shrink-0 max-w-[140px] truncate">
               {item.feature}
             </span>
           </div>

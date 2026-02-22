@@ -83,7 +83,7 @@ export function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`md:hidden p-2 ${scrolled ? "text-foreground" : "text-white"}`}
+            className={`md:hidden p-2.5 ${scrolled ? "text-foreground" : "text-white"}`}
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

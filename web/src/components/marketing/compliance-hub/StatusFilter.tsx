@@ -26,7 +26,7 @@ export function StatusFilter({ active, onSelect }: StatusFilterProps) {
             key={pill.id}
             onClick={() => onSelect(pill.id)}
             className={`
-              px-3 py-1.5 text-xs font-medium rounded-full transition-colors
+              px-3.5 py-2.5 text-xs font-medium rounded-full transition-colors
               ${
                 isActive && isStatusPill
                   ? "bg-foreground/10 text-foreground font-medium"

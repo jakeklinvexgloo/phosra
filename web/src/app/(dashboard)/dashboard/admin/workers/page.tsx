@@ -191,7 +191,7 @@ export default function WorkersPage() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: "Total", value: total, icon: Activity, color: "text-foreground" },
           { label: "Healthy", value: healthy, icon: CheckCircle2, color: "text-emerald-500" },

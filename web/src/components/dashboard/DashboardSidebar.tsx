@@ -21,7 +21,7 @@ export function DashboardSidebar({ isSandbox, isAdmin }: DashboardSidebarProps) 
   const allGroups = isAdmin ? [...navGroups, ...adminNavGroups] : navGroups
 
   return (
-    <aside className="hidden lg:block w-[200px] xl:w-[220px] flex-shrink-0">
+    <aside className="w-[200px] xl:w-[220px] flex-shrink-0">
       <nav className="lg:sticky lg:top-[88px] space-y-6">
         {/* Environment badge */}
         <div className="px-1">

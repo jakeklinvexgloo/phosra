@@ -25,7 +25,7 @@ export function EndpointCard({ endpoint }: { endpoint: EndpointDef }) {
       {/* Endpoint heading */}
       <div className="flex items-center gap-3 mb-2">
         <MethodBadge method={endpoint.method} />
-        <code className="text-[16px] font-semibold font-mono text-foreground">
+        <code className="text-[16px] font-semibold font-mono text-foreground break-all">
           {endpoint.path}
         </code>
         <button
@@ -33,7 +33,7 @@ export function EndpointCard({ endpoint }: { endpoint: EndpointDef }) {
             window.location.hash = endpoint.id
             navigator.clipboard.writeText(window.location.href)
           }}
-          className="opacity-0 group-hover/ep:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
+          className="opacity-60 sm:opacity-0 group-hover/ep:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
           title="Copy link"
         >
           <Link2 className="w-4 h-4" />

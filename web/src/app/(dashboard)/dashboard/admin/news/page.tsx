@@ -318,7 +318,7 @@ export default function NewsFeedPage() {
       </div>
 
       {/* ── Stat ticker ────────────────────────────────────── */}
-      <div className="grid grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         {[
           { label: "Priority", value: priorityCount, icon: Zap, color: "text-amber-500" },
           { label: "Unread", value: unreadCount, icon: Radio, color: "text-blue-500" },

@@ -50,7 +50,7 @@ function FieldRow({ field, depth = 0 }: { field: FieldDef; depth?: number }) {
               {field.description}
             </p>
           </div>
-          <div className="flex items-center gap-2 ml-4 flex-shrink-0 mt-0.5">
+          <div className="flex items-center gap-2 ml-4 sm:flex-shrink-0 mt-0.5">
             <span className="text-[11px] text-muted-foreground font-mono">{field.type}</span>
             {field.required && (
               <span className="text-[10px] font-bold text-amber-600 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded">

@@ -344,7 +344,7 @@ export default function AboutPage() {
                 </p>
 
                 {/* Highlights / metrics */}
-                <div className="grid grid-cols-3 gap-3 mt-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
                   {FOUNDERS.highlights.map((h) => (
                     <div key={h.label} className="text-center sm:text-left">
                       <p className="text-xl sm:text-2xl font-display text-foreground">{h.metric}</p>
@@ -356,7 +356,7 @@ export default function AboutPage() {
                 {/* Previously at — logo strip */}
                 <div className="mt-6 pt-6 border-t border-border">
                   <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-4">Previously at</p>
-                  <div className="flex items-center gap-8">
+                  <div className="flex items-center flex-wrap gap-4 sm:gap-8">
                     {FOUNDERS.career.map((c) => (
                       <div key={c.company} className="flex flex-col items-center gap-1.5">
                         <div className="h-8 flex items-center">
@@ -438,7 +438,7 @@ export default function AboutPage() {
                   </p>
 
                   {/* Highlights */}
-                  <div className="grid grid-cols-3 gap-3 mt-5">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5">
                     {advisor.highlights.map((h) => (
                       <div key={h.label} className="text-center sm:text-left">
                         <p className="text-lg sm:text-xl font-display text-foreground">{h.metric}</p>
@@ -450,7 +450,7 @@ export default function AboutPage() {
                   {/* Previously at — logo strip */}
                   <div className="mt-5 pt-5 border-t border-border">
                     <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-3">Previously at</p>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center flex-wrap gap-3 sm:gap-6">
                       {advisor.career.map((c) => (
                         <div key={c.company} className="flex flex-col items-center gap-1.5">
                           <div className="h-7 flex items-center">

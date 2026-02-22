@@ -146,14 +146,14 @@ export function WebhookPanel() {
                   <button
                     onClick={() => testWebhook(webhook.id)}
                     disabled={testingId === webhook.id}
-                    className="p-1.5 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+                    className="p-2.5 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
                     title="Test"
                   >
                     <Zap className={`w-3.5 h-3.5 ${testingId === webhook.id ? "animate-pulse" : ""}`} />
                   </button>
                   <button
                     onClick={() => toggleStatus(webhook.id)}
-                    className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                    className="p-2.5 text-muted-foreground hover:text-foreground transition-colors"
                     title={webhook.status === "active" ? "Pause" : "Resume"}
                   >
                     {webhook.status === "active" ? (
@@ -164,7 +164,7 @@ export function WebhookPanel() {
                   </button>
                   <button
                     onClick={() => deleteWebhook(webhook.id)}
-                    className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+                    className="p-2.5 text-muted-foreground hover:text-destructive transition-colors"
                     title="Delete"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -211,7 +211,7 @@ export function WebhookPanel() {
                 <button
                   key={event}
                   onClick={() => toggleEvent(event)}
-                  className={`text-xs font-mono px-2 py-1 rounded-full border transition-colors ${
+                  className={`text-xs font-mono px-3 py-2 rounded-full border transition-colors ${
                     newEvents.includes(event)
                       ? "bg-foreground text-background border-foreground"
                       : "border-border text-muted-foreground hover:border-foreground/40"

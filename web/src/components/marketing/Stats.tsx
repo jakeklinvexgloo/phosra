@@ -98,7 +98,7 @@ export function Stats() {
                   <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
                 <div className="text-xs sm:text-sm font-semibold text-white mb-1 sm:mb-1.5">{stat.label}</div>
-                <p className="text-[10px] sm:text-xs text-white/40 max-w-[160px] sm:max-w-[180px] mx-auto leading-tight">{stat.description}</p>
+                <p className="text-[11px] sm:text-xs text-white/40 max-w-[160px] sm:max-w-[180px] mx-auto leading-tight">{stat.description}</p>
               </div>
             </AnimatedSection>
           ))}

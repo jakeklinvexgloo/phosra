@@ -175,7 +175,7 @@ export default function ContactSyncPage() {
       {syncPreview && (
         <div className="plaid-card">
           <h3 className="text-sm font-semibold text-foreground mb-3">Sync Preview</h3>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="text-center">
               <div className="text-2xl font-semibold text-brand-green tabular-nums">{syncPreview.to_create.length}</div>
               <div className="text-xs text-muted-foreground">New contacts to create</div>

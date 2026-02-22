@@ -190,7 +190,7 @@ function HighlightedCode({
   let charsSoFar = 0
 
   return (
-    <code className="block px-3 sm:px-5 py-4 sm:py-5 text-[10px] sm:text-[13px] leading-5 sm:leading-6 font-mono">
+    <code className="block px-3 sm:px-5 py-4 sm:py-5 text-[11px] sm:text-[13px] leading-5 sm:leading-6 font-mono">
       {lines.map((line, i) => {
         const lineStart = charsSoFar
         charsSoFar += line.length + 1 // +1 for newline
