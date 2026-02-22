@@ -11,8 +11,16 @@ import {
   Bot, User, AlertTriangle, Eye, Plus, X, Power, Copy, Loader2,
   Smartphone, AlertCircle,
 } from "lucide-react"
-import PhoneInput from "@/components/investors/PhoneInput"
 import { formatPhoneDisplay } from "@/lib/investors/phone"
+
+/** Format phone input as user types: (212) 555-1234 */
+function formatAsYouType(raw: string): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 10)
+  if (digits.length === 0) return ""
+  if (digits.length <= 3) return `(${digits}`
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
+}
 import WarmIntrosTab from "./_components/WarmIntrosTab"
 import InvestorResearchModal from "./_components/InvestorResearchModal"
 
@@ -1305,13 +1313,22 @@ export default function FundraiseCommandCenter() {
                 <div className="p-5 space-y-4">
                   <div>
                     <label className="text-xs font-medium text-muted-foreground mb-1 block">Phone Number *</label>
-                    <PhoneInput
-                      value={addForm.phone}
-                      onChange={(raw) => setAddForm((f) => ({ ...f, phone: raw }))}
-                      onSubmit={handleAddInvestor}
-                      disabled={addLoading}
-                      error={addError && addForm.phone.length > 0 && addForm.phone.length < 10 ? "Enter a valid 10-digit number" : undefined}
-                    />
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground font-mono flex-shrink-0">+1</span>
+                      <input
+                        type="tel"
+                        inputMode="numeric"
+                        placeholder="(555) 555-1234"
+                        value={formatAsYouType(addForm.phone)}
+                        onChange={(e) => {
+                          const raw = e.target.value.replace(/\D/g, "").slice(0, 10)
+                          setAddForm((f) => ({ ...f, phone: raw }))
+                        }}
+                        onKeyDown={(e) => { if (e.key === "Enter" && addForm.phone.length === 10) handleAddInvestor() }}
+                        disabled={addLoading}
+                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm font-mono placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="text-xs font-medium text-muted-foreground mb-1 block">Name</label>
