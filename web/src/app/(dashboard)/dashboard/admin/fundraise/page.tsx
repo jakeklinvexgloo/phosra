@@ -22,6 +22,7 @@ function formatAsYouType(raw: string): string {
 }
 import WarmIntrosTab from "./_components/WarmIntrosTab"
 import InvestorResearchModal from "./_components/InvestorResearchModal"
+import MilestoneAgentModal from "./_components/MilestoneAgentModal"
 
 /* ═══════════════════════════════════════════════════════════════
    DATA: Fundraise plan — milestones, agents, founder tasks
@@ -562,6 +563,9 @@ export default function FundraiseCommandCenter() {
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"timeline" | "agents" | "founder" | "warm-intros" | "investor-access">("timeline")
   const [showResearchModal, setShowResearchModal] = useState(false)
+  const [activeMilestoneModal, setActiveMilestoneModal] = useState<{
+    milestone: Milestone; agent: Agent; phase: Phase
+  } | null>(null)
 
   // Milestone check-off state (persisted to localStorage)
   const [milestoneOverrides, setMilestoneOverrides] = useState<
@@ -1086,11 +1090,27 @@ export default function FundraiseCommandCenter() {
 
                               <div className="flex items-center gap-3 mt-1.5">
                                 <span className="text-[10px] text-muted-foreground">Due: {m.dueDate}</span>
-                                {m.agentId && (
-                                  <span className="text-[10px] text-muted-foreground/70">
-                                    Agent: {AGENTS.find((a) => a.id === m.agentId)?.name}
-                                  </span>
-                                )}
+                                {m.agentId && (() => {
+                                  const agent = AGENTS.find((a) => a.id === m.agentId)
+                                  if (!agent) return null
+                                  return (
+                                    <>
+                                      <span className="text-[10px] text-muted-foreground/70">
+                                        Agent: {agent.name}
+                                      </span>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          setActiveMilestoneModal({ milestone: m, agent, phase })
+                                        }}
+                                        className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-brand-green/10 text-brand-green hover:bg-brand-green/20 transition-colors"
+                                      >
+                                        <Sparkles className="w-2.5 h-2.5" />
+                                        Execute
+                                      </button>
+                                    </>
+                                  )
+                                })()}
                               </div>
                             </div>
                           </div>
@@ -1586,6 +1606,38 @@ export default function FundraiseCommandCenter() {
         open={showResearchModal}
         onClose={() => setShowResearchModal(false)}
       />
+
+      {/* ═══ MILESTONE AGENT MODAL (from Timeline tab) ═══ */}
+      {activeMilestoneModal && (
+        <MilestoneAgentModal
+          open={true}
+          onClose={() => setActiveMilestoneModal(null)}
+          milestone={{
+            id: activeMilestoneModal.milestone.id,
+            title: activeMilestoneModal.milestone.title,
+            description: activeMilestoneModal.milestone.description,
+            owner: activeMilestoneModal.milestone.owner,
+            status: getMilestoneStatus(activeMilestoneModal.milestone),
+            dueDate: activeMilestoneModal.milestone.dueDate,
+            agentId: activeMilestoneModal.milestone.agentId!,
+          }}
+          agent={{
+            id: activeMilestoneModal.agent.id,
+            name: activeMilestoneModal.agent.name,
+            role: activeMilestoneModal.agent.role,
+            description: activeMilestoneModal.agent.description,
+            tasks: activeMilestoneModal.agent.tasks,
+            tools: activeMilestoneModal.agent.tools,
+            cadence: activeMilestoneModal.agent.cadence,
+            color: activeMilestoneModal.agent.color,
+            bgColor: activeMilestoneModal.agent.bgColor,
+          }}
+          phase={{
+            name: activeMilestoneModal.phase.name,
+            dates: activeMilestoneModal.phase.dates,
+          }}
+        />
+      )}
     </div>
   )
 }
