@@ -80,11 +80,11 @@ export const NEWSROOM: NewsEntry[] = [
   },
   {
     slug: "community-standards-enforcement",
-    title: "28 Community Standards, 50,000 Families: Making Pledges Enforceable",
+    title: "31 Community Standards, 50,000 Families: Making Pledges Enforceable",
     date: "2025-02-08",
     category: "company",
     excerpt:
-      "Phosra now supports 28 community standards — including Four Norms, Wait Until 8th, and the Surgeon General's Advisory — turning voluntary pledges into enforceable configurations.",
+      "Phosra now supports 31 community standards — including Four Norms, Wait Until 8th, and the Surgeon General's Advisory — turning voluntary pledges into enforceable configurations.",
     content: [
       {
         type: "paragraph",
@@ -101,7 +101,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Phosra now supports 28 community standards that collectively reach over 50,000 families and 2,000 schools. Each standard is mapped to specific PCSS rules, so adoption means automatic enforcement across all connected platforms. Explore the full standards library at phosra.com/standards.",
+        text: "Phosra now supports 31 community standards that collectively reach over 50,000 families and 2,000 schools. Each standard is mapped to specific PCSS rules, so adoption means automatic enforcement across all connected platforms. Explore the full standards library at phosra.com/standards.",
       },
     ],
   },

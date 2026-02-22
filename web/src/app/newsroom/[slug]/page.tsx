@@ -99,7 +99,7 @@ export default function NewsDetailPage() {
         <AnimatedSection className="mt-16 pt-10 border-t border-border">
           <h3 className="text-sm font-semibold text-foreground mb-3">About Phosra</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Phosra is the universal parental controls infrastructure. Parents and parental control apps connect to the Phosra API to set rules once and enforce them across 190+ platforms automatically. Phosra tracks 67 child safety laws across 25+ jurisdictions and supports 28 community standards adopted by over 50,000 families and 2,000 schools. Learn more at{" "}
+            Phosra is the universal parental controls infrastructure. Parents and parental control apps connect to the Phosra API to set rules once and enforce them across 220+ platforms automatically. Phosra tracks 78 child safety laws across 25+ jurisdictions and supports 31 community standards adopted by over 50,000 families and 2,000 schools. Learn more at{" "}
             <Link href="/" className="text-brand-green hover:underline">phosra.com</Link>.
           </p>
           <p className="text-sm text-muted-foreground mt-3">

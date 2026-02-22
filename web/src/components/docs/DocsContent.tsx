@@ -1313,7 +1313,7 @@ Content-Type: application/json
                 <div className="bg-accent/5 border border-accent/20 rounded p-4">
                   <p className="text-sm text-foreground">
                     Browse all available standards at <a href="/standards" className="text-brand-green font-medium hover:underline">/standards</a>.
-                    The Phosra API currently includes <strong>21 community standards</strong> spanning expert guidance, parenting pledges, and organizational recommendations.
+                    The Phosra API currently includes <strong>31 community standards</strong> spanning expert guidance, parenting pledges, and organizational recommendations.
                   </p>
                 </div>
               </div>

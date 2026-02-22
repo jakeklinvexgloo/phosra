@@ -12,9 +12,9 @@ import { InterestModal } from "@/components/investors/InterestModal"
 /* ------------------------------------------------------------------ */
 
 const METRICS = [
-  { value: "190+", label: "Platforms Connected" },
-  { value: "67", label: "Child Safety Laws Tracked" },
-  { value: "28", label: "Community Movements" },
+  { value: "220+", label: "Platforms Connected" },
+  { value: "78", label: "Child Safety Laws Tracked" },
+  { value: "31", label: "Community Movements" },
   { value: "50K+", label: "Families" },
   { value: "2K+", label: "Schools" },
   { value: "25+", label: "Jurisdictions" },
@@ -33,7 +33,7 @@ const MARKET_CARDS = [
     icon: TrendingUp,
     title: "The Compliance Wave",
     description:
-      "67 child safety laws across 25+ jurisdictions. KOSA passed the Senate 91-3. Twenty-two states are legislating. The EU, UK, and Australia have already enacted. Every new law creates platform compliance demand — and infrastructure demand.",
+      "78 child safety laws across 25+ jurisdictions. KOSA passed the Senate 91-3. Twenty-two states are legislating. The EU, UK, and Australia have already enacted. Every new law creates platform compliance demand — and infrastructure demand.",
   },
   {
     icon: Layers,
@@ -56,7 +56,7 @@ const REVENUE_STREAMS = [
     subtitle: "Bark, Qustodio, Net Nanny, Circle, etc.",
     price: "$0.25\u2013$0.50",
     unit: "/user/mo",
-    description: "Providers pay per active user for Phosra\u2019s cross-platform enforcement API. Like Visa charging per transaction, Phosra charges per user protected.",
+    description: "Providers pay per active user for Phosra\u2019s cross-platform enforcement API. Like Plaid charging per bank connection, Phosra charges per user protected.",
     example: "Bark (500K users) \u00d7 $0.50/mo = $3M/year",
     features: [
       "\"Phosra Verified\" trust badge",
@@ -84,9 +84,9 @@ const REVENUE_STREAMS = [
 
 const PRODUCT_LINKS = [
   { href: "/docs", label: "API Documentation", sublabel: "PCSS v1.0 specification and integration guides" },
-  { href: "/compliance", label: "Compliance Hub", sublabel: "67 laws mapped to enforcement actions" },
-  { href: "/movements", label: "Community Movements", sublabel: "28 movements, 50K families, 2K schools" },
-  { href: "/technology-services", label: "Technology Services", sublabel: "190+ connected platforms and growing" },
+  { href: "/compliance", label: "Compliance Hub", sublabel: "78 laws mapped to enforcement actions" },
+  { href: "/movements", label: "Community Movements", sublabel: "31 movements, 50K families, 2K schools" },
+  { href: "/technology-services", label: "Technology Services", sublabel: "220+ connected platforms and growing" },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -169,7 +169,7 @@ export default function InvestorsPage() {
               Phosra is the infrastructure that makes this possible. We&apos;re not another parental control
               app — we&apos;re the layer underneath. Parents set rules once. Parental control apps
               plug in to extend their reach. Platforms connect to offer compliant, interoperable controls.
-              Rules enforce across 190+ services automatically.
+              Rules enforce across 220+ services automatically.
             </p>
 
             <p>
@@ -182,8 +182,8 @@ export default function InvestorsPage() {
             </p>
 
             <p>
-              Today, Phosra tracks 67 of these child safety laws across 25+ jurisdictions and maps each
-              one to specific enforcement actions. Our rule engine maps to 28 community standards — from
+              Today, Phosra tracks 78 of these child safety laws across 25+ jurisdictions and maps each
+              one to specific enforcement actions. Our rule engine maps to 31 community standards — from
               screen-free classrooms to delayed smartphone access — representing a growing movement of
               families and schools. We&apos;ve published PCSS v1.0, the open specification for how parental
               controls should work across platforms. The technical standard exists. The infrastructure is live.
@@ -247,7 +247,7 @@ export default function InvestorsPage() {
                 </p>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-green/10 border border-brand-green/20 flex-shrink-0">
-                <span className="text-brand-green text-sm font-semibold">67 laws</span>
+                <span className="text-brand-green text-sm font-semibold">78 laws</span>
                 <span className="text-white/40 text-xs">and counting</span>
               </div>
             </div>
@@ -319,10 +319,10 @@ export default function InvestorsPage() {
               Business Model
             </p>
             <h2 className="text-2xl sm:text-3xl font-display text-white mb-3 max-w-2xl">
-              The Visa/Mastercard of child safety
+              The Plaid of child safety
             </h2>
             <p className="text-white/50 leading-relaxed max-w-2xl mb-12">
-              Like Visa charges per transaction to process payments, Phosra charges per user to enforce child safety. Parents always free. Providers and platforms pay for the infrastructure.
+              Like Plaid charges per bank connection to link financial data, Phosra charges per child profile to enforce safety rules. Parents always free. Providers and platforms pay for the infrastructure.
             </p>
           </AnimatedSection>
 

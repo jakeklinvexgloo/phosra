@@ -22,7 +22,7 @@ export const RECIPES: Recipe[] = [
     |── POST /compliance ──>|                   |              |
     |   (Android creds)     |── verify ─────────|─────────────>|
     |<── 200 verified ──────|                   |              |
-    |── POST /enforce ─────>|── push rules ────>|              |
+    |── POST .../enforce ──>|── push rules ────>|              |
     |                       |── push rules ─────|─────────────>|
     |<── 200 results ───────|                   |              |`,
     steps: [
@@ -104,10 +104,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 5,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_ghi789/enforce",
         description: "Push all policy rules to both verified platforms",
         requestBody: `{
-  "policy_id": "pol_jkl012",
   "platforms": ["comp_mno345", "comp_pqr678"]
 }`,
         responseBody: `{
@@ -139,7 +138,7 @@ export const RECIPES: Recipe[] = [
     |<── 201 webhook ───────|                       |
     |── POST /setup/quick ─>|                       |
     |<── 201 policy ────────|                       |
-    |── POST /enforce ─────>|                       |
+    |── POST .../enforce ──>|                       |
     |<── 200 results ───────|                       |
     |                       |── POST event ────────>|
     |                       |   (HMAC-signed)       |`,
@@ -214,11 +213,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 5,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_ks001/enforce",
         description: "Push policy to connected platforms",
-        requestBody: `{
-  "policy_id": "pol_ks001"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "nextdns", "status": "success", "rules_pushed": 8 }
@@ -248,7 +245,7 @@ export const RECIPES: Recipe[] = [
     |── PUT /rules/bulk ───>|                   |              |
     |   (web_filter rules)  |                   |              |
     |<── 200 updated ───────|                   |              |
-    |── POST /enforce ─────>|── push DNS ──────>|              |
+    |── POST .../enforce ──>|── push DNS ──────>|              |
     |                       |── push DNS ───────|─────────────>|
     |<── 200 results ───────|                   |              |`,
     steps: [
@@ -308,10 +305,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 4,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_chen01/enforce",
         description: "Push updated rules to both DNS providers simultaneously",
         requestBody: `{
-  "policy_id": "pol_chen01",
   "platforms": ["comp_ndns01", "comp_cb01"]
 }`,
         responseBody: `{
@@ -345,7 +341,7 @@ export const RECIPES: Recipe[] = [
     |<── 200 new policy ────|                           |
     |── PUT /activate ─────>|                           |
     |<── 200 activated ─────|                           |
-    |── POST /enforce ─────>|── push updated rules ───>|
+    |── POST .../enforce ──>|── push updated rules ───>|
     |<── 200 results ───────|                           |`,
     steps: [
       {
@@ -418,11 +414,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 5,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_emma/enforce",
         description: "Push the updated teen-appropriate rules to all connected platforms",
-        requestBody: `{
-  "policy_id": "pol_emma_v2"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "nextdns", "status": "success", "rules_pushed": 8 },
@@ -450,10 +444,10 @@ export const RECIPES: Recipe[] = [
     |── POST /setup/quick ─>|                           |
     |   (Marcus, age 14)    |── generate 24 rules ──   |
     |<── 201 policy_marcus ─|                           |
-    |── POST /enforce ─────>|                           |
+    |── POST .../enforce ──>|                           |
     |   (policy_lily)       |── push strict DNS ──────>|
     |<── 200 ───────────────|                           |
-    |── POST /enforce ─────>|                           |
+    |── POST .../enforce ──>|                           |
     |   (policy_marcus)     |── push teen DNS ────────>|
     |<── 200 ───────────────|                           |`,
     steps: [
@@ -495,10 +489,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 3,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_lily/enforce",
         description: "Enforce Lily's strict policy on NextDNS",
         requestBody: `{
-  "policy_id": "pol_lily",
   "platforms": ["comp_ndns_lily"]
 }`,
         responseBody: `{
@@ -511,10 +504,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 4,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_marcus/enforce",
         description: "Enforce Marcus's teen policy on NextDNS",
         requestBody: `{
-  "policy_id": "pol_marcus",
   "platforms": ["comp_ndns_marcus"]
 }`,
         responseBody: `{
@@ -545,7 +537,7 @@ export const RECIPES: Recipe[] = [
     |                       |                       |
     |                       |<── GET /policies ─────|
     |                       |── 200 (read-only) ───>|
-    |                       |<── POST /enforce ─────|
+    |                       |<── POST .../enforce ──|
     |                       |── 200 results ───────>|`,
     steps: [
       {
@@ -603,11 +595,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 4,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_jake/enforce",
         description: "Sarah triggers enforcement from her device during her custody time",
-        requestBody: `{
-  "policy_id": "pol_jake"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "android", "status": "success", "rules_pushed": 18 }
@@ -637,7 +627,7 @@ export const RECIPES: Recipe[] = [
     |── PUT /rules/{id} ───>|                   |              |
     |   (app_block)         |                   |              |
     |<── 200 updated ───────|                   |              |
-    |── POST /enforce ─────>|── block domain ──>|              |
+    |── POST .../enforce ──>|── block domain ──>|              |
     |                       |── block app ──────|─────────────>|
     |<── 200 results ───────|                   |              |`,
     steps: [
@@ -698,10 +688,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 4,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_son01/enforce",
         description: "Push both blocking rules to NextDNS and Android",
         requestBody: `{
-  "policy_id": "pol_son",
   "platforms": ["comp_ndns_son", "comp_android_son"]
 }`,
         responseBody: `{
@@ -882,7 +871,7 @@ export const RECIPES: Recipe[] = [
     actors: ["Parent App", "Phosra API", "NextDNS"],
     flowDiagram: `Parent App          Phosra API            NextDNS
     |                       |                           |
-    |── POST /enforce ─────>|── push rules ────────────>|
+    |── POST .../enforce ──>|── push rules ────────────>|
     |                       |<── 401 unauthorized ──────|
     |<── 200 (failed) ──────|                           |
     |── GET /results ──────>|                           |
@@ -891,18 +880,16 @@ export const RECIPES: Recipe[] = [
     |   (new API key)       |── verify new key ────────>|
     |                       |<── 200 ok ────────────────|
     |<── 200 re-verified ───|                           |
-    |── POST /enforce ─────>|── push rules ────────────>|
+    |── POST .../enforce ──>|── push rules ────────────>|
     |                       |<── 200 ok ────────────────|
     |<── 200 success ───────|                           |`,
     steps: [
       {
         number: 1,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/{childID}/enforce",
         description: "Attempt enforcement \u2014 it fails because the API key was rotated",
-        requestBody: `{
-  "policy_id": "pol_family01"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "nextdns", "status": "failed", "error": "authentication_failed", "message": "NextDNS returned 401: Invalid API key" }
@@ -946,11 +933,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 4,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/{childID}/enforce",
         description: "Retry enforcement with the new verified credentials",
-        requestBody: `{
-  "policy_id": "pol_family01"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "nextdns", "status": "success", "rules_pushed": 8 }
@@ -978,7 +963,7 @@ export const RECIPES: Recipe[] = [
     |                       |   (HMAC-signed)       |
     |<── 200 test ok ───────|<── 200 ──────────────|
     |                       |                       |
-    |── POST /enforce ─────>|                       |
+    |── POST .../enforce ──>|                       |
     |<── 200 ───────────────|                       |
     |                       |── POST event ────────>|
     |                       |   enforcement.done    |`,
@@ -1022,11 +1007,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 3,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/{childID}/enforce",
         description: "Trigger an enforcement \u2014 webhook fires automatically after completion",
-        requestBody: `{
-  "policy_id": "pol_dash01"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "nextdns", "status": "success", "rules_pushed": 8 }
@@ -1062,14 +1045,14 @@ export const RECIPES: Recipe[] = [
     |                       |                           |
     |── PUT /pause ────────>|                           |
     |<── 200 paused ────────|                           |
-    |── POST /enforce ─────>|── remove restrictions ──>|
+    |── POST .../enforce ──>|── remove restrictions ──>|
     |<── 200 cleared ───────|                           |
     |                       |                           |
     |   [... appointment time passes ...]               |
     |                       |                           |
     |── PUT /activate ─────>|                           |
     |<── 200 active ────────|                           |
-    |── POST /enforce ─────>|── restore restrictions ─>|
+    |── POST .../enforce ──>|── restore restrictions ─>|
     |<── 200 enforced ──────|                           |`,
     steps: [
       {
@@ -1094,11 +1077,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 2,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_child01/enforce",
         description: "Enforce the paused state \u2014 removes active restrictions from platforms",
-        requestBody: `{
-  "policy_id": "pol_child01"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "nextdns", "status": "success", "rules_pushed": 0, "details": "Policy paused: all restrictions removed" },
@@ -1124,11 +1105,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 4,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_child01/enforce",
         description: "Push all restrictions back to platforms",
-        requestBody: `{
-  "policy_id": "pol_child01"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "nextdns", "status": "success", "rules_pushed": 8 },
@@ -1153,7 +1132,7 @@ export const RECIPES: Recipe[] = [
     |── PUT /rules/{id} ───>|                   |              |
     |   (custom domains)    |                   |              |
     |<── 200 updated ───────|                   |              |
-    |── POST /enforce ─────>|── block domains ─>|              |
+    |── POST .../enforce ──>|── block domains ─>|              |
     |                       |── block domains ──|─────────────>|
     |<── 200 results ───────|                   |              |`,
     steps: [
@@ -1182,10 +1161,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 2,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_child11/enforce",
         description: "Push the custom blocklist to both DNS providers",
         requestBody: `{
-  "policy_id": "pol_child11",
   "platforms": ["comp_ndns_home", "comp_cb_school"]
 }`,
         responseBody: `{
@@ -1233,7 +1211,7 @@ export const RECIPES: Recipe[] = [
     |── POST /compliance ──>| (\u00D7200)                   |
     |   (CleanBrowsing)     |── verify ───────────────>|
     |                       |                          |
-    |── POST /enforce ─────>| (\u00D7200)                   |
+    |── POST .../enforce ──>| (\u00D7200)                   |
     |                       |── push rules ───────────>|
     |<── 200 results ───────|                          |`,
     steps: [
@@ -1291,11 +1269,9 @@ export const RECIPES: Recipe[] = [
       {
         number: 4,
         method: "POST",
-        endpoint: "/api/v1/enforce",
+        endpoint: "/api/v1/children/child_jane_doe/enforce",
         description: "Enforce policies in batch \u2014 called for each student's policy",
-        requestBody: `{
-  "policy_id": "pol_jane_doe"
-}`,
+        requestBody: `{}`,
         responseBody: `{
   "results": [
     { "platform": "cleanbrowsing", "status": "success", "rules_pushed": 6 }
@@ -1324,7 +1300,7 @@ export const RECIPES: Recipe[] = [
     |\u2500\u2500 POST /children/     |                           |
     |   {id}/standards \u2500\u2500\u2500>|\u2500\u2500 merge rules \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500  |
     |<\u2500\u2500 200 adopted \u2500\u2500\u2500\u2500\u2500\u2500\u2500|                           |
-    |\u2500\u2500 POST /enforce \u2500\u2500\u2500\u2500\u2500>|\u2500\u2500 push updated rules \u2500\u2500\u2500>|
+    |\u2500\u2500 POST .../enforce \u2500\u2500>|\u2500\u2500 push updated rules \u2500\u2500\u2500>|
     |<\u2500\u2500 200 results \u2500\u2500\u2500\u2500\u2500\u2500\u2500|                           |`,
     steps: [
       {
@@ -1397,9 +1373,9 @@ export const RECIPES: Recipe[] = [
   {
     id: "connect-parental-source",
     title: "Connecting a Parental Control App",
-    summary: "Link a parental control source and push rules through its API",
+    summary: "[Preview] Link a parental control source and push rules through its API",
     icon: "\u{1F4F1}",
-    tags: ["Sources", "Managed API"],
+    tags: ["Sources", "Managed API", "Preview"],
     scenario: "The Martinez family already uses a monitoring app to watch their daughter Mia's phone. Now they want to connect it to Phosra so they can push Phosra's policy rules through the app's API. Since this app has a managed API integration, Phosra can automate the rule push. For apps without an API (like Net Nanny), Phosra would instead generate guided setup steps.",
     actors: ["Parent App", "Phosra API", "Source Provider"],
     flowDiagram: `Parent App          Phosra API         Source Provider
@@ -1479,6 +1455,6 @@ export const RECIPES: Recipe[] = [
         whatHappens: "Individual rule push for more granular control. The source confirms the web filter is applied with full support. The 'verified' flag confirms the rule is active on the source side."
       }
     ],
-    keyTeachingPoint: "Parental control apps are 'sources' that Phosra pushes rules through. Apps with APIs get automated syncing; apps without APIs get guided setup instructions. The API handles both transparently."
+    keyTeachingPoint: "Parental control apps are 'sources' that Phosra pushes rules through. Apps with APIs get automated syncing; apps without APIs get guided setup instructions. The API handles both transparently. Note: This API is in preview and subject to change."
   },
 ]
