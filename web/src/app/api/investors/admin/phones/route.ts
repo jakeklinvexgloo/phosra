@@ -7,9 +7,17 @@ import { withAuth } from "@workos-inc/authkit-nextjs"
 export const runtime = "nodejs"
 
 /**
- * Verify the caller is an authenticated admin via WorkOS.
+ * Verify the caller is an authenticated admin via WorkOS (or sandbox session).
  */
-async function requireAdmin(): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
+async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
+  // Sandbox mode: trust X-Sandbox-Session header
+  if (process.env.NEXT_PUBLIC_SANDBOX_MODE === "true") {
+    const sandbox = req.headers.get("x-sandbox-session")
+    if (sandbox) {
+      return { authorized: true }
+    }
+  }
+
   try {
     const { user } = await withAuth()
     if (!user) {
@@ -33,8 +41,8 @@ async function requireAdmin(): Promise<{ authorized: true } | { authorized: fals
  * GET /api/investors/admin/phones
  * List all approved phone numbers with last login info.
  */
-export async function GET() {
-  const auth = await requireAdmin()
+export async function GET(req: NextRequest) {
+  const auth = await requireAdmin(req)
   if (!auth.authorized) return auth.response
 
   const phones = await query<{
@@ -62,7 +70,7 @@ export async function GET() {
  * Add an approved phone number and auto-send invite SMS.
  */
 export async function POST(req: NextRequest) {
-  const auth = await requireAdmin()
+  const auth = await requireAdmin(req)
   if (!auth.authorized) return auth.response
 
   try {
@@ -123,7 +131,7 @@ export async function POST(req: NextRequest) {
  * Deactivate an approved phone number (soft delete).
  */
 export async function DELETE(req: NextRequest) {
-  const auth = await requireAdmin()
+  const auth = await requireAdmin(req)
   if (!auth.authorized) return auth.response
 
   try {

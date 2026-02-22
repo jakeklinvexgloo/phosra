@@ -9,8 +9,10 @@ import {
   Handshake, Presentation, Phone, ChevronDown, ChevronRight,
   CheckCircle2, Circle, Clock, ArrowRight, Sparkles,
   Bot, User, AlertTriangle, Eye, Plus, X, Power, Copy, Loader2,
-  Smartphone,
+  Smartphone, AlertCircle,
 } from "lucide-react"
+import PhoneInput from "@/components/investors/PhoneInput"
+import { formatPhoneDisplay } from "@/lib/investors/phone"
 
 /* ═══════════════════════════════════════════════════════════════
    DATA: Fundraise plan — milestones, agents, founder tasks
@@ -495,11 +497,21 @@ export default function FundraiseCommandCenter() {
   const [addLoading, setAddLoading] = useState(false)
   const [addError, setAddError] = useState("")
   const [copiedLink, setCopiedLink] = useState(false)
+  const [confirmDeactivate, setConfirmDeactivate] = useState<string | null>(null)
+  const [showAddConfirm, setShowAddConfirm] = useState(false)
+
+  /** Build headers including sandbox session when applicable. */
+  const investorAdminHeaders = useCallback((extra?: Record<string, string>) => {
+    const h: Record<string, string> = { "Content-Type": "application/json", ...extra }
+    const sandbox = typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
+    if (sandbox) h["X-Sandbox-Session"] = sandbox
+    return h
+  }, [])
 
   const fetchPhones = useCallback(async () => {
     setPhonesLoading(true)
     try {
-      const res = await fetch("/api/investors/admin/phones")
+      const res = await fetch("/api/investors/admin/phones", { headers: investorAdminHeaders() })
       if (res.ok) {
         const data = await res.json()
         setInvestorPhones(data.phones || [])
@@ -509,7 +521,7 @@ export default function FundraiseCommandCenter() {
     } finally {
       setPhonesLoading(false)
     }
-  }, [])
+  }, [investorAdminHeaders])
 
   useEffect(() => {
     if (activeTab === "investor-access") {
@@ -519,12 +531,16 @@ export default function FundraiseCommandCenter() {
 
   const handleAddInvestor = async () => {
     if (!addForm.phone) { setAddError("Phone number is required"); return }
+    if (addForm.phone.length < 10) { setAddError("Enter a valid 10-digit phone number"); return }
+    // Show confirmation before sending SMS
+    if (!showAddConfirm) { setShowAddConfirm(true); return }
+    setShowAddConfirm(false)
     setAddLoading(true)
     setAddError("")
     try {
       const res = await fetch("/api/investors/admin/phones", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: investorAdminHeaders(),
         body: JSON.stringify(addForm),
       })
       if (res.ok) {
@@ -544,15 +560,18 @@ export default function FundraiseCommandCenter() {
 
   const handleToggleActive = async (phone: string, currentlyActive: boolean) => {
     if (currentlyActive) {
+      // Require confirmation for deactivation
+      if (confirmDeactivate !== phone) { setConfirmDeactivate(phone); return }
+      setConfirmDeactivate(null)
       await fetch("/api/investors/admin/phones", {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: investorAdminHeaders(),
         body: JSON.stringify({ phone }),
       })
     } else {
       await fetch("/api/investors/admin/phones", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: investorAdminHeaders(),
         body: JSON.stringify({ phone }),
       })
     }
@@ -824,7 +843,7 @@ export default function FundraiseCommandCenter() {
                 <strong className="text-foreground">The problem:</strong> 67+ child safety laws are now in effect or pending. Platforms face a compliance cliff — COPPA 2.0 enforcement hits April 2026, half of US states mandate age gating, EU DSA enforcement is ramping. Every platform is building bespoke compliance solutions because no unified API exists.
               </p>
               <p>
-                <strong className="text-foreground">The solution:</strong> Phosra is the Stripe for child safety compliance — a single API that maps 45 enforcement rule categories across 67+ laws and pushes controls to 15+ provider adapters. Define once, enforce everywhere.
+                <strong className="text-foreground">The solution:</strong> Phosra is the Plaid for child safety compliance — a single API that maps 45 enforcement rule categories across 67+ laws and pushes controls to 15+ provider adapters. Define once, enforce everywhere.
               </p>
               <p>
                 <strong className="text-foreground">The market:</strong> $5-8B combined market (parental controls + age verification + compliance tooling) growing at 12%+ CAGR, driven by regulatory mandate, not discretionary spend.
@@ -1124,7 +1143,7 @@ export default function FundraiseCommandCenter() {
                       <tr key={p.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                         <td className="py-2.5 px-4 text-foreground font-medium">{p.name || "—"}</td>
                         <td className="py-2.5 px-4 text-muted-foreground">{p.company || "—"}</td>
-                        <td className="py-2.5 px-4 text-muted-foreground font-mono">{p.phone_e164}</td>
+                        <td className="py-2.5 px-4 text-muted-foreground font-mono">{formatPhoneDisplay(p.phone_e164)}</td>
                         <td className="py-2.5 px-4">
                           <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
                             p.is_active
@@ -1139,17 +1158,35 @@ export default function FundraiseCommandCenter() {
                           {p.last_login ? new Date(p.last_login).toLocaleDateString() : "Never"}
                         </td>
                         <td className="py-2.5 px-4 text-right">
-                          <button
-                            onClick={() => handleToggleActive(p.phone_e164, p.is_active)}
-                            className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded transition-colors ${
-                              p.is_active
-                                ? "text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
-                                : "text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20"
-                            }`}
-                          >
-                            <Power className="w-3 h-3" />
-                            {p.is_active ? "Deactivate" : "Activate"}
-                          </button>
+                          {confirmDeactivate === p.phone_e164 ? (
+                            <div className="inline-flex items-center gap-1">
+                              <span className="text-[10px] text-muted-foreground mr-1">Revoke access?</span>
+                              <button
+                                onClick={() => handleToggleActive(p.phone_e164, true)}
+                                className="text-[10px] font-medium px-2 py-1 rounded text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
+                              >
+                                Yes
+                              </button>
+                              <button
+                                onClick={() => setConfirmDeactivate(null)}
+                                className="text-[10px] font-medium px-2 py-1 rounded text-muted-foreground hover:bg-muted/60 transition-colors"
+                              >
+                                No
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => handleToggleActive(p.phone_e164, p.is_active)}
+                              className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded transition-colors ${
+                                p.is_active
+                                  ? "text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                                  : "text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20"
+                              }`}
+                            >
+                              <Power className="w-3 h-3" />
+                              {p.is_active ? "Deactivate" : "Activate"}
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -1172,12 +1209,12 @@ export default function FundraiseCommandCenter() {
                 <div className="p-5 space-y-4">
                   <div>
                     <label className="text-xs font-medium text-muted-foreground mb-1 block">Phone Number *</label>
-                    <input
-                      type="tel"
-                      placeholder="(555) 555-1234"
+                    <PhoneInput
                       value={addForm.phone}
-                      onChange={(e) => setAddForm((f) => ({ ...f, phone: e.target.value }))}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                      onChange={(raw) => setAddForm((f) => ({ ...f, phone: raw }))}
+                      onSubmit={handleAddInvestor}
+                      disabled={addLoading}
+                      error={addError && addForm.phone.length > 0 && addForm.phone.length < 10 ? "Enter a valid 10-digit number" : undefined}
                     />
                   </div>
                   <div>
@@ -1212,9 +1249,22 @@ export default function FundraiseCommandCenter() {
                   </div>
                   {addError && <p className="text-red-500 text-xs">{addError}</p>}
                 </div>
+                {showAddConfirm && (
+                  <div className="mx-5 mb-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-medium text-amber-800 dark:text-amber-300">Confirm SMS Invite</p>
+                        <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+                          This will send a real SMS to the phone number. Continue?
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <div className="flex justify-end gap-2 px-5 py-4 border-t border-border">
                   <button
-                    onClick={() => { setShowAddModal(false); setAddError("") }}
+                    onClick={() => { setShowAddModal(false); setAddError(""); setShowAddConfirm(false) }}
                     className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Cancel
@@ -1222,10 +1272,14 @@ export default function FundraiseCommandCenter() {
                   <button
                     onClick={handleAddInvestor}
                     disabled={addLoading}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-brand-green text-[#0D1B2A] text-xs font-semibold hover:bg-brand-green/90 transition-colors disabled:opacity-50"
+                    className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold transition-colors disabled:opacity-50 ${
+                      showAddConfirm
+                        ? "bg-amber-500 hover:bg-amber-600 text-white"
+                        : "bg-brand-green hover:bg-brand-green/90 text-[#0D1B2A]"
+                    }`}
                   >
                     {addLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
-                    Add & Send Invite
+                    {showAddConfirm ? "Confirm & Send SMS" : "Add & Send Invite"}
                   </button>
                 </div>
               </div>
