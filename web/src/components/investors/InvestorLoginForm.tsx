@@ -5,7 +5,7 @@ import { ArrowLeft, Loader2, Shield, UserPlus } from "lucide-react"
 import PhoneInput from "./PhoneInput"
 import OtpInput from "./OtpInput"
 
-type LoginState = "phone_input" | "otp_sent" | "verifying" | "invite_claim" | "claiming"
+type LoginState = "phone_input" | "otp_sent" | "verifying" | "invite_loading" | "invite_claim" | "claiming"
 
 interface InvestorLoginFormProps {
   onAuthenticated: () => void
@@ -16,7 +16,7 @@ export default function InvestorLoginForm({
   onAuthenticated,
   inviteCode,
 }: InvestorLoginFormProps) {
-  const [loginState, setLoginState] = useState<LoginState>("phone_input")
+  const [loginState, setLoginState] = useState<LoginState>(inviteCode ? "invite_loading" : "phone_input")
   const [phone, setPhone] = useState("")
   const [otpValue, setOtpValue] = useState("")
   const [error, setError] = useState("")
@@ -43,9 +43,11 @@ export default function InvestorLoginForm({
           setReferrerName(data.referrerName || "An investor")
           setReferrerCompany(data.referrerCompany || "")
           setLoginState("invite_claim")
+        } else {
+          setLoginState("phone_input")
         }
       } catch {
-        // Invite invalid, fall through to normal login
+        if (!cancelled) setLoginState("phone_input")
       }
     }
 
@@ -141,6 +143,17 @@ export default function InvestorLoginForm({
     setOtpValue("")
     setError("")
   }, [])
+
+  if (loginState === "invite_loading") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 text-brand-green animate-spin mx-auto mb-4" />
+          <p className="text-sm text-white/40">Loading invite...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
