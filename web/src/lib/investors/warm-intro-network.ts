@@ -6999,6 +6999,792 @@ const FAITH_FAMILY: WarmIntroTarget[] = [
   },
 ]
 
+
+// ─── Faith & Family Gatekeepers (Operational Decision-Makers) ────────────────
+
+const FAITH_GATEKEEPERS: WarmIntroTarget[] = [
+  // ─── Tier 1 ───────────────────────────────────────────────────────────────
+
+  {
+    id: "ryan-haning",
+    name: "Ryan Haning",
+    fundOrCompany: "Chick-fil-A / Cathy Family Office",
+    role: "Executive Director & Head of Family Office",
+    category: "faith-family" as const,
+    type: "family-office" as const,
+    checkSizeRange: "$1M–$10M",
+    stagePreference: "Series A / Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/ryan-haning-c-p-a-56710748/",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Ryan Haning is the operational brain of the Cathy family's $33.6B wealth — a CPA-trained investment director who evaluates every VC and PE deal before it reaches Dan Cathy. Pitching Phosra to Ryan means pitching to the person who actually approves checks, not a symbolic patriarch. The Cathy family's deep Southern Baptist faith and public commitment to family values makes child safety compliance infrastructure a culturally coherent ask. His CPA background means he will immediately grasp the regulatory liability angle and enterprise ARR model.",
+    coppaInterest: "none" as const,
+    fundSignal: "unknown" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "Engage VC Atlanta is the premier Southeast tech investor community — Ryan is reachable through Atlanta VC dinners and LP events hosted by Engage, where Cathy family presence is known.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "alumni-network" as const,
+        description: "Atlanta-area CPA professional networks (GSCPA chapter, AICPA SFO section) overlap directly with Ryan's credentialed background. An intro through a mutual CPA contact carries immediate professional credibility.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Family Office Exchange (FOX) and UHNW Institute conferences attract exactly this profile — senior family office operational directors. A warm hallway intro at FOX Annual Forum could open the door.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 1 as 1|2|3,
+    approachStrategy: {
+      recommended: "Warm intro through Engage VC Atlanta network or Atlanta CPA professional circle",
+      steps: [
+        "Identify a mutual contact in the Engage VC Atlanta ecosystem who has dealt with Cathy Family Office and can make a credible peer introduction.",
+        "Frame the initial ask as a 20-minute call about child safety compliance liability in the digital product landscape — not a fundraise call.",
+        "Lead with the regulatory risk angle: COPPA 2.0, state AADC laws, and the FTC enforcement wave create enterprise-grade demand that maps directly to the Cathy family's values and commercial instincts.",
+        "If direct intro fails, attend GSCPA Family Office SIG events and build rapport over multiple touchpoints before requesting a meeting.",
+      ],
+      openingAngle: "The Cathy family built a brand on family values — but the next generation of that brand lives online, and COPPA enforcement is hitting platform companies with eight-figure fines. Phosra is the compliance infrastructure that makes digital family safety commercially scalable.",
+    },
+    status: "identified" as const,
+    notes: "The actual decision-maker for the Cathy Family Office — while Dan Cathy is the patriarch, Ryan evaluates and recommends all investment opportunities. His CPA discipline means he will want to see clean cap table, clear ARR metrics, and a defensible regulatory moat before bringing anything to the family. Do not cold-approach — this relationship requires a warm path through Atlanta's tightly networked evangelical business community.",
+  },
+
+  {
+    id: "finny-kuruvilla",
+    name: "Finny Kuruvilla MD PhD",
+    fundOrCompany: "Eventide Asset Management",
+    role: "Co-CIO & Managing Director (Ventures)",
+    category: "faith-family" as const,
+    type: "vc" as const,
+    checkSizeRange: "$500K–$5M",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/finny-kuruvilla-7a1796/",
+      website: "https://www.eventideinvestments.com",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote: "Finny Kuruvilla is not simply a faith-aligned allocator — he is the founding architect of Eventide's 'business as a force for good' investment theology, holds 50%+ of the firm, and personally closed Eventide Ventures at $83M in April 2024 with an explicit 'redemptive technology' mandate. Phosra is textbook Eventide Ventures material: it is infrastructure that makes the internet structurally safer for children, generates enterprise SaaS revenue, and addresses a legal compliance wave (COPPA 2.0, AADC) that creates durable demand. Finny's MD/PhD background means he understands complex technical and regulatory systems — the pitch should be precise, not vague.",
+    coppaInterest: "portfolio-signal" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description: "Eventide regularly participates in faith-and-finance conferences (e.g., Praxis Academy, Kingdom Advisors Annual Conference). Finny or his team appear at events where redemptive business is the organizing theme.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "portfolio-founder" as const,
+        description: "Eventide Ventures' portfolio companies include redemptive tech founders who can speak to the thesis fit and provide a warm peer introduction from within the existing portfolio.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "content-warmup" as const,
+        description: "Finny engages publicly with ideas around technology ethics and human flourishing. Publishing substantive content (blog post, substack, or LinkedIn article) on child safety as redemptive infrastructure creates an organic warm touchpoint.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 1 as 1|2|3,
+    approachStrategy: {
+      recommended: "Portfolio-founder warm intro or Kingdom Advisors / Praxis Academy conference approach",
+      steps: [
+        "Map Eventide Ventures' current portfolio to identify a founder who has worked with Finny directly and can vouch for the quality of the opportunity.",
+        "Request a 15-minute call framed around 'redemptive technology infrastructure' — specifically how API-layer compliance tooling changes the economics of child safety at scale.",
+        "Prepare a two-page brief using Eventide's own 'business as a force for good' framework, showing how Phosra scores on their stakeholder impact matrix.",
+        "Follow up with the specific COPPA 2.0 and state AADC legislative pipeline as evidence that regulatory tailwinds will drive sustained enterprise demand.",
+      ],
+      openingAngle: "Eventide Ventures deployed $83M to back companies that do good and do well. Phosra is the compliance API that makes child safety profitable for platforms and mandatory under federal law — a redemptive technology investment with a regulatory moat.",
+    },
+    status: "identified" as const,
+    notes: "Eventide Ventures ($83M fund, April 2024) actively deploys into 'redemptive technology' startups — a child safety compliance API is a textbook fit for their faith-driven venture mandate. Finny is both the ideological architect and the operational decision-maker; getting his intellectual conviction is equivalent to getting the check. Priority Tier 1 with highest thesis alignment of any faith-aligned VC.",
+  },
+
+  {
+    id: "thomas-lowe-maclellan",
+    name: "Thomas Lowe",
+    fundOrCompany: "Maclellan Foundation",
+    role: "CIO",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$500K–$3M",
+    stagePreference: "Seed / Series A (via MRI fund)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/thomas-lowe-61323316/",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote: "Thomas Lowe manages Maclellan's Mission Related Investment fund — one of the very few evangelical foundations that has built a direct investment vehicle sized for pre-seed and seed deals, explicitly seeking market-rate returns alongside mission alignment in child and family protection. He is the professional evaluator, not a ceremonial title: he underwrites the MRI fund's deals independently of the grants team. Phosra hits both the mission pillar (child/family safety) and the return requirement (enterprise SaaS with regulatory moat) that MRI mandates demand.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "Mission Investors Exchange (MIE) and the Council on Foundations are the primary professional networks for foundation investment officers. Thomas participates in these circles as a practitioner in MRI/PRI structuring.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Chattanooga's Christian philanthropic community is tightly networked. Regional faith-and-business forums (e.g., Chattanooga Christian Community Foundation events) are natural venues to build a relationship before a direct ask.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "attorney-intro" as const,
+        description: "Foundation legal counsel and impact investment attorneys who structure MRI/PRI deals often know every active foundation CIO in a given region. A mutual attorney who has structured Maclellan instruments could make a credible introduction.",
+        strength: 3 as 1|2|3|4|5,
+      },
+    ],
+    tier: 1 as 1|2|3,
+    approachStrategy: {
+      recommended: "Mission Investors Exchange professional network introduction",
+      steps: [
+        "Identify a mutual contact in the MIE network or impact investing legal community who knows Thomas and can frame Phosra as a mission-aligned, market-rate opportunity.",
+        "Lead with the MRI mandate: explicitly position Phosra as designed for mission-first investors who require market-rate returns — not a grant or a below-market PRI.",
+        "Provide a one-page MRI brief showing how Phosra maps to Maclellan's child/family protection mission pillar alongside a financial summary showing the path to enterprise ARR.",
+        "Offer to present to the MRI investment committee as part of their standard diligence process.",
+      ],
+      openingAngle: "Maclellan's MRI fund was built for exactly this moment: a market-rate investment that also makes the internet structurally safer for children — enterprise compliance infrastructure addressing a federal regulatory wave.",
+    },
+    status: "identified" as const,
+    notes: "Maclellan's MRI fund actively seeks market-rate investments in child/family protection — one of the few evangelical foundations with a direct investment vehicle sized for pre-seed/seed deals. Thomas Lowe is the professional gatekeeper for all MRI decisions, operating with genuine investment autonomy. This is a rare combination of perfect mission alignment and genuine check-writing capacity at the seed stage.",
+  },
+
+  {
+    id: "randall-damstra",
+    name: "Randall Damstra",
+    fundOrCompany: "Ottawa Avenue Private Capital (DeVos Family Office)",
+    role: "CEO & CIO",
+    category: "faith-family" as const,
+    type: "family-office" as const,
+    checkSizeRange: "$5M–$50M",
+    stagePreference: "Growth / PE",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/randall-damstra-a8b3b7/",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Randall Damstra is the professional CIO of one of America's largest evangelical family offices, having just closed a $3.42B PE fund (9th largest US PE raise in late 2024). He operates with 23 investment advisory staff and 35+ co-investors, which means he runs an institutional-grade process despite being a family office. The DeVos family's evangelical values, Betsy DeVos's tenure as Education Secretary, and the family's decades-long focus on school choice and family formation make child safety compliance technology a natural values-aligned conversation — Damstra is the professional who evaluates whether that conversation becomes a check.",
+    coppaInterest: "none" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "Grand Rapids' West Michigan business community is tight-knit and evangelical-dominated. The West Michigan Policy Forum and local YPO/EO chapters include Ottawa Avenue contacts who can make a warm intro.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Family Office Networks (FOX, iConnections) and ILPA events attract senior family office CIOs. Randall's institutional scale means he participates in LP-facing conferences where introductions happen naturally.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "2nd-degree-weak" as const,
+        description: "Ottawa Avenue's 35+ co-investors across PE deals include institutional GPs who have worked with Randall on fund commitments — a GP who can intro Phosra as a co-investment opportunity carries weight.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 1 as 1|2|3,
+    approachStrategy: {
+      recommended: "West Michigan evangelical business network introduction, framing Phosra as a values-aligned technology co-investment",
+      steps: [
+        "Map Ottawa Avenue's PE co-investors to identify a GP or fund manager who has a relationship with Randall and can introduce Phosra as a portfolio-adjacent opportunity.",
+        "Frame the conversation around the values alignment first — DeVos family legacy in education and family formation maps directly to child safety infrastructure.",
+        "Acknowledge the check size mismatch upfront: position as a strategic minority stake or co-investment alongside other faith-aligned family offices rather than a standalone PE-sized check.",
+        "Prepare institutional-grade materials: Ottawa Avenue runs a professional investment committee process, not an informal family decision.",
+      ],
+      openingAngle: "The DeVos family spent decades fighting for children's educational rights — Phosra fights for children's digital rights with the same conviction, now backed by federal law.",
+    },
+    status: "identified" as const,
+    notes: "The DeVos family's evangelical values and education focus (Betsy DeVos was Education Secretary) make child safety compliance tech a natural conversation — Damstra is the professional gatekeeper for all alternative investments. Note the check size preference is larger than Phosra's current raise; position as a strategic introduction for future rounds or as a smaller co-investment alongside other faith-aligned family offices.",
+  },
+
+  {
+    id: "mart-green",
+    name: "Mart Green",
+    fundOrCompany: "Hobby Lobby / Green Family",
+    role: "Ministry Investment Officer",
+    category: "faith-family" as const,
+    type: "family-office" as const,
+    checkSizeRange: "$1M–$10M",
+    stagePreference: "Seed / Growth",
+    contact: {
+      website: "https://illuminations.bible",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Mart Green holds the explicit title of Ministry Investment Officer for America's most prominent evangelical family — a role created specifically to evaluate and deploy the Green family's impact and ministry capital. He co-founded IllumiNations (Bible translation coalition) and David Green transferred all Hobby Lobby voting stock to a charitable trust in 2022, meaning the family's capital is now structurally committed to mission alignment. Anti-trafficking and child protection are explicit Green family priorities. Mart is the designated decision-maker for this capital channel — not an heir, not a trustee committee, but a named operational officer.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "IllumiNations coalition includes major evangelical organizations (American Bible Society, Wycliffe, Biblica) whose leadership overlaps with Mart's professional network. A contact through the Bible translation or anti-trafficking coalition space creates natural common ground.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "The Gathering (faith-based philanthropists), National Christian Foundation events, and Praxis Academy are venues where Mart's network is active. These conferences are the watering hole for evangelical impact capital.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "content-warmup" as const,
+        description: "Mart engages publicly on child protection and Bible access. A thoughtful LinkedIn or email outreach connecting Phosra's mission to his anti-trafficking public statements could open a direct conversation.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 1 as 1|2|3,
+    approachStrategy: {
+      recommended: "Introduction through anti-trafficking or child protection coalition contacts who intersect with IllumiNations or Green family ministry work",
+      steps: [
+        "Identify an anti-trafficking or child protection nonprofit leader who has received Green family funding and can introduce Phosra as the technology complement to their programmatic work.",
+        "Lead with mission, not returns: frame Phosra as infrastructure that makes the digital enforcement of child protection laws scalable — connecting legislative mandates to real-world protection.",
+        "Reference the Green family's explicit child protection priority and how Phosra's compliance API accelerates the enforcement of laws like COPPA 2.0 and state AADC legislation.",
+        "Have a term sheet-ready materials package prepared for a fast conversion — Mart makes decisions with family authority, not through a slow investment committee.",
+      ],
+      openingAngle: "America's most committed evangelical family has made child protection an explicit priority — Phosra is the technology that makes that protection legally enforceable at internet scale.",
+    },
+    status: "identified" as const,
+    notes: "Mart is the designated 'Ministry Investment Officer' for America's most prominent evangelical family — he decides where the Green family deploys impact capital, and anti-trafficking/child-protection is an explicit priority. The 2022 trust structure means this capital now operates with a formal governance mandate toward mission, making Mart's role more formalized and his authority clearer than most family office gatekeepers.",
+  },
+
+  // ─── Tier 2 ───────────────────────────────────────────────────────────────
+
+  {
+    id: "michael-shields-ncf",
+    name: "Michael Shields CFA",
+    fundOrCompany: "National Christian Foundation",
+    role: "CIO",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$500K–$5M",
+    stagePreference: "Seed / Series A (DAF impact)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/michael-shields-a7b44a16/",
+      website: "https://www.ncfgiving.com",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Michael Shields is the investment gatekeeper for $4B+ in DAF assets and the professional who recommends investment vehicles to over 100,000 evangelical donors. His authority is not ceremonial: he runs NCF's investment team, oversees impact investing vehicles, and has direct influence over which opportunities reach NCF's massive donor base. A Phosra allocation recommendation from Shields could trigger follow-on capital from evangelical donors who trust NCF's investment judgment. He is a CFA charterholder operating at institutional scale within a faith-driven mandate.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "NCF is a founding institution in the faith-and-finance ecosystem. Shields participates in Christian financial professional networks (Kingdom Advisors, CAMA) where his peer relationships run deep.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "The Gathering and Outcomes Conference (National Association of Evangelicals) are attended by NCF leadership. Shields or his team are accessible at these faith-philanthropy intersections.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "content-warmup" as const,
+        description: "NCF publishes extensively on impact investing and donor education. Contributing a thought piece on child safety technology as a biblical stewardship investment creates intellectual credibility before a direct approach.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 2 as 1|2|3,
+    approachStrategy: {
+      recommended: "Kingdom Advisors or NCF donor network introduction through a shared evangelical finance professional",
+      steps: [
+        "Identify a mutual contact in the Kingdom Advisors network or a financial advisor who channels clients to NCF and can make a peer introduction to Shields.",
+        "Frame Phosra as a new impact vehicle that NCF's investment team could evaluate for the DAF impact program — not as a cold fundraise pitch.",
+        "Emphasize the distribution multiplier: a Shields recommendation reaches 100,000+ NCF donors who are already primed for faith-aligned investing.",
+        "Prepare a one-page impact brief showing how Phosra scores on NCF's stated values framework, alongside standard financial diligence materials.",
+      ],
+      openingAngle: "NCF's 100,000 donors are already committed to child welfare — Phosra gives them a way to invest in the technology infrastructure that makes that welfare legally enforceable.",
+    },
+    status: "identified" as const,
+    notes: "NCF's CIO has direct authority over impact investment recommendations reaching 100,000+ evangelical donors — a Phosra allocation could trigger significant follow-on from the donor base. The DAF structure means NCF doesn't write checks from its own balance sheet in the traditional VC sense; the play here is getting Phosra listed as a recommended impact vehicle for NCF donor capital.",
+  },
+
+  {
+    id: "dave-morehead-baylor",
+    name: "Dave Morehead CFA",
+    fundOrCompany: "Baylor University",
+    role: "CIO",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$1M–$5M",
+    stagePreference: "Seed / Series A (emerging managers)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/davidmorehead/",
+      twitter: "https://twitter.com/CIO_Baylor",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Dave Morehead is the 2025 Endowment/Foundation CIO of the Year (Institutional Investor) — a peer-validated signal that he runs one of the most respected emerging manager programs in faith-aligned endowment investing. His active presence on X (@CIO_Baylor) makes him uniquely accessible for thoughtful cold outreach among institutional allocators. Baylor's Baptist heritage and its 12.2% annualized returns demonstrate that Morehead balances mission and performance without compromise. The emerging manager program actively seeks differentiated venture allocations that larger endowments overlook.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "content-warmup" as const,
+        description: "Dave is unusually active on X (@CIO_Baylor) for an endowment CIO. Engaging substantively with his posts on emerging managers, venture allocation, and endowment strategy creates a warm digital relationship before a direct ask.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "alumni-network" as const,
+        description: "Baylor alumni in the tech and venture ecosystem provide natural warm intro paths — a Baylor alum who can speak to both the institutional fit and the product creates a credible peer bridge.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Institutional Investor's CIO Summit and NACUBO (National Association of College and University Business Officers) conferences are where Morehead participates as a recognized peer leader after his CIO of the Year award.",
+        strength: 3 as 1|2|3|4|5,
+      },
+    ],
+    tier: 2 as 1|2|3,
+    approachStrategy: {
+      recommended: "Content engagement on X followed by a direct LinkedIn message from a Baylor-connected founder or investor",
+      steps: [
+        "Engage genuinely with Dave's X (@CIO_Baylor) content on emerging managers and venture strategy for 2-3 weeks before any direct outreach.",
+        "Identify a Baylor alum in the tech/venture ecosystem who can provide a warm intro with direct personal context.",
+        "Frame the pitch around his emerging manager mandate: Phosra is a pre-institutional venture allocation that offers differentiated exposure to regulatory compliance infrastructure — an uncorrelated category.",
+        "Reference his CIO of the Year recognition and the intelligence it signals: this is a peer-to-peer conversation about a category opportunity most allocators are missing.",
+      ],
+      openingAngle: "You built one of the best emerging manager programs in faith-aligned endowment investing — Phosra is the kind of differentiated regulatory compliance infrastructure that most endowments will discover two years too late.",
+    },
+    status: "identified" as const,
+    notes: "CIO of the Year for 2025 with an active emerging manager program — one of the few university endowments both faith-aligned and actively seeking differentiated venture allocations. His X activity makes him the most digitally warm-able institutional allocator in the faith-aligned endowment universe. Pursue the content-warmup path aggressively before any direct meeting request.",
+  },
+
+  {
+    id: "brandon-pizzurro",
+    name: "Brandon Pizzurro CFP CFA",
+    fundOrCompany: "GuideStone Capital Management",
+    role: "President & CIO",
+    category: "faith-family" as const,
+    type: "strategic" as const,
+    checkSizeRange: "$5M–$25M",
+    stagePreference: "Growth / Strategic",
+    contact: {
+      website: "https://www.guidestonefunds.com",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Brandon Pizzurro manages $22.5B AUM including the largest faith-based mutual fund family ($18.9B) with Southern Baptist values screens. The strategic value of a GuideStone relationship is not primarily about the check size — it is about distribution to thousands of SBC churches and institutions who are themselves responsible for minor-heavy programming and who face the same digital child safety compliance obligations. Pizzurro is the professional who runs this asset management operation with institutional rigor; reaching him is a distribution and strategic partnership conversation as much as an investment conversation.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "GuideStone serves the SBC institutional ecosystem — the Executive Committee of the SBC, Lifeway Christian Resources, and related entities are natural introduction channels through shared Baptist institutional relationships.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "alumni-network" as const,
+        description: "Brandon is a Baylor alum — the same Baylor network that connects to Dave Morehead at Baylor endowment also provides a warm path to Pizzurro through shared institutional identity.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "GuideStone and CNBC/Fox Business are Brandon's media channels. Appearing on faith-and-finance media or at SBC Annual Meeting events (where GuideStone is a named participant) creates visibility before a direct approach.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 2 as 1|2|3,
+    approachStrategy: {
+      recommended: "SBC institutional introduction through Lifeway or another GuideStone institutional client",
+      steps: [
+        "Identify a GuideStone institutional client (SBC entity, Baptist university, or SBC-affiliated nonprofit) whose leadership knows Brandon and can frame Phosra as mission-aligned technology.",
+        "Frame the conversation as a strategic distribution partnership first: GuideStone's 10,000+ institutional clients include churches and schools who need child safety compliance technology.",
+        "Secondary frame: a strategic investment that aligns GuideStone's SBC mission with the fastest-growing category in regulatory compliance technology.",
+        "Prepare a GuideStone-specific one-pager showing how Phosra's technology serves the SBC institutional ecosystem — not just a generic fintech pitch.",
+      ],
+      openingAngle: "GuideStone serves thousands of SBC institutions — many of them run youth programs, apps, and digital platforms that face the same COPPA compliance liability Phosra is built to solve.",
+    },
+    status: "identified" as const,
+    notes: "The largest faith-based asset manager in the US — a GuideStone relationship is less about check size and more about distribution to thousands of SBC churches and institutions who need child safety compliance. Brandon is the operational CIO of a $22.5B institution; treat this as a strategic partnership conversation with an investment component, not a pure VC pitch.",
+  },
+
+  {
+    id: "brian-crawford-templeton",
+    name: "Brian Crawford CFA",
+    fundOrCompany: "John Templeton Foundation",
+    role: "Director of Investments",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$1M–$10M",
+    stagePreference: "Series A / Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/brianfcrawfordcfa/",
+      website: "https://www.templeton.org",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Brian Crawford manages the investment function for Templeton's ~$3.5B portfolio alongside its grant-making in science, religion, and human flourishing. Templeton is unusual among faith-aligned foundations in that it funds PRIs and impact investments that complement its research mission — and 'human flourishing' is the operative concept that links Templeton's mandate to child safety infrastructure. Crawford evaluates both PRIs and traditional investments, meaning he has two separate potential vehicles through which Phosra could enter the relationship. His CFA discipline brings the same institutional rigor as any professional endowment investor.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "Mission Investors Exchange and Council on Foundations attract Templeton's investment team. Crawford participates in impact investing professional networks where PRI structuring and mission-aligned direct investments are discussed.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Templeton-sponsored conferences on science, religion, and human flourishing (including their own Big Questions events) offer direct access to the Templeton investment and program team.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "content-warmup" as const,
+        description: "Templeton publishes extensively on human flourishing research. A white paper or blog post connecting digital child safety to human flourishing metrics (using Templeton's own intellectual framework) creates a credible warm touchpoint.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 2 as 1|2|3,
+    approachStrategy: {
+      recommended: "Mission Investors Exchange professional introduction combined with a Templeton-framed human flourishing pitch document",
+      steps: [
+        "Identify a mutual contact through the Mission Investors Exchange or PRI legal community who knows Crawford and can make a credible introduction.",
+        "Frame Phosra explicitly in Templeton's 'human flourishing' vocabulary: child safety compliance infrastructure enables digital environments that support rather than harm flourishing.",
+        "Offer a PRI structure as an alternative to equity investment — Templeton's comfort with program-related investments could accelerate the process.",
+        "Reference Templeton's track record funding research on technology and human behavior as intellectual common ground before making the investment ask.",
+      ],
+      openingAngle: "Templeton funds research on human flourishing — Phosra is the infrastructure that makes digital spaces structurally capable of supporting it.",
+    },
+    status: "identified" as const,
+    notes: "Templeton's mission to fund 'human flourishing' research creates natural alignment — a child safety compliance platform is infrastructure for digital flourishing, and Crawford evaluates both PRIs and traditional investments. The two-track approach (PRI + equity) gives more flexibility than a pure equity pitch to most institutional investors. Templeton has more secular institutional credibility than most faith-aligned foundations, which means Brian applies rigorous investment discipline.",
+  },
+
+  {
+    id: "michael-buchman-hilton",
+    name: "Michael Buchman",
+    fundOrCompany: "Conrad N. Hilton Foundation",
+    role: "VP & CIO",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$5M–$25M",
+    stagePreference: "Growth / PE",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/michael-buchman-4984156/",
+      website: "https://www.hiltonfoundation.org",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Michael Buchman has been the sole CIO of the Conrad N. Hilton Foundation since 2009, managing an $8B Catholic-identity portfolio that includes a major child welfare grantmaking pillar. He has operated with institutional continuity and independence for 15+ years — a profile that means he has deep relationships and significant investment authority. The Hilton Foundation's Catholic identity and explicit child welfare mission create genuine alignment with Phosra's compliance infrastructure. Buchman evaluates both traditional endowment investments and impact/PRIs within the same portfolio framework.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "Hilton Foundation participates in Catholic philanthropic networks (Catholic Charities USA, FADICA — Foundations and Donors Interested in Catholic Activities) where Buchman's peers can make credible introductions.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Council on Foundations, Mission Investors Exchange, and Los Angeles philanthropic community events are natural venues. Buchman's 15-year tenure means he is a senior figure at these gatherings.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "2nd-degree-weak" as const,
+        description: "Hilton Foundation's child welfare grantees (including anti-trafficking and child protection nonprofits) have direct relationships with Buchman's program team — a nonprofit executive can bridge to the investment side.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 2 as 1|2|3,
+    approachStrategy: {
+      recommended: "Catholic philanthropic network introduction through FADICA or a shared child welfare grantee",
+      steps: [
+        "Identify a Hilton Foundation child welfare grantee whose executive director knows the investment team and can bridge the program-to-investment relationship.",
+        "Frame Phosra in Catholic social teaching vocabulary: the dignity of the child, protection of the vulnerable, and the responsibility of technology platforms to prevent harm.",
+        "Position as a growth-stage impact investment that complements Hilton's existing child welfare grant portfolio with a market-rate return.",
+        "Prepare an $8B endowment-appropriate materials package — Buchman runs an institutional-grade process and will expect professional diligence documentation.",
+      ],
+      openingAngle: "The Hilton Foundation has spent decades protecting vulnerable children through grantmaking — Phosra is the technology that makes that protection legally mandatory for every digital platform.",
+    },
+    status: "identified" as const,
+    notes: "The Hilton Foundation's Catholic identity and child welfare grantmaking pillar make child safety compliance tech a natural conversation — Buchman manages one of the largest Catholic-aligned endowments in the US. Note that at $8B, Hilton is likely to write checks larger than Phosra's current round; position as a strategic minority investment or future-round relationship.",
+  },
+
+  {
+    id: "mark-regier-praxis",
+    name: "Mark Regier",
+    fundOrCompany: "Praxis Investment Management / Everence Financial",
+    role: "VP of Stewardship Investing",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$500K–$2M",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/mark-regier-703346a3/",
+      website: "https://www.praxismutualfunds.com",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote: "Mark Regier has 20+ years overseeing socially responsible investing within the Mennonite/Anabaptist tradition — a faith community with especially strong convictions about nonviolence, protection of the vulnerable, and corporate accountability. His role as VP of Stewardship Investing gives him direct authority over which companies pass Praxis's moral screen, proxy voting posture, and investment recommendations. Praxis explicitly screens for companies protecting the vulnerable and avoiding harm to children — this is not a general ESG screen but a specific moral conviction that directly maps to Phosra's product. Regier's coppaInterest is 'public-stance' because Praxis has publicly engaged on technology harm to children.",
+    coppaInterest: "public-stance" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "Praxis/Everence operates within the Mennonite Church USA and related Anabaptist institutional networks. Mennonite economic development organizations (MCC, Mennonite Economic Development Associates) provide natural warm intro paths.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Praxis participates in socially responsible investing conferences (US SIF Forum, Ceres Conference) where Mark's public positions on faith-based screening make him a known voice. A conference introduction carries peer credibility.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "content-warmup" as const,
+        description: "Mark publishes and speaks on faith-based investment screening and corporate accountability. A direct LinkedIn engagement or response to his public writing on technology harm creates a warm connection before a meeting request.",
+        strength: 3 as 1|2|3|4|5,
+      },
+    ],
+    tier: 2 as 1|2|3,
+    approachStrategy: {
+      recommended: "Direct engagement through Mennonite institutional network or US SIF responsible investing community",
+      steps: [
+        "Identify a Mennonite Church USA institutional contact (MCC, Goshen College, or MEDA) who knows Mark and can frame Phosra as a compliance technology that operationalizes their children's protection values.",
+        "Lead with Praxis's explicit moral screen: demonstrate specifically how Phosra would score on their published criteria for 'protecting the vulnerable' and 'avoiding harm to children'.",
+        "Prepare a Praxis-format ESG/moral screening brief alongside standard financial documentation — Regier will want to see the thesis in his framework, not a generic impact pitch.",
+        "Offer to engage with Praxis's proxy voting and corporate engagement team as a thought partner on digital child safety standards before making a direct investment ask.",
+      ],
+      openingAngle: "Praxis screens for companies that protect the vulnerable — Phosra is the API infrastructure that makes child protection legally enforceable for every digital platform at scale.",
+    },
+    status: "identified" as const,
+    notes: "Praxis explicitly screens for companies protecting the vulnerable and avoiding harm to children — Regier has direct authority over which companies pass their moral screen, making this a high-conviction match. The Mennonite tradition's emphasis on corporate accountability and nonviolence toward the vulnerable creates unusually deep alignment. At $1B+ mutual fund AUM, Praxis operates at a scale that can accommodate meaningful early-stage allocations through their stewardship investing vehicles.",
+  },
+
+  {
+    id: "ying-hosler-liberty",
+    name: "Ying Hosler CFA",
+    fundOrCompany: "Liberty University",
+    role: "Senior Director of Investments",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$1M–$5M",
+    stagePreference: "Seed / Series A (building new portfolio)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/ying-hosler-cfa-22ba89b/",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Ying Hosler joined Liberty in November 2023 to build its venture allocation from scratch after growing Penn State's endowment from $1B to $6.5B over 13 years and managing all PE/VC at that institution. She is in pure discovery mode — actively sourcing emerging managers and direct investments with fresh mandate and institutional backing. Her Yale SOM MBA and institutional pedigree mean she applies rigorous investment standards, but her current portfolio construction phase means she is actively seeking differentiated allocations. Liberty's 100,000+ online students (many minors) make child safety directly mission-relevant to the university's own operations.",
+    coppaInterest: "none" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "alumni-network" as const,
+        description: "Ying's Penn State and Yale SOM networks are large and active. A peer introduction from a Penn State endowment colleague or Yale SOM alum in venture carries institutional credibility.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "NACUBO and Institutional Investor university endowment conferences are where Ying would be building her institutional network in her first year at Liberty. A conference introduction in 2024–2025 creates a natural warm touchpoint.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "industry-association" as const,
+        description: "Women in endowment investing networks (Toigo Foundation, WCEA) provide peer introduction paths to Ying through her professional community as a female CIO at a major university.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 2 as 1|2|3,
+    approachStrategy: {
+      recommended: "Penn State or Yale SOM alumni warm introduction from a mutual institutional investing contact",
+      steps: [
+        "Identify a Penn State endowment or Yale SOM alum who knows Ying professionally and can make a credible peer introduction to a promising emerging allocation.",
+        "Frame Phosra around Liberty's own operational stake: 100,000+ online students including minors means Liberty itself faces COPPA and AADC compliance obligations that Phosra's API directly addresses.",
+        "Position as an early emerging manager allocation for a portfolio being built from scratch — Ying is in exactly the moment where differentiated early-stage VC makes sense to establish.",
+        "Prepare institutional-quality materials: her Penn State background means she has seen world-class diligence documentation and will hold Phosra to the same standard.",
+      ],
+      openingAngle: "You're building Liberty's venture portfolio from scratch — Phosra is the kind of regulatory compliance infrastructure that most endowments wish they'd backed two years before the COPPA enforcement wave.",
+    },
+    status: "identified" as const,
+    notes: "Actively building Liberty's venture allocation from scratch — one of the few endowment allocators currently in pure discovery mode. Liberty's 100K+ online students (many minors) make child safety directly mission-relevant. Her institutional pedigree (Penn State $1B→$6.5B, Yale SOM) means she applies rigorous standards — do not treat this as an easy faith-aligned pitch. She is a professional institutional investor who happens to work at a faith institution.",
+  },
+
+  {
+    id: "dolores-bamford-eventide",
+    name: "Dolores Bamford CFA",
+    fundOrCompany: "Eventide Asset Management",
+    role: "Co-CIO & Senior Portfolio Manager",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$1M–$5M",
+    stagePreference: "Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/doloresbamford/",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote: "Dolores Bamford is a literal theologian-investor: SM from MIT Sloan, dual-MA in Theology and Church History from Gordon-Conwell, 13 years as a Goldman Sachs AM Managing Director, and 10 years at Putnam as SVP before joining Eventide. She evaluates investments through both Goldman-grade institutional rigor and deep Christian ethical conviction — a combination that makes her one of the most credible internal advocates for a faith-aligned investment case within any firm. As Co-CIO alongside Finny Kuruvilla, her endorsement is effectively a second vote for conviction investments at Eventide's growth equity strategy. She is not Finny's deputy; she is his co-equal partner on the portfolio.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "alumni-network" as const,
+        description: "Gordon-Conwell Theological Seminary alumni network is a distinctive and tight-knit community — a mutual contact from her theology program creates an unusual and memorable warm intro angle.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Praxis Academy, Faith & Work Movement events, and Eventide's own Business as a Force for Good conferences are venues where Dolores participates as a thought leader in faith-integrated investing.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "portfolio-founder" as const,
+        description: "Eventide's existing portfolio founders who have worked with both Finny and Dolores on portfolio governance and ESG engagement can provide a warm introduction that emphasizes her dual-lens evaluation process.",
+        strength: 3 as 1|2|3|4|5,
+      },
+    ],
+    tier: 2 as 1|2|3,
+    approachStrategy: {
+      recommended: "Gordon-Conwell alumni introduction or Eventide portfolio founder warm intro",
+      steps: [
+        "Identify a mutual contact from Gordon-Conwell, MIT Sloan, or Goldman Sachs AM who knows Dolores and can introduce Phosra with peer-level credibility.",
+        "Frame the theological case explicitly: digital spaces that harm children are a structural injustice that investment capital can help correct — Phosra is the instrument.",
+        "Prepare materials that speak to both institutional investment standards (Goldman-grade financial rigor) and Christian ethical framework (Eventide's stakeholder impact matrix).",
+        "Recognize that winning Dolores's conviction may be the path to Finny's allocation — they are Co-CIOs and her theological endorsement carries weight in Eventide's internal deliberation.",
+      ],
+      openingAngle: "You built ESG strategies at Goldman and now evaluate investments through both institutional rigor and Christian conviction — Phosra needs both lenses to understand why this is the defining compliance infrastructure of the next decade.",
+    },
+    status: "identified" as const,
+    notes: "A Goldman Sachs MD turned theologian-investor who ran ESG/responsible equity strategies — she evaluates investments through both institutional rigor and Christian ethical conviction, making her an unusually credible advocate for Phosra within Eventide. As Co-CIO, reaching Dolores is effectively a parallel path to reaching Finny Kuruvilla — two separate but mutually reinforcing conviction vectors within the same firm.",
+  },
+
+  // ─── Tier 3 ───────────────────────────────────────────────────────────────
+
+  {
+    id: "greg-mcneilly-windquest",
+    name: "Greg McNeilly",
+    fundOrCompany: "Windquest Group (Dick & Betsy DeVos)",
+    role: "President & CEO",
+    category: "faith-family" as const,
+    type: "family-office" as const,
+    checkSizeRange: "$1M–$10M",
+    stagePreference: "Growth / Strategic",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/gregmcneilly/",
+    },
+    thesisAlignment: "adjacent" as const,
+    thesisNote: "Greg McNeilly is the operational gatekeeper for the Windquest channel of DeVos family investment — distinct from Randall Damstra's Ottawa Avenue Private Capital. Windquest handles the operating company and strategic technology investment side of the DeVos portfolio, while Ottawa Avenue handles PE fund commitments. McNeilly grew Windquest sixfold to 1,700+ employees across 24 states, evaluating all strategic and technology investments that come through this channel. The DeVos family's evangelical values and Betsy DeVos's Education Secretary tenure create adjacent alignment with child safety — but Windquest's primary mandate is operational/strategic rather than impact, making this a harder thesis conversation.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description: "Grand Rapids West Michigan business community — the same evangelical business network that reaches Ottawa Avenue Private Capital also reaches Windquest through DeVos family shared institutional presence.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "Michigan entrepreneurship and technology conferences (Detroit Venture Partners events, Michigan Rise) where Windquest participates as a regional strategic investor.",
+        strength: 2 as 1|2|3|4|5,
+      },
+      {
+        type: "2nd-degree-weak" as const,
+        description: "Windquest portfolio company executives who have worked with Greg on strategic technology integrations can make a peer introduction to a new technology investment opportunity.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 3 as 1|2|3,
+    approachStrategy: {
+      recommended: "West Michigan evangelical business network introduction, framing as strategic technology investment complementary to Windquest's operating portfolio",
+      steps: [
+        "Identify a Windquest portfolio executive or West Michigan business contact who has worked with Greg directly and can make a credible warm introduction.",
+        "Frame Phosra as a strategic technology investment with potential distribution through Windquest's operating company network — not a pure financial investment.",
+        "Reference the DeVos family's education and family focus as the values bridge to child safety compliance technology.",
+        "Be prepared for a longer relationship-building arc: Windquest's strategic focus means they need to see operational fit, not just thesis alignment.",
+      ],
+      openingAngle: "Windquest's operating companies interact with families and children across 24 states — Phosra's compliance infrastructure protects those relationships from regulatory liability.",
+    },
+    status: "identified" as const,
+    notes: "Windquest is the DeVos family's operating/investment company — McNeilly is the operational gatekeeper for deals that flow through this channel rather than Ottawa Avenue Private Capital. The adjacent thesis alignment and operational rather than impact mandate make this a longer-cycle relationship. Pursue Ottawa Avenue (Randall Damstra) as the primary DeVos family path; Windquest is a secondary channel.",
+  },
+
+  {
+    id: "ken-larson-wheaton",
+    name: "Ken Larson",
+    fundOrCompany: "Wheaton College",
+    role: "Investment Manager & Chief Trust Officer",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$500K–$3M",
+    stagePreference: "Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/ken-larson-9b612531/",
+      website: "https://www.wheaton.edu",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote: "Ken Larson has managed Wheaton's endowment for 30+ years, making him one of the most deeply networked investment professionals in the evangelical academic ecosystem. Wheaton is the most academically rigorous evangelical liberal arts college — the institution that produced Billy Graham and hosts the Billy Graham Center. Larson's 30-year tenure means his relationships span the entire evangelical investment and philanthropic community, making him as valuable as a warm intro hub as he is as a direct allocator. His Chief Trust Officer role also means he manages planned giving and charitable trust vehicles alongside the endowment.",
+    coppaInterest: "none" as const,
+    fundSignal: "unknown" as const,
+    introPaths: [
+      {
+        type: "alumni-network" as const,
+        description: "Wheaton College alumni network is one of the most active evangelical professional networks in the country — a Wheaton alum in the tech or venture space creates a natural and highly credible warm path.",
+        strength: 4 as 1|2|3|4|5,
+      },
+      {
+        type: "industry-association" as const,
+        description: "NACUBO and Christian higher education investment networks (CCCU — Council for Christian Colleges and Universities) are where Ken's 30-year network makes him a senior peer. An introduction through a fellow Christian higher education CIO carries institutional weight.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "conference-event" as const,
+        description: "The Gathering, Evangelical Council for Financial Accountability (ECFA) events, and Wheaton-hosted academic conferences create direct access to Ken's community without a formal intro requirement.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 3 as 1|2|3,
+    approachStrategy: {
+      recommended: "Wheaton College alumni warm introduction from a tech or venture-connected Wheaton grad",
+      steps: [
+        "Identify a Wheaton College alumnus in the technology or venture ecosystem who knows Ken personally and can make a credible peer introduction.",
+        "Frame the ask around Ken's dual role: endowment allocation and trust/planned giving vehicles both offer potential pathways for a Phosra relationship.",
+        "Lead with the warm intro hub angle: even if Ken cannot write a meaningful check, his 30-year evangelical investment network is itself the prize — request an introduction conversation, not an investment meeting.",
+        "Treat Ken as a relationship multiplier: his endorsement of Phosra within the evangelical endowment community could open five more doors worth more than his direct allocation.",
+      ],
+      openingAngle: "Thirty years managing Wheaton's endowment means you know every faith-aligned allocator worth knowing — we're looking for 20 minutes and your honest assessment of fit, not just a check.",
+    },
+    status: "identified" as const,
+    notes: "30+ years managing Wheaton's endowment means deep relationships across the evangelical investment community — a warm intro hub even if the direct allocation is modest. The fundSignal is 'unknown' because Wheaton's venture appetite is not publicly established; the strategic value here is Ken's network breadth more than his direct check. Prioritize accordingly: treat this as a relationship-building and referral-network play.",
+  },
+
+  {
+    id: "adriana-ballard-presbyterian",
+    name: "Adriana Ballard",
+    fundOrCompany: "Presbyterian Foundation",
+    role: "Director of Investments & AVP",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$1M–$5M",
+    stagePreference: "Growth",
+    contact: {
+      website: "https://www.presbyterianfoundation.org",
+    },
+    thesisAlignment: "adjacent" as const,
+    thesisNote: "Adriana Ballard was newly installed as Director of Investments in 2024 after 14+ years at the Employees Retirement System of Texas ($34B) and a Director role at Nasdaq — she brings institutional-grade investment rigor to a foundation that has historically lagged in investment sophistication. The Presbyterian Foundation manages $2.6B and serves PCUSA churches and institutions. PCUSA has been publicly active on child digital safety and online exploitation through denominational resolutions. Ballard is in pure discovery mode, actively rebuilding the portfolio with new managers and asset classes. Her adjacent thesis alignment reflects the Presbyterian Foundation's broader mandate rather than a specific child safety mission pillar.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description: "NACUBO, Mission Investors Exchange, and Council on Foundations conferences are where Adriana is actively building her institutional network in her first two years. A 2025-2026 conference introduction catches her in her most receptive discovery window.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "alumni-network" as const,
+        description: "Employees Retirement System of Texas alumni network and Nasdaq finance professional networks provide a peer introduction path through shared institutional investing identity.",
+        strength: 3 as 1|2|3|4|5,
+      },
+      {
+        type: "industry-association" as const,
+        description: "PCUSA denominational networks (Office of the General Assembly, Presbyterian Mission Agency) provide a church-side introduction path to the Foundation's investment team through shared Presbyterian institutional identity.",
+        strength: 2 as 1|2|3|4|5,
+      },
+    ],
+    tier: 3 as 1|2|3,
+    approachStrategy: {
+      recommended: "Conference introduction at NACUBO or Mission Investors Exchange during her active portfolio-building discovery phase",
+      steps: [
+        "Target a 2025-2026 NACUBO Annual Meeting or Mission Investors Exchange conference where Adriana is actively building her institutional network — a direct peer introduction in this context is natural and low-friction.",
+        "Lead with her portfolio construction mandate: Phosra represents a differentiated emerging manager allocation in regulatory compliance technology — a category underrepresented in most institutional portfolios.",
+        "Connect to PCUSA's public denominational stance on child digital safety as the mission bridge to what would otherwise be a purely financial conversation.",
+        "Acknowledge the adjacent alignment honestly: position Phosra as a values-compatible financial investment rather than a mission-first impact play.",
+      ],
+      openingAngle: "You're rebuilding the Presbyterian Foundation's portfolio with fresh eyes — Phosra is the kind of differentiated regulatory compliance investment that most institutional allocators haven't discovered yet.",
+    },
+    status: "identified" as const,
+    notes: "Newly installed and actively rebuilding the portfolio — in discovery mode with managers and new opportunities. PCUSA has been active on child digital safety and online exploitation. Adriana's Nasdaq and Texas ERS background means she applies rigorous institutional standards; do not oversell the faith alignment at the expense of investment thesis clarity. The adjacent alignment means the financial case must stand on its own.",
+  },
+]
+
 // ─── Master List ──────────────────────────────────────────────────────────────
 
 export const WARM_INTRO_TARGETS: WarmIntroTarget[] = [
@@ -7019,6 +7805,7 @@ export const WARM_INTRO_TARGETS: WarmIntroTarget[] = [
   ...PARENT_ANGELS,
   ...FINTECH_ANGELS,
   ...FAITH_FAMILY,
+  ...FAITH_GATEKEEPERS,
 ]
 
 // ─── Super Connectors ─────────────────────────────────────────────────────────
