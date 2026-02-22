@@ -43,6 +43,9 @@ export default function OutreachPage() {
   const [activitySummary, setActivitySummary] = useState<OutreachActivitySummary | null>(null)
   const [lastVisit, setLastVisit] = useState<string | null>(null)
 
+  // ── Drafting ─────────────────────────────────────────────────
+  const [drafting, setDrafting] = useState(false)
+
   // ── UI ────────────────────────────────────────────────────────
   const [showSettings, setShowSettings] = useState(false)
   const [feedOpen, setFeedOpen] = useState(true)
@@ -152,6 +155,44 @@ export default function OutreachPage() {
     }
   }, [getToken])
 
+  // ── Draft next email (1 at a time) ───────────────────────────
+  const handleDraftNext = useCallback(async () => {
+    if (drafting) return
+    const next = upNextContacts[0]
+    if (!next) return
+
+    setDrafting(true)
+    try {
+      const token = (await getToken()) ?? undefined
+
+      // Start a sequence for the next priority contact
+      await api.startSequence(next.id, token)
+
+      // Trigger the worker (DRAFT_LIMIT=1 is set server-side for manual triggers)
+      await api.triggerWorker("outreach-sequencer", token)
+
+      // Poll for the new pending email to appear
+      const prevCount = pendingEmails.length
+      for (let i = 0; i < 30; i++) {
+        await new Promise((r) => setTimeout(r, 2000))
+        try {
+          const emails = await api.listPendingEmails("pending_review", token)
+          if ((emails as OutreachPendingEmail[]).length > prevCount) {
+            setPendingEmails(emails as OutreachPendingEmail[])
+            // Refresh contacts so the drafted one moves out of upNext
+            const freshContacts = await api.listOutreach(token)
+            setContacts(freshContacts as OutreachContact[])
+            break
+          }
+        } catch { /* keep polling */ }
+      }
+    } catch {
+      // ignore
+    } finally {
+      setDrafting(false)
+    }
+  }, [drafting, upNextContacts, getToken, pendingEmails.length])
+
   // ── Expand active conversation → fetch Gmail threads ──────────
   const handleExpandContact = useCallback(
     async (contactId: string, email?: string) => {
@@ -217,7 +258,10 @@ export default function OutreachPage() {
       <ReviewQueue
         emails={pendingEmails}
         loading={loading}
+        drafting={drafting}
+        hasContacts={upNextContacts.length > 0}
         onRefresh={fetchAll}
+        onDraftNext={handleDraftNext}
       />
 
       <AlexActivityFeed

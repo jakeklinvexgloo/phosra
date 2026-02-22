@@ -104,10 +104,19 @@ async function main() {
     const { count: sentToday } = await apiFetch("/outreach/sent-today")
     let remaining = config.max_emails_per_day - sentToday
 
+    // DRAFT_LIMIT: process at most N sequences per run (default: unlimited)
+    const draftLimit = parseInt(process.env.DRAFT_LIMIT || "0", 10)
+
     const results = { generated: 0, sent: 0, skipped: 0, errors: 0 }
 
     for (const seq of sequences) {
       if (remaining <= 0) {
+        results.skipped++
+        continue
+      }
+
+      // Stop after reaching draft limit (if set)
+      if (draftLimit > 0 && (results.generated + results.sent) >= draftLimit) {
         results.skipped++
         continue
       }

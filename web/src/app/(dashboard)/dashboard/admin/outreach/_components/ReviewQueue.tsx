@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useState } from "react"
-import { Loader2 } from "lucide-react"
+import { Loader2, Sparkles } from "lucide-react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import type { OutreachPendingEmail } from "@/lib/admin/types"
@@ -11,10 +11,13 @@ const STEP_LABELS = ["Initial", "Follow-up 1", "Follow-up 2", "Final"]
 interface ReviewQueueProps {
   emails: OutreachPendingEmail[]
   loading: boolean
+  drafting: boolean
+  hasContacts: boolean
   onRefresh: () => void
+  onDraftNext: () => void
 }
 
-export function ReviewQueue({ emails, loading, onRefresh }: ReviewQueueProps) {
+export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh, onDraftNext }: ReviewQueueProps) {
   const { getToken } = useApi()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editSubject, setEditSubject] = useState("")
@@ -77,13 +80,30 @@ export function ReviewQueue({ emails, loading, onRefresh }: ReviewQueueProps) {
         </div>
       )}
 
-      {/* Empty state */}
-      {!loading && emails.length === 0 && (
+      {/* Empty state — drafting in progress */}
+      {!loading && emails.length === 0 && drafting && (
         <div className="plaid-card text-center py-12">
           <div className="inline-flex items-center gap-2 text-muted-foreground">
             <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="text-sm">No emails to review &mdash; Alex is drafting...</span>
+            <span className="text-sm">Alex is drafting an email...</span>
           </div>
+        </div>
+      )}
+
+      {/* Empty state — ready to draft */}
+      {!loading && emails.length === 0 && !drafting && (
+        <div className="plaid-card text-center py-12 space-y-3">
+          <p className="text-sm text-muted-foreground">No emails to review.</p>
+          {hasContacts && (
+            <button
+              onClick={onDraftNext}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white transition-colors"
+              style={{ backgroundColor: "hsl(157, 100%, 42%)" }}
+            >
+              <Sparkles className="w-4 h-4" />
+              Draft Next Email
+            </button>
+          )}
         </div>
       )}
 
@@ -173,6 +193,23 @@ export function ReviewQueue({ emails, loading, onRefresh }: ReviewQueueProps) {
               )}
             </div>
           ))}
+
+          {/* Draft next button below existing emails */}
+          {hasContacts && (
+            <div className="text-center pt-1">
+              <button
+                onClick={onDraftNext}
+                disabled={drafting}
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+              >
+                {drafting ? (
+                  <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Drafting...</>
+                ) : (
+                  <><Sparkles className="w-3.5 h-3.5" /> Draft another</>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

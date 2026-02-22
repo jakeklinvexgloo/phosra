@@ -318,6 +318,10 @@ func (h *AdminHandler) executeWorker(runID uuid.UUID, workerID, scriptPath strin
 		fmt.Sprintf("RUN_ID=%s", runID.String()),
 		fmt.Sprintf("WORKER_ID=%s", workerID),
 	)
+	// Manual sequencer triggers process 1 draft at a time for incremental UX
+	if workerID == "outreach-sequencer" {
+		cmd.Env = append(cmd.Env, "DRAFT_LIMIT=1")
+	}
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
