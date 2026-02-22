@@ -23,6 +23,7 @@ const unauthenticatedPaths = [
   "/investors/portal(.*)",
   "/investors/financial-model(.*)",
   "/api/investors(.*)",
+  "/api/agents(.*)",
   "/newsroom(.*)",
   "/privacy(.*)",
   "/terms(.*)",

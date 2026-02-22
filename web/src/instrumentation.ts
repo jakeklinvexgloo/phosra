@@ -7,8 +7,9 @@ export const langfuseSpanProcessor = new LangfuseSpanProcessor({
     span.otelSpan.instrumentationScope.name !== "next.js",
 })
 
-const tracerProvider = new NodeTracerProvider({
-  spanProcessors: [langfuseSpanProcessor],
-})
-
-tracerProvider.register()
+export async function register() {
+  const tracerProvider = new NodeTracerProvider({
+    spanProcessors: [langfuseSpanProcessor],
+  })
+  tracerProvider.register()
+}
