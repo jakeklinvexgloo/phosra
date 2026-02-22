@@ -675,6 +675,8 @@ export default function FundraiseCommandCenter() {
   const [copiedLink, setCopiedLink] = useState(false)
   const [confirmDeactivate, setConfirmDeactivate] = useState<string | null>(null)
   const [showAddConfirm, setShowAddConfirm] = useState(false)
+  const [addSuccess, setAddSuccess] = useState(false)
+  const [copiedInviteLink, setCopiedInviteLink] = useState(false)
 
   /** Build headers including sandbox session when applicable. */
   const investorAdminHeaders = useCallback((extra?: Record<string, string>) => {
@@ -720,8 +722,7 @@ export default function FundraiseCommandCenter() {
         body: JSON.stringify(addForm),
       })
       if (res.ok) {
-        setShowAddModal(false)
-        setAddForm({ phone: "", name: "", company: "", notes: "" })
+        setAddSuccess(true)
         fetchPhones()
       } else {
         const data = await res.json()
@@ -1412,8 +1413,7 @@ export default function FundraiseCommandCenter() {
           {/* Info card */}
           <div className="plaid-card border-l-2 border-l-brand-green !py-3">
             <p className="text-xs text-muted-foreground">
-              When you add an investor, they automatically receive an SMS invite with a link to the portal.
-              They sign in with their phone number via OTP — no email or password needed.
+              Add an investor&apos;s phone number to grant portal access. Share the portal link with them — when they visit and enter their phone, they&apos;ll receive a verification code via SMS to sign in.
             </p>
           </div>
 
@@ -1505,96 +1505,124 @@ export default function FundraiseCommandCenter() {
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
               <div className="bg-card border border-border rounded-xl shadow-xl w-full max-w-md">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-                  <h3 className="text-sm font-semibold text-foreground">Add Investor</h3>
-                  <button onClick={() => { setShowAddModal(false); setAddError("") }} className="text-muted-foreground hover:text-foreground">
+                  <h3 className="text-sm font-semibold text-foreground">{addSuccess ? "Investor Added" : "Add Investor"}</h3>
+                  <button onClick={() => { setShowAddModal(false); setAddError(""); setShowAddConfirm(false); setAddSuccess(false); setCopiedInviteLink(false) }} className="text-muted-foreground hover:text-foreground">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="p-5 space-y-4">
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Phone Number *</label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground font-mono flex-shrink-0">+1</span>
-                      <input
-                        type="tel"
-                        inputMode="numeric"
-                        placeholder="(555) 555-1234"
-                        value={formatAsYouType(addForm.phone)}
-                        onChange={(e) => {
-                          const raw = e.target.value.replace(/\D/g, "").slice(0, 10)
-                          setAddForm((f) => ({ ...f, phone: raw }))
-                        }}
-                        onKeyDown={(e) => { if (e.key === "Enter" && addForm.phone.length === 10) handleAddInvestor() }}
-                        disabled={addLoading}
-                        className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm font-mono placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Name</label>
-                    <input
-                      type="text"
-                      placeholder="Jane Smith"
-                      value={addForm.name}
-                      onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Company</label>
-                    <input
-                      type="text"
-                      placeholder="Acme Ventures"
-                      value={addForm.company}
-                      onChange={(e) => setAddForm((f) => ({ ...f, company: e.target.value }))}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Notes</label>
-                    <input
-                      type="text"
-                      placeholder="Met at demo day, interested in Series A"
-                      value={addForm.notes}
-                      onChange={(e) => setAddForm((f) => ({ ...f, notes: e.target.value }))}
-                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
-                    />
-                  </div>
-                  {addError && <p className="text-red-500 text-xs">{addError}</p>}
-                </div>
-                {showAddConfirm && (
-                  <div className="mx-5 mb-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                    <div className="flex items-start gap-2">
-                      <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-medium text-amber-800 dark:text-amber-300">Confirm SMS Invite</p>
-                        <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
-                          This will send a real SMS to the phone number. Continue?
-                        </p>
+                {addSuccess ? (
+                  <>
+                    <div className="p-5 space-y-4">
+                      <div className="flex items-center gap-2 text-brand-green">
+                        <CheckCircle2 className="w-5 h-5" />
+                        <span className="text-sm font-medium">
+                          {addForm.name || "Investor"} has been approved for portal access.
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Share the portal link below. When they visit and enter their phone number, they&apos;ll receive a verification code via SMS to sign in.
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          readOnly
+                          value={`${typeof window !== "undefined" ? window.location.origin : "https://phosra.com"}/investors`}
+                          className="flex-1 px-3 py-2 rounded-lg border border-border bg-muted/50 text-foreground text-xs font-mono outline-none"
+                        />
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(`${window.location.origin}/investors`)
+                            setCopiedInviteLink(true)
+                            setTimeout(() => setCopiedInviteLink(false), 2000)
+                          }}
+                          className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-border text-xs font-medium text-foreground hover:bg-muted/60 transition-colors flex-shrink-0"
+                        >
+                          <Copy className="w-3 h-3" />
+                          {copiedInviteLink ? "Copied!" : "Copy"}
+                        </button>
                       </div>
                     </div>
-                  </div>
+                    <div className="flex justify-end px-5 py-4 border-t border-border">
+                      <button
+                        onClick={() => { setShowAddModal(false); setAddForm({ phone: "", name: "", company: "", notes: "" }); setAddSuccess(false); setShowAddConfirm(false); setCopiedInviteLink(false) }}
+                        className="px-4 py-2 rounded-md bg-brand-green text-[#0D1B2A] text-xs font-semibold hover:bg-brand-green/90 transition-colors"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="p-5 space-y-4">
+                      <div>
+                        <label className="text-xs font-medium text-muted-foreground mb-1 block">Phone Number *</label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground font-mono flex-shrink-0">+1</span>
+                          <input
+                            type="tel"
+                            inputMode="numeric"
+                            placeholder="(555) 555-1234"
+                            value={formatAsYouType(addForm.phone)}
+                            onChange={(e) => {
+                              const raw = e.target.value.replace(/\D/g, "").slice(0, 10)
+                              setAddForm((f) => ({ ...f, phone: raw }))
+                            }}
+                            onKeyDown={(e) => { if (e.key === "Enter" && addForm.phone.length === 10) handleAddInvestor() }}
+                            disabled={addLoading}
+                            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm font-mono placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-muted-foreground mb-1 block">Name</label>
+                        <input
+                          type="text"
+                          placeholder="Jane Smith"
+                          value={addForm.name}
+                          onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
+                          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-muted-foreground mb-1 block">Company</label>
+                        <input
+                          type="text"
+                          placeholder="Acme Ventures"
+                          value={addForm.company}
+                          onChange={(e) => setAddForm((f) => ({ ...f, company: e.target.value }))}
+                          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-muted-foreground mb-1 block">Notes</label>
+                        <input
+                          type="text"
+                          placeholder="Met at demo day, interested in Series A"
+                          value={addForm.notes}
+                          onChange={(e) => setAddForm((f) => ({ ...f, notes: e.target.value }))}
+                          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                        />
+                      </div>
+                      {addError && <p className="text-red-500 text-xs">{addError}</p>}
+                    </div>
+                    <div className="flex justify-end gap-2 px-5 py-4 border-t border-border">
+                      <button
+                        onClick={() => { setShowAddModal(false); setAddError(""); setShowAddConfirm(false) }}
+                        className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleAddInvestor}
+                        disabled={addLoading}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-brand-green text-[#0D1B2A] text-xs font-semibold hover:bg-brand-green/90 transition-colors disabled:opacity-50"
+                      >
+                        {addLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+                        Add Investor
+                      </button>
+                    </div>
+                  </>
                 )}
-                <div className="flex justify-end gap-2 px-5 py-4 border-t border-border">
-                  <button
-                    onClick={() => { setShowAddModal(false); setAddError(""); setShowAddConfirm(false) }}
-                    className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleAddInvestor}
-                    disabled={addLoading}
-                    className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold transition-colors disabled:opacity-50 ${
-                      showAddConfirm
-                        ? "bg-amber-500 hover:bg-amber-600 text-white"
-                        : "bg-brand-green hover:bg-brand-green/90 text-[#0D1B2A]"
-                    }`}
-                  >
-                    {addLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
-                    {showAddConfirm ? "Confirm & Send SMS" : "Add & Send Invite"}
-                  </button>
-                </div>
               </div>
             </div>
           )}

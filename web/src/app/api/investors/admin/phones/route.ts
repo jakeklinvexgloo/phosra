@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { query, queryOne } from "@/lib/investors/db"
 import { normalizePhone } from "@/lib/investors/phone"
-import { sendVerifyOtp } from "@/lib/investors/twilio"
+// Note: raw SMS requires A2P 10DLC registration.
+// Invite link is shared manually by admin for now.
 import { withAuth } from "@workos-inc/authkit-nextjs"
 
 export const runtime = "nodejs"
@@ -104,14 +105,6 @@ export async function POST(req: NextRequest) {
          VALUES ($1, $2, $3, $4)`,
         [normalized, name ?? "", company ?? "", notes ?? ""],
       )
-    }
-
-    // Send OTP via Twilio Verify so investor can log in immediately
-    try {
-      await sendVerifyOtp(normalized)
-    } catch (smsErr) {
-      console.error("Failed to send invite OTP:", smsErr)
-      // Don't fail the whole request if SMS fails
     }
 
     return NextResponse.json({ message: "Investor added", phone: normalized })
