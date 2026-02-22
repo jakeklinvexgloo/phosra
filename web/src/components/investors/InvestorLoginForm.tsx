@@ -14,9 +14,11 @@ interface InvestorLoginFormProps {
 
 export default function InvestorLoginForm({
   onAuthenticated,
-  inviteCode,
+  inviteCode: inviteCodeProp,
 }: InvestorLoginFormProps) {
-  const [loginState, setLoginState] = useState<LoginState>(inviteCode ? "invite_loading" : "phone_input")
+  // Read invite code from URL directly as fallback (useSearchParams can be null during hydration)
+  const [resolvedInviteCode, setResolvedInviteCode] = useState<string | null>(inviteCodeProp || null)
+  const [loginState, setLoginState] = useState<LoginState>("invite_loading")
   const [phone, setPhone] = useState("")
   const [otpValue, setOtpValue] = useState("")
   const [error, setError] = useState("")
@@ -28,14 +30,24 @@ export default function InvestorLoginForm({
   const [recipientName, setRecipientName] = useState("")
   const hasInvite = Boolean(referrerName)
 
-  // Validate invite code on mount
+  // Resolve invite code from prop or URL on mount
   useEffect(() => {
-    if (!inviteCode) return
+    const code = inviteCodeProp || new URLSearchParams(window.location.search).get("invite")
+    if (code) {
+      setResolvedInviteCode(code)
+    } else {
+      setLoginState("phone_input")
+    }
+  }, [inviteCodeProp])
+
+  // Validate invite code
+  useEffect(() => {
+    if (!resolvedInviteCode) return
     let cancelled = false
 
     async function validateInvite() {
       try {
-        const res = await fetch(`/api/investors/portal/invite/${inviteCode}`)
+        const res = await fetch(`/api/investors/portal/invite/${resolvedInviteCode}`)
         const data = await res.json()
         if (cancelled) return
         if (data.valid) {
@@ -51,7 +63,7 @@ export default function InvestorLoginForm({
 
     validateInvite()
     return () => { cancelled = true }
-  }, [inviteCode])
+  }, [resolvedInviteCode])
 
   const handleRequestOtp = useCallback(async () => {
     if (phone.length !== 10) {
@@ -64,7 +76,7 @@ export default function InvestorLoginForm({
       const res = await fetch("/api/investors/auth/request-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: `+1${phone}`, ...(inviteCode ? { inviteCode } : {}) }),
+        body: JSON.stringify({ phone: `+1${phone}`, ...(resolvedInviteCode ? { inviteCode: resolvedInviteCode } : {}) }),
       })
       if (res.ok) {
         setLoginState("otp_sent")
@@ -93,8 +105,8 @@ export default function InvestorLoginForm({
         const data = await res.json()
         if (res.ok) {
           // If this was an invite, mark it as claimed
-          if (inviteCode) {
-            fetch(`/api/investors/portal/invite/${inviteCode}/claim`, {
+          if (resolvedInviteCode) {
+            fetch(`/api/investors/portal/invite/${resolvedInviteCode}/claim`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               credentials: "include",
@@ -111,7 +123,7 @@ export default function InvestorLoginForm({
         setLoginState("otp_sent")
       }
     },
-    [phone, inviteCode, onAuthenticated],
+    [phone, resolvedInviteCode, onAuthenticated],
   )
 
   const handleBack = useCallback(() => {
