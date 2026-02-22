@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { query, queryOne } from "@/lib/investors/db"
 import { normalizePhone } from "@/lib/investors/phone"
-import { sendInviteSms } from "@/lib/investors/twilio"
+import { sendVerifyOtp } from "@/lib/investors/twilio"
 import { withAuth } from "@workos-inc/authkit-nextjs"
 
 export const runtime = "nodejs"
@@ -111,11 +111,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Send invite SMS
+    // Send OTP via Twilio Verify so investor can log in immediately
     try {
-      await sendInviteSms(normalized, "Jake")
+      await sendVerifyOtp(normalized)
     } catch (smsErr) {
-      console.error("Failed to send invite SMS:", smsErr)
+      console.error("Failed to send invite OTP:", smsErr)
       // Don't fail the whole request if SMS fails
     }
 
