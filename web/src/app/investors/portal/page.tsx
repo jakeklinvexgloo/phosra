@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useState, useCallback } from "react"
+import { Suspense, useState, useCallback, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import {
@@ -22,6 +22,8 @@ import {
   MessageSquare,
   Check,
   X,
+  Eye,
+  LinkIcon,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 import { RAISE_DETAILS, DATA_ROOM_LINKS } from "@/lib/investors/config"
@@ -244,6 +246,217 @@ function InviteModal({ onClose, investorName }: { onClose: () => void; investorN
 }
 
 /* ------------------------------------------------------------------ */
+/*  Deck Share Panel                                                   */
+/* ------------------------------------------------------------------ */
+
+interface DeckShare {
+  id: string
+  token: string
+  recipientHint: string
+  createdAt: string
+  isActive: boolean
+  viewCount: number
+  lastViewed: string | null
+  url: string
+}
+
+function DeckSection({ investorPhone, investorName, investorCompany }: { investorPhone: string; investorName: string; investorCompany: string }) {
+  const [showSharePanel, setShowSharePanel] = useState(false)
+  const [shares, setShares] = useState<DeckShare[]>([])
+  const [recipientHint, setRecipientHint] = useState("")
+  const [generatedLink, setGeneratedLink] = useState("")
+  const [generating, setGenerating] = useState(false)
+  const [copied, setCopied] = useState("")
+  const [error, setError] = useState("")
+  const [loadingShares, setLoadingShares] = useState(false)
+
+  const fetchShares = useCallback(async () => {
+    setLoadingShares(true)
+    try {
+      const res = await fetch("/api/investors/deck/shares", { credentials: "include" })
+      if (res.ok) {
+        setShares(await res.json())
+      }
+    } catch {
+      // silent
+    } finally {
+      setLoadingShares(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (showSharePanel) fetchShares()
+  }, [showSharePanel, fetchShares])
+
+  const handleGenerate = useCallback(async () => {
+    setGenerating(true)
+    setError("")
+    setGeneratedLink("")
+    try {
+      const res = await fetch("/api/investors/deck/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ recipientHint: recipientHint.trim() || undefined }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setGeneratedLink(data.url)
+        setRecipientHint("")
+        fetchShares()
+      } else {
+        setError(data.error || "Failed to generate link")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setGenerating(false)
+    }
+  }, [recipientHint, fetchShares])
+
+  const handleCopy = useCallback(async (url: string, id: string) => {
+    await navigator.clipboard.writeText(url)
+    setCopied(id)
+    setTimeout(() => setCopied(""), 2000)
+  }, [])
+
+  return (
+    <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 lg:py-20">
+      <AnimatedSection>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
+              Pitch Deck
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-display text-white">
+              Pre-seed deck
+            </h2>
+          </div>
+          <button
+            onClick={() => setShowSharePanel(!showSharePanel)}
+            className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 text-white font-medium rounded-lg hover:border-white/40 transition-colors text-sm"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            Share Deck
+          </button>
+        </div>
+      </AnimatedSection>
+
+      {showSharePanel && (
+        <AnimatedSection>
+          <div className="glass-card rounded-xl p-6 mb-6 space-y-5">
+            {/* Generate a new share link */}
+            <div>
+              <h3 className="text-white font-semibold text-sm mb-3 flex items-center gap-2">
+                <LinkIcon className="w-4 h-4 text-brand-green" />
+                Generate Share Link
+              </h3>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={recipientHint}
+                  onChange={(e) => { setRecipientHint(e.target.value); setError("") }}
+                  placeholder="Sharing with (optional) — e.g. John at Sequoia"
+                  className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors"
+                />
+                <button
+                  onClick={handleGenerate}
+                  disabled={generating}
+                  className="px-5 py-2.5 bg-brand-green text-[#0D1B2A] font-semibold rounded-lg hover:bg-brand-green/90 transition-colors text-sm flex items-center gap-2 flex-shrink-0 disabled:opacity-50"
+                >
+                  {generating ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    "Generate Link"
+                  )}
+                </button>
+              </div>
+              {error && <p className="text-xs text-red-400 mt-2">{error}</p>}
+            </div>
+
+            {/* Just-generated link */}
+            {generatedLink && (
+              <div className="bg-white/5 border border-brand-green/20 rounded-lg p-4">
+                <p className="text-xs text-white/40 mb-2">Share this link:</p>
+                <div className="flex items-center gap-3">
+                  <p className="text-xs text-white/70 break-all font-mono flex-1">{generatedLink}</p>
+                  <button
+                    onClick={() => handleCopy(generatedLink, "new")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 text-white text-xs rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
+                  >
+                    {copied === "new" ? <Check className="w-3 h-3 text-brand-green" /> : <Copy className="w-3 h-3" />}
+                    {copied === "new" ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Existing shares list */}
+            <div>
+              <h3 className="text-white font-semibold text-sm mb-3 flex items-center gap-2">
+                <Eye className="w-4 h-4 text-brand-green" />
+                Your Shares
+              </h3>
+              {loadingShares ? (
+                <div className="flex items-center gap-2 text-white/30 text-sm py-4">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Loading...
+                </div>
+              ) : shares.length === 0 ? (
+                <p className="text-xs text-white/30 py-2">No shares yet. Generate a link above to get started.</p>
+              ) : (
+                <div className="space-y-2">
+                  {shares.map((share) => (
+                    <div
+                      key={share.id}
+                      className="flex items-center gap-3 bg-white/[0.03] border border-white/5 rounded-lg px-4 py-3"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-white/70 truncate">
+                          {share.recipientHint || "General link"}
+                        </p>
+                        <p className="text-[10px] text-white/30 mt-0.5">
+                          Created {new Date(share.createdAt).toLocaleDateString()}
+                          {share.lastViewed && ` · Last viewed ${new Date(share.lastViewed).toLocaleDateString()}`}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 bg-white/5 rounded-full flex-shrink-0">
+                        <Eye className="w-3 h-3 text-white/40" />
+                        <span className="text-xs font-mono text-white/60">{share.viewCount}</span>
+                      </div>
+                      <button
+                        onClick={() => handleCopy(share.url, share.id)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 text-white text-xs rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
+                      >
+                        {copied === share.id ? <Check className="w-3 h-3 text-brand-green" /> : <Copy className="w-3 h-3" />}
+                        {copied === share.id ? "Copied!" : "Copy"}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </AnimatedSection>
+      )}
+
+      <AnimatedSection delay={0.1}>
+        <div className="glass-card rounded-xl overflow-hidden">
+          <iframe
+            src="/deck/"
+            className="w-full h-[700px] sm:h-[750px] border-0"
+            title="Phosra Pre-Seed Pitch Deck"
+          />
+        </div>
+      </AnimatedSection>
+    </section>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /*  Portal Page                                                        */
 /* ------------------------------------------------------------------ */
 
@@ -384,38 +597,7 @@ function InvestorPortalContent() {
       {/* ============================================================ */}
       {/*  Section 2: Pitch Deck Viewer                                 */}
       {/* ============================================================ */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 lg:py-20">
-        <AnimatedSection>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
-                Pitch Deck
-              </p>
-              <h2 className="text-2xl sm:text-3xl font-display text-white">
-                Pre-seed deck
-              </h2>
-            </div>
-            <a
-              href="/deck/phosra-pre-seed-deck.pdf"
-              download
-              className="inline-flex items-center gap-2 px-4 py-2 border border-white/20 text-white font-medium rounded-lg hover:border-white/40 transition-colors text-sm"
-            >
-              <Download className="w-3.5 h-3.5" />
-              Download PDF
-            </a>
-          </div>
-        </AnimatedSection>
-
-        <AnimatedSection delay={0.1}>
-          <div className="glass-card rounded-xl overflow-hidden">
-            <iframe
-              src="/deck/phosra-pre-seed-deck.pdf"
-              className="w-full h-[600px] sm:h-[700px] border-0"
-              title="Phosra Pre-Seed Pitch Deck"
-            />
-          </div>
-        </AnimatedSection>
-      </section>
+      <DeckSection investorPhone={investor.phone} investorName={investor.name || ""} investorCompany={investor.company || ""} />
 
       {/* ============================================================ */}
       {/*  Section 3: SAFE Document                                     */}
