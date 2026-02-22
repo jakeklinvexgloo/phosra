@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { queryOne } from "@/lib/investors/db"
 import { normalizePhone } from "@/lib/investors/phone"
-import { generateOtp, hashOtp } from "@/lib/investors/otp"
-import { isRateLimited } from "@/lib/investors/rate-limit"
-import { sendOtpSms } from "@/lib/investors/twilio"
-import { query } from "@/lib/investors/db"
+import { sendVerifyOtp } from "@/lib/investors/twilio"
 
 export const runtime = "nodejs"
 
 /**
  * POST /api/investors/auth/request-otp
- * Accept phone number, send OTP if approved.
+ * Accept phone number, send OTP via Twilio Verify if approved.
  * Anti-enumeration: same response regardless of approval status.
  */
 export async function POST(req: NextRequest) {
@@ -49,24 +46,8 @@ export async function POST(req: NextRequest) {
       return successResponse
     }
 
-    // Check rate limit
-    if (await isRateLimited(normalized)) {
-      // Still return same shape — don't reveal rate limit to unapproved users
-      return successResponse
-    }
-
-    // Generate and store OTP
-    const code = generateOtp()
-    const codeHash = hashOtp(code)
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
-
-    await query(
-      `INSERT INTO investor_otp_codes (phone_e164, code_hash, expires_at) VALUES ($1, $2, $3)`,
-      [normalized, codeHash, expiresAt.toISOString()],
-    )
-
-    // Send SMS
-    await sendOtpSms(normalized, code)
+    // Send OTP via Twilio Verify (handles code generation, storage, rate limiting)
+    await sendVerifyOtp(normalized)
 
     return successResponse
   } catch (error) {

@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
 import { normalizePhone } from "@/lib/investors/phone"
-import { verifyOtp } from "@/lib/investors/otp"
+import { checkVerifyOtp } from "@/lib/investors/twilio"
 import { createSessionToken, hashToken } from "@/lib/investors/session"
 import { query, queryOne } from "@/lib/investors/db"
 
 export const runtime = "nodejs"
 
-const MAX_ATTEMPTS = 3
-
 /**
  * POST /api/investors/auth/verify-otp
- * Verify 6-digit code, create JWT session, set httpOnly cookie.
+ * Verify 6-digit code via Twilio Verify, create JWT session, set httpOnly cookie.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -34,61 +32,14 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Find the latest unused, unexpired OTP for this phone
-    const otp = await queryOne<{
-      id: string
-      code_hash: string
-      attempts: number
-    }>(
-      `SELECT id, code_hash, attempts FROM investor_otp_codes
-       WHERE phone_e164 = $1 AND used = FALSE AND expires_at > NOW()
-       ORDER BY created_at DESC LIMIT 1`,
-      [normalized],
-    )
-
-    if (!otp) {
+    // Verify code via Twilio Verify
+    const valid = await checkVerifyOtp(normalized, code)
+    if (!valid) {
       return NextResponse.json(
-        { error: "Code expired or not found. Please request a new one." },
+        { error: "Invalid or expired code. Please try again." },
         { status: 400 },
       )
     }
-
-    // Check attempts
-    if (otp.attempts >= MAX_ATTEMPTS) {
-      // Mark as used to prevent further attempts
-      await query(`UPDATE investor_otp_codes SET used = TRUE WHERE id = $1`, [
-        otp.id,
-      ])
-      return NextResponse.json(
-        { error: "Too many attempts. Please request a new code." },
-        { status: 400 },
-      )
-    }
-
-    // Increment attempts
-    await query(
-      `UPDATE investor_otp_codes SET attempts = attempts + 1 WHERE id = $1`,
-      [otp.id],
-    )
-
-    // Verify code
-    if (!verifyOtp(code, otp.code_hash)) {
-      const remaining = MAX_ATTEMPTS - otp.attempts - 1
-      return NextResponse.json(
-        {
-          error:
-            remaining > 0
-              ? `Invalid code. ${remaining} attempt${remaining === 1 ? "" : "s"} remaining.`
-              : "Too many attempts. Please request a new code.",
-        },
-        { status: 400 },
-      )
-    }
-
-    // Mark OTP as used
-    await query(`UPDATE investor_otp_codes SET used = TRUE WHERE id = $1`, [
-      otp.id,
-    ])
 
     // Get investor info
     const investor = await queryOne<{ name: string; company: string }>(

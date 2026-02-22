@@ -7,26 +7,43 @@ function getClient() {
   return twilio(sid, token)
 }
 
-function getFromNumber(): string {
-  const num = process.env.TWILIO_PHONE_NUMBER
-  if (!num) throw new Error("TWILIO_PHONE_NUMBER is not set")
-  return num
+function getVerifyServiceSid(): string {
+  const sid = process.env.TWILIO_VERIFY_SERVICE_SID
+  if (!sid) throw new Error("TWILIO_VERIFY_SERVICE_SID is not set")
+  return sid
 }
 
 /**
- * Send a 6-digit OTP code via SMS.
+ * Send an OTP code via Twilio Verify.
+ * Twilio generates, stores, rate-limits, and delivers the code.
  */
-export async function sendOtpSms(to: string, code: string): Promise<void> {
+export async function sendVerifyOtp(to: string): Promise<void> {
   const client = getClient()
-  await client.messages.create({
-    to,
-    from: getFromNumber(),
-    body: `Your Phosra investor portal code is: ${code}. Expires in 5 minutes.`,
-  })
+  await client.verify.v2
+    .services(getVerifyServiceSid())
+    .verifications.create({ to, channel: "sms" })
+}
+
+/**
+ * Check an OTP code via Twilio Verify.
+ * Returns true if the code is valid.
+ */
+export async function checkVerifyOtp(to: string, code: string): Promise<boolean> {
+  const client = getClient()
+  try {
+    const check = await client.verify.v2
+      .services(getVerifyServiceSid())
+      .verificationChecks.create({ to, code })
+    return check.status === "approved"
+  } catch {
+    return false
+  }
 }
 
 /**
  * Send an invite SMS to a newly approved investor.
+ * Best-effort: uses messaging service if available, falls back to direct send.
+ * May fail if A2P 10DLC registration is not complete.
  */
 export async function sendInviteSms(
   to: string,
@@ -37,9 +54,14 @@ export async function sendInviteSms(
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
     : process.env.NEXTAUTH_URL ?? "https://phosra.com"
 
-  await client.messages.create({
-    to,
-    from: getFromNumber(),
-    body: `${inviterName} from Phosra invited you to our investor data room: ${baseUrl}/investors/portal`,
-  })
+  const body = `${inviterName} from Phosra invited you to our investor data room: ${baseUrl}/investors/portal`
+
+  const msgServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID
+  if (msgServiceSid) {
+    await client.messages.create({ to, messagingServiceSid: msgServiceSid, body })
+  } else {
+    const from = process.env.TWILIO_PHONE_NUMBER
+    if (!from) throw new Error("TWILIO_PHONE_NUMBER is not set")
+    await client.messages.create({ to, from, body })
+  }
 }
