@@ -755,9 +755,10 @@ export default function FundraiseCommandCenter() {
     fetchPhones()
   }
 
+  const portalUrl = typeof window !== "undefined" ? `${window.location.origin}/investors/portal` : "https://www.phosra.com/investors/portal"
+
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/investors/portal`
-    navigator.clipboard.writeText(url)
+    navigator.clipboard.writeText(portalUrl)
     setCopiedLink(true)
     setTimeout(() => setCopiedLink(false), 2000)
   }
@@ -1520,18 +1521,18 @@ export default function FundraiseCommandCenter() {
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Share the portal link below. When they visit and enter their phone number, they&apos;ll receive a verification code via SMS to sign in.
+                        Send them the portal link below. When they visit and enter their phone number, they&apos;ll receive a verification code via SMS to sign in.
                       </p>
                       <div className="flex items-center gap-2">
                         <input
                           type="text"
                           readOnly
-                          value={`${typeof window !== "undefined" ? window.location.origin : "https://phosra.com"}/investors`}
+                          value={`${typeof window !== "undefined" ? window.location.origin : "https://www.phosra.com"}/investors/portal`}
                           className="flex-1 px-3 py-2 rounded-lg border border-border bg-muted/50 text-foreground text-xs font-mono outline-none"
                         />
                         <button
                           onClick={() => {
-                            navigator.clipboard.writeText(`${window.location.origin}/investors`)
+                            navigator.clipboard.writeText(`${window.location.origin}/investors/portal`)
                             setCopiedInviteLink(true)
                             setTimeout(() => setCopiedInviteLink(false), 2000)
                           }}
@@ -1541,6 +1542,17 @@ export default function FundraiseCommandCenter() {
                           {copiedInviteLink ? "Copied!" : "Copy"}
                         </button>
                       </div>
+                      {/* Quick-send via native Messages app */}
+                      <a
+                        href={`sms:+1${addForm.phone}&body=${encodeURIComponent(`You've been invited to the Phosra investor data room. View the pitch deck, financials, and SAFE here:\n\n${typeof window !== "undefined" ? window.location.origin : "https://www.phosra.com"}/investors/portal`)}`}
+                        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        Text Link to {addForm.name || formatPhoneDisplay(`+1${addForm.phone}`)}
+                      </a>
+                      <p className="text-[10px] text-muted-foreground text-center">
+                        Opens Messages on your device with the portal link pre-filled
+                      </p>
                     </div>
                     <div className="flex justify-end px-5 py-4 border-t border-border">
                       <button
