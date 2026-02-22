@@ -43,13 +43,9 @@ export async function POST(req: NextRequest) {
       [code, payload.phone, expiresAt.toISOString()],
     )
 
-    const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-      : "https://phosra.com"
-
     return NextResponse.json({
       code,
-      url: `${baseUrl}/investors/portal?invite=${code}`,
+      url: `https://phosra.com/investors/portal?invite=${code}`,
       expiresAt: expiresAt.toISOString(),
     })
   } catch (error) {
