@@ -20,6 +20,7 @@ import pg from "pg"
 const API_URL = process.env.API_URL || "http://localhost:8080"
 const WORKER_KEY = process.env.WORKER_API_KEY || ""
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || ""
+const CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-20250514"
 const DATABASE_URL =
   process.env.DATABASE_URL ||
   "postgres://guardiangate:guardiangate_dev@localhost:5432/guardiangate"
@@ -49,7 +50,7 @@ async function callClaude(systemPrompt, userPrompt) {
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
+      model: CLAUDE_MODEL,
       max_tokens: 1024,
       system: systemPrompt,
       messages: [{ role: "user", content: userPrompt }],
