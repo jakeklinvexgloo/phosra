@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo, useCallback } from "react"
-import { Users, Target, Sparkles } from "lucide-react"
+import { Users, Target, Sparkles, Layers } from "lucide-react"
 import {
   WARM_INTRO_TARGETS,
   SUPER_CONNECTORS,
@@ -50,7 +50,7 @@ export default function WarmIntrosTab() {
   return (
     <div className="space-y-4">
       {/* Stats row */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="plaid-card !py-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="p-1.5 rounded-md bg-brand-green/10">
@@ -107,7 +107,21 @@ export default function WarmIntrosTab() {
           </div>
         </div>
 
-        <div className="plaid-card !py-3 col-span-2 lg:col-span-1">
+        <div className="plaid-card !py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="p-1.5 rounded-md bg-indigo-100 dark:bg-indigo-900/30">
+              <Layers className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+            </div>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">
+              Categories
+            </span>
+          </div>
+          <div className="text-xl font-semibold tabular-nums">
+            {Object.keys(stats.byCategory).length}
+          </div>
+        </div>
+
+        <div className="plaid-card !py-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="p-1.5 rounded-md bg-purple-100 dark:bg-purple-900/30">
               <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />

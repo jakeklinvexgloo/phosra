@@ -3,11 +3,13 @@
 import { Fragment, useMemo, useState } from "react"
 import {
   ChevronDown,
+  ChevronUp,
   Linkedin,
   Twitter,
   Mail,
   Globe,
   ExternalLink,
+  Search,
 } from "lucide-react"
 import type {
   WarmIntroTarget,
@@ -16,6 +18,44 @@ import type {
   InvestorCategory,
   InvestorType,
 } from "@/lib/investors/warm-intro-network"
+
+const CATEGORY_LABELS: Partial<Record<InvestorCategory, string>> = {
+  "regtech-vc": "Regtech VC",
+  "child-safety-vc": "Child Safety VC",
+  "edtech-vc": "EdTech VC",
+  "solo-founder-fund": "Solo Founder Fund",
+  "identity-vc": "Identity VC",
+  "family-safety-vc": "Family Safety VC",
+  "impact-fund": "Impact Fund",
+  "pre-seed-specialist": "Pre-Seed Specialist",
+  "ts-leader": "T&S Leader",
+  "ftc-alumni": "FTC Alumni",
+  "nonprofit-leader": "Nonprofit Leader",
+  "regtech-founder": "Regtech Founder",
+  "angel-syndicate": "Angel Syndicate",
+  "hnw-angel": "HNW Angel",
+  "family-office": "Family Office",
+  "corporate-vc": "Corporate VC",
+  "impact-investor": "Impact Investor",
+  "celebrity-angel": "Celebrity Angel",
+  "policy-angel": "Policy Angel",
+  "parent-angel": "Parent Angel",
+  "fintech-angel": "Fintech Angel",
+}
+
+const TYPE_LABELS: Partial<Record<InvestorType, string>> = {
+  vc: "VC",
+  angel: "Angel",
+  syndicate: "Syndicate",
+  strategic: "Strategic",
+  "micro-fund": "Micro Fund",
+  cvc: "CVC",
+  "family-office": "Family Office",
+  "impact-fund": "Impact Fund",
+}
+
+type SortKey = "name" | "tier" | "category" | "thesisAlignment" | "paths"
+type SortDir = "asc" | "desc"
 
 const PIPELINE_OPTIONS: PipelineStatus[] = [
   "identified",
@@ -54,6 +94,9 @@ export default function InvestorTable({
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
   const [typeFilter, setTypeFilter] = useState<string>("all")
   const [thesisFilter, setThesisFilter] = useState<string>("all")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [sortKey, setSortKey] = useState<SortKey>("tier")
+  const [sortDir, setSortDir] = useState<SortDir>("asc")
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const categories = useMemo(
@@ -66,69 +109,116 @@ export default function InvestorTable({
   )
 
   const filtered = useMemo(() => {
-    return targets.filter((t) => {
+    const q = searchQuery.toLowerCase()
+    let result = targets.filter((t) => {
       if (tierFilter !== "all" && t.tier !== Number(tierFilter)) return false
       if (categoryFilter !== "all" && t.category !== categoryFilter) return false
       if (typeFilter !== "all" && t.type !== typeFilter) return false
       if (thesisFilter !== "all" && t.thesisAlignment !== thesisFilter) return false
+      if (q && !t.name.toLowerCase().includes(q) && !t.fundOrCompany.toLowerCase().includes(q) && !(t.notes ?? "").toLowerCase().includes(q))
+        return false
       return true
     })
-  }, [targets, tierFilter, categoryFilter, typeFilter, thesisFilter])
+    // Sort
+    const thesisOrder = { perfect: 0, good: 1, adjacent: 2 }
+    result.sort((a, b) => {
+      let cmp = 0
+      switch (sortKey) {
+        case "name": cmp = a.name.localeCompare(b.name); break
+        case "tier": cmp = a.tier - b.tier; break
+        case "category": cmp = a.category.localeCompare(b.category); break
+        case "thesisAlignment": cmp = thesisOrder[a.thesisAlignment] - thesisOrder[b.thesisAlignment]; break
+        case "paths": cmp = b.introPaths.length - a.introPaths.length; break
+      }
+      return sortDir === "asc" ? cmp : -cmp
+    })
+    return result
+  }, [targets, tierFilter, categoryFilter, typeFilter, thesisFilter, searchQuery, sortKey, sortDir])
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"))
+    } else {
+      setSortKey(key)
+      setSortDir("asc")
+    }
+  }
+
+  const SortIcon = ({ col }: { col: SortKey }) => {
+    if (sortKey !== col) return null
+    return sortDir === "asc" ? (
+      <ChevronUp className="w-3 h-3 inline ml-0.5" />
+    ) : (
+      <ChevronDown className="w-3 h-3 inline ml-0.5" />
+    )
+  }
 
   const selectClass =
     "px-3 py-2 rounded-lg border border-border bg-background text-sm"
 
   return (
     <div>
-      {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-3">
-        <select
-          value={tierFilter}
-          onChange={(e) => setTierFilter(e.target.value)}
-          className={selectClass}
-        >
-          <option value="all">All Tiers</option>
-          <option value="1">Tier 1</option>
-          <option value="2">Tier 2</option>
-          <option value="3">Tier 3</option>
-        </select>
-        <select
-          value={categoryFilter}
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          className={selectClass}
-        >
-          <option value="all">All Categories</option>
-          {categories.map((c) => (
-            <option key={c} value={c}>
-              {c.replace(/-/g, " ")}
-            </option>
-          ))}
-        </select>
-        <select
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-          className={selectClass}
-        >
-          <option value="all">All Types</option>
-          {types.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-        <select
-          value={thesisFilter}
-          onChange={(e) => setThesisFilter(e.target.value)}
-          className={selectClass}
-        >
-          <option value="all">All Thesis</option>
-          <option value="perfect">Perfect</option>
-          <option value="good">Good</option>
-          <option value="adjacent">Adjacent</option>
-        </select>
-        <span className="flex items-center text-xs text-muted-foreground ml-auto">
-          {filtered.length} of {targets.length} targets
-        </span>
+      {/* Search + Filters */}
+      <div className="space-y-2 mb-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search investors by name, fund, or notes..."
+            className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-background text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+          />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <select
+            value={tierFilter}
+            onChange={(e) => setTierFilter(e.target.value)}
+            className={selectClass}
+          >
+            <option value="all">All Tiers</option>
+            <option value="1">Tier 1</option>
+            <option value="2">Tier 2</option>
+            <option value="3">Tier 3</option>
+          </select>
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className={selectClass}
+          >
+            <option value="all">All Categories</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {CATEGORY_LABELS[c] ?? c.replace(/-/g, " ")}
+              </option>
+            ))}
+          </select>
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className={selectClass}
+          >
+            <option value="all">All Types</option>
+            {types.map((t) => (
+              <option key={t} value={t}>
+                {TYPE_LABELS[t] ?? t}
+              </option>
+            ))}
+          </select>
+          <select
+            value={thesisFilter}
+            onChange={(e) => setThesisFilter(e.target.value)}
+            className={selectClass}
+          >
+            <option value="all">All Thesis</option>
+            <option value="perfect">Perfect</option>
+            <option value="good">Good</option>
+            <option value="adjacent">Adjacent</option>
+          </select>
+          <span className="flex items-center text-xs text-muted-foreground ml-auto">
+            {filtered.length} of {targets.length} targets
+          </span>
+        </div>
       </div>
 
       {/* Table */}
@@ -137,14 +227,24 @@ export default function InvestorTable({
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Name</th>
+                <th onClick={() => toggleSort("name")} className="text-left py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
+                  Name <SortIcon col="name" />
+                </th>
                 <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Fund</th>
-                <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Tier</th>
-                <th className="text-left py-2.5 px-4 text-muted-foreground font-medium hidden md:table-cell">Category</th>
+                <th onClick={() => toggleSort("tier")} className="text-left py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
+                  Tier <SortIcon col="tier" />
+                </th>
+                <th onClick={() => toggleSort("category")} className="text-left py-2.5 px-4 text-muted-foreground font-medium hidden md:table-cell cursor-pointer hover:text-foreground select-none">
+                  Category <SortIcon col="category" />
+                </th>
                 <th className="text-left py-2.5 px-4 text-muted-foreground font-medium hidden lg:table-cell">Check Size</th>
-                <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Thesis</th>
+                <th onClick={() => toggleSort("thesisAlignment")} className="text-left py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
+                  Thesis <SortIcon col="thesisAlignment" />
+                </th>
                 <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Status</th>
-                <th className="text-right py-2.5 px-4 text-muted-foreground font-medium">Paths</th>
+                <th onClick={() => toggleSort("paths")} className="text-right py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
+                  Paths <SortIcon col="paths" />
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -176,8 +276,8 @@ export default function InvestorTable({
                           Tier {t.tier}
                         </span>
                       </td>
-                      <td className="py-2.5 px-4 text-muted-foreground capitalize hidden md:table-cell">
-                        {t.category.replace(/-/g, " ")}
+                      <td className="py-2.5 px-4 text-muted-foreground hidden md:table-cell">
+                        {CATEGORY_LABELS[t.category] ?? t.category.replace(/-/g, " ")}
                       </td>
                       <td className="py-2.5 px-4 text-muted-foreground tabular-nums hidden lg:table-cell">
                         {t.checkSizeRange}

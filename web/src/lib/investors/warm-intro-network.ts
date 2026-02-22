@@ -32,8 +32,16 @@ export type InvestorCategory =
   | "nonprofit-leader"
   | "regtech-founder"
   | "angel-syndicate"
+  | "hnw-angel"        // high net worth tech angel
+  | "family-office"
+  | "corporate-vc"
+  | "impact-investor"
+  | "celebrity-angel"
+  | "policy-angel"
+  | "parent-angel"
+  | "fintech-angel"
 
-export type InvestorType = "vc" | "angel" | "syndicate" | "strategic" | "micro-fund" | "cvc"
+export type InvestorType = "vc" | "angel" | "syndicate" | "strategic" | "micro-fund" | "cvc" | "family-office" | "impact-fund"
 
 export type IntroPathType =
   | "direct-1st-degree"
@@ -2368,6 +2376,3787 @@ const SYNDICATES: WarmIntroTarget[] = [
   },
 ]
 
+const HNW_ANGELS: WarmIntroTarget[] = [
+  // ─── Tier 1: Strong thesis alignment ─────────────────────────────────────────
+
+  {
+    id: "naval-ravikant",
+    name: "Naval Ravikant",
+    fundOrCompany: "AngelList / Personal",
+    role: "Co-Founder & Chairman, AngelList",
+    website: "https://nav.al",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$50K-$500K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/navalr",
+      twitter: "@naval",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Naval backs API-first infrastructure companies (invested in Plaid, Clearbit, etc.). Phosra's 'Plaid of child safety' positioning maps directly to his API-layer thesis. His syndicate on AngelList could multiply the allocation.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "cold-application",
+        description: "Apply through AngelList syndicate — Naval still reviews deal flow",
+        strength: 1,
+      },
+      {
+        type: "content-warmup",
+        description: "Engage with Naval's Twitter/podcast content on infrastructure plays; DM with concise pitch framing Phosra as compliance infrastructure",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Position as API infrastructure play, not child safety charity",
+      steps: [
+        "Frame pitch as 'Plaid for compliance' — Naval loves infrastructure-layer bets",
+        "Apply through AngelList syndicate with crisp 1-pager",
+        "Reference regulatory tailwind: 67+ laws = massive TAM for compliance API",
+        "Emphasize Jake's 3 exits and Mastercard infrastructure background",
+      ],
+      openingAngle:
+        "Every platform serving users under 18 needs a compliance API. 67 child safety laws, 45 rule categories, zero unified standard — until now.",
+    },
+    status: "identified",
+    notes:
+      "376 investments total; most recent was Quanta (Dec 2025). Check size sweet spot ~$100K-$500K. Co-founded Airchat in 2023. Primarily backs SF/NY companies. Responds to concise, infrastructure-focused pitches.",
+  },
+
+  {
+    id: "esther-dyson",
+    name: "Esther Dyson",
+    fundOrCompany: "EDventure Holdings / Personal",
+    role: "Angel Investor; Founder, Way to Wellville",
+    website: "https://www.edventure.com",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$25K-$100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/edyson/",
+      twitter: "@edyson",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Esther is one of the original internet governance and digital privacy thought leaders. Board chair of The Commons Project (digital trust infrastructure) and Avanlee Care (family care tech). Her career focus on digital rights, health tech, and open government perfectly aligns with Phosra's child safety compliance mission.",
+    coppaInterest: "public-stance",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "conference-event",
+        description: "Esther is a regular at digital rights, privacy, and internet governance conferences",
+        strength: 2,
+      },
+      {
+        type: "industry-association",
+        description: "Through digital privacy / internet governance communities — she's deeply networked in this space",
+        strength: 3,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Lead with digital rights and child protection mission alignment",
+      steps: [
+        "Reference her decades of work on internet governance and digital privacy",
+        "Connect Phosra to The Commons Project's digital trust infrastructure mission",
+        "Frame compliance API as the technical layer that makes digital rights enforceable",
+        "Approach through digital rights conference circuit or direct email",
+      ],
+      openingAngle:
+        "You've spent decades fighting for digital rights. We built the enforcement layer — a compliance API that turns 67 child safety laws into programmable rules platforms can actually implement.",
+    },
+    status: "identified",
+    notes:
+      "195 investments over career. Pioneer of internet governance and digital privacy. Board chair: Avanlee Care, The Commons Project. Investments span health care, open government, digital technology. RELease 1.0 newsletter was foundational in tech. Smaller check sizes but massive credibility signal.",
+  },
+
+  {
+    id: "jason-calacanis",
+    name: "Jason Calacanis",
+    fundOrCompany: "LAUNCH / The Syndicate",
+    role: "Founder & CEO, LAUNCH",
+    website: "https://www.launch.co",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$25K-$100K",
+    stagePreference: "Pre-seed to Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/jasoncalacanis/",
+      twitter: "@Jason",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Calacanis invests in ~100 startups/year through LAUNCH and is one of the most prolific pre-seed angels. He's vocal about tech regulation and child safety on his podcast. LAUNCH accelerator gives deal flow visibility. His $25-100K checks are perfect for Phosra's round size.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "cold-application",
+        description: "Apply at launch.co/apply — Jason's team reviews every application; strong conversion for infrastructure plays",
+        strength: 2,
+      },
+      {
+        type: "podcast",
+        description: "Pitch for This Week in Startups coverage; regulatory infrastructure is a recurring theme",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description: "LAUNCH events and demo days — next accelerator cohort accepting applications",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Apply through launch.co/apply with a sharp 2-minute video pitch",
+      steps: [
+        "Submit application at launch.co/apply with focus on market size ($130B+ regtech spend)",
+        "Record concise video pitch emphasizing 3 exits, Mastercard background, 5 kids = personal mission",
+        "Frame the regulatory tsunami (67 laws) as the compliance Stripe moment",
+        "If accepted, leverage LAUNCH demo day for syndicate allocation",
+      ],
+      openingAngle:
+        "67 child safety laws. Zero unified compliance API. Every platform serving minors needs this — and the regulatory wave is just starting.",
+    },
+    status: "identified",
+    notes:
+      "Invests in 100 new startups/year. LAUNCH LA35 cohort demo day held Jan 31, 2026. Typical check $25-100K. Angel University sessions running in 2026. The Syndicate can amplify allocation. Very responsive to cold applications through launch.co.",
+  },
+
+  // ─── Tier 2: Good alignment, strong networks ──────────────────────────────────
+
+  {
+    id: "balaji-srinivasan",
+    name: "Balaji Srinivasan",
+    fundOrCompany: "Balaji Fund / Personal",
+    role: "Angel Investor; Former CTO, Coinbase",
+    website: "https://balajis.com",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$25K-$250K",
+    stagePreference: "Pre-seed to Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/balajissrinivasan/",
+      twitter: "@balaborat",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Balaji invested in OpenGov (govtech/compliance) and advocates for technology solutions to regulatory problems. His 'Network State' thesis values infrastructure that codifies rules into programmable systems — Phosra literally turns legislation into API calls.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description: "Engage on Twitter/Substack with Phosra's approach to codifying legislation as API infrastructure; resonates with his programmable-governance thesis",
+        strength: 2,
+      },
+      {
+        type: "cold-application",
+        description: "Apply through Balaji Fund on AngelList",
+        strength: 1,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Frame as 'programmable compliance' — legislation-as-code resonates with Network State thesis",
+      steps: [
+        "Lead with the concept of turning 67 laws into a programmable API layer",
+        "Reference his OpenGov investment as prior art for govtech conviction",
+        "Position child safety compliance as the first vertical for a broader compliance-as-API platform",
+        "Share via Twitter DM or Substack reply with a concise technical pitch",
+      ],
+      openingAngle:
+        "We turned 67 child safety laws into 45 programmable rule categories — legislation-as-code for the compliance layer every platform needs.",
+    },
+    status: "identified",
+    notes:
+      "170 investments total. Latest: Reason Robotics (Dec 2025). Former Coinbase CTO, a16z GP. OpenGov investor (govtech). Responds to technically dense, thesis-aligned pitches. Strong Twitter presence.",
+  },
+
+  {
+    id: "elad-gil",
+    name: "Elad Gil",
+    fundOrCompany: "Personal / Color Genomics",
+    role: "Angel Investor; Author, High Growth Handbook",
+    website: "https://eladgil.com",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$50K-$1M",
+    stagePreference: "Pre-seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/eladgil/",
+      twitter: "@eaborat",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Elad runs one of the largest solo GP funds ever ($1B+) and has an exceptional hit rate (Airbnb, Stripe, Figma). He backs infrastructure companies at seed stage and understands API-first businesses deeply. His SaaS and enterprise infrastructure thesis aligns well with Phosra's compliance API positioning.",
+    coppaInterest: "none",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description: "Elad is highly active on Twitter and his blog; engage with infrastructure-layer content before reaching out",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-weak",
+        description: "Through YC/startup founder networks — Elad is well-connected in SF founder circles",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Position as infrastructure-layer bet with regulatory moat",
+      steps: [
+        "Lead with the compliance infrastructure thesis — Elad loves platform plays",
+        "Reference Stripe/Plaid parallels: Phosra is the API layer for child safety compliance",
+        "Emphasize the regulatory moat: 67 laws = switching cost + complexity barrier",
+        "Send cold email to his public contact with a 1-page memo",
+      ],
+      openingAngle:
+        "The compliance API layer for child safety — 67 laws, 45 rule categories, one integration. Think Plaid for regulatory compliance.",
+    },
+    status: "identified",
+    notes:
+      "Largest solo GP fund ($1B+ AUM). Latest investment: Decagon (Jan 2026). Former Google VP, Twitter exec. Hit rate includes Airbnb, Stripe, Coinbase, Figma, Notion. Prefers infrastructure and platform companies.",
+  },
+
+  {
+    id: "ron-conway",
+    name: "Ron Conway",
+    fundOrCompany: "SV Angel",
+    role: "Founder & Managing Partner",
+    website: "https://svangel.com",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$50K-$250K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/ronconway/",
+      twitter: "@ronconway",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Ron Conway is Silicon Valley's most connected angel investor ('Godfather of Silicon Valley'). SV Angel's seed fund (led by Beth Turner) actively deploys into infrastructure plays. His political connections (SF/CA government) and advocacy work make child safety compliance a natural conversation topic.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "2nd-degree-weak",
+        description: "Through SF startup ecosystem — Ron is one of the most connected investors in Silicon Valley",
+        strength: 2,
+      },
+      {
+        type: "attorney-intro",
+        description: "Through startup-focused law firms in SF that work with SV Angel portfolio companies",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Get a warm intro through SF startup ecosystem; SV Angel reviews all referred deals",
+      steps: [
+        "Identify a shared connection in SF startup/tech community for warm intro",
+        "Frame pitch around infrastructure + regulatory tailwind — SV Angel loves platform plays",
+        "Highlight the OpenAI/Sam Altman connection angle — Conway helped save OpenAI, understands tech-policy intersection",
+        "Target Beth Turner (leads seed fund) as primary contact at SV Angel",
+      ],
+      openingAngle:
+        "The 'Plaid of child safety' — a single API for 67 laws and 45 rule categories. Every platform serving minors needs this, and the regulatory wave is accelerating.",
+    },
+    status: "identified",
+    notes:
+      "The 'Godfather of Silicon Valley.' SV Angel promoted Beth Turner to lead seed fund. Recent investments: World Labs, Kumo.AI. Raised $330M growth fund. Deeply connected to SF/CA politics. Early backer of Google, Facebook, PayPal.",
+  },
+
+  {
+    id: "cyan-banister",
+    name: "Cyan Banister",
+    fundOrCompany: "Long Journey Ventures",
+    role: "General Partner",
+    website: "https://cyanbanister.com",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$25K-$250K",
+    stagePreference: "Pre-seed to Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/cyanb/",
+      twitter: "@cyantist",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Cyan is an early-stage investor through Long Journey Ventures (Fund IV closed March 2025). Her portfolio includes Vigil Labs and Barndoor AI (safety/compliance adjacent). Her personal story (grew up homeless, self-taught) resonates with mission-driven founders. Long Journey's early-stage focus and check sizes fit perfectly.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description: "Cyan is active on Twitter and has appeared on Tim Ferriss Show; engage with her content on early-stage investing",
+        strength: 2,
+      },
+      {
+        type: "cold-application",
+        description: "Long Journey Ventures accepts inbound — apply through their website",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Apply to Long Journey Ventures; emphasize mission-driven founder with personal stake (5 kids)",
+      steps: [
+        "Apply through Long Journey Ventures website with focus on founder story",
+        "Lead with personal mission angle — Jake has 5 kids, built this out of necessity",
+        "Highlight the regulatory infrastructure thesis and Plaid comparison",
+        "Reference Vigil Labs / Barndoor AI investments as portfolio pattern",
+      ],
+      openingAngle:
+        "Father of 5, 3 exits, Mastercard infrastructure background — I built the compliance API I wished existed. 67 child safety laws, one integration.",
+    },
+    status: "identified",
+    notes:
+      "Long Journey Ventures Fund IV closed March 2025 (actively deploying). Partners: Cyan Banister, Arielle Zuckerberg, Lee Jacobs. Early investor in Uber, SpaceX, DeepMind, Flexport, Affirm. 100+ investments. Featured on Tim Ferriss Show (#780).",
+  },
+
+  {
+    id: "scott-belsky",
+    name: "Scott Belsky",
+    fundOrCompany: "Personal",
+    role: "Seed Investor; Founder, Behance; Former Adobe CPO",
+    website: "https://www.scottbelsky.com",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$25K-$250K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/scottbelsky/",
+      twitter: "@scottbelsky",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Scott was named to Business Insider's 'Best Early-Stage Investors' in 2025. His 'transformation by interface' thesis means he values companies that turn complexity into elegant developer/user experiences — exactly what Phosra does by abstracting 67 laws into a clean API. Former Benchmark GP gives him strong network.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description: "Scott is very active on Twitter/LinkedIn about product design and early-stage investing; engage with his content",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description: "Speaks regularly at design and startup conferences; approach in person",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Frame Phosra through his 'transformation by interface' lens",
+      steps: [
+        "Lead with the interface/DX angle: turning 67 complex laws into a beautiful API",
+        "Reference his portfolio pattern (Airtable, Ramp) — complex problems, elegant solutions",
+        "Emphasize the developer experience and API design",
+        "Apply through his website or reach via Twitter/LinkedIn DM",
+      ],
+      openingAngle:
+        "67 child safety laws, 45 rule categories — a nightmare of regulatory complexity. We turned it into one clean API integration. Transformation by interface.",
+    },
+    status: "identified",
+    notes:
+      "155 investments. Latest: Extend AI (Jun 2025). Named to BI 'Best Early-Stage Investors' 2025. Founded Behance (acquired by Adobe). Former Benchmark GP. Seed investments: Airtable, Pinterest, Ramp, Uber, Warby Parker. NYC-based.",
+  },
+
+  {
+    id: "jyoti-bansal",
+    name: "Jyoti Bansal",
+    fundOrCompany: "Unusual Ventures / Personal",
+    role: "Co-Founder, Unusual Ventures; Founder, AppDynamics",
+    website: "https://www.unusual.vc",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$50K-$250K",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/jyotibansal",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Jyoti built AppDynamics (acquired by Cisco for $3.7B) and now runs Unusual Ventures ($600M AUM). His Harness + Traceable merger (2025) shows deep understanding of compliance and security infrastructure. Traceable specifically focused on API security — directly adjacent to Phosra's API compliance layer.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "cold-application",
+        description: "Apply to Unusual Ventures — they actively invest at seed stage",
+        strength: 2,
+      },
+      {
+        type: "industry-association",
+        description: "Through enterprise infrastructure / API security communities",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Lead with API infrastructure and compliance automation parallels to his own companies",
+      steps: [
+        "Reference Harness + Traceable merger as proof he understands compliance infrastructure",
+        "Frame Phosra as the compliance equivalent of what AppDynamics did for performance monitoring",
+        "Emphasize the API-first architecture and enterprise scalability",
+        "Apply through Unusual Ventures with a technical architecture overview",
+      ],
+      openingAngle:
+        "AppDynamics automated performance monitoring. Harness automated DevOps. Phosra automates child safety compliance — same infrastructure-layer thesis, massive regulatory tailwind.",
+    },
+    status: "identified",
+    notes:
+      "AppDynamics sold to Cisco for $3.7B. Unusual Ventures has $600M AUM. Merged Harness + Traceable in 2025 ($5B valuation, $250M revenue). H-1B to billionaire story. Deep infrastructure DNA. SF-based.",
+  },
+
+  {
+    id: "gil-elbaz",
+    name: "Gil Elbaz",
+    fundOrCompany: "TenOneTen Ventures / Personal",
+    role: "Co-Founder, TenOneTen Ventures; Founder, Factual & Applied Semantics",
+    website: "https://www.tenonetenventures.com",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$100K-$500K",
+    stagePreference: "Pre-seed to Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/gilelbaz/",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Gil co-created the technology behind Google AdSense and founded Factual (structured data infrastructure). His career obsession is organizing and structuring the world's data — Phosra structures the world's child safety legislation into a programmable API. His data-infrastructure thesis is a direct match.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description: "Through LA tech community and data infrastructure circles",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description: "Gil writes on Medium about data quality and structured information; engage before pitching",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Frame Phosra as structured data infrastructure for compliance",
+      steps: [
+        "Lead with the data structuring angle: 67 laws, 500+ provisions, structured into 45 rule categories",
+        "Reference his Factual vision of structuring world data — Phosra does this for legislation",
+        "Emphasize the semantic layer: laws parsed into machine-readable enforcement rules",
+        "Approach through TenOneTen Ventures or LA tech community",
+      ],
+      openingAngle:
+        "You structured the world's data with Factual. We're structuring the world's child safety legislation — 67 laws into 45 programmable rule categories, delivered as an API.",
+    },
+    status: "identified",
+    notes:
+      "Co-created Google AdSense technology. Founded Factual (structured data) and Applied Semantics. TenOneTen Ventures co-founder. Notable investments: Climate Corporation (sold to Monsanto $1.2B), GoodReads (Amazon), Kaggle. LA-based. Focus on data infrastructure.",
+  },
+
+  // ─── Tier 3: Adjacent alignment, worth pursuing ───────────────────────────────
+
+  {
+    id: "david-sacks",
+    name: "David Sacks",
+    fundOrCompany: "Craft Ventures",
+    role: "Co-Founder & General Partner, Craft Ventures",
+    website: "https://www.craftventures.com",
+    category: "hnw-angel",
+    type: "angel",
+    checkSizeRange: "$100K-$500K",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/davidoliversacks/",
+      twitter: "@DavidSacks",
+    },
+    thesisAlignment: "adjacent",
+    thesisNote:
+      "Sacks' Craft Ventures led $42M Series A in Starbridge (AI govtech with compliance focus). He's currently serving as White House AI & Crypto Czar, giving him direct exposure to tech regulation. However, his government role may limit new personal investments and his focus is primarily AI/crypto — making alignment adjacent rather than strong.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "2nd-degree-weak",
+        description: "Through PayPal mafia network — Sacks is deeply connected to Levchin, Thiel, Musk circles",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description: "Sacks hosts All-In Podcast; pitch through that ecosystem",
+        strength: 1,
+      },
+    ],
+    tier: 3,
+    approachStrategy: {
+      recommended: "Approach after government role ends; reference Starbridge govtech investment",
+      steps: [
+        "Monitor when Sacks returns to full-time investing (government role may limit activity)",
+        "Reference Craft's Starbridge investment as precedent for compliance-focused govtech",
+        "Frame through All-In Podcast lens — regulatory compliance as next big infrastructure layer",
+        "Approach Craft Ventures team even if David is personally occupied with government role",
+      ],
+      openingAngle:
+        "Craft backed Starbridge for AI govtech compliance. Phosra is the compliance API layer for the $130B child safety regtech market — same thesis, horizontal platform play.",
+    },
+    status: "identified",
+    notes:
+      "PayPal co-founder, COO. Craft Ventures co-founder. 80 angel investments (Facebook, Uber, SpaceX, Palantir, Airbnb). Currently White House AI & Crypto Czar (Dec 2024). Craft invested $42M in Starbridge (compliance-focused AI govtech). Government role may limit personal investment activity. All-In Podcast host.",
+  },
+]
+const FAMILY_OFFICES: WarmIntroTarget[] = [
+  // ── Tier 1: Strong thesis alignment ──────────────────────────────────────
+
+  {
+    id: "emerson-collective",
+    name: "Laurene Powell Jobs",
+    fundOrCompany: "Emerson Collective",
+    role: "Founder & President",
+    website: "https://www.emersoncollective.com",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$100K-$5M",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/laurene-powell-jobs-15929b188/",
+      twitter: "@laurenepowell",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Emerson Collective invests in education, digital health, and AI — all directly relevant to Phosra. Founded College Track and XQ Institute for K-12 reform. Led seed investment in Amplify (edtech). Their LLC structure lets them deploy grants, advocacy, or venture capital — perfect for child safety compliance which spans all three. 200+ investments since 2019.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "XQ Institute / education policy circles — position Phosra as infrastructure protecting the students Emerson Collective's education investments serve",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage with Emerson Collective's education and AI coverage on The Atlantic (which they own) — pitch op-ed on child safety compliance gap",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Emerson Collective hosts invite-only convenings on education and technology policy",
+        strength: 1,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Position Phosra at the intersection of Emerson Collective's education and technology thesis — protecting the children their education portfolio serves",
+      steps: [
+        "Research Emerson Collective's venture team members on LinkedIn — identify who covers compliance/regtech investments",
+        "Draft a pitch op-ed for The Atlantic (Emerson-owned) on the child safety compliance crisis — build awareness before outreach",
+        "Reference their Amplify investment and XQ Institute work to show alignment with their education thesis",
+        "Request intro through education policy networks — Emerson is deeply embedded in K-12 policy advocacy",
+      ],
+      openingAngle:
+        "Emerson Collective invested in Amplify to transform education and founded XQ to reimagine high school. Phosra is the compliance infrastructure that ensures every platform those students use actually protects them — we map 67+ child safety laws into 45 enforceable rule categories via a single API.",
+    },
+    status: "identified",
+    notes:
+      "Emerson Collective is an LLC (not a foundation), giving maximum flexibility for venture investments. Has participated in $1B+ of AI funding rounds. Education is a core pillar. Laurene Powell Jobs has 3 children — personal stake in child safety. Very high profile but actively deploying at seed stage (e.g., Teal Health $10M seed extension in 2025).",
+  },
+
+  {
+    id: "ballmer-group",
+    name: "Connie Ballmer",
+    fundOrCompany: "Ballmer Group",
+    role: "Co-founder",
+    website: "https://ballmergroup.org",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$100K-$1M",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/connie-ballmer-b8a86519/",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Ballmer Group's explicit mission is helping children in economically disadvantaged families achieve economic mobility. $1B+ committed to early childhood education in Washington state. Backed Recidiviz (data-driven policy), StriveTogether ($175M for AI-driven edtech equity), and co-launched NextLadder Ventures ($1B+ initiative with Gates Foundation). Children and families are the core thesis — Phosra's child safety compliance maps directly.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "StriveTogether network — Ballmer Group is the anchor funder; approach through Cradle to Career community",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "NextLadder Ventures coalition events — attend or connect through Gates Foundation overlap",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Reference USAFacts.org (Steve Ballmer's data transparency project) and frame Phosra as bringing similar transparency to child safety regulation",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Lead with Ballmer Group's children-and-families mission — Phosra protects the children they're investing in educating",
+      steps: [
+        "Research Ballmer Group's venture arm leadership — identify the team member covering technology investments",
+        "Reference their StriveTogether and NextLadder Ventures work to show you understand their thesis",
+        "Frame Phosra as 'USAFacts for child safety regulation' — data-driven compliance transparency that Steve Ballmer's data ethos aligns with",
+        "Propose a 15-min call focused on how platforms fail children from disadvantaged communities disproportionately — directly tied to Ballmer's equity thesis",
+      ],
+      openingAngle:
+        "Ballmer Group has committed billions to help children achieve economic mobility. But the platforms those children use daily lack compliance infrastructure — Phosra maps 67+ child safety laws into enforceable API rules, ensuring the digital environments your portfolio serves actually protect kids.",
+    },
+    status: "identified",
+    notes:
+      "Steve and Connie Ballmer have 3 sons. $145B net worth. Based in Bellevue, WA. Very active deploying capital in 2025 — $1B+ to NextLadder Ventures, $1B to WA early childhood education. Data-driven approach (USAFacts). Connie is the more engaged philanthropic leader. Ballmer Group is technically a 'philanthropic investment company' but makes venture-style investments.",
+  },
+
+  {
+    id: "blue-haven",
+    name: "Liesel Pritzker Simmons",
+    fundOrCompany: "Blue Haven Initiative",
+    role: "Co-founder & Managing Partner",
+    website: "https://www.bluehaveninitiative.com",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$50-500K",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/liesel-pritzker-simmons-0714124/",
+      twitter: "@lieselsimmons",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Blue Haven is one of the first family offices built from scratch for impact investing. Diversified portfolio spanning private equity, venture, public equities, and fixed income — all with impact lens. Focus areas include education technology, financial services, and healthcare. Ian and Liesel Simmons seek market-rate returns plus maximum social/environmental impact. Pritzker family connections open additional doors.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Blue Haven is a member of The GIIN (Global Impact Investing Network) — approach through impact investing conferences and GIIN events",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Reference Liesel's ImpactAlpha interview on family office impact investing — engage on social media with her thought leadership",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Impact investing conferences (GIIN, Skoll World Forum, SOCAP) where Blue Haven team speaks regularly",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Lead with Blue Haven's impact investing thesis — Phosra generates market returns while protecting children, the ultimate impact investing proposition",
+      steps: [
+        "Research Blue Haven's current portfolio for edtech or regtech adjacencies",
+        "Reference Liesel's ImpactAlpha interview on impact investing in challenging times",
+        "Frame child safety compliance as an impact investment with strong financial returns — $37B TAM in regulatory compliance",
+        "Apply through GIIN network or impact investing events where Blue Haven is visible",
+      ],
+      openingAngle:
+        "Blue Haven pioneered the 100% impact portfolio model. Phosra is the rare investment that delivers both: market-rate VC returns in a $37B compliance market and direct child protection impact. We map 67+ child safety laws so platforms actually enforce them.",
+    },
+    status: "identified",
+    notes:
+      "Liesel is a Pritzker family member — potential overlap with Pritzker Group VC. Ian Simmons co-manages. No 2025 investments recorded publicly — may be in a quieter deployment phase. Harvard Business School case study written about their approach. Strong thought leadership in impact investing space.",
+  },
+
+  {
+    id: "schusterman",
+    name: "Stacy Schusterman",
+    fundOrCompany: "Schusterman Family Investments",
+    role: "Chairman",
+    website: "https://www.schusterman.org",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$100K-$2M",
+    stagePreference: "Seed to Series B",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/schusterman-family-investments/",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "SFI is the investment arm of the Schusterman family, managing venture/growth investments in technology, healthcare, and energy. The Schusterman Foundation invests heavily in K-12 public education reform and youth development. Founded 2010, headquartered in NYC. Recent investments include Navina (healthtech, March 2025). The education philanthropy creates a natural bridge to child safety compliance.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Schusterman Foundation's education reform network — K-12 education policy circles overlap with child safety advocacy",
+        strength: 2,
+      },
+      {
+        type: "linkedin-group",
+        description:
+          "Schusterman Family Investments LinkedIn page — engage with their content and connect with investment team",
+        strength: 1,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Education reform and Jewish community leadership events where Schusterman is a major funder",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Bridge the gap between SFI's tech investment focus and the Schusterman Foundation's education mission — Phosra sits at the intersection",
+      steps: [
+        "Identify the SFI investment team members covering technology deals on LinkedIn",
+        "Reference the Schusterman Foundation's K-12 education investments to show thesis understanding",
+        "Position Phosra as protecting the students the Foundation's education programs serve — compliance infrastructure for the digital tools used in classrooms",
+        "Apply through their venture pipeline or seek intro via education reform network",
+      ],
+      openingAngle:
+        "The Schusterman Foundation invests in K-12 education reform, and SFI backs high-growth technology companies. Phosra bridges both: we're the compliance API ensuring the educational platforms your students use actually comply with 67+ child safety laws.",
+    },
+    status: "identified",
+    notes:
+      "Dual structure: SFI (for-profit investments) + Schusterman Foundation (philanthropic, education focus). NYC headquarters. Technology and healthcare are primary investment sectors. Most recent investment was Navina in March 2025. Good fit given the education-technology crossover, though child safety is not an explicit investment thesis.",
+  },
+
+  // ── Tier 2: Good alignment ───────────────────────────────────────────────
+
+  {
+    id: "time-ventures",
+    name: "Marc Benioff",
+    fundOrCompany: "TIME Ventures",
+    role: "Founder, Chairman & CEO of Salesforce",
+    website: "https://time.com",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$50-500K",
+    stagePreference: "Seed to Series B",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/marc-benioff-4a5646117/",
+      twitter: "@Benioff",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "TIME Ventures is Benioff's personal investment vehicle — 200+ investments since 2019. Invests in B2B, 'platform thinking' companies that become foundational layers for ecosystems. Benioff and wife Lynne gave $100M to UCSF Children's Hospital and $39M to public schools. Latest investment Oct 2025 (Sumble). The 'Plaid of child safety' positioning maps to his platform-thinking thesis.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "conference-event",
+        description:
+          "Salesforce Dreamforce conference — child safety compliance is relevant to the Salesforce ecosystem",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage with Benioff on Twitter/X (very active) around children's hospital philanthropy and platform-building themes",
+        strength: 2,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Salesforce AppExchange ecosystem — position Phosra as infrastructure for the Salesforce platform",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Lead with Benioff's 'platform thinking' investment thesis — Phosra is the compliance platform layer for every company handling children's data",
+      steps: [
+        "Study Benioff's investment pattern — he backs companies that become foundational ecosystem layers (like Wiz for security)",
+        "Engage on Twitter/X with his children's hospital and education philanthropy posts — build visibility",
+        "Frame Phosra as 'the Salesforce of child safety compliance' — a platform that every company needs, just like CRM",
+        "Approach through Salesforce ecosystem events or seek intro through B2B SaaS founder networks",
+      ],
+      openingAngle:
+        "You invest in companies that become foundational layers for ecosystems — Wiz for security, Plaid for fintech. Phosra is that layer for child safety compliance: a single API mapping 67+ laws into 45 enforceable rules. Every platform handling children's data needs this.",
+    },
+    status: "identified",
+    notes:
+      "Marc Benioff scored a $600M windfall from Google-Wiz deal in 2025. Active angel investor with 209 investments. Children's hospital philanthropy shows personal commitment to child welfare. Platform-thinking thesis aligns well with Phosra's 'Plaid of child safety' positioning. Very high profile — may be difficult to reach directly but check size is flexible.",
+  },
+
+  {
+    id: "revolution-case",
+    name: "Steve Case",
+    fundOrCompany: "Revolution / Rise of the Rest",
+    role: "Chairman & CEO",
+    website: "https://www.revolution.com",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$250K-$1M",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/stevecase/",
+      twitter: "@SteveCase",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Revolution's Rise of the Rest Seed Fund specifically backs seed-stage startups outside Silicon Valley, with $300M+ across two funds. Backed by Bezos, Walton family, Sara Blakely, Ray Dalio. Case testified before Congress in March 2025 on entrepreneurship policy. Strong interest in regulated industries and policy-adjacent startups. If Phosra has any operations outside coastal tech hubs, this is a strong fit.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "conference-event",
+        description:
+          "Rise of the Rest bus tours and pitch competitions — apply directly ($500K+ investments on each tour)",
+        strength: 3,
+      },
+      {
+        type: "cold-application",
+        description:
+          "Rise of the Rest accepts direct applications for their seed fund — formal pipeline",
+        strength: 3,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage with Steve Case's policy-oriented content on Twitter/X — he's vocal about regulated industries and entrepreneurship",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Apply to Rise of the Rest seed fund directly — they have a formal application process and back startups in regulated industries",
+      steps: [
+        "Check if Phosra qualifies for Rise of the Rest's geographic focus (outside Silicon Valley / coastal hubs)",
+        "Apply through the official Rise of the Rest pipeline — they invest at least $500K per company",
+        "Reference Case's March 2025 congressional testimony on entrepreneurship to show awareness of his policy interests",
+        "Frame Phosra as a regulated-industry startup that turns regulatory complexity into competitive advantage — mirrors Case's thesis",
+      ],
+      openingAngle:
+        "Rise of the Rest backs seed-stage startups in highly regulated industries. Phosra turns the complexity of 67+ child safety laws into a single API — exactly the kind of regulatory infrastructure play that creates massive economic value in underserved markets.",
+    },
+    status: "identified",
+    notes:
+      "AOL co-founder. $300M+ across two Rise of the Rest seed funds. 200+ startups invested across 100+ US cities. Strong policy connections (testified before Congress March 2025). Backed by Bezos, Walton family. Revolution also has Ventures (early-stage) and Growth funds. Geographic focus is key — may be less relevant if Phosra is purely coastal.",
+  },
+
+  {
+    id: "pritzker-group",
+    name: "Tony Pritzker",
+    fundOrCompany: "Pritzker Group Venture Capital",
+    role: "Managing Partner",
+    website: "https://www.pritzkergroup.com",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$500K-$5M",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/pritzker-group-vc/",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Pritzker Group VC writes $500K-$5M checks at seed/Series A. 168 companies invested, 7 unicorns (including Coinbase, Bird, Pluto TV). Looks for experienced founding teams with demonstrated product-market fit. Deep marketplace and platform expertise. The Pritzker Organization also has a separate investment arm. Blue Haven Initiative (Liesel Pritzker Simmons) is a family member's separate fund focused on impact. Jake's 3-exit track record aligns with their experienced-founder preference.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "conference-event",
+        description:
+          "Chicago tech ecosystem events — Pritzker Group is Chicago-based and deeply embedded",
+        strength: 2,
+      },
+      {
+        type: "cold-application",
+        description:
+          "Apply through Pritzker Group's website — they review cold applications from experienced founders",
+        strength: 2,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Pritzker family's broader network — Blue Haven (Liesel) could be a parallel approach",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Lead with Jake's 3-exit track record — Pritzker Group explicitly invests in highly experienced founding teams",
+      steps: [
+        "Research Pritzker Group's current portfolio for compliance/regtech adjacencies",
+        "Lead outreach with Jake's founding experience (3 exits, Mastercard infrastructure) — their #1 criterion is experienced founders",
+        "Position Phosra as a platform play with marketplace dynamics — PGVC has deep marketplace investing expertise",
+        "Apply through their website and simultaneously seek warm intro through Chicago tech or fintech networks",
+      ],
+      openingAngle:
+        "Pritzker Group backs experienced founders building platform businesses. Jake Klinvex has 3 exits and built infrastructure at Mastercard. Phosra is the 'Plaid of child safety' — a platform API that every company needs as 67+ child safety laws create mandatory compliance, with the same network effects you saw in Coinbase and Pluto TV.",
+    },
+    status: "identified",
+    notes:
+      "Founded 1996. 168+ portfolio companies. $500K-$1M initial checks at seed, up to $5M. 7 unicorns including Coinbase. Chicago-based. The broader Pritzker family has multiple investment vehicles (Blue Haven, Pritzker Organization). Governor J.B. Pritzker is a family member — political connections could be relevant for regulatory-focused startups.",
+  },
+
+  {
+    id: "bezos-expeditions",
+    name: "Jeff Bezos",
+    fundOrCompany: "Bezos Expeditions",
+    role: "Founder",
+    website: "https://www.bezosexpeditions.com",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$100K-$10M",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/jeffbezos/",
+      twitter: "@JeffBezos",
+    },
+    thesisAlignment: "adjacent",
+    thesisNote:
+      "Bezos Expeditions focuses on transformative technology — AI, robotics, biotech. Made 7 investments in 2025. 70% of portfolio in technology. Also backs Rise of the Rest Seed Fund (Steve Case). Day One Fund focuses on homelessness and preschool education. Not a direct child safety thesis, but the Day One Fund's preschool education focus and the scale of AWS's compliance infrastructure (Phosra could be built on AWS) create strategic angles.",
+    coppaInterest: "none",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Day One Fund / preschool education network — Bezos is personally invested in early childhood",
+        strength: 1,
+      },
+      {
+        type: "conference-event",
+        description:
+          "AWS re:Invent or startup events — position as AWS marketplace play for compliance",
+        strength: 1,
+      },
+      {
+        type: "cold-application",
+        description:
+          "Bezos Expeditions is very hard to reach cold — seek intro through Rise of the Rest or AWS Activate",
+        strength: 1,
+      },
+    ],
+    tier: 3,
+    approachStrategy: {
+      recommended:
+        "Approach through Day One Fund or Rise of the Rest network rather than Bezos Expeditions directly — those channels are more accessible",
+      steps: [
+        "Apply to Rise of the Rest (which Bezos backs) — this gets you into the Bezos network indirectly",
+        "Position Phosra as infrastructure for AWS — compliance-as-a-service in the AWS marketplace",
+        "Reference Day One Fund's preschool education investments to show awareness of Bezos's personal interests",
+        "This is a long-shot at seed stage — prioritize other family offices first and revisit at Series A",
+      ],
+      openingAngle:
+        "Your Day One Fund invests in preschool education because you believe every child deserves a great start. Phosra ensures every digital platform those children encounter actually protects them — a single API mapping 67+ child safety laws into enforceable compliance rules.",
+    },
+    status: "identified",
+    notes:
+      "Very difficult to access at pre-seed stage. Bezos Expeditions manages Jeff Bezos's personal wealth. Mercer Island, WA based. 7 investments in 2025 (Archetype AI, Arrived). Day One Fund is separate — focuses on preschool education and homelessness. The strategic play is through Rise of the Rest or AWS Marketplace rather than a direct Bezos Expeditions check. Better as a Series A target.",
+  },
+
+  {
+    id: "tusk-ventures",
+    name: "Bradley Tusk",
+    fundOrCompany: "Tusk Venture Partners",
+    role: "Co-founder & Managing Partner",
+    website: "https://www.tuskventurepartners.com",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$250K-$2M",
+    stagePreference: "Pre-seed to Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/bradleytusk/",
+      twitter: "@BradleyTusk",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Tusk Venture Partners is the world's ONLY VC fund investing solely in early-stage startups in highly regulated industries. They literally turn regulatory complexity into competitive advantage — which is exactly Phosra's value proposition. Portfolio includes Coinbase, Lemonade, FanDuel, Circle, Ro. The fund comes with a built-in political consulting firm (Tusk Strategies) and equity-for-service regulatory shop. Phosra in a highly regulated space + a VC that provides regulatory strategy = perfect match.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "Tusk accepts applications from startups in regulated industries — Phosra is a textbook fit",
+        strength: 3,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Bradley Tusk hosts 'Firewall' podcast and publishes frequently on regulated industries — engage with his content",
+        strength: 3,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Regulatory technology conferences and policy advocacy events where Tusk Strategies is active",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Apply directly — Tusk exists to invest in exactly this type of company. Regulated industry + regulatory competitive advantage = their entire thesis",
+      steps: [
+        "Apply through Tusk Venture Partners' website — make the regulated-industry angle the headline",
+        "Listen to Bradley Tusk's 'Firewall' podcast and reference specific episodes in outreach",
+        "Emphasize that Phosra's regulatory mapping across 67+ laws creates a defensible moat — Tusk's core thesis is that regulatory complexity = competitive advantage",
+        "Highlight that Tusk Strategies (their in-house lobbying arm) could help Phosra shape child safety policy — offer to become a portfolio company that helps write the rules",
+      ],
+      openingAngle:
+        "Tusk Venture Partners invests solely in regulated industries where regulatory complexity creates competitive advantage. Child safety compliance is one of the most complex regulatory landscapes on earth — 67+ laws, 45 rule categories, 50+ jurisdictions. Phosra's single API turns that complexity into our moat. This is exactly what you built your fund to invest in.",
+    },
+    status: "identified",
+    notes:
+      "Not technically a family office but a hybrid VC/advisory model uniquely aligned with Phosra. Bradley Tusk was Bloomberg's campaign manager and Uber's first political strategist. 50+ portfolio companies, 12 exits. Coinbase, Lemonade, FanDuel in portfolio. The equity-for-service model means Tusk Strategies provides regulatory/political strategy to portfolio companies. Could be transformative for shaping child safety policy. Founded 2016 by Bradley Tusk and Jordan Nof.",
+  },
+
+  {
+    id: "obvious-ventures",
+    name: "Evan Williams",
+    fundOrCompany: "Obvious Ventures",
+    role: "Co-founder & General Partner",
+    website: "https://obvious.com",
+    category: "family-office",
+    type: "family-office",
+    checkSizeRange: "$5M-$12M",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/evanwilliams/",
+      twitter: "@ev",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Obvious Ventures invests in 'world positive' companies — purpose-driven entrepreneurs reimagining industries. Three pillars: Planetary Health, Human Health, Economic Health. Twitter co-founder who understands platform safety challenges firsthand. Fund V closed at $360M in January 2026, investing $5-12M in seed/Series A. 'We invest in companies we wish existed in the world' — child safety compliance infrastructure is that kind of company.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "Obvious Ventures accepts applications — focus on the 'world positive' framing",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Evan Williams is active on LinkedIn and blogs about purpose-driven investing — engage with his content on social media safety",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "SOCAP, Skoll World Forum, and other impact/purpose-driven venture events",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Lead with the 'world positive' framing — Phosra is a company that should exist in the world to protect children online",
+      steps: [
+        "Apply through Obvious Ventures' pipeline with strong 'world positive' positioning",
+        "Reference Evan Williams' experience at Twitter — he saw firsthand how platforms struggle with child safety",
+        "Frame Phosra under 'Economic Health' pillar — compliance infrastructure that creates economic value while protecting children",
+        "Note: Check size ($5-12M) is larger than Phosra's raise — they may not do $950K rounds unless it's a small allocation in a bigger round",
+      ],
+      openingAngle:
+        "You co-founded Twitter and saw platforms struggle with child safety firsthand. Obvious Ventures invests in companies you wish existed — Phosra is exactly that: the compliance infrastructure ensuring every platform protects children across 67+ laws. A company that should exist.",
+    },
+    status: "identified",
+    notes:
+      "Check size concern: Obvious writes $5-12M checks, which is much larger than Phosra's $950K raise. May need to position as a small initial allocation or wait for a larger round. However, the 'world positive' thesis alignment is very strong. Fund V ($360M) just closed January 2026 — fresh capital to deploy. Evan Williams co-founded Twitter, Blogger, Medium — deeply understands platform safety challenges. San Francisco based.",
+  },
+]
+const CORPORATE_VCS: WarmIntroTarget[] = [
+  {
+    id: "mastercard-start-path",
+    name: "Johan Gerber",
+    fundOrCompany: "Mastercard Start Path — Security Solutions",
+    role: "EVP & Head of Security Solutions",
+    website: "https://www.mastercard.com/us/en/innovation/partner-with-us/start-path/security-solutions.html",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "Program + strategic investment",
+    stagePreference: "Growth-stage startups",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/johangerber/",
+      twitter: "@JohanGerber",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Mastercard launched a dedicated Start Path Security Solutions track in June 2025 focused on cybersecurity, fraud mitigation, digital identity, and payment resiliency. Jake's Mastercard infrastructure background is a direct network advantage. The program has onboarded 500+ companies from 60+ countries and alumni have raised $25B+ collectively. Security is Mastercard's 'cornerstone of trust' — child safety compliance maps directly to their digital trust thesis.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "direct-1st-degree",
+        description:
+          "Jake's Mastercard infrastructure background provides warm intro path; leverage former colleagues and the Start Path application process",
+        strength: 5,
+      },
+      {
+        type: "cold-application",
+        description:
+          "Apply directly to Start Path Security Solutions track — competitive global process with 4-5 startups per cohort",
+        strength: 4,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Leverage Jake's Mastercard network for warm intro to Johan Gerber or Start Path team, then apply to Security Solutions track",
+      steps: [
+        "Map Jake's former Mastercard colleagues who can intro to Start Path or Security Solutions leadership",
+        "Apply to Start Path Security Solutions track emphasizing digital identity verification for minors and payment compliance",
+        "Position Phosra as infrastructure-layer compliance (similar to Mastercard's infrastructure role in payments)",
+        "Highlight COPPA parental consent verification as adjacent to Mastercard's identity verification capabilities",
+      ],
+      openingAngle:
+        "Former Mastercard infrastructure engineer building the compliance infrastructure layer for child safety — the same way Mastercard built trust infrastructure for payments",
+    },
+    status: "identified",
+    notes:
+      "STRONGEST LEAD: Jake's Mastercard background is the single best warm intro path in the entire CVC target list. Start Path Security Solutions cohort includes companies like OneID (digital identity), Scamnetic (AI scam detection), and Shield-IoT (IoT compliance) — Phosra fits perfectly. Program offers mentorship, Mastercard API integration, and co-innovation opportunities.",
+  },
+
+  {
+    id: "salesforce-ventures",
+    name: "John Somorjai",
+    fundOrCompany: "Salesforce Ventures",
+    role: "EVP, Corporate Development & Salesforce Ventures",
+    website: "https://salesforceventures.com/",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$1-5M (seed), up to $50M+ (growth)",
+    stagePreference: "Seed to Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/johnsomorjai/",
+      twitter: "@johnsomorjai",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Salesforce Ventures has invested $6B+ across 630+ companies globally. They explicitly invest in Drata (compliance automation), demonstrating strong regtech thesis. Their $1B AI fund (85% deployed) prioritizes 'trust and responsibility.' Phosra's API-first compliance platform maps directly to Salesforce's ecosystem — platforms using Salesforce CRM need child safety compliance enforcement, and Phosra could integrate as an AppExchange partner.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "2nd-degree-weak",
+        description:
+          "Salesforce Ventures invested in Drata (compliance automation) — use Drata's team as a warm intro path since Phosra is complementary, not competitive",
+        strength: 4,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Position as AppExchange integration partner; Salesforce's partner ecosystem team can facilitate introductions to Ventures",
+        strength: 3,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Lead with the Drata investment as proof of compliance thesis alignment, position Phosra as the child safety vertical complement",
+      steps: [
+        "Research Drata investment team at Salesforce Ventures for the specific partner who led that deal",
+        "Build a 1-page brief showing Phosra as AppExchange-ready child safety compliance for Salesforce customers",
+        "Reach out via Dreamforce or Salesforce community events (next Dreamforce: Sept 2026)",
+        "Emphasize that 67+ child safety laws create the same fragmented compliance burden that Drata solves for SOC2/GDPR",
+      ],
+      openingAngle:
+        "You backed Drata for compliance automation — we're building the equivalent for the fastest-growing regulatory category: child safety. 67 laws, 45 rule categories, one API.",
+    },
+    status: "identified",
+    notes:
+      "Salesforce Ventures is the most active CVC globally with 504 portfolio companies and 23 new investments in the past 12 months. Their Drata investment validates the compliance automation thesis. Check sizes start under $5M for seed — our $950K raise fits within their range. Team of 43 people including 15 partners.",
+  },
+
+  {
+    id: "microsoft-m12",
+    name: "Peter Lenke",
+    fundOrCompany: "M12 (Microsoft's Venture Fund)",
+    role: "Managing Partner, AI/Enterprise",
+    website: "https://m12.vc/",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$1-10M (Series A/B focus, some seed)",
+    stagePreference: "Seed to Series B",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/peterlenke/",
+      twitter: "",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "M12 invests from an evergreen fund off Microsoft's balance sheet in cybersecurity, AI, and enterprise infrastructure. They invested in Sola Security and Reach Security in 2025, showing active security/compliance deployment. Microsoft's own platforms (Xbox, Teams for Education, Minecraft) have massive COPPA exposure. Phosra's API could integrate with Azure/Microsoft ecosystem for child safety compliance.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Microsoft's own COPPA exposure via Xbox, Minecraft, and Teams for Education creates strategic buyer interest — approach through Microsoft for Startups or M12 directly",
+        strength: 3,
+      },
+      {
+        type: "conference-event",
+        description:
+          "M12 team is active at enterprise/security conferences; target RSA Conference or Microsoft Ignite for face-to-face intro",
+        strength: 3,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Position Phosra as infrastructure-layer compliance for any platform with minor users — directly relevant to Microsoft's own compliance needs across Xbox, Minecraft, Teams for Education",
+      steps: [
+        "Apply to Microsoft for Startups program to establish relationship with Microsoft ecosystem team",
+        "Build Azure integration narrative — Phosra as a compliance middleware in Azure Marketplace",
+        "Target Peter Lenke (seed-to-B focus) or Michelle Gonzalez (Managing Partner) with a cold outreach referencing their Sola Security and Reach Security investments",
+        "Frame the pitch around Microsoft's own $20M FTC fine for Xbox COPPA violations as proof that even Microsoft needs this",
+      ],
+      openingAngle:
+        "Microsoft paid $20M in COPPA fines for Xbox. Every platform with minor users needs compliance infrastructure — we're building the API layer that prevents the next fine.",
+    },
+    status: "identified",
+    notes:
+      "M12 has 252 portfolio companies, 15 new investments in past 12 months. Evergreen fund from Microsoft balance sheet means no fund cycle pressure. Michelle Gonzalez (former Google Area 120 leader) is Managing Partner. Peter Lenke focuses on seed-to-B AI/enterprise investments. 17 team members total.",
+  },
+
+  {
+    id: "cisco-investments",
+    name: "Cisco Investments Team",
+    fundOrCompany: "Cisco Investments",
+    role: "Corporate Venture Capital",
+    website: "https://www.ciscoinvestments.com/",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$2-10M (early stage), $10-50M (growth)",
+    stagePreference: "Seed to Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/cisco-investments/",
+      twitter: "",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Cisco Investments has 339 portfolio companies with deep security/compliance portfolio including Theta Lake (compliance hub), BigID (data privacy), JupiterOne (compliance dashboards), StrongDM (zero-trust access), and Securiti (AI governance). They invest in seed through growth stage and have 40+ investment professionals globally. Child safety compliance maps to their broader security/compliance thesis.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "2nd-degree-weak",
+        description:
+          "Theta Lake (Cisco portfolio company) built a compliance hub for Webex — Phosra is the child safety equivalent; use Theta Lake team for warm intro",
+        strength: 3,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Attend RSA Conference or Cisco partner events; Cisco Investments team is visible at security/compliance conferences",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Lead with Cisco's compliance portfolio (Theta Lake, BigID, Securiti) and position Phosra as the child safety compliance layer that complements their existing investments",
+      steps: [
+        "Research which Cisco Investments partner led the Theta Lake and Securiti deals",
+        "Position Phosra as complementary infrastructure — Cisco's portfolio covers data privacy, AI governance, and compliance dashboards but lacks child safety",
+        "Emphasize API-first approach matches Cisco's platform philosophy",
+        "Apply to Cisco LaunchPad accelerator as an entry point into the Cisco ecosystem",
+      ],
+      openingAngle:
+        "Your portfolio covers data privacy (BigID), AI governance (Securiti), and compliance dashboards (JupiterOne) — but not the fastest-growing compliance category: child safety. We fill that gap.",
+    },
+    status: "identified",
+    notes:
+      "Cisco Investments has not made any 2026 investments yet as of February, but had 13 new investments in the past 12 months. Their compliance-focused portfolio companies (Theta Lake, BigID, JupiterOne, StrongDM, Securiti) show clear thesis alignment. Founded 1993, based in San Jose. Strong startup support program with monthly portfolio spotlights.",
+  },
+
+  {
+    id: "roblox-strategic",
+    name: "Roblox Corporate Development",
+    fundOrCompany: "Roblox Corporation",
+    role: "Strategic Investments & Partnerships",
+    website: "https://about.roblox.com/",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$500K-5M (strategic)",
+    stagePreference: "Early to Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/roblox/",
+      twitter: "@Roblox",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Roblox is the ultimate strategic buyer for child safety compliance. With $4.9B revenue (up 36% YoY) and $6.8B in bookings, they're spending hundreds of millions on safety infrastructure. They deploy 400+ AI models for moderation, partner with IARC for global age ratings, and face an SEC investigation and German USK 16+ rating. They spent $468M in Q4 capital expenditures specifically on 'safety and AI.' Phosra could be their compliance API vendor.",
+    coppaInterest: "public-stance",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Roblox's Trust & Safety team and Safety Partners page lists organizations they work with — target those connections for warm intro",
+        strength: 3,
+      },
+      {
+        type: "cold-application",
+        description:
+          "Approach through Roblox Developer Conference (RDC) or their open safety partnerships program",
+        strength: 3,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Position Phosra as the external compliance layer Roblox needs — they're spending $468M on safety capex but building everything in-house; Phosra offers the regulatory mapping they can't build alone",
+      steps: [
+        "Research Roblox's Head of Trust & Safety and VP of Corporate Development on LinkedIn",
+        "Reference their SEC investigation, German USK 16+ rating, and IARC partnership as proof they need multi-jurisdictional compliance mapping",
+        "Propose a vendor relationship first (not investment) — become their compliance API, then discuss strategic investment",
+        "Attend RDC 2026 or target Roblox's Safety Partners program for initial engagement",
+      ],
+      openingAngle:
+        "You're spending $468M on safety infrastructure and navigating 67+ child safety laws across jurisdictions. We map all of them to a single API — saving your compliance team months of regulatory tracking.",
+    },
+    status: "identified",
+    notes:
+      "Roblox's massive COPPA exposure and regulatory pressure make them a top-3 strategic target. They face multi-jurisdictional compliance challenges (IARC ratings differ by region), an active SEC investigation, and expanding global regulation. Revenue: $4.9B (2025). They've open-sourced some safety tools and have a Parent Council with 200+ members. Key risk: they may prefer to build vs. buy compliance infrastructure.",
+  },
+
+  {
+    id: "epic-games-strategic",
+    name: "Epic Games Corporate Development",
+    fundOrCompany: "Epic Games",
+    role: "Strategic Investments",
+    website: "https://www.epicgames.com/",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$500K-5M (strategic)",
+    stagePreference: "Growth-stage preferred",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/epic-games/",
+      twitter: "@EpicGames",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Epic Games paid a record $520M FTC settlement ($275M COPPA penalty + $245M consumer refunds) — the largest COPPA enforcement action in history. They raised $2B from Sony and KIRKBI (LEGO) specifically to build a 'kid-friendly metaverse' with child safety as a stated priority. Disney invested $1.5B in Epic in 2024. They have direct, painful experience with COPPA non-compliance costs and are committed to getting it right.",
+    coppaInterest: "public-stance",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Epic's public commitment to child safety post-FTC settlement creates an opening for compliance vendors; approach through their Trust & Safety or Legal teams",
+        strength: 3,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Target GDC (Game Developers Conference) or Epic's Unreal Fest for face-to-face engagement with their corporate development team",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Lead with their $520M FTC pain — position Phosra as the compliance API that would have prevented it",
+      steps: [
+        "Research Epic's VP of Trust & Safety or Chief Privacy Officer on LinkedIn for warm outreach",
+        "Frame the pitch: '$520M in COPPA fines could have been prevented with a $50K/year compliance API'",
+        "Propose a vendor/partnership first — Epic building a kid-friendly metaverse with Sony/LEGO needs compliance infrastructure",
+        "Reference their KIRKBI/LEGO partnership explicitly — LEGO's brand depends on child safety, they'd want Epic's compliance partners to be robust",
+      ],
+      openingAngle:
+        "Epic paid $520M — the largest COPPA penalty ever. As you build the kid-friendly metaverse with LEGO and Sony, you need compliance infrastructure that scales across 67+ jurisdictions. That's exactly what Phosra does.",
+    },
+    status: "identified",
+    notes:
+      "Epic's $520M FTC settlement is the strongest 'pain point' signal of any target. $275M was specifically for COPPA violations. $2B raised from Sony + KIRKBI (LEGO) for kid-friendly metaverse. Disney invested $1.5B in 2024. Epic has made strategic investments as a corporate VC (portfolio includes companies via their Games investment arm). Key risk: Epic may want to build compliance in-house, but the multi-jurisdictional complexity favors a platform approach.",
+  },
+
+  {
+    id: "gradient-ventures",
+    name: "Anna Patterson",
+    fundOrCompany: "Gradient Ventures (Google/Alphabet)",
+    role: "Founder & Managing Partner",
+    website: "https://www.gradient.com/",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$1-5M (seed average ~$5.3M rounds)",
+    stagePreference: "Seed to Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/anna-googler/",
+      twitter: "",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Gradient Ventures is Google's AI-focused fund investing directly from Alphabet's balance sheet. They emphasize ethical AI including fairness, bias detection, and explainable AI. They made 27 investments in 2025, primarily at Seed and Series A. Phosra's AI-powered compliance mapping across 67+ laws aligns with their responsible AI thesis. Google/YouTube's own massive COPPA exposure ($170M FTC settlement in 2019) makes this strategically relevant.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "conference-event",
+        description:
+          "Gradient partners attend AI/ML conferences; target NeurIPS, ICML, or Google-hosted AI events for warm intro opportunities",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-weak",
+        description:
+          "Research Gradient's responsible AI portfolio companies for warm intro paths — companies working on AI safety/fairness may know the team",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Position Phosra as responsible AI infrastructure for compliance — AI-powered mapping of child safety laws aligns with Gradient's ethical AI thesis",
+      steps: [
+        "Research Gradient's responsible AI investments and find portfolio founders who can make warm intros",
+        "Frame Phosra as an AI-native compliance platform — the 45 rule categories mapped by ML across 67+ laws is a technical story that resonates with an AI-focused fund",
+        "Reference YouTube's $170M COPPA settlement as proof that even Google needs this",
+        "Target Darian Shirazi or Zach Bratun-Glennon (Partners) for initial outreach — seed stage is their sweet spot",
+      ],
+      openingAngle:
+        "YouTube paid $170M in COPPA fines. We use AI to map 67+ child safety laws across 45 enforcement categories into a single API — responsible AI applied to the most important compliance category.",
+    },
+    status: "identified",
+    notes:
+      "Gradient is transitioning from Google-only backing to accepting outside LPs (raising $200M Fund V). 313 total investments, 99 at seed stage. Team of 15 with 7 partners. Invests directly from Alphabet balance sheet with longer timelines and less fund cycle pressure. Latest investment: Vijil (Nov 2025). Note: Gradient may be becoming more independent from Google, which could reduce the strategic 'Google needs this' angle.",
+  },
+
+  {
+    id: "disney-accelerator",
+    name: "Disney Accelerator Team",
+    fundOrCompany: "Disney Accelerator / Walt Disney Company",
+    role: "Accelerator Program + Strategic Investment",
+    website: "https://sites.disney.com/accelerator/",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "Investment capital (accelerator program)",
+    stagePreference: "Growth-stage startups",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/the-walt-disney-company/",
+      twitter: "@WaltDisneyCo",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Disney paid $10M in a COPPA settlement finalized in December 2025 for failing to properly designate kid-directed YouTube videos. The Disney Accelerator has supported 65+ companies including Epic Games and Kahoot. The 2025 program focuses on XR, AI/ML, sports tech, robotics, connected play, haptics, and 'Generation Alpha experiences.' Disney's massive children's content portfolio (Disney+, Pixar, Marvel, etc.) creates direct COPPA compliance need.",
+    coppaInterest: "public-stance",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "accelerator-alumni",
+        description:
+          "Apply directly to Disney Accelerator program — they accept growth-stage, venture-backed startups with technology/entertainment focus",
+        strength: 3,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Disney's Safety & Content teams are active in children's media industry groups (kidSAFE, CARU, etc.)",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Apply to Disney Accelerator emphasizing 'Generation Alpha experiences' focus area and Disney's own COPPA compliance needs",
+      steps: [
+        "Wait for Disney Accelerator 2026 application window (typically opens Q1-Q2)",
+        "Frame Phosra under their 'Generation Alpha experiences' category — compliance infrastructure that protects kids",
+        "Reference Disney's $10M COPPA settlement (Dec 2025) as proof of their compliance pain point",
+        "Highlight that Disney+ Parental Controls, Disney Channel, and YouTube content all need multi-jurisdictional child safety compliance",
+      ],
+      openingAngle:
+        "Disney just settled a $10M COPPA case. Your content reaches billions of children across platforms — you need a single compliance API that maps all 67+ child safety laws. That's Phosra.",
+    },
+    status: "identified",
+    notes:
+      "Disney's $10M COPPA settlement (finalized Dec 2025) was for YouTube videos not properly designated as kid-directed. The Disney Accelerator program runs annually with 4-5 companies per cohort, offering investment, co-working space, and executive mentorship. 2025 cohort included Animaj (kid-focused AI animation). The Accelerator has produced 65+ alumni over 10 years. Key risk: Disney may prefer enterprise-grade vendors over pre-seed startups.",
+  },
+
+  {
+    id: "comcast-ventures",
+    name: "Allison Goldberg",
+    fundOrCompany: "Comcast Ventures",
+    role: "Managing Partner",
+    website: "https://comcastventures.com/",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$1-10M",
+    stagePreference: "Seed to Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/allisongoldberg/",
+      twitter: "",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Comcast Ventures has invested in 275 companies with 4 new investments in the past 12 months. As parent company of NBCUniversal (now with Versant Media spinoff), Comcast operates Peacock streaming and family entertainment brands (Illumination, DreamWorks Animation). Their media platforms serving family audiences create direct COPPA compliance exposure. The Versant Media spinoff may create new investment opportunities in safety/compliance infrastructure.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Target Comcast's family entertainment and media teams (Illumination, DreamWorks Animation) for internal champion who can intro to Ventures",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-weak",
+        description:
+          "Research Comcast Ventures' enterprise software portfolio for founders who can provide warm intros",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Position Phosra as compliance infrastructure for media/streaming platforms with family audiences — directly relevant to Peacock and NBCUniversal properties",
+      steps: [
+        "Research Marc Silberman (Comcast Ventures emerging leader 2025) and Allison Goldberg for outreach",
+        "Frame the pitch around media/streaming compliance — Peacock, DreamWorks Animation, and Illumination all serve kids",
+        "Highlight the regulatory landscape: KOSA, COPPA 2.0, and state-level kids' safety laws all impact streaming platforms",
+        "Propose a pilot with one Comcast/NBCU property to prove value before investment discussion",
+      ],
+      openingAngle:
+        "Peacock and DreamWorks Animation serve millions of kids. With KOSA, COPPA 2.0, and 67+ child safety laws, your streaming platforms need a compliance API — not a 50-person legal team.",
+    },
+    status: "identified",
+    notes:
+      "Comcast just completed the Versant Media spinoff (Jan 2026), separating cable networks from NBCU's core film/TV/streaming business. This restructuring may affect Comcast Ventures' investment thesis. 275 portfolio companies, 16 team members. Marc Silberman was named emerging leader in 2025. Lower activity recently (4 new investments in 12 months) could mean more selective or pivoting thesis.",
+  },
+
+  {
+    id: "t-mobile-ventures",
+    name: "T-Mobile Ventures Team",
+    fundOrCompany: "T-Mobile Ventures",
+    role: "Corporate Venture Capital",
+    website: "https://www.t-mobile.com/business/ventures",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$2-10M",
+    stagePreference: "Mid to Growth-stage",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/t-mobile/",
+      twitter: "@TMobile",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "T-Mobile Ventures explicitly lists 'ensuring peace of mind for parents of digital natives' as a key investment focus in their second CVC fund. They operate FamilyMode (parental controls app), SyncUP KIDS Watch, and have a Children's Privacy Notice. Their family safety products create direct need for child safety compliance infrastructure. However, they typically invest in mid-to-growth stage, which may be too late for a pre-seed startup.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "T-Mobile's FamilyMode and SyncUP KIDS products teams are direct stakeholders for child safety compliance — approach through product team first",
+        strength: 3,
+      },
+      {
+        type: "accelerator-alumni",
+        description:
+          "T-Mobile Accelerator program in Kansas City could be an entry point before CVC investment",
+        strength: 2,
+      },
+    ],
+    tier: 3,
+    approachStrategy: {
+      recommended:
+        "Approach through T-Mobile's family products division first, then leverage internal champion for Ventures introduction",
+      steps: [
+        "Research T-Mobile's FamilyMode and SyncUP KIDS product teams — they need COPPA compliance infrastructure",
+        "Position Phosra as vendor first: 'Your FamilyMode app needs to comply with COPPA, KOSA, and 67+ state/federal laws'",
+        "Apply to T-Mobile Accelerator program as alternative entry point",
+        "Convert vendor/accelerator relationship into Ventures investment conversation",
+      ],
+      openingAngle:
+        "Your FamilyMode app and SyncUP KIDS Watch serve children directly — you're subject to COPPA, KOSA, and 67+ child safety laws. Phosra's API handles compliance across all of them.",
+    },
+    status: "identified",
+    notes:
+      "T-Mobile Ventures launched second CVC fund specifically mentioning family safety. They operate FamilyMode (parental controls), SyncUP KIDS Watch 2, and have dedicated Children's Privacy Notice. Based in Bellevue, WA. Founded 2018. Typical check size may be too large for pre-seed ($2-10M in mid-to-growth companies), but the strategic alignment on family safety is strong. Omar Tazi is EVP & Chief Product Officer overseeing product innovation.",
+  },
+
+  {
+    id: "pearson-ventures",
+    name: "Pearson Ventures Team",
+    fundOrCompany: "Pearson Ventures",
+    role: "Corporate Venture Capital — Education",
+    website: "https://plc.pearson.com/en-GB/company/pearson-ventures",
+    category: "corporate-vc",
+    type: "cvc",
+    checkSizeRange: "$2-5M",
+    stagePreference: "Early-stage (4-5 investments per year)",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/pearson/",
+      twitter: "@pearson",
+    },
+    thesisAlignment: "adjacent",
+    thesisNote:
+      "Pearson Ventures invests $2-5M per deal in 4-5 early-stage education technology companies annually, from a $50M fund launched in 2019. Focus areas include employability, lifelong learning, next-gen assessment, AI, mobile-first delivery, and social impact. While not directly focused on child safety compliance, Pearson's K-12 education platforms serve millions of students and face COPPA/FERPA compliance requirements. EdTech companies are a key Phosra customer segment.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Approach through EdTech industry conferences (ASU+GSV, ISTE, SXSW EDU) where Pearson Ventures team is active",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-weak",
+        description:
+          "Research Pearson Ventures portfolio companies (Acadeum, HowNow, Nexford) for warm intros",
+        strength: 2,
+      },
+    ],
+    tier: 3,
+    approachStrategy: {
+      recommended:
+        "Position Phosra as compliance infrastructure for the EdTech sector — every Pearson portfolio company serving K-12 students needs COPPA compliance",
+      steps: [
+        "Research Pearson Ventures Director (Pav) who leads investments for initial outreach",
+        "Frame the pitch around EdTech compliance: 'Every portfolio company serving minors needs COPPA/FERPA compliance — Phosra handles it via API'",
+        "Attend ASU+GSV Summit or ISTE Conference where Pearson team is present",
+        "Position as value-add for Pearson's existing portfolio — Phosra as compliance layer for their EdTech investments",
+      ],
+      openingAngle:
+        "Every EdTech company serving K-12 students faces COPPA and FERPA compliance. Your portfolio companies need this — and Phosra's API handles 67+ child safety laws in one integration.",
+    },
+    status: "identified",
+    notes:
+      "$50M fund launched in 2019 for early-stage EdTech. Check size ($2-5M) is larger than our $950K raise, so we'd be at the smaller end of their range. 4-5 investments per year. Adjacent thesis — they invest in education, not compliance directly. Strongest angle is as a value-add for their portfolio companies. Key risk: child safety compliance is not their core thesis, and the $950K raise may be too small for their typical deal size.",
+  },
+]
+const IMPACT_INVESTORS: WarmIntroTarget[] = [
+  {
+    id: "draper-richards-kaplan",
+    name: "Lara Metcalf",
+    fundOrCompany: "Draper Richards Kaplan Foundation",
+    role: "Senior Managing Director",
+    website: "https://www.drkfoundation.org",
+    category: "impact-investor",
+    type: "impact-fund",
+    checkSizeRange: "$100-300K",
+    stagePreference: "Seed to Series A (pre $15M post-money valuation)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/lara-metcalf/",
+      twitter: "",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "DRK invests up to $300K in early-stage social enterprises with proven impact on underserved communities. Phosra's $6M cap is well within their $15M valuation ceiling. They provide 3-year unrestricted capital plus board-level support. Their focus on 'scalable, innovative, impact-first solutions' aligns with Phosra's compliance API model. They accept applications year-round and invest in for-profit ventures at Seed to Series A.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "DRK accepts applications year-round at drkfoundation.org/apply-for-funding/. They review 2,200+ applications annually and select ~20 organizations.",
+        strength: 3,
+      },
+      {
+        type: "2nd-degree-weak",
+        description:
+          "DRK has multiple Managing Directors across US regions — Holly Kuzmich covers Texas/Southwest. If Jake has any Dallas/Texas tech network connections, this could be a warm path.",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Direct application with impact metrics focus",
+      steps: [
+        "Apply at drkfoundation.org — emphasize: (1) scalable API infrastructure, (2) protecting children across 67+ jurisdictions, (3) Jake's 3-exit track record",
+        "Quantify impact: number of children protected per platform customer, compliance coverage across jurisdictions, regulatory enforcement enabled",
+        "Highlight Phosra's 'Plaid of child safety' positioning — DRK loves clear analogies to proven business models applied to social impact",
+        "Prepare for 3-year board partnership — DRK joins the board for the term of their grant, so frame this as valuable governance support during scale-up",
+      ],
+      openingAngle:
+        "A single API that enables platforms to comply with 67+ child safety laws — protecting millions of children while building a venture-scale business. The 'Plaid of child safety compliance.'",
+    },
+    status: "identified",
+    notes:
+      "Highly competitive (20 selected from 2,200+ applications) but excellent fit: for-profit investment, $300K check, board-level engagement, 3-year commitment. Their valuation cap of $15M post-money means Phosra's $6M cap is comfortably within range. Geographic focus includes US which is Phosra's primary market. The board seat could be valuable for governance credibility.",
+  },
+
+  {
+    id: "echoing-green",
+    name: "Cheryl Dorsey",
+    fundOrCompany: "Echoing Green",
+    role: "Co-CEO",
+    website: "https://echoinggreen.org",
+    category: "impact-investor",
+    type: "impact-fund",
+    checkSizeRange: "$100K (recoverable grant for for-profits)",
+    stagePreference: "Pre-Seed / Early Stage",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/cheryl-dorsey/",
+      twitter: "",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Echoing Green provides $100K over 18 months to early-stage social entrepreneurs. For for-profit organizations, funding is a recoverable grant — non-dilutive capital. They look for 'bold, community-driven ideas' from 'original founders' with organizations operating <5 years. Jake as a serial entrepreneur with a child safety mission fits their founder archetype. Fellowship includes pro-bono professional support and network access.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "Echoing Green fellowship applications open annually (typically fall). The 2026 cycle closed Oct 2025, so the 2027 cycle would be the next opportunity.",
+        strength: 3,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Attend Echoing Green events and convenings — their fellows network is strong for warm introductions to other impact investors.",
+        strength: 1,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Apply in next fellowship cycle (2027); use network immediately",
+      steps: [
+        "Monitor echoinggreen.org/fellowship/apply for 2027 cycle opening (likely Sept 2026)",
+        "Meanwhile, engage Echoing Green fellows working in adjacent child safety / digital rights space for warm introductions",
+        "Prepare application emphasizing: original founder, <5 years operating, bold community-driven vision for child safety compliance",
+        "Leverage 18-month fellowship timeline: $100K recoverable grant + professional support + impact investor network access",
+      ],
+      openingAngle:
+        "Child safety compliance is the civil rights issue of the digital age. Phosra gives every platform — not just Big Tech — the tools to protect children under 67+ laws worldwide.",
+    },
+    status: "identified",
+    notes:
+      "Timing challenge: 2026 cycle already closed (Oct 2025 deadline). Next opportunity is 2027 cycle. However, the Echoing Green network is valuable even before formal application — their fellows and alumni include many impact-focused founders who could be connectors. Sharyanne McSwain (co-CEO, former investment banker) may be particularly receptive to Phosra's API business model.",
+  },
+
+  {
+    id: "luminate-group",
+    name: "Melanie Hui",
+    fundOrCompany: "Luminate Group",
+    role: "CEO (appointed Jan 2025)",
+    website: "https://www.luminategroup.com",
+    category: "impact-investor",
+    type: "impact-fund",
+    checkSizeRange: "Multi-year grants (varies)",
+    stagePreference: "Any (mission-aligned)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/melanie-hui/",
+      twitter: "",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Luminate focuses on ensuring Big Tech, social platforms, and AI companies respect human rights and social justice. By 2026, all their work will challenge unchecked harms of tech companies, especially for marginalized people. They provide multi-year unrestricted funding. Their portfolio includes Digital Freedom Fund, Open Rights Group, and other digital rights organizations. New CEO Melanie Hui (Jan 2025) represents fresh leadership open to new partnerships.",
+    coppaInterest: "public-stance",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage with Luminate's 'All Eyes on 2026' and 'Our Evolving Strategy' publications. Reference their tech accountability focus in outreach.",
+        strength: 2,
+      },
+      {
+        type: "cold-application",
+        description:
+          "Luminate accepts funding applications at luminategroup.com/funding. They provide multi-year unrestricted funding to mission-aligned organizations.",
+        strength: 2,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Connect through shared digital rights ecosystem — Luminate funds organizations that Phosra's compliance work directly supports.",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Digital rights angle — position Phosra as enforcement infrastructure for rights",
+      steps: [
+        "Review Luminate's partner database at luminategroup.com/portfolio to identify overlap with Phosra's compliance coverage",
+        "Draft outreach to Melanie Hui framing Phosra as tech accountability infrastructure — making child safety laws actually enforceable",
+        "Apply via luminategroup.com/funding with emphasis on: (1) holding tech companies accountable, (2) protecting marginalized children, (3) global regulatory coverage",
+        "Propose pilot partnership: Phosra compliance data could support Luminate's advocacy work with concrete enforcement metrics",
+      ],
+      openingAngle:
+        "Laws protecting children online exist across 67+ jurisdictions — but without compliance infrastructure, they are unenforceable. Phosra makes digital rights for children operational.",
+    },
+    status: "identified",
+    notes:
+      "Luminate (part of the Omidyar Group) provides grants rather than equity investment. Their multi-year unrestricted funding model is excellent for runway extension. New CEO Melanie Hui (replacing Stephen King after ~7 years) may be receptive to fresh partnerships. Key focus on tech accountability aligns perfectly with compliance enforcement. Risk: they may prefer advocacy organizations over for-profit infrastructure companies.",
+  },
+
+  {
+    id: "macarthur-foundation",
+    name: "Eric Sears",
+    fundOrCompany: "MacArthur Foundation",
+    role: "Director, Technology in the Public Interest",
+    website: "https://www.macfound.org",
+    category: "impact-investor",
+    type: "impact-fund",
+    checkSizeRange: "Grants (varies, typically $100K-500K+)",
+    stagePreference: "Any (mission-aligned)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/eric-sears/",
+      twitter: "",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "MacArthur's Technology in the Public Interest program strengthens democratic oversight and accountability in technology governance, with emphasis on AI auditing and evaluation. Their 2025 increased payout (6%+) signals more capital deployment. They support the 'humane development of AI' and track social media algorithm impacts. Phosra's compliance infrastructure serves their goal of making technology governance actionable.",
+    coppaInterest: "public-stance",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage with MacArthur's 'What Our Directors Learned from the Field in 2025' publication and Eric Sears' public writing on tech accountability.",
+        strength: 2,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Connect through Public Voices Fellowship on Technology in the Public Interest — MacArthur's flagship tech accountability program.",
+        strength: 2,
+      },
+      {
+        type: "cold-application",
+        description:
+          "MacArthur accepts grant proposals through their website. Technology in the Public Interest has active grant guidelines.",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Position Phosra as technology governance infrastructure",
+      steps: [
+        "Research MacArthur's Technology in the Public Interest grant guidelines and recent grantees",
+        "Frame Phosra as 'algorithmic accountability infrastructure' — our 45 rule categories include algorithmic_audit, which directly maps to MacArthur's AI governance focus",
+        "Connect with Eric Sears via LinkedIn, referencing their tech accountability work and how compliance enforcement enables governance",
+        "Submit grant proposal emphasizing: democratic oversight of platforms, child safety as tech governance imperative, auditable compliance infrastructure",
+      ],
+      openingAngle:
+        "MacArthur is strengthening technology governance and AI accountability. Phosra provides the enforcement infrastructure — mapping 45 rule categories including algorithmic auditing across 67+ child safety laws.",
+    },
+    status: "identified",
+    notes:
+      "MacArthur increased its 2025 payout to 6%+ in response to federal grant freezes, signaling more capital available. Their Safety and Justice Challenge is winding down in 2025, potentially freeing resources for new technology-focused programs. $96M in annual grants with $1.5B+ in assets. The Technology in the Public Interest program is the right entry point. Risk: large foundations move slowly and may prefer larger, more established grantees.",
+  },
+
+  {
+    id: "ford-foundation",
+    name: "Technology and Society Program Team",
+    fundOrCompany: "Ford Foundation",
+    role: "Technology and Society Program",
+    website: "https://www.fordfoundation.org",
+    category: "impact-investor",
+    type: "impact-fund",
+    checkSizeRange: "Grants ($100K-1M+)",
+    stagePreference: "Any (mission-aligned)",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/ford-foundation/",
+      twitter: "@FordFoundation",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Ford Foundation's Technology and Society program invests $50M+ annually (across 5 foundation coalition) in digital rights. They focus on reshaping technology governance to advance social justice, countering surveillance, and building public interest tech expertise. Their Spyware Accountability Initiative ($12M+ in grants) shows willingness to fund tech accountability infrastructure. Phosra's compliance API serves their goal of making digital rights enforceable.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "Ford Foundation's Technology and Society program accepts grant proposals. They are actively hiring program officers, suggesting expanding portfolio.",
+        strength: 2,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Connect through public interest technology networks — Ford Foundation co-convened a 5-foundation digital rights coalition investing $50M+ annually.",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage with Ford Foundation's digital rights publications and Technology and Society strategy documents.",
+        strength: 1,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Public interest technology angle with digital rights framing",
+      steps: [
+        "Review Ford Foundation's Technology and Society strategy document and recent grants at fordfoundation.org",
+        "Frame Phosra as public interest technology infrastructure — making child safety laws enforceable serves digital rights and justice",
+        "Submit grant inquiry emphasizing: (1) counter-surveillance through compliance enforcement, (2) protecting marginalized children online, (3) global coverage across 67+ jurisdictions",
+        "Reference the 5-foundation digital rights coalition — position Phosra as infrastructure that serves multiple foundation priorities simultaneously",
+      ],
+      openingAngle:
+        "You invest in digital rights. Child safety compliance is a digital rights issue — and right now, there is no infrastructure to enforce 67+ laws protecting children. Phosra is that infrastructure.",
+    },
+    status: "identified",
+    notes:
+      "Ford Foundation president Darren Walker announced departure in 2025, creating potential leadership transition dynamics. The Spyware Accountability Initiative ($12M+) demonstrates willingness to fund tech accountability infrastructure at scale. They are part of a 5-foundation coalition spending $50M+ annually on digital rights. Risk: large foundations have long grant cycles and may focus on nonprofit grantees rather than for-profit infrastructure. The hiring of new program officers suggests an expanding portfolio, which could create opportunity.",
+  },
+
+  {
+    id: "skoll-foundation",
+    name: "Marla Blow",
+    fundOrCompany: "Skoll Foundation",
+    role: "CEO (effective June 2025)",
+    website: "https://skoll.org",
+    category: "impact-investor",
+    type: "impact-fund",
+    checkSizeRange: "Grants ($500K-2M+)",
+    stagePreference: "Growth (typically larger organizations)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/marlablow/",
+      twitter: "",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Skoll Foundation deploys $96M annually in grants to social entrepreneurs, with $1.5B+ in assets. New CEO Marla Blow has Mastercard background (North America lead at Mastercard Center for Inclusive Growth) — direct overlap with Jake's Mastercard infrastructure experience. She was also founder/CEO of a fintech venture, making her uniquely positioned to appreciate Phosra's API-first business model. The Mastercard connection is a powerful personal angle.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "alumni-network",
+        description:
+          "Marla Blow led Mastercard Center for Inclusive Growth — Jake's Mastercard infrastructure background creates a direct professional network overlap. This is the strongest connection point.",
+        strength: 4,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Attend Skoll World Forum (typically held at Oxford in spring). The premier gathering for social entrepreneurs and Skoll network.",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Mastercard alumni network connection to Marla Blow",
+      steps: [
+        "Leverage Jake's Mastercard background to connect with Marla Blow via shared professional network — she led Mastercard Center for Inclusive Growth",
+        "Frame Phosra through Mastercard lens: 'Just as Mastercard built infrastructure rails for payments, Phosra builds infrastructure rails for child safety compliance'",
+        "Request meeting at Skoll World Forum or via LinkedIn, leading with shared Mastercard heritage and fintech-to-impact trajectory",
+        "Acknowledge Skoll's nomination-only model — position initial outreach as relationship-building for future nomination, not cold application",
+      ],
+      openingAngle:
+        "From one Mastercard infrastructure builder to another: I built the 'Plaid of child safety compliance' — a single API mapping 45 enforcement categories across 67+ laws. Your fintech background means you understand infrastructure plays.",
+    },
+    status: "identified",
+    notes:
+      "KEY CONNECTION: Marla Blow's Mastercard background is a direct overlap with Jake's. She was also a fintech founder (FS Card Inc., subprime credit card venture), so she understands API-first business models. Skoll does NOT accept unsolicited proposals — all grantees are identified through referrals and nominations. The Mastercard alumni angle is the strongest intro path. $96M annual grants, but typically larger organizations. May be better as a Series A+ relationship to cultivate now.",
+  },
+
+  {
+    id: "new-profit",
+    name: "Tulaine Montgomery",
+    fundOrCompany: "New Profit",
+    role: "Co-CEO",
+    website: "https://newprofit.org",
+    category: "impact-investor",
+    type: "impact-fund",
+    checkSizeRange: "$110K-1.5M",
+    stagePreference: "Early Stage (Build portfolio)",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/tulainemontgomery",
+      twitter: "",
+    },
+    thesisAlignment: "adjacent",
+    thesisNote:
+      "New Profit has invested $350M+ in 250+ social impact organizations since 1998. Their Build portfolio provides $1.5M unrestricted funding over 4 years plus strategic advisory. Focus areas are Education, Economic Mobility, and Democracy. Child safety is adjacent to their Education focus, and digital rights connect to their Democracy work. However, they primarily invest in nonprofits and education-focused organizations.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "New Profit accepts applications through newprofit.org/get-funding-support/. Their Build portfolio and Catalyze Cohort are the relevant entry points.",
+        strength: 2,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage with Tulaine Montgomery on LinkedIn — she actively posts about social innovation and venture philanthropy.",
+        strength: 1,
+      },
+    ],
+    tier: 3,
+    approachStrategy: {
+      recommended: "Education safety angle — COPPA compliance for education platforms",
+      steps: [
+        "Frame Phosra through education lens: child safety compliance is essential for every edtech platform serving students",
+        "Apply to Build portfolio or Catalyze Cohort with emphasis on protecting children in digital education environments",
+        "Reference New Profit's $110K funding + advisory model (Global South Opportunities cohort) as accessible entry point",
+        "Leverage Boston/education ecosystem connections — New Profit is Boston-based with deep education sector networks",
+      ],
+      openingAngle:
+        "Every education platform must protect children under COPPA, FERPA, and 67+ child safety laws. Phosra provides the compliance infrastructure that the entire edtech ecosystem needs.",
+    },
+    status: "identified",
+    notes:
+      "New Profit's primary focus areas (Education, Economic Mobility, Democracy) are adjacent but not direct fits. They primarily fund nonprofits. However, their $1.5M Build portfolio grants are substantial and come with 4-year strategic advisory. The education angle is the strongest pitch vector. Boston-based, which could be relevant for network building. Co-founded by Vanessa Kirsch, who also co-leads as CEO.",
+  },
+
+  {
+    id: "dtsp",
+    name: "Digital Trust & Safety Partnership",
+    fundOrCompany: "Digital Trust & Safety Partnership (DTSP)",
+    role: "Industry Consortium",
+    website: "https://dtspartnership.org",
+    category: "impact-investor",
+    type: "impact-fund",
+    checkSizeRange: "Strategic partnership (not a fund)",
+    stagePreference: "N/A (industry consortium)",
+    contact: {
+      linkedin: "https://www.linkedin.com/company/dtspartnership",
+      twitter: "@dtspartnership",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "DTSP is a consortium of major tech companies implementing trust and safety best practices. Their Safe Framework became ISO/IEC 25389 standard in Jan 2025. DTSP members need compliance infrastructure to implement the Safe Framework — Phosra's API maps directly to their best practices. This is a strategic partnership target, not a direct investor, but DTSP member companies are potential customers AND investors.",
+    coppaInterest: "public-stance",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Engage with DTSP convenings and working groups. Their Safe Framework ISO standardization creates a compliance requirement that Phosra can serve.",
+        strength: 3,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Reference the ISO/IEC 25389 Safe Framework standard in Phosra materials. Position Phosra as implementation tooling for the standard.",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Attend DTSP events and Trust & Safety Professional Association (TSPA) conferences.",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Position Phosra as Safe Framework implementation infrastructure",
+      steps: [
+        "Map Phosra's 45 rule categories to DTSP's Safe Framework (ISO/IEC 25389) requirements — create a compatibility matrix",
+        "Engage with DTSP through their website and working groups to understand member company compliance needs",
+        "Position Phosra as the implementation layer that makes the Safe Framework operationally achievable for member platforms",
+        "Use DTSP relationship to access member companies' corporate venture arms and trust & safety procurement teams",
+      ],
+      openingAngle:
+        "The Safe Framework is now ISO/IEC 25389. Your member platforms need infrastructure to implement it. Phosra maps 45 enforcement categories across 67+ laws — the compliance engine behind the standard.",
+    },
+    status: "identified",
+    notes:
+      "DTSP is not an investor but a critical strategic partner. Their ISO standardization (Jan 2025) creates compliance demand that Phosra can serve. Member companies include major tech platforms that could be both customers and corporate venture investors. The Trust & Safety ecosystem is the natural distribution channel for Phosra. Use DTSP as a credibility builder and customer acquisition channel, not as a direct fundraising target.",
+  },
+]
+const CELEBRITY_ANGELS: WarmIntroTarget[] = [
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TIER 1 — Perfect Alignment (demonstrated child safety commitment)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "ashton-kutcher",
+    name: "Ashton Kutcher",
+    fundOrCompany: "Sound Ventures / Thorn",
+    role: "Co-Founder & GP",
+    website: "https://www.soundventures.com/",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$100K-$1M",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/ashton-kutcher/",
+      twitter: "@aplusk",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Co-founded Thorn: Digital Defenders of Children — built technology to identify 14,874 child victims and 16,927 traffickers. Thorn's Safer product helps platforms detect and report CSAM at scale. Kutcher literally built the child safety tech category. Phosra's compliance API is the infrastructure layer Thorn-like products need to ensure platform compliance across 67+ laws.",
+    coppaInterest: "public-stance" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description:
+          "Thorn partnership angle — Phosra enforces the laws that protect the children Thorn rescues. Complementary infrastructure play.",
+        strength: 4,
+      },
+      {
+        type: "content-warmup" as const,
+        description:
+          "Sound Ventures invests in platform infrastructure (Uber, Airbnb, Spotify). Phosra fits the 'picks and shovels' thesis.",
+        strength: 3,
+      },
+    ],
+    tier: 1 as const,
+    approachStrategy: {
+      recommended: "Thorn partnership + child safety infrastructure pitch",
+      steps: [
+        "Connect through Thorn team or child safety advocacy network — frame as complementary infrastructure",
+        "Lead with: 'You built the tools to rescue kids. We're building the compliance layer that forces every platform to use tools like yours.'",
+        "Highlight the 67+ laws creating mandatory compliance obligations that map to Thorn's mission",
+        "Propose: angel check + Thorn/Phosra technical partnership for platform compliance workflows",
+      ],
+      openingAngle:
+        "The laws you've fought for are passing. Phosra is the infrastructure that makes them enforceable at scale.",
+    },
+    status: "identified" as const,
+    notes:
+      "HIGHEST PRIORITY. Kutcher co-founded Thorn in 2009 (originally DNA Foundation with Demi Moore). Sound Ventures manages $1B+ AUM, portfolio includes 200+ early-stage companies. Thorn has helped identify 75,000+ child victims since 2012. His personal mission IS child safety technology. Check sizes through Sound Ventures range $100K-$10M with sweet spot around $1M. Most recent investment: Ephemera Series B (July 2025).",
+  },
+
+  {
+    id: "jessica-alba",
+    name: "Jessica Alba",
+    fundOrCompany: "Personal Angel / The Honest Company",
+    role: "Founder & Angel Investor",
+    website: "https://www.honest.com/",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/jessicaalba/",
+      twitter: "@JessicaAlba",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Founded The Honest Company specifically because of child safety concerns — her own childhood illnesses and the birth of her first child in 2008 drove her to create safer baby products. She built a $1B+ company on the thesis that parents demand safety guarantees for their children. Phosra is the digital equivalent: safety guarantees for kids online.",
+    coppaInterest: "public-stance" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "cold-application" as const,
+        description:
+          "Parent-founder to parent-founder pitch. Jake (5 kids) + Alba (3 kids) share the 'I built this because my kids need it' motivation.",
+        strength: 4,
+      },
+      {
+        type: "content-warmup" as const,
+        description:
+          "Honest Company = child safety in physical products. Phosra = child safety in digital products. Same thesis, new frontier.",
+        strength: 4,
+      },
+    ],
+    tier: 1 as const,
+    approachStrategy: {
+      recommended: "Parent-founder connection + physical-to-digital safety parallel",
+      steps: [
+        "Reach out via LinkedIn or through LA startup community — emphasize the parent-founder angle",
+        "Frame: 'You proved parents will pay for child safety in products. Now 67 laws are mandating it digitally — and platforms need Phosra to comply.'",
+        "Highlight Jake's 5 kids as authentic motivation (mirrors her Honest Company origin story)",
+        "Propose small angel check ($25-50K) + advisory role as 'child safety advocate'",
+      ],
+      openingAngle:
+        "You made child safety a consumer brand. We're making it platform infrastructure.",
+    },
+    status: "identified" as const,
+    notes:
+      "Alba stepped down as Honest Company CCO in April 2024 but remains deeply connected to child safety brand. She has a smaller angel portfolio (3 companies) but her personal brand + child safety credibility are extremely valuable. The Honest Company IPO'd in 2021 (raised $100M+). Her endorsement would be a strong signal to other parent-focused investors.",
+  },
+
+  {
+    id: "serena-williams",
+    name: "Serena Williams",
+    fundOrCompany: "Serena Ventures",
+    role: "Founder & Managing Partner",
+    website: "https://www.serenaventures.com/",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$100K-$500K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/serenawilliams/",
+      twitter: "@seabornjp",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Serena Ventures invested in Zigazoo, a safe social media platform for children (kidSAFE certified). This is a direct portfolio-signal for child safety tech. She was also named Reckitt's first entrepreneur-in-residence (2025) focused on maternal care and health equity. As a mother, she publicly advocates for child-safe digital environments.",
+    coppaInterest: "portfolio-signal" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "portfolio-founder" as const,
+        description:
+          "Zigazoo (Serena Ventures portfolio) is exactly the type of platform that needs Phosra's compliance API. Direct customer-investor alignment.",
+        strength: 4,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Serena Ventures focuses on diverse founders and underserved markets. Child safety compliance is a massively underserved infrastructure market.",
+        strength: 3,
+      },
+    ],
+    tier: 1 as const,
+    approachStrategy: {
+      recommended: "Zigazoo portfolio connection + child safety infrastructure thesis",
+      steps: [
+        "Connect through Zigazoo team or Serena Ventures associates — reference their child safety portfolio",
+        "Lead with: 'Your portfolio company Zigazoo proves the market for child-safe platforms. Phosra is the compliance infrastructure every platform like Zigazoo needs.'",
+        "Emphasize 14 unicorns in portfolio — Phosra has similar platform infrastructure DNA (like the early-stage versions of Plaid or Stripe)",
+        "Highlight the 67-law landscape creating mandatory compliance demand",
+      ],
+      openingAngle:
+        "You already invest in child-safe platforms. Phosra is the compliance API they all need.",
+    },
+    status: "identified" as const,
+    notes:
+      "Serena Ventures has backed 14 unicorns. Made 4 investments in 2025, 1 in 2026 so far. Actively deploying. Portfolio includes Zigazoo (children's social media), demonstrating direct child safety interest. Named Reckitt entrepreneur-in-residence (2025) for maternal care + health equity. Check sizes vary but seed investments typically $100K-$500K.",
+  },
+
+  {
+    id: "dwyane-wade",
+    name: "Dwyane Wade",
+    fundOrCompany: "Personal Angel / Wade Family Foundation",
+    role: "Angel Investor & Family Advocate",
+    website: "https://dwyanewade.com/",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/dwyane-wade/",
+      twitter: "@DwyaneWade",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Co-founded Proudly (baby care for children of color) and invested in KiddieKredit (children's financial literacy app). Has 5 children including transgender daughter Zaya — is one of the most vocal celebrity advocates for protecting children from online harassment and bullying. Won NAACP President's Award (2023) for family advocacy. His personal mission aligns directly with child safety online.",
+    coppaInterest: "public-stance" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "cold-application" as const,
+        description:
+          "Both Jake (5 kids) and Wade (5 kids) are fathers of five. Wade's advocacy for Zaya's safety online creates deep personal alignment with child safety infrastructure.",
+        strength: 4,
+      },
+      {
+        type: "portfolio-founder" as const,
+        description:
+          "KiddieKredit (children's fintech) and Proudly (baby care) show Wade invests where his kids inspire him. Phosra protects all kids online.",
+        strength: 3,
+      },
+    ],
+    tier: 1 as const,
+    approachStrategy: {
+      recommended: "Father-to-father appeal + child safety advocacy angle",
+      steps: [
+        "Connect through Miami startup network or sports-tech community",
+        "Lead with: 'You've publicly fought to protect your children. 67 laws are being written to protect all children online — Phosra makes them enforceable.'",
+        "Reference his KiddieKredit and Proudly investments as proof he invests in children's wellbeing",
+        "Emphasize: the same online platforms that have failed to protect kids like Zaya now face mandatory compliance obligations",
+      ],
+      openingAngle:
+        "You protect your kids publicly. We're building the infrastructure to protect every kid digitally.",
+    },
+    status: "identified" as const,
+    notes:
+      "Wade has invested in seed through Series A across KiddieKredit, Jomboy Media, Goldin Auctions, Taft, Stance, and KICKS CREW. Co-founded Proudly baby care with Gabrielle Union. 2023 NAACP President's Award for advocacy. Wade Family Foundation focuses on racial justice and LGBTQ equality. His advocacy for daughter Zaya (transgender) against online harassment makes child safety deeply personal. Both he and Jake have 5 kids — strong personal connection angle.",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TIER 2 — Strong Alignment (impact-focused with family/children interest)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "gwyneth-paltrow",
+    name: "Gwyneth Paltrow",
+    fundOrCompany: "Kinship Ventures",
+    role: "Co-Founder",
+    website: "https://www.kinshipventures.co",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$100K-$500K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/gwynethpaltrow/",
+      twitter: "@GwynethPaltrow",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "Kinship Ventures invests in 'companies shaping the future of consumer wellness, technology, and lifestyle.' Portfolio includes Kudos (diaper company), demonstrating child/family product interest. Paltrow is a mother of two and goop's brand is heavily family/wellness-oriented. Kinship Ventures is actively deploying from a $75M fund with $500K-$3M check sizes.",
+    coppaInterest: "portfolio-signal" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "content-warmup" as const,
+        description:
+          "Goop/Kinship thesis: consumers demand transparency and safety. Phosra delivers digital safety transparency for children's platforms.",
+        strength: 3,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Paltrow's investments in Kudos (diapers) and child-adjacent products show family product interest. Child safety compliance is the next frontier.",
+        strength: 3,
+      },
+    ],
+    tier: 2 as const,
+    approachStrategy: {
+      recommended: "Consumer wellness + family safety thesis alignment",
+      steps: [
+        "Connect through Kinship Ventures or LA startup community — reference the wellness-to-safety pipeline",
+        "Frame: 'You invest in wellness for families. Digital child safety is the fastest-growing wellness category — 67 laws and counting.'",
+        "Highlight Kinship's portfolio (OpenAI, Poppi, Olipop) — Phosra has similar infrastructure DNA at earlier stage",
+        "Propose $100-250K check through Kinship Ventures at seed stage",
+      ],
+      openingAngle:
+        "Wellness doesn't stop at what kids eat — it includes what platforms do with their data.",
+    },
+    status: "identified" as const,
+    notes:
+      "Kinship Ventures raising $75M fund (reported March 2023). Check sizes $500K-$3M for seed. Co-founded with Moj Mahdara (former BeautyCon CEO). Portfolio includes OpenAI, Poppi (acquired by PepsiCo for $1.95B), Olipop ($1.85B valuation). 25 personal angel investments total. Most recent: Forethought Series D (May 2025). Kudos (diaper company) investment is direct child/family signal. Paltrow has 2 children (Apple, Moses).",
+  },
+
+  {
+    id: "robert-downey-jr",
+    name: "Robert Downey Jr.",
+    fundOrCompany: "FootPrint Coalition Ventures",
+    role: "Founder",
+    website: "https://www.footprintcoalition.com",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$100K-$500K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/robert-downey-jr-ab6703215/",
+      twitter: "@RobertDowneyJr",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "FootPrint Coalition focuses on sustainability and impact — not child safety specifically, but the 'technology for good' thesis translates. Also co-founded Happy (wellness) and serves on the board of Aura (digital safety company). The Aura board seat is a STRONG signal — Aura provides online safety and identity protection, which overlaps directly with child safety infrastructure.",
+    coppaInterest: "portfolio-signal" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "portfolio-founder" as const,
+        description:
+          "RDJ is a board member at Aura (digital safety company). Phosra's child safety compliance API is adjacent to Aura's consumer safety mission.",
+        strength: 4,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "FootPrint Coalition invests in 'technology to restore the planet.' Child safety compliance is 'technology to restore the internet for kids.'",
+        strength: 3,
+      },
+    ],
+    tier: 2 as const,
+    approachStrategy: {
+      recommended: "Aura board connection + impact technology thesis",
+      steps: [
+        "Connect through Aura team — RDJ's board role there creates a direct bridge to digital safety",
+        "Frame: 'You invest in technology that protects people (Aura) and the planet (FootPrint). Phosra protects children online.'",
+        "Highlight the regulatory tailwind: 67 laws creating $B+ compliance market, similar to how environmental regulation created the cleantech market FootPrint invests in",
+        "Propose angel check + advisory through the digital safety lens",
+      ],
+      openingAngle:
+        "You sit on Aura's board protecting adults online. Phosra does the same for children — with 67 laws mandating it.",
+    },
+    status: "identified" as const,
+    notes:
+      "FootPrint Coalition makes ~6 early-stage and ~4 later-stage investments per year. RDJ's board seat at Aura (digital safety/identity protection company) is the strongest connection to child safety. Also co-founded Happy (wellness brand). Father of 3 children. FootPrint Coalition's investment focus includes education sector alongside sustainability. Most impactful approach is through the Aura connection rather than FootPrint directly.",
+  },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TIER 3 — Adjacent Alignment (tech investors with social impact interest)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  {
+    id: "will-smith",
+    name: "Will Smith",
+    fundOrCompany: "Dreamers VC",
+    role: "Co-Founder",
+    website: "https://www.dreamers.vc/",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$250K-$1M",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/willsmith/",
+      twitter: "@willsmith",
+    },
+    thesisAlignment: "adjacent" as const,
+    thesisNote:
+      "Dreamers VC bridges US startups with Japanese corporate investors. Will & Jada Smith Family Foundation focuses on youth empowerment, education, and storytelling. While Dreamers VC hasn't invested in child safety specifically, the foundation's youth mission and Smith's role as a father of 3 create personal alignment. Dreamers VC has 76 investments and 11 unicorns.",
+    coppaInterest: "none" as const,
+    fundSignal: "unknown" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description:
+          "Will & Jada Smith Family Foundation mission ('uplifting the next generation') aligns with child safety infrastructure.",
+        strength: 2,
+      },
+      {
+        type: "conference-event" as const,
+        description:
+          "Dreamers VC connects US startups to Japanese corporates. Japan has aggressive child safety regulation — Phosra's global law mapping is relevant.",
+        strength: 2,
+      },
+    ],
+    tier: 3 as const,
+    approachStrategy: {
+      recommended: "Youth empowerment foundation angle + Japan regulatory bridge",
+      steps: [
+        "Connect through Dreamers VC team or LA entertainment-tech network",
+        "Frame: 'Your foundation uplifts the next generation. Phosra ensures platforms protect them while you do.'",
+        "Highlight the Japan angle: Dreamers VC bridges US-Japan, and Japan's child safety regulations create demand for Phosra's global compliance mapping",
+        "Propose through Dreamers VC as an institutional investment rather than personal angel",
+      ],
+      openingAngle:
+        "Your foundation protects children's futures. Phosra protects their present — online.",
+    },
+    status: "identified" as const,
+    notes:
+      "Dreamers VC has NOT made any investments in 2025 or 2026 (last was Karat Series B, July 2023) — fund may be between vintages or less active. The Will & Jada Smith Family Foundation closed in 2024 following the Chris Rock incident fallout. Average deal sizes are large ($10-50M range) which may not fit pre-seed. Lower priority due to inactivity and higher typical check sizes, but the Japan bridge angle for global compliance is unique.",
+  },
+
+  {
+    id: "nas",
+    name: "Nas (Nasir Jones)",
+    fundOrCompany: "QueensBridge Venture Partners",
+    role: "Co-Founder & Partner",
+    website: "https://www.queensbridgevp.com/",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$50-250K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/nasir-jones/",
+      twitter: "@Nas",
+    },
+    thesisAlignment: "adjacent" as const,
+    thesisNote:
+      "QueensBridge VP has a stellar early-stage track record: Coinbase, Ring, Robinhood, Lyft, Dropbox, PillPack, SeatGeek — 4 unicorns, 7 IPOs, 39 acquisitions. Invests in fintech, media, health tech, AI infrastructure, and consumer tech. While no direct child safety investments, the fintech/infrastructure thesis aligns with Phosra's 'Plaid of child safety' positioning. Nas also established the Harvard Hip-Hop Fellowship — showing commitment to education.",
+    coppaInterest: "none" as const,
+    fundSignal: "unknown" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description:
+          "QueensBridge backed Coinbase, Robinhood, Ring — all infrastructure/platform plays. Phosra is compliance infrastructure with similar DNA.",
+        strength: 3,
+      },
+      {
+        type: "content-warmup" as const,
+        description:
+          "Nas established Harvard Hip-Hop Fellowship. Education commitment shows youth-focused values.",
+        strength: 2,
+      },
+    ],
+    tier: 3 as const,
+    approachStrategy: {
+      recommended: "Infrastructure thesis + fintech parallel",
+      steps: [
+        "Connect through QueensBridge VP team (Anthony Saleh) or fintech network",
+        "Frame: 'You backed the infrastructure layers (Coinbase for crypto, Robinhood for trading). Phosra is the infrastructure layer for child safety compliance.'",
+        "Highlight the 'Plaid of child safety' positioning — QueensBridge loves fintech infrastructure",
+        "Reference the regulatory tailwind: 67 laws = massive demand, similar to how crypto regulation drove Coinbase",
+      ],
+      openingAngle:
+        "You backed Coinbase before crypto regulation hit. Phosra is the compliance layer before child safety enforcement hits.",
+    },
+    status: "identified" as const,
+    notes:
+      "QueensBridge VP has been less active recently — no investments in 2025, last was Disco.xyz (June 2024). Latest exit: mParticle (January 2025). Co-founded with Anthony Saleh (Forbes 30 Under 30). The fintech infrastructure parallel is the strongest angle. Father of 2 children. QueensBridge's early-stage track record is exceptional but fund activity has slowed — may be between funds.",
+  },
+
+  {
+    id: "jared-leto",
+    name: "Jared Leto",
+    fundOrCompany: "Personal Angel Investments",
+    role: "Angel Investor",
+    website: "https://www.jaredleto.com/",
+    category: "celebrity-angel" as const,
+    type: "angel" as const,
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/jaredleto/",
+      twitter: "@JaredLeto",
+    },
+    thesisAlignment: "adjacent" as const,
+    thesisNote:
+      "Prolific angel investor with 41 investments across 23 companies including Uber, Robinhood, Reddit, Snap. Founded VyRT (live-streaming) and The Hive (social media management). His portfolio skews toward consumer tech and social platforms — the exact platforms that need child safety compliance. No direct child safety investments but strong pattern recognition for platform infrastructure.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "portfolio-founder" as const,
+        description:
+          "Leto's portfolio (Reddit, Snap, Robinhood) includes platforms directly impacted by child safety regulation. Phosra is the compliance API they need.",
+        strength: 3,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Founded VyRT (live-streaming) and The Hive (social media). He understands platform compliance challenges firsthand.",
+        strength: 2,
+      },
+    ],
+    tier: 3 as const,
+    approachStrategy: {
+      recommended: "Platform infrastructure thesis + portfolio companies as customers",
+      steps: [
+        "Connect through tech angel network or entertainment-tech community",
+        "Frame: 'Your portfolio companies (Reddit, Snap) are spending millions on child safety compliance. Phosra automates it.'",
+        "Emphasize the regulatory wave: 67 laws = every social platform in your portfolio needs this",
+        "Propose small angel check ($25-50K) — Leto does high-volume, smaller checks",
+      ],
+      openingAngle:
+        "Every social platform you've invested in faces child safety regulation. Phosra is the API that handles it.",
+    },
+    status: "identified" as const,
+    notes:
+      "Most recent investment: Moonlake AI Seed (October 2025). 18 portfolio exits. Investments span fintech, social media, AI, and crypto. Founded 3 companies. Smaller check sizes typical for his angel deals ($25-100K range). Lower priority for child safety alignment but high volume investor who is actively deploying. No children — the parent-founder angle doesn't apply here.",
+  },
+]
+const POLICY_ANGELS: WarmIntroTarget[] = [
+  // ─── TIER 1: Active investors with strong policy/regulatory backgrounds ─────
+
+  {
+    id: "ron-bouganim",
+    name: "Ron Bouganim",
+    fundOrCompany: "Govtech Fund",
+    role: "Founder & Managing Partner",
+    website: "https://govtechfund.com",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$250-500K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/ronbouganim/",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Founded the FIRST venture fund dedicated to govtech startups. Previously Accelerator Director at Code for America. Portfolio companies have worked with 35,000+ government agencies. Phosra's compliance API is exactly the type of infrastructure that powers government-mandated enforcement — a natural extension of his thesis.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "Govtech Fund accepts direct applications through their website. Strong thesis fit should get attention.",
+        strength: 3,
+      },
+      {
+        type: "industry-association",
+        description:
+          "Connect through Code for America network or govtech conference circuit where Bouganim is a regular speaker.",
+        strength: 3,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Direct pitch emphasizing regulatory infrastructure thesis",
+      steps: [
+        "Apply through Govtech Fund website with tailored deck emphasizing government compliance mandate",
+        "Reference COPPA 2.0 April 2026 enforcement deadline creating platform-wide compliance demand",
+        "Highlight how Phosra maps 45 enforcement categories across 67+ laws — exactly the infrastructure layer govtech needs",
+        "Position as 'the compliance infrastructure layer' for the $130B regtech market",
+      ],
+      openingAngle:
+        "COPPA 2.0 enforcement in April 2026 creates a government-mandated compliance market — Phosra is the infrastructure layer platforms need to comply.",
+      timing: "Urgent — COPPA 2.0 deadline creates compelling near-term catalyst",
+    },
+    status: "identified",
+    notes:
+      "First-ever govtech VC fund ($50M across two funds). Writes $250-500K checks in early-stage companies focused on government operations. Serial entrepreneur with exits (Razz, CCI sold to British Telecom, Trymedia sold to Macrovision). Former angel investor in ShareThrough, HelloSign, PagerDuty. Check size may be slightly above Phosra's sweet spot but could anchor the round.",
+  },
+
+  {
+    id: "dj-patil",
+    name: "DJ Patil",
+    fundOrCompany: "GreatPoint Ventures",
+    role: "General Partner",
+    website: "https://www.gpv.com/team/dj-patil",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$250K-2M",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/dpatil/",
+      twitter: "@daboraptor",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "First US Chief Data Scientist under Obama. Wrote early check into Figma ($20B acquisition). GP at GreatPoint Ventures focusing on healthcare, enterprise tech, and national security. Data infrastructure and compliance automation are adjacent to his thesis. His government data background makes Phosra's structured approach to mapping 67+ laws to 45 rule categories particularly resonant.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage with his writing on data policy and AI ethics. Reference his work as Chief Data Scientist when framing Phosra's data-driven compliance approach.",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Patil speaks regularly at data and AI conferences. Approach at a relevant event with a concise pitch.",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Frame Phosra as data infrastructure for compliance — resonates with his Chief Data Scientist background",
+      steps: [
+        "Engage with his LinkedIn/Twitter content on data policy and responsible AI",
+        "Reference his government data background when framing Phosra's structured compliance data model",
+        "Pitch as 'the data layer for child safety compliance' — maps to his enterprise infrastructure thesis",
+        "Highlight that COPPA 2.0 creates a mandatory data compliance market similar to healthcare data standards he knows well",
+      ],
+      openingAngle:
+        "As the first US Chief Data Scientist, you built the framework for open government data. Phosra is building the equivalent for child safety compliance — a structured data model across 67+ laws.",
+    },
+    status: "identified",
+    notes:
+      "GreatPoint Ventures invests $250K-$20M in Seed through Series B. Fund co-founded with Ray Lane (former Oracle President/COO). Notable early-stage portfolio: Figma, Confluent, Monte Carlo, Rebellion Defense. 157 total investments. His national security portfolio (Rebellion Defense) shows appetite for government-adjacent tech.",
+  },
+
+  {
+    id: "nick-sinai",
+    name: "Nick Sinai",
+    fundOrCompany: "Insight Partners",
+    role: "Managing Director",
+    website: "https://www.insightpartners.com/team/nick-sinai/",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/nicksinai",
+      twitter: "@nicksinai",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Former US Deputy CTO under Obama. Joined Insight Partners specifically to invest in govtech and public sector software. Led investment in Govly (govtech procurement). Board member at Rebellion Defense, BrightBytes (edtech). Teaches govtech at Harvard Kennedy School. His entire career arc — government CTO to govtech investor — makes Phosra's compliance infrastructure a perfect fit. Also makes personal angel investments in civic tech.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage with his Medium blog (nicksinai.medium.com) where he writes about govtech investing. Comment on his Insight Partners Government Advisory Board posts.",
+        strength: 3,
+      },
+      {
+        type: "alumni-network",
+        description:
+          "Harvard Kennedy School connection — he teaches a govtech class there. Reach out through HKS alumni or innovation lab networks.",
+        strength: 2,
+      },
+      {
+        type: "industry-association",
+        description:
+          "ACT-IAC and govtech conference circuit where Sinai is active.",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Approach through govtech community with emphasis on government-mandated compliance creating new software category",
+      steps: [
+        "Engage with his Medium posts about govtech and government technology transformation",
+        "Reference his work creating the US Digital Service and Open Data Initiative when framing Phosra's mission",
+        "Pitch Phosra as the compliance infrastructure layer that government regulation is forcing platforms to adopt",
+        "Highlight BrightBytes (edtech) parallel — he understands K-12/child-adjacent markets",
+      ],
+      openingAngle:
+        "You helped build the government's digital infrastructure as US Deputy CTO. Now COPPA 2.0 is creating mandatory compliance infrastructure that every platform needs — Phosra is building it.",
+      timing:
+        "Insight Partners is a large fund ($30B+) but Sinai may make personal angel investments in pre-seed govtech or connect to right people at Insight.",
+    },
+    status: "identified",
+    notes:
+      "Insight Partners manages $30B+ but Sinai's personal brand is deeply govtech-focused. He co-founded the US Digital Corps and launched Insight's Government Advisory Board. His govtech network is unmatched. Even if Insight Partners' check size is too large for a $950K raise, Sinai himself may angel invest or provide invaluable warm intros to other govtech investors. Board seats at BrightBytes (edtech safety) and Rebellion Defense (government tech) show relevant pattern.",
+  },
+
+  {
+    id: "aneesh-chopra",
+    name: "Aneesh Chopra",
+    fundOrCompany: "Arcadia / DGA-Albright Stonebridge Group",
+    role: "Chief Strategy Officer / Senior Advisor",
+    website: "https://arcadia.io/leadership/aneesh-chopra",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/apchopra",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "First US Chief Technology Officer under Obama. Active angel investor with portfolio including Abridge (unicorn), Stride Health, and Marit Health. Co-founded CareJourney (acquired by Arcadia). His entire career is about using technology to improve government-mandated services. He championed open data and interoperability standards — Phosra's structured compliance API is exactly this pattern applied to child safety.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage through his Aspen Institute and DGA-Albright Stonebridge networks. Reference his open data and interoperability work when pitching.",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-strong",
+        description:
+          "DGA-Albright Stonebridge Group connection — advisory firm with deep government tech policy network. Nicole Wong is also an advisor there.",
+        strength: 3,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended:
+        "Frame Phosra as 'open data standards for child safety compliance' — maps directly to his life's work",
+      steps: [
+        "Connect through DGA-Albright Stonebridge Group advisory network",
+        "Frame Phosra's 45 rule categories mapped across 67+ laws as an interoperability standard — mirrors his healthcare data work at CareJourney/Arcadia",
+        "Emphasize that COPPA 2.0 creates the same kind of regulatory mandate that drove healthcare data standards adoption",
+        "Reference his open government data initiatives and how Phosra extends that mission to child safety",
+      ],
+      openingAngle:
+        "You championed open data and interoperability standards as the first US CTO. COPPA 2.0 is creating the same mandate for child safety — Phosra is building the interoperability layer.",
+    },
+    status: "identified",
+    notes:
+      "First US CTO (2009-2012). Latest angel investment: Marit Health (Seed, March 2025). Portfolio of 3 companies focused on healthcare and insurance. His CareJourney exit (acquired by Arcadia) shows he builds data infrastructure companies. DGA-Albright Stonebridge advisory role means he counsels tech companies on policy — natural overlap with Phosra's compliance mission. Check size likely $25-100K based on portfolio pattern.",
+  },
+
+  // ─── TIER 2: Strong policy backgrounds, adjacent thesis ────────────────────
+
+  {
+    id: "tom-wheeler",
+    name: "Tom Wheeler",
+    fundOrCompany: "Brookings Institution / Core Capital Partners (former)",
+    role: "Visiting Fellow / Former FCC Chairman & VC",
+    website: "https://www.brookings.edu/people/tom-wheeler/",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$50-250K",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/tom-wheeler-fcc/",
+      twitter: "@TomWheelerFCC",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Former FCC Chairman (2013-2017) and former VC at Core Capital Partners ($350M fund, early-stage IP-based companies). Serial entrepreneur who co-founded SmartBrief and launched multiple telecom companies. Author of 'Techlash' about tech regulation. Deep understanding of both regulation AND venture investing. His regulatory experience at FCC and venture background at Core Capital make him uniquely positioned to understand Phosra's compliance-as-infrastructure thesis.",
+    coppaInterest: "public-stance",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage with his Brookings publications on tech regulation. His 'Techlash' book is directly relevant to Phosra's mission.",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Wheeler speaks at major tech policy events. Approach at Brookings events or tech regulation conferences.",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Approach through Brookings tech policy network emphasizing regulatory enforcement creating market opportunity",
+      steps: [
+        "Engage with his Brookings writing and 'Techlash' themes about tech accountability",
+        "Reference his dual experience as FCC Chairman AND venture capitalist to frame the compliance-as-investment thesis",
+        "Position COPPA 2.0 as the kind of regulatory inflection point he wrote about in 'Techlash'",
+        "Pitch Phosra as the infrastructure that makes compliance feasible — the bridge between regulation and implementation",
+      ],
+      openingAngle:
+        "You wrote 'Techlash' about the need for tech accountability. COPPA 2.0 enforcement in April 2026 is exactly that inflection — Phosra is the infrastructure that makes compliance possible.",
+      timing:
+        "His current focus is on AI regulation at Brookings, but child safety regulation is equally in his wheelhouse.",
+    },
+    status: "identified",
+    notes:
+      "31st FCC Chairman under Obama (2013-2017). Former MD at Core Capital Partners ($350M, early-stage VC, 2005-2013). Co-founded SmartBrief, launched multiple cable/wireless/video companies. Now Visiting Fellow at Brookings Governance Studies and Senior Fellow at Harvard Kennedy School. Investment activity status unknown post-FCC, but his VC background and regulatory expertise make him a high-value advisor/investor for compliance infrastructure. May be more valuable as advisor + small check than large investor.",
+  },
+
+  {
+    id: "nicole-wong",
+    name: "Nicole Wong",
+    fundOrCompany: "NWong Strategies",
+    role: "Principal / Former White House Deputy CTO",
+    website: "https://about.me/nwong",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$10-50K",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/nicole-wong-96b4335/",
+      twitter: "@nicolewong",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Former White House Deputy CTO (2013-2014) focused on internet, privacy, and innovation policy. Former VP & Deputy General Counsel at Google, Legal Director of Products at Twitter. Advisor to Refactor Capital (VC fund) and Albright Stonebridge Group. Board member at Mozilla Foundation and Filecoin Foundation. Her entire career is at the intersection of tech platforms, privacy law, and content regulation — exactly Phosra's domain. She helped Google and Twitter navigate the same content and privacy regulations Phosra automates.",
+    coppaInterest: "public-stance",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "2nd-degree-strong",
+        description:
+          "Through Albright Stonebridge Group network — she advises there alongside Aneesh Chopra. If you connect with Chopra first, she's a natural second intro.",
+        strength: 3,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage with her privacy and platform regulation work. Reference her Google/Twitter experience navigating COPPA when pitching.",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Approach through Albright Stonebridge or Refactor Capital networks, emphasizing platform compliance challenges she knows intimately",
+      steps: [
+        "Connect through Aneesh Chopra or Albright Stonebridge Group advisory network",
+        "Reference her Google and Twitter experience navigating child safety and privacy regulations",
+        "Frame Phosra as the tool she wished existed when she was Deputy General Counsel at Google dealing with COPPA",
+        "Emphasize Phosra's advisory role at Refactor Capital means she's already evaluating startups in this space",
+      ],
+      openingAngle:
+        "At Google and Twitter, you navigated child safety and privacy regulations from the inside. Phosra builds the compliance API that would have saved your legal team thousands of hours.",
+    },
+    status: "identified",
+    notes:
+      "Deputy CTO (2013-2014), Google VP & Deputy GC, Twitter Legal Director. Advisor to Refactor Capital (VC), Albright Stonebridge Group, AI Now Institute, Alliance for Securing Democracy. Board: Mozilla Foundation, Filecoin Foundation, Open Technology Fund. Her advisory role at Refactor Capital suggests she evaluates and likely co-invests in startups. Check size estimate is conservative but her network value and advisory credibility are very high. Potential advisor + small check combination.",
+  },
+
+  {
+    id: "vivek-kundra",
+    name: "Vivek Kundra",
+    fundOrCompany: "The Trade Desk",
+    role: "COO / Former Federal CIO",
+    website: "https://www.thetradedesk.com",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/vivekkundra/",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "First Federal CIO under Obama (2009-2011). Managed $80B in federal technology investments, led government's transition to cloud, and launched the open government movement. Now COO at The Trade Desk — an advertising technology company that must comply with data privacy regulations including COPPA. His dual perspective — government IT leader AND adtech executive — makes Phosra's compliance API directly relevant to his current work and investment thesis.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Reference his work at The Trade Desk navigating advertising data privacy regulations. COPPA compliance is directly relevant to adtech.",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-strong",
+        description:
+          "Through the Obama tech alumni network — Chopra, Sinai, Patil, Wong are all connected.",
+        strength: 3,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Approach through Obama administration tech alumni network, emphasizing The Trade Desk's own COPPA compliance needs",
+      steps: [
+        "Connect through Obama tech alumni network (Chopra, Sinai, Patil are all 1st-degree connections)",
+        "Reference The Trade Desk's advertising data privacy challenges — they directly need COPPA compliance",
+        "Frame Phosra as both a potential investment AND a strategic tool for The Trade Desk's compliance",
+        "Highlight his federal CIO background managing government technology standards",
+      ],
+      openingAngle:
+        "As Federal CIO, you managed government technology standards. At The Trade Desk, you navigate COPPA compliance daily. Phosra is the API bridge between both worlds.",
+    },
+    status: "identified",
+    notes:
+      "First Federal CIO (2009-2011). Managed $80B in tech investments, led government cloud transition. Post-government: EVP at Salesforce, COO at Sprinklr, COO at project44, now COO at The Trade Desk. Angel investment in Gospel Technology. The Trade Desk ($50B+ market cap) is directly affected by COPPA — advertising to children is heavily regulated. Small angel portfolio but high-value network connection and potential strategic angle.",
+  },
+
+  {
+    id: "jennifer-pahlka",
+    name: "Jennifer Pahlka",
+    fundOrCompany: "Niskanen Center / Recoding America Fund",
+    role: "Senior Fellow / Former White House Deputy CTO",
+    website: "https://www.jenniferpahlka.com",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$10-50K",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/jpahlka/",
+      twitter: "@paaboraptor",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Founded Code for America — the flagship civic tech nonprofit. Former White House Deputy CTO. Now chairs the $120M Recoding America Fund to reform government at all levels. Author of 'Recoding America.' She defines the civic tech/govtech ecosystem and her endorsement carries enormous weight. Co-founded the US Digital Service (now DOGE's predecessor). Her $120M Recoding America Fund may also be a funding source.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Code for America network and civic tech ecosystem are natural connection points. She's deeply embedded in the govtech community.",
+        strength: 3,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage with her 'Recoding America' book themes and Niskanen Center writing. Frame Phosra as implementing her vision of technology-enabled government compliance.",
+        strength: 3,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Approach through civic tech community, framing Phosra as implementing her 'Recoding America' vision for compliance",
+      steps: [
+        "Engage with her 'Recoding America' content — Phosra literally recodes compliance processes",
+        "Connect through Code for America alumni network or Niskanen Center",
+        "Frame COPPA 2.0 enforcement as an example of government mandates that need modern technology solutions",
+        "Position the $120M Recoding America Fund as a potential funding or partnership channel",
+      ],
+      openingAngle:
+        "You wrote 'Recoding America' about modernizing government processes. COPPA 2.0 enforcement in April 2026 needs exactly this — Phosra recodes child safety compliance from 67 laws into one API.",
+    },
+    status: "identified",
+    notes:
+      "Founded Code for America (2009), White House Deputy CTO, co-founded US Digital Service. Now chairs $120M Recoding America Fund and is senior fellow at Niskanen Center and Federation of American Scientists. Not confirmed as active angel investor, but her network, credibility, and the Recoding America Fund make her high-value. Even a $10K check + endorsement would be worth more than many larger investments. The Recoding America Fund itself could potentially invest in or partner with Phosra.",
+  },
+
+  {
+    id: "nuala-oconnor",
+    name: "Nuala O'Connor",
+    fundOrCompany: "Walmart / EqualAI",
+    role: "SVP & Chief Counsel, Digital Citizenship / Former DHS Chief Privacy Officer",
+    website: "https://cdt.org/staff/nuala-oconnor/",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/nualao/",
+      twitter: "@privacymama",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "First Chief Privacy Officer at DHS. Former President & CEO of the Center for Democracy and Technology (CDT). Now SVP & Chief Counsel for Digital Citizenship at Walmart. Previously at Amazon (VP, Compliance & Consumer Trust) and GE (Global Privacy Leader). Her ENTIRE career is child safety, privacy compliance, and digital trust. Her Twitter handle is literally @privacymama. She managed COPPA-adjacent compliance at DoubleClick, Amazon, and now Walmart. She is the dream advisor-investor for Phosra.",
+    coppaInterest: "public-stance",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage with her privacy and digital citizenship work. Reference CDT's positions on children's privacy and COPPA reform.",
+        strength: 3,
+      },
+      {
+        type: "industry-association",
+        description:
+          "IAPP (International Association of Privacy Professionals) connections — she's a prominent member. Also connect through Future of Privacy Forum, Kekst CNC advisory board.",
+        strength: 3,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended:
+        "Approach through privacy professional networks (IAPP, FPF) emphasizing her unique perspective spanning government AND corporate compliance",
+      steps: [
+        "Connect through IAPP or Future of Privacy Forum where she's a recognized leader",
+        "Reference her career spanning DHS privacy, CDT advocacy, Amazon compliance, and Walmart digital citizenship",
+        "Frame Phosra as the tool that unifies the fragmented compliance landscape she's navigated across government and corporate roles",
+        "Emphasize Walmart's own child safety compliance challenges — she may see strategic value beyond personal investment",
+      ],
+      openingAngle:
+        "You've been the Chief Privacy Officer at DHS, led CDT, and now oversee digital citizenship at Walmart. You know better than anyone how fragmented child safety compliance is — Phosra unifies it into one API.",
+    },
+    status: "identified",
+    notes:
+      "First DHS CPO (2003-2005). CEO of CDT (2014-2019). Amazon VP Compliance & Consumer Trust. Now Walmart SVP Digital Citizenship. Twitter: @privacymama. Advisor to EqualAI, Kekst CNC, National Cyber Security Alliance. Not confirmed as active angel investor, but her career is perfectly aligned with Phosra's mission. At Walmart, she directly manages COPPA compliance for one of the world's largest retailers. Could be both investor AND customer/strategic advisor. Her endorsement in the child safety privacy community would be invaluable.",
+  },
+
+  // ─── TIER 3: Valuable for network and credibility ──────────────────────────
+
+  {
+    id: "sonal-shah",
+    name: "Sonal Shah",
+    fundOrCompany: "Georgetown Beeck Center / Case Foundation",
+    role: "Professor & Founding Executive Director / Former White House Director of Social Innovation",
+    website: "https://beeckcenter.georgetown.edu",
+    category: "policy-angel",
+    type: "angel",
+    checkSizeRange: "$10-25K",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/sonalshah/",
+    },
+    thesisAlignment: "adjacent",
+    thesisNote:
+      "First Director of the White House Office of Social Innovation and Civic Participation under Obama. Senior Fellow at Case Foundation focused on impact investing. Founded Georgetown's Beeck Center for Social Impact & Innovation. Former Goldman Sachs VP and Google.org executive. Leads the G7 Impact Investing Working Group. Phosra's child safety mission aligns with her social innovation thesis, and her impact investing network could unlock philanthropic and impact-first capital sources.",
+    coppaInterest: "none",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Georgetown Beeck Center hosts civic innovation events. Also accessible through Case Foundation impact investing network.",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-strong",
+        description:
+          "Obama administration alumni network connects to Chopra, Sinai, Wong, Kundra, and Patil.",
+        strength: 3,
+      },
+    ],
+    tier: 3,
+    approachStrategy: {
+      recommended:
+        "Approach through impact investing angle and Georgetown social innovation community",
+      steps: [
+        "Connect through Georgetown Beeck Center or Case Foundation impact investing network",
+        "Frame Phosra's child safety mission as social innovation with a venture-scale business model",
+        "Reference her G7 Impact Investing work — Phosra generates measurable social impact (children protected) alongside financial returns",
+        "Position Phosra as a model for the 'innovative models in the social sector' her White House office championed",
+      ],
+      openingAngle:
+        "You founded the White House Office of Social Innovation to invest in scalable social impact models. Phosra protects children online while building venture-scale compliance infrastructure.",
+    },
+    status: "identified",
+    notes:
+      "Former White House Director of Social Innovation. Goldman Sachs VP, Google.org head of Global Development, Case Foundation Senior Fellow, Georgetown Beeck Center founder. Impact investing focus via G7 working group. Not a typical angel investor, but her impact investing network and social innovation credibility are valuable. Could unlock philanthropic capital sources (Case Foundation, Omidyar Network, etc.) and provide credibility with impact-focused LPs.",
+  },
+]
+const PARENT_ANGELS: WarmIntroTarget[] = [
+  {
+    id: "tim-kendall",
+    name: "Tim Kendall",
+    fundOrCompany: "Common Metal",
+    role: "Co-Founder & Partner",
+    website: "https://www.commonmetal.com",
+    category: "parent-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/tim-kendall-6572/",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Former Facebook monetization director and Pinterest president who had a personal awakening about tech's harm on his own kids — found himself 'holed up in the pantry' watching videos instead of being with his children. Built Moment app to combat screen addiction (9M downloads). Featured in The Social Dilemma. Sits on UCSF Benioff Children's Hospitals board focusing on children's mental health strategy. Invests in 'tech for good' with focus on consumer tech, preventative health, and mental health. Has made 20+ angel investments. Phosra's compliance infrastructure directly enables the regulatory framework he publicly champions.",
+    coppaInterest: "public-stance",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage with his Social Dilemma commentary and children's mental health board work at UCSF Benioff — position Phosra as the compliance layer that makes child protection enforceable, not just aspirational",
+        strength: 2,
+      },
+      {
+        type: "alumni-network",
+        description:
+          "Stanford GSB alumni network (class of '06) — check if Jake has Stanford connections who overlap",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Lead with his personal story arc — Facebook monetization to Moment to children's hospital board. Phosra is the infrastructure layer for the movement he's been building toward.",
+      steps: [
+        "Research his Common Metal portfolio for overlapping investments in compliance/safety tech",
+        "Engage with his children's mental health content on LinkedIn and social",
+        "Reference his Congressional testimony on tech's impact on children",
+        "Frame Phosra as the enforcement infrastructure that makes his UCSF Benioff work actionable at the platform level",
+      ],
+      openingAngle:
+        "You've seen the problem from the inside (Facebook/Pinterest), built the consumer solution (Moment), and now advise the hospital system treating the fallout. Phosra is the missing compliance infrastructure layer — the 'Plaid of child safety' that gives your entire arc a regulatory backbone.",
+    },
+    status: "identified",
+    notes:
+      "Stanford GSB '06. Father of two. Previously Facebook's first monetization strategy lead, President of Pinterest. Built Moment (screen-time tracker, 9M downloads, closed 2021 after Apple/Google built native tools). Featured in Netflix's The Social Dilemma. Venture Partner at Tidemark. Board member at UCSF Benioff Children's Hospitals. Invests via Common Metal in early-stage 'tech for good.' Extremely strong thesis fit — one of the few angels who has literally built consumer child-safety products AND has a 20+ deal angel track record.",
+  },
+
+  {
+    id: "chris-hulls",
+    name: "Chris Hulls",
+    fundOrCompany: "Life360 (Personal Investments)",
+    role: "Co-Founder & Executive Chairman, Life360",
+    website: "https://www.life360.com",
+    category: "parent-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/chrishulls/",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Built the world's leading family safety platform (Life360, 70M+ users, $3B+ market cap, ASX-listed). Has made 26 angel investments including early bets on Ring and Tile (both acquired — Tile later by Life360 itself). As the founder of the category-defining family safety company, he deeply understands the regulatory compliance burden platforms face. Phosra solves a problem he's lived — making child safety compliance automatable for platforms that serve families.",
+    coppaInterest: "public-stance",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Family safety tech ecosystem overlap — Life360 deals with COPPA/child safety compliance directly. Phosra's API would be relevant to Life360's compliance stack.",
+        strength: 3,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage through his podcast appearances and writing about family safety tech, then position Phosra as infrastructure that Life360 and similar platforms need",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Position Phosra as solving the compliance problem Life360 faces — he knows firsthand how complex multi-jurisdiction child safety law is. Lead with the platform use case, then pivot to the angel opportunity.",
+      steps: [
+        "Map which child safety laws apply to Life360 using Phosra's registry — create a mini-audit as an outreach artifact",
+        "Reach out on LinkedIn noting the shared family-safety mission and his angel track record",
+        "Reference his 26 angel investments and position Phosra alongside his Ring/Tile pattern of investing in safety/tracking infrastructure",
+        "Ask for both investment and strategic partnership consideration (Life360 as a potential Phosra customer)",
+      ],
+      openingAngle:
+        "You've built the category-defining family safety platform. The regulatory landscape protecting those families is exploding — 67+ laws across jurisdictions. Phosra is the compliance infrastructure layer for every platform that serves families, including Life360.",
+    },
+    status: "identified",
+    notes:
+      "UC Berkeley Haas alum. Started Life360 with $30K from his mom and a community college professor. Company now valued at $3B+, publicly listed on ASX and NASDAQ. Transitioned to Executive Chairman in 2025 (Lauren Antonoff now CEO), freeing up bandwidth for angel investing. 26 angel investments including Ring (acquired by Amazon), Tile (acquired by Life360), Credible, Automatic, Honk, and Zendrive. Strong pattern of investing in safety/location infrastructure. Recently stepped back from day-to-day CEO role — likely has more time for angel investing.",
+  },
+
+  {
+    id: "tony-fadell",
+    name: "Tony Fadell",
+    fundOrCompany: "Build Collective",
+    role: "Principal",
+    website: "https://www.buildc.com",
+    category: "parent-angel",
+    type: "angel",
+    checkSizeRange: "$50-250K",
+    stagePreference: "Pre-seed to Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/tfadell/",
+      twitter: "@tfadell",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "iPod inventor and iPhone co-designer who publicly agonizes about tech's impact on his kids — says he wakes up in 'cold sweats every so often thinking what did we bring to the world.' Founded Build Collective to invest in startups making the world 'greener, healthier, and safer.' Currently advising/investing in 200+ startups. His personal guilt about the devices he created, combined with his investment thesis of 'safer world' tech, makes Phosra a thesis-perfect investment.",
+    coppaInterest: "public-stance",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage through his 'Build' book community and Time Sensitive podcast appearances where he discusses building healthier technology for society",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Build Collective operates out of Station F in Paris — potential to connect at European tech events or through Station F ecosystem",
+        strength: 1,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Lead with his public 'cold sweats' admission about tech's impact on kids. Phosra is the compliance infrastructure that enforces the child safety regulations his devices helped necessitate — a direct way to address his stated concern.",
+      steps: [
+        "Reference his Build book and interviews about making technology safer",
+        "Frame Phosra as the 'infrastructure play' he gravitates toward (iPod/Nest were both infrastructure-level bets)",
+        "Highlight the 45 rule categories and 67+ laws — appeal to his engineering mindset about systematizing complexity",
+        "Position as 'making the world safer' — directly aligned with Build Collective's stated mission",
+      ],
+      openingAngle:
+        "You built the devices that changed childhood. You've said you wake up in cold sweats thinking about it. Phosra is the compliance infrastructure that makes child safety laws actually enforceable — 45 rule categories, 67+ laws, one API. This is the 'safer' in Build Collective's 'greener, healthier, safer.'",
+    },
+    status: "identified",
+    notes:
+      "Father of two. Created the iPod, co-created the iPhone, founded Nest Labs (acquired by Google for $3.2B). Now runs Build Collective (formerly Future Shape) from Paris's Station F. Advises/invests in 200+ startups. Portfolio includes Nothing, Turvo, Nabla. Deeply publicly remorseful about devices' impact on children. Advocates screen-free meals, tech-free family days, analog books. Check size likely larger than typical angel given his net worth. Paris-based but globally connected.",
+  },
+
+  {
+    id: "brian-bason",
+    name: "Brian Bason",
+    fundOrCompany: "Bark Technologies",
+    role: "CEO & Founder",
+    website: "https://www.bark.us",
+    category: "parent-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/brianbason/",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Founded Bark specifically as a parent who saw a 'critical void' in internet safety solutions for children. Bark now protects 6M+ children and serves 3,200+ school districts. As a serial entrepreneur (3 exits to Twitter, RadioIO, and SocialChorus), he has the background and liquidity for angel investing. Phosra's compliance API is directly complementary to Bark's monitoring product — Bark needs to comply with the laws Phosra tracks. Strong potential as both an angel investor and strategic partner.",
+    coppaInterest: "public-stance",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Direct child safety tech ecosystem peer — Bark and Phosra are complementary products, not competitors. Bark monitors content; Phosra maps compliance requirements.",
+        strength: 3,
+      },
+      {
+        type: "content-warmup",
+        description:
+          "Engage through child safety tech conferences and Bark's public advocacy for online child protection",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Position Phosra as directly complementary to Bark — Bark does content monitoring, Phosra maps the regulatory requirements that dictate what monitoring is needed. Lead with a 'compliance audit' showing how Phosra tracks the laws Bark must comply with.",
+      steps: [
+        "Create a Phosra compliance map specific to Bark's product (which laws apply, which rule categories overlap)",
+        "Reach out via LinkedIn highlighting the complementary nature of both companies",
+        "Propose both an angel investment and an exploration of Phosra as a Bark integration partner",
+        "Reference Jake's parallel path as a parent-founder with multiple exits",
+      ],
+      openingAngle:
+        "You built Bark because you saw a critical void in child safety as a parent. Phosra maps the 67+ laws and 45 rule categories that define what Bark needs to enforce — we're the compliance layer for the child safety ecosystem you're building.",
+    },
+    status: "identified",
+    notes:
+      "Father and parent-first founder. Physics degree from University of Colorado. Serial entrepreneur: CTO at Niche (acquired by Twitter), CEO of CrowdStream (acquired by RadioIO), CTO at YouCast Corp (acquired by SocialChorus). Founded Bark in 2015. Bark protects 6M+ children, serves 3,200+ school districts, raised $30M+ (Series C in 2022). Bark Phone named TIME Best Invention 2023. Angel investing track record unknown — but serial exit history and child safety focus make him ideal. Strong strategic investor potential.",
+  },
+
+  {
+    id: "esther-wojcicki",
+    name: "Esther Wojcicki",
+    fundOrCompany: "Tract (Co-Founder) / Personal Investments",
+    role: "Co-Founder of Tract; Educator & Author",
+    website: "https://www.estherwojcicki.com",
+    category: "parent-angel",
+    type: "angel",
+    checkSizeRange: "$25-50K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/estherwojcicki/",
+      twitter: "@EstherWojcicki",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Called the 'Godmother of Silicon Valley' — mother of YouTube CEO Susan Wojcicki, 23andMe founder Anne Wojcicki, and anthropologist Janet Wojcicki. Co-founded Tract (raised $7M from NEA), a platform where kids teach kids. Legendary educator who built the largest high school journalism program in the US. Deeply connected to Google/YouTube ecosystem through family and her role founding GoogleEdu. Her daughter Susan ran YouTube, which has faced significant COPPA enforcement — she understands this compliance challenge intimately through family context.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "content-warmup",
+        description:
+          "Engage through her education and parenting thought leadership — she's active on social media and at education conferences",
+        strength: 2,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Frequent speaker at education and tech conferences — could connect at events like ASU GSV, SXSW Edu, or TechEmotion Summit",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Lead with the education-to-compliance connection. Her daughter ran YouTube (which paid $170M in COPPA fines). Her Tract platform serves kids directly and needs compliance. Phosra maps the regulatory landscape for every platform serving children.",
+      steps: [
+        "Reference Tract's mission and how Phosra's compliance mapping would help any edtech platform serving children",
+        "Note the YouTube/COPPA connection through her daughter Susan — she's aware of the stakes",
+        "Attend an education technology conference where she's speaking and approach in person",
+        "Frame Phosra as enabling safe, compliant innovation in the edtech space she champions",
+      ],
+      openingAngle:
+        "You've built your life around empowering children through education and technology. Your daughter's platform paid $170M in COPPA fines. Your own platform, Tract, serves kids directly. Phosra ensures every edtech platform can navigate 67+ child safety laws confidently.",
+    },
+    status: "identified",
+    notes:
+      "Mother of three (Susan Wojcicki — YouTube CEO, Anne Wojcicki — 23andMe founder, Janet Wojcicki — epidemiologist). Co-founded Tract with former Uber exec Ari Memar (raised $7M seed from NEA). Founded Palo Alto High School media arts program (600+ students, 9 publications). CA Teacher of the Year 2002. Author of 'How to Raise Successful People.' Google/YouTube family connections provide unique insight into child safety compliance challenges. Check size likely smaller but comes with extraordinary Silicon Valley network and credibility.",
+  },
+
+  {
+    id: "mike-lowe",
+    name: "Mike Lowe",
+    fundOrCompany: "A Parent Media Co. (Kidoodle.TV)",
+    role: "Co-Founder & CEO",
+    website: "https://www.kidoodle.tv",
+    category: "parent-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/michael-lowe-08972566/",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Built A Parent Media Co. and Kidoodle.TV explicitly 'to make the digital media world a safer place for kids.' Pioneered 'Safe Streaming' — both a content platform (Kidoodle.TV, valued at CDN $600M+ after TriWest investment) and an ad-moderation service (Safe Exchange). As a platform that serves children directly, he faces the exact compliance challenges Phosra solves. Journalism background gives him a communication-first mindset. His company has raised $62M+ and achieved $11.5M revenue — he has the liquidity and network for angel investing in complementary child safety infrastructure.",
+    coppaInterest: "public-stance",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "industry-association",
+        description:
+          "Direct child safety streaming platform founder — Kidoodle.TV faces COPPA, KOSA, and international child safety compliance challenges that Phosra maps",
+        strength: 3,
+      },
+      {
+        type: "conference-event",
+        description:
+          "Active at Kidscreen Summit and children's media conferences — networking overlap opportunity",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Position Phosra as the compliance infrastructure Kidoodle.TV needs — he's built a Safe Streaming platform but managing compliance across 67+ laws manually is unsustainable.",
+      steps: [
+        "Create a compliance audit showing which laws apply to Kidoodle.TV using Phosra's registry",
+        "Reach out through child safety media industry connections or Kidscreen Summit networking",
+        "Position both as angel investment opportunity AND potential Phosra customer/integration partner",
+        "Highlight the parallel parent-founder story — Jake has 5 kids, Mike founded 'A Parent Media Co.'",
+      ],
+      openingAngle:
+        "You literally named your company 'A Parent Media Co.' and invented Safe Streaming. The regulatory landscape protecting those kids is now 67+ laws and growing. Phosra maps all of them — we're the compliance API that makes Safe Streaming legally bulletproof across every jurisdiction.",
+    },
+    status: "identified",
+    notes:
+      "Father. Co-founded Kidoodle.TV with Neil Gruninger in 2012. Calgary, Canada-based. A Parent Media Co. valued at CDN $600M+ after TriWest Capital Partners investment ($62M+ total raised). $11.5M revenue in 2024. 118-person team. Journalism background. Pioneered Safe Streaming and Safe Exchange (ad moderation). Titles himself 'Dad, Co-Founder & CEO' on Crunchbase. Strong strategic investor potential — Kidoodle.TV would be an ideal Phosra customer. Check size and angel track record unconfirmed, but the CDN $600M valuation and multiple funding rounds suggest significant personal liquidity.",
+  },
+]
+const FINTECH_ANGELS: WarmIntroTarget[] = [
+  {
+    id: "zach-perret",
+    name: "Zach Perret",
+    fundOrCompany: "Plaid / Mischief Ventures",
+    role: "CEO & Co-Founder, Plaid; GP, Mischief Ventures",
+    website: "https://zachperret.com",
+    category: "fintech-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://linkedin.com/in/zperret",
+      twitter: "@zachperret",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Phosra is literally 'the Plaid of child safety' — Zach built the API-first infrastructure playbook for financial data. He understands exactly what a compliance API layer looks like at scale. Mischief Ventures ($30M fund with Lauren Farleigh) is hyper people-driven and invests $1.5-3M checks in pre-seed/seed software. His personal angels are smaller ($25-100K). He recently invested in Fragment (2024) and Comulate (Feb 2025), showing active deployment. The 'Plaid of X' framing is both flattering and immediately legible to him.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "The 'Plaid of child safety' metaphor is the ultimate warm opener. Reference his Acquired.fm episode and how Plaid's infrastructure-layer thesis maps perfectly to compliance. Reach via zachperret.com or X DM.",
+        strength: 3,
+      },
+      {
+        type: "alumni-network",
+        description:
+          "Mastercard network — Plaid partners deeply with Mastercard Open Banking. Jake's MC background creates a shared language.",
+        strength: 3,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Personal email via zachperret.com + X DM",
+      steps: [
+        "Lead with 'I built the Plaid of child safety compliance' — one sentence that maps to his entire worldview",
+        "Reference how Plaid standardized 12,000+ FI connections the same way Phosra standardizes 67+ child safety laws into 45 rule categories",
+        "Mention Jake's Mastercard infrastructure background — Plaid partners with MC Open Banking",
+        "Ask for 30 min to demo the API and discuss infrastructure-layer compliance",
+      ],
+      openingAngle:
+        "Plaid proved that messy, fragmented regulatory data (bank APIs) could be unified into a single developer-friendly layer. Phosra does the same for the child safety compliance landscape — 67 laws, 45 rule categories, one API.",
+    },
+    status: "identified",
+    notes:
+      "Mischief fund does $1.5-3M checks (too large for a $950K round unless leading). Better angle may be personal angel check ($25-100K). Mischief is generalist software, founder-driven, not thesis-driven — so the pitch must be about Jake as a founder, not just the market.",
+  },
+
+  {
+    id: "william-hockey",
+    name: "William Hockey",
+    fundOrCompany: "Column / Plaid",
+    role: "Co-Founder, Plaid; Co-CEO, Column",
+    website: "https://column.com",
+    category: "fintech-angel",
+    type: "angel",
+    checkSizeRange: "$5-50K",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://linkedin.com/in/william-hockey-04536710",
+      twitter: "@wrhockey",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "Co-founded Plaid and now building Column (the only nationally chartered bank built for developers). He is among the most prolific fintech angel investors with 38-49 documented investments including Stytch ($1B valuation), Spenmo, Goldsky, Ethena, and Zero Hash. His latest investment was Town (Seed, March 2025) — so actively deploying. He deeply understands API-first infrastructure in regulated industries. Column itself operates in the most regulated layer of fintech (banking charter), so compliance infrastructure resonates at a DNA level.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "Same 'Plaid of child safety' hook. Column's regulated-infrastructure thesis makes compliance API even more resonant.",
+        strength: 3,
+      },
+      {
+        type: "2nd-degree-weak",
+        description:
+          "Through Mastercard/Plaid partnership channels. Also potential intro via any mutual connections in the Stytch or Column ecosystem.",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "LinkedIn message + X DM, reference Column's regulated-infra thesis",
+      steps: [
+        "Open with 'Plaid of child safety' metaphor — he co-built the original Plaid",
+        "Draw parallel between Column's 'bank built for developers' and Phosra's 'compliance API built for platforms'",
+        "Emphasize that child safety compliance is the next wave of regulation that needs an infrastructure layer (like banking needed Column)",
+        "Reference Jake's Mastercard background — he understands payment infrastructure deeply",
+      ],
+      openingAngle:
+        "You built the infrastructure layer for financial data (Plaid) and banking (Column). I'm building it for child safety compliance — 67 laws, 45 rule categories, one API. Same thesis, different vertical.",
+    },
+    status: "identified",
+    notes:
+      "Check size ($5-50K sweet spot $25K) fits perfectly in a $950K round. Extremely prolific — 38+ investments means he moves fast and does volume. Column's regulated-infra DNA makes this a natural fit.",
+  },
+
+  {
+    id: "jean-denis-greze",
+    name: "Jean-Denis Greze",
+    fundOrCompany: "Plaid / ASDF Ventures",
+    role: "CTO, Plaid; Co-Investor, ASDF Ventures",
+    website: "https://greze.com",
+    category: "fintech-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://linkedin.com/in/jeandenisgreze",
+      twitter: "@jdgreze",
+    },
+    thesisAlignment: "perfect",
+    thesisNote:
+      "As Plaid's CTO, Jean-Denis literally built the technical infrastructure that Phosra's 'Plaid of child safety' metaphor references. He has 17 angel investments focused on AI, fintech, and developer tools — all of which describe Phosra. His ASDF Ventures co-investor role shows formalized angel activity. Investment range reported at $100K-5M (with ASDF), but personal angel checks likely $25-100K. Recent investments include Harmony Intelligence, Formal, Frigade, and Loops — all developer-focused tools.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "As Plaid CTO, the 'Plaid of child safety' metaphor resonates even more technically. Can speak to API architecture and data standardization challenges.",
+        strength: 3,
+      },
+      {
+        type: "2nd-degree-weak",
+        description:
+          "Through Plaid's developer ecosystem or Mastercard Open Banking partnership channels.",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Email via greze.com + LinkedIn DM with technical depth",
+      steps: [
+        "Lead with technical framing: 'I built the Plaid of child safety — here's how the API architecture maps 67 laws to 45 rule categories'",
+        "Emphasize the developer-tool angle — Phosra is a developer-first API, same as Plaid",
+        "Reference his investments in developer tools (Formal, Frigade, Loops) and how Phosra fits that portfolio",
+        "Offer a technical deep-dive on the API architecture — CTO-to-CTO credibility",
+      ],
+      openingAngle:
+        "You built Plaid's technical infrastructure. I built the same thing for child safety compliance — a single API that standardizes 67 laws into 45 enforceable rule categories. I'd love to walk you through the architecture.",
+    },
+    status: "identified",
+    notes:
+      "The CTO angle is powerful — he can evaluate the technical architecture and provide signal. Getting both Zach Perret AND Jean-Denis Greze would be the ultimate validation of the 'Plaid of child safety' positioning. His 20VC appearance shows he's publicly engaged in the ecosystem.",
+  },
+
+  {
+    id: "jason-gardner",
+    name: "Jason Gardner",
+    fundOrCompany: "Marqeta",
+    role: "Founder, Marqeta (3x Founder, IPO exit)",
+    website: "https://marqeta.com",
+    category: "fintech-angel",
+    type: "angel",
+    checkSizeRange: "$5-50K",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://linkedin.com/in/jasonmatthewgardner",
+      twitter: "@jasonmgardner",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Jason Gardner founded Marqeta (card issuing infrastructure — think 'Plaid for card programs') and took it through IPO in 2021. He's a 3x founder like Jake (PropertyBridge acquired by MoneyGram, Vertical Think, then Marqeta). His angel portfolio of 12 companies includes Zilch and Zero Hash (both unicorns). His $5-50K check size with $25K sweet spot fits perfectly in a $950K round. Marqeta itself provides compliance tools (spend controls, fraud detection) — so compliance infrastructure resonates. Currently guides Marqeta's Payments Innovation Committee.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "2nd-degree-strong",
+        description:
+          "Both are 3x founders who built payment infrastructure. Jake (3 exits, Mastercard) and Jason (3 companies, Marqeta IPO) share the serial-founder DNA.",
+        strength: 3,
+      },
+      {
+        type: "2nd-degree-weak",
+        description:
+          "Mastercard invested in Marqeta ecosystem companies (Synctera). MC alumni network could surface direct connection.",
+        strength: 2,
+      },
+    ],
+    tier: 1,
+    approachStrategy: {
+      recommended: "Founder-to-founder cold email via LinkedIn",
+      steps: [
+        "Lead with shared DNA: both 3x founders who built payment/compliance infrastructure",
+        "Reference how Marqeta's card-issuing infrastructure playbook maps to Phosra's compliance API infrastructure",
+        "Emphasize the 'infrastructure layer for a fragmented market' thesis — card issuing was fragmented like child safety compliance is now",
+        "Mention Mastercard connection — MC invested in Marqeta's ecosystem (Synctera)",
+      ],
+      openingAngle:
+        "Fellow 3x founder here. You built the infrastructure layer for card issuing. I'm building it for child safety compliance — same fragmented-market-needs-an-API thesis, powered by my Mastercard infrastructure background.",
+    },
+    status: "identified",
+    notes:
+      "Perfect check size for the round ($25K sweet spot). 3x founder parallel creates immediate rapport. His post-Marqeta phase (stepped down as CEO 2023, then Executive Chairman through 2024) means he has time and capital to deploy. Currently on Innovation Committee so still thinking about payments/compliance infrastructure.",
+  },
+
+  {
+    id: "claire-hughes-johnson",
+    name: "Claire Hughes Johnson",
+    fundOrCompany: "Stripe (Former COO)",
+    role: "Former COO, Stripe; Author, 'Scaling People'; Angel Investor",
+    website: "https://linkedin.com/in/claire-hughes-johnson-7058",
+    category: "fintech-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://linkedin.com/in/claire-hughes-johnson-7058",
+      twitter: "@chabornevik",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Former Stripe COO (2014-2021) who helped scale Stripe from a payments startup to a $95B infrastructure company. Now an active angel investor with 20+ portfolio companies across enterprise apps, fintech, and developer tools. Recent investments include Stainless (Dec 2024) and Quanta (Dec 2025) — actively deploying. She also invested in Duna (identity verification) alongside other Stripe execs, showing interest in compliance-adjacent infrastructure. Her Stripe experience means she deeply understands API-first infrastructure businesses and platform compliance challenges.",
+    coppaInterest: "portfolio-signal",
+    fundSignal: "deploying",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "Stripe's compliance challenges (KYC, AML, payment regulations) parallel child safety compliance. Her operational lens would appreciate Phosra's infrastructure approach.",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-strong",
+        description:
+          "Xtripe (Stripe alumni angel syndicate) or Stripe alumni network could provide warm intro. Also Yale SOM alumni network.",
+        strength: 3,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "LinkedIn DM + warm intro through Stripe alumni / Xtripe syndicate",
+      steps: [
+        "Reference Stripe's own compliance infrastructure journey — she lived it as COO",
+        "Position Phosra as 'Stripe for child safety compliance' — she built the ops that made Stripe's API-first model work",
+        "Highlight that child safety is where payment compliance was 10 years ago — fragmented, manual, about to be automated",
+        "Mention her Duna investment (identity verification) as a compliance-adjacent analog",
+      ],
+      openingAngle:
+        "You scaled Stripe's compliance and API infrastructure as COO. Child safety compliance is at the same inflection point payment regulations were when you joined Stripe — fragmented across 67 laws, ripe for an API-first solution.",
+    },
+    status: "identified",
+    notes:
+      "Her book 'Scaling People' and public presence (Yale SOM, speaking circuit) make her accessible. The Stripe compliance angle is strong — she understood first-hand how regulatory complexity creates demand for infrastructure. Her Duna investment signals interest in compliance/identity infrastructure.",
+  },
+
+  {
+    id: "jim-mckelvey",
+    name: "Jim McKelvey",
+    fundOrCompany: "Square (Co-Founder) / FINTOP Capital / Cultivation Capital",
+    role: "Co-Founder, Square; Co-Founder, FINTOP Capital; Author, 'The Innovation Stack'",
+    website: "https://linkedin.com/in/mckelveyjim",
+    category: "fintech-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://linkedin.com/in/mckelveyjim",
+      twitter: "@jimmckelvey",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Co-founded Square with Jack Dorsey — built the payment infrastructure that democratized card acceptance. Now runs FINTOP Capital (fintech-focused VC co-founded ~2016) and co-founded Cultivation Capital (ranked 7th most active VC since 2009). His book 'The Innovation Stack' details how Square created an innovation stack in payments — Phosra is creating one for child safety compliance. Serial founder (8+ companies) like Jake. Angel portfolio of ~10 companies spans fintech, healthtech, and consumer. He's based in St. Louis, not SF, which broadens the network.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "2nd-degree-strong",
+        description:
+          "Both are serial founders who built payment infrastructure. His Innovation Stack thesis maps perfectly to Phosra's approach.",
+        strength: 3,
+      },
+      {
+        type: "industry-association",
+        description:
+          "FINTOP Capital specifically focuses on fintech — could be a fund-level investment path as well as personal angel.",
+        strength: 3,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Approach through FINTOP Capital or direct LinkedIn outreach",
+      steps: [
+        "Reference 'The Innovation Stack' — Phosra is building an innovation stack for child safety compliance",
+        "Draw parallel between Square democratizing payments and Phosra democratizing compliance",
+        "Mention FINTOP's fintech focus — this is fintech-adjacent infrastructure (compliance for platforms that handle payments/data)",
+        "Highlight Jake's Mastercard background — shared payments infrastructure DNA",
+      ],
+      openingAngle:
+        "Your Innovation Stack thesis at Square — creating multiple interlocking innovations to solve a problem no one else can — is exactly what we're building for child safety compliance. 67 laws, 45 rule categories, one API.",
+    },
+    status: "identified",
+    notes:
+      "FINTOP Capital path could yield either a personal angel check or fund-level investment. His St. Louis base means he's less inundated with SF deal flow. The Innovation Stack framing is a compelling hook. Cultivation Capital co-founding shows he actively builds investor networks.",
+  },
+
+  {
+    id: "omri-dahan",
+    name: "Omri Dahan",
+    fundOrCompany: "Marqeta / Stage 2 Capital",
+    role: "Former CRO, Marqeta (employee #1 to IPO); Partner, Stage 2 Capital",
+    website: "https://stage2.capital/team/omri-dahan",
+    category: "fintech-angel",
+    type: "angel",
+    checkSizeRange: "$5-50K",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://linkedin.com/in/omridahan",
+      twitter: "@omaborana",
+    },
+    thesisAlignment: "good",
+    thesisNote:
+      "Led Marqeta's commercial organization from first dollar of revenue to IPO filing. Now a Partner at Stage 2 Capital and active angel with 10+ investments ($5-50K range, $25K sweet spot). Invested in Synctera alongside Mastercard and in Vertice (SaaS optimization). His career arc (White House > Trium Group consulting > Marqeta CRO) shows interest in regulated industries and institutional relationships. Ranked on payments, SaaS, and Web3 investor lists. His Mastercard co-investment in Synctera creates a direct connection to Jake's MC background.",
+    coppaInterest: "none",
+    fundSignal: "active",
+    introPaths: [
+      {
+        type: "alumni-network",
+        description:
+          "Omri co-invested with Mastercard in Synctera's Series A. Jake's Mastercard background creates immediate common ground.",
+        strength: 4,
+      },
+      {
+        type: "2nd-degree-strong",
+        description:
+          "Jason Gardner (Marqeta founder) could intro if we connect with him first.",
+        strength: 3,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "LinkedIn DM referencing Mastercard + Marqeta overlap",
+      steps: [
+        "Open with the Mastercard connection — he co-invested with MC in Synctera, Jake built on MC infrastructure",
+        "Reference his Marqeta journey: building payment infrastructure from zero to IPO parallels Phosra's compliance infrastructure play",
+        "Highlight that Phosra serves the same platforms Marqeta serves (fintechs, neobanks, tech companies) with compliance infrastructure",
+        "Mention his White House background — government/regulation connection adds relevance",
+      ],
+      openingAngle:
+        "You built Marqeta's go-to-market from first dollar to IPO, and co-invested with Mastercard in Synctera. I'm a Mastercard alum building the compliance infrastructure layer for child safety — serving the same platforms you helped scale at Marqeta.",
+    },
+    status: "identified",
+    notes:
+      "His White House background adds an interesting regulatory awareness dimension. Stage 2 Capital partnership could amplify beyond personal angel check. The Mastercard/Synctera co-investment is the strongest intro path on this entire list — a direct, concrete connection. Check size fits perfectly in $950K round.",
+  },
+
+  {
+    id: "renaud-laplanche",
+    name: "Renaud Laplanche",
+    fundOrCompany: "Upgrade / LendingClub (Founder)",
+    role: "Co-Founder & CEO, Upgrade; Founder, LendingClub",
+    website: "https://renaudlaplanche.com",
+    category: "fintech-angel",
+    type: "angel",
+    checkSizeRange: "$25-100K",
+    stagePreference: "Seed",
+    contact: {
+      linkedin: "https://linkedin.com/in/renaudlaplanche",
+      twitter: "@RLaplanche",
+    },
+    thesisAlignment: "adjacent",
+    thesisNote:
+      "Founded LendingClub (IPO in 2014, $870M raised) and now leads Upgrade (valued at $6.3B), both in regulated fintech. As a fintech founder who's navigated SEC enforcement and heavy lending regulation, he intimately understands the compliance burden platforms face. His 5 angel investments are smaller volume but high conviction. LendingClub's SEC issues actually reinforce why compliance infrastructure matters — he learned this lesson the hard way. Upgrade provides credit and mobile banking products that must comply with extensive consumer protection regulations.",
+    coppaInterest: "none",
+    fundSignal: "unknown",
+    introPaths: [
+      {
+        type: "cold-application",
+        description:
+          "The regulated-fintech founder angle. He's lived through compliance challenges at both LendingClub and Upgrade. Reach via renaudlaplanche.com.",
+        strength: 2,
+      },
+      {
+        type: "2nd-degree-weak",
+        description:
+          "French-American fintech community is tight-knit. SF fintech ecosystem overlap with Mastercard network.",
+        strength: 2,
+      },
+    ],
+    tier: 2,
+    approachStrategy: {
+      recommended: "Personal email via renaudlaplanche.com, compliance-cost angle",
+      steps: [
+        "Lead with the compliance burden angle — he's lived it at LendingClub and Upgrade",
+        "Position child safety compliance as the next major regulatory wave that will hit every platform (including consumer fintech like Upgrade)",
+        "Reference the cost of non-compliance — LendingClub's SEC experience makes this visceral",
+        "Ask for introductions to his fintech network even if he doesn't invest personally",
+      ],
+      openingAngle:
+        "You've built two companies in heavily regulated fintech and know the compliance burden firsthand. Child safety is the next regulatory wave — 67 laws and counting. I'm building the infrastructure to automate it.",
+    },
+    status: "identified",
+    notes:
+      "Lower angel volume (5 investments) means he's more selective — needs a compelling pitch. The SEC/LendingClub history actually makes compliance infrastructure MORE resonant, not less. Upgrade's $6.3B valuation means he has significant capital. As CEO of Upgrade, he's busy — may be harder to reach. The compliance-cost angle is the best hook.",
+  },
+]
 // ─── Master List ──────────────────────────────────────────────────────────────
 
 export const WARM_INTRO_TARGETS: WarmIntroTarget[] = [
@@ -2379,6 +6168,14 @@ export const WARM_INTRO_TARGETS: WarmIntroTarget[] = [
   ...NONPROFIT_LEADERS,
   ...REGTECH_FOUNDERS,
   ...SYNDICATES,
+  ...HNW_ANGELS,
+  ...FAMILY_OFFICES,
+  ...CORPORATE_VCS,
+  ...IMPACT_INVESTORS,
+  ...CELEBRITY_ANGELS,
+  ...POLICY_ANGELS,
+  ...PARENT_ANGELS,
+  ...FINTECH_ANGELS,
 ]
 
 // ─── Super Connectors ─────────────────────────────────────────────────────────
