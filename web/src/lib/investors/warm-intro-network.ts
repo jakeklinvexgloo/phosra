@@ -139,6 +139,8 @@ export interface SuperConnector {
   description: string
   reachableTargets: string[] // investor IDs they can connect to
   estimatedIntros: number
+  website?: string
+  contactNote?: string
 }
 
 // ─── Regtech & Child-Safety VCs (28 targets) ──────────────────────────────────
@@ -7818,6 +7820,8 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "Connects to nearly all T&S leaders. Annual conference + working groups. Stephen Balkam (founder) is a super-connector himself.",
     reachableTargets: ["antigone-davis", "adam-presser", "cormac-keenan", "clint-smith", "tami-bhaumik", "eric-ebenstein", "stephen-balkam", "julie-cordua", "sean-litton"],
     estimatedIntros: 10,
+    website: "https://www.fosi.org",
+    contactNote: "Apply for membership. Attend annual conference + join working groups.",
   },
   {
     id: "technology-coalition",
@@ -7826,6 +7830,8 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "59 member companies committed to child safety. Events draw T&S professionals and investors.",
     reachableTargets: ["cormac-keenan", "adam-presser", "angela-hession", "sean-litton", "julie-cordua"],
     estimatedIntros: 8,
+    website: "https://www.technologycoalition.org",
+    contactNote: "Attend member events and Project Protect convenings.",
   },
   {
     id: "iapp",
@@ -7834,6 +7840,8 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "Connects to all privacy/regulatory targets. Conferences, convenings, and member directory.",
     reachableTargets: ["jules-polonetsky", "dimitri-sirota", "rehan-jalil", "mamie-kresses", "chris-babel", "cillian-kieran"],
     estimatedIntros: 8,
+    website: "https://iapp.org",
+    contactNote: "Join as member. Attend GPS and PSR conferences.",
   },
   {
     id: "roost",
@@ -7842,6 +7850,8 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "New $27M initiative connecting Google, Discord, Roblox, OpenAI safety teams. Clint Smith is Board Chair.",
     reachableTargets: ["clint-smith", "tami-bhaumik", "angela-hession"],
     estimatedIntros: 5,
+    website: "https://roost.org",
+    contactNote: "Apply for partner program.",
   },
   {
     id: "kid-ecosystem",
@@ -7850,6 +7860,8 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "k-ID investors (a16z, Konvoy, Okta) + supervisory board (Baroness Shields) form a tight network.",
     reachableTargets: ["konvoy", "okta-ventures", "a16z-speedrun", "joanna-shields", "julian-corbett"],
     estimatedIntros: 6,
+    website: "https://www.k-id.com",
+    contactNote: "Request intros through portfolio network connections.",
   },
   {
     id: "startup-attorneys",
@@ -7858,6 +7870,7 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "Cooley, Goodwin, Wilson Sonsini, Gunderson Dettmer, Orrick. Each attorney knows 50+ VCs. 3-5 intros per relationship.",
     reachableTargets: ["precursor", "hustle-fund", "amplify", "flybridge", "backstage"],
     estimatedIntros: 15,
+    contactNote: "Engage Cooley, Goodwin, Wilson Sonsini, Gunderson, or Orrick for legal + investor intros.",
   },
   {
     id: "asu-gsv",
@@ -7866,6 +7879,8 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "Premier EdTech investor conference. 600+ investors attend. 15,000+ leaders.",
     reachableTargets: ["reach-capital", "magnify", "emerge", "brighteye", "rethink-ed"],
     estimatedIntros: 10,
+    website: "https://www.asugsvsummit.com",
+    contactNote: "Register for annual summit (typically April). Apply for startup pitch competition.",
   },
   {
     id: "faith-driven-investor",
@@ -7874,6 +7889,8 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "Umbrella community connecting Sovereign's Capital, 11 Tribes, M25, Praxis, Telos, PivotNorth, IrishAngels, and SENT Ventures. Annual Gathering + conferences. Single entry point to the entire faith-aligned investor ecosystem.",
     reachableTargets: ["sovereigns-capital", "11-tribes", "m25", "praxis-ventures", "telos-ventures", "pivotnorth", "irish-angels", "sent-ventures", "1flourish", "cathy-family"],
     estimatedIntros: 20,
+    website: "https://www.faithdriveninvestor.org",
+    contactNote: "Attend the annual Gathering. Join online community for introductions.",
   },
 ]
 

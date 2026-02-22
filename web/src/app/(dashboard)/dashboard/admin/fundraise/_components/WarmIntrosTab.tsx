@@ -8,16 +8,44 @@ import {
   getNetworkStats,
   type PipelineStatus,
 } from "@/lib/investors/warm-intro-network"
+import type { InvestorRating } from "./InvestorTable"
 import InvestorTable from "./InvestorTable"
 import SuperConnectorsSection from "./SuperConnectorsSection"
 import PipelineFunnel from "./PipelineFunnel"
 import InvestorResearchModal from "./InvestorResearchModal"
+
+const RATINGS_KEY = "fundraise-investor-ratings"
 
 export default function WarmIntrosTab() {
   const [statusOverrides, setStatusOverrides] = useState<
     Record<string, PipelineStatus>
   >({})
   const [showResearch, setShowResearch] = useState(false)
+
+  const [ratings, setRatings] = useState<Record<string, InvestorRating>>(() => {
+    if (typeof window === "undefined") return {}
+    try {
+      return JSON.parse(localStorage.getItem(RATINGS_KEY) || "{}")
+    } catch {
+      return {}
+    }
+  })
+
+  const handleRatingChange = useCallback(
+    (id: string, rating: InvestorRating | null) => {
+      setRatings((prev) => {
+        const next = { ...prev }
+        if (rating === null) {
+          delete next[id]
+        } else {
+          next[id] = rating
+        }
+        localStorage.setItem(RATINGS_KEY, JSON.stringify(next))
+        return next
+      })
+    },
+    [],
+  )
 
   const targets = useMemo(
     () =>
@@ -148,7 +176,12 @@ export default function WarmIntrosTab() {
       </div>
 
       {/* Investor table */}
-      <InvestorTable targets={targets} onStatusChange={handleStatusChange} />
+      <InvestorTable
+        targets={targets}
+        onStatusChange={handleStatusChange}
+        ratings={ratings}
+        onRatingChange={handleRatingChange}
+      />
 
       {/* Super connectors */}
       <SuperConnectorsSection

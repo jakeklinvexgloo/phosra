@@ -10,6 +10,8 @@ import {
   Globe,
   ExternalLink,
   Search,
+  Star,
+  X,
 } from "lucide-react"
 import type {
   WarmIntroTarget,
@@ -18,6 +20,8 @@ import type {
   InvestorCategory,
   InvestorType,
 } from "@/lib/investors/warm-intro-network"
+
+export type InvestorRating = 1 | 2 | 3 | 4 | 5 | "x"
 
 const CATEGORY_LABELS: Partial<Record<InvestorCategory, string>> = {
   "regtech-vc": "Regtech VC",
@@ -55,7 +59,7 @@ const TYPE_LABELS: Partial<Record<InvestorType, string>> = {
   "impact-fund": "Impact Fund",
 }
 
-type SortKey = "name" | "tier" | "category" | "thesisAlignment" | "paths"
+type SortKey = "name" | "tier" | "category" | "thesisAlignment" | "paths" | "rating"
 type SortDir = "asc" | "desc"
 
 const PIPELINE_OPTIONS: PipelineStatus[] = [
@@ -87,14 +91,23 @@ const THESIS_COLORS: Record<string, string> = {
 export default function InvestorTable({
   targets,
   onStatusChange,
+  ratings,
+  onRatingChange,
+  initialCategoryFilter,
+  initialTierFilter,
 }: {
   targets: WarmIntroTarget[]
   onStatusChange: (id: string, status: PipelineStatus) => void
+  ratings?: Record<string, InvestorRating>
+  onRatingChange?: (id: string, rating: InvestorRating | null) => void
+  initialCategoryFilter?: string
+  initialTierFilter?: string
 }) {
-  const [tierFilter, setTierFilter] = useState<string>("all")
-  const [categoryFilter, setCategoryFilter] = useState<string>("all")
+  const [tierFilter, setTierFilter] = useState<string>(initialTierFilter ?? "all")
+  const [categoryFilter, setCategoryFilter] = useState<string>(initialCategoryFilter ?? "all")
   const [typeFilter, setTypeFilter] = useState<string>("all")
   const [thesisFilter, setThesisFilter] = useState<string>("all")
+  const [ratingFilter, setRatingFilter] = useState<string>("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [sortKey, setSortKey] = useState<SortKey>("tier")
   const [sortDir, setSortDir] = useState<SortDir>("asc")
@@ -109,6 +122,21 @@ export default function InvestorTable({
     [targets],
   )
 
+  const hasActiveFilters =
+    tierFilter !== "all" ||
+    categoryFilter !== "all" ||
+    typeFilter !== "all" ||
+    thesisFilter !== "all" ||
+    ratingFilter !== "all"
+
+  const clearAllFilters = () => {
+    setTierFilter("all")
+    setCategoryFilter("all")
+    setTypeFilter("all")
+    setThesisFilter("all")
+    setRatingFilter("all")
+  }
+
   const filtered = useMemo(() => {
     const q = searchQuery.toLowerCase()
     let result = targets.filter((t) => {
@@ -116,6 +144,12 @@ export default function InvestorTable({
       if (categoryFilter !== "all" && t.category !== categoryFilter) return false
       if (typeFilter !== "all" && t.type !== typeFilter) return false
       if (thesisFilter !== "all" && t.thesisAlignment !== thesisFilter) return false
+      if (ratingFilter !== "all" && ratings) {
+        const r = ratings[t.id]
+        if (ratingFilter === "rated" && (r === undefined || r === "x")) return false
+        if (ratingFilter === "unrated" && r !== undefined) return false
+        if (ratingFilter === "not-a-fit" && r !== "x") return false
+      }
       if (q && !t.name.toLowerCase().includes(q) && !t.fundOrCompany.toLowerCase().includes(q) && !(t.notes ?? "").toLowerCase().includes(q))
         return false
       return true
@@ -130,18 +164,28 @@ export default function InvestorTable({
         case "category": cmp = a.category.localeCompare(b.category); break
         case "thesisAlignment": cmp = thesisOrder[a.thesisAlignment] - thesisOrder[b.thesisAlignment]; break
         case "paths": cmp = b.introPaths.length - a.introPaths.length; break
+        case "rating": {
+          const ratingVal = (id: string) => {
+            const r = ratings?.[id]
+            if (r === undefined) return 0
+            if (r === "x") return -1
+            return r
+          }
+          cmp = ratingVal(b.id) - ratingVal(a.id)
+          break
+        }
       }
       return sortDir === "asc" ? cmp : -cmp
     })
     return result
-  }, [targets, tierFilter, categoryFilter, typeFilter, thesisFilter, searchQuery, sortKey, sortDir])
+  }, [targets, tierFilter, categoryFilter, typeFilter, thesisFilter, ratingFilter, searchQuery, sortKey, sortDir, ratings])
 
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) {
       setSortDir((d) => (d === "asc" ? "desc" : "asc"))
     } else {
       setSortKey(key)
-      setSortDir("asc")
+      setSortDir(key === "rating" ? "asc" : "asc")
     }
   }
 
@@ -157,6 +201,13 @@ export default function InvestorTable({
   const selectClass =
     "px-3 py-2 rounded-lg border border-border bg-background text-sm"
 
+  const chipClass = (active: boolean) =>
+    `text-[11px] font-medium px-2.5 py-1 rounded-full cursor-pointer transition-colors ${
+      active
+        ? "bg-brand-green text-[#0D1B2A]"
+        : "bg-muted text-muted-foreground hover:bg-muted/80"
+    }`
+
   return (
     <div>
       {/* Search + Filters */}
@@ -171,6 +222,50 @@ export default function InvestorTable({
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-background text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
           />
         </div>
+
+        {/* Quick-filter chips */}
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => {
+              setCategoryFilter("faith-family")
+              setTierFilter("1")
+            }}
+            className={chipClass(categoryFilter === "faith-family" && tierFilter === "1")}
+          >
+            Faith & Family Gatekeepers
+          </button>
+          <button
+            onClick={() => {
+              setTierFilter("1")
+              setCategoryFilter("all")
+              setTypeFilter("all")
+              setThesisFilter("all")
+            }}
+            className={chipClass(tierFilter === "1" && categoryFilter === "all")}
+          >
+            Tier 1 Investors
+          </button>
+          <button
+            onClick={() => {
+              setThesisFilter("perfect")
+              setTierFilter("all")
+              setCategoryFilter("all")
+              setTypeFilter("all")
+            }}
+            className={chipClass(thesisFilter === "perfect" && tierFilter === "all" && categoryFilter === "all")}
+          >
+            Perfect Thesis
+          </button>
+          {hasActiveFilters && (
+            <button
+              onClick={clearAllFilters}
+              className="text-[11px] font-medium px-2.5 py-1 rounded-full cursor-pointer transition-colors bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30"
+            >
+              Clear Filters
+            </button>
+          )}
+        </div>
+
         <div className="flex flex-wrap gap-2">
           <select
             value={tierFilter}
@@ -216,6 +311,16 @@ export default function InvestorTable({
             <option value="good">Good</option>
             <option value="adjacent">Adjacent</option>
           </select>
+          <select
+            value={ratingFilter}
+            onChange={(e) => setRatingFilter(e.target.value)}
+            className={selectClass}
+          >
+            <option value="all">All Ratings</option>
+            <option value="rated">Rated</option>
+            <option value="unrated">Unrated</option>
+            <option value="not-a-fit">Not a Fit</option>
+          </select>
           <span className="flex items-center text-xs text-muted-foreground ml-auto">
             {filtered.length} of {targets.length} targets
           </span>
@@ -243,6 +348,9 @@ export default function InvestorTable({
                   Thesis <SortIcon col="thesisAlignment" />
                 </th>
                 <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Status</th>
+                <th onClick={() => toggleSort("rating")} className="text-left py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
+                  Rating <SortIcon col="rating" />
+                </th>
                 <th onClick={() => toggleSort("paths")} className="text-right py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
                   Paths <SortIcon col="paths" />
                 </th>
@@ -251,6 +359,7 @@ export default function InvestorTable({
             <tbody>
               {filtered.map((t) => {
                 const isExpanded = expandedId === t.id
+                const currentRating = ratings?.[t.id]
                 return (
                   <Fragment key={t.id}>
                     <tr
@@ -309,6 +418,61 @@ export default function InvestorTable({
                           ))}
                         </select>
                       </td>
+                      <td className="py-2.5 px-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center gap-0.5">
+                          {currentRating === "x" ? (
+                            <>
+                              {[1, 2, 3, 4, 5].map((s) => (
+                                <button
+                                  key={s}
+                                  onClick={() => onRatingChange?.(t.id, s as InvestorRating)}
+                                  className="p-0"
+                                >
+                                  <Star className="w-3 h-3 text-border" />
+                                </button>
+                              ))}
+                              <button
+                                onClick={() => onRatingChange?.(t.id, null)}
+                                className="p-0 ml-1"
+                                title="Clear not-a-fit"
+                              >
+                                <X className="w-3 h-3 text-red-500 fill-red-500" />
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              {[1, 2, 3, 4, 5].map((s) => (
+                                <button
+                                  key={s}
+                                  onClick={() =>
+                                    onRatingChange?.(
+                                      t.id,
+                                      currentRating === s ? null : (s as InvestorRating),
+                                    )
+                                  }
+                                  className="p-0"
+                                >
+                                  <Star
+                                    className={`w-3 h-3 ${
+                                      currentRating !== undefined &&
+                                      s <= (currentRating as number)
+                                        ? "text-amber-400 fill-amber-400"
+                                        : "text-border"
+                                    }`}
+                                  />
+                                </button>
+                              ))}
+                              <button
+                                onClick={() => onRatingChange?.(t.id, "x")}
+                                className="p-0 ml-1"
+                                title="Not a fit"
+                              >
+                                <X className="w-3 h-3 text-border hover:text-red-500" />
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </td>
                       <td className="py-2.5 px-4 text-right tabular-nums">
                         {t.introPaths.length}
                       </td>
@@ -317,7 +481,7 @@ export default function InvestorTable({
                     {/* Expanded detail row */}
                     {isExpanded && (
                       <tr className="border-b border-border/50 bg-muted/10">
-                        <td colSpan={8} className="px-4 py-4">
+                        <td colSpan={9} className="px-4 py-4">
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                             {/* Column 1: Contact & Links */}
                             <div className="space-y-3">
