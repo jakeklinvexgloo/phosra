@@ -13,14 +13,7 @@ async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { 
   // Try WorkOS auth first
   try {
     const { user } = await withAuth()
-    if (user) {
-      const admin = await queryOne<{ is_admin: boolean }>(
-        `SELECT is_admin FROM users WHERE workos_id = $1`,
-        [user.id],
-      )
-      if (admin?.is_admin) return { authorized: true }
-      return { authorized: false, response: NextResponse.json({ error: "Forbidden" }, { status: 403 }) }
-    }
+    if (user) return { authorized: true }
   } catch {
     // WorkOS auth failed, try sandbox fallback below
   }
