@@ -1,20 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import { useEffect, useCallback } from "react"
 import {
   Target, Calendar, DollarSign, TrendingUp,
   Users, FileText, Megaphone, Code2, Search, Mail,
   BarChart3, Linkedin, PenTool, Brain, Globe,
   Handshake, Presentation, Phone, ChevronDown, ChevronRight,
   CheckCircle2, Circle, Clock, ArrowRight, Sparkles,
-  Bot, User, AlertTriangle, Eye,
+  Bot, User, AlertTriangle, Eye, Plus, X, Power, Copy, Loader2,
+  Smartphone,
 } from "lucide-react"
 
 /* ═══════════════════════════════════════════════════════════════
    DATA: Fundraise plan — milestones, agents, founder tasks
    ═══════════════════════════════════════════════════════════════ */
 
-const RAISE_TARGET = 1_000_000
+const RAISE_TARGET = 950_000
 const DEADLINE = new Date("2026-05-31")
 const START = new Date("2026-02-21")
 
@@ -84,7 +86,7 @@ const PHASES: Phase[] = [
       },
       {
         id: "m4", title: "3-year financial model",
-        description: "Conservative / moderate / aggressive scenarios. Path to $1M ARR. Benchmark against SaaS comps",
+        description: "Conservative / moderate / aggressive scenarios. Path to $950K ARR. Benchmark against SaaS comps",
         owner: "both", status: "upcoming", dueDate: "Mar 3", agentId: "financial-model",
       },
       {
@@ -108,7 +110,7 @@ const PHASES: Phase[] = [
     milestones: [
       {
         id: "m7", title: "Begin regulatory content publishing (2x/week)",
-        description: "Blog posts analyzing new legislation. Your law registry (52 laws) is a content asset",
+        description: "Blog posts analyzing new legislation. Your law registry (67 laws) is a content asset",
         owner: "agent", status: "upcoming", dueDate: "Mar 10", agentId: "content-engine",
       },
       {
@@ -201,7 +203,7 @@ const PHASES: Phase[] = [
     milestones: [
       {
         id: "m22", title: "Close lead investor SAFE",
-        description: "Post-money SAFE, $8-12M cap. Use YC standard template",
+        description: "Post-money SAFE, $6M cap. Use YC standard template",
         owner: "founder", status: "upcoming", dueDate: "May 5",
       },
       {
@@ -216,7 +218,7 @@ const PHASES: Phase[] = [
       },
       {
         id: "m25", title: "Execute remaining SAFEs & wire funds",
-        description: "Target: 8-16 total checks to reach $1M. Mix of lead + angels + syndicates",
+        description: "Target: 8-16 total checks to reach $950K. Mix of lead + angels + syndicates",
         owner: "founder", status: "upcoming", dueDate: "May 28",
       },
       {
@@ -271,7 +273,7 @@ const AGENTS: Agent[] = [
     id: "content-engine",
     name: "Content Engine",
     role: "Thought Leadership Writer",
-    description: "Produces regulatory analysis blog posts, compliance guides, newsletters, and whitepapers. Leverages the 52-law registry as source material. Targets SEO keywords around COPPA 2.0, KOSA, age verification.",
+    description: "Produces regulatory analysis blog posts, compliance guides, newsletters, and whitepapers. Leverages the 67-law registry as source material. Targets SEO keywords around COPPA 2.0, KOSA, age verification.",
     icon: PenTool,
     color: "text-amber-600 dark:text-amber-400",
     bgColor: "bg-amber-100 dark:bg-amber-900/30",
@@ -375,7 +377,7 @@ const AGENTS: Agent[] = [
       "Build 3-year P&L with SaaS metrics (ARR, churn, LTV, CAC)",
       "Model 3 scenarios: conservative, moderate, aggressive",
       "Benchmark against Qustodio, Bark, age verification comps",
-      "Generate use-of-funds slide with $1M allocation",
+      "Generate use-of-funds slide with $950K allocation",
       "Iterate model based on investor feedback",
     ],
     tools: ["Claude API", "Google Sheets", "Excel"],
@@ -468,7 +470,7 @@ const ROUND_STRUCTURE = [
 export default function FundraiseCommandCenter() {
   const [expandedPhase, setExpandedPhase] = useState<string | null>("foundation")
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<"timeline" | "agents" | "founder">("timeline")
+  const [activeTab, setActiveTab] = useState<"timeline" | "agents" | "founder" | "investor-access">("timeline")
 
   // Calculate days remaining
   const now = new Date()
@@ -482,10 +484,93 @@ export default function FundraiseCommandCenter() {
   const doneMilestones = allMilestones.filter((m) => m.status === "done").length
   const activeMilestones = allMilestones.filter((m) => m.status === "active").length
 
+  // Investor access state
+  const [investorPhones, setInvestorPhones] = useState<Array<{
+    id: string; phone_e164: string; name: string; company: string;
+    notes: string; is_active: boolean; created_at: string; last_login: string | null;
+  }>>([])
+  const [phonesLoading, setPhonesLoading] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [addForm, setAddForm] = useState({ phone: "", name: "", company: "", notes: "" })
+  const [addLoading, setAddLoading] = useState(false)
+  const [addError, setAddError] = useState("")
+  const [copiedLink, setCopiedLink] = useState(false)
+
+  const fetchPhones = useCallback(async () => {
+    setPhonesLoading(true)
+    try {
+      const res = await fetch("/api/investors/admin/phones")
+      if (res.ok) {
+        const data = await res.json()
+        setInvestorPhones(data.phones || [])
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setPhonesLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (activeTab === "investor-access") {
+      fetchPhones()
+    }
+  }, [activeTab, fetchPhones])
+
+  const handleAddInvestor = async () => {
+    if (!addForm.phone) { setAddError("Phone number is required"); return }
+    setAddLoading(true)
+    setAddError("")
+    try {
+      const res = await fetch("/api/investors/admin/phones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(addForm),
+      })
+      if (res.ok) {
+        setShowAddModal(false)
+        setAddForm({ phone: "", name: "", company: "", notes: "" })
+        fetchPhones()
+      } else {
+        const data = await res.json()
+        setAddError(data.error || "Failed to add")
+      }
+    } catch {
+      setAddError("Network error")
+    } finally {
+      setAddLoading(false)
+    }
+  }
+
+  const handleToggleActive = async (phone: string, currentlyActive: boolean) => {
+    if (currentlyActive) {
+      await fetch("/api/investors/admin/phones", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      })
+    } else {
+      await fetch("/api/investors/admin/phones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      })
+    }
+    fetchPhones()
+  }
+
+  const handleCopyLink = () => {
+    const url = `${window.location.origin}/investors/portal`
+    navigator.clipboard.writeText(url)
+    setCopiedLink(true)
+    setTimeout(() => setCopiedLink(false), 2000)
+  }
+
   const TABS = [
     { key: "timeline" as const, label: "Timeline", icon: Calendar },
     { key: "agents" as const, label: "Agent Workforce", icon: Bot },
     { key: "founder" as const, label: "Your Focus", icon: User },
+    { key: "investor-access" as const, label: "Investor Access", icon: Smartphone },
   ]
 
   return (
@@ -500,7 +585,7 @@ export default function FundraiseCommandCenter() {
             </span>
           </div>
           <p className="text-sm text-muted-foreground">
-            $1M raise by May 31, 2026 — milestones, agent workforce, and your high-value work
+            $950K raise by May 31, 2026 — milestones, agent workforce, and your high-value work
           </p>
         </div>
         <a
@@ -523,8 +608,8 @@ export default function FundraiseCommandCenter() {
             </div>
             <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Target</span>
           </div>
-          <div className="text-xl font-semibold tabular-nums">$1,000,000</div>
-          <div className="text-[10px] text-muted-foreground mt-0.5">Post-money SAFE, $8-12M cap</div>
+          <div className="text-xl font-semibold tabular-nums">$950,000</div>
+          <div className="text-[10px] text-muted-foreground mt-0.5">Post-money SAFE, $6M cap</div>
         </div>
 
         <div className="plaid-card !py-3">
@@ -643,7 +728,7 @@ export default function FundraiseCommandCenter() {
                     <td className="pt-2 text-foreground font-semibold">Total target</td>
                     <td></td>
                     <td className="pt-2 text-muted-foreground tabular-nums">8-16 checks</td>
-                    <td className="pt-2 text-foreground font-semibold tabular-nums text-right">$1,000,000</td>
+                    <td className="pt-2 text-foreground font-semibold tabular-nums text-right">$950,000</td>
                   </tr>
                 </tfoot>
               </table>
@@ -736,10 +821,10 @@ export default function FundraiseCommandCenter() {
             </h3>
             <div className="space-y-2 text-xs text-muted-foreground leading-relaxed">
               <p>
-                <strong className="text-foreground">The problem:</strong> 52+ child safety laws are now in effect or pending. Platforms face a compliance cliff — COPPA 2.0 enforcement hits April 2026, half of US states mandate age gating, EU DSA enforcement is ramping. Every platform is building bespoke compliance solutions because no unified API exists.
+                <strong className="text-foreground">The problem:</strong> 67+ child safety laws are now in effect or pending. Platforms face a compliance cliff — COPPA 2.0 enforcement hits April 2026, half of US states mandate age gating, EU DSA enforcement is ramping. Every platform is building bespoke compliance solutions because no unified API exists.
               </p>
               <p>
-                <strong className="text-foreground">The solution:</strong> Phosra is the Stripe for child safety compliance — a single API that maps 45 enforcement rule categories across 52+ laws and pushes controls to 15+ provider adapters. Define once, enforce everywhere.
+                <strong className="text-foreground">The solution:</strong> Phosra is the Stripe for child safety compliance — a single API that maps 45 enforcement rule categories across 67+ laws and pushes controls to 15+ provider adapters. Define once, enforce everywhere.
               </p>
               <p>
                 <strong className="text-foreground">The market:</strong> $5-8B combined market (parental controls + age verification + compliance tooling) growing at 12%+ CAGR, driven by regulatory mandate, not discretionary spend.
@@ -748,7 +833,7 @@ export default function FundraiseCommandCenter() {
                 <strong className="text-foreground">The timing:</strong> COPPA 2.0 compliance deadline is April 22, 2026. Platforms are panicking now. Every month of delay increases their regulatory risk and our urgency-driven sales motion.
               </p>
               <p>
-                <strong className="text-foreground">The ask:</strong> $1M pre-seed to sign 10 pilot customers, expand law coverage to 75+ jurisdictions, and build the sales motion for seed.
+                <strong className="text-foreground">The ask:</strong> $950K pre-seed to sign 10 pilot customers, expand law coverage to 75+ jurisdictions, and build the sales motion for seed.
               </p>
             </div>
           </div>
@@ -906,7 +991,7 @@ export default function FundraiseCommandCenter() {
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-brand-green font-bold">3.</span>
-                <p><strong className="text-foreground">Your law registry is a moat.</strong> 52 laws with full metadata, mapped to 45 rule categories — months of domain work that competitors would need to replicate. Make this visible in your pitch.</p>
+                <p><strong className="text-foreground">Your law registry is a moat.</strong> 67 laws with full metadata, mapped to 45 rule categories — months of domain work that competitors would need to replicate. Make this visible in your pitch.</p>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-brand-green font-bold">4.</span>
@@ -953,7 +1038,7 @@ export default function FundraiseCommandCenter() {
             <div className="grid grid-cols-2 gap-3">
               {[
                 { metric: "Pilot customers / LOIs", target: "2-5", current: "0" },
-                { metric: "Laws mapped to enforcement", target: "52+", current: "52" },
+                { metric: "Laws mapped to enforcement", target: "67+", current: "67" },
                 { metric: "Advisory board members", target: "3-4", current: "1" },
                 { metric: "Published content pieces", target: "10+", current: "0" },
                 { metric: "Developer waitlist signups", target: "50-200", current: "0" },
@@ -969,6 +1054,183 @@ export default function FundraiseCommandCenter() {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ═══ INVESTOR ACCESS TAB ═════════════════════════════ */}
+      {activeTab === "investor-access" && (
+        <div className="space-y-4">
+          {/* Actions bar */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <h3 className="text-sm font-semibold text-foreground">Approved Investors</h3>
+              <span className="text-xs text-muted-foreground">
+                {investorPhones.filter((p) => p.is_active).length} active
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleCopyLink}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border text-xs font-medium text-foreground hover:bg-muted/60 transition-colors"
+              >
+                <Copy className="w-3 h-3" />
+                {copiedLink ? "Copied!" : "Copy Portal Link"}
+              </button>
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-brand-green text-[#0D1B2A] text-xs font-semibold hover:bg-brand-green/90 transition-colors"
+              >
+                <Plus className="w-3 h-3" />
+                Add Investor
+              </button>
+            </div>
+          </div>
+
+          {/* Info card */}
+          <div className="plaid-card border-l-2 border-l-brand-green !py-3">
+            <p className="text-xs text-muted-foreground">
+              When you add an investor, they automatically receive an SMS invite with a link to the portal.
+              They sign in with their phone number via OTP — no email or password needed.
+            </p>
+          </div>
+
+          {/* Table */}
+          <div className="plaid-card p-0 overflow-hidden">
+            {phonesLoading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+              </div>
+            ) : investorPhones.length === 0 ? (
+              <div className="text-center py-12">
+                <Smartphone className="w-8 h-8 text-muted-foreground/40 mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground">No investors added yet</p>
+                <p className="text-xs text-muted-foreground/60 mt-1">Add an investor to send them an SMS invite</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Name</th>
+                      <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Company</th>
+                      <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Phone</th>
+                      <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Status</th>
+                      <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Last Login</th>
+                      <th className="text-right py-2.5 px-4 text-muted-foreground font-medium">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {investorPhones.map((p) => (
+                      <tr key={p.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                        <td className="py-2.5 px-4 text-foreground font-medium">{p.name || "—"}</td>
+                        <td className="py-2.5 px-4 text-muted-foreground">{p.company || "—"}</td>
+                        <td className="py-2.5 px-4 text-muted-foreground font-mono">{p.phone_e164}</td>
+                        <td className="py-2.5 px-4">
+                          <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+                            p.is_active
+                              ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                              : "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400"
+                          }`}>
+                            <div className={`w-1.5 h-1.5 rounded-full ${p.is_active ? "bg-green-500" : "bg-red-500"}`} />
+                            {p.is_active ? "Active" : "Inactive"}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-4 text-muted-foreground">
+                          {p.last_login ? new Date(p.last_login).toLocaleDateString() : "Never"}
+                        </td>
+                        <td className="py-2.5 px-4 text-right">
+                          <button
+                            onClick={() => handleToggleActive(p.phone_e164, p.is_active)}
+                            className={`inline-flex items-center gap-1 text-[10px] font-medium px-2 py-1 rounded transition-colors ${
+                              p.is_active
+                                ? "text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                                : "text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20"
+                            }`}
+                          >
+                            <Power className="w-3 h-3" />
+                            {p.is_active ? "Deactivate" : "Activate"}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Add Investor Modal */}
+          {showAddModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-card border border-border rounded-xl shadow-xl w-full max-w-md">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+                  <h3 className="text-sm font-semibold text-foreground">Add Investor</h3>
+                  <button onClick={() => { setShowAddModal(false); setAddError("") }} className="text-muted-foreground hover:text-foreground">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="p-5 space-y-4">
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Phone Number *</label>
+                    <input
+                      type="tel"
+                      placeholder="(555) 555-1234"
+                      value={addForm.phone}
+                      onChange={(e) => setAddForm((f) => ({ ...f, phone: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Name</label>
+                    <input
+                      type="text"
+                      placeholder="Jane Smith"
+                      value={addForm.name}
+                      onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Company</label>
+                    <input
+                      type="text"
+                      placeholder="Acme Ventures"
+                      value={addForm.company}
+                      onChange={(e) => setAddForm((f) => ({ ...f, company: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground mb-1 block">Notes</label>
+                    <input
+                      type="text"
+                      placeholder="Met at demo day, interested in Series A"
+                      value={addForm.notes}
+                      onChange={(e) => setAddForm((f) => ({ ...f, notes: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
+                    />
+                  </div>
+                  {addError && <p className="text-red-500 text-xs">{addError}</p>}
+                </div>
+                <div className="flex justify-end gap-2 px-5 py-4 border-t border-border">
+                  <button
+                    onClick={() => { setShowAddModal(false); setAddError("") }}
+                    className="px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddInvestor}
+                    disabled={addLoading}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-brand-green text-[#0D1B2A] text-xs font-semibold hover:bg-brand-green/90 transition-colors disabled:opacity-50"
+                  >
+                    {addLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+                    Add & Send Invite
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

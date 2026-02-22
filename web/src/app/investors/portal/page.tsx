@@ -1,7 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 import Link from "next/link"
 import {
   Download,
@@ -11,17 +10,17 @@ import {
   DollarSign,
   BarChart3,
   Clock,
-  ArrowRight,
   Loader2,
-  Lock,
   Scale,
   PieChart,
+  LogOut,
 } from "lucide-react"
-import { useAuth } from "@workos-inc/authkit-nextjs/components"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
-import { RAISE_DETAILS, DATA_ROOM_LINKS, isInvestorAllowed } from "@/lib/investors/config"
+import { RAISE_DETAILS, DATA_ROOM_LINKS } from "@/lib/investors/config"
 import type { DataRoomLink } from "@/lib/investors/config"
-import { useApi } from "@/lib/useApi"
+import { useInvestorSession } from "@/lib/investors/investor-auth"
+import InvestorLoginForm from "@/components/investors/InvestorLoginForm"
+import AccountLinking from "@/components/investors/AccountLinking"
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -42,76 +41,13 @@ const CATEGORY_LABELS: Record<DataRoomLink["category"], string> = {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Access Pending View                                                */
-/* ------------------------------------------------------------------ */
-
-function AccessPendingView() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
-      <div className="max-w-md text-center">
-        <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
-          <Lock className="w-7 h-7 text-brand-green" />
-        </div>
-        <h1 className="text-2xl font-display text-white mb-3">Access Pending</h1>
-        <p className="text-white/50 leading-relaxed mb-8">
-          Your account has been authenticated, but access to the investor data room has not yet been granted.
-          We&apos;ll follow up within 48 hours.
-        </p>
-        <Link
-          href="/investors"
-          className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/20 text-white font-medium rounded-lg hover:border-white/40 transition-colors text-sm"
-        >
-          Back to Investors <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
 /*  Portal Page                                                        */
 /* ------------------------------------------------------------------ */
 
 function InvestorPortalContent() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { user, loading } = useAuth()
-  const { fetch: authedFetch } = useApi()
-  const [allowed, setAllowed] = useState<boolean | null>(null)
+  const { state, investor, signOut, refreshSession } = useInvestorSession()
 
-  useEffect(() => {
-    if (loading) return
-    if (!user) {
-      router.push("/login")
-      return
-    }
-
-    const isAdminPreview = searchParams.get("admin_preview") === "1"
-
-    // Check allowlist first
-    fetch("/api/investors/check-access", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: user.email }) })
-      .then((r) => r.json())
-      .then(async (data) => {
-        if (data.allowed) {
-          setAllowed(true)
-          return
-        }
-        // If not on allowlist but admin_preview param is set, check admin status
-        if (isAdminPreview) {
-          try {
-            const me = await authedFetch("/auth/me") as { is_admin?: boolean }
-            setAllowed(me?.is_admin === true)
-          } catch {
-            setAllowed(false)
-          }
-        } else {
-          setAllowed(false)
-        }
-      })
-      .catch(() => setAllowed(false))
-  }, [loading, user, router, searchParams, authedFetch])
-
-  if (loading || allowed === null) {
+  if (state === "checking") {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-brand-green animate-spin" />
@@ -119,9 +55,11 @@ function InvestorPortalContent() {
     )
   }
 
-  if (!allowed) {
-    return <AccessPendingView />
+  if (state === "unauthenticated" || !investor) {
+    return <InvestorLoginForm onAuthenticated={refreshSession} />
   }
+
+  const displayName = investor.name || investor.phone
 
   return (
     <div className="bg-[#060D16] min-h-screen">
@@ -139,15 +77,26 @@ function InvestorPortalContent() {
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-20 sm:py-28">
           <AnimatedSection>
-            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
-              Investor Portal
-            </p>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display text-white leading-tight max-w-3xl">
-              Data Room
-            </h1>
-            <p className="text-base text-white/40 mt-4 max-w-xl">
-              Welcome, {user?.firstName || user?.email?.split("@")[0]}. Confidential materials for approved investors.
-            </p>
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
+                  Investor Portal
+                </p>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display text-white leading-tight max-w-3xl">
+                  Data Room
+                </h1>
+                <p className="text-base text-white/40 mt-4 max-w-xl">
+                  Welcome, {displayName}. Confidential materials for approved investors.
+                </p>
+              </div>
+              <button
+                onClick={signOut}
+                className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/50 hover:text-white hover:border-white/20 rounded-lg transition-colors text-sm flex-shrink-0"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                Sign Out
+              </button>
+            </div>
           </AnimatedSection>
         </div>
       </section>
@@ -292,7 +241,7 @@ function InvestorPortalContent() {
       {/* ============================================================ */}
       {/*  Section 4: Data Room Links                                   */}
       {/* ============================================================ */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 lg:py-20 pb-32">
+      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 lg:py-20">
         <AnimatedSection>
           <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
             Due Diligence
@@ -334,6 +283,15 @@ function InvestorPortalContent() {
             )
           })}
         </StaggerChildren>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  Section 5: Account Linking                                   */}
+      {/* ============================================================ */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 lg:py-20 pb-32">
+        <AnimatedSection>
+          <AccountLinking phone={investor.phone} />
+        </AnimatedSection>
       </section>
     </div>
   )

@@ -4,8 +4,8 @@
 
 export const RAISE_DETAILS = {
   instrument: "SAFE (Post-Money)",
-  targetAmount: "$1.5M",
-  valuationCap: "$12M",
+  targetAmount: "$950K",
+  valuationCap: "$6M",
   minCheck: "$25K",
   roundStatus: "Open",
   useOfFunds: [
@@ -62,13 +62,3 @@ export const DATA_ROOM_LINKS: DataRoomLink[] = [
   },
 ]
 
-/**
- * Check whether an email address is on the investor allowlist.
- * The allowlist is read from `INVESTOR_ALLOWLIST` (comma-separated, case-insensitive).
- */
-export function isInvestorAllowed(email: string): boolean {
-  const raw = process.env.INVESTOR_ALLOWLIST ?? ""
-  if (!raw) return false
-  const allowed = raw.split(",").map((e) => e.trim().toLowerCase())
-  return allowed.includes(email.trim().toLowerCase())
-}

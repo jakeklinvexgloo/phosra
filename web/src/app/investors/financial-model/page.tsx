@@ -1,7 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense, useState } from "react"
 import Link from "next/link"
 import {
   ArrowLeft,
@@ -10,17 +9,15 @@ import {
   DollarSign,
   BarChart3,
   Loader2,
-  Lock,
-  ArrowRight,
   Building2,
   Layers,
   Target,
   Percent,
+  LogOut,
 } from "lucide-react"
-import { useAuth } from "@workos-inc/authkit-nextjs/components"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
-import { isInvestorAllowed } from "@/lib/investors/config"
-import { useApi } from "@/lib/useApi"
+import { useInvestorSession } from "@/lib/investors/investor-auth"
+import InvestorLoginForm from "@/components/investors/InvestorLoginForm"
 
 /* ------------------------------------------------------------------ */
 /*  Financial Model Data                                               */
@@ -159,75 +156,14 @@ function fmtFull(n: number): string {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Access Pending View                                                */
-/* ------------------------------------------------------------------ */
-
-function AccessPendingView() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
-      <div className="max-w-md text-center">
-        <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
-          <Lock className="w-7 h-7 text-brand-green" />
-        </div>
-        <h1 className="text-2xl font-display text-white mb-3">Access Pending</h1>
-        <p className="text-white/50 leading-relaxed mb-8">
-          Your account has been authenticated, but access to the investor data room has not yet been granted.
-          We&apos;ll follow up within 48 hours.
-        </p>
-        <Link
-          href="/investors"
-          className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/20 text-white font-medium rounded-lg hover:border-white/40 transition-colors text-sm"
-        >
-          Back to Investors <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
 /*  Financial Model Content                                            */
 /* ------------------------------------------------------------------ */
 
 function FinancialModelContent() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { user, loading } = useAuth()
-  const { fetch: authedFetch } = useApi()
-  const [allowed, setAllowed] = useState<boolean | null>(null)
+  const { state, investor, signOut, refreshSession } = useInvestorSession()
   const [activeScenario, setActiveScenario] = useState<ScenarioKey>("moderate")
 
-  useEffect(() => {
-    if (loading) return
-    if (!user) {
-      router.push("/login")
-      return
-    }
-
-    const isAdminPreview = searchParams.get("admin_preview") === "1"
-
-    fetch("/api/investors/check-access", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: user.email }) })
-      .then((r) => r.json())
-      .then(async (data) => {
-        if (data.allowed) {
-          setAllowed(true)
-          return
-        }
-        if (isAdminPreview) {
-          try {
-            const me = await authedFetch("/auth/me") as { is_admin?: boolean }
-            setAllowed(me?.is_admin === true)
-          } catch {
-            setAllowed(false)
-          }
-        } else {
-          setAllowed(false)
-        }
-      })
-      .catch(() => setAllowed(false))
-  }, [loading, user, router, searchParams, authedFetch])
-
-  if (loading || allowed === null) {
+  if (state === "checking") {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-brand-green animate-spin" />
@@ -235,13 +171,12 @@ function FinancialModelContent() {
     )
   }
 
-  if (!allowed) return <AccessPendingView />
+  if (state === "unauthenticated" || !investor) {
+    return <InvestorLoginForm onAuthenticated={refreshSession} />
+  }
 
   const revenue = calcRevenue(activeScenario)
   const scenario = SCENARIOS[activeScenario]
-  const totalCosts = COST_STRUCTURE[0].categories.map((_, ci) =>
-    COST_STRUCTURE[0].categories[ci].values
-  )
   const yearlyTotalCost = [0, 1, 2].map((yi) =>
     COST_STRUCTURE[0].categories.reduce((sum, cat) => sum + cat.values[yi], 0)
   )
@@ -260,22 +195,33 @@ function FinancialModelContent() {
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-20 sm:py-28">
           <AnimatedSection>
-            <Link
-              href="/investors/portal"
-              className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors text-sm mb-6"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              Back to Data Room
-            </Link>
-            <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
-              Financial Model
-            </p>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display text-white leading-tight max-w-3xl">
-              3-Year Revenue Projection
-            </h1>
-            <p className="text-base text-white/40 mt-4 max-w-xl">
-              Plaid-style usage-based economics applied to the $5-8B child safety compliance market.
-            </p>
+            <div className="flex items-start justify-between">
+              <div>
+                <Link
+                  href="/investors/portal"
+                  className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 transition-colors text-sm mb-6"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  Back to Data Room
+                </Link>
+                <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
+                  Financial Model
+                </p>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display text-white leading-tight max-w-3xl">
+                  3-Year Revenue Projection
+                </h1>
+                <p className="text-base text-white/40 mt-4 max-w-xl">
+                  Plaid-style usage-based economics applied to the $5-8B child safety compliance market.
+                </p>
+              </div>
+              <button
+                onClick={signOut}
+                className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/50 hover:text-white hover:border-white/20 rounded-lg transition-colors text-sm flex-shrink-0"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                Sign Out
+              </button>
+            </div>
           </AnimatedSection>
         </div>
       </section>
