@@ -132,6 +132,12 @@ export default function InvestorLoginForm({
     setError("")
   }, [])
 
+  // Temporary debug — remove after fixing
+  const [debugUrl, setDebugUrl] = useState("")
+  useEffect(() => {
+    setDebugUrl(window.location.href)
+  }, [])
+
   if (loginState === "invite_loading") {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
@@ -163,6 +169,16 @@ export default function InvestorLoginForm({
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
+        {/* Debug banner — TEMPORARY */}
+        <div className="mb-4 p-3 bg-red-900/50 border border-red-500/30 rounded-lg text-[10px] text-white/60 break-all font-mono">
+          <div>v3 | state: {loginState}</div>
+          <div>prop: {String(inviteCodeProp)}</div>
+          <div>resolved: {String(resolvedInviteCode)}</div>
+          <div>hasInvite: {String(hasInvite)}</div>
+          <div>referrer: {referrerName || "(empty)"}</div>
+          <div>recipient: {recipientName || "(empty)"}</div>
+          <div>url: {debugUrl}</div>
+        </div>
         {/* Logo / Header */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-5">
