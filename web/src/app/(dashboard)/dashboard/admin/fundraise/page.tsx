@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import {
   Target, Calendar, DollarSign, TrendingUp,
   Users, FileText, Megaphone, Code2, Search, Mail,
@@ -9,7 +8,7 @@ import {
   Handshake, Presentation, Phone, ChevronDown, ChevronRight,
   CheckCircle2, Circle, Clock, ArrowRight, Sparkles,
   Bot, User, AlertTriangle, Eye, Plus, X, Power, Copy, Loader2,
-  Smartphone, AlertCircle,
+  Smartphone, AlertCircle, MessageSquare,
 } from "lucide-react"
 import { formatPhoneDisplay } from "@/lib/investors/phone"
 
@@ -564,6 +563,89 @@ export default function FundraiseCommandCenter() {
   const [activeTab, setActiveTab] = useState<"timeline" | "agents" | "founder" | "warm-intros" | "investor-access">("timeline")
   const [showResearchModal, setShowResearchModal] = useState(false)
 
+  // Milestone check-off state (persisted to localStorage)
+  const [milestoneOverrides, setMilestoneOverrides] = useState<
+    Record<string, { status: "done" | "active" | "upcoming"; comment?: string }>
+  >({})
+  const [commentingId, setCommentingId] = useState<string | null>(null)
+  const [commentDraft, setCommentDraft] = useState("")
+  const commentInputRef = useRef<HTMLTextAreaElement>(null)
+
+  // Load milestone state from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("fundraise-milestones")
+      if (saved) setMilestoneOverrides(JSON.parse(saved))
+    } catch { /* ignore */ }
+  }, [])
+
+  // Persist milestone state to localStorage
+  const saveMilestoneOverrides = useCallback(
+    (next: Record<string, { status: "done" | "active" | "upcoming"; comment?: string }>) => {
+      setMilestoneOverrides(next)
+      try { localStorage.setItem("fundraise-milestones", JSON.stringify(next)) } catch { /* ignore */ }
+    },
+    [],
+  )
+
+  const getMilestoneStatus = useCallback(
+    (m: Milestone) => milestoneOverrides[m.id]?.status ?? m.status,
+    [milestoneOverrides],
+  )
+
+  const getMilestoneComment = useCallback(
+    (id: string) => milestoneOverrides[id]?.comment,
+    [milestoneOverrides],
+  )
+
+  const cycleMilestoneStatus = useCallback(
+    (m: Milestone) => {
+      const current = getMilestoneStatus(m)
+      // Cycle: upcoming → active → done → upcoming
+      const next = current === "upcoming" ? "active" : current === "active" ? "done" : "upcoming"
+      const existing = milestoneOverrides[m.id]
+      if (next === m.status && !existing?.comment) {
+        // Remove override if returning to default with no comment
+        const { [m.id]: _, ...rest } = milestoneOverrides
+        saveMilestoneOverrides(rest)
+      } else {
+        saveMilestoneOverrides({
+          ...milestoneOverrides,
+          [m.id]: { ...existing, status: next },
+        })
+      }
+      // If marking done, open comment input
+      if (next === "done") {
+        setCommentingId(m.id)
+        setCommentDraft(existing?.comment ?? "")
+      }
+    },
+    [milestoneOverrides, getMilestoneStatus, saveMilestoneOverrides],
+  )
+
+  const saveComment = useCallback(
+    (id: string) => {
+      const trimmed = commentDraft.trim()
+      const existing = milestoneOverrides[id]
+      if (existing) {
+        saveMilestoneOverrides({
+          ...milestoneOverrides,
+          [id]: { ...existing, comment: trimmed || undefined },
+        })
+      }
+      setCommentingId(null)
+      setCommentDraft("")
+    },
+    [commentDraft, milestoneOverrides, saveMilestoneOverrides],
+  )
+
+  // Focus comment textarea when it opens
+  useEffect(() => {
+    if (commentingId && commentInputRef.current) {
+      commentInputRef.current.focus()
+    }
+  }, [commentingId])
+
   // Calculate days remaining
   const now = new Date()
   const daysRemaining = Math.max(0, Math.ceil((DEADLINE.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
@@ -571,10 +653,10 @@ export default function FundraiseCommandCenter() {
   const elapsed = totalDays - daysRemaining
   const progressPct = Math.min(100, Math.round((elapsed / totalDays) * 100))
 
-  // Count milestones
+  // Count milestones (with overrides)
   const allMilestones = PHASES.flatMap((p) => p.milestones)
-  const doneMilestones = allMilestones.filter((m) => m.status === "done").length
-  const activeMilestones = allMilestones.filter((m) => m.status === "active").length
+  const doneMilestones = allMilestones.filter((m) => getMilestoneStatus(m) === "done").length
+  const activeMilestones = allMilestones.filter((m) => getMilestoneStatus(m) === "active").length
 
   // Investor access state
   const [investorPhones, setInvestorPhones] = useState<Array<{
@@ -848,7 +930,7 @@ export default function FundraiseCommandCenter() {
           {/* Phase timeline */}
           {PHASES.map((phase) => {
             const isExpanded = expandedPhase === phase.id
-            const doneCount = phase.milestones.filter((m) => m.status === "done").length
+            const doneCount = phase.milestones.filter((m) => getMilestoneStatus(m) === "done").length
             return (
               <div key={phase.id} className="plaid-card p-0 overflow-hidden">
                 <button
@@ -871,52 +953,150 @@ export default function FundraiseCommandCenter() {
                 </button>
                 {isExpanded && (
                   <div className="border-t border-border divide-y divide-border/50">
-                    {phase.milestones.map((m) => (
-                      <div key={m.id} className="px-5 py-3 hover:bg-muted/20 transition-colors">
-                        <div className="flex items-start gap-3">
-                          <div className="mt-0.5 flex-shrink-0">
-                            {m.status === "done" ? (
-                              <CheckCircle2 className="w-4 h-4 text-brand-green" />
-                            ) : m.status === "active" ? (
-                              <Clock className="w-4 h-4 text-amber-500 animate-pulse" />
-                            ) : (
-                              <Circle className="w-4 h-4 text-muted-foreground/40" />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className={`text-sm font-medium ${m.status === "done" ? "text-muted-foreground line-through" : "text-foreground"}`}>
-                                {m.title}
-                              </span>
-                              <span className={`inline-flex items-center gap-1 text-[9px] font-medium px-1.5 py-0.5 rounded-full ${
-                                m.owner === "agent"
-                                  ? "bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400"
-                                  : m.owner === "founder"
-                                  ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
-                                  : "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400"
-                              }`}>
-                                {m.owner === "agent" ? (
-                                  <><Bot className="w-2.5 h-2.5" /> Agent</>
-                                ) : m.owner === "founder" ? (
-                                  <><User className="w-2.5 h-2.5" /> You</>
-                                ) : (
-                                  <><Sparkles className="w-2.5 h-2.5" /> You + Agent</>
-                                )}
-                              </span>
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">{m.description}</p>
-                            <div className="flex items-center gap-3 mt-1.5">
-                              <span className="text-[10px] text-muted-foreground">Due: {m.dueDate}</span>
-                              {m.agentId && (
-                                <span className="text-[10px] text-muted-foreground/70">
-                                  Agent: {AGENTS.find((a) => a.id === m.agentId)?.name}
-                                </span>
+                    {phase.milestones.map((m) => {
+                      const status = getMilestoneStatus(m)
+                      const comment = getMilestoneComment(m.id)
+                      const isCommenting = commentingId === m.id
+                      return (
+                        <div key={m.id} className="px-5 py-3 hover:bg-muted/20 transition-colors">
+                          <div className="flex items-start gap-3">
+                            <button
+                              onClick={() => cycleMilestoneStatus(m)}
+                              className="mt-0.5 flex-shrink-0 group"
+                              title={`Status: ${status}. Click to cycle.`}
+                            >
+                              {status === "done" ? (
+                                <CheckCircle2 className="w-4 h-4 text-brand-green group-hover:text-brand-green/70 transition-colors" />
+                              ) : status === "active" ? (
+                                <Clock className="w-4 h-4 text-amber-500 animate-pulse group-hover:text-amber-400 transition-colors" />
+                              ) : (
+                                <Circle className="w-4 h-4 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors" />
                               )}
+                            </button>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className={`text-sm font-medium ${status === "done" ? "text-muted-foreground line-through" : "text-foreground"}`}>
+                                  {m.title}
+                                </span>
+                                <span className={`inline-flex items-center gap-1 text-[9px] font-medium px-1.5 py-0.5 rounded-full ${
+                                  m.owner === "agent"
+                                    ? "bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400"
+                                    : m.owner === "founder"
+                                    ? "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
+                                    : "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400"
+                                }`}>
+                                  {m.owner === "agent" ? (
+                                    <><Bot className="w-2.5 h-2.5" /> Agent</>
+                                  ) : m.owner === "founder" ? (
+                                    <><User className="w-2.5 h-2.5" /> You</>
+                                  ) : (
+                                    <><Sparkles className="w-2.5 h-2.5" /> You + Agent</>
+                                  )}
+                                </span>
+                                {comment && !isCommenting && (
+                                  <button
+                                    onClick={() => { setCommentingId(m.id); setCommentDraft(comment) }}
+                                    className="inline-flex items-center gap-1 text-[9px] text-muted-foreground hover:text-foreground transition-colors"
+                                    title="Edit comment"
+                                  >
+                                    <MessageSquare className="w-2.5 h-2.5" />
+                                  </button>
+                                )}
+                                {!comment && !isCommenting && (
+                                  <button
+                                    onClick={() => { setCommentingId(m.id); setCommentDraft("") }}
+                                    className="inline-flex items-center gap-1 text-[9px] text-muted-foreground/0 hover:text-muted-foreground transition-colors group-hover:text-muted-foreground/50"
+                                    title="Add comment"
+                                  >
+                                    <MessageSquare className="w-2.5 h-2.5" />
+                                  </button>
+                                )}
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">{m.description}</p>
+
+                              {/* Saved comment display */}
+                              {comment && !isCommenting && (
+                                <button
+                                  onClick={() => { setCommentingId(m.id); setCommentDraft(comment) }}
+                                  className="mt-2 flex items-start gap-1.5 text-left group/comment"
+                                >
+                                  <MessageSquare className="w-3 h-3 text-brand-green flex-shrink-0 mt-0.5" />
+                                  <span className="text-xs text-foreground/80 leading-relaxed group-hover/comment:text-foreground transition-colors">
+                                    {comment}
+                                  </span>
+                                </button>
+                              )}
+
+                              {/* Comment input */}
+                              {isCommenting && (
+                                <div className="mt-2 space-y-1.5">
+                                  <textarea
+                                    ref={commentInputRef}
+                                    value={commentDraft}
+                                    onChange={(e) => setCommentDraft(e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter" && !e.shiftKey) {
+                                        e.preventDefault()
+                                        saveComment(m.id)
+                                      }
+                                      if (e.key === "Escape") {
+                                        setCommentingId(null)
+                                        setCommentDraft("")
+                                      }
+                                    }}
+                                    placeholder="Add a note (Enter to save, Esc to cancel)..."
+                                    rows={2}
+                                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-xs text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-brand-green resize-none"
+                                  />
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      onClick={() => saveComment(m.id)}
+                                      className="text-[10px] font-medium px-2 py-1 rounded bg-brand-green text-[#0D1B2A] hover:bg-brand-green/90 transition-colors"
+                                    >
+                                      Save
+                                    </button>
+                                    <button
+                                      onClick={() => { setCommentingId(null); setCommentDraft("") }}
+                                      className="text-[10px] font-medium px-2 py-1 rounded text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                      Cancel
+                                    </button>
+                                    {comment && (
+                                      <button
+                                        onClick={() => {
+                                          const existing = milestoneOverrides[m.id]
+                                          if (existing) {
+                                            const { comment: _, ...rest } = existing
+                                            saveMilestoneOverrides({
+                                              ...milestoneOverrides,
+                                              [m.id]: rest as typeof existing,
+                                            })
+                                          }
+                                          setCommentingId(null)
+                                          setCommentDraft("")
+                                        }}
+                                        className="text-[10px] font-medium px-2 py-1 rounded text-red-500 hover:text-red-400 transition-colors"
+                                      >
+                                        Delete note
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              <div className="flex items-center gap-3 mt-1.5">
+                                <span className="text-[10px] text-muted-foreground">Due: {m.dueDate}</span>
+                                {m.agentId && (
+                                  <span className="text-[10px] text-muted-foreground/70">
+                                    Agent: {AGENTS.find((a) => a.id === m.agentId)?.name}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
               </div>
