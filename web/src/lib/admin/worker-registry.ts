@@ -53,6 +53,30 @@ export const workerRegistry: WorkerDef[] = [
     cron: "Weekly (Fri 8am UTC)",
     enabled: true,
   },
+  {
+    id: "outreach-sequencer",
+    name: "Outreach Sequencer",
+    description: "Generates personalized cold emails and follow-ups for active outreach sequences",
+    script: "scripts/workers/outreach-sequencer.mjs",
+    cron: "Daily (2pm UTC)",
+    enabled: true,
+  },
+  {
+    id: "reply-scanner",
+    name: "Reply Scanner",
+    description: "Scans Gmail for replies to outreach emails and classifies intent",
+    script: "scripts/workers/reply-scanner.mjs",
+    cron: "Every 2 hours",
+    enabled: true,
+  },
+  {
+    id: "meeting-booker",
+    name: "Meeting Booker",
+    description: "Proposes meeting times for interested contacts and creates calendar events",
+    script: "scripts/workers/meeting-booker.mjs",
+    cron: "Daily (10am UTC)",
+    enabled: true,
+  },
 ]
 
 export function getWorker(id: string): WorkerDef | undefined {

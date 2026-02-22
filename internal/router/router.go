@@ -322,6 +322,10 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Post("/outreach/autopilot/toggle", h.Admin.ToggleAutopilot)
 			r.Get("/outreach/autopilot/stats", h.Admin.GetAutopilotStats)
 
+			// Activity Feed
+			r.Get("/outreach/activities/recent", h.Admin.ListRecentActivities)
+			r.Get("/outreach/activities/summary", h.Admin.GetActivitySummary)
+
 			// Sequences
 			r.Get("/outreach/sequences", h.Admin.ListSequences)
 			r.Post("/outreach/{contactID}/sequence", h.Admin.StartSequence)

@@ -16,6 +16,8 @@ const (
 	ContactTypeTechCompany OutreachContactType = "tech_company"
 	ContactTypeLegislator  OutreachContactType = "legislator"
 	ContactTypeAcademic    OutreachContactType = "academic"
+	ContactTypeInvestor    OutreachContactType = "investor"
+	ContactTypeThinkTank   OutreachContactType = "think_tank"
 	ContactTypeOther       OutreachContactType = "other"
 )
 
@@ -177,6 +179,22 @@ type AutopilotStats struct {
 	SentToday       int `json:"sent_today"`
 	TotalReplies    int `json:"total_replies"`
 	TotalMeetings   int `json:"total_meetings"`
+}
+
+// OutreachActivityWithContact is an activity joined with contact info.
+type OutreachActivityWithContact struct {
+	OutreachActivity
+	ContactName string `json:"contact_name"`
+	ContactOrg  string `json:"contact_org"`
+}
+
+// OutreachActivitySummary aggregates activity counts since a given timestamp.
+type OutreachActivitySummary struct {
+	EmailsDrafted    int `json:"emails_drafted"`
+	EmailsSent       int `json:"emails_sent"`
+	RepliesReceived  int `json:"replies_received"`
+	MeetingsProposed int `json:"meetings_proposed"`
+	NewInterested    int `json:"new_interested"`
 }
 
 // OutreachStats holds aggregate counts for the outreach pipeline.

@@ -328,6 +328,15 @@ class ApiClient {
     return this.fetch(`/admin/outreach/pending-emails/${id}`, { method: "PUT", body: JSON.stringify(data) }, token)
   }
 
+  // Activity Feed
+  async listRecentActivities(limit?: number, token?: string) {
+    const qs = limit ? `?limit=${limit}` : ""
+    return this.fetch(`/admin/outreach/activities/recent${qs}`, {}, token)
+  }
+  async getActivitySummary(since: string, token?: string) {
+    return this.fetch(`/admin/outreach/activities/summary?since=${encodeURIComponent(since)}`, {}, token)
+  }
+
   // Outreach Google OAuth
   async getOutreachGoogleAuthURL(token?: string) { return this.fetch("/admin/outreach/google/auth-url", {}, token) }
   async submitOutreachGoogleCallback(code: string, token?: string) {

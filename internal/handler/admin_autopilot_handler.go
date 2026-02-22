@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -805,6 +806,43 @@ func (h *AdminHandler) WorkerGetContact(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	httputil.JSON(w, http.StatusOK, contact)
+}
+
+func (h *AdminHandler) ListRecentActivities(w http.ResponseWriter, r *http.Request) {
+	limit := 50
+	if l := r.URL.Query().Get("limit"); l != "" {
+		if n, err := strconv.Atoi(l); err == nil && n > 0 {
+			limit = n
+		}
+	}
+	activities, err := h.outreach.ListRecentActivities(r.Context(), limit)
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to list recent activities")
+		return
+	}
+	if activities == nil {
+		activities = []domain.OutreachActivityWithContact{}
+	}
+	httputil.JSON(w, http.StatusOK, activities)
+}
+
+func (h *AdminHandler) GetActivitySummary(w http.ResponseWriter, r *http.Request) {
+	sinceStr := r.URL.Query().Get("since")
+	if sinceStr == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing 'since' query parameter")
+		return
+	}
+	since, err := time.Parse(time.RFC3339, sinceStr)
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid 'since' timestamp")
+		return
+	}
+	summary, err := h.outreach.ActivitySummary(r.Context(), since)
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to get activity summary")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, summary)
 }
 
 func (h *AdminHandler) WorkerCountSentToday(w http.ResponseWriter, r *http.Request) {

@@ -9,12 +9,17 @@ import type {
   OutreachPendingEmail,
   OutreachConfig,
   AutopilotStats,
+  OutreachActivityWithContact,
+  OutreachActivitySummary,
   GmailMessage,
   GmailListResponse,
 } from "@/lib/admin/types"
 import { OutreachHeader } from "./_components/OutreachHeader"
+import { SinceLastVisit } from "./_components/SinceLastVisit"
 import { ReviewQueue } from "./_components/ReviewQueue"
+import { AlexActivityFeed } from "./_components/AlexActivityFeed"
 import { ActiveConversations } from "./_components/ActiveConversations"
+import { MeetingsSection } from "./_components/MeetingsSection"
 import { UpNextQueue } from "./_components/UpNextQueue"
 import { SenderConfig } from "./_components/SenderConfig"
 
@@ -33,9 +38,16 @@ export default function OutreachPage() {
   const [gmailConnected, setGmailConnected] = useState(false)
   const [gmailEmail, setGmailEmail] = useState("")
 
+  // ── Activity Feed ───────────────────────────────────────────
+  const [recentActivities, setRecentActivities] = useState<OutreachActivityWithContact[]>([])
+  const [activitySummary, setActivitySummary] = useState<OutreachActivitySummary | null>(null)
+  const [lastVisit, setLastVisit] = useState<string | null>(null)
+
   // ── UI ────────────────────────────────────────────────────────
   const [showSettings, setShowSettings] = useState(false)
+  const [feedOpen, setFeedOpen] = useState(true)
   const [activeOpen, setActiveOpen] = useState(true)
+  const [meetingsOpen, setMeetingsOpen] = useState(false)
   const [queueOpen, setQueueOpen] = useState(false)
 
   // ── Gmail thread state (for expanded active conversation) ─────
@@ -47,25 +59,45 @@ export default function OutreachPage() {
   const fetchAll = useCallback(async () => {
     try {
       const token = (await getToken()) ?? undefined
-      const [contactsRes, configRes, statsRes, gmailRes, pendingRes, seqRes] =
-        await Promise.allSettled([
-          api.listOutreach(token),
-          api.getAutopilotConfig(token),
-          api.getAutopilotStats(token),
-          api.getOutreachGoogleStatus(token),
-          api.listPendingEmails("pending_review", token),
-          api.listSequences(token),
-        ])
 
-      if (contactsRes.status === "fulfilled") setContacts(contactsRes.value)
-      if (configRes.status === "fulfilled") setConfig(configRes.value)
-      if (statsRes.status === "fulfilled") setStats(statsRes.value)
-      if (gmailRes.status === "fulfilled") {
-        setGmailConnected(gmailRes.value.connected)
-        setGmailEmail(gmailRes.value.email || "")
+      // Read last visit from localStorage
+      const storedLastVisit = typeof window !== "undefined" ? localStorage.getItem("outreach-last-visit") : null
+      setLastVisit(storedLastVisit)
+
+      const promises: Promise<unknown>[] = [
+        api.listOutreach(token),
+        api.getAutopilotConfig(token),
+        api.getAutopilotStats(token),
+        api.getOutreachGoogleStatus(token),
+        api.listPendingEmails("pending_review", token),
+        api.listSequences(token),
+        api.listRecentActivities(50, token),
+      ]
+      // Only fetch summary if we have a previous visit
+      if (storedLastVisit) {
+        promises.push(api.getActivitySummary(storedLastVisit, token))
       }
-      if (pendingRes.status === "fulfilled") setPendingEmails(pendingRes.value)
-      if (seqRes.status === "fulfilled") setSequences(seqRes.value)
+
+      const results = await Promise.allSettled(promises)
+      const [contactsRes, configRes, statsRes, gmailRes, pendingRes, seqRes, activitiesRes, summaryRes] = results
+
+      if (contactsRes.status === "fulfilled") setContacts(contactsRes.value as OutreachContact[])
+      if (configRes.status === "fulfilled") setConfig(configRes.value as OutreachConfig)
+      if (statsRes.status === "fulfilled") setStats(statsRes.value as AutopilotStats)
+      if (gmailRes.status === "fulfilled") {
+        const val = gmailRes.value as { connected: boolean; email: string }
+        setGmailConnected(val.connected)
+        setGmailEmail(val.email || "")
+      }
+      if (pendingRes.status === "fulfilled") setPendingEmails(pendingRes.value as OutreachPendingEmail[])
+      if (seqRes.status === "fulfilled") setSequences(seqRes.value as OutreachSequence[])
+      if (activitiesRes.status === "fulfilled") setRecentActivities(activitiesRes.value as OutreachActivityWithContact[])
+      if (summaryRes && summaryRes.status === "fulfilled") setActivitySummary(summaryRes.value as OutreachActivitySummary)
+
+      // Update last visit timestamp
+      if (typeof window !== "undefined") {
+        localStorage.setItem("outreach-last-visit", new Date().toISOString())
+      }
     } catch {
       // ignore
     } finally {
@@ -81,6 +113,12 @@ export default function OutreachPage() {
   const activeConversations = useMemo(
     () => sequences.filter((s) => s.status === "active"),
     [sequences]
+  )
+
+  // ── Computed: meeting activities ─────────────────────────────
+  const meetingActivities = useMemo(
+    () => recentActivities.filter((a) => a.activity_type === "meeting_proposed"),
+    [recentActivities]
   )
 
   // ── Computed: up-next contacts (not_contacted with email, sorted by priority)
@@ -164,6 +202,8 @@ export default function OutreachPage() {
   // ── Render ────────────────────────────────────────────────────
   return (
     <div className="space-y-6">
+      <SinceLastVisit summary={activitySummary} lastVisit={lastVisit} />
+
       <OutreachHeader
         config={config}
         stats={stats}
@@ -180,6 +220,12 @@ export default function OutreachPage() {
         onRefresh={fetchAll}
       />
 
+      <AlexActivityFeed
+        activities={recentActivities}
+        open={feedOpen}
+        onToggle={() => setFeedOpen((v) => !v)}
+      />
+
       <ActiveConversations
         sequences={activeConversations}
         open={activeOpen}
@@ -188,6 +234,12 @@ export default function OutreachPage() {
         onExpandContact={handleExpandContact}
         gmailThreads={gmailThreads}
         gmailLoading={gmailLoading}
+      />
+
+      <MeetingsSection
+        meetings={meetingActivities}
+        open={meetingsOpen}
+        onToggle={() => setMeetingsOpen((v) => !v)}
       />
 
       <UpNextQueue

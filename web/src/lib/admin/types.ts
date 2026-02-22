@@ -1,6 +1,6 @@
 // ── Admin Dashboard Types ───────────────────────────────────────
 
-export type OutreachContactType = "advocacy" | "tech_company" | "legislator" | "academic" | "other"
+export type OutreachContactType = "advocacy" | "tech_company" | "legislator" | "academic" | "investor" | "think_tank" | "other"
 export type OutreachStatus = "not_contacted" | "draft_ready" | "reached_out" | "in_conversation" | "partnership" | "declined"
 export type EmailStatus = "none" | "draft_ready" | "emailed" | "awaiting_reply" | "replied" | "bounced"
 export type OutreachActivityType = "email_sent" | "linkedin_message" | "call" | "meeting" | "note" | "auto_followup_sent" | "intent_classified" | "meeting_proposed" | "email_received"
@@ -97,6 +97,19 @@ export interface AutopilotStats {
   sent_today: number
   total_replies: number
   total_meetings: number
+}
+
+export interface OutreachActivityWithContact extends OutreachActivity {
+  contact_name: string
+  contact_org: string
+}
+
+export interface OutreachActivitySummary {
+  emails_drafted: number
+  emails_sent: number
+  replies_received: number
+  meetings_proposed: number
+  new_interested: number
 }
 
 export interface OutreachStats {
@@ -463,5 +476,7 @@ export const CONTACT_TYPE_LABELS: Record<OutreachContactType, string> = {
   tech_company: "Tech Companies",
   legislator: "Legislators",
   academic: "Academics",
+  investor: "Investors",
+  think_tank: "Think Tanks",
   other: "Other",
 }

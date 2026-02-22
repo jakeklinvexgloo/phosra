@@ -120,19 +120,28 @@ async function main() {
           continue
         }
 
-        if (seq.current_step === 0) {
-          // Initial email — generate and queue for review
-          const email = await callClaude(
-            `You are ${config.sender_name}, ${config.sender_title} at Phosra. Write concise cold outreach emails.\n\nAbout Phosra: ${config.company_brief}\n\nRules:\n- Under 150 words\n- Specific to the recipient's role and organization\n- Soft ask (15-minute call)\n- No buzzwords, no hyperbole\n- Professional but warm tone\n- End with the signature: ${config.email_signature}`,
-            `Write a cold outreach email to ${contact.name}, ${contact.title} at ${contact.org}.\nContact type: ${contact.contact_type}\nTags: ${(contact.tags || []).join(", ")}\nNotes: ${contact.notes || "none"}\n\nReturn JSON: { "subject": "...", "body": "..." }`
-          )
+        // Require review for initial emails AND all follow-ups to P1 contacts
+        const needsReview = seq.current_step === 0 || contact.priority_tier === 1
+
+        if (needsReview) {
+          // Generate and queue for human review
+          const isInitial = seq.current_step === 0
+          const stepLabels = { 1: "gentle bump", 2: "different angle/value prop", 3: "final outreach, leave door open" }
+          const systemPrompt = isInitial
+            ? `You are ${config.sender_name}, ${config.sender_title} at Phosra. Write concise cold outreach emails.\n\nAbout Phosra: ${config.company_brief}\n\nRules:\n- Under 150 words\n- Specific to the recipient's role and organization\n- Soft ask (15-minute call)\n- No buzzwords, no hyperbole\n- Professional but warm tone\n- End with the signature: ${config.email_signature}`
+            : `You are ${config.sender_name}, ${config.sender_title} at Phosra. Write follow-up emails.\n\nAbout Phosra: ${config.company_brief}\n\nRules:\n- Under 100 words\n- Reference the initial outreach naturally\n- ${stepLabels[seq.current_step] || "brief follow-up"}\n- Professional but warm\n- End with the signature: ${config.email_signature}`
+          const userPrompt = isInitial
+            ? `Write a cold outreach email to ${contact.name}, ${contact.title} at ${contact.org}.\nContact type: ${contact.contact_type}\nTags: ${(contact.tags || []).join(", ")}\nNotes: ${contact.notes || "none"}\n\nReturn JSON: { "subject": "...", "body": "..." }`
+            : `Follow-up #${seq.current_step} to ${contact.name} at ${contact.org}.\nDays since last email: ${seq.last_sent_at ? Math.round((Date.now() - new Date(seq.last_sent_at).getTime()) / 86400000) : "unknown"}\n\nReturn JSON: { "subject": "Re: ...", "body": "..." }`
+
+          const email = await callClaude(systemPrompt, userPrompt)
 
           await apiFetch("/outreach/pending-emails", {
             method: "POST",
             body: JSON.stringify({
               contact_id: seq.contact_id,
               sequence_id: seq.id,
-              step_number: 0,
+              step_number: seq.current_step,
               to_email: contact.email,
               subject: email.subject,
               body: email.body,
@@ -142,7 +151,7 @@ async function main() {
           })
           results.generated++
         } else {
-          // Follow-up — generate and send directly
+          // Follow-up for non-P1 — generate and send directly
           const stepLabels = { 1: "gentle bump", 2: "different angle/value prop", 3: "final outreach, leave door open" }
           const email = await callClaude(
             `You are ${config.sender_name}, ${config.sender_title} at Phosra. Write follow-up emails.\n\nAbout Phosra: ${config.company_brief}\n\nRules:\n- Under 100 words\n- Reference the initial outreach naturally\n- ${stepLabels[seq.current_step] || "brief follow-up"}\n- Professional but warm\n- End with the signature: ${config.email_signature}`,

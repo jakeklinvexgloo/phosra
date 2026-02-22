@@ -178,6 +178,57 @@ func (r *AdminOutreachRepo) Stats(ctx context.Context) (*domain.OutreachStats, e
 	return &s, nil
 }
 
+func (r *AdminOutreachRepo) ListRecentActivities(ctx context.Context, limit int) ([]domain.OutreachActivityWithContact, error) {
+	if limit <= 0 || limit > 200 {
+		limit = 50
+	}
+	rows, err := r.Pool.Query(ctx,
+		`SELECT a.id, a.contact_id, a.activity_type, a.subject, a.body,
+		        a.intent_classification, a.confidence_score, a.created_at,
+		        c.name, c.org
+		 FROM admin_outreach_activities a
+		 JOIN admin_outreach_contacts c ON c.id = a.contact_id
+		 ORDER BY a.created_at DESC
+		 LIMIT $1`, limit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var activities []domain.OutreachActivityWithContact
+	for rows.Next() {
+		var a domain.OutreachActivityWithContact
+		if err := rows.Scan(
+			&a.ID, &a.ContactID, &a.ActivityType, &a.Subject, &a.Body,
+			&a.IntentClassification, &a.ConfidenceScore, &a.CreatedAt,
+			&a.ContactName, &a.ContactOrg,
+		); err != nil {
+			return nil, err
+		}
+		activities = append(activities, a)
+	}
+	return activities, rows.Err()
+}
+
+func (r *AdminOutreachRepo) ActivitySummary(ctx context.Context, since time.Time) (*domain.OutreachActivitySummary, error) {
+	var s domain.OutreachActivitySummary
+	err := r.Pool.QueryRow(ctx,
+		`SELECT
+		   COUNT(*) FILTER (WHERE activity_type = 'email_sent') AS emails_sent,
+		   COUNT(*) FILTER (WHERE activity_type = 'auto_followup_sent') AS emails_drafted,
+		   COUNT(*) FILTER (WHERE activity_type = 'email_received') AS replies_received,
+		   COUNT(*) FILTER (WHERE activity_type = 'meeting_proposed') AS meetings_proposed,
+		   COUNT(*) FILTER (WHERE activity_type = 'intent_classified') AS new_interested
+		 FROM admin_outreach_activities
+		 WHERE created_at >= $1`, since,
+	).Scan(&s.EmailsSent, &s.EmailsDrafted, &s.RepliesReceived, &s.MeetingsProposed, &s.NewInterested)
+	if err != nil {
+		return nil, err
+	}
+	return &s, nil
+}
+
 // placeholder returns a PostgreSQL placeholder like $1, $2, etc.
 func placeholder(n int) string {
 	return fmt.Sprintf("$%d", n)
