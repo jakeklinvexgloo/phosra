@@ -21,7 +21,7 @@ export default function OtpInput({
 }: OtpInputProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
-  const digits = value.padEnd(length, "").slice(0, length).split("")
+  const digits = Array.from({ length }, (_, i) => value[i] ?? "")
 
   const focusInput = useCallback((index: number) => {
     inputRefs.current[index]?.focus()
@@ -33,7 +33,7 @@ export default function OtpInput({
 
       const newDigits = [...digits]
       newDigits[index] = char
-      const newValue = newDigits.join("").replace(/\s/g, "")
+      const newValue = newDigits.join("")
       onChange(newValue)
 
       if (newValue.length === length) {
@@ -50,12 +50,12 @@ export default function OtpInput({
       if (e.key === "Backspace") {
         e.preventDefault()
         const newDigits = [...digits]
-        if (digits[index] && digits[index] !== " ") {
-          newDigits[index] = " "
-          onChange(newDigits.join("").trimEnd())
+        if (digits[index]) {
+          newDigits[index] = ""
+          onChange(newDigits.join(""))
         } else if (index > 0) {
-          newDigits[index - 1] = " "
-          onChange(newDigits.join("").trimEnd())
+          newDigits[index - 1] = ""
+          onChange(newDigits.join(""))
           focusInput(index - 1)
         }
       } else if (e.key === "ArrowLeft" && index > 0) {
@@ -100,16 +100,16 @@ export default function OtpInput({
             type="text"
             inputMode="numeric"
             maxLength={1}
-            value={digit === " " ? "" : digit}
+            value={digit}
             onChange={(e) => handleChange(i, e.target.value)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             onFocus={(e) => e.target.select()}
             disabled={disabled}
             className={`w-11 h-14 sm:w-12 sm:h-16 rounded-xl border text-center text-xl font-mono font-semibold
-              bg-white/[0.03] text-white outline-none transition-all
-              focus:border-brand-green/50 focus:bg-white/[0.06] focus:shadow-[0_0_0_2px_rgba(0,212,126,0.1)]
+              bg-white/[0.08] text-white outline-none transition-all
+              focus:border-brand-green focus:bg-white/[0.12] focus:shadow-[0_0_0_2px_rgba(0,212,126,0.15)]
               disabled:opacity-50
-              ${error ? "border-red-400/50" : "border-white/10 hover:border-white/20"}`}
+              ${error ? "border-red-400/50" : "border-white/20 hover:border-white/30"}`}
           />
         ))}
       </div>
