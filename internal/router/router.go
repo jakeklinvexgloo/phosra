@@ -337,6 +337,8 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			// Pending Emails
 			r.Get("/outreach/pending-emails", h.Admin.ListPendingEmails)
 			r.Post("/outreach/pending-emails/{emailID}/approve", h.Admin.ApprovePendingEmail)
+			r.Post("/outreach/pending-emails/{emailID}/queue", h.Admin.QueuePendingEmail)
+			r.Post("/outreach/pending-emails/{emailID}/send", h.Admin.SendQueuedEmail)
 			r.Post("/outreach/pending-emails/{emailID}/reject", h.Admin.RejectPendingEmail)
 			r.Put("/outreach/pending-emails/{emailID}", h.Admin.EditPendingEmail)
 

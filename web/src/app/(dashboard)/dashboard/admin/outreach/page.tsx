@@ -72,7 +72,11 @@ export default function OutreachPage() {
         api.getAutopilotConfig(token),
         api.getAutopilotStats(token),
         api.getOutreachGoogleStatus(token),
-        api.listPendingEmails("pending_review", token),
+        api.listPendingEmails(undefined, token).then((all: unknown) =>
+          (all as OutreachPendingEmail[]).filter(
+            (e) => e.status === "pending_review" || e.status === "approved"
+          )
+        ),
         api.listSequences(token),
         api.listRecentActivities(50, token),
       ]
@@ -177,9 +181,10 @@ export default function OutreachPage() {
       for (let i = 0; i < 30; i++) {
         await new Promise((r) => setTimeout(r, 2000))
         try {
-          const emails = await api.listPendingEmails("pending_review", token)
-          if ((emails as OutreachPendingEmail[]).length > prevCount) {
-            setPendingEmails(emails as OutreachPendingEmail[])
+          const allEmails = (await api.listPendingEmails(undefined, token) as OutreachPendingEmail[])
+            .filter((e) => e.status === "pending_review" || e.status === "approved")
+          if (allEmails.length > prevCount) {
+            setPendingEmails(allEmails)
             // Refresh contacts so the drafted one moves out of upNext
             const freshContacts = await api.listOutreach(token)
             setContacts(freshContacts as OutreachContact[])
@@ -193,6 +198,23 @@ export default function OutreachPage() {
       setDrafting(false)
     }
   }, [drafting, upNextContacts, getToken, pendingEmails.length])
+
+  // ── Queue / Send ────────────────────────────────────────────────
+  const handleQueue = useCallback(async (id: string) => {
+    try {
+      const token = (await getToken()) ?? undefined
+      await api.queuePendingEmail(id, token)
+      fetchAll()
+    } catch { /* ignore */ }
+  }, [getToken, fetchAll])
+
+  const handleSend = useCallback(async (id: string) => {
+    try {
+      const token = (await getToken()) ?? undefined
+      await api.sendQueuedEmail(id, token)
+      fetchAll()
+    } catch { /* ignore */ }
+  }, [getToken, fetchAll])
 
   // ── Expand active conversation → fetch Gmail threads ──────────
   const handleExpandContact = useCallback(
@@ -263,6 +285,8 @@ export default function OutreachPage() {
         hasContacts={upNextContacts.length > 0 || activeConversations.length > 0}
         onRefresh={fetchAll}
         onDraftNext={handleDraftNext}
+        onQueue={handleQueue}
+        onSend={handleSend}
       />
 
       <AlexActivityFeed

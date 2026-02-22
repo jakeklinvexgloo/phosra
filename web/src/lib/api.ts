@@ -327,6 +327,12 @@ class ApiClient {
   async editPendingEmail(id: string, data: { subject?: string; body?: string }, token?: string) {
     return this.fetch(`/admin/outreach/pending-emails/${id}`, { method: "PUT", body: JSON.stringify(data) }, token)
   }
+  async queuePendingEmail(id: string, token?: string) {
+    return this.fetch(`/admin/outreach/pending-emails/${id}/queue`, { method: "POST" }, token)
+  }
+  async sendQueuedEmail(id: string, token?: string) {
+    return this.fetch(`/admin/outreach/pending-emails/${id}/send`, { method: "POST" }, token)
+  }
 
   // Activity Feed
   async listRecentActivities(limit?: number, token?: string) {

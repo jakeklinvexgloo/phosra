@@ -11,6 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/guardiangate/api/internal/domain"
+	"github.com/guardiangate/api/internal/email"
 	"github.com/guardiangate/api/internal/google"
 	"github.com/guardiangate/api/pkg/httputil"
 )
@@ -264,7 +265,17 @@ func (h *AdminHandler) ApprovePendingEmail(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	sent, err := h.googleOutreach.SendMessage(r.Context(), pe.ToEmail, pe.Subject, pe.Body, "")
+	// Wrap body with branded HTML signature
+	cfg, _ := h.outreach.GetConfig(r.Context())
+	senderName, senderTitle, senderEmail := "", "", ""
+	if cfg != nil {
+		senderName = cfg.SenderName
+		senderTitle = cfg.SenderTitle
+		senderEmail = cfg.SenderEmail
+	}
+	htmlBody := email.WrapWithSignature(pe.Body, senderName, senderTitle, senderEmail)
+
+	sent, err := h.googleOutreach.SendMessage(r.Context(), pe.ToEmail, pe.Subject, htmlBody, "")
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google account disconnected — please reconnect")
@@ -304,7 +315,6 @@ func (h *AdminHandler) ApprovePendingEmail(w http.ResponseWriter, r *http.Reques
 			now := time.Now()
 			seq.LastSentAt = &now
 			// Schedule next step
-			cfg, _ := h.outreach.GetConfig(r.Context())
 			delayDays := 3
 			if cfg != nil {
 				delayDays = cfg.FollowUpDelayDays
@@ -322,6 +332,126 @@ func (h *AdminHandler) ApprovePendingEmail(w http.ResponseWriter, r *http.Reques
 	}
 
 	// Log activity
+	activity := &domain.OutreachActivity{
+		ContactID:    pe.ContactID,
+		ActivityType: domain.ActivityEmailSent,
+		Subject:      pe.Subject,
+		Body:         pe.Body,
+	}
+	_ = h.outreach.CreateActivity(r.Context(), activity)
+
+	httputil.JSON(w, http.StatusOK, pe)
+}
+
+func (h *AdminHandler) QueuePendingEmail(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "emailID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid email ID")
+		return
+	}
+
+	pe, err := h.outreach.GetPendingEmailByID(r.Context(), id)
+	if err != nil || pe == nil {
+		httputil.Error(w, http.StatusNotFound, "pending email not found")
+		return
+	}
+	if pe.Status != domain.PendingReview {
+		httputil.Error(w, http.StatusBadRequest, "email is not pending review")
+		return
+	}
+
+	pe.Status = domain.PendingApproved
+	if err := h.outreach.UpdatePendingEmail(r.Context(), pe); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to queue email")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, pe)
+}
+
+func (h *AdminHandler) SendQueuedEmail(w http.ResponseWriter, r *http.Request) {
+	id, err := uuid.Parse(chi.URLParam(r, "emailID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid email ID")
+		return
+	}
+
+	pe, err := h.outreach.GetPendingEmailByID(r.Context(), id)
+	if err != nil || pe == nil {
+		httputil.Error(w, http.StatusNotFound, "pending email not found")
+		return
+	}
+	if pe.Status != domain.PendingApproved {
+		httputil.Error(w, http.StatusBadRequest, "email is not queued")
+		return
+	}
+
+	if h.googleOutreach == nil {
+		httputil.Error(w, http.StatusServiceUnavailable, "outreach Google account not configured")
+		return
+	}
+
+	// Wrap body with branded HTML signature
+	cfg, _ := h.outreach.GetConfig(r.Context())
+	senderName, senderTitle, senderEmail := "", "", ""
+	if cfg != nil {
+		senderName = cfg.SenderName
+		senderTitle = cfg.SenderTitle
+		senderEmail = cfg.SenderEmail
+	}
+	htmlBody := email.WrapWithSignature(pe.Body, senderName, senderTitle, senderEmail)
+
+	sent, err := h.googleOutreach.SendMessage(r.Context(), pe.ToEmail, pe.Subject, htmlBody, "")
+	if err != nil {
+		if errors.Is(err, google.ErrGoogleDisconnected) {
+			httputil.Error(w, http.StatusUnauthorized, "outreach Google account disconnected — please reconnect")
+			return
+		}
+		log.Error().Err(err).Str("to", pe.ToEmail).Msg("failed to send queued email")
+		pe.Status = domain.PendingFailed
+		_ = h.outreach.UpdatePendingEmail(r.Context(), pe)
+		httputil.Error(w, http.StatusInternalServerError, "failed to send email")
+		return
+	}
+
+	pe.Status = domain.PendingSent
+	msgID := sent.ID
+	pe.GmailMessageID = &msgID
+	if err := h.outreach.UpdatePendingEmail(r.Context(), pe); err != nil {
+		log.Error().Err(err).Msg("failed to update pending email after send")
+	}
+
+	contact, _ := h.outreach.GetByID(r.Context(), pe.ContactID)
+	if contact != nil {
+		contact.EmailStatus = domain.EmailAwaitingReply
+		contact.Status = domain.OutreachReachedOut
+		now := time.Now()
+		contact.LastContactAt = &now
+		_ = h.outreach.Update(r.Context(), contact)
+	}
+
+	if pe.SequenceID != nil {
+		seq, _ := h.outreach.GetSequenceByID(r.Context(), *pe.SequenceID)
+		if seq != nil {
+			threadID := sent.ThreadID
+			seq.GmailThreadID = &threadID
+			now := time.Now()
+			seq.LastSentAt = &now
+			delayDays := 3
+			if cfg != nil {
+				delayDays = cfg.FollowUpDelayDays
+			}
+			if seq.CurrentStep < 3 {
+				seq.CurrentStep++
+				next := now.AddDate(0, 0, delayDays)
+				seq.NextActionAt = &next
+			} else {
+				seq.Status = domain.SequenceCompleted
+				seq.NextActionAt = nil
+			}
+			_ = h.outreach.UpdateSequence(r.Context(), seq)
+		}
+	}
+
 	activity := &domain.OutreachActivity{
 		ContactID:    pe.ContactID,
 		ActivityType: domain.ActivityEmailSent,
@@ -375,8 +505,8 @@ func (h *AdminHandler) EditPendingEmail(w http.ResponseWriter, r *http.Request) 
 		httputil.Error(w, http.StatusNotFound, "pending email not found")
 		return
 	}
-	if pe.Status != domain.PendingReview {
-		httputil.Error(w, http.StatusBadRequest, "can only edit emails pending review")
+	if pe.Status != domain.PendingReview && pe.Status != domain.PendingApproved {
+		httputil.Error(w, http.StatusBadRequest, "can only edit emails pending review or queued")
 		return
 	}
 

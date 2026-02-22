@@ -15,9 +15,11 @@ interface ReviewQueueProps {
   hasContacts: boolean
   onRefresh: () => void
   onDraftNext: () => void
+  onQueue: (id: string) => void
+  onSend: (id: string) => void
 }
 
-export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh, onDraftNext }: ReviewQueueProps) {
+export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh, onDraftNext, onQueue, onSend }: ReviewQueueProps) {
   const { getToken } = useApi()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editSubject, setEditSubject] = useState("")
@@ -44,6 +46,24 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
     finally { setActionLoading(null) }
   }, [getToken, onRefresh])
 
+  const handleQueue = useCallback(async (id: string) => {
+    setActionLoading(id)
+    try {
+      onQueue(id)
+    } finally {
+      setActionLoading(null)
+    }
+  }, [onQueue])
+
+  const handleSend = useCallback(async (id: string) => {
+    setActionLoading(id)
+    try {
+      onSend(id)
+    } finally {
+      setActionLoading(null)
+    }
+  }, [onSend])
+
   const handleStartEdit = useCallback((email: OutreachPendingEmail) => {
     setEditingId(email.id)
     setEditSubject(email.subject)
@@ -60,6 +80,9 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
     } catch { /* ignore */ }
     finally { setActionLoading(null) }
   }, [getToken, editSubject, editBody, onRefresh])
+
+  const pendingReview = emails.filter((e) => e.status === "pending_review")
+  const queued = emails.filter((e) => e.status === "approved")
 
   return (
     <div>
@@ -110,7 +133,8 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
       {/* Email cards */}
       {!loading && emails.length > 0 && (
         <div className="space-y-3">
-          {emails.map((email) => (
+          {/* Pending review emails */}
+          {pendingReview.map((email) => (
             <div key={email.id} className="plaid-card p-4 space-y-3">
               {/* Header: contact info + step badge */}
               <div className="flex items-center justify-between">
@@ -174,6 +198,101 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
                       style={{ backgroundColor: "hsl(157, 100%, 42%)" }}
                     >
                       {actionLoading === email.id ? "Sending..." : "Approve & Send"}
+                    </button>
+                    <button
+                      onClick={() => handleQueue(email.id)}
+                      disabled={actionLoading === email.id}
+                      className="px-4 py-2 rounded-lg text-sm font-medium border border-border hover:bg-muted transition-colors disabled:opacity-50"
+                    >
+                      Queue
+                    </button>
+                    <button
+                      onClick={() => handleStartEdit(email)}
+                      className="px-4 py-2 rounded-lg text-sm font-medium border border-border hover:bg-muted transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleReject(email.id)}
+                      disabled={actionLoading === email.id}
+                      className="px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Skip
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+
+          {/* Queued emails */}
+          {queued.map((email) => (
+            <div key={email.id} className="plaid-card p-4 space-y-3 border-l-4 border-l-blue-400">
+              {/* Header: contact info + step badge + queued badge */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-sm font-medium truncate">{email.contact_name}</span>
+                  {email.contact_org && (
+                    <span className="text-sm text-muted-foreground truncate">&middot; {email.contact_org}</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                  <span className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded font-medium">
+                    Queued
+                  </span>
+                  <span className="text-xs bg-muted px-2 py-0.5 rounded font-medium">
+                    {STEP_LABELS[email.step_number] ?? `Step ${email.step_number + 1}`}
+                  </span>
+                </div>
+              </div>
+
+              {editingId === email.id ? (
+                <>
+                  <input
+                    value={editSubject}
+                    onChange={(e) => setEditSubject(e.target.value)}
+                    className="plaid-input text-sm font-semibold"
+                    placeholder="Subject"
+                    autoFocus
+                  />
+                  <textarea
+                    value={editBody}
+                    onChange={(e) => setEditBody(e.target.value)}
+                    rows={10}
+                    className="plaid-input text-sm leading-relaxed"
+                    placeholder="Email body"
+                  />
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      onClick={() => handleSaveEdit(email.id)}
+                      disabled={actionLoading === email.id}
+                      className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-50"
+                      style={{ backgroundColor: "hsl(157, 100%, 42%)" }}
+                    >
+                      {actionLoading === email.id ? "Saving..." : "Save"}
+                    </button>
+                    <button
+                      onClick={() => setEditingId(null)}
+                      className="px-4 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="text-sm font-semibold">{email.subject}</div>
+                  <div className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                    {email.body}
+                  </div>
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      onClick={() => handleSend(email.id)}
+                      disabled={actionLoading === email.id}
+                      className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-50"
+                      style={{ backgroundColor: "hsl(157, 100%, 42%)" }}
+                    >
+                      {actionLoading === email.id ? "Sending..." : "Send Now"}
                     </button>
                     <button
                       onClick={() => handleStartEdit(email)}
