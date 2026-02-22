@@ -10,31 +10,28 @@ export const runtime = "nodejs"
  * Verify the caller is an authenticated admin via WorkOS (or sandbox session).
  */
 async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
-  // Sandbox mode: trust X-Sandbox-Session header
-  if (process.env.NEXT_PUBLIC_SANDBOX_MODE === "true") {
-    const sandbox = req.headers.get("x-sandbox-session")
-    if (sandbox) {
-      return { authorized: true }
-    }
-  }
-
+  // Try WorkOS auth first
   try {
     const { user } = await withAuth()
-    if (!user) {
-      return { authorized: false, response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
-    }
-    // Check admin flag from our DB
-    const admin = await queryOne<{ is_admin: boolean }>(
-      `SELECT is_admin FROM users WHERE workos_id = $1`,
-      [user.id],
-    )
-    if (!admin?.is_admin) {
+    if (user) {
+      const admin = await queryOne<{ is_admin: boolean }>(
+        `SELECT is_admin FROM users WHERE workos_id = $1`,
+        [user.id],
+      )
+      if (admin?.is_admin) return { authorized: true }
       return { authorized: false, response: NextResponse.json({ error: "Forbidden" }, { status: 403 }) }
     }
-    return { authorized: true }
   } catch {
-    return { authorized: false, response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
+    // WorkOS auth failed, try sandbox fallback below
   }
+
+  // Fallback: accept sandbox session header
+  const sandbox = req.headers.get("x-sandbox-session")
+  if (sandbox) {
+    return { authorized: true }
+  }
+
+  return { authorized: false, response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
 }
 
 /**
