@@ -15,7 +15,7 @@ All child safety legislation data lives in `web/src/lib/compliance/`:
 ```
 web/src/lib/compliance/
 ├── types.ts                    # LawEntry, Jurisdiction, LawStatus types
-├── law-registry.ts             # THE registry: ~52 laws with full metadata
+├── law-registry.ts             # THE registry: ~67 laws with full metadata
 ├── index.ts                    # Barrel exports + helper functions
 ├── snippet-generator.ts        # Auto-generates MCP enforcement snippets
 └── adapters/

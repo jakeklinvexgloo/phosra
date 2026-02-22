@@ -10,7 +10,7 @@ const METRICS = [
   { value: "45", label: "Rule Categories" },
   { value: PLATFORM_STATS.marketingTotal, label: "Platform Integrations" },
   { value: "5", label: "Rating Systems" },
-  { value: "50+", label: "Compliance Laws" },
+  { value: "67+", label: "Compliance Laws" },
 ]
 
 const VALUES = [
