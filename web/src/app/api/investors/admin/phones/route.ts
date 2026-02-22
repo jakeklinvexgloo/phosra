@@ -35,24 +35,29 @@ export async function GET(req: NextRequest) {
   const auth = await requireAdmin(req)
   if (!auth.authorized) return auth.response
 
-  const phones = await query<{
-    id: string
-    phone_e164: string
-    name: string
-    company: string
-    notes: string
-    is_active: boolean
-    created_at: string
-    last_login: string | null
-  }>(`
-    SELECT
-      p.id, p.phone_e164, p.name, p.company, p.notes, p.is_active, p.created_at,
-      (SELECT MAX(s.created_at) FROM investor_sessions s WHERE s.phone_e164 = p.phone_e164 AND s.revoked_at IS NULL) as last_login
-    FROM investor_approved_phones p
-    ORDER BY p.created_at DESC
-  `)
+  try {
+    const phones = await query<{
+      id: string
+      phone_e164: string
+      name: string
+      company: string
+      notes: string
+      is_active: boolean
+      created_at: string
+      last_login: string | null
+    }>(`
+      SELECT
+        p.id, p.phone_e164, p.name, p.company, p.notes, p.is_active, p.created_at,
+        (SELECT MAX(s.created_at) FROM investor_sessions s WHERE s.phone_e164 = p.phone_e164 AND s.revoked_at IS NULL) as last_login
+      FROM investor_approved_phones p
+      ORDER BY p.created_at DESC
+    `)
 
-  return NextResponse.json({ phones })
+    return NextResponse.json({ phones })
+  } catch (error) {
+    console.error("admin/phones GET error:", error)
+    return NextResponse.json({ error: "Failed to fetch investors" }, { status: 500 })
+  }
 }
 
 /**
