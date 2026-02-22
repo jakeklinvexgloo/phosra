@@ -25,13 +25,64 @@ export const CATEGORY_CONFIG: Record<NewsCategory, { label: string; bg: string; 
 
 export const NEWSROOM: NewsEntry[] = [
   {
+    slug: "coppa-rule-deadline-april-2026",
+    title: "COPPA 2.0 vs. the FTC's Amended COPPA Rule: What Actually Matters on April 22",
+    date: "2026-02-22",
+    category: "company",
+    excerpt:
+      "Most organizations are confusing COPPA 2.0 — a bill that hasn't been signed into law — with the FTC's amended COPPA Rule, which takes full effect on April 22, 2026. The enforcement deadline is real, the penalties are severe, and many teams are preparing for the wrong thing.",
+    featured: true,
+    content: [
+      {
+        type: "paragraph",
+        text: "There is a dangerous misconception circulating in boardrooms and compliance departments across the country. Most organizations that serve children online have heard of \"COPPA 2.0\" and assume it's the thing they need to worry about. It isn't — at least not yet. Senate Bill 836, commonly called COPPA 2.0, has not been signed into law. What has changed is the FTC's amended COPPA Rule, a separate regulatory action that updates the existing Children's Online Privacy Protection Rule with significant new requirements. Full compliance is required by April 22, 2026. That's 59 days from today. The distinction matters because organizations preparing for a bill that hasn't passed are likely overlooking the rule that's already on the books.",
+      },
+      {
+        type: "heading",
+        text: "What Changed in the FTC's Amended COPPA Rule",
+      },
+      {
+        type: "paragraph",
+        text: "The amended rule introduces six key requirements that go well beyond the original COPPA framework. First, operators must now obtain separate verifiable parental consent before disclosing a child's personal information to third parties — blanket consent no longer covers downstream data sharing. Second, organizations must publish written data retention policies in their privacy notices, specifying how long children's data is kept and when it is deleted. Third, the rule requires enhanced direct notice to parents about how their child's data is collected, used, and shared, with more granular detail than previously required. Fourth, any third-party service provider with access to children's data must provide written confirmation of their security measures — operators are now accountable for the entire data supply chain. Fifth, the definition of personal information has been expanded to include biometric identifiers and government-issued IDs, closing loopholes that some operators relied on. Sixth, the FTC has approved new consent verification methods including knowledge-based authentication questions, facial recognition matching, and a \"text plus\" method that combines SMS verification with additional identity checks.",
+      },
+      {
+        type: "heading",
+        text: "The Stakes Are Real",
+      },
+      {
+        type: "paragraph",
+        text: "COPPA violations carry penalties of $53,088 per violation, per child, per instance. That number adds up fast. Epic Games paid $520 million to settle COPPA-related charges. YouTube's parent company Google paid $170 million. TikTok was fined $5.7 million in an earlier action. The FTC has publicly stated that COPPA enforcement is a top priority for 2026, and the amended rule gives them substantially more surface area to pursue cases. Organizations that assume they have time or that enforcement will be delayed are making a bet against a regulator that has demonstrated it will act aggressively.",
+      },
+      {
+        type: "quote",
+        text: "Every requirement in the amended COPPA Rule maps to an engineering problem that's already been solved. Organizations don't need to build consent management, data retention pipelines, and third-party oversight systems from scratch. The infrastructure exists — the question is whether teams will adopt it before April 22 or scramble after the first enforcement action.",
+        attribution: "Jake Klinvex, Founder & CEO",
+      },
+      {
+        type: "heading",
+        text: "How Phosra Maps to Every Requirement",
+      },
+      {
+        type: "paragraph",
+        text: "Phosra's API was designed around the full landscape of child safety regulation, and the amended COPPA Rule's requirements map directly to existing enforcement capabilities. The parental_consent_gate rule category handles verifiable parental consent workflows, including the new requirement for separate consent on third-party disclosures. The privacy_data_sharing and commercial_data_ban rules enforce granular controls over how children's data flows to third parties, ensuring operators maintain compliant data-sharing practices. The data_deletion_request rule powers the eraser button functionality that the amended rule contemplates for data retention compliance. The targeted_ad_block rule disables advertising mechanisms that rely on children's personal information. Beyond individual rules, Phosra's compliance attestation system generates the audit trails that regulators expect — documented proof that consent was obtained, data policies were enforced, and third-party providers were vetted. All of this works across 200+ platforms through a single API call, which means organizations don't need to implement compliance logic separately for every service they operate.",
+      },
+      {
+        type: "heading",
+        text: "59 Days and Counting",
+      },
+      {
+        type: "paragraph",
+        text: "April 22 is not a soft deadline. Organizations that collect data from children under 13, operate websites or apps directed at children, or have actual knowledge that they serve minors need to have their compliance infrastructure in place before that date. The amended COPPA Rule is not a proposal or a recommendation — it is an enforceable regulation with per-violation penalties that can reach into the hundreds of millions. The full regulatory breakdown, including provision-by-provision analysis and rule category mappings, is available at phosra.com/compliance. For teams ready to integrate, API documentation and quickstart guides are at phosra.com/docs.",
+      },
+    ],
+  },
+  {
     slug: "introducing-phosra",
     title: "Introducing Phosra — Universal Parental Controls Infrastructure",
     date: "2025-02-01",
     category: "company",
     excerpt:
       "Today we're launching Phosra, the infrastructure layer that lets parents set rules once and enforce them across every platform their kids use.",
-    featured: true,
     content: [
       {
         type: "paragraph",

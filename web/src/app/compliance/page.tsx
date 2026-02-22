@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from "react"
 import Link from "next/link"
 import { ArrowRight, BookOpen } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
+import { COPPACountdownBanner } from "@/components/marketing/compliance-hub/COPPACountdownBanner"
 import { ComplianceStats } from "@/components/marketing/compliance-hub/ComplianceStats"
 import { ComplianceSearch } from "@/components/marketing/compliance-hub/ComplianceSearch"
 import { StatusFilter } from "@/components/marketing/compliance-hub/StatusFilter"
@@ -106,6 +107,11 @@ export default function ComplianceHubPage() {
             <ComplianceStats />
           </AnimatedSection>
         </div>
+      </section>
+
+      {/* COPPA Deadline Banner */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-8 -mt-8 mb-6 relative z-10">
+        <COPPACountdownBanner />
       </section>
 
       {/* Sticky Filter Bar */}
