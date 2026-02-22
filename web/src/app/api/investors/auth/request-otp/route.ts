@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { queryOne } from "@/lib/investors/db"
+import { queryOne, query } from "@/lib/investors/db"
 import { normalizePhone } from "@/lib/investors/phone"
 import { sendVerifyOtp } from "@/lib/investors/twilio"
 
@@ -8,11 +8,12 @@ export const runtime = "nodejs"
 /**
  * POST /api/investors/auth/request-otp
  * Accept phone number, send OTP via Twilio Verify if approved.
+ * If inviteCode is provided, auto-approve the phone number first.
  * Anti-enumeration: same response regardless of approval status.
  */
 export async function POST(req: NextRequest) {
   try {
-    const { phone } = (await req.json()) as { phone?: string }
+    const { phone, inviteCode } = (await req.json()) as { phone?: string; inviteCode?: string }
 
     if (!phone) {
       return NextResponse.json(
@@ -33,6 +34,41 @@ export async function POST(req: NextRequest) {
     const successResponse = NextResponse.json({
       message: "If this number is approved, you will receive a code shortly.",
     })
+
+    // If invite code provided, validate and auto-approve this phone
+    if (inviteCode) {
+      const invite = await queryOne<{
+        id: string
+        created_by: string
+        referrer_name: string
+        recipient_name: string
+        uses: string
+        max_uses: string
+        expires_at: string
+      }>(
+        `SELECT id, created_by, referrer_name, recipient_name, uses::text, max_uses::text, expires_at::text
+         FROM investor_invite_links
+         WHERE code = $1`,
+        [inviteCode],
+      )
+
+      if (invite) {
+        const isExpired = new Date(invite.expires_at) < new Date()
+        const isUsed = parseInt(invite.uses, 10) >= parseInt(invite.max_uses, 10)
+
+        if (!isExpired && !isUsed) {
+          const referrerLabel = invite.referrer_name || "an investor"
+
+          // Auto-approve this phone number
+          await query(
+            `INSERT INTO investor_approved_phones (phone_e164, name, company, notes, is_active)
+             VALUES ($1, $2, '', $3, TRUE)
+             ON CONFLICT (phone_e164) DO UPDATE SET notes = $3, is_active = TRUE`,
+            [normalized, invite.recipient_name || "", `Referred by ${referrerLabel}`],
+          )
+        }
+      }
+    }
 
     // Check if phone is approved and active
     const approved = await queryOne<{ phone_e164: string }>(

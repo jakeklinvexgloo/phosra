@@ -18,11 +18,12 @@ export async function GET(
     const invite = await queryOne<{
       created_by: string
       referrer_name: string
+      recipient_name: string
       uses: string
       max_uses: string
       expires_at: string
     }>(
-      `SELECT il.created_by, il.referrer_name, il.uses::text, il.max_uses::text, il.expires_at::text
+      `SELECT il.created_by, il.referrer_name, il.recipient_name, il.uses::text, il.max_uses::text, il.expires_at::text
        FROM investor_invite_links il
        WHERE il.code = $1`,
       [code],
@@ -49,6 +50,7 @@ export async function GET(
       valid: true,
       referrerName: invite.referrer_name || referrer?.name || "An investor",
       referrerCompany: referrer?.company || "",
+      recipientName: invite.recipient_name || "",
     })
   } catch (error) {
     console.error("invite validate error:", error)

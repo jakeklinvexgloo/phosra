@@ -5,7 +5,7 @@ import { ArrowLeft, Loader2, Shield, UserPlus } from "lucide-react"
 import PhoneInput from "./PhoneInput"
 import OtpInput from "./OtpInput"
 
-type LoginState = "phone_input" | "otp_sent" | "verifying" | "invite_loading" | "invite_claim" | "claiming"
+type LoginState = "phone_input" | "otp_sent" | "verifying" | "invite_loading"
 
 interface InvestorLoginFormProps {
   onAuthenticated: () => void
@@ -25,9 +25,8 @@ export default function InvestorLoginForm({
   // Invite state
   const [referrerName, setReferrerName] = useState("")
   const [referrerCompany, setReferrerCompany] = useState("")
-  const [claimName, setClaimName] = useState("")
-  const [claimCompany, setClaimCompany] = useState("")
-  const [claimEmail, setClaimEmail] = useState("")
+  const [recipientName, setRecipientName] = useState("")
+  const hasInvite = Boolean(referrerName)
 
   // Validate invite code on mount
   useEffect(() => {
@@ -42,13 +41,12 @@ export default function InvestorLoginForm({
         if (data.valid) {
           setReferrerName(data.referrerName || "An investor")
           setReferrerCompany(data.referrerCompany || "")
-          setLoginState("invite_claim")
-        } else {
-          setLoginState("phone_input")
+          setRecipientName(data.recipientName || "")
         }
       } catch {
-        if (!cancelled) setLoginState("phone_input")
+        // Invite invalid, fall through to normal login
       }
+      if (!cancelled) setLoginState("phone_input")
     }
 
     validateInvite()
@@ -66,7 +64,7 @@ export default function InvestorLoginForm({
       const res = await fetch("/api/investors/auth/request-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: `+1${phone}` }),
+        body: JSON.stringify({ phone: `+1${phone}`, ...(inviteCode ? { inviteCode } : {}) }),
       })
       if (res.ok) {
         setLoginState("otp_sent")
@@ -94,6 +92,15 @@ export default function InvestorLoginForm({
         })
         const data = await res.json()
         if (res.ok) {
+          // If this was an invite, mark it as claimed
+          if (inviteCode) {
+            fetch(`/api/investors/portal/invite/${inviteCode}/claim`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ phone: `+1${phone}` }),
+            }).catch(() => {})
+          }
           onAuthenticated()
         } else {
           setError(data.error || "Verification failed")
@@ -104,39 +111,8 @@ export default function InvestorLoginForm({
         setLoginState("otp_sent")
       }
     },
-    [phone, onAuthenticated],
+    [phone, inviteCode, onAuthenticated],
   )
-
-  const handleClaimInvite = useCallback(async () => {
-    if (!claimName.trim()) {
-      setError("Please enter your name")
-      return
-    }
-    setLoginState("claiming")
-    setError("")
-    try {
-      const res = await fetch(`/api/investors/portal/invite/${inviteCode}/claim`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          name: claimName.trim(),
-          company: claimCompany.trim(),
-          email: claimEmail.trim(),
-        }),
-      })
-      const data = await res.json()
-      if (res.ok) {
-        onAuthenticated()
-      } else {
-        setError(data.error || "Failed to claim invite")
-        setLoginState("invite_claim")
-      }
-    } catch {
-      setError("Network error. Please try again.")
-      setLoginState("invite_claim")
-    }
-  }, [inviteCode, claimName, claimCompany, claimEmail, onAuthenticated])
 
   const handleBack = useCallback(() => {
     setLoginState("phone_input")
@@ -155,13 +131,30 @@ export default function InvestorLoginForm({
     )
   }
 
+  // Header text based on state + invite context
+  const getSubtitle = () => {
+    if (loginState === "otp_sent" || loginState === "verifying") {
+      if (hasInvite && recipientName) {
+        return `Welcome ${recipientName} — enter your 6-digit code to access the investor portal from ${referrerName}`
+      }
+      return "Enter the 6-digit code we sent you"
+    }
+    if (hasInvite && recipientName) {
+      return `Welcome ${recipientName}, you've been invited by ${referrerName}${referrerCompany ? ` from ${referrerCompany}` : ""} to view the Phosra data room`
+    }
+    if (hasInvite) {
+      return `You've been invited by ${referrerName}${referrerCompany ? ` from ${referrerCompany}` : ""} to view the Phosra data room`
+    }
+    return "Enter your phone number to sign in"
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo / Header */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-5">
-            {loginState === "invite_claim" || loginState === "claiming" ? (
+            {hasInvite ? (
               <UserPlus className="w-6 h-6 text-brand-green" />
             ) : (
               <Shield className="w-6 h-6 text-brand-green" />
@@ -171,78 +164,9 @@ export default function InvestorLoginForm({
             Investor Portal
           </h1>
           <p className="text-sm text-white/40">
-            {loginState === "invite_claim" || loginState === "claiming"
-              ? `You've been invited to view the Phosra data room by ${referrerName}${referrerCompany ? ` from ${referrerCompany}` : ""}`
-              : loginState === "phone_input"
-                ? "Enter your phone number to sign in"
-                : "Enter the 6-digit code we sent you"}
+            {getSubtitle()}
           </p>
         </div>
-
-        {/* Invite Claim State */}
-        {(loginState === "invite_claim" || loginState === "claiming") && (
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs text-white/40 mb-1.5">Your Name *</label>
-              <input
-                type="text"
-                value={claimName}
-                onChange={(e) => { setClaimName(e.target.value); setError("") }}
-                placeholder="Jane Smith"
-                disabled={loginState === "claiming"}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors disabled:opacity-50"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-white/40 mb-1.5">Company</label>
-              <input
-                type="text"
-                value={claimCompany}
-                onChange={(e) => setClaimCompany(e.target.value)}
-                placeholder="Acme Ventures"
-                disabled={loginState === "claiming"}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors disabled:opacity-50"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-white/40 mb-1.5">Email (optional)</label>
-              <input
-                type="email"
-                value={claimEmail}
-                onChange={(e) => setClaimEmail(e.target.value)}
-                placeholder="jane@acme.vc"
-                disabled={loginState === "claiming"}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors disabled:opacity-50"
-              />
-            </div>
-
-            {error && (
-              <p className="text-xs text-red-400 text-center">{error}</p>
-            )}
-
-            <button
-              onClick={handleClaimInvite}
-              disabled={loginState === "claiming" || !claimName.trim()}
-              className="w-full py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-xl hover:bg-brand-green/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center justify-center gap-2"
-            >
-              {loginState === "claiming" ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Accessing...
-                </>
-              ) : (
-                "Access Data Room"
-              )}
-            </button>
-
-            <button
-              onClick={() => { setLoginState("phone_input"); setError("") }}
-              className="w-full text-xs text-white/30 hover:text-white/50 transition-colors text-center"
-            >
-              Already have an account? Sign in with phone
-            </button>
-          </div>
-        )}
 
         {/* Phone Input State */}
         {loginState === "phone_input" && (
@@ -273,9 +197,10 @@ export default function InvestorLoginForm({
             </button>
 
             <p className="text-[11px] text-white/30 text-center leading-relaxed">
-              By continuing, you confirm you have been invited
-              <br />
-              to the Phosra investor data room.
+              {hasInvite
+                ? "Enter your phone number to verify your identity"
+                : <>By continuing, you confirm you have been invited<br />to the Phosra investor data room.</>
+              }
             </p>
           </div>
         )}

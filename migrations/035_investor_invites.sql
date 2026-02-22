@@ -5,6 +5,7 @@ CREATE TABLE investor_invite_links (
     code            TEXT NOT NULL UNIQUE,
     created_by      TEXT NOT NULL,              -- phone_e164 of referrer
     referrer_name   TEXT NOT NULL DEFAULT '',   -- full name of the person sharing
+    recipient_name  TEXT NOT NULL DEFAULT '',   -- full name of the intended recipient
     max_uses        INT NOT NULL DEFAULT 1,
     uses            INT NOT NULL DEFAULT 0,
     expires_at      TIMESTAMPTZ NOT NULL,

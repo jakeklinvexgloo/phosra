@@ -21,11 +21,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid session" }, { status: 401 })
     }
 
-    const body = await req.json().catch(() => ({})) as { name?: string }
+    const body = await req.json().catch(() => ({})) as { name?: string; recipientName?: string }
     const referrerName = body.name?.trim() || payload.name || ""
+    const recipientName = body.recipientName?.trim() || ""
 
     if (!referrerName) {
       return NextResponse.json({ error: "Your full name is required to generate an invite" }, { status: 400 })
+    }
+
+    if (!recipientName) {
+      return NextResponse.json({ error: "Recipient's name is required" }, { status: 400 })
     }
 
     // Update the investor's name in approved phones if provided
@@ -53,9 +58,9 @@ export async function POST(req: NextRequest) {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
 
     await query(
-      `INSERT INTO investor_invite_links (code, created_by, referrer_name, max_uses, expires_at)
-       VALUES ($1, $2, $3, 1, $4)`,
-      [code, payload.phone, referrerName, expiresAt.toISOString()],
+      `INSERT INTO investor_invite_links (code, created_by, referrer_name, recipient_name, max_uses, expires_at)
+       VALUES ($1, $2, $3, $4, 1, $5)`,
+      [code, payload.phone, referrerName, recipientName, expiresAt.toISOString()],
     )
 
     return NextResponse.json({

@@ -58,11 +58,16 @@ function InviteModal({ onClose, investorName }: { onClose: () => void; investorN
   const [error, setError] = useState("")
   const [copied, setCopied] = useState(false)
   const [nameInput, setNameInput] = useState(investorName)
+  const [recipientName, setRecipientName] = useState("")
   const needsName = !investorName.trim()
 
   const generateInvite = useCallback(async () => {
     if (!nameInput.trim()) {
       setError("Please enter your full name")
+      return
+    }
+    if (!recipientName.trim()) {
+      setError("Please enter the recipient's name")
       return
     }
     setLoading(true)
@@ -72,7 +77,7 @@ function InviteModal({ onClose, investorName }: { onClose: () => void; investorN
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name: nameInput.trim() }),
+        body: JSON.stringify({ name: nameInput.trim(), recipientName: recipientName.trim() }),
       })
       const data = await res.json()
       if (res.ok) {
@@ -85,7 +90,7 @@ function InviteModal({ onClose, investorName }: { onClose: () => void; investorN
     } finally {
       setLoading(false)
     }
-  }, [nameInput])
+  }, [nameInput, recipientName])
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(inviteUrl)
@@ -141,14 +146,24 @@ function InviteModal({ onClose, investorName }: { onClose: () => void; investorN
                   type="text"
                   value={nameInput}
                   onChange={(e) => { setNameInput(e.target.value); setError("") }}
-                  placeholder="Jake Klinvex"
+                  placeholder="Alex Phosra"
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors"
                 />
               </div>
             )}
+            <div>
+              <label className="block text-xs text-white/40 mb-1.5">Recipient&apos;s Name *</label>
+              <input
+                type="text"
+                value={recipientName}
+                onChange={(e) => { setRecipientName(e.target.value); setError("") }}
+                placeholder="Jane Smith"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors"
+              />
+            </div>
             <button
               onClick={generateInvite}
-              disabled={loading || !nameInput.trim()}
+              disabled={loading || !nameInput.trim() || !recipientName.trim()}
               className="w-full py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-xl hover:bg-brand-green/90 transition-colors disabled:opacity-50 text-sm flex items-center justify-center gap-2"
             >
               {loading ? (
