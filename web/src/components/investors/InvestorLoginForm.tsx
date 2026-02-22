@@ -147,15 +147,15 @@ export default function InvestorLoginForm({
   const getSubtitle = () => {
     if (loginState === "otp_sent" || loginState === "verifying") {
       if (hasInvite && recipientName) {
-        return `Welcome ${recipientName} — enter your 6-digit code to access the investor portal from ${referrerName}`
+        return <>Welcome <span className="text-white font-semibold">{recipientName}</span> — enter your 6-digit code to access the investor portal</>
       }
       return "Enter the 6-digit code we sent you"
     }
     if (hasInvite && recipientName) {
-      return `Welcome ${recipientName}, you've been invited by ${referrerName}${referrerCompany ? ` from ${referrerCompany}` : ""} to view the Phosra data room`
+      return <>Welcome <span className="text-white font-semibold">{recipientName}</span>, you've been invited by <span className="text-white font-semibold">{referrerName}</span>{referrerCompany ? ` from ${referrerCompany}` : ""} to view the Phosra data room</>
     }
     if (hasInvite) {
-      return `You've been invited by ${referrerName}${referrerCompany ? ` from ${referrerCompany}` : ""} to view the Phosra data room`
+      return <>You've been invited by <span className="text-white font-semibold">{referrerName}</span>{referrerCompany ? ` from ${referrerCompany}` : ""} to view the Phosra data room</>
     }
     return "Enter your phone number to sign in"
   }
