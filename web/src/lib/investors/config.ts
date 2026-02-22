@@ -39,7 +39,7 @@ export const DATA_ROOM_LINKS: DataRoomLink[] = [
   {
     label: "Financial Model",
     description: "3-year projection with unit economics",
-    url: "#",
+    url: "/investors/financial-model",
     category: "financial",
   },
   {
