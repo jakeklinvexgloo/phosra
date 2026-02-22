@@ -21,6 +21,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid session" }, { status: 401 })
     }
 
+    const body = await req.json().catch(() => ({})) as { name?: string }
+    const referrerName = body.name?.trim() || payload.name || ""
+
+    if (!referrerName) {
+      return NextResponse.json({ error: "Your full name is required to generate an invite" }, { status: 400 })
+    }
+
+    // Update the investor's name in approved phones if provided
+    if (body.name?.trim()) {
+      await query(
+        `UPDATE investor_approved_phones SET name = $1 WHERE phone_e164 = $2`,
+        [referrerName, payload.phone],
+      )
+    }
+
     // Rate limit: max 5 active (unclaimed, unexpired) invites per investor
     const active = await queryOne<{ count: string }>(
       `SELECT COUNT(*)::text AS count FROM investor_invite_links
@@ -38,9 +53,9 @@ export async function POST(req: NextRequest) {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
 
     await query(
-      `INSERT INTO investor_invite_links (code, created_by, max_uses, expires_at)
-       VALUES ($1, $2, 1, $3)`,
-      [code, payload.phone, expiresAt.toISOString()],
+      `INSERT INTO investor_invite_links (code, created_by, referrer_name, max_uses, expires_at)
+       VALUES ($1, $2, $3, 1, $4)`,
+      [code, payload.phone, referrerName, expiresAt.toISOString()],
     )
 
     return NextResponse.json({

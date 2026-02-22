@@ -17,11 +17,12 @@ export async function GET(
 
     const invite = await queryOne<{
       created_by: string
+      referrer_name: string
       uses: string
       max_uses: string
       expires_at: string
     }>(
-      `SELECT il.created_by, il.uses::text, il.max_uses::text, il.expires_at::text
+      `SELECT il.created_by, il.referrer_name, il.uses::text, il.max_uses::text, il.expires_at::text
        FROM investor_invite_links il
        WHERE il.code = $1`,
       [code],
@@ -38,7 +39,7 @@ export async function GET(
       return NextResponse.json({ valid: false })
     }
 
-    // Look up referrer info
+    // Look up referrer info (fall back to stored name on the invite)
     const referrer = await queryOne<{ name: string; company: string }>(
       `SELECT name, company FROM investor_approved_phones WHERE phone_e164 = $1`,
       [invite.created_by],
@@ -46,7 +47,7 @@ export async function GET(
 
     return NextResponse.json({
       valid: true,
-      referrerName: referrer?.name || "An investor",
+      referrerName: invite.referrer_name || referrer?.name || "An investor",
       referrerCompany: referrer?.company || "",
     })
   } catch (error) {

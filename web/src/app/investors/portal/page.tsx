@@ -52,19 +52,27 @@ const CATEGORY_LABELS: Record<DataRoomLink["category"], string> = {
 /*  Invite Modal                                                       */
 /* ------------------------------------------------------------------ */
 
-function InviteModal({ onClose }: { onClose: () => void }) {
+function InviteModal({ onClose, investorName }: { onClose: () => void; investorName: string }) {
   const [loading, setLoading] = useState(false)
   const [inviteUrl, setInviteUrl] = useState("")
   const [error, setError] = useState("")
   const [copied, setCopied] = useState(false)
+  const [nameInput, setNameInput] = useState(investorName)
+  const needsName = !investorName.trim()
 
   const generateInvite = useCallback(async () => {
+    if (!nameInput.trim()) {
+      setError("Please enter your full name")
+      return
+    }
     setLoading(true)
     setError("")
     try {
       const res = await fetch("/api/investors/portal/invite", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
+        body: JSON.stringify({ name: nameInput.trim() }),
       })
       const data = await res.json()
       if (res.ok) {
@@ -77,7 +85,7 @@ function InviteModal({ onClose }: { onClose: () => void }) {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [nameInput])
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(inviteUrl)
@@ -90,7 +98,7 @@ function InviteModal({ onClose }: { onClose: () => void }) {
       try {
         await navigator.share({
           title: "Phosra Investor Portal",
-          text: "You've been invited to view the Phosra investor data room.",
+          text: `You've been invited by ${nameInput} to view the Phosra data room.`,
           url: inviteUrl,
         })
       } catch {
@@ -99,9 +107,9 @@ function InviteModal({ onClose }: { onClose: () => void }) {
     } else {
       handleCopy()
     }
-  }, [inviteUrl, handleCopy])
+  }, [inviteUrl, handleCopy, nameInput])
 
-  const shareMessage = `You've been invited to view the Phosra investor data room: ${inviteUrl}`
+  const shareMessage = `You've been invited by ${nameInput} to view the Phosra data room: ${inviteUrl}`
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
@@ -125,23 +133,37 @@ function InviteModal({ onClose }: { onClose: () => void }) {
         </div>
 
         {!inviteUrl && !error && (
-          <button
-            onClick={generateInvite}
-            disabled={loading}
-            className="w-full py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-xl hover:bg-brand-green/90 transition-colors disabled:opacity-50 text-sm flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Share2 className="w-4 h-4" />
-                Generate Invite Link
-              </>
+          <div className="space-y-3">
+            {needsName && (
+              <div>
+                <label className="block text-xs text-white/40 mb-1.5">Your Full Name *</label>
+                <input
+                  type="text"
+                  value={nameInput}
+                  onChange={(e) => { setNameInput(e.target.value); setError("") }}
+                  placeholder="Jake Klinvex"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors"
+                />
+              </div>
             )}
-          </button>
+            <button
+              onClick={generateInvite}
+              disabled={loading || !nameInput.trim()}
+              className="w-full py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-xl hover:bg-brand-green/90 transition-colors disabled:opacity-50 text-sm flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-4 h-4" />
+                  Generate Invite Link
+                </>
+              )}
+            </button>
+          </div>
         )}
 
         {error && (
@@ -232,7 +254,7 @@ function InvestorPortalContent() {
 
   return (
     <div className="bg-[#060D16] min-h-screen">
-      {showInviteModal && <InviteModal onClose={() => setShowInviteModal(false)} />}
+      {showInviteModal && <InviteModal onClose={() => setShowInviteModal(false)} investorName={investor.name || ""} />}
 
       {/* ============================================================ */}
       {/*  Hero                                                        */}

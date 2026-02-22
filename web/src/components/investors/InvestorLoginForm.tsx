@@ -159,7 +159,7 @@ export default function InvestorLoginForm({
           </h1>
           <p className="text-sm text-white/40">
             {loginState === "invite_claim" || loginState === "claiming"
-              ? `You've been invited by ${referrerName}${referrerCompany ? ` from ${referrerCompany}` : ""}`
+              ? `You've been invited to view the Phosra data room by ${referrerName}${referrerCompany ? ` from ${referrerCompany}` : ""}`
               : loginState === "phone_input"
                 ? "Enter your phone number to sign in"
                 : "Enter the 6-digit code we sent you"}
