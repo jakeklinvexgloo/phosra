@@ -103,6 +103,31 @@ const PHASES: Phase[] = [
         description: "Developers can hit your API in a sandbox. Key traction metric for pre-seed",
         owner: "agent", status: "upcoming", dueDate: "Mar 7", agentId: "product-dev",
       },
+      {
+        id: "m27", title: "Draft fundraise press release and embargo materials",
+        description: "Hybrid narrative: COPPA deadline urgency + 'Plaid of child safety' positioning. 5 headline variants, lede, founder quotes, boilerplate. Target: Tue Mar 3 launch",
+        owner: "both", status: "upcoming", dueDate: "Feb 28", agentId: "pr-comms",
+      },
+      {
+        id: "m28", title: "Send embargo pitches to 3 target journalists",
+        description: "48-72hr embargo to Sara Fischer (Axios Media Trends), Casey Newton (Platformer), Jedidiah Bracy (IAPP). Personalized pitches per outlet",
+        owner: "founder", status: "upcoming", dueDate: "Feb 28",
+      },
+      {
+        id: "m29", title: "Create PR derivative assets (one-pager, platform brief, FAQ)",
+        description: "Investor one-pager with data room link, platform sales brief with COPPA timeline, founder FAQ for interviews, policy brief for regulators",
+        owner: "both", status: "upcoming", dueDate: "Mar 1", agentId: "pr-comms",
+      },
+      {
+        id: "m30", title: "Press release launch: embargo lift + LinkedIn + X thread",
+        description: "8 AM ET embargo lift. Jake LinkedIn personal narrative (800-1200 words). 6-tweet X thread. Susannah companion post +6hrs. Email investor list + platform prospects",
+        owner: "both", status: "upcoming", dueDate: "Mar 3", agentId: "pr-comms",
+      },
+      {
+        id: "m31", title: "Post Show HN technical deep-dive on PCSS standard",
+        description: "'Show HN: We mapped 78 child safety laws into a single compliance API.' Technical angle, not press release. HN audiences value open standards + infrastructure depth",
+        owner: "founder", status: "upcoming", dueDate: "Mar 5",
+      },
     ],
   },
   {
@@ -114,7 +139,7 @@ const PHASES: Phase[] = [
     milestones: [
       {
         id: "m7", title: "Begin regulatory content publishing (2x/week)",
-        description: "Blog posts analyzing new legislation. Your law registry (67 laws) is a content asset",
+        description: "Blog posts analyzing new legislation. Your law registry (78 laws) is a content asset",
         owner: "agent", status: "upcoming", dueDate: "Mar 10", agentId: "content-engine",
       },
       {
@@ -151,6 +176,31 @@ const PHASES: Phase[] = [
         id: "m14", title: "LinkedIn thought leadership cadence (daily)",
         description: "Consistent posting builds visibility. Regulatory analysis, product updates, market commentary",
         owner: "agent", status: "upcoming", dueDate: "Mar 10", agentId: "social-media",
+      },
+      {
+        id: "m32", title: "Publish '78 Laws' data report — citable industry resource",
+        description: "The Child Safety Compliance Landscape: 78 Laws, 45 States, One Deadline. Downloadable PDF + blog. Target: IAPP pickup + journalist citations",
+        owner: "both", status: "upcoming", dueDate: "Mar 10", agentId: "pr-comms",
+      },
+      {
+        id: "m33", title: "Activate super connectors for PR amplification",
+        description: "Brief FOSI, IAPP, Technology Coalition, ROOST, k-ID ecosystem, startup attorneys. Share release + policy brief. Ask for newsletter features and event invitations",
+        owner: "both", status: "upcoming", dueDate: "Mar 14", agentId: "pr-comms",
+      },
+      {
+        id: "m34", title: "Begin COPPA countdown LinkedIn series (2-3x/week)",
+        description: "'X Days to COPPA Compliance' posts highlighting specific requirements. Each post drives phosra.com traffic and positions Jake as the go-to regulatory voice",
+        owner: "both", status: "upcoming", dueDate: "Mar 17", agentId: "social-media",
+      },
+      {
+        id: "m35", title: "Publish founder essay: 'Why We Left Fintech for Child Safety'",
+        description: "Personal narrative on LinkedIn + Medium. The 3-exits-to-mission arc. Recruiter signal + investor credibility. Targets 10K+ impressions",
+        owner: "founder", status: "upcoming", dueDate: "Mar 19",
+      },
+      {
+        id: "m36", title: "Pitch podcast & interview appearances",
+        description: "IAPP Privacy Perspectives, Trust & Safety Foundation events, edtech podcasts. Position Jake as regulatory infrastructure expert, not just another founder",
+        owner: "founder", status: "upcoming", dueDate: "Mar 21",
       },
     ],
   },
@@ -196,6 +246,16 @@ const PHASES: Phase[] = [
         description: "Build pipeline from 10 targets. Social proof + case study material for remaining angels",
         owner: "founder", status: "upcoming", dueDate: "Apr 25",
       },
+      {
+        id: "m37", title: "Pitch COPPA deadline op-ed to major outlet",
+        description: "700-word op-ed targeting WSJ, Washington Post, or Axios as April 22 approaches. 'The compliance cliff platforms aren't ready for.' Leverage press coverage momentum",
+        owner: "both", status: "upcoming", dueDate: "Apr 7", agentId: "pr-comms",
+      },
+      {
+        id: "m38", title: "Apply to speak at FOSI 2026 + ASU+GSV Summit",
+        description: "FOSI 20th Annual Conference (Nov 2026, DC) and ASU+GSV Summit (edtech). Conference presence validates Phosra as industry voice, not just a startup",
+        owner: "founder", status: "upcoming", dueDate: "Apr 10",
+      },
     ],
   },
   {
@@ -227,7 +287,7 @@ const PHASES: Phase[] = [
       },
       {
         id: "m26", title: "Announce raise (optional) for seed momentum",
-        description: "Public announcement drives inbound for seed round. Time with product milestone",
+        description: "Public announcement drives inbound for seed round. Time with product milestone. Use press release strategy playbook (docs/press-release-strategy.md) and accumulated media relationships",
         owner: "both", status: "upcoming", dueDate: "May 31", agentId: "social-media",
       },
     ],
@@ -277,7 +337,7 @@ const AGENTS: Agent[] = [
     id: "content-engine",
     name: "Content Engine",
     role: "Thought Leadership Writer",
-    description: "Produces regulatory analysis blog posts, compliance guides, newsletters, and whitepapers. Leverages the 67-law registry as source material. Targets SEO keywords around COPPA 2.0, KOSA, age verification.",
+    description: "Produces regulatory analysis blog posts, compliance guides, newsletters, and whitepapers. Leverages the 78-law registry as source material. Targets SEO keywords around COPPA 2.0, KOSA, age verification.",
     icon: PenTool,
     color: "text-amber-600 dark:text-amber-400",
     bgColor: "bg-amber-100 dark:bg-amber-900/30",
@@ -348,6 +408,25 @@ const AGENTS: Agent[] = [
     ],
     tools: ["Buffer/Typefully", "Claude API", "LinkedIn", "X/Twitter"],
     cadence: "Daily LinkedIn, 3-5x/week Twitter",
+  },
+  {
+    id: "pr-comms",
+    name: "PR & Comms",
+    role: "Press Strategy",
+    description: "Manages press release strategy, media outreach, and earned media. Drafts releases, coordinates embargoes, produces derivative PR assets (one-pagers, briefs, data reports). Leverages COPPA deadline and regulatory momentum as media hooks.",
+    icon: Megaphone,
+    color: "text-pink-600 dark:text-pink-400",
+    bgColor: "bg-pink-100 dark:bg-pink-900/30",
+    automationLevel: 65,
+    tasks: [
+      "Draft press releases and coordinate embargo strategy with 3 target journalists",
+      "Build targeted journalist contact list (Axios, Platformer, IAPP, TechCrunch)",
+      "Create derivative PR assets (investor one-pager, platform brief, founder FAQ)",
+      "Produce citable data reports from 78-law compliance registry",
+      "Track media coverage, compile press roundups, pitch follow-on stories",
+    ],
+    tools: ["Claude API", "Muck Rack", "Google Docs", "Buffer"],
+    cadence: "Continuous during launch week, weekly post-launch",
   },
   {
     id: "outreach-seq",
