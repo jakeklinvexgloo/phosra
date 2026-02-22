@@ -158,15 +158,16 @@ export default function OutreachPage() {
   // ── Draft next email (1 at a time) ───────────────────────────
   const handleDraftNext = useCallback(async () => {
     if (drafting) return
-    const next = upNextContacts[0]
-    if (!next) return
 
     setDrafting(true)
     try {
       const token = (await getToken()) ?? undefined
 
-      // Start a sequence for the next priority contact
-      await api.startSequence(next.id, token)
+      // If there's an un-sequenced contact, start a sequence for them (ignore error if one already exists)
+      const next = upNextContacts[0]
+      if (next) {
+        try { await api.startSequence(next.id, token) } catch { /* sequence may already exist */ }
+      }
 
       // Trigger the worker (DRAFT_LIMIT=1 is set server-side for manual triggers)
       await api.triggerWorker("outreach-sequencer", token)
@@ -259,7 +260,7 @@ export default function OutreachPage() {
         emails={pendingEmails}
         loading={loading}
         drafting={drafting}
-        hasContacts={upNextContacts.length > 0}
+        hasContacts={upNextContacts.length > 0 || activeConversations.length > 0}
         onRefresh={fetchAll}
         onDraftNext={handleDraftNext}
       />
