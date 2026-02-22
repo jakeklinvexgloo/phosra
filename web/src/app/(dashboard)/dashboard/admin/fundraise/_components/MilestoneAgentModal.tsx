@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useEffect, type FormEvent } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { X, Loader2, Send, Sparkles } from "lucide-react"
+import { X, Loader2, Send, Sparkles, AlertCircle } from "lucide-react"
 
 type MilestoneProps = {
   id: string
@@ -66,7 +66,7 @@ export default function MilestoneAgentModal({
     [milestone.id],
   )
 
-  const { messages, sendMessage, status } = useChat({ transport })
+  const { messages, sendMessage, status, error } = useChat({ transport })
 
   const isLoading = status === "streaming" || status === "submitted"
 
@@ -172,6 +172,14 @@ export default function MilestoneAgentModal({
             </div>
           )}
         </div>
+
+        {/* Error display */}
+        {error && (
+          <div className="flex items-start gap-2 mx-5 mb-0 mt-2 p-2.5 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+            <AlertCircle className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-red-700 dark:text-red-400">{error.message || "Failed to get a response. Please try again."}</p>
+          </div>
+        )}
 
         {/* Input */}
         <form
