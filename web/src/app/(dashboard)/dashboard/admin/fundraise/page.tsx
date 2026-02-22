@@ -13,6 +13,8 @@ import {
 } from "lucide-react"
 import PhoneInput from "@/components/investors/PhoneInput"
 import { formatPhoneDisplay } from "@/lib/investors/phone"
+import WarmIntrosTab from "./_components/WarmIntrosTab"
+import InvestorResearchModal from "./_components/InvestorResearchModal"
 
 /* ═══════════════════════════════════════════════════════════════
    DATA: Fundraise plan — milestones, agents, founder tasks
@@ -472,7 +474,8 @@ const ROUND_STRUCTURE = [
 export default function FundraiseCommandCenter() {
   const [expandedPhase, setExpandedPhase] = useState<string | null>("foundation")
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<"timeline" | "agents" | "founder" | "investor-access">("timeline")
+  const [activeTab, setActiveTab] = useState<"timeline" | "agents" | "founder" | "warm-intros" | "investor-access">("timeline")
+  const [showResearchModal, setShowResearchModal] = useState(false)
 
   // Calculate days remaining
   const now = new Date()
@@ -589,6 +592,7 @@ export default function FundraiseCommandCenter() {
     { key: "timeline" as const, label: "Timeline", icon: Calendar },
     { key: "agents" as const, label: "Agent Workforce", icon: Bot },
     { key: "founder" as const, label: "Your Focus", icon: User },
+    { key: "warm-intros" as const, label: "Warm Intros", icon: Handshake },
     { key: "investor-access" as const, label: "Investor Access", icon: Smartphone },
   ]
 
@@ -959,6 +963,16 @@ export default function FundraiseCommandCenter() {
                           <span className="text-xs text-foreground">{agent.cadence}</span>
                         </div>
                       </div>
+
+                      {agent.id === "investor-research" && (
+                        <button
+                          onClick={() => setShowResearchModal(true)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-brand-green text-[#0D1B2A] text-xs font-semibold hover:bg-brand-green/90 transition-colors"
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          Run Research
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -1075,6 +1089,9 @@ export default function FundraiseCommandCenter() {
           </div>
         </div>
       )}
+
+      {/* ═══ WARM INTROS TAB ══════════════════════════════════ */}
+      {activeTab === "warm-intros" && <WarmIntrosTab />}
 
       {/* ═══ INVESTOR ACCESS TAB ═════════════════════════════ */}
       {activeTab === "investor-access" && (
@@ -1287,6 +1304,12 @@ export default function FundraiseCommandCenter() {
           )}
         </div>
       )}
+
+      {/* ═══ INVESTOR RESEARCH MODAL (from Agent Workforce tab) ═══ */}
+      <InvestorResearchModal
+        open={showResearchModal}
+        onClose={() => setShowResearchModal(false)}
+      />
     </div>
   )
 }
