@@ -40,6 +40,7 @@ export type InvestorCategory =
   | "policy-angel"
   | "parent-angel"
   | "fintech-angel"
+  | "faith-family"
 
 export type InvestorType = "vc" | "angel" | "syndicate" | "strategic" | "micro-fund" | "cvc" | "family-office" | "impact-fund"
 
@@ -1453,7 +1454,7 @@ const TS_LEADERS: WarmIntroTarget[] = [
     introPaths: [
       { type: "industry-association", description: "TSPA, TED network, Twitter T&S alumni", strength: 2 },
     ],
-    tier: 2,
+    tier: 1,
     approachStrategy: {
       recommended: "Direct LinkedIn outreach — she is now independent and associated with TSPA",
       steps: [
@@ -1487,7 +1488,7 @@ const TS_LEADERS: WarmIntroTarget[] = [
     introPaths: [
       { type: "industry-association", description: "Technology Coalition, NCMEC, Microsoft/Xbox alumni", strength: 2 },
     ],
-    tier: 2,
+    tier: 1,
     approachStrategy: {
       recommended: "Direct LinkedIn outreach referencing Project Artemis and her gaming safety legacy",
       steps: [
@@ -1521,7 +1522,7 @@ const TS_LEADERS: WarmIntroTarget[] = [
     introPaths: [
       { type: "industry-association", description: "FOSI board network, Roblox safety partners", strength: 3 },
     ],
-    tier: 2,
+    tier: 1,
     approachStrategy: {
       recommended: "Warm intro via FOSI board network — she chairs the board and is deeply connected",
       steps: [
@@ -3125,7 +3126,7 @@ const FAMILY_OFFICES: WarmIntroTarget[] = [
         strength: 2,
       },
     ],
-    tier: 2,
+    tier: 1,
     approachStrategy: {
       recommended:
         "Bridge the gap between SFI's tech investment focus and the Schusterman Foundation's education mission — Phosra sits at the intersection",
@@ -3184,7 +3185,7 @@ const FAMILY_OFFICES: WarmIntroTarget[] = [
         strength: 2,
       },
     ],
-    tier: 2,
+    tier: 1,
     approachStrategy: {
       recommended:
         "Lead with Benioff's 'platform thinking' investment thesis — Phosra is the compliance platform layer for every company handling children's data",
@@ -4819,7 +4820,7 @@ const CELEBRITY_ANGELS: WarmIntroTarget[] = [
         strength: 2,
       },
     ],
-    tier: 3 as const,
+    tier: 2 as const,
     approachStrategy: {
       recommended: "Youth empowerment foundation angle + Japan regulatory bridge",
       steps: [
@@ -5389,7 +5390,7 @@ const POLICY_ANGELS: WarmIntroTarget[] = [
         strength: 3,
       },
     ],
-    tier: 2,
+    tier: 1,
     approachStrategy: {
       recommended:
         "Approach through privacy professional networks (IAPP, FPF) emphasizing her unique perspective spanning government AND corporate compliance",
@@ -5739,7 +5740,7 @@ const PARENT_ANGELS: WarmIntroTarget[] = [
         strength: 2,
       },
     ],
-    tier: 2,
+    tier: 1,
     approachStrategy: {
       recommended: "Position Phosra as the compliance infrastructure Kidoodle.TV needs — he's built a Safe Streaming platform but managing compliance across 67+ laws manually is unsustainable.",
       steps: [
@@ -6157,6 +6158,847 @@ const FINTECH_ANGELS: WarmIntroTarget[] = [
       "Lower angel volume (5 investments) means he's more selective — needs a compelling pitch. The SEC/LendingClub history actually makes compliance infrastructure MORE resonant, not less. Upgrade's $6.3B valuation means he has significant capital. As CEO of Upgrade, he's busy — may be harder to reach. The compliance-cost angle is the best hook.",
   },
 ]
+
+// ─── Faith & Family-Aligned Investors ────────────────────────────────────────
+
+const FAITH_FAMILY: WarmIntroTarget[] = [
+  // ─── Tier 1 ───────────────────────────────────────────────────────────────
+
+  {
+    id: "sovereigns-capital",
+    name: "Phil Jung",
+    fundOrCompany: "Sovereign's Capital",
+    role: "Co-Founder & Managing Partner",
+    category: "faith-family" as const,
+    type: "vc" as const,
+    checkSizeRange: "$300K–$4M",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/philjung/",
+      website: "https://www.sovereignscapital.com",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Explicitly faith-driven fund whose LP base views child protection as Christian stewardship; B2B software focus maps directly to Phosra's compliance infrastructure play.",
+    coppaInterest: "portfolio-signal" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "Faith Driven Investor annual conference — Phil Jung is a regular speaker and panelist; warm room for direct conversation.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "conference-event" as const,
+        description:
+          "SENT Summit at Notre Dame — Sovereign's Capital is a featured investor; pitch competition and investor-founder mixers provide natural intro moments.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Faith Driven Entrepreneur online community (Slack + forum) — post content on child-safety regulation to establish presence before direct outreach.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 1 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Faith Driven Investor conference warm intro",
+      steps: [
+        "Join the Faith Driven Investor community and engage authentically in the forums for 2–3 weeks before outreach.",
+        "Attend (or secure a speaker slot at) the annual Faith Driven Investor conference; Phil Jung is typically on stage.",
+        "Request a 20-minute coffee at the conference by citing shared stewardship values and the LP interest in child protection.",
+        "Follow up with a one-pager framing Phosra as 'infrastructure for Biblical stewardship of digital spaces for children.'",
+      ],
+      openingAngle:
+        "Your LPs believe protecting children online is an act of Christian stewardship — Phosra is the B2B compliance layer that makes that protection enforceable at scale.",
+    },
+    status: "identified" as const,
+    notes:
+      "Sovereign's Capital Fund IV ($60M) is actively deploying into B2B software at Seed/Series A, which is an exact stage and sector match. The LP base's faith framing around child protection is unusually direct alignment for a compliance infrastructure pitch.",
+    relevantPortfolio: ["Level3 AI", "Fakespot"],
+  },
+
+  {
+    id: "waterstone-tebow",
+    name: "Tommy Martin / Tim Tebow",
+    fundOrCompany: "WaterStone Impact Fund",
+    role: "Managing Partner / Co-Founder",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$500K–$3M",
+    stagePreference: "Seed / Series A",
+    contact: {
+      website: "https://www.waterstoneimpactfund.com",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Carried interest flows directly to Tim Tebow Foundation anti-child-trafficking operations across 95+ countries; Tebow testified before Congress on child exploitation in March 2024 — mission alignment is foundational, not incidental.",
+    coppaInterest: "public-stance" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "Tim Tebow Foundation events (Night to Shine gala network, annual fundraiser circuit) — Tommy Martin and Tebow regularly appear together; sponsor or attend to get a warm room introduction.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "cold-application" as const,
+        description:
+          "WaterStone Impact Fund accepts inbound applications via waterstoneimpactfund.com; lead with the anti-exploitation angle in the subject line.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Connect through National Center for Missing & Exploited Children (NCMEC) or Thorn network events where Tebow Foundation staff are regularly present.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 1 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Tim Tebow Foundation event sponsorship / attendance",
+      steps: [
+        "Identify the next Tim Tebow Foundation Night to Shine or regional fundraiser and sponsor at the lowest tier that includes a table.",
+        "Prepare a one-slide impact statement showing how Phosra reduces child exploitation surface area on digital platforms.",
+        "Request 10 minutes with Tommy Martin framing Phosra as 'the compliance infrastructure that makes the platforms TTF already pressures actually enforce child safety law.'",
+        "Offer a co-branded impact report for the fund's LPs showing COPPA/KOSA enforcement metrics Phosra generates.",
+      ],
+      openingAngle:
+        "Every dollar your fund invests in Phosra generates enforceable child safety compliance across the platforms Tim Tebow Foundation already targets — turning advocacy into auditable infrastructure.",
+    },
+    status: "identified" as const,
+    notes:
+      "WaterStone is one of the only funds in existence whose GP carry is explicitly redirected to anti-child-exploitation operations; Phosra's product is a direct force-multiplier for that mission and the pitch almost writes itself. Fund launched October 2024 so deployment is early-stage.",
+    relevantPortfolio: ["eFuse"],
+  },
+
+  {
+    id: "halogen-ventures",
+    name: "Jesse Draper",
+    fundOrCompany: "Halogen Ventures",
+    role: "Founding Partner",
+    category: "faith-family" as const,
+    type: "vc" as const,
+    checkSizeRange: "$500K–$2M",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/jessedraper/",
+      twitter: "https://twitter.com/jessedraper",
+      website: "https://www.halogenvc.com",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Fund III mandate explicitly covers Childcare, EdTech, FamTech, and Child & Youth Services — Phosra sits at the intersection of all four. Jesse is a mother of three boys with personal skin in the child-safety space.",
+    coppaInterest: "portfolio-signal" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "TechCrunch Disrupt and TechCrunch events — Jesse Draper is a frequent speaker and judge; natural warm conversation setting.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "2nd-degree-strong" as const,
+        description:
+          "Draper VC dynasty network — Tim Draper (grandfather fund) and Draper Associates portfolio founders are reachable connectors to Jesse.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "content-warmup" as const,
+        description:
+          "Jesse is active on Twitter/X commenting on FamTech and child safety regulation; engage thoughtfully on KOSA and COPPA threads before cold outreach.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 1 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Twitter/X content engagement followed by conference intro",
+      steps: [
+        "Follow Jesse Draper on Twitter/X and contribute substantive replies on 3–4 of her child safety or FamTech posts over two weeks.",
+        "Publish a short-form piece (Substack or LinkedIn) on COPPA 2.0 enforcement gaps and tag Halogen Ventures — Jesse regularly amplifies aligned content.",
+        "Pitch via halogenvc.com inbound form citing Fund III's explicit FamTech mandate, referencing your content she engaged with.",
+        "If attending TechCrunch Disrupt, request a 15-minute hallway meeting citing the content thread as the warm signal.",
+      ],
+      openingAngle:
+        "As a mother of three boys and a FamTech investor, you know the regulatory gap is the product risk — Phosra is the B2B compliance layer that closes it for every platform your portfolio companies touch.",
+    },
+    status: "identified" as const,
+    notes:
+      "Halogen Fund III closed at $30M in June 2025 with an explicit 'Future of Family' mandate, making this the most thesis-matched VC fund for Phosra currently deploying. Jesse's personal identity as a parent of young boys creates authentic resonance beyond a pure investment thesis.",
+    relevantPortfolio: [],
+  },
+
+  {
+    id: "pivotnorth",
+    name: "Tim Connors",
+    fundOrCompany: "PivotNorth Capital",
+    role: "Founding General Partner",
+    category: "faith-family" as const,
+    type: "vc" as const,
+    checkSizeRange: "$1M–$5M",
+    stagePreference: "Seed / Series A",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/timconnors/",
+      website: "https://www.pivotnorth.com",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "4x Forbes Midas List GP who is a devout Catholic co-founder of the Connors Foundation for vulnerable families; Catholic values framework means child protection resonates at a personal stewardship level even absent prior portfolio signal.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "alumni-network" as const,
+        description:
+          "Notre Dame alumni events — Tim Connors actively engages the ND Catholic community; any ND-connected founder or advisor on the cap table is a warm path.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "podcast" as const,
+        description:
+          "Catholic Founders podcast and Catholic business leader circuit — Tim has appeared on these shows; reach out to shared guests as connectors.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "2nd-degree-strong" as const,
+        description:
+          "Google/Looker alumni network — Looker was acquired by Google and Tim was an early investor; Looker alumni who know Tim can provide credible introductions.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 1 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Notre Dame Catholic community warm intro",
+      steps: [
+        "Identify any Notre Dame alumni, Catholic Founders podcast guests, or Connors Foundation board members in Phosra's existing network.",
+        "Ask a connector to make an email intro citing Tim's family-values investing philosophy and Phosra's child protection mission.",
+        "Open the conversation with the Connors Foundation's vulnerable families focus before mentioning the investment opportunity.",
+        "Frame Phosra as 'infrastructure the platforms that reach every Catholic family's children are legally required to adopt' — makes the investment feel like applied stewardship.",
+      ],
+      openingAngle:
+        "Your foundation protects vulnerable families offline — Phosra protects them in the digital spaces their children inhabit every day, and the law now requires every platform to comply.",
+    },
+    status: "identified" as const,
+    notes:
+      "Tim Connors has 90+ investments and 24 exits with a Midas List track record, so this is a high-credibility signal-amplifier investor beyond the check itself. His Catholic family-values framework makes the Phosra pitch a values story first and a market story second, which is the right order for him.",
+    relevantPortfolio: ["Looker", "Chime"],
+  },
+
+  {
+    id: "lubetzky-camino",
+    name: "Daniel Lubetzky",
+    fundOrCompany: "Camino Partners",
+    role: "Founder & Managing Partner",
+    category: "faith-family" as const,
+    type: "angel" as const,
+    checkSizeRange: "$500K–$5M",
+    stagePreference: "Series A / Growth",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/daniellubetzky/",
+      twitter: "https://twitter.com/daniellubetzky",
+      website: "https://www.caminopartners.com",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Invested $20M into Empatico — a safe digital connection platform for children — demonstrating direct prior conviction in child-safe technology; Holocaust survivor family background gives authentic urgency to protecting the vulnerable.",
+    coppaInterest: "public-stance" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description:
+          "Jewish Funders Network annual conference — Daniel Lubetzky is a known participant; tikkun olam (repairing the world) framing for child safety resonates deeply in this community.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "conference-event" as const,
+        description:
+          "Aspen Ideas Festival — Lubetzky is a recurring speaker on social entrepreneurship and values-based business; warm room for peer conversations.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "2nd-degree-strong" as const,
+        description:
+          "Shark Tank alumni and co-investor network — Lubetzky's Shark Tank profile and KIND Snacks retail network create a broad second-degree reach via any founder who pitched the show.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 1 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Jewish Funders Network tikkun olam framing",
+      steps: [
+        "Connect with a Jewish Funders Network member who has interacted with Lubetzky and can make a warm email introduction.",
+        "Frame the introduction around tikkun olam and the moral obligation to protect children in digital spaces — lead with values, not valuation.",
+        "Reference the Empatico investment explicitly: 'You already believe in safe digital spaces for children — Phosra is the compliance infrastructure that makes that promise legally enforceable.'",
+        "Offer a demo session focused on how Phosra would have protected Empatico's users from regulatory risk.",
+      ],
+      openingAngle:
+        "You invested in Empatico because you believe children deserve safe digital connection — Phosra is the B2B infrastructure that makes every platform legally obligated to provide it.",
+    },
+    status: "identified" as const,
+    notes:
+      "The $20M Empatico investment is a direct proof point that Lubetzky invests conviction capital into child-safe digital platforms; Phosra is the B2B compliance layer underneath every product like Empatico and is thus a natural portfolio complement. Camino Partners' $350M fund gives him meaningful check-writing capacity.",
+    relevantPortfolio: ["Empatico", "KIND Snacks"],
+  },
+
+  // ─── Tier 2 ───────────────────────────────────────────────────────────────
+
+  {
+    id: "11-tribes",
+    name: "Mark Phillips",
+    fundOrCompany: "11 Tribes Ventures",
+    role: "Managing Partner",
+    category: "faith-family" as const,
+    type: "vc" as const,
+    checkSizeRange: "$250K–$2M",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      website: "https://www.11tribes.vc",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "Fund II ($46M, April 2025) invests through Biblical principles with cybersecurity as an explicit sector — Phosra's compliance infrastructure sits at the intersection of cybersecurity and faith-aligned child protection values.",
+    coppaInterest: "none" as const,
+    fundSignal: "deploying" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "SENT Summit at Notre Dame — 11 Tribes Ventures participates regularly; natural warm intro through the shared faith-entrepreneur ecosystem.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "cold-application" as const,
+        description:
+          "11tribes.vc inbound form — the fund actively reviews applications from faith-aligned founders; cite cybersecurity + child protection angle in the subject.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Faith Driven Investor community overlap — 11 Tribes and Sovereign's Capital share events and LP relationships; a Sovereign's intro would carry significant weight.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 2 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "SENT Summit warm intro + Sovereign's Capital cross-referral",
+      steps: [
+        "If pursuing Sovereign's Capital in parallel, ask Phil Jung for a warm cross-referral to 11 Tribes given the shared fund community.",
+        "Attend SENT Summit and engage Mark Phillips directly in the context of Biblical stewardship applied to digital child protection.",
+        "Submit an application via 11tribes.vc citing the cybersecurity mandate and the faith framing around protecting children online.",
+        "Include a brief note on how Phosra's rule-engine architecture reflects Biblical principles of structured accountability.",
+      ],
+      openingAngle:
+        "You invest in cybersecurity through Biblical principles — Phosra applies that same framework to the regulatory infrastructure protecting children from digital harm.",
+    },
+    status: "identified" as const,
+    notes:
+      "Fund II closed at $46M in April 2025 meaning 11 Tribes is in active deployment mode with fresh capital; the explicit cybersecurity sector mandate and faith-driven thesis create a credible dual hook for Phosra's compliance infrastructure story.",
+    relevantPortfolio: ["NuTrād", "Circadian Risk"],
+  },
+
+  {
+    id: "m25",
+    name: "Victor Gutwein",
+    fundOrCompany: "M25",
+    role: "Co-Founder & Managing Partner",
+    category: "faith-family" as const,
+    type: "vc" as const,
+    checkSizeRange: "$250K–$1.5M",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      linkedin: "https://www.linkedin.com/in/victorgutwein/",
+      website: "https://www.m25vc.com",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "Named after Matthew 25 (Parable of Talents) with an explicit Biblical stewardship thesis; most active Midwest early-stage VC with 90+ companies, making M25 a high-volume signal for follow-on investors.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "Faith Driven Investor events — Victor Gutwein participates in the faith-entrepreneur circuit and is accessible at these gatherings.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "cold-application" as const,
+        description:
+          "M25 has a transparent inbound process at m25vc.com; as the most active Midwest VC they review a high volume of applications with fast turnaround.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "portfolio-founder" as const,
+        description:
+          "M25's 90+ portfolio companies include Kin Insurance and Branch — any founder in that portfolio who knows Phosra's team is a credible warm path.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 2 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Portfolio founder warm intro + Faith Driven Investor conference follow-up",
+      steps: [
+        "Map M25's 90+ portfolio companies and identify any founder with a 1st or 2nd-degree connection to Phosra's team.",
+        "Ask that founder for a warm email intro to Victor Gutwein citing Phosra's compliance-infrastructure category.",
+        "If no portfolio founder path exists, submit via m25vc.com with a Biblical stewardship framing for child safety regulation.",
+        "Follow up at Faith Driven Investor events where Victor is reachable for a 10-minute in-person conversation.",
+      ],
+      openingAngle:
+        "The Parable of Talents is about faithful stewardship of what you're entrusted with — every platform entrusted with a child's data has a legal and moral obligation Phosra makes enforceable.",
+    },
+    status: "identified" as const,
+    notes:
+      "M25 is strategically valuable as a Midwest market-maker with 90+ portfolio companies — an M25 investment signals credibility to the entire Midwest tech ecosystem and creates warm paths to dozens of follow-on investors. The Matthew 25 Biblical naming is not cosmetic; Victor Gutwein has spoken extensively about stewardship as investment thesis.",
+    relevantPortfolio: ["Kin Insurance", "Branch"],
+  },
+
+  {
+    id: "praxis-ventures",
+    name: "Dave Blanchard",
+    fundOrCompany: "Praxis Labs",
+    role: "CEO & Co-Founder",
+    category: "faith-family" as const,
+    type: "micro-fund" as const,
+    checkSizeRange: "$50K SAFE per Fellow",
+    stagePreference: "Pre-Seed / Seed (via Praxis accelerator)",
+    contact: {
+      website: "https://www.praxis.co",
+    },
+    thesisAlignment: "perfect" as const,
+    thesisNote:
+      "Co-filed shareholder proposals at Apple regarding child exploitation risk — Praxis is publicly on record as an activist for child protection in digital spaces, making this the highest mission-conviction aligned investor group in the portfolio.",
+    coppaInterest: "public-stance" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "Praxis Forum — annual gathering of 'redemptive venture' founders and investors; Phosra's child safety mission is natural programming content and creates warm access to the investor panel.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "accelerator-alumni" as const,
+        description:
+          "Apply to Praxis Labs accelerator cohort — the $50K SAFE investment comes with the investor network of 200+ ventures and direct access to the aligned investor group.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Engage Praxis via their shareholder advocacy work — connect through NCMEC or Thorn where Praxis also has relationships to open a backdoor introduction.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 2 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Apply to Praxis Labs accelerator cohort",
+      steps: [
+        "Apply to the next Praxis Labs Fellow cohort — the accelerator is the cleanest entry point into the full Praxis investor network.",
+        "In the application, reference the Apple shareholder proposal co-filing as evidence of mission alignment: 'Praxis already demanded Apple enforce child safety — Phosra is the infrastructure that makes it technically possible.'",
+        "If accepted, leverage the $50K SAFE and the 12-year network of 200+ redemptive ventures to unlock warm intros to Sovereign's Capital, IrishAngels, and other faith-aligned co-investors in Praxis's ecosystem.",
+        "If not applying to accelerator, attend Praxis Forum and request a meeting with Dave Blanchard framed around the Apple shareholder proposal common ground.",
+      ],
+      openingAngle:
+        "You co-filed shareholder proposals demanding Apple protect children — Phosra is what happens when that demand is translated into enforceable B2B compliance infrastructure.",
+    },
+    status: "identified" as const,
+    notes:
+      "Praxis is uniquely valuable beyond the check size: 12 years and 200+ redemptive ventures means the Praxis stamp of approval is a powerful signal to the entire faith-driven investor ecosystem. The Apple shareholder proposal co-filing makes this the only investor in this list with a public on-record activist stance for child protection online.",
+    relevantPortfolio: [],
+  },
+
+  {
+    id: "irish-angels",
+    name: "Caroline Gash",
+    fundOrCompany: "IrishAngels",
+    role: "Executive Director",
+    category: "faith-family" as const,
+    type: "syndicate" as const,
+    checkSizeRange: "$500K–$2M syndicated",
+    stagePreference: "Seed / Series A",
+    contact: {
+      website: "https://www.irishangels.com",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "250+ Notre Dame alumni angel investors with $45M+ deployed — the Catholic institutional network and family-values ethos make this syndicate receptive to child safety framing; SENT Summit overlap with Sovereign's Capital creates ecosystem synergy.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "alumni-network" as const,
+        description:
+          "Notre Dame alumni network — any ND-connected advisor, investor, or founder on Phosra's cap table can provide a warm introduction to Caroline Gash and the IrishAngels network.",
+        strength: 5 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "conference-event" as const,
+        description:
+          "SENT Summit at Notre Dame — IrishAngels co-appears with Sovereign's Capital and SENT Ventures; a single SENT Summit attendance can open warm paths to all three simultaneously.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "cold-application" as const,
+        description:
+          "IrishAngels accepts inbound applications from non-ND founders when the deal is strong; apply via irishangels.com with a Catholic values and child protection framing.",
+        strength: 2 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 2 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Notre Dame alumni warm intro at SENT Summit",
+      steps: [
+        "Identify any Notre Dame alumni in Phosra's existing investor, advisor, or customer network.",
+        "Ask that person to make an email introduction to Caroline Gash citing Phosra's child safety mission and the Catholic family-values alignment.",
+        "Attend SENT Summit where IrishAngels and SENT Ventures both appear — one event can open multiple warm paths simultaneously.",
+        "Prepare a syndicate-friendly deck with a clear $500K–$2M ask that the IrishAngels 250-member network can rally behind collectively.",
+      ],
+      openingAngle:
+        "Notre Dame built its mission around care for the common good — protecting every child's digital safety is the defining common-good challenge of this generation, and Phosra makes it commercially enforceable.",
+    },
+    status: "identified" as const,
+    notes:
+      "IrishAngels' 250-member Catholic alumni syndicate is a high-leverage target because a single presentation can reach hundreds of qualified angels simultaneously; the $45M+ deployment track record signals a sophisticated, active group rather than a passive network.",
+    relevantPortfolio: [],
+  },
+
+  {
+    id: "telos-ventures",
+    name: "Eric Quan & David Kim",
+    fundOrCompany: "Telos Ventures",
+    role: "General Partners",
+    category: "faith-family" as const,
+    type: "vc" as const,
+    checkSizeRange: "$50K–$250K",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      website: "https://www.telosventures.com",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "Silicon Valley faith-driven fund established 2013 with a 'Gospel-centered ventures' thesis — child safety regulation creates a discipleship and stewardship narrative that resonates with Telos's founding mission.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description:
+          "Silicon Valley Christian community networks (The Well, Christian tech founders groups) — Eric Quan and David Kim are embedded in this community and are reachable through any mutual faith-tech connection.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "portfolio-founder" as const,
+        description:
+          "FaithStreet or Cladwell founders — Telos portfolio founders who are active in the faith-tech ecosystem can make warm introductions to the GPs.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "cold-application" as const,
+        description:
+          "Telos Ventures reviews inbound applications from faith-aligned founders via telosventures.com; check size is small but the network effect and signal value are significant.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 2 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Silicon Valley Christian community warm intro",
+      steps: [
+        "Map any connections in the Silicon Valley Christian founder and investor community (The Well, SF Bay Area faith-tech Slack groups).",
+        "Request a warm introduction to Eric Quan or David Kim via a mutual community member.",
+        "Frame Phosra as infrastructure that enables 'Gospel-centered ventures' to operate in regulated digital spaces without compliance risk.",
+        "Given the $50K–$250K check range, position Telos as an ecosystem entry point that opens the Silicon Valley faith-tech network for future rounds.",
+      ],
+      openingAngle:
+        "Gospel-centered ventures need Gospel-safe digital infrastructure — Phosra ensures every platform your portfolio touches is legally compliant with the laws protecting children online.",
+    },
+    status: "identified" as const,
+    notes:
+      "Telos's small check size ($50K–$250K) is less about capital than about ecosystem access — an investment from Telos opens doors to 10+ years of Silicon Valley faith-tech relationships and co-investor networks. FaithStreet portfolio company is a direct community overlap with Phosra's potential faith-sector customers.",
+    relevantPortfolio: ["FaithStreet", "Cladwell", "Wasoko"],
+  },
+
+  {
+    id: "lauder-partners",
+    name: "Gary & Laura Lauder",
+    fundOrCompany: "Lauder Partners",
+    role: "Managing Partners",
+    category: "faith-family" as const,
+    type: "family-office" as const,
+    checkSizeRange: "$500K–$3M",
+    stagePreference: "Seed / Series A",
+    contact: {
+      website: "https://www.lauderpartners.com",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "150+ private investments since 1985 with Jewish philanthropic tikkun olam framework; Laura's family fund seeds education and community resilience — child safety technology maps to both the philanthropic values and the investment history.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description:
+          "Band of Angels membership — Gary Lauder is a Band of Angels member; this Silicon Valley angel group provides a structured warm intro pathway for qualified startups.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Jewish Funders Network — the Lauder family is connected to the broader Jewish philanthropic network; a JFN referral carries strong credibility for tikkun olam-framed pitches.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "2nd-degree-strong" as const,
+        description:
+          "Estée Lauder Companies corporate network — the Lauder family's deep corporate connections create second-degree paths through any executive in their portfolio or professional network.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 2 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Band of Angels presentation + Jewish Funders Network referral",
+      steps: [
+        "Apply to present at a Band of Angels meeting — Gary Lauder's membership means a Band of Angels presentation reaches him directly in a structured setting.",
+        "In parallel, pursue a Jewish Funders Network warm introduction using tikkun olam framing for child digital safety.",
+        "Reference Laura's family fund focus on education and community resilience — Phosra's compliance infrastructure protects children in educational platforms and community spaces.",
+        "Prepare a family-office-friendly memo emphasizing the 150+ investment track record alignment: Phosra fits the Lauder pattern of long-horizon impact investments with strong market fundamentals.",
+      ],
+      openingAngle:
+        "Tikkun olam begins with protecting the most vulnerable — Phosra makes child digital safety legally enforceable for every platform your grandchildren and great-grandchildren will use.",
+    },
+    status: "identified" as const,
+    notes:
+      "Gary Lauder's 40-year track record of 150+ private investments signals patient, conviction-based capital that suits Phosra's long-horizon compliance infrastructure play. Band of Angels membership provides a structured, low-friction pathway to a warm meeting without relying on personal network access.",
+    relevantPortfolio: [],
+  },
+
+  {
+    id: "cathy-family",
+    name: "Dan T. Cathy",
+    fundOrCompany: "Cathy Family Office (Chick-fil-A)",
+    role: "Chairman, Chick-fil-A / Family Office Principal",
+    category: "faith-family" as const,
+    type: "family-office" as const,
+    checkSizeRange: "$1M–$10M",
+    stagePreference: "Series A / Growth",
+    contact: {},
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "Evangelical Christian family office with WinShape Foundation 'shaping winners' for youth and Chick-fil-A Foundation mandate to 'nourish potential in every child' — child protection technology is a natural stewardship extension of both foundation missions.",
+    coppaInterest: "none" as const,
+    fundSignal: "unknown" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "Engage VC Atlanta network — Dan T. Cathy is embedded in the Atlanta tech and faith-business community; Engage VC events provide warm room access.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Faith Driven Entrepreneur Atlanta chapter — Dan T. Cathy is a known participant in Atlanta's faith-business community; chapter events create warm relationship-building opportunities.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "2nd-degree-strong" as const,
+        description:
+          "WinShape Foundation board and Chick-fil-A Foundation staff — any advisor or consultant connected to either foundation can provide an internal referral to the family office.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 2 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Faith Driven Entrepreneur Atlanta chapter community-building",
+      steps: [
+        "Engage consistently in the Faith Driven Entrepreneur Atlanta chapter over 4–6 weeks before any direct outreach to Dan T. Cathy's office.",
+        "Identify a WinShape Foundation board member or Chick-fil-A Foundation staff member who can provide an internal family office referral.",
+        "Frame Phosra around the 'nourish potential in every child' mandate: 'Every digital platform that touches a child should have the same commitment to their wellbeing that Chick-fil-A's foundation has.'",
+        "Request a 30-minute introductory call with the family office investment team rather than Dan T. Cathy directly — family offices typically screen through a professional staff layer.",
+      ],
+      openingAngle:
+        "Your foundation's mission is to nourish potential in every child — Phosra ensures every digital platform those children use is legally required to protect that potential.",
+    },
+    status: "identified" as const,
+    notes:
+      "The Cathy family office is a longer-horizon cultivation target given the unknown fund signal, but the WinShape and Chick-fil-A Foundation dual mandate around youth creates unusually strong mission alignment. Net worth of ~$10.6B means check capacity is not a constraint once the relationship is established.",
+    relevantPortfolio: [],
+  },
+
+  // ─── Tier 3 ───────────────────────────────────────────────────────────────
+
+  {
+    id: "1flourish",
+    name: "Tom Tognoli",
+    fundOrCompany: "1Flourish Capital",
+    role: "Founder & Managing Partner",
+    category: "faith-family" as const,
+    type: "vc" as const,
+    checkSizeRange: "$250K–$1M",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      website: "https://www.1flourish.com",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "'High character founders on missions that advance human flourishing' with Biblical values culture — Phosra's child protection mission and regulatory compliance focus align with both the character criterion and the flourishing mandate.",
+    coppaInterest: "none" as const,
+    fundSignal: "active" as const,
+    introPaths: [
+      {
+        type: "industry-association" as const,
+        description:
+          "Connect Silicon Valley network — Tom Tognoli is engaged in the Silicon Valley faith-tech and entrepreneur community through Connect Silicon Valley.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "cold-application" as const,
+        description:
+          "1Flourish Capital accepts inbound applications via 1flourish.com; lead with the 'human flourishing' thesis alignment and the character-mission framing.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "2nd-degree-strong" as const,
+        description:
+          "WeatherPromise or Lemurian Labs founders — direct portfolio founder outreach can surface a warm GP introduction.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 3 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "Cold application with human flourishing thesis framing",
+      steps: [
+        "Apply via 1flourish.com with a founder letter that explicitly addresses the 'high character founders on missions that advance human flourishing' thesis.",
+        "Reference 1Flourish's Biblical values culture in the application — demonstrate that Phosra's team shares those foundational principles.",
+        "If any Connect Silicon Valley network members have a relationship with Tom Tognoli, request a warm intro before or alongside the application.",
+        "Frame the pitch around how enforceable child safety compliance is a prerequisite for genuine human flourishing in the digital age.",
+      ],
+      openingAngle:
+        "Human flourishing in the digital age requires that the spaces children inhabit online are safe by law, not just by policy — Phosra makes that enforceable for every platform.",
+    },
+    status: "identified" as const,
+    notes:
+      "1Flourish is a Tier 3 target primarily because the fund signal and check size are modest, but the thesis language ('human flourishing,' 'Biblical values,' 'high character founders') is an unusually precise match for Phosra's positioning and Tom Tognoli's Mountain View presence keeps him accessible.",
+    relevantPortfolio: ["WeatherPromise", "Lemurian Labs"],
+  },
+
+  {
+    id: "ncf-impact",
+    name: "David Wills",
+    fundOrCompany: "National Christian Foundation Impact Investing",
+    role: "President Emeritus",
+    category: "faith-family" as const,
+    type: "impact-fund" as const,
+    checkSizeRange: "$500K–$5M (DAF capital)",
+    stagePreference: "Seed / Series A",
+    contact: {
+      website: "https://www.ncfgiving.com",
+    },
+    thesisAlignment: "good" as const,
+    thesisNote:
+      "Largest US Christian grantmaking organization ($18B+ granted) with an impact investing program deploying donor-advised fund capital into mission-aligned ventures — child protection technology is a natural fit for DAF investors seeking faith-mission alignment.",
+    coppaInterest: "none" as const,
+    fundSignal: "unknown" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "The Gathering — NCF's annual 500-attendee Christian philanthropist event; David Wills and NCF leadership are core organizers and accessible for warm conversations.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "NCF donor-advised fund holder network — any NCF DAF holder who is a Phosra investor or advisor can request an internal introduction to the impact investing team.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "cold-application" as const,
+        description:
+          "NCF impact investing program reviews mission-aligned venture applications via ncfgiving.com; submit with a clear child protection mission statement.",
+        strength: 2 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 3 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "The Gathering conference attendance + NCF DAF network referral",
+      steps: [
+        "Identify any NCF DAF holders in Phosra's existing investor, advisor, or customer network and ask for an internal NCF impact investing referral.",
+        "Apply for attendance at The Gathering annual event — 500 Christian philanthropists in one room creates high-density warm intro opportunities.",
+        "Request a meeting with NCF's impact investing team (not David Wills directly) framing Phosra as a mission-aligned venture for DAF capital deployment.",
+        "Prepare an impact measurement framework showing child safety outcomes Phosra generates — NCF's impact investing program requires measurable mission returns alongside financial returns.",
+      ],
+      openingAngle:
+        "NCF's $18B in Christian grantmaking proves the conviction — Phosra offers DAF holders a way to deploy capital that generates both financial returns and measurable child protection outcomes.",
+    },
+    status: "identified" as const,
+    notes:
+      "NCF Impact is a Tier 3 target due to unknown fund signal, but the $18B grantmaking track record means the donor base has significant capital and the impact investing program is a natural evolution of existing giving mandates. The DAF capital structure means donors can invest Phosra through their existing charitable giving vehicles.",
+    relevantPortfolio: [],
+  },
+
+  {
+    id: "sent-ventures",
+    name: "Nick Madden",
+    fundOrCompany: "SENT Ventures",
+    role: "Executive Director",
+    category: "faith-family" as const,
+    type: "syndicate" as const,
+    checkSizeRange: "$10K pitch prize + investor intros",
+    stagePreference: "Pre-Seed / Seed",
+    contact: {
+      website: "https://www.sentventures.com",
+    },
+    thesisAlignment: "adjacent" as const,
+    thesisNote:
+      "Catholic entrepreneurship network with annual SENT Summit at Notre Dame featuring investor panels from Sovereign's Capital and IrishAngels — SENT is less a capital source than a warm-intro gateway to the entire Catholic faith-investor ecosystem.",
+    coppaInterest: "none" as const,
+    fundSignal: "unknown" as const,
+    introPaths: [
+      {
+        type: "conference-event" as const,
+        description:
+          "SENT Summit pitch competition at Notre Dame — $10K prize and direct investor panel introductions to Sovereign's Capital and IrishAngels; competing is the fastest warm-intro path to multiple Tier 1 and Tier 2 targets simultaneously.",
+        strength: 5 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "cold-application" as const,
+        description:
+          "Apply to the SENT Summit pitch competition via sentventures.com — the application process itself surfaces Phosra to Nick Madden and the organizing committee who have investor relationships.",
+        strength: 4 as 1 | 2 | 3 | 4 | 5,
+      },
+      {
+        type: "industry-association" as const,
+        description:
+          "Catholic entrepreneurship community overlap with IrishAngels and Notre Dame alumni network — any ND-connected founder can intro Phosra to the SENT network.",
+        strength: 3 as 1 | 2 | 3 | 4 | 5,
+      },
+    ],
+    tier: 3 as 1 | 2 | 3,
+    approachStrategy: {
+      recommended: "SENT Summit pitch competition application",
+      steps: [
+        "Apply to the next SENT Summit pitch competition at Notre Dame — this is a strategic ecosystem play, not primarily a capital play.",
+        "Frame the application around Catholic social teaching on protecting the vulnerable and the dignity of children in digital spaces.",
+        "Prepare a pitch that speaks to the investor panel (Sovereign's Capital, IrishAngels) as the primary audience — win or lose the competition, the panel exposure is the prize.",
+        "Follow up directly with Nick Madden after the event to request warm introductions to the investor panelists who expressed interest.",
+      ],
+      openingAngle:
+        "Catholic social teaching demands we protect the most vulnerable — Phosra translates that moral imperative into enforceable compliance infrastructure for every digital platform that touches a child.",
+    },
+    status: "identified" as const,
+    notes:
+      "SENT Ventures is categorized as 'adjacent' thesis alignment because it is primarily an accelerator and community platform rather than a capital source, but it is the single highest-leverage ecosystem event for simultaneously reaching Sovereign's Capital, IrishAngels, PivotNorth, and the broader Catholic faith-investor community in one venue.",
+    relevantPortfolio: [],
+  },
+]
+
 // ─── Master List ──────────────────────────────────────────────────────────────
 
 export const WARM_INTRO_TARGETS: WarmIntroTarget[] = [
@@ -6176,6 +7018,7 @@ export const WARM_INTRO_TARGETS: WarmIntroTarget[] = [
   ...POLICY_ANGELS,
   ...PARENT_ANGELS,
   ...FINTECH_ANGELS,
+  ...FAITH_FAMILY,
 ]
 
 // ─── Super Connectors ─────────────────────────────────────────────────────────
@@ -6236,6 +7079,14 @@ export const SUPER_CONNECTORS: SuperConnector[] = [
     description: "Premier EdTech investor conference. 600+ investors attend. 15,000+ leaders.",
     reachableTargets: ["reach-capital", "magnify", "emerge", "brighteye", "rethink-ed"],
     estimatedIntros: 10,
+  },
+  {
+    id: "faith-driven-investor",
+    name: "Faith Driven Investor Network",
+    type: "Faith & Values Network",
+    description: "Umbrella community connecting Sovereign's Capital, 11 Tribes, M25, Praxis, Telos, PivotNorth, IrishAngels, and SENT Ventures. Annual Gathering + conferences. Single entry point to the entire faith-aligned investor ecosystem.",
+    reachableTargets: ["sovereigns-capital", "11-tribes", "m25", "praxis-ventures", "telos-ventures", "pivotnorth", "irish-angels", "sent-ventures", "1flourish", "cathy-family"],
+    estimatedIntros: 20,
   },
 ]
 

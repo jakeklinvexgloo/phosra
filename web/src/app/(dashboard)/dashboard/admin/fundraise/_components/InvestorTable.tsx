@@ -41,6 +41,7 @@ const CATEGORY_LABELS: Partial<Record<InvestorCategory, string>> = {
   "policy-angel": "Policy Angel",
   "parent-angel": "Parent Angel",
   "fintech-angel": "Fintech Angel",
+  "faith-family": "Faith & Family",
 }
 
 const TYPE_LABELS: Partial<Record<InvestorType, string>> = {
