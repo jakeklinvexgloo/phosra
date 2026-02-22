@@ -7,7 +7,7 @@ import {
   BarChart3, Linkedin, PenTool, Brain, Globe,
   Handshake, Presentation, Phone, ChevronDown, ChevronRight,
   CheckCircle2, Circle, Clock, ArrowRight, Sparkles,
-  Bot, User, AlertTriangle,
+  Bot, User, AlertTriangle, Eye,
 } from "lucide-react"
 
 /* ═══════════════════════════════════════════════════════════════
@@ -491,16 +491,27 @@ export default function FundraiseCommandCenter() {
   return (
     <div className="space-y-8">
       {/* ── Header ──────────────────────────────────────────── */}
-      <div>
-        <div className="flex items-center gap-3 mb-1">
-          <h1 className="text-2xl font-semibold text-foreground">Fundraise Command Center</h1>
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-brand-green/10 text-brand-green uppercase tracking-wider">
-            Pre-Seed
-          </span>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="text-2xl font-semibold text-foreground">Fundraise Command Center</h1>
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-brand-green/10 text-brand-green uppercase tracking-wider">
+              Pre-Seed
+            </span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            $1M raise by May 31, 2026 — milestones, agent workforce, and your high-value work
+          </p>
         </div>
-        <p className="text-sm text-muted-foreground">
-          $1M raise by May 31, 2026 — milestones, agent workforce, and your high-value work
-        </p>
+        <a
+          href="/investors/portal?admin_preview=1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted/60 transition-colors whitespace-nowrap flex-shrink-0"
+        >
+          <Eye className="w-4 h-4" />
+          Preview Investor Portal
+        </a>
       </div>
 
       {/* ── Top Stats ───────────────────────────────────────── */}

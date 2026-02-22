@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { Suspense, useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import {
   Download,
@@ -21,6 +21,7 @@ import { useAuth } from "@workos-inc/authkit-nextjs/components"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 import { RAISE_DETAILS, DATA_ROOM_LINKS, isInvestorAllowed } from "@/lib/investors/config"
 import type { DataRoomLink } from "@/lib/investors/config"
+import { useApi } from "@/lib/useApi"
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -71,9 +72,11 @@ function AccessPendingView() {
 /*  Portal Page                                                        */
 /* ------------------------------------------------------------------ */
 
-export default function InvestorPortalPage() {
+function InvestorPortalContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user, loading } = useAuth()
+  const { fetch: authedFetch } = useApi()
   const [allowed, setAllowed] = useState<boolean | null>(null)
 
   useEffect(() => {
@@ -82,14 +85,31 @@ export default function InvestorPortalPage() {
       router.push("/login")
       return
     }
-    // Check allowlist client-side via a lightweight check
-    // The env var is only available server-side, so we call an endpoint
-    // For simplicity, we check against a server endpoint
+
+    const isAdminPreview = searchParams.get("admin_preview") === "1"
+
+    // Check allowlist first
     fetch("/api/investors/check-access", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: user.email }) })
       .then((r) => r.json())
-      .then((data) => setAllowed(data.allowed ?? false))
+      .then(async (data) => {
+        if (data.allowed) {
+          setAllowed(true)
+          return
+        }
+        // If not on allowlist but admin_preview param is set, check admin status
+        if (isAdminPreview) {
+          try {
+            const me = await authedFetch("/auth/me") as { is_admin?: boolean }
+            setAllowed(me?.is_admin === true)
+          } catch {
+            setAllowed(false)
+          }
+        } else {
+          setAllowed(false)
+        }
+      })
       .catch(() => setAllowed(false))
-  }, [loading, user, router])
+  }, [loading, user, router, searchParams, authedFetch])
 
   if (loading || allowed === null) {
     return (
@@ -316,5 +336,19 @@ export default function InvestorPortalPage() {
         </StaggerChildren>
       </section>
     </div>
+  )
+}
+
+export default function InvestorPortalPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-brand-green animate-spin" />
+        </div>
+      }
+    >
+      <InvestorPortalContent />
+    </Suspense>
   )
 }
