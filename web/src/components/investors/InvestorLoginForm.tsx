@@ -1,24 +1,57 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { ArrowLeft, Loader2, Shield } from "lucide-react"
+import { useState, useCallback, useEffect } from "react"
+import { ArrowLeft, Loader2, Shield, UserPlus } from "lucide-react"
 import PhoneInput from "./PhoneInput"
 import OtpInput from "./OtpInput"
 
-type LoginState = "phone_input" | "otp_sent" | "verifying"
+type LoginState = "phone_input" | "otp_sent" | "verifying" | "invite_claim" | "claiming"
 
 interface InvestorLoginFormProps {
   onAuthenticated: () => void
+  inviteCode?: string | null
 }
 
 export default function InvestorLoginForm({
   onAuthenticated,
+  inviteCode,
 }: InvestorLoginFormProps) {
   const [loginState, setLoginState] = useState<LoginState>("phone_input")
   const [phone, setPhone] = useState("")
   const [otpValue, setOtpValue] = useState("")
   const [error, setError] = useState("")
   const [sending, setSending] = useState(false)
+
+  // Invite state
+  const [referrerName, setReferrerName] = useState("")
+  const [referrerCompany, setReferrerCompany] = useState("")
+  const [claimName, setClaimName] = useState("")
+  const [claimCompany, setClaimCompany] = useState("")
+  const [claimEmail, setClaimEmail] = useState("")
+
+  // Validate invite code on mount
+  useEffect(() => {
+    if (!inviteCode) return
+    let cancelled = false
+
+    async function validateInvite() {
+      try {
+        const res = await fetch(`/api/investors/portal/invite/${inviteCode}`)
+        const data = await res.json()
+        if (cancelled) return
+        if (data.valid) {
+          setReferrerName(data.referrerName || "An investor")
+          setReferrerCompany(data.referrerCompany || "")
+          setLoginState("invite_claim")
+        }
+      } catch {
+        // Invite invalid, fall through to normal login
+      }
+    }
+
+    validateInvite()
+    return () => { cancelled = true }
+  }, [inviteCode])
 
   const handleRequestOtp = useCallback(async () => {
     if (phone.length !== 10) {
@@ -72,6 +105,37 @@ export default function InvestorLoginForm({
     [phone, onAuthenticated],
   )
 
+  const handleClaimInvite = useCallback(async () => {
+    if (!claimName.trim()) {
+      setError("Please enter your name")
+      return
+    }
+    setLoginState("claiming")
+    setError("")
+    try {
+      const res = await fetch(`/api/investors/portal/invite/${inviteCode}/claim`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          name: claimName.trim(),
+          company: claimCompany.trim(),
+          email: claimEmail.trim(),
+        }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        onAuthenticated()
+      } else {
+        setError(data.error || "Failed to claim invite")
+        setLoginState("invite_claim")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+      setLoginState("invite_claim")
+    }
+  }, [inviteCode, claimName, claimCompany, claimEmail, onAuthenticated])
+
   const handleBack = useCallback(() => {
     setLoginState("phone_input")
     setOtpValue("")
@@ -84,17 +148,88 @@ export default function InvestorLoginForm({
         {/* Logo / Header */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-5">
-            <Shield className="w-6 h-6 text-brand-green" />
+            {loginState === "invite_claim" || loginState === "claiming" ? (
+              <UserPlus className="w-6 h-6 text-brand-green" />
+            ) : (
+              <Shield className="w-6 h-6 text-brand-green" />
+            )}
           </div>
           <h1 className="text-xl font-display text-white mb-1">
             Investor Portal
           </h1>
           <p className="text-sm text-white/40">
-            {loginState === "phone_input"
-              ? "Enter your phone number to sign in"
-              : "Enter the 6-digit code we sent you"}
+            {loginState === "invite_claim" || loginState === "claiming"
+              ? `You've been invited by ${referrerName}${referrerCompany ? ` from ${referrerCompany}` : ""}`
+              : loginState === "phone_input"
+                ? "Enter your phone number to sign in"
+                : "Enter the 6-digit code we sent you"}
           </p>
         </div>
+
+        {/* Invite Claim State */}
+        {(loginState === "invite_claim" || loginState === "claiming") && (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs text-white/40 mb-1.5">Your Name *</label>
+              <input
+                type="text"
+                value={claimName}
+                onChange={(e) => { setClaimName(e.target.value); setError("") }}
+                placeholder="Jane Smith"
+                disabled={loginState === "claiming"}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors disabled:opacity-50"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-white/40 mb-1.5">Company</label>
+              <input
+                type="text"
+                value={claimCompany}
+                onChange={(e) => setClaimCompany(e.target.value)}
+                placeholder="Acme Ventures"
+                disabled={loginState === "claiming"}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors disabled:opacity-50"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-white/40 mb-1.5">Email (optional)</label>
+              <input
+                type="email"
+                value={claimEmail}
+                onChange={(e) => setClaimEmail(e.target.value)}
+                placeholder="jane@acme.vc"
+                disabled={loginState === "claiming"}
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-brand-green/50 transition-colors disabled:opacity-50"
+              />
+            </div>
+
+            {error && (
+              <p className="text-xs text-red-400 text-center">{error}</p>
+            )}
+
+            <button
+              onClick={handleClaimInvite}
+              disabled={loginState === "claiming" || !claimName.trim()}
+              className="w-full py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-xl hover:bg-brand-green/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm flex items-center justify-center gap-2"
+            >
+              {loginState === "claiming" ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Accessing...
+                </>
+              ) : (
+                "Access Data Room"
+              )}
+            </button>
+
+            <button
+              onClick={() => { setLoginState("phone_input"); setError("") }}
+              className="w-full text-xs text-white/30 hover:text-white/50 transition-colors text-center"
+            >
+              Already have an account? Sign in with phone
+            </button>
+          </div>
+        )}
 
         {/* Phone Input State */}
         {loginState === "phone_input" && (

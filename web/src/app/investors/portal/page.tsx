@@ -1,6 +1,7 @@
 "use client"
 
-import { Suspense } from "react"
+import { Suspense, useState, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import {
   Download,
@@ -14,6 +15,13 @@ import {
   Scale,
   PieChart,
   LogOut,
+  UserPlus,
+  Copy,
+  Share2,
+  Mail,
+  MessageSquare,
+  Check,
+  X,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 import { RAISE_DETAILS, DATA_ROOM_LINKS } from "@/lib/investors/config"
@@ -41,11 +49,172 @@ const CATEGORY_LABELS: Record<DataRoomLink["category"], string> = {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Invite Modal                                                       */
+/* ------------------------------------------------------------------ */
+
+function InviteModal({ onClose }: { onClose: () => void }) {
+  const [loading, setLoading] = useState(false)
+  const [inviteUrl, setInviteUrl] = useState("")
+  const [error, setError] = useState("")
+  const [copied, setCopied] = useState(false)
+
+  const generateInvite = useCallback(async () => {
+    setLoading(true)
+    setError("")
+    try {
+      const res = await fetch("/api/investors/portal/invite", {
+        method: "POST",
+        credentials: "include",
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setInviteUrl(data.url)
+      } else {
+        setError(data.error || "Failed to generate invite")
+      }
+    } catch {
+      setError("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const handleCopy = useCallback(async () => {
+    await navigator.clipboard.writeText(inviteUrl)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }, [inviteUrl])
+
+  const handleNativeShare = useCallback(async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Phosra Investor Portal",
+          text: "You've been invited to view the Phosra investor data room.",
+          url: inviteUrl,
+        })
+      } catch {
+        // User cancelled or share failed — fall through to copy
+      }
+    } else {
+      handleCopy()
+    }
+  }, [inviteUrl, handleCopy])
+
+  const shareMessage = `You've been invited to view the Phosra investor data room: ${inviteUrl}`
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-md bg-[#0D1B2A] border border-white/10 rounded-2xl p-6 shadow-2xl">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/30 hover:text-white/60 transition-colors"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-10 h-10 rounded-full bg-brand-green/10 flex items-center justify-center">
+            <UserPlus className="w-4 h-4 text-brand-green" />
+          </div>
+          <div>
+            <h3 className="text-white font-semibold text-sm">Invite an Investor</h3>
+            <p className="text-xs text-white/40">Generate a one-time access link</p>
+          </div>
+        </div>
+
+        {!inviteUrl && !error && (
+          <button
+            onClick={generateInvite}
+            disabled={loading}
+            className="w-full py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-xl hover:bg-brand-green/90 transition-colors disabled:opacity-50 text-sm flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Share2 className="w-4 h-4" />
+                Generate Invite Link
+              </>
+            )}
+          </button>
+        )}
+
+        {error && (
+          <div className="text-center">
+            <p className="text-xs text-red-400 mb-3">{error}</p>
+            <button
+              onClick={generateInvite}
+              className="text-xs text-brand-green hover:text-brand-green/80 transition-colors"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
+        {inviteUrl && (
+          <div className="space-y-3">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-3">
+              <p className="text-xs text-white/60 break-all font-mono">{inviteUrl}</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={handleCopy}
+                className="flex items-center justify-center gap-2 py-2.5 bg-white/5 border border-white/10 text-white text-xs font-medium rounded-lg hover:bg-white/10 transition-colors"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-brand-green" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? "Copied!" : "Copy Link"}
+              </button>
+              <button
+                onClick={handleNativeShare}
+                className="flex items-center justify-center gap-2 py-2.5 bg-white/5 border border-white/10 text-white text-xs font-medium rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                Share
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <a
+                href={`sms:&body=${encodeURIComponent(shareMessage)}`}
+                className="flex items-center justify-center gap-2 py-2.5 bg-white/5 border border-white/10 text-white text-xs font-medium rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                Messages
+              </a>
+              <a
+                href={`mailto:?subject=${encodeURIComponent("Phosra Investor Portal Access")}&body=${encodeURIComponent(shareMessage)}`}
+                className="flex items-center justify-center gap-2 py-2.5 bg-white/5 border border-white/10 text-white text-xs font-medium rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <Mail className="w-3.5 h-3.5" />
+                Email
+              </a>
+            </div>
+
+            <p className="text-[10px] text-white/20 text-center">
+              This link is single-use and expires in 7 days.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /*  Portal Page                                                        */
 /* ------------------------------------------------------------------ */
 
 function InvestorPortalContent() {
   const { state, investor, signOut, refreshSession } = useInvestorSession()
+  const searchParams = useSearchParams()
+  const inviteCode = searchParams.get("invite")
+  const [showInviteModal, setShowInviteModal] = useState(false)
 
   if (state === "checking") {
     return (
@@ -56,13 +225,15 @@ function InvestorPortalContent() {
   }
 
   if (state === "unauthenticated" || !investor) {
-    return <InvestorLoginForm onAuthenticated={refreshSession} />
+    return <InvestorLoginForm onAuthenticated={refreshSession} inviteCode={inviteCode} />
   }
 
   const displayName = investor.name || investor.phone
 
   return (
     <div className="bg-[#060D16] min-h-screen">
+      {showInviteModal && <InviteModal onClose={() => setShowInviteModal(false)} />}
+
       {/* ============================================================ */}
       {/*  Hero                                                        */}
       {/* ============================================================ */}
@@ -89,13 +260,22 @@ function InvestorPortalContent() {
                   Welcome, {displayName}. Confidential materials for approved investors.
                 </p>
               </div>
-              <button
-                onClick={signOut}
-                className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/50 hover:text-white hover:border-white/20 rounded-lg transition-colors text-sm flex-shrink-0"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                Sign Out
-              </button>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <button
+                  onClick={() => setShowInviteModal(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-brand-green/10 border border-brand-green/20 text-brand-green hover:bg-brand-green/20 hover:border-brand-green/30 rounded-lg transition-colors text-sm"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  Invite
+                </button>
+                <button
+                  onClick={signOut}
+                  className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/50 hover:text-white hover:border-white/20 rounded-lg transition-colors text-sm"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Sign Out
+                </button>
+              </div>
             </div>
           </AnimatedSection>
         </div>
