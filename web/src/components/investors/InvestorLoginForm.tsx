@@ -153,7 +153,7 @@ export default function InvestorLoginForm({
       setError("")
       try {
         await stytch.otps.authenticate(code, methodId, {
-          session_duration_minutes: 60 * 24 * 7, // 7 days
+          session_duration_minutes: 60, // 1 hour (Stytch live default max)
         })
         // Session cookie set automatically by Stytch SDK
         // Claim invite if applicable
