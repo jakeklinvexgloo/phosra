@@ -532,10 +532,10 @@ function InvestorPortalContent() {
           <PhosraBurst size={520} color="#00D47E" opacity={0.04} />
         </div>
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-20 sm:py-28">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-8 py-14 sm:py-20 md:py-28">
           <AnimatedSection>
-            <div className="flex items-start justify-between">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8 sm:gap-12">
+              <div className="flex-1">
                 <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
                   Investor Portal
                 </p>
@@ -546,20 +546,39 @@ function InvestorPortalContent() {
                   Welcome, {displayName}. Confidential materials for approved investors.
                 </p>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <button
-                  onClick={() => setShowInviteModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-brand-green/10 border border-brand-green/20 text-brand-green hover:bg-brand-green/20 hover:border-brand-green/30 rounded-lg transition-colors text-sm"
-                >
-                  <UserPlus className="w-3.5 h-3.5" />
-                  Invite
-                </button>
+
+              <div className="flex flex-col items-stretch sm:items-end gap-3 sm:w-72 flex-shrink-0">
+                <div className="cta-gradient-border rounded-2xl">
+                  <div className="relative bg-white/[0.06] backdrop-blur-xl rounded-2xl border border-white/10 p-5 sm:p-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-9 h-9 rounded-full bg-brand-green/10 flex items-center justify-center flex-shrink-0">
+                        <UserPlus className="w-4 h-4 text-brand-green" />
+                      </div>
+                      <p className="text-sm font-semibold text-white">Share the data room</p>
+                    </div>
+                    <p className="text-xs text-white/40 mb-4 leading-relaxed">
+                      Know someone who&apos;d be a great investor? Send them a private invite link.
+                    </p>
+                    <button
+                      onClick={() => setShowInviteModal(true)}
+                      className="w-full py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-xl hover:bg-brand-green/90 hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)] transition-all text-sm flex items-center justify-center gap-2"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Invite an Investor
+                    </button>
+                    <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+                      <p className="text-[10px] text-white/30">Single-use links &middot; Tracked views</p>
+                    </div>
+                  </div>
+                </div>
+
                 <button
                   onClick={signOut}
-                  className="flex items-center gap-2 px-4 py-2 border border-white/10 text-white/50 hover:text-white hover:border-white/20 rounded-lg transition-colors text-sm"
+                  className="text-xs text-white/20 hover:text-white/40 transition-colors flex items-center gap-1.5 self-end"
                 >
-                  <LogOut className="w-3.5 h-3.5" />
-                  Sign Out
+                  <LogOut className="w-3 h-3" />
+                  Sign out
                 </button>
               </div>
             </div>
