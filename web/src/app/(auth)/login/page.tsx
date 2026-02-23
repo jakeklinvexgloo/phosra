@@ -54,9 +54,11 @@ export default function LoginPage() {
   }
 
   const handleGoogleOAuth = () => {
-    const publicToken = process.env.NEXT_PUBLIC_STYTCH_PUBLIC_TOKEN
     const redirectUrl = `${window.location.origin}/auth/callback`
-    window.location.href = `https://test.stytch.com/v1/public/oauth/google/start?public_token=${publicToken}&login_redirect_url=${encodeURIComponent(redirectUrl)}&signup_redirect_url=${encodeURIComponent(redirectUrl)}`
+    stytch.oauth.google.start({
+      login_redirect_url: redirectUrl,
+      signup_redirect_url: redirectUrl,
+    })
   }
 
   const handleDevLogin = () => {
