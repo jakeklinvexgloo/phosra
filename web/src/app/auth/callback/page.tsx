@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useRef } from "react"
+import { Suspense, useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useStytch, useStytchSession } from "@stytch/nextjs"
 import { Loader2 } from "lucide-react"
@@ -11,6 +11,7 @@ function CallbackHandler() {
   const stytch = useStytch()
   const { session } = useStytchSession()
   const authenticating = useRef(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (session) {
@@ -44,15 +45,31 @@ function CallbackHandler() {
             session_duration_minutes: 60 * 24 * 7,
           })
         }
+        // SDK sets cookies automatically — redirect to dashboard
         router.replace("/dashboard")
-      } catch (err) {
+      } catch (err: any) {
         console.error("Auth callback error:", err)
-        router.replace("/login?error=auth_failed")
+        const msg = err?.message || err?.error_message || JSON.stringify(err)
+        setError(msg)
+        // Auto-redirect after showing error briefly
+        setTimeout(() => router.replace(`/login?error=auth_failed`), 3000)
       }
     }
 
     authenticate()
   }, [stytch, session, searchParams, router])
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0D1B2A]">
+        <div className="flex flex-col items-center gap-4 max-w-md px-6">
+          <p className="text-red-400 text-sm font-medium">Authentication Error</p>
+          <p className="text-white/60 text-xs text-center break-all">{error}</p>
+          <p className="text-white/40 text-xs">Redirecting to login...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0D1B2A]">
