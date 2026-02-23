@@ -131,10 +131,13 @@ export default function InvestorLoginForm({
       })
       setMethodId(resp.method_id)
       setLoginState("otp_sent")
-    } catch {
+    } catch (err) {
       // If Stytch fails, still show OTP screen for anti-enumeration
       // (unapproved phones won't have a real method_id)
-      setError("Something went wrong. Please try again.")
+      const msg = err instanceof Error ? err.message : String(err)
+      addDebug(`OTP send error: ${msg}`)
+      addDebug(`Full error: ${JSON.stringify(err, Object.getOwnPropertyNames(err instanceof Error ? err : {}), 2)}`)
+      setError(`DEBUG: ${msg}`)
     } finally {
       setSending(false)
     }
@@ -163,8 +166,10 @@ export default function InvestorLoginForm({
           }).catch(() => {})
         }
         onAuthenticated()
-      } catch {
-        setError("Invalid code. Please try again.")
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err)
+        addDebug(`OTP verify error: ${msg}`)
+        setError(`DEBUG: ${msg}`)
         setLoginState("otp_sent")
       }
     },
