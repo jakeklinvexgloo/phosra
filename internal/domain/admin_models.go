@@ -162,12 +162,15 @@ type OutreachConfig struct {
 	SenderName        string `json:"sender_name"`
 	SenderTitle       string `json:"sender_title"`
 	SenderEmail       string `json:"sender_email"`
+	SenderPhone       string `json:"sender_phone"`
+	SenderLinkedIn    string `json:"sender_linkedin"`
 	CompanyBrief      string `json:"company_brief"`
 	EmailSignature    string `json:"email_signature"`
 	SendHourUTC       int    `json:"send_hour_utc"`
 	MaxEmailsPerDay   int    `json:"max_emails_per_day"`
 	FollowUpDelayDays int    `json:"follow_up_delay_days"`
 	GoogleAccountKey  string `json:"google_account_key"`
+	ActivePersona     string `json:"active_persona"`
 	CreatedAt         time.Time `json:"created_at"`
 	UpdatedAt         time.Time `json:"updated_at"`
 }

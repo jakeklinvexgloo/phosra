@@ -47,6 +47,9 @@ func (h *AdminHandler) UpdateAutopilotConfig(w http.ResponseWriter, r *http.Requ
 	// Update fields
 	cfg.SenderName = req.SenderName
 	cfg.SenderTitle = req.SenderTitle
+	cfg.SenderPhone = req.SenderPhone
+	cfg.SenderLinkedIn = req.SenderLinkedIn
+	cfg.ActivePersona = req.ActivePersona
 	cfg.CompanyBrief = req.CompanyBrief
 	cfg.EmailSignature = req.EmailSignature
 	if req.SendHourUTC >= 0 && req.SendHourUTC <= 23 {
@@ -267,13 +270,17 @@ func (h *AdminHandler) ApprovePendingEmail(w http.ResponseWriter, r *http.Reques
 
 	// Wrap body with branded HTML signature
 	cfg, _ := h.outreach.GetConfig(r.Context())
-	senderName, senderTitle, senderEmail := "", "", ""
+	sigParams := email.SignatureParams{}
 	if cfg != nil {
-		senderName = cfg.SenderName
-		senderTitle = cfg.SenderTitle
-		senderEmail = cfg.SenderEmail
+		sigParams = email.SignatureParams{
+			Name:     cfg.SenderName,
+			Title:    cfg.SenderTitle,
+			Email:    cfg.SenderEmail,
+			Phone:    cfg.SenderPhone,
+			LinkedIn: cfg.SenderLinkedIn,
+		}
 	}
-	htmlBody := email.WrapWithSignature(pe.Body, senderName, senderTitle, senderEmail)
+	htmlBody := email.WrapWithSignature(pe.Body, sigParams)
 
 	sent, err := h.googleOutreach.SendMessage(r.Context(), pe.ToEmail, pe.Subject, htmlBody, "")
 	if err != nil {
@@ -392,13 +399,17 @@ func (h *AdminHandler) SendQueuedEmail(w http.ResponseWriter, r *http.Request) {
 
 	// Wrap body with branded HTML signature
 	cfg, _ := h.outreach.GetConfig(r.Context())
-	senderName, senderTitle, senderEmail := "", "", ""
+	sigParams := email.SignatureParams{}
 	if cfg != nil {
-		senderName = cfg.SenderName
-		senderTitle = cfg.SenderTitle
-		senderEmail = cfg.SenderEmail
+		sigParams = email.SignatureParams{
+			Name:     cfg.SenderName,
+			Title:    cfg.SenderTitle,
+			Email:    cfg.SenderEmail,
+			Phone:    cfg.SenderPhone,
+			LinkedIn: cfg.SenderLinkedIn,
+		}
 	}
-	htmlBody := email.WrapWithSignature(pe.Body, senderName, senderTitle, senderEmail)
+	htmlBody := email.WrapWithSignature(pe.Body, sigParams)
 
 	sent, err := h.googleOutreach.SendMessage(r.Context(), pe.ToEmail, pe.Subject, htmlBody, "")
 	if err != nil {

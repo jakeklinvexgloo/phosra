@@ -241,14 +241,16 @@ func (r *AdminOutreachRepo) CountSentToday(ctx context.Context) (int, error) {
 func (r *AdminOutreachRepo) GetConfig(ctx context.Context) (*domain.OutreachConfig, error) {
 	var c domain.OutreachConfig
 	err := r.Pool.QueryRow(ctx,
-		`SELECT autopilot_enabled, sender_name, sender_title, sender_email, company_brief,
-		        email_signature, send_hour_utc, max_emails_per_day, follow_up_delay_days,
-		        google_account_key, created_at, updated_at
+		`SELECT autopilot_enabled, sender_name, sender_title, sender_email,
+		        sender_phone, sender_linkedin,
+		        company_brief, email_signature, send_hour_utc, max_emails_per_day,
+		        follow_up_delay_days, google_account_key, active_persona, created_at, updated_at
 		 FROM admin_outreach_config WHERE id = 1`,
 	).Scan(
-		&c.AutopilotEnabled, &c.SenderName, &c.SenderTitle, &c.SenderEmail, &c.CompanyBrief,
-		&c.EmailSignature, &c.SendHourUTC, &c.MaxEmailsPerDay, &c.FollowUpDelayDays,
-		&c.GoogleAccountKey, &c.CreatedAt, &c.UpdatedAt,
+		&c.AutopilotEnabled, &c.SenderName, &c.SenderTitle, &c.SenderEmail,
+		&c.SenderPhone, &c.SenderLinkedIn,
+		&c.CompanyBrief, &c.EmailSignature, &c.SendHourUTC, &c.MaxEmailsPerDay,
+		&c.FollowUpDelayDays, &c.GoogleAccountKey, &c.ActivePersona, &c.CreatedAt, &c.UpdatedAt,
 	)
 	if err == pgx.ErrNoRows {
 		return nil, nil
@@ -265,12 +267,14 @@ func (r *AdminOutreachRepo) UpdateConfig(ctx context.Context, c *domain.Outreach
 	_, err := r.Pool.Exec(ctx,
 		`UPDATE admin_outreach_config
 		 SET autopilot_enabled = $1, sender_name = $2, sender_title = $3, sender_email = $4,
-		     company_brief = $5, email_signature = $6, send_hour_utc = $7, max_emails_per_day = $8,
-		     follow_up_delay_days = $9, google_account_key = $10, updated_at = $11
+		     sender_phone = $5, sender_linkedin = $6,
+		     company_brief = $7, email_signature = $8, send_hour_utc = $9, max_emails_per_day = $10,
+		     follow_up_delay_days = $11, google_account_key = $12, active_persona = $13, updated_at = $14
 		 WHERE id = 1`,
-		c.AutopilotEnabled, c.SenderName, c.SenderTitle, c.SenderEmail, c.CompanyBrief,
-		c.EmailSignature, c.SendHourUTC, c.MaxEmailsPerDay, c.FollowUpDelayDays,
-		c.GoogleAccountKey, c.UpdatedAt,
+		c.AutopilotEnabled, c.SenderName, c.SenderTitle, c.SenderEmail,
+		c.SenderPhone, c.SenderLinkedIn,
+		c.CompanyBrief, c.EmailSignature, c.SendHourUTC, c.MaxEmailsPerDay,
+		c.FollowUpDelayDays, c.GoogleAccountKey, c.ActivePersona, c.UpdatedAt,
 	)
 	return err
 }

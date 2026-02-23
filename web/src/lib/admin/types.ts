@@ -81,12 +81,15 @@ export interface OutreachConfig {
   sender_name: string
   sender_title: string
   sender_email: string
+  sender_phone: string
+  sender_linkedin: string
   company_brief: string
   email_signature: string
   send_hour_utc: number
   max_emails_per_day: number
   follow_up_delay_days: number
   google_account_key: string
+  active_persona: string
   created_at: string
   updated_at: string
 }

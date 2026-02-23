@@ -5,6 +5,29 @@ import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import type { OutreachConfig } from "@/lib/admin/types"
 
+const SENDER_PERSONAS: Record<string, {
+  sender_name: string
+  sender_title: string
+  sender_email: string
+  sender_phone: string
+  sender_linkedin: string
+}> = {
+  alex: {
+    sender_name: "Alex Chen",
+    sender_title: "Head of Partnerships",
+    sender_email: "alex@phosra.com",
+    sender_phone: "",
+    sender_linkedin: "",
+  },
+  jake: {
+    sender_name: "Jake Klinvex",
+    sender_title: "Co-Founder & CEO",
+    sender_email: "jake.k.klinvex@phosra.com",
+    sender_phone: "412-566-7932",
+    sender_linkedin: "linkedin.com/in/jakeklinvex",
+  },
+}
+
 interface SenderConfigProps {
   open: boolean
   onClose: () => void
@@ -27,6 +50,21 @@ export function SenderConfig({ open, onClose }: SenderConfigProps) {
     }
     load()
   }, [open, getToken])
+
+  const handlePersonaChange = useCallback((personaKey: string) => {
+    if (!config) return
+    const persona = SENDER_PERSONAS[personaKey]
+    if (!persona) return
+    setConfig({
+      ...config,
+      active_persona: personaKey,
+      sender_name: persona.sender_name,
+      sender_title: persona.sender_title,
+      sender_email: persona.sender_email,
+      sender_phone: persona.sender_phone,
+      sender_linkedin: persona.sender_linkedin,
+    })
+  }, [config])
 
   const handleSave = useCallback(async () => {
     if (!config) return
@@ -61,6 +99,20 @@ export function SenderConfig({ open, onClose }: SenderConfigProps) {
             {/* Sender Info */}
             <div className="space-y-3">
               <h3 className="text-sm font-medium">Sender Persona</h3>
+              <div>
+                <label className="text-xs text-muted-foreground">Persona Preset</label>
+                <select
+                  value={config.active_persona || "alex"}
+                  onChange={(e) => handlePersonaChange(e.target.value)}
+                  className="w-full text-sm border rounded px-2 py-1.5 mt-1 bg-background"
+                >
+                  {Object.entries(SENDER_PERSONAS).map(([key, p]) => (
+                    <option key={key} value={key}>
+                      {p.sender_name} — {p.sender_title}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-muted-foreground">Name</label>
@@ -80,8 +132,32 @@ export function SenderConfig({ open, onClose }: SenderConfigProps) {
                 </div>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground">Email (read-only)</label>
-                <input value={config.sender_email} disabled className="w-full text-sm border rounded px-2 py-1.5 mt-1 bg-muted" />
+                <label className="text-xs text-muted-foreground">Email</label>
+                <input
+                  value={config.sender_email}
+                  onChange={(e) => setConfig({ ...config, sender_email: e.target.value })}
+                  className="w-full text-sm border rounded px-2 py-1.5 mt-1"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs text-muted-foreground">Phone</label>
+                  <input
+                    value={config.sender_phone}
+                    onChange={(e) => setConfig({ ...config, sender_phone: e.target.value })}
+                    placeholder="412-555-1234"
+                    className="w-full text-sm border rounded px-2 py-1.5 mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-muted-foreground">LinkedIn URL</label>
+                  <input
+                    value={config.sender_linkedin}
+                    onChange={(e) => setConfig({ ...config, sender_linkedin: e.target.value })}
+                    placeholder="linkedin.com/in/username"
+                    className="w-full text-sm border rounded px-2 py-1.5 mt-1"
+                  />
+                </div>
               </div>
             </div>
 
