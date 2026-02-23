@@ -24,6 +24,7 @@ import WarmIntrosTab from "./_components/WarmIntrosTab"
 import InvestorResearchModal from "./_components/InvestorResearchModal"
 import MilestoneAgentModal from "./_components/MilestoneAgentModal"
 import SafeManagement from "./_components/SafeManagement"
+import ReferralNetwork from "./_components/ReferralNetwork"
 
 /* ═══════════════════════════════════════════════════════════════
    DATA: Fundraise plan — milestones, agents, founder tasks
@@ -1388,6 +1389,9 @@ export default function FundraiseCommandCenter() {
         <div className="space-y-8">
           {/* ── SAFE Management ──────────────────────────────── */}
           <SafeManagement />
+
+          {/* ── Referral Network ──────────────────────────────── */}
+          <ReferralNetwork />
 
           {/* ── Investor Phone Access ────────────────────────── */}
           <div className="space-y-4">

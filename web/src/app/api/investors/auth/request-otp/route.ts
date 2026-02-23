@@ -59,12 +59,13 @@ export async function POST(req: NextRequest) {
         if (!isExpired && !isUsed) {
           const referrerLabel = invite.referrer_name || "an investor"
 
-          // Auto-approve this phone number
+          // Auto-approve this phone number with referral tracking
           await query(
-            `INSERT INTO investor_approved_phones (phone_e164, name, company, notes, is_active)
-             VALUES ($1, $2, '', $3, TRUE)
-             ON CONFLICT (phone_e164) DO UPDATE SET notes = $3, is_active = TRUE`,
-            [normalized, invite.recipient_name || "", `Referred by ${referrerLabel}`],
+            `INSERT INTO investor_approved_phones (phone_e164, name, company, notes, is_active, referred_by)
+             VALUES ($1, $2, '', $3, TRUE, $4)
+             ON CONFLICT (phone_e164) DO UPDATE SET notes = $3, is_active = TRUE,
+               referred_by = CASE WHEN investor_approved_phones.referred_by = '' THEN $4 ELSE investor_approved_phones.referred_by END`,
+            [normalized, invite.recipient_name || "", `Referred by ${referrerLabel}`, invite.created_by],
           )
         }
       }

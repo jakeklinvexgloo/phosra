@@ -61,7 +61,7 @@ interface NetworkData {
   investors: Investor[]
   sessions: SessionInfo[]
   invites: InviteLink[]
-  inviteClaims: Array<{ invite_code: string; claimed_by_phone: string; name: string; claimed_at: string }>
+  inviteClaims: Array<{ invite_code: string; claimed_by_phone: string; name: string; created_at: string }>
   deckShares: DeckShare[]
   deckViews: Array<{ share_id: string; viewed_at: string }>
   safes: SafeRecord[]

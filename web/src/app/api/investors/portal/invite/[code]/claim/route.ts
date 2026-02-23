@@ -52,9 +52,9 @@ export async function POST(
 
     // Record claim
     await query(
-      `INSERT INTO investor_invite_claims (invite_code, name, company, email, ip_address, user_agent)
-       VALUES ($1, $2, '', '', $3, $4)`,
-      [code, phone || "", ip, ua],
+      `INSERT INTO investor_invite_claims (invite_code, name, company, email, ip_address, user_agent, claimed_by_phone)
+       VALUES ($1, $2, '', '', $3, $4, $5)`,
+      [code, phone || "", ip, ua, phone || ""],
     )
 
     return NextResponse.json({ ok: true })

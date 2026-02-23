@@ -33,6 +33,7 @@ import { useInvestorSession } from "@/lib/investors/investor-auth"
 import InvestorLoginForm from "@/components/investors/InvestorLoginForm"
 import AccountLinking from "@/components/investors/AccountLinking"
 import SafeSection from "@/components/investors/SafeSection"
+import ReferralHub from "@/components/investors/ReferralHub"
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -655,7 +656,12 @@ function InvestorPortalContent() {
       <DeckSection investorPhone={investor.phone} investorName={investor.name || ""} investorCompany={investor.company || ""} />
 
       {/* ============================================================ */}
-      {/*  Section 3: SAFE Document                                     */}
+      {/*  Section 3: Your Network (Referral Hub)                       */}
+      {/* ============================================================ */}
+      <ReferralHub />
+
+      {/* ============================================================ */}
+      {/*  Section 4: SAFE Document                                     */}
       {/* ============================================================ */}
       <SafeSection investorPhone={investor.phone} investorName={investor.name || ""} investorCompany={investor.company || ""} />
 
