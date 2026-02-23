@@ -32,6 +32,7 @@ import type { DataRoomLink } from "@/lib/investors/config"
 import { useInvestorSession } from "@/lib/investors/investor-auth"
 import InvestorLoginForm from "@/components/investors/InvestorLoginForm"
 import AccountLinking from "@/components/investors/AccountLinking"
+import NextStepsCard from "@/components/investors/NextStepsCard"
 import SafeSection from "@/components/investors/SafeSection"
 import ReferralHub from "@/components/investors/ReferralHub"
 
@@ -559,31 +560,8 @@ function InvestorPortalContent() {
                 </p>
               </div>
 
-              <div className="flex flex-col items-stretch sm:items-end gap-3 sm:w-72 flex-shrink-0">
-                <div className="cta-gradient-border rounded-2xl">
-                  <div className="relative bg-white/[0.06] backdrop-blur-xl rounded-2xl border border-white/10 p-5 sm:p-6">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-9 h-9 rounded-full bg-brand-green/10 flex items-center justify-center flex-shrink-0">
-                        <UserPlus className="w-4 h-4 text-brand-green" />
-                      </div>
-                      <p className="text-sm font-semibold text-white">Share the data room</p>
-                    </div>
-                    <p className="text-xs text-white/40 mb-4 leading-relaxed">
-                      Know someone who&apos;d be a great investor? Send them a private invite link.
-                    </p>
-                    <button
-                      onClick={() => setShowInviteModal(true)}
-                      className="w-full py-3 bg-brand-green text-[#0D1B2A] font-semibold rounded-xl hover:bg-brand-green/90 hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)] transition-all text-sm flex items-center justify-center gap-2"
-                    >
-                      <Share2 className="w-4 h-4" />
-                      Invite an Investor
-                    </button>
-                    <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
-                      <p className="text-[10px] text-white/30">Single-use links &middot; Tracked views</p>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex flex-col items-stretch sm:items-end gap-3 sm:w-80 flex-shrink-0">
+                <NextStepsCard onInviteClick={() => setShowInviteModal(true)} />
 
                 <button
                   onClick={signOut}
