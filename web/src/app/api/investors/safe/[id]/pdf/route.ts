@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { renderToStream } from "@react-pdf/renderer"
 import React from "react"
-import { verifySessionToken } from "@/lib/investors/session"
+import { requireInvestor } from "@/lib/stytch-auth"
 import { queryOne } from "@/lib/investors/db"
 import { SafePdf } from "@/lib/investors/safe-pdf"
 import type { SafePdfData } from "@/lib/investors/safe-pdf"
@@ -17,15 +17,11 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   try {
-    const token = req.cookies.get("investor_session")?.value
-    if (!token) {
+    const auth = await requireInvestor()
+    if (!auth.authenticated) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
     }
-
-    const payload = await verifySessionToken(token)
-    if (!payload) {
-      return NextResponse.json({ error: "Invalid session" }, { status: 401 })
-    }
+    const { payload } = auth
 
     const safe = await queryOne<{
       id: string

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { query } from "@/lib/investors/db"
-import { verifySessionToken, hashToken } from "@/lib/investors/session"
-import { queryOne } from "@/lib/investors/db"
 import { anonymizeName, checkAndAwardBadges, BADGE_DEFINITIONS } from "@/lib/investors/activity"
+import { requireInvestor } from "@/lib/stytch-auth"
 
 export const runtime = "nodejs"
 
@@ -12,27 +11,13 @@ export const runtime = "nodejs"
  */
 export async function GET(req: NextRequest) {
   try {
-    // Authenticate via investor_session cookie
-    const token = req.cookies.get("investor_session")?.value
-    if (!token) {
+    // Authenticate via Stytch session
+    const auth = await requireInvestor()
+    if (!auth.authenticated) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const payload = await verifySessionToken(token)
-    if (!payload) {
-      return NextResponse.json({ error: "Invalid session" }, { status: 401 })
-    }
-
-    // Verify session not revoked
-    const session = await queryOne<{ revoked_at: string | null }>(
-      `SELECT revoked_at FROM investor_sessions WHERE token_hash = $1 AND expires_at > NOW()`,
-      [hashToken(payload.jti)],
-    )
-    if (!session || session.revoked_at) {
-      return NextResponse.json({ error: "Session expired" }, { status: 401 })
-    }
-
-    const phone = payload.phone
+    const phone = auth.payload.phone
 
     // Run badge check (upserts, low cost)
     await checkAndAwardBadges(phone)

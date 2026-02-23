@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Menu, X, Search, LogOut, ChevronDown, LayoutDashboard } from "lucide-react"
-import { useAuth } from "@workos-inc/authkit-nextjs/components"
-import { signOut } from "@/lib/auth-actions"
+import { useStytchUser, useStytch } from "@stytch/nextjs"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 const NAV_LINKS = [
@@ -29,7 +28,8 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef<HTMLDivElement>(null)
-  const { user, loading } = useAuth()
+  const { user, isInitialized } = useStytchUser()
+  const stytchClient = useStytch()
 
   // Check sandbox mode
   const [isSandbox, setIsSandbox] = useState(false)
@@ -37,8 +37,8 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
     setIsSandbox(!!localStorage.getItem("sandbox-session"))
   }, [])
 
-  const isAuthenticated = !loading && (!!user || isSandbox)
-  const displayName = isSandbox ? "Dev User" : (user?.firstName || user?.email || "User")
+  const isAuthenticated = isInitialized && (!!user || isSandbox)
+  const displayName = isSandbox ? "Dev User" : (user?.name?.first_name || user?.emails?.[0]?.email || "User")
 
   // Close user menu on outside click
   useEffect(() => {
@@ -115,13 +115,9 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-muted/50 transition-colors"
               >
-                {!isSandbox && user?.profilePictureUrl ? (
-                  <img src={user.profilePictureUrl} alt="" className="w-7 h-7 rounded-full" />
-                ) : (
-                  <div className="w-7 h-7 rounded-full bg-accent/15 flex items-center justify-center text-brand-green text-xs font-semibold">
-                    {displayName.charAt(0).toUpperCase()}
-                  </div>
-                )}
+                <div className="w-7 h-7 rounded-full bg-accent/15 flex items-center justify-center text-brand-green text-xs font-semibold">
+                  {displayName.charAt(0).toUpperCase()}
+                </div>
                 <span className="text-sm text-foreground font-medium hidden sm:inline max-w-[120px] truncate">
                   {displayName}
                 </span>
@@ -147,7 +143,7 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
                         localStorage.removeItem("sandbox-session")
                         router.push("/login")
                       } else {
-                        await signOut()
+                        await stytchClient.session.revoke()
                         router.push("/login")
                       }
                     }}
@@ -217,7 +213,7 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
                     localStorage.removeItem("sandbox-session")
                     router.push("/login")
                   } else {
-                    await signOut()
+                    await stytchClient.session.revoke()
                     router.push("/login")
                   }
                 }}

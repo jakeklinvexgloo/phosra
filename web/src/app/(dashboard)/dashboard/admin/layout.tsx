@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { useAuth } from "@workos-inc/authkit-nextjs/components"
+import { useStytchUser } from "@stytch/nextjs"
 import { useApi } from "@/lib/useApi"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const { user } = useAuth()
+  const { user } = useStytchUser()
   const { fetch: authedFetch } = useApi()
   const [authorized, setAuthorized] = useState<boolean | null>(null)
 

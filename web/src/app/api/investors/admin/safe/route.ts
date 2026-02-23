@@ -1,24 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 import { query, queryOne } from "@/lib/investors/db"
-import { withAuth } from "@workos-inc/authkit-nextjs"
+import { requireAdmin } from "@/lib/stytch-auth"
 
 export const runtime = "nodejs"
 
 /**
- * Verify the caller is an authenticated admin via WorkOS (or sandbox session).
+ * Verify the caller is an authenticated admin via Stytch (or sandbox session).
  */
-async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
-  try {
-    const { user } = await withAuth()
-    if (user) return { authorized: true }
-  } catch {
-    // WorkOS auth failed, try sandbox fallback below
-  }
-
+async function checkAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
   const sandbox = req.headers.get("x-sandbox-session")
-  if (sandbox) {
-    return { authorized: true }
-  }
+  if (sandbox) return { authorized: true }
+
+  const auth = await requireAdmin()
+  if (auth.authorized) return { authorized: true }
 
   return { authorized: false, response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
 }
@@ -28,7 +22,7 @@ async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { 
  * List all SAFE agreements with stats.
  */
 export async function GET(req: NextRequest) {
-  const auth = await requireAdmin(req)
+  const auth = await checkAdmin(req)
   if (!auth.authorized) return auth.response
 
   try {
@@ -95,7 +89,7 @@ export async function GET(req: NextRequest) {
  * Countersign or void a SAFE. Body: { safeId, action: "countersign" | "void" }
  */
 export async function POST(req: NextRequest) {
-  const auth = await requireAdmin(req)
+  const auth = await checkAdmin(req)
   if (!auth.authorized) return auth.response
 
   try {

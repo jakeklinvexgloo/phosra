@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import dynamic from "next/dynamic"
-import { AuthKitProvider } from "@workos-inc/authkit-nextjs/components"
+import StytchProvider from "@/components/StytchProvider"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import localFont from "next/font/local"
 import { JetBrains_Mono } from "next/font/google"
@@ -69,16 +69,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AuthKitProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${generalSans.variable} ${cabinetGrotesk.variable} ${jetbrainsMono.variable} antialiased bg-[#0D1B2A]`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${generalSans.variable} ${cabinetGrotesk.variable} ${jetbrainsMono.variable} antialiased bg-[#0D1B2A]`}>
+        <StytchProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             {children}
             <Toaster />
             {/* <FeedbackOverlay /> */}
           </ThemeProvider>
-        </body>
-      </html>
-    </AuthKitProvider>
+        </StytchProvider>
+      </body>
+    </html>
   )
 }

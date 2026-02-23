@@ -1,19 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { query } from "@/lib/investors/db"
-import { withAuth } from "@workos-inc/authkit-nextjs"
+import { requireAdmin } from "@/lib/stytch-auth"
 
 export const runtime = "nodejs"
 
-async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
-  try {
-    const { user } = await withAuth()
-    if (user) return { authorized: true }
-  } catch {
-    // WorkOS auth failed, try sandbox fallback
-  }
-
+async function checkAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
   const sandbox = req.headers.get("x-sandbox-session")
   if (sandbox) return { authorized: true }
+
+  const auth = await requireAdmin()
+  if (auth.authorized) return { authorized: true }
 
   return { authorized: false, response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
 }
@@ -24,7 +20,7 @@ async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { 
  * No privacy restrictions — admin sees full names, amounts, etc.
  */
 export async function GET(req: NextRequest) {
-  const auth = await requireAdmin(req)
+  const auth = await checkAdmin(req)
   if (!auth.authorized) return auth.response
 
   try {

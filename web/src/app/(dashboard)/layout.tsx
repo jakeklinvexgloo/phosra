@@ -3,23 +3,21 @@
 import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { List, X } from "lucide-react"
-import { useAuth } from "@workos-inc/authkit-nextjs/components"
+import { useStytchUser } from "@stytch/nextjs"
 import { DashboardSkeleton } from "@/components/ui/skeleton"
 import { CommandPalette } from "@/components/ui/command-palette"
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar"
-import { useApi } from "@/lib/useApi"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
-  const { user, loading } = useAuth()
+  const { user, isInitialized } = useStytchUser()
   const [isSandbox, setIsSandbox] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [cmdkOpen, setCmdkOpen] = useState(false)
-  const { fetch: authedFetch } = useApi()
 
   useEffect(() => {
     const sandbox = localStorage.getItem("sandbox-session")
@@ -27,20 +25,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       setIsSandbox(true)
       return
     }
-    if (!loading && !user) {
+    if (isInitialized && !user) {
       router.push("/login")
     }
-  }, [loading, user, router])
+  }, [isInitialized, user, router])
 
-  // Fetch admin status from backend
+  // Check admin status from Stytch trusted_metadata
   useEffect(() => {
     if (!user && !isSandbox) return
-    authedFetch("/auth/me").then((me: { is_admin?: boolean }) => {
-      if (me?.is_admin) setIsAdmin(true)
-    }).catch(() => {
-      // Non-critical — just hide admin nav
-    })
-  }, [user, isSandbox, authedFetch])
+    if (isSandbox) {
+      setIsAdmin(true)
+      return
+    }
+    const role = (user?.trusted_metadata as Record<string, unknown>)?.role
+    if (role === "admin") setIsAdmin(true)
+  }, [user, isSandbox])
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
@@ -59,7 +58,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => window.removeEventListener("keydown", handler)
   }, [])
 
-  if (!isSandbox && (loading || !user)) {
+  if (!isSandbox && (!isInitialized || !user)) {
     return <DashboardSkeleton />
   }
 

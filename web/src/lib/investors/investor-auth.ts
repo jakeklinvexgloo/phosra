@@ -1,6 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState, useEffect } from "react"
+import { useStytch, useStytchUser, useStytchSession } from "@stytch/nextjs"
 
 export interface InvestorSession {
   phone: string
@@ -11,40 +12,54 @@ export interface InvestorSession {
 type AuthState = "checking" | "unauthenticated" | "authenticated"
 
 export function useInvestorSession() {
+  const stytch = useStytch()
+  const { user, isInitialized: userInitialized } = useStytchUser()
+  const { session } = useStytchSession()
   const [state, setState] = useState<AuthState>("checking")
   const [investor, setInvestor] = useState<InvestorSession | null>(null)
 
-  const checkSession = useCallback(async () => {
-    try {
-      const res = await fetch("/api/investors/auth/session", {
-        credentials: "include",
-      })
-      if (res.ok) {
-        const data = await res.json()
-        setInvestor(data)
-        setState("authenticated")
-      } else {
-        setInvestor(null)
-        setState("unauthenticated")
-      }
-    } catch {
+  useEffect(() => {
+    if (!userInitialized) return
+
+    if (session && user) {
+      const phone = user.phone_numbers?.[0]?.phone_number || ""
+      const firstName = user.name?.first_name || ""
+      const lastName = user.name?.last_name || ""
+      const name = [firstName, lastName].filter(Boolean).join(" ")
+      const company = (user.trusted_metadata as Record<string, unknown>)?.company as string || ""
+
+      setInvestor({ phone, name, company })
+      setState("authenticated")
+    } else {
       setInvestor(null)
       setState("unauthenticated")
     }
-  }, [])
-
-  useEffect(() => {
-    checkSession()
-  }, [checkSession])
+  }, [session, user, userInitialized])
 
   const signOut = useCallback(async () => {
-    await fetch("/api/investors/auth/session", {
-      method: "DELETE",
-      credentials: "include",
-    })
+    try {
+      await stytch.session.revoke()
+    } catch {
+      // Session may already be expired
+    }
     setInvestor(null)
     setState("unauthenticated")
-  }, [])
+  }, [stytch])
+
+  const refreshSession = useCallback(() => {
+    // Stytch SDK auto-refreshes; trigger re-check by resetting state
+    if (!userInitialized) return
+    if (session && user) {
+      const phone = user.phone_numbers?.[0]?.phone_number || ""
+      const firstName = user.name?.first_name || ""
+      const lastName = user.name?.last_name || ""
+      const name = [firstName, lastName].filter(Boolean).join(" ")
+      const company = (user.trusted_metadata as Record<string, unknown>)?.company as string || ""
+
+      setInvestor({ phone, name, company })
+      setState("authenticated")
+    }
+  }, [session, user, userInitialized])
 
   return {
     state,
@@ -52,6 +67,6 @@ export function useInvestorSession() {
     isAuthenticated: state === "authenticated",
     isLoading: state === "checking",
     signOut,
-    refreshSession: checkSession,
+    refreshSession,
   }
 }

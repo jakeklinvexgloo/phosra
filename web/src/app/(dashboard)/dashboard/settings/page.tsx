@@ -4,10 +4,10 @@ import Link from "next/link"
 import { BookOpen } from "lucide-react"
 import { ApiKeyPanel } from "@/components/dashboard/ApiKeyPanel"
 import { WebhookPanel } from "@/components/dashboard/WebhookPanel"
-import { useAuth } from "@workos-inc/authkit-nextjs/components"
+import { useStytchUser } from "@stytch/nextjs"
 
 export default function SettingsPage() {
-  const { user } = useAuth()
+  const { user } = useStytchUser()
 
   return (
     <div>
@@ -21,11 +21,11 @@ export default function SettingsPage() {
             <div className="space-y-3">
               <div>
                 <label className="block text-sm text-muted-foreground">Name</label>
-                <p className="text-sm font-medium text-foreground">{user.firstName} {user.lastName}</p>
+                <p className="text-sm font-medium text-foreground">{user.name.first_name} {user.name.last_name}</p>
               </div>
               <div>
                 <label className="block text-sm text-muted-foreground">Email</label>
-                <p className="text-sm font-medium text-foreground">{user.email}</p>
+                <p className="text-sm font-medium text-foreground">{user.emails[0]?.email}</p>
               </div>
             </div>
           )}

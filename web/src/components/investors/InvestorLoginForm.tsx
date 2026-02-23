@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback, useEffect } from "react"
+import { useStytch, useStytchSession } from "@stytch/nextjs"
 import { ArrowLeft, Loader2, Shield, UserPlus } from "lucide-react"
 import PhoneInput from "./PhoneInput"
 import OtpInput from "./OtpInput"
@@ -16,11 +17,14 @@ export default function InvestorLoginForm({
   onAuthenticated,
   inviteCode: inviteCodeProp,
 }: InvestorLoginFormProps) {
-  // Read invite code from URL directly as fallback (useSearchParams can be null during hydration)
+  const stytch = useStytch()
+  const { session } = useStytchSession()
+
   const [resolvedInviteCode, setResolvedInviteCode] = useState<string | null>(inviteCodeProp || null)
   const [loginState, setLoginState] = useState<LoginState>("invite_loading")
   const [phone, setPhone] = useState("")
   const [otpValue, setOtpValue] = useState("")
+  const [methodId, setMethodId] = useState("")
   const [error, setError] = useState("")
   const [sending, setSending] = useState(false)
 
@@ -29,6 +33,11 @@ export default function InvestorLoginForm({
   const [referrerCompany, setReferrerCompany] = useState("")
   const [recipientName, setRecipientName] = useState("")
   const hasInvite = Boolean(referrerName)
+
+  // If already authenticated via Stytch, notify parent
+  useEffect(() => {
+    if (session) onAuthenticated()
+  }, [session, onAuthenticated])
 
   // Resolve invite code from prop or URL on mount
   useEffect(() => {
@@ -73,62 +82,68 @@ export default function InvestorLoginForm({
     setSending(true)
     setError("")
     try {
-      const res = await fetch("/api/investors/auth/request-otp", {
+      const e164 = `+1${phone}`
+
+      // Check approval (anti-enumeration: same response either way)
+      await fetch("/api/investors/auth/check-approved", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: `+1${phone}`, ...(resolvedInviteCode ? { inviteCode: resolvedInviteCode } : {}) }),
+        body: JSON.stringify({
+          phone: e164,
+          ...(resolvedInviteCode ? { inviteCode: resolvedInviteCode } : {}),
+        }),
       })
-      if (res.ok) {
-        setLoginState("otp_sent")
-      } else {
-        const data = await res.json()
-        setError(data.message || "Failed to send code")
-      }
+
+      // Send OTP via Stytch
+      const resp = await stytch.otps.sms.loginOrCreate(e164, {
+        expiration_minutes: 5,
+      })
+      setMethodId(resp.method_id)
+      setLoginState("otp_sent")
     } catch {
-      setError("Network error. Please try again.")
+      // If Stytch fails, still show OTP screen for anti-enumeration
+      // (unapproved phones won't have a real method_id)
+      setError("Something went wrong. Please try again.")
     } finally {
       setSending(false)
     }
-  }, [phone])
+  }, [stytch, phone, resolvedInviteCode])
 
   const handleVerifyOtp = useCallback(
     async (code: string) => {
+      if (!methodId) {
+        setError("Please request a new code")
+        return
+      }
       setLoginState("verifying")
       setError("")
       try {
-        const res = await fetch("/api/investors/auth/verify-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ phone: `+1${phone}`, code }),
+        await stytch.otps.authenticate(code, methodId, {
+          session_duration_minutes: 60 * 24 * 30, // 30 days
         })
-        const data = await res.json()
-        if (res.ok) {
-          // If this was an invite, mark it as claimed
-          if (resolvedInviteCode) {
-            fetch(`/api/investors/portal/invite/${resolvedInviteCode}/claim`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              credentials: "include",
-              body: JSON.stringify({ phone: `+1${phone}` }),
-            }).catch(() => {})
-          }
-          onAuthenticated()
-        } else {
-          setError(data.error || "Verification failed")
-          setLoginState("otp_sent")
+        // Session cookie set automatically by Stytch SDK
+        // Claim invite if applicable
+        if (resolvedInviteCode) {
+          fetch(`/api/investors/portal/invite/${resolvedInviteCode}/claim`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ phone: `+1${phone}` }),
+          }).catch(() => {})
         }
+        onAuthenticated()
       } catch {
-        setError("Network error. Please try again.")
+        setError("Invalid code. Please try again.")
         setLoginState("otp_sent")
       }
     },
-    [phone, resolvedInviteCode, onAuthenticated],
+    [stytch, methodId, phone, resolvedInviteCode, onAuthenticated],
   )
 
   const handleBack = useCallback(() => {
     setLoginState("phone_input")
     setOtpValue("")
+    setMethodId("")
     setError("")
   }, [])
 

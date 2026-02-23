@@ -13,7 +13,7 @@ class ApiClient {
       ...((options.headers as Record<string, string>) || {}),
     }
 
-    // Sandbox mode: send X-Sandbox-Session header instead of WorkOS token
+    // Sandbox mode: send X-Sandbox-Session header instead of auth token
     const sandboxSession = typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
     if (sandboxSession) {
       headers["X-Sandbox-Session"] = sandboxSession

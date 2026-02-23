@@ -3,27 +3,19 @@ import { query, queryOne } from "@/lib/investors/db"
 import { normalizePhone } from "@/lib/investors/phone"
 // Note: raw SMS requires A2P 10DLC registration.
 // Invite link is shared manually by admin for now.
-import { withAuth } from "@workos-inc/authkit-nextjs"
+import { requireAdmin } from "@/lib/stytch-auth"
 
 export const runtime = "nodejs"
 
 /**
- * Verify the caller is an authenticated admin via WorkOS (or sandbox session).
+ * Verify the caller is an authenticated admin via Stytch (or sandbox session).
  */
-async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
-  // Try WorkOS auth first
-  try {
-    const { user } = await withAuth()
-    if (user) return { authorized: true }
-  } catch {
-    // WorkOS auth failed, try sandbox fallback below
-  }
-
-  // Fallback: accept sandbox session header
+async function checkAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
   const sandbox = req.headers.get("x-sandbox-session")
-  if (sandbox) {
-    return { authorized: true }
-  }
+  if (sandbox) return { authorized: true }
+
+  const auth = await requireAdmin()
+  if (auth.authorized) return { authorized: true }
 
   return { authorized: false, response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) }
 }
@@ -33,7 +25,7 @@ async function requireAdmin(req: NextRequest): Promise<{ authorized: true } | { 
  * List all approved phone numbers with last login info.
  */
 export async function GET(req: NextRequest) {
-  const auth = await requireAdmin(req)
+  const auth = await checkAdmin(req)
   if (!auth.authorized) return auth.response
 
   try {
@@ -66,7 +58,7 @@ export async function GET(req: NextRequest) {
  * Add an approved phone number and auto-send invite SMS.
  */
 export async function POST(req: NextRequest) {
-  const auth = await requireAdmin(req)
+  const auth = await checkAdmin(req)
   if (!auth.authorized) return auth.response
 
   try {
@@ -119,7 +111,7 @@ export async function POST(req: NextRequest) {
  * Deactivate an approved phone number (soft delete).
  */
 export async function DELETE(req: NextRequest) {
-  const auth = await requireAdmin(req)
+  const auth = await checkAdmin(req)
   if (!auth.authorized) return auth.response
 
   try {

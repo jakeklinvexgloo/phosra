@@ -1,18 +1,11 @@
 "use server"
 
-import { signOut as workosSignOut, getSignInUrl, getSignUpUrl } from "@workos-inc/authkit-nextjs"
+import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
 export async function signOut() {
-  return workosSignOut()
-}
-
-export async function signIn() {
-  const url = await getSignInUrl()
-  redirect(url)
-}
-
-export async function signUp() {
-  const url = await getSignUpUrl({ prompt: "consent" })
-  redirect(url)
+  const cookieStore = await cookies()
+  cookieStore.delete("stytch_session")
+  cookieStore.delete("stytch_session_jwt")
+  redirect("/login")
 }

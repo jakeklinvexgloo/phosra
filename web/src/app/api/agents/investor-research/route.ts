@@ -1,36 +1,25 @@
 import { NextRequest, NextResponse } from "next/server"
 import { streamText, type UIMessage, convertToModelMessages } from "ai"
 import { createAnthropic } from "@ai-sdk/anthropic"
-import { withAuth } from "@workos-inc/authkit-nextjs"
+import { requireAdmin } from "@/lib/stytch-auth"
 
 export const runtime = "nodejs"
 export const maxDuration = 120
 
-async function requireAdmin(
+async function checkAdmin(
   req: NextRequest,
 ): Promise<
   { authorized: true } | { authorized: false; response: NextResponse }
 > {
-  if (process.env.NEXT_PUBLIC_SANDBOX_MODE === "true") {
-    const sandbox = req.headers.get("x-sandbox-session")
-    if (sandbox) return { authorized: true }
-  }
-  try {
-    const { user } = await withAuth()
-    if (!user)
-      return {
-        authorized: false,
-        response: NextResponse.json(
-          { error: "Unauthorized" },
-          { status: 401 },
-        ),
-      }
-    return { authorized: true }
-  } catch {
-    return {
-      authorized: false,
-      response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
-    }
+  const sandbox = req.headers.get("x-sandbox-session")
+  if (sandbox) return { authorized: true }
+
+  const auth = await requireAdmin()
+  if (auth.authorized) return { authorized: true }
+
+  return {
+    authorized: false,
+    response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
   }
 }
 
@@ -65,7 +54,7 @@ We have 70 warm intro targets across these categories:
 Always be specific, data-driven, and actionable. Format responses with clear headings and bullet points.`
 
 export async function POST(req: NextRequest) {
-  const auth = await requireAdmin(req)
+  const auth = await checkAdmin(req)
   if (!auth.authorized) return auth.response
 
   const apiKey =

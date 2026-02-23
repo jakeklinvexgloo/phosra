@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createHash } from "crypto"
-import { verifySessionToken } from "@/lib/investors/session"
+import { requireInvestor } from "@/lib/stytch-auth"
 import { query, queryOne } from "@/lib/investors/db"
 
 export const runtime = "nodejs"
@@ -11,15 +11,11 @@ export const runtime = "nodejs"
  */
 export async function POST(req: NextRequest) {
   try {
-    const token = req.cookies.get("investor_session")?.value
-    if (!token) {
+    const auth = await requireInvestor()
+    if (!auth.authenticated) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
     }
-
-    const payload = await verifySessionToken(token)
-    if (!payload) {
-      return NextResponse.json({ error: "Invalid session" }, { status: 401 })
-    }
+    const { payload } = auth
 
     const body = (await req.json()) as {
       safeId?: string
