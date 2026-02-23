@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { href: "/technology-services", label: "Services" },
   { href: "/compliance", label: "Compliance" },
   { href: "/movements", label: "Movements" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
 ]
 
