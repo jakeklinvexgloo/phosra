@@ -32,7 +32,7 @@ export const DATA_ROOM_LINKS: DataRoomLink[] = [
   },
   {
     label: "Pitch Deck",
-    description: "11-slide pre-seed deck — problem, infrastructure thesis, product, market, team",
+    description: "12-slide pre-seed deck — problem, infrastructure thesis, product, market, team",
     url: "/deck/",
     category: "product",
   },
