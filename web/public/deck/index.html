@@ -52,7 +52,8 @@ body {
   display: flex;
   flex-direction: column;
 }
-.slide + .slide { margin-top: 2px; }
+.slide-wrapper { overflow: hidden; width: 100%; }
+.slide-wrapper + .slide-wrapper { margin-top: 2px; }
 
 /* Background glow layers - default */
 .slide::before {
@@ -1822,5 +1823,47 @@ body {
   <span class="slide-num">11</span>
 </section>
 
+<script>
+(function() {
+  var SLIDE_W = 1280;
+  var SLIDE_H = 720;
+  var slides = document.querySelectorAll('.slide');
+
+  // Wrap each slide in a .slide-wrapper
+  slides.forEach(function(slide) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'slide-wrapper';
+    slide.parentNode.insertBefore(wrapper, slide);
+    wrapper.appendChild(slide);
+  });
+
+  function resize() {
+    var vw = document.documentElement.clientWidth;
+    var scale = Math.min(vw / SLIDE_W, 1);
+    var wrappers = document.querySelectorAll('.slide-wrapper');
+    var totalHeight = 0;
+
+    wrappers.forEach(function(wrapper) {
+      var slide = wrapper.querySelector('.slide');
+      slide.style.transform = 'scale(' + scale + ')';
+      slide.style.transformOrigin = 'top left';
+      var h = SLIDE_H * scale;
+      wrapper.style.height = h + 'px';
+      totalHeight += h;
+    });
+
+    // Add spacing between wrappers (2px each gap)
+    totalHeight += (wrappers.length - 1) * 2;
+
+    // Notify parent iframe of total height
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'deck-height', height: totalHeight }, '*');
+    }
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+})();
+</script>
 </body>
 </html>
