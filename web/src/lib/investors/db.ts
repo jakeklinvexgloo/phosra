@@ -5,7 +5,7 @@ let pool: Pool | null = null
 export function getPool(): Pool {
   if (!pool) {
     pool = new Pool({
-      connectionString: process.env.INVESTOR_DB_URL,
+      connectionString: process.env.INVESTOR_DB_URL?.trim(),
       max: 5,
       idleTimeoutMillis: 30_000,
       connectionTimeoutMillis: 5_000,

@@ -724,16 +724,94 @@ function InvestorPortalContent() {
   )
 }
 
+/* ------------------------------------------------------------------ */
+/*  DEBUG WRAPPER — remove after testing                               */
+/* ------------------------------------------------------------------ */
+function DebugInviteWrapper({ children }: { children: React.ReactNode }) {
+  const [logs, setLogs] = useState<string[]>([])
+  const [apiResult, setApiResult] = useState<string>("pending...")
+  const [crashed, setCrashed] = useState<string | null>(null)
+
+  const addLog = useCallback((msg: string) => {
+    setLogs((prev) => [...prev, msg])
+  }, [])
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const invite = params.get("invite")
+      addLog(`URL: ${window.location.href}`)
+      addLog(`invite param: ${JSON.stringify(invite)}`)
+      addLog(`all params: ${window.location.search}`)
+
+      if (invite) {
+        const apiUrl = `/api/investors/portal/invite/${invite}`
+        addLog(`Fetching: ${apiUrl}`)
+        fetch(apiUrl)
+          .then(async (res) => {
+            addLog(`API status: ${res.status}`)
+            const text = await res.text()
+            addLog(`API body: ${text}`)
+            setApiResult(text)
+          })
+          .catch((err) => {
+            addLog(`API error: ${err.message}`)
+            setApiResult(`ERROR: ${err.message}`)
+          })
+      } else {
+        addLog("No invite param in URL")
+        setApiResult("N/A — no invite param")
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      addLog(`CRASH: ${msg}`)
+      setCrashed(msg)
+    }
+  }, [addLog])
+
+  return (
+    <div>
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 99999,
+        background: "#000", color: "#0f0", fontFamily: "monospace",
+        fontSize: "13px", padding: "16px", maxHeight: "50vh",
+        overflowY: "auto", borderBottom: "3px solid #0f0",
+      }}>
+        <div style={{ color: "#ff0", fontWeight: "bold", fontSize: "16px", marginBottom: "8px" }}>
+          INVITE DEBUG PANEL
+        </div>
+        <div style={{ color: "#fff", marginBottom: "8px" }}>
+          API Result: <span style={{ color: apiResult.includes("true") ? "#0f0" : "#f00" }}>{apiResult}</span>
+        </div>
+        {crashed && (
+          <div style={{ color: "#f00", fontWeight: "bold", marginBottom: "8px" }}>
+            CRASHED: {crashed}
+          </div>
+        )}
+        {logs.map((line, i) => (
+          <div key={i} style={{ color: "#0f0" }}>{line}</div>
+        ))}
+        {logs.length === 0 && <div style={{ color: "#666" }}>Loading...</div>}
+      </div>
+      <div style={{ marginTop: "50vh" }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 export default function InvestorPortalPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-brand-green animate-spin" />
-        </div>
-      }
-    >
-      <InvestorPortalContent />
-    </Suspense>
+    <DebugInviteWrapper>
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center">
+            <Loader2 className="w-8 h-8 text-brand-green animate-spin" />
+          </div>
+        }
+      >
+        <InvestorPortalContent />
+      </Suspense>
+    </DebugInviteWrapper>
   )
 }

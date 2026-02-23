@@ -34,6 +34,12 @@ export default function InvestorLoginForm({
   const [recipientName, setRecipientName] = useState("")
   const hasInvite = Boolean(referrerName)
 
+  // DEBUG state
+  const [debugLog, setDebugLog] = useState<string[]>([])
+  const addDebug = useCallback((msg: string) => {
+    setDebugLog((prev) => [...prev, `[${new Date().toISOString().slice(11, 23)}] ${msg}`])
+  }, [])
+
   // If already authenticated via Stytch, notify parent
   useEffect(() => {
     if (session) onAuthenticated()
@@ -41,38 +47,63 @@ export default function InvestorLoginForm({
 
   // Resolve invite code from prop or URL on mount
   useEffect(() => {
-    const code = inviteCodeProp || new URLSearchParams(window.location.search).get("invite")
+    addDebug(`inviteCodeProp=${JSON.stringify(inviteCodeProp)}`)
+    addDebug(`window.location.search=${window.location.search}`)
+    const urlCode = new URLSearchParams(window.location.search).get("invite")
+    addDebug(`URL invite param=${JSON.stringify(urlCode)}`)
+    const code = inviteCodeProp || urlCode
+    addDebug(`resolved code=${JSON.stringify(code)}`)
     if (code) {
       setResolvedInviteCode(code)
     } else {
+      addDebug("No invite code found, going to phone_input")
       setLoginState("phone_input")
     }
-  }, [inviteCodeProp])
+  }, [inviteCodeProp, addDebug])
 
   // Validate invite code
   useEffect(() => {
-    if (!resolvedInviteCode) return
+    if (!resolvedInviteCode) {
+      addDebug("validateInvite: no resolvedInviteCode, skipping")
+      return
+    }
     let cancelled = false
+    addDebug(`validateInvite: fetching /api/investors/portal/invite/${resolvedInviteCode}`)
 
     async function validateInvite() {
       try {
-        const res = await fetch(`/api/investors/portal/invite/${resolvedInviteCode}`)
-        const data = await res.json()
-        if (cancelled) return
+        const url = `/api/investors/portal/invite/${resolvedInviteCode}`
+        addDebug(`fetch GET ${url}`)
+        const res = await fetch(url)
+        addDebug(`fetch response: status=${res.status} ok=${res.ok}`)
+        const text = await res.text()
+        addDebug(`fetch body: ${text}`)
+        const data = JSON.parse(text)
+        if (cancelled) {
+          addDebug("validateInvite: cancelled, ignoring response")
+          return
+        }
+        addDebug(`data.valid=${data.valid} referrerName=${data.referrerName} recipientName=${data.recipientName}`)
         if (data.valid) {
           setReferrerName(data.referrerName || "An investor")
           setReferrerCompany(data.referrerCompany || "")
           setRecipientName(data.recipientName || "")
+          addDebug("invite validated successfully!")
+        } else {
+          addDebug("invite NOT valid (data.valid is false)")
         }
-      } catch {
-        // Invite invalid, fall through to normal login
+      } catch (err) {
+        addDebug(`validateInvite error: ${err instanceof Error ? err.message : String(err)}`)
       }
-      if (!cancelled) setLoginState("phone_input")
+      if (!cancelled) {
+        addDebug("setting loginState=phone_input")
+        setLoginState("phone_input")
+      }
     }
 
     validateInvite()
     return () => { cancelled = true }
-  }, [resolvedInviteCode])
+  }, [resolvedInviteCode, addDebug])
 
   const handleRequestOtp = useCallback(async () => {
     if (phone.length !== 10) {
@@ -177,6 +208,27 @@ export default function InvestorLoginForm({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
+      {/* DEBUG PANEL */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black/90 text-green-400 text-[10px] font-mono p-3 max-h-[40vh] overflow-y-auto border-b border-green-800">
+        <div className="font-bold text-green-300 mb-1">DEBUG — Invite Flow</div>
+        <div className="mb-2 text-yellow-300 space-y-0.5">
+          <div>inviteCodeProp: {JSON.stringify(inviteCodeProp)}</div>
+          <div>resolvedInviteCode: {JSON.stringify(resolvedInviteCode)}</div>
+          <div>loginState: {loginState}</div>
+          <div>hasInvite: {String(hasInvite)}</div>
+          <div>referrerName: {JSON.stringify(referrerName)}</div>
+          <div>recipientName: {JSON.stringify(recipientName)}</div>
+          <div>error: {JSON.stringify(error)}</div>
+          <div>methodId: {methodId ? "set" : "empty"}</div>
+        </div>
+        <div className="border-t border-green-800 pt-1">
+          {debugLog.map((line, i) => (
+            <div key={i}>{line}</div>
+          ))}
+          {debugLog.length === 0 && <div className="text-white/30">Waiting for logs...</div>}
+        </div>
+      </div>
+
       <div className="w-full max-w-sm">
         {/* Logo / Header */}
         <div className="text-center mb-8">
