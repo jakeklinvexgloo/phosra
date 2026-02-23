@@ -1,4 +1,4 @@
-CREATE TABLE safe_agreements (
+CREATE TABLE IF NOT EXISTS safe_agreements (
     id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     investor_phone       TEXT NOT NULL,
     investor_name        TEXT NOT NULL,
@@ -22,5 +22,5 @@ CREATE TABLE safe_agreements (
     updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_safe_investor_phone ON safe_agreements(investor_phone);
-CREATE INDEX idx_safe_status ON safe_agreements(status);
+CREATE INDEX IF NOT EXISTS idx_safe_investor_phone ON safe_agreements(investor_phone);
+CREATE INDEX IF NOT EXISTS idx_safe_status ON safe_agreements(status);

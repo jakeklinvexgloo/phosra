@@ -1,5 +1,5 @@
 -- Trackable deck sharing for investor portal
-CREATE TABLE deck_shares (
+CREATE TABLE IF NOT EXISTS deck_shares (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     token VARCHAR(32) UNIQUE NOT NULL,
     shared_by_phone VARCHAR(20) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE deck_shares (
     is_active BOOLEAN NOT NULL DEFAULT true
 );
 
-CREATE TABLE deck_share_views (
+CREATE TABLE IF NOT EXISTS deck_share_views (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     share_id UUID NOT NULL REFERENCES deck_shares(id) ON DELETE CASCADE,
     viewed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -19,5 +19,5 @@ CREATE TABLE deck_share_views (
     referrer TEXT
 );
 
-CREATE INDEX idx_deck_shares_token ON deck_shares(token);
-CREATE INDEX idx_deck_share_views_share_id ON deck_share_views(share_id);
+CREATE INDEX IF NOT EXISTS idx_deck_shares_token ON deck_shares(token);
+CREATE INDEX IF NOT EXISTS idx_deck_share_views_share_id ON deck_share_views(share_id);

@@ -1,6 +1,6 @@
 -- Investor referral invite links (one-time shareable URLs)
 
-CREATE TABLE investor_invite_links (
+CREATE TABLE IF NOT EXISTS investor_invite_links (
     id              BIGSERIAL PRIMARY KEY,
     code            TEXT NOT NULL UNIQUE,
     created_by      TEXT NOT NULL,              -- phone_e164 of referrer
@@ -12,7 +12,7 @@ CREATE TABLE investor_invite_links (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE investor_invite_claims (
+CREATE TABLE IF NOT EXISTS investor_invite_claims (
     id              BIGSERIAL PRIMARY KEY,
     invite_code     TEXT NOT NULL REFERENCES investor_invite_links(code),
     name            TEXT NOT NULL DEFAULT '',
@@ -23,6 +23,6 @@ CREATE TABLE investor_invite_claims (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_invite_links_code ON investor_invite_links(code);
-CREATE INDEX idx_invite_links_created_by ON investor_invite_links(created_by);
-CREATE INDEX idx_invite_claims_code ON investor_invite_claims(invite_code);
+CREATE INDEX IF NOT EXISTS idx_invite_links_code ON investor_invite_links(code);
+CREATE INDEX IF NOT EXISTS idx_invite_links_created_by ON investor_invite_links(created_by);
+CREATE INDEX IF NOT EXISTS idx_invite_claims_code ON investor_invite_claims(invite_code);

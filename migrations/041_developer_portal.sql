@@ -1,5 +1,5 @@
 -- Developer organizations
-CREATE TABLE developer_orgs (
+CREATE TABLE IF NOT EXISTS developer_orgs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(100) NOT NULL UNIQUE,
@@ -14,11 +14,11 @@ CREATE TABLE developer_orgs (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_dev_orgs_owner ON developer_orgs(owner_user_id);
-CREATE INDEX idx_dev_orgs_slug ON developer_orgs(slug);
+CREATE INDEX IF NOT EXISTS idx_dev_orgs_owner ON developer_orgs(owner_user_id);
+CREATE INDEX IF NOT EXISTS idx_dev_orgs_slug ON developer_orgs(slug);
 
 -- Developer org members
-CREATE TABLE developer_org_members (
+CREATE TABLE IF NOT EXISTS developer_org_members (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES developer_orgs(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -29,7 +29,7 @@ CREATE TABLE developer_org_members (
 );
 
 -- Developer API keys
-CREATE TABLE developer_api_keys (
+CREATE TABLE IF NOT EXISTS developer_api_keys (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     org_id UUID NOT NULL REFERENCES developer_orgs(id) ON DELETE CASCADE,
     name VARCHAR(255) NOT NULL,
@@ -46,11 +46,11 @@ CREATE TABLE developer_api_keys (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_dev_keys_org ON developer_api_keys(org_id);
-CREATE INDEX idx_dev_keys_hash ON developer_api_keys(key_hash) WHERE revoked_at IS NULL;
+CREATE INDEX IF NOT EXISTS idx_dev_keys_org ON developer_api_keys(org_id);
+CREATE INDEX IF NOT EXISTS idx_dev_keys_hash ON developer_api_keys(key_hash) WHERE revoked_at IS NULL;
 
 -- API usage tracking (hourly rollups)
-CREATE TABLE developer_api_usage (
+CREATE TABLE IF NOT EXISTS developer_api_usage (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     key_id UUID NOT NULL REFERENCES developer_api_keys(id) ON DELETE CASCADE,
     org_id UUID NOT NULL REFERENCES developer_orgs(id) ON DELETE CASCADE,
@@ -63,10 +63,10 @@ CREATE TABLE developer_api_usage (
     UNIQUE(key_id, hour, endpoint)
 );
 
-CREATE INDEX idx_dev_usage_org_hour ON developer_api_usage(org_id, hour DESC);
+CREATE INDEX IF NOT EXISTS idx_dev_usage_org_hour ON developer_api_usage(org_id, hour DESC);
 
 -- Key lifecycle audit log
-CREATE TABLE developer_key_events (
+CREATE TABLE IF NOT EXISTS developer_key_events (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     key_id UUID NOT NULL REFERENCES developer_api_keys(id) ON DELETE CASCADE,
     event_type VARCHAR(50) NOT NULL
@@ -76,4 +76,4 @@ CREATE TABLE developer_key_events (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_dev_key_events ON developer_key_events(key_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_dev_key_events ON developer_key_events(key_id, created_at DESC);

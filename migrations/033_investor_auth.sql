@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS investor_approved_phones (
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_investor_phones_active ON investor_approved_phones (is_active) WHERE is_active = TRUE;
+CREATE INDEX IF NOT EXISTS idx_investor_phones_active ON investor_approved_phones (is_active) WHERE is_active = TRUE;
 
 -- OTP codes (hashed, short-lived)
 CREATE TABLE IF NOT EXISTS investor_otp_codes (
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS investor_otp_codes (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_investor_otp_phone ON investor_otp_codes (phone_e164, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_investor_otp_phone ON investor_otp_codes (phone_e164, created_at DESC);
 
 -- Sessions (JWT-backed, server-side revocation)
 CREATE TABLE IF NOT EXISTS investor_sessions (
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS investor_sessions (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_investor_sessions_phone ON investor_sessions (phone_e164);
-CREATE INDEX idx_investor_sessions_token ON investor_sessions (token_hash) WHERE revoked_at IS NULL;
+CREATE INDEX IF NOT EXISTS idx_investor_sessions_phone ON investor_sessions (phone_e164);
+CREATE INDEX IF NOT EXISTS idx_investor_sessions_token ON investor_sessions (token_hash) WHERE revoked_at IS NULL;
 
 -- Linked accounts (email / Google for convenience login)
 CREATE TABLE IF NOT EXISTS investor_linked_accounts (
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS investor_linked_accounts (
     UNIQUE (provider, provider_id)
 );
 
-CREATE INDEX idx_investor_linked_phone ON investor_linked_accounts (phone_e164);
-CREATE INDEX idx_investor_linked_provider ON investor_linked_accounts (provider, provider_id);
+CREATE INDEX IF NOT EXISTS idx_investor_linked_phone ON investor_linked_accounts (phone_e164);
+CREATE INDEX IF NOT EXISTS idx_investor_linked_provider ON investor_linked_accounts (provider, provider_id);
 
 COMMIT;
