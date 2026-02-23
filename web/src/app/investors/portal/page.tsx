@@ -285,8 +285,16 @@ function DeckSection({ investorPhone, investorName, investorCompany }: { investo
   }, [])
 
   const handleFullscreen = useCallback(() => {
-    if (deckRef.current?.requestFullscreen) {
-      deckRef.current.requestFullscreen()
+    const el = deckRef.current
+    if (!el) return
+    // Try native fullscreen (works on desktop + iPad)
+    if (el.requestFullscreen) {
+      el.requestFullscreen()
+    } else if ((el as any).webkitRequestFullscreen) {
+      (el as any).webkitRequestFullscreen()
+    } else {
+      // Fallback for iPhone and other browsers without fullscreen API
+      window.open("/deck/index.html", "_blank")
     }
   }, [])
 
@@ -467,7 +475,7 @@ function DeckSection({ investorPhone, investorName, investorCompany }: { investo
         <div ref={deckRef} className="glass-card rounded-xl overflow-hidden relative group">
           <button
             onClick={handleFullscreen}
-            className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-black/50 text-white/60 opacity-0 group-hover:opacity-100 hover:text-white hover:bg-black/70 transition-all"
+            className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-black/50 text-white/60 sm:opacity-0 sm:group-hover:opacity-100 hover:text-white hover:bg-black/70 transition-all"
             title="View fullscreen"
           >
             <Maximize className="w-4 h-4" />
