@@ -10,6 +10,7 @@ import {
   X,
   FileText,
   ArrowRight,
+  ArrowLeft,
 } from "lucide-react"
 import { AnimatedSection } from "@/components/marketing/shared"
 import { RAISE_DETAILS } from "@/lib/investors/config"
@@ -551,6 +552,10 @@ export default function SafeSection({
         setViewState("signing")
         // Refetch to get full record
         await fetchSafe()
+      } else if (res.status === 409 && safe) {
+        // SAFE already exists (user went back from signing) — just go to signing
+        setSignatureName(safe.investor_name || legalName.trim())
+        setViewState("signing")
       } else {
         setError(data.error || "Failed to create SAFE")
       }
@@ -795,6 +800,24 @@ export default function SafeSection({
                 <Scale className="w-4 h-4 text-brand-green" />
                 Sign SAFE Agreement
               </h3>
+              <button
+                onClick={() => {
+                  setError("")
+                  setLegalName(safe.investor_name || legalName)
+                  setEmail(safe.investor_email || email)
+                  setCompany(safe.investor_company || company)
+                  setInvestmentAmount(
+                    safe.investment_amount_cents
+                      ? (parseInt(safe.investment_amount_cents, 10) / 100).toLocaleString()
+                      : investmentAmount,
+                  )
+                  setViewState("reviewing")
+                }}
+                className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Back to Review
+              </button>
             </div>
 
             <div className="px-6 py-4 bg-white/[0.02] border-b border-white/5">
