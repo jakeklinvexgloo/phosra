@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useState, useCallback, useEffect } from "react"
+import { Suspense, useState, useCallback, useEffect, useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import {
@@ -24,6 +24,7 @@ import {
   X,
   Eye,
   LinkIcon,
+  Maximize,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
 import { RAISE_DETAILS, DATA_ROOM_LINKS } from "@/lib/investors/config"
@@ -31,6 +32,7 @@ import type { DataRoomLink } from "@/lib/investors/config"
 import { useInvestorSession } from "@/lib/investors/investor-auth"
 import InvestorLoginForm from "@/components/investors/InvestorLoginForm"
 import AccountLinking from "@/components/investors/AccountLinking"
+import SafeSection from "@/components/investors/SafeSection"
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -269,6 +271,24 @@ function DeckSection({ investorPhone, investorName, investorCompany }: { investo
   const [copied, setCopied] = useState("")
   const [error, setError] = useState("")
   const [loadingShares, setLoadingShares] = useState(false)
+  const [deckHeight, setDeckHeight] = useState(750)
+  const deckRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleMessage(e: MessageEvent) {
+      if (e.data?.type === "deck-height" && typeof e.data.height === "number") {
+        setDeckHeight(e.data.height)
+      }
+    }
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [])
+
+  const handleFullscreen = useCallback(() => {
+    if (deckRef.current?.requestFullscreen) {
+      deckRef.current.requestFullscreen()
+    }
+  }, [])
 
   const fetchShares = useCallback(async () => {
     setLoadingShares(true)
@@ -444,10 +464,18 @@ function DeckSection({ investorPhone, investorName, investorCompany }: { investo
       )}
 
       <AnimatedSection delay={0.1}>
-        <div className="glass-card rounded-xl overflow-hidden">
+        <div ref={deckRef} className="glass-card rounded-xl overflow-hidden relative group">
+          <button
+            onClick={handleFullscreen}
+            className="absolute top-3 right-3 z-10 p-2 rounded-lg bg-black/50 text-white/60 opacity-0 group-hover:opacity-100 hover:text-white hover:bg-black/70 transition-all"
+            title="View fullscreen"
+          >
+            <Maximize className="w-4 h-4" />
+          </button>
           <iframe
             src="/deck/"
-            className="w-full h-[700px] sm:h-[750px] border-0"
+            className="w-full border-0"
+            style={{ height: deckHeight }}
             title="Phosra Pre-Seed Pitch Deck"
           />
         </div>
@@ -602,40 +630,7 @@ function InvestorPortalContent() {
       {/* ============================================================ */}
       {/*  Section 3: SAFE Document                                     */}
       {/* ============================================================ */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 lg:py-20">
-        <AnimatedSection>
-          <p className="text-brand-green text-sm font-semibold tracking-wider uppercase mb-4">
-            Investment Agreement
-          </p>
-          <h2 className="text-2xl sm:text-3xl font-display text-white mb-6">
-            SAFE Document
-          </h2>
-        </AnimatedSection>
-
-        <AnimatedSection delay={0.1}>
-          <div className="glass-card rounded-xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-lg bg-brand-green/10 flex items-center justify-center flex-shrink-0">
-                <Scale className="w-5 h-5 text-brand-green" />
-              </div>
-              <div>
-                <h3 className="text-white font-semibold mb-1">Post-Money SAFE Agreement</h3>
-                <p className="text-sm text-white/40 leading-relaxed max-w-md">
-                  Standard YC post-money SAFE with a {RAISE_DETAILS.valuationCap} valuation cap. No discount, no pro-rata, MFN provision.
-                </p>
-              </div>
-            </div>
-            <a
-              href="/investors/phosra-safe.pdf"
-              download
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-green text-[#0D1B2A] font-semibold rounded-lg hover:bg-brand-green/90 transition-colors text-sm flex-shrink-0"
-            >
-              <Download className="w-3.5 h-3.5" />
-              Download SAFE
-            </a>
-          </div>
-        </AnimatedSection>
-      </section>
+      <SafeSection investorPhone={investor.phone} investorName={investor.name || ""} investorCompany={investor.company || ""} />
 
       {/* ============================================================ */}
       {/*  Section 4: Data Room Links                                   */}

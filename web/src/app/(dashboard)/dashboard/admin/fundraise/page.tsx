@@ -23,6 +23,7 @@ function formatAsYouType(raw: string): string {
 import WarmIntrosTab from "./_components/WarmIntrosTab"
 import InvestorResearchModal from "./_components/InvestorResearchModal"
 import MilestoneAgentModal from "./_components/MilestoneAgentModal"
+import SafeManagement from "./_components/SafeManagement"
 
 /* ═══════════════════════════════════════════════════════════════
    DATA: Fundraise plan — milestones, agents, founder tasks
@@ -1384,7 +1385,12 @@ export default function FundraiseCommandCenter() {
 
       {/* ═══ INVESTOR ACCESS TAB ═════════════════════════════ */}
       {activeTab === "investor-access" && (
-        <div className="space-y-4">
+        <div className="space-y-8">
+          {/* ── SAFE Management ──────────────────────────────── */}
+          <SafeManagement />
+
+          {/* ── Investor Phone Access ────────────────────────── */}
+          <div className="space-y-4">
           {/* Actions bar */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -1638,6 +1644,7 @@ export default function FundraiseCommandCenter() {
               </div>
             </div>
           )}
+        </div>
         </div>
       )}
 
