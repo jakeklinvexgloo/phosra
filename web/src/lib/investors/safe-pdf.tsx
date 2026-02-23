@@ -256,8 +256,15 @@ export function SafePdf({ data }: { data: SafePdfData }) {
           Stock, the Company will create a new series of preferred stock having the identical
           rights, privileges, preferences and restrictions as the shares of Standard Preferred Stock
           issued in the Equity Financing, except that the Post-Money Valuation Cap will be used for
-          determining the price per share, the ## liquidation preference, and the conversion price
+          determining the price per share, the liquidation preference, and the conversion price
           for purposes of price-based anti-dilution protection.
+        </Text>
+        <Text style={s.indent}>
+          In the event of an Equity Financing, the initial closing of which occurs within ninety (90)
+          days of the issuance of this Safe, the Company will, at the option of the Investor, either
+          (a) apply the Purchase Amount to the purchase of shares of Standard Preferred Stock at the
+          price per share paid by the other investors in the Equity Financing, or (b) convert this
+          Safe into shares of Safe Preferred Stock as described above.
         </Text>
 
         <Text style={s.subsectionTitle}>(b) Liquidity Event.</Text>
@@ -417,6 +424,10 @@ export function SafePdf({ data }: { data: SafePdfData }) {
           Post-Money Valuation Cap divided by the Company Capitalization.
         </Text>
         <Text style={s.indent}>
+          <Text style={s.bold}>&quot;Securities Act&quot;</Text> means the Securities Act of 1933,
+          as amended.
+        </Text>
+        <Text style={s.indent}>
           <Text style={s.bold}>&quot;Standard Preferred Stock&quot;</Text> means the shares of the
           series of Preferred Stock issued to the investors investing new money in the Company in
           connection with the initial closing of the Equity Financing.
@@ -452,6 +463,14 @@ export function SafePdf({ data }: { data: SafePdfData }) {
           permit, license, or authorization applicable to the Company, its business, or operations.
         </Text>
 
+        <Text style={s.subsectionTitle}>(d)</Text>
+        <Text style={s.indent}>
+          No consents or approvals are required in connection with the performance of this Safe,
+          other than: (i) the Company&apos;s corporate approvals; (ii) any qualifications or filings
+          under applicable securities laws; and (iii) necessary corporate approvals for the
+          authorization of Capital Stock issuable pursuant to Section 1.
+        </Text>
+
         {/* ── Section 4: Investor Representations ─────────────── */}
         <Text style={s.sectionTitle}>4. Investor Representations</Text>
 
@@ -480,6 +499,13 @@ export function SafePdf({ data }: { data: SafePdfData }) {
           view to, or for resale in connection with, the distribution thereof, and the Investor has
           no present intention of selling, granting any participation in, or otherwise distributing
           the same.
+        </Text>
+
+        <Text style={s.subsectionTitle}>(d)</Text>
+        <Text style={s.indent}>
+          The Investor has had an opportunity to ask questions and receive answers from the Company
+          regarding the terms and conditions of this Safe and the business, properties, prospects,
+          and financial condition of the Company.
         </Text>
 
         <Text style={s.footer}>
@@ -531,11 +557,37 @@ export function SafePdf({ data }: { data: SafePdfData }) {
           without regard to the conflicts of law provisions of such jurisdiction.
         </Text>
 
-        <Text style={s.subsectionTitle}>(f) Entire Agreement.</Text>
+        <Text style={s.subsectionTitle}>(f) Successors and Assigns.</Text>
+        <Text style={s.indent}>
+          The terms and conditions of this Safe will inure to the benefit of and be binding upon
+          the respective successors and assigns of the parties. Neither the Company nor the Investor
+          may assign this Safe or any rights under this Safe without the prior written consent of the
+          other. Notwithstanding the foregoing, the Investor may assign this Safe to an affiliate of
+          the Investor without the Company&apos;s consent.
+        </Text>
+
+        <Text style={s.subsectionTitle}>(g) Severability.</Text>
+        <Text style={s.indent}>
+          If one or more provisions of this Safe are held to be unenforceable under applicable law,
+          the parties agree to renegotiate such provision in good faith. In the event that the
+          parties cannot reach a mutually agreeable and enforceable replacement for such provision,
+          then (i) such provision will be excluded from this Safe, (ii) the balance of this Safe
+          will be interpreted as if such provision were so excluded and (iii) the balance of this
+          Safe will be enforceable in accordance with its terms.
+        </Text>
+
+        <Text style={s.subsectionTitle}>(h) Entire Agreement.</Text>
         <Text style={s.indent}>
           This Safe comprises the entire agreement between the Company and the Investor with regard
           to the subject matter herein, and no party has relied on any other agreements or
           representations.
+        </Text>
+
+        <Text style={s.subsectionTitle}>(i) Counterparts.</Text>
+        <Text style={s.indent}>
+          This Safe may be executed in one or more counterparts, each of which will be deemed an
+          original and all of which together will constitute one and the same instrument. Electronic
+          signatures will be deemed original signatures for all purposes.
         </Text>
 
         {/* ── Signature Page ──────────────────────────────────── */}
