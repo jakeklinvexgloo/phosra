@@ -626,7 +626,7 @@ export default function SafeSection({
       {/* ── No SAFE — Overview Card ───────────────────────── */}
       {viewState === "no_safe" && (
         <AnimatedSection delay={0.1}>
-          <div className="glass-card rounded-xl p-6">
+          <div className="glass-card rounded-xl p-6 space-y-5">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-lg bg-brand-green/10 flex items-center justify-center flex-shrink-0">
@@ -658,6 +658,19 @@ export default function SafeSection({
                 <FileText className="w-3.5 h-3.5" />
                 Review &amp; Sign SAFE
               </button>
+            </div>
+
+            <div className="border-t border-white/5 pt-4">
+              <p className="text-xs text-white/30 leading-relaxed max-w-2xl">
+                <strong className="text-white/50">About the SAFE.</strong>{" "}
+                The SAFE (Simple Agreement for Future Equity) was introduced by Y Combinator in 2013
+                and has become the most widely used instrument for early-stage fundraising. Unlike
+                convertible notes, SAFEs have no interest rate, no maturity date, and no repayment
+                obligation — they simply convert into equity at a future priced round. The post-money
+                variant (used here) gives investors clarity on their ownership percentage at the time
+                of signing, making it the preferred standard for pre-seed and seed rounds. Over $100B+
+                in startup funding has been raised using SAFEs.
+              </p>
             </div>
           </div>
         </AnimatedSection>
@@ -741,7 +754,20 @@ export default function SafeSection({
 
             {/* Full SAFE document with pre-populated fields */}
             <div className="px-6 py-4 border-b border-white/5">
-              <p className="text-xs text-white/40 uppercase tracking-wider mb-3">Full Agreement — Post-Money SAFE (Valuation Cap, No Discount)</p>
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs text-white/40 uppercase tracking-wider">Full Agreement — Post-Money SAFE (Valuation Cap, No Discount)</p>
+                {safe && (
+                  <a
+                    href={`/api/investors/safe/${safe.id}/pdf`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 rounded-lg text-[11px] font-medium transition-colors"
+                  >
+                    <Download className="w-3 h-3" />
+                    Download PDF
+                  </a>
+                )}
+              </div>
               <SafeDocumentPreview
                 investorName={legalName.trim() || "______________________"}
                 investorCompany={company.trim()}
@@ -821,21 +847,32 @@ export default function SafeSection({
             </div>
 
             <div className="px-6 py-4 bg-white/[0.02] border-b border-white/5">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
-                <div>
-                  <p className="text-white/30">Investor</p>
-                  <p className="text-white font-medium">{safe.investor_name}</p>
+              <div className="flex items-center justify-between">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs flex-1">
+                  <div>
+                    <p className="text-white/30">Investor</p>
+                    <p className="text-white font-medium">{safe.investor_name}</p>
+                  </div>
+                  <div>
+                    <p className="text-white/30">Amount</p>
+                    <p className="text-white font-medium">
+                      {fmtDollars(parseInt(safe.investment_amount_cents, 10))}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-white/30">Valuation Cap</p>
+                    <p className="text-white font-medium">{RAISE_DETAILS.valuationCap}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white/30">Amount</p>
-                  <p className="text-white font-medium">
-                    {fmtDollars(parseInt(safe.investment_amount_cents, 10))}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-white/30">Valuation Cap</p>
-                  <p className="text-white font-medium">{RAISE_DETAILS.valuationCap}</p>
-                </div>
+                <a
+                  href={`/api/investors/safe/${safe.id}/pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 rounded-lg text-[11px] font-medium transition-colors flex-shrink-0 ml-4"
+                >
+                  <Download className="w-3 h-3" />
+                  Download PDF
+                </a>
               </div>
             </div>
 
