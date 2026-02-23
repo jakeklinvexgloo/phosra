@@ -69,7 +69,11 @@ export default function PhoneInput({
           value={formatAsYouType(value)}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          onFocus={() => setFocused(true)}
+          onFocus={(e) => {
+            setFocused(true)
+            const target = e.target
+            setTimeout(() => target.scrollIntoView({ block: "center", behavior: "smooth" }), 300)
+          }}
           onBlur={() => setFocused(false)}
           disabled={disabled}
           className="flex-1 bg-transparent text-white text-sm font-mono placeholder:text-white/20 outline-none disabled:opacity-50"

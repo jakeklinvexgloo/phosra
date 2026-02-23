@@ -149,7 +149,7 @@ export default function InvestorLoginForm({
 
   if (loginState === "invite_loading") {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
+      <div className="min-h-dvh bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-start pt-[20vh] justify-center px-4">
         <div className="text-center">
           <Loader2 className="w-8 h-8 text-brand-green animate-spin mx-auto mb-4" />
           <p className="text-sm text-white/40">Loading invite...</p>
@@ -176,7 +176,7 @@ export default function InvestorLoginForm({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center px-4">
+    <div className="min-h-dvh bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-start pt-[20vh] justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo / Header */}
         <div className="text-center mb-8">

@@ -503,9 +503,20 @@ function InvestorPortalContent() {
   const inviteCode = searchParams.get("invite")
   const [showInviteModal, setShowInviteModal] = useState(false)
 
+  // Auto-claim invite when returning authenticated user arrives via invite link
+  useEffect(() => {
+    if (state === "authenticated" && inviteCode) {
+      fetch(`/api/investors/portal/invite/${inviteCode}/claim`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      }).catch(() => {})
+    }
+  }, [state, inviteCode])
+
   if (state === "checking") {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center">
+      <div className="min-h-dvh bg-gradient-to-b from-[#0D1B2A] to-[#060D16] flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-brand-green animate-spin" />
       </div>
     )
