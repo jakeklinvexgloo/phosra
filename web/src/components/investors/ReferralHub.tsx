@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Activity, Loader2, UserPlus } from "lucide-react"
+import { Activity, Loader2, UserPlus, Share2, Eye, Trophy, ArrowRight } from "lucide-react"
 import { AnimatedSection } from "@/components/marketing/shared"
 import ReferralStats from "./ReferralStats"
 import ReferralBadges from "./ReferralBadges"
@@ -108,73 +108,110 @@ export default function ReferralHub() {
         </div>
       </AnimatedSection>
 
-      {!hasActivity ? (
-        <AnimatedSection delay={0.1}>
-          <div className="glass-card rounded-xl p-8 text-center">
-            <div className="w-12 h-12 rounded-full bg-brand-green/10 flex items-center justify-center mx-auto mb-4">
-              <UserPlus className="w-5 h-5 text-brand-green" />
-            </div>
-            <h3 className="text-white font-semibold text-sm mb-2">Build your network</h3>
-            <p className="text-xs text-white/40 max-w-sm mx-auto leading-relaxed">
-              Invite other investors to earn points, unlock badges, and climb the leaderboard.
-              Share the deck and track engagement in real time.
-            </p>
-          </div>
-        </AnimatedSection>
-      ) : (
-        <div className="space-y-6">
+      <div className="space-y-6">
+        {/* Stats — only when there's activity */}
+        {hasActivity && (
           <AnimatedSection delay={0.1}>
             <ReferralStats stats={data.stats} />
           </AnimatedSection>
+        )}
 
-          <AnimatedSection delay={0.15}>
-            <ReferralBadges badges={data.badges} />
+        {/* Empty state CTA — when no activity yet */}
+        {!hasActivity && (
+          <AnimatedSection delay={0.1}>
+            <div className="glass-card rounded-xl p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row items-start gap-5">
+                <div className="w-12 h-12 rounded-full bg-brand-green/10 flex items-center justify-center flex-shrink-0">
+                  <UserPlus className="w-5 h-5 text-brand-green" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-white font-semibold text-sm mb-2">
+                    Help build the round — earn your place on the board
+                  </h3>
+                  <p className="text-xs text-white/40 leading-relaxed mb-4">
+                    Every great raise is built on referrals. Invite investors you know, share the deck,
+                    and track who engages — all from here.
+                  </p>
+                  <div className="space-y-2">
+                    {[
+                      { icon: Share2, action: "Send an invite", points: "+1 pt", detail: "per invite sent" },
+                      { icon: UserPlus, action: "They join the portal", points: "+5 pts", detail: "per sign-up" },
+                      { icon: Eye, action: "Share the deck", points: "+2 pts", detail: "per view" },
+                      { icon: Trophy, action: "They invest", points: "+20 pts", detail: "per SAFE signed" },
+                    ].map((row) => (
+                      <div key={row.action} className="flex items-center gap-3">
+                        <row.icon className="w-3.5 h-3.5 text-white/20 flex-shrink-0" />
+                        <span className="text-xs text-white/60 flex-1">{row.action}</span>
+                        <span className="text-xs text-brand-green font-mono tabular-nums">{row.points}</span>
+                        <span className="text-[10px] text-white/20 w-24">{row.detail}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-4 text-[10px] text-white/20">
+                    <ArrowRight className="w-3 h-3" />
+                    <span>Use the <strong className="text-white/40">Invite an Investor</strong> button above or <strong className="text-white/40">Share Deck</strong> on the pitch deck to get started</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </AnimatedSection>
+        )}
 
+        {/* Badges — always visible (unearned ones are dimmed, acts as a teaser) */}
+        <AnimatedSection delay={hasActivity ? 0.15 : 0.2}>
+          <ReferralBadges badges={data.badges} />
+        </AnimatedSection>
+
+        {/* Activity feed — only when there's activity */}
+        {hasActivity && (
           <AnimatedSection delay={0.2}>
             <ReferralActivityFeed activity={data.activity} />
           </AnimatedSection>
+        )}
 
-          {data.referrals.length > 0 && (
-            <AnimatedSection delay={0.25}>
-              <div className="glass-card rounded-xl p-4">
-                <p className="text-xs text-white/40 font-semibold uppercase tracking-wider mb-3">
-                  Your Referrals
-                </p>
-                <div className="space-y-2">
-                  {data.referrals.map((ref, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3 py-2 border-b border-white/5 last:border-0"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-white/70 font-medium">{ref.name}</p>
-                        {ref.company && (
-                          <p className="text-[10px] text-white/30">{ref.company}</p>
-                        )}
-                      </div>
-                      <span
-                        className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${ENGAGEMENT_COLORS[ref.engagementLevel]}`}
-                      >
-                        {ref.engagementLevel}
-                      </span>
-                      {ref.subReferralCount > 0 && (
-                        <span className="text-[10px] text-white/20">
-                          +{ref.subReferralCount} sub
-                        </span>
+        {/* Referral list — only when referrals exist */}
+        {data.referrals.length > 0 && (
+          <AnimatedSection delay={0.25}>
+            <div className="glass-card rounded-xl p-4">
+              <p className="text-xs text-white/40 font-semibold uppercase tracking-wider mb-3">
+                Your Referrals
+              </p>
+              <div className="space-y-2">
+                {data.referrals.map((ref, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center gap-3 py-2 border-b border-white/5 last:border-0"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-white/70 font-medium">{ref.name}</p>
+                      {ref.company && (
+                        <p className="text-[10px] text-white/30">{ref.company}</p>
                       )}
                     </div>
-                  ))}
-                </div>
+                    <span
+                      className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${ENGAGEMENT_COLORS[ref.engagementLevel]}`}
+                    >
+                      {ref.engagementLevel}
+                    </span>
+                    {ref.subReferralCount > 0 && (
+                      <span className="text-[10px] text-white/20">
+                        +{ref.subReferralCount} sub
+                      </span>
+                    )}
+                  </div>
+                ))}
               </div>
-            </AnimatedSection>
-          )}
+            </div>
+          </AnimatedSection>
+        )}
 
+        {/* Leaderboard — always visible if anyone has scored (shows other investors' momentum) */}
+        {data.leaderboard.length > 0 && (
           <AnimatedSection delay={0.3}>
             <ReferralLeaderboard leaderboard={data.leaderboard} />
           </AnimatedSection>
-        </div>
-      )}
+        )}
+      </div>
     </section>
   )
 }

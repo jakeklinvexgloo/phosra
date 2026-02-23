@@ -32,8 +32,8 @@ export const DATA_ROOM_LINKS: DataRoomLink[] = [
   },
   {
     label: "Pitch Deck",
-    description: "12-slide pre-seed deck — problem, product, market, traction, team",
-    url: "/deck/phosra-pre-seed-deck.pdf",
+    description: "11-slide pre-seed deck — problem, infrastructure thesis, product, market, team",
+    url: "/deck/",
     category: "product",
   },
   {
