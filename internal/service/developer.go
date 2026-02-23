@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"regexp"
@@ -16,11 +17,11 @@ import (
 )
 
 var (
-	ErrOrgNotFound        = errors.New("developer org not found")
-	ErrKeyNotFound        = errors.New("API key not found")
-	ErrInvalidScope       = errors.New("invalid scope requested")
-	ErrInvalidEnvironment = errors.New("environment must be 'live' or 'test'")
-	ErrNotOrgMember       = errors.New("not a member of this organization")
+	ErrOrgNotFound         = errors.New("developer org not found")
+	ErrKeyNotFound         = errors.New("API key not found")
+	ErrInvalidScope        = errors.New("invalid scope requested")
+	ErrInvalidEnvironment  = errors.New("environment must be 'live' or 'test'")
+	ErrNotOrgMember        = errors.New("not a member of this organization")
 	ErrInsufficientOrgRole = errors.New("insufficient role for this action")
 )
 
@@ -48,23 +49,23 @@ var validScopes = map[string]bool{
 
 // developerRepo defines the repository interface for the developer portal.
 type developerRepo interface {
-	CreateOrg(ctx context.Context, org *domain.DeveloperOrg) (*domain.DeveloperOrg, error)
-	GetOrg(ctx context.Context, id string) (*domain.DeveloperOrg, error)
+	CreateOrg(ctx context.Context, org *domain.DeveloperOrg) error
+	GetOrg(ctx context.Context, id uuid.UUID) (*domain.DeveloperOrg, error)
 	GetOrgBySlug(ctx context.Context, slug string) (*domain.DeveloperOrg, error)
-	ListOrgsByUser(ctx context.Context, userID string) ([]domain.DeveloperOrg, error)
-	UpdateOrg(ctx context.Context, org *domain.DeveloperOrg) (*domain.DeveloperOrg, error)
-	DeleteOrg(ctx context.Context, id string) error
-	AddMember(ctx context.Context, member *domain.DeveloperOrgMember) (*domain.DeveloperOrgMember, error)
-	RemoveMember(ctx context.Context, orgID, userID string) error
-	ListMembers(ctx context.Context, orgID string) ([]domain.DeveloperOrgMember, error)
-	GetMemberRole(ctx context.Context, orgID, userID string) (string, error)
-	CreateKey(ctx context.Context, key *domain.DeveloperAPIKey) (*domain.DeveloperAPIKey, error)
+	ListOrgsByUser(ctx context.Context, userID uuid.UUID) ([]domain.DeveloperOrg, error)
+	UpdateOrg(ctx context.Context, org *domain.DeveloperOrg) error
+	DeleteOrg(ctx context.Context, id uuid.UUID) error
+	AddMember(ctx context.Context, member *domain.DeveloperOrgMember) error
+	RemoveMember(ctx context.Context, orgID, userID uuid.UUID) error
+	ListMembers(ctx context.Context, orgID uuid.UUID) ([]domain.DeveloperOrgMember, error)
+	GetMemberRole(ctx context.Context, orgID, userID uuid.UUID) (string, error)
+	CreateKey(ctx context.Context, key *domain.DeveloperAPIKey) error
 	GetKeyByHash(ctx context.Context, hash string) (*domain.DeveloperAPIKey, error)
-	ListKeysByOrg(ctx context.Context, orgID string) ([]domain.DeveloperAPIKey, error)
-	RevokeKey(ctx context.Context, id string) error
-	UpdateKeyLastUsed(ctx context.Context, id, ip string) error
+	ListKeysByOrg(ctx context.Context, orgID uuid.UUID) ([]domain.DeveloperAPIKey, error)
+	RevokeKey(ctx context.Context, id uuid.UUID) error
+	UpdateKeyLastUsed(ctx context.Context, id uuid.UUID, ip string) error
 	RecordUsage(ctx context.Context, usage *domain.DeveloperAPIUsage) error
-	GetUsageSummary(ctx context.Context, orgID string, from, to time.Time) ([]domain.DeveloperAPIUsage, error)
+	GetUsageSummary(ctx context.Context, orgID uuid.UUID, from, to time.Time) ([]domain.DeveloperAPIUsage, error)
 	LogKeyEvent(ctx context.Context, event *domain.DeveloperKeyEvent) error
 }
 
@@ -79,42 +80,39 @@ func NewDeveloperService(repo developerRepo) *DeveloperService {
 }
 
 // CreateOrg creates a new developer organization and adds the user as owner.
-func (s *DeveloperService) CreateOrg(ctx context.Context, userID, name, description, websiteURL string) (*domain.DeveloperOrg, error) {
+func (s *DeveloperService) CreateOrg(ctx context.Context, userID uuid.UUID, name, description, websiteURL string) (*domain.DeveloperOrg, error) {
 	slug := generateSlug(name)
 
 	org := &domain.DeveloperOrg{
-		ID:          uuid.New().String(),
+		ID:          uuid.New(),
 		Name:        name,
 		Slug:        slug,
 		Description: description,
 		WebsiteURL:  websiteURL,
-		Plan:        "free",
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		OwnerUserID: userID,
+		Tier:        domain.DeveloperTierFree,
 	}
 
-	created, err := s.repo.CreateOrg(ctx, org)
-	if err != nil {
+	if err := s.repo.CreateOrg(ctx, org); err != nil {
 		return nil, fmt.Errorf("create org: %w", err)
 	}
 
 	// Add the creator as owner
 	member := &domain.DeveloperOrgMember{
-		ID:       uuid.New().String(),
-		OrgID:    created.ID,
-		UserID:   userID,
-		Role:     "owner",
-		JoinedAt: time.Now(),
+		ID:     uuid.New(),
+		OrgID:  org.ID,
+		UserID: userID,
+		Role:   domain.DeveloperRoleOwner,
 	}
-	if _, err := s.repo.AddMember(ctx, member); err != nil {
+	if err := s.repo.AddMember(ctx, member); err != nil {
 		return nil, fmt.Errorf("add owner member: %w", err)
 	}
 
-	return created, nil
+	return org, nil
 }
 
 // GetOrg retrieves a developer organization by ID.
-func (s *DeveloperService) GetOrg(ctx context.Context, orgID string) (*domain.DeveloperOrg, error) {
+func (s *DeveloperService) GetOrg(ctx context.Context, orgID uuid.UUID) (*domain.DeveloperOrg, error) {
 	org, err := s.repo.GetOrg(ctx, orgID)
 	if err != nil {
 		return nil, fmt.Errorf("get org: %w", err)
@@ -126,7 +124,7 @@ func (s *DeveloperService) GetOrg(ctx context.Context, orgID string) (*domain.De
 }
 
 // ListOrgs lists all organizations for a user.
-func (s *DeveloperService) ListOrgs(ctx context.Context, userID string) ([]domain.DeveloperOrg, error) {
+func (s *DeveloperService) ListOrgs(ctx context.Context, userID uuid.UUID) ([]domain.DeveloperOrg, error) {
 	orgs, err := s.repo.ListOrgsByUser(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("list orgs: %w", err)
@@ -135,7 +133,7 @@ func (s *DeveloperService) ListOrgs(ctx context.Context, userID string) ([]domai
 }
 
 // UpdateOrg updates an organization's details.
-func (s *DeveloperService) UpdateOrg(ctx context.Context, orgID, name, description, websiteURL string) (*domain.DeveloperOrg, error) {
+func (s *DeveloperService) UpdateOrg(ctx context.Context, orgID uuid.UUID, name, description, websiteURL string) (*domain.DeveloperOrg, error) {
 	org, err := s.repo.GetOrg(ctx, orgID)
 	if err != nil {
 		return nil, fmt.Errorf("get org: %w", err)
@@ -156,15 +154,14 @@ func (s *DeveloperService) UpdateOrg(ctx context.Context, orgID, name, descripti
 	}
 	org.UpdatedAt = time.Now()
 
-	updated, err := s.repo.UpdateOrg(ctx, org)
-	if err != nil {
+	if err := s.repo.UpdateOrg(ctx, org); err != nil {
 		return nil, fmt.Errorf("update org: %w", err)
 	}
-	return updated, nil
+	return org, nil
 }
 
 // DeleteOrg deletes an organization.
-func (s *DeveloperService) DeleteOrg(ctx context.Context, orgID string) error {
+func (s *DeveloperService) DeleteOrg(ctx context.Context, orgID uuid.UUID) error {
 	org, err := s.repo.GetOrg(ctx, orgID)
 	if err != nil {
 		return fmt.Errorf("get org: %w", err)
@@ -176,7 +173,7 @@ func (s *DeveloperService) DeleteOrg(ctx context.Context, orgID string) error {
 }
 
 // ListMembers lists all members of an organization.
-func (s *DeveloperService) ListMembers(ctx context.Context, orgID string) ([]domain.DeveloperOrgMember, error) {
+func (s *DeveloperService) ListMembers(ctx context.Context, orgID uuid.UUID) ([]domain.DeveloperOrgMember, error) {
 	members, err := s.repo.ListMembers(ctx, orgID)
 	if err != nil {
 		return nil, fmt.Errorf("list members: %w", err)
@@ -186,8 +183,8 @@ func (s *DeveloperService) ListMembers(ctx context.Context, orgID string) ([]dom
 
 // CreateAPIKey generates a new API key for an organization.
 // Returns the key struct and the raw key string (shown once to the user).
-func (s *DeveloperService) CreateAPIKey(ctx context.Context, orgID, userID, name, environment string, scopes []string) (*domain.DeveloperAPIKey, string, error) {
-	if environment != "live" && environment != "test" {
+func (s *DeveloperService) CreateAPIKey(ctx context.Context, orgID, userID uuid.UUID, name string, environment domain.DeveloperEnv, scopes []string) (*domain.DeveloperAPIKey, string, error) {
+	if environment != domain.DeveloperEnvLive && environment != domain.DeveloperEnvTest {
 		return nil, "", ErrInvalidEnvironment
 	}
 
@@ -204,7 +201,7 @@ func (s *DeveloperService) CreateAPIKey(ctx context.Context, orgID, userID, name
 
 	// Add environment-based prefix
 	var prefix string
-	if environment == "live" {
+	if environment == domain.DeveloperEnvLive {
 		prefix = "phosra_live_"
 	} else {
 		prefix = "phosra_test_"
@@ -219,7 +216,7 @@ func (s *DeveloperService) CreateAPIKey(ctx context.Context, orgID, userID, name
 	keyPrefix := rawKey[:len(prefix)+8]
 
 	key := &domain.DeveloperAPIKey{
-		ID:          uuid.New().String(),
+		ID:          uuid.New(),
 		OrgID:       orgID,
 		Name:        name,
 		KeyHash:     keyHash,
@@ -227,33 +224,30 @@ func (s *DeveloperService) CreateAPIKey(ctx context.Context, orgID, userID, name
 		Environment: environment,
 		Scopes:      scopes,
 		CreatedBy:   userID,
-		CreatedAt:   time.Now(),
 	}
 
-	created, err := s.repo.CreateKey(ctx, key)
-	if err != nil {
+	if err := s.repo.CreateKey(ctx, key); err != nil {
 		return nil, "", fmt.Errorf("create key: %w", err)
 	}
 
 	// Log the creation event
 	event := &domain.DeveloperKeyEvent{
-		ID:        uuid.New().String(),
-		KeyID:     created.ID,
-		OrgID:     orgID,
-		Action:    "created",
-		ActorID:   userID,
-		CreatedAt: time.Now(),
+		ID:          uuid.New(),
+		KeyID:       key.ID,
+		EventType:   domain.KeyEventCreated,
+		ActorUserID: &userID,
+		Metadata:    json.RawMessage("{}"),
 	}
 	if err := s.repo.LogKeyEvent(ctx, event); err != nil {
 		// Non-fatal: key was created successfully, just log event failed
 		_ = err
 	}
 
-	return created, rawKey, nil
+	return key, rawKey, nil
 }
 
 // ListAPIKeys lists all API keys for an organization (without raw keys).
-func (s *DeveloperService) ListAPIKeys(ctx context.Context, orgID string) ([]domain.DeveloperAPIKey, error) {
+func (s *DeveloperService) ListAPIKeys(ctx context.Context, orgID uuid.UUID) ([]domain.DeveloperAPIKey, error) {
 	keys, err := s.repo.ListKeysByOrg(ctx, orgID)
 	if err != nil {
 		return nil, fmt.Errorf("list keys: %w", err)
@@ -262,18 +256,17 @@ func (s *DeveloperService) ListAPIKeys(ctx context.Context, orgID string) ([]dom
 }
 
 // RevokeKey revokes an API key and logs the event.
-func (s *DeveloperService) RevokeKey(ctx context.Context, orgID, keyID, actorUserID string) error {
+func (s *DeveloperService) RevokeKey(ctx context.Context, orgID, keyID, actorUserID uuid.UUID) error {
 	if err := s.repo.RevokeKey(ctx, keyID); err != nil {
 		return fmt.Errorf("revoke key: %w", err)
 	}
 
 	event := &domain.DeveloperKeyEvent{
-		ID:        uuid.New().String(),
-		KeyID:     keyID,
-		OrgID:     orgID,
-		Action:    "revoked",
-		ActorID:   actorUserID,
-		CreatedAt: time.Now(),
+		ID:          uuid.New(),
+		KeyID:       keyID,
+		EventType:   domain.KeyEventRevoked,
+		ActorUserID: &actorUserID,
+		Metadata:    json.RawMessage("{}"),
 	}
 	if err := s.repo.LogKeyEvent(ctx, event); err != nil {
 		_ = err
@@ -283,7 +276,7 @@ func (s *DeveloperService) RevokeKey(ctx context.Context, orgID, keyID, actorUse
 }
 
 // RegenerateKey revokes the old key and creates a new one with the same name, environment, and scopes.
-func (s *DeveloperService) RegenerateKey(ctx context.Context, orgID, keyID, actorUserID string) (*domain.DeveloperAPIKey, string, error) {
+func (s *DeveloperService) RegenerateKey(ctx context.Context, orgID, keyID, actorUserID uuid.UUID) (*domain.DeveloperAPIKey, string, error) {
 	// Get the existing key's metadata
 	keys, err := s.repo.ListKeysByOrg(ctx, orgID)
 	if err != nil {
@@ -313,14 +306,13 @@ func (s *DeveloperService) RegenerateKey(ctx context.Context, orgID, keyID, acto
 	}
 
 	// Log regeneration event
+	metadata := fmt.Sprintf(`{"previous_key_id":"%s"}`, keyID)
 	event := &domain.DeveloperKeyEvent{
-		ID:        uuid.New().String(),
-		KeyID:     newKey.ID,
-		OrgID:     orgID,
-		Action:    "regenerated",
-		ActorID:   actorUserID,
-		Metadata:  fmt.Sprintf(`{"previous_key_id":"%s"}`, keyID),
-		CreatedAt: time.Now(),
+		ID:          uuid.New(),
+		KeyID:       newKey.ID,
+		EventType:   domain.KeyEventRegenerated,
+		ActorUserID: &actorUserID,
+		Metadata:    json.RawMessage(metadata),
 	}
 	if err := s.repo.LogKeyEvent(ctx, event); err != nil {
 		_ = err
@@ -330,7 +322,7 @@ func (s *DeveloperService) RegenerateKey(ctx context.Context, orgID, keyID, acto
 }
 
 // GetUsage retrieves usage data for an organization over the last N days.
-func (s *DeveloperService) GetUsage(ctx context.Context, orgID string, days int) ([]domain.DeveloperAPIUsage, error) {
+func (s *DeveloperService) GetUsage(ctx context.Context, orgID uuid.UUID, days int) ([]domain.DeveloperAPIUsage, error) {
 	to := time.Now()
 	from := to.AddDate(0, 0, -days)
 	usage, err := s.repo.GetUsageSummary(ctx, orgID, from, to)
@@ -351,16 +343,19 @@ func (s *DeveloperService) ValidateScopes(requested []string) error {
 }
 
 // CheckOrgAccess verifies the user is a member of the org and returns the role.
-func (s *DeveloperService) CheckOrgAccess(ctx context.Context, orgID, userID string) (string, error) {
+func (s *DeveloperService) CheckOrgAccess(ctx context.Context, orgID, userID uuid.UUID) (string, error) {
 	role, err := s.repo.GetMemberRole(ctx, orgID, userID)
 	if err != nil {
+		return "", ErrNotOrgMember
+	}
+	if role == "" {
 		return "", ErrNotOrgMember
 	}
 	return role, nil
 }
 
 // CheckOrgAdmin verifies the user has admin or owner role in the org.
-func (s *DeveloperService) CheckOrgAdmin(ctx context.Context, orgID, userID string) error {
+func (s *DeveloperService) CheckOrgAdmin(ctx context.Context, orgID, userID uuid.UUID) error {
 	role, err := s.CheckOrgAccess(ctx, orgID, userID)
 	if err != nil {
 		return err

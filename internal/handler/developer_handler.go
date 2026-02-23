@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 	"github.com/guardiangate/api/internal/domain"
 	"github.com/guardiangate/api/internal/handler/middleware"
 	"github.com/guardiangate/api/internal/service"
@@ -40,7 +41,7 @@ func (h *DeveloperHandler) CreateOrg(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	org, err := h.developers.CreateOrg(r.Context(), userID.String(), req.Name, req.Description, req.WebsiteURL)
+	org, err := h.developers.CreateOrg(r.Context(), userID, req.Name, req.Description, req.WebsiteURL)
 	if err != nil {
 		httputil.Error(w, http.StatusInternalServerError, "failed to create organization")
 		return
@@ -52,7 +53,7 @@ func (h *DeveloperHandler) CreateOrg(w http.ResponseWriter, r *http.Request) {
 func (h *DeveloperHandler) ListOrgs(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
 
-	orgs, err := h.developers.ListOrgs(r.Context(), userID.String())
+	orgs, err := h.developers.ListOrgs(r.Context(), userID)
 	if err != nil {
 		httputil.Error(w, http.StatusInternalServerError, "failed to list organizations")
 		return
@@ -63,10 +64,14 @@ func (h *DeveloperHandler) ListOrgs(w http.ResponseWriter, r *http.Request) {
 // GetOrg handles GET /developers/orgs/{orgID}
 func (h *DeveloperHandler) GetOrg(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
 
 	// Verify the user has access to this org
-	if _, err := h.developers.CheckOrgAccess(r.Context(), orgID, userID.String()); err != nil {
+	if _, err := h.developers.CheckOrgAccess(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
@@ -82,9 +87,13 @@ func (h *DeveloperHandler) GetOrg(w http.ResponseWriter, r *http.Request) {
 // UpdateOrg handles PUT /developers/orgs/{orgID}
 func (h *DeveloperHandler) UpdateOrg(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
 
-	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID.String()); err != nil {
+	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
@@ -110,9 +119,13 @@ func (h *DeveloperHandler) UpdateOrg(w http.ResponseWriter, r *http.Request) {
 // DeleteOrg handles DELETE /developers/orgs/{orgID}
 func (h *DeveloperHandler) DeleteOrg(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
 
-	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID.String()); err != nil {
+	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
@@ -127,9 +140,13 @@ func (h *DeveloperHandler) DeleteOrg(w http.ResponseWriter, r *http.Request) {
 // ListMembers handles GET /developers/orgs/{orgID}/members
 func (h *DeveloperHandler) ListMembers(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
 
-	if _, err := h.developers.CheckOrgAccess(r.Context(), orgID, userID.String()); err != nil {
+	if _, err := h.developers.CheckOrgAccess(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
@@ -145,9 +162,13 @@ func (h *DeveloperHandler) ListMembers(w http.ResponseWriter, r *http.Request) {
 // CreateKey handles POST /developers/orgs/{orgID}/keys
 func (h *DeveloperHandler) CreateKey(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
 
-	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID.String()); err != nil {
+	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
@@ -170,7 +191,7 @@ func (h *DeveloperHandler) CreateKey(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	key, rawKey, err := h.developers.CreateAPIKey(r.Context(), orgID, userID.String(), req.Name, req.Environment, req.Scopes)
+	key, rawKey, err := h.developers.CreateAPIKey(r.Context(), orgID, userID, req.Name, domain.DeveloperEnv(req.Environment), req.Scopes)
 	if err != nil {
 		handleDeveloperServiceError(w, err)
 		return
@@ -190,9 +211,13 @@ func (h *DeveloperHandler) CreateKey(w http.ResponseWriter, r *http.Request) {
 // ListKeys handles GET /developers/orgs/{orgID}/keys
 func (h *DeveloperHandler) ListKeys(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
 
-	if _, err := h.developers.CheckOrgAccess(r.Context(), orgID, userID.String()); err != nil {
+	if _, err := h.developers.CheckOrgAccess(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
@@ -208,15 +233,23 @@ func (h *DeveloperHandler) ListKeys(w http.ResponseWriter, r *http.Request) {
 // RevokeKey handles DELETE /developers/orgs/{orgID}/keys/{keyID}
 func (h *DeveloperHandler) RevokeKey(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
-	keyID := chi.URLParam(r, "keyID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
+	keyID, err := uuid.Parse(chi.URLParam(r, "keyID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid key ID")
+		return
+	}
 
-	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID.String()); err != nil {
+	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
 
-	if err := h.developers.RevokeKey(r.Context(), orgID, keyID, userID.String()); err != nil {
+	if err := h.developers.RevokeKey(r.Context(), orgID, keyID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
@@ -226,15 +259,23 @@ func (h *DeveloperHandler) RevokeKey(w http.ResponseWriter, r *http.Request) {
 // RegenerateKey handles POST /developers/orgs/{orgID}/keys/{keyID}/regenerate
 func (h *DeveloperHandler) RegenerateKey(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
-	keyID := chi.URLParam(r, "keyID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
+	keyID, err := uuid.Parse(chi.URLParam(r, "keyID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid key ID")
+		return
+	}
 
-	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID.String()); err != nil {
+	if err := h.developers.CheckOrgAdmin(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
 
-	key, rawKey, err := h.developers.RegenerateKey(r.Context(), orgID, keyID, userID.String())
+	key, rawKey, err := h.developers.RegenerateKey(r.Context(), orgID, keyID, userID)
 	if err != nil {
 		handleDeveloperServiceError(w, err)
 		return
@@ -254,9 +295,13 @@ func (h *DeveloperHandler) RegenerateKey(w http.ResponseWriter, r *http.Request)
 // GetUsage handles GET /developers/orgs/{orgID}/usage
 func (h *DeveloperHandler) GetUsage(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	orgID := chi.URLParam(r, "orgID")
+	orgID, err := uuid.Parse(chi.URLParam(r, "orgID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid org ID")
+		return
+	}
 
-	if _, err := h.developers.CheckOrgAccess(r.Context(), orgID, userID.String()); err != nil {
+	if _, err := h.developers.CheckOrgAccess(r.Context(), orgID, userID); err != nil {
 		handleDeveloperServiceError(w, err)
 		return
 	}
