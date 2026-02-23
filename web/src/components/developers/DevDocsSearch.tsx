@@ -48,15 +48,7 @@ export function DevDocsSearch() {
           setEntries(data)
           setLoaded(true)
         })
-        .catch(() => {
-          // Try static import as fallback
-          import("@/lib/developers/generated/search-index.json")
-            .then((mod) => {
-              setEntries(mod.default as SearchEntry[])
-              setLoaded(true)
-            })
-            .catch(() => setLoaded(true))
-        })
+        .catch(() => setLoaded(true))
     }
   }, [open, loaded])
 

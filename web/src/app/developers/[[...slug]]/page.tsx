@@ -1,3 +1,5 @@
+import fs from "fs"
+import path from "path"
 import { compileMDX } from "next-mdx-remote/rsc"
 import remarkGfm from "remark-gfm"
 import rehypePrettyCode from "rehype-pretty-code"
@@ -9,13 +11,17 @@ import { DevDocsToc } from "@/components/developers/DevDocsToc"
 import { DevDocsHeader } from "@/components/developers/DevDocsHeader"
 import type { Metadata } from "next"
 
-// Try to load generated API data (may not exist until build script runs)
-let apiReferenceData: any = null
-try {
-  apiReferenceData = require("@/lib/developers/generated/api-reference.json")
-} catch {
-  // not generated yet
+function loadApiReferenceData(): any {
+  try {
+    const filePath = path.join(process.cwd(), "src", "lib", "developers", "generated", "api-reference.json")
+    if (fs.existsSync(filePath)) {
+      return JSON.parse(fs.readFileSync(filePath, "utf-8"))
+    }
+  } catch {}
+  return null
 }
+
+const apiReferenceData = loadApiReferenceData()
 
 interface PageProps {
   params: { slug?: string[] }
