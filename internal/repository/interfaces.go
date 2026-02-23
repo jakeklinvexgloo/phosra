@@ -217,3 +217,68 @@ type DeviceReportRepository interface {
 	ListByDevice(ctx context.Context, deviceID uuid.UUID, limit int) ([]domain.DeviceReport, error)
 	ListByChildAndTimeRange(ctx context.Context, childID uuid.UUID, from, to time.Time) ([]domain.DeviceReport, error)
 }
+
+// ── Developer Portal ─────────────────────────────────────────────
+
+type DeveloperRepository interface {
+	// Orgs
+	CreateOrg(ctx context.Context, org *domain.DeveloperOrg) error
+	GetOrg(ctx context.Context, id uuid.UUID) (*domain.DeveloperOrg, error)
+	GetOrgBySlug(ctx context.Context, slug string) (*domain.DeveloperOrg, error)
+	ListOrgsByUser(ctx context.Context, userID uuid.UUID) ([]domain.DeveloperOrg, error)
+	UpdateOrg(ctx context.Context, org *domain.DeveloperOrg) error
+	DeleteOrg(ctx context.Context, id uuid.UUID) error
+
+	// Members
+	AddMember(ctx context.Context, member *domain.DeveloperOrgMember) error
+	RemoveMember(ctx context.Context, orgID, userID uuid.UUID) error
+	ListMembers(ctx context.Context, orgID uuid.UUID) ([]domain.DeveloperOrgMember, error)
+	GetMemberRole(ctx context.Context, orgID, userID uuid.UUID) (string, error)
+
+	// API Keys
+	CreateKey(ctx context.Context, key *domain.DeveloperAPIKey) error
+	GetKeyByHash(ctx context.Context, hash string) (*domain.DeveloperAPIKey, error)
+	ListKeysByOrg(ctx context.Context, orgID uuid.UUID) ([]domain.DeveloperAPIKey, error)
+	RevokeKey(ctx context.Context, id uuid.UUID) error
+	UpdateKeyLastUsed(ctx context.Context, id uuid.UUID, ip string) error
+
+	// Usage
+	RecordUsage(ctx context.Context, usage *domain.DeveloperAPIUsage) error
+	GetUsageSummary(ctx context.Context, orgID uuid.UUID, from, to time.Time) ([]domain.DeveloperAPIUsage, error)
+
+	// Key Events
+	LogKeyEvent(ctx context.Context, event *domain.DeveloperKeyEvent) error
+}
+
+// ── Sources API (Parental Control Integrations) ─────────────────
+
+type SourceRepository interface {
+	// Sources
+	CreateSource(ctx context.Context, src *domain.Source) (*domain.Source, error)
+	GetSource(ctx context.Context, id uuid.UUID) (*domain.Source, error)
+	GetSourceByChildAndSlug(ctx context.Context, childID uuid.UUID, slug string) (*domain.Source, error)
+	ListSourcesByChild(ctx context.Context, childID uuid.UUID) ([]domain.Source, error)
+	ListSourcesByFamily(ctx context.Context, familyID uuid.UUID) ([]domain.Source, error)
+	UpdateSource(ctx context.Context, src *domain.Source) (*domain.Source, error)
+	UpdateSourceStatus(ctx context.Context, id uuid.UUID, status string, errorMsg *string) error
+	DeleteSource(ctx context.Context, id uuid.UUID) error
+
+	// Sync Jobs
+	CreateSyncJob(ctx context.Context, job *domain.SourceSyncJob) (*domain.SourceSyncJob, error)
+	GetSyncJob(ctx context.Context, id uuid.UUID) (*domain.SourceSyncJob, error)
+	UpdateSyncJob(ctx context.Context, job *domain.SourceSyncJob) error
+	ListSyncJobs(ctx context.Context, sourceID uuid.UUID, limit int) ([]domain.SourceSyncJob, error)
+
+	// Sync Results
+	CreateSyncResult(ctx context.Context, result *domain.SourceSyncResult) (*domain.SourceSyncResult, error)
+	ListSyncResults(ctx context.Context, jobID uuid.UUID) ([]domain.SourceSyncResult, error)
+
+	// Capabilities
+	GetCapabilities(ctx context.Context, sourceSlug string) ([]domain.SourceCapability, error)
+	UpsertCapability(ctx context.Context, cap *domain.SourceCapability) error
+
+	// Inbound Events
+	CreateInboundEvent(ctx context.Context, event *domain.SourceInboundEvent) (*domain.SourceInboundEvent, error)
+	ListUnprocessedEvents(ctx context.Context, sourceID uuid.UUID) ([]domain.SourceInboundEvent, error)
+	MarkEventProcessed(ctx context.Context, id uuid.UUID) error
+}

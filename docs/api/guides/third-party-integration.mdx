@@ -1,0 +1,104 @@
+---
+title: 'Third-Party Integration'
+description: 'How to connect and enforce rules on external platforms'
+---
+
+# Third-Party Integration
+
+Phosra connects to external platforms (DNS filters, streaming services, gaming consoles, browsers, devices) and pushes your child safety rules to each one. This guide covers how platform connections work.
+
+## Supported Platforms
+
+Platforms are grouped by category:
+
+| Category | Examples | Auth Type |
+|----------|----------|-----------|
+| `dns` | NextDNS, CleanBrowsing | API key |
+| `streaming` | Netflix, Disney+, YouTube | OAuth 2.0 |
+| `gaming` | Xbox, PlayStation, Nintendo | OAuth 2.0 |
+| `device` | Apple Screen Time, Google Family Link | Device key |
+| `browser` | Chrome, Safari | Extension API |
+
+List all platforms:
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/platforms \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+Filter by category:
+
+```bash
+curl "https://phosra-api-production.up.railway.app/api/v1/platforms/by-category?category=dns" \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+## Connecting a Platform
+
+### API Key Platforms
+
+For platforms that use API keys (like NextDNS), pass the credentials directly:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/compliance \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "family_id": "FAMILY_UUID",
+    "platform_id": "nextdns",
+    "credentials": "nextdns-api-key-here"
+  }'
+```
+
+### OAuth Platforms
+
+For OAuth platforms, redirect the user through the authorization flow:
+
+```bash
+# 1. Get the authorization URL
+curl "https://phosra-api-production.up.railway.app/api/v1/platforms/netflix/oauth/authorize?redirect_uri=https://yourapp.com/callback" \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+
+# 2. User authorizes in browser, redirected to your callback with ?code=...
+
+# 3. Exchange the code
+curl "https://phosra-api-production.up.railway.app/api/v1/platforms/netflix/oauth/callback?code=AUTH_CODE&redirect_uri=https://yourapp.com/callback" \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+## Compliance Tiers
+
+Each platform has a compliance tier indicating how well Phosra can enforce rules:
+
+| Tier | Meaning |
+|------|---------|
+| `compliant` | Full API support. All applicable rules can be enforced. |
+| `provisional` | Partial API support. Some rules may be skipped. |
+| `pending` | Integration in development. Manual configuration required. |
+
+## Verifying Connections
+
+After connecting, verify that credentials are still valid:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/compliance/LINK_UUID/verify \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+Set up a periodic verification check (e.g., daily cron) to catch expired tokens or revoked access early.
+
+## Rule Translation
+
+Not every platform supports every rule category. When Phosra enforces a policy, it:
+
+1. Reads the child's active policy and its rules
+2. For each connected platform, maps supported rule categories to platform-specific API calls
+3. Skips unsupported categories (counted as `rules_skipped` in results)
+4. Reports per-platform results with applied, skipped, and failed counts
+
+Check enforcement results to see which rules were applied per platform:
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/enforcement/jobs/JOB_UUID/results \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```

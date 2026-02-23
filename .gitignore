@@ -36,6 +36,12 @@ web/out/
 # Go compiled binary
 /server
 
+# Package build artifacts
+packages/*/node_modules/
+packages/*/dist/
+packages/ios-sdk/.build/
+node_modules/
+
 # Test results
 web/test-results/
 web/playwright-report/

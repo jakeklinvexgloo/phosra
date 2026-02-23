@@ -1,0 +1,678 @@
+---
+title: 'Android SDK'
+description: 'On-device child safety enforcement for Android'
+---
+
+# Android SDK
+
+The `com.phosra.sdk` Kotlin library provides on-device child safety enforcement for Android using UsageStatsManager, DevicePolicyManager, VpnService, and AccessibilityService.
+
+## Overview
+
+The SDK has a two-layer architecture:
+
+1. **API Client** -- Communicates with the Phosra API to register devices, fetch compiled policies, submit enforcement reports, and acknowledge policy versions.
+2. **Enforcement Engine** -- Translates the compiled policy document into native Android API calls to enforce content filters, screen time limits, web filtering, purchase controls, and more.
+
+<CardGroup cols={2}>
+  <Card title="API Client" icon="cloud">
+    Handles device registration, policy sync, and reporting via the Phosra REST API.
+  </Card>
+  <Card title="Enforcement Engine" icon="shield-check">
+    Maps policy rules to UsageStatsManager, DevicePolicyManager, VpnService, and AccessibilityService.
+  </Card>
+</CardGroup>
+
+## Requirements
+
+| Requirement | Version |
+|---|---|
+| Android | 8.0+ (API 26) |
+| Kotlin | 1.9+ |
+| Gradle | 8+ |
+| compileSdk | 35 |
+| targetSdk | 35 |
+
+## Installation
+
+Add the dependency to your module-level `build.gradle.kts`:
+
+<CodeGroup>
+
+```kotlin build.gradle.kts
+dependencies {
+    implementation("com.phosra:sdk:1.0.0")
+}
+```
+
+```groovy build.gradle
+dependencies {
+    implementation 'com.phosra:sdk:1.0.0'
+}
+```
+
+</CodeGroup>
+
+The SDK pulls in the following transitive dependencies:
+
+- `kotlinx-coroutines-android` -- Async operations
+- `kotlinx-serialization-json` -- JSON parsing
+- `okhttp3` -- HTTP networking
+- `androidx.work:work-runtime-ktx` -- Background sync
+- `androidx.security:security-crypto` -- Encrypted key storage
+
+## Quick Start
+
+<Steps>
+
+### Request Required Permissions
+
+Android requires several special permissions for parental control enforcement. Guide the user through each:
+
+```kotlin
+import com.phosra.sdk.permissions.PermissionManager
+
+val permissionManager = PermissionManager(context)
+val missing = permissionManager.getMissingPermissions()
+
+for (permission in missing) {
+    permissionManager.requestPermission(activity, permission)
+}
+```
+
+### Register the Device
+
+The parent initiates device registration from their authenticated session:
+
+```kotlin
+import com.phosra.sdk.PhosraClient
+import com.phosra.sdk.PhosraConfiguration
+import com.phosra.sdk.models.RegisterDeviceRequest
+
+val config = PhosraConfiguration(
+    parentToken = parentJWT,
+    childId = childUUID
+)
+val client = PhosraClient(config)
+
+val request = RegisterDeviceRequest(
+    deviceName = "Emma's Pixel",
+    deviceModel = android.os.Build.MODEL,
+    osVersion = android.os.Build.VERSION.RELEASE,
+    appVersion = BuildConfig.VERSION_NAME,
+    capabilities = listOf("UsageStats", "DeviceAdmin", "VPN", "Accessibility")
+)
+
+val response = client.registerDevice(request)
+```
+
+### Store the API Key
+
+The API key is returned exactly once during registration. Store it in EncryptedSharedPreferences:
+
+```kotlin
+import com.phosra.sdk.storage.KeystoreHelper
+
+KeystoreHelper.saveDeviceKey(context, response.apiKey)
+```
+
+### Schedule Background Sync
+
+Set up periodic policy sync using WorkManager:
+
+```kotlin
+import com.phosra.sdk.sync.PolicySyncWorker
+import androidx.work.*
+import java.util.concurrent.TimeUnit
+
+val syncRequest = PeriodicWorkRequestBuilder<PolicySyncWorker>(
+    15, TimeUnit.MINUTES
+).setConstraints(
+    Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
+).build()
+
+WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+    "phosra_policy_sync",
+    ExistingPeriodicWorkPolicy.KEEP,
+    syncRequest
+)
+```
+
+### Fetch and Apply the Policy
+
+```kotlin
+val deviceKey = KeystoreHelper.loadDeviceKey(context)!!
+val deviceConfig = PhosraConfiguration(deviceKey = deviceKey)
+val deviceClient = PhosraClient(deviceConfig)
+
+val policy = deviceClient.fetchPolicy()
+println("Applying policy v${policy.version} for ${policy.ageGroup}")
+
+// Apply via enforcement engine
+val engine = EnforcementEngine(context)
+val results = engine.apply(policy)
+
+// Report results back to Phosra
+deviceClient.submitReport(DeviceReport(
+    reportType = ReportType.ENFORCEMENT_STATUS,
+    payload = EnforcementStatusPayload(
+        policyVersion = policy.version,
+        results = results
+    )
+))
+deviceClient.ackPolicyVersion(policy.version)
+```
+
+</Steps>
+
+## Device Registration
+
+The registration flow requires parent authentication and produces a device-specific API key:
+
+```
+Parent App                    Phosra API                  Child Device
+    |                             |                           |
+    |-- POST /children/{id}/devices ------------------------> |
+    |   (Authorization: Bearer parentJWT)                     |
+    |                             |                           |
+    |   <-- { device, api_key } --|                           |
+    |                             |                           |
+    |   -- Transfer api_key ------------------------------>   |
+    |                             |                           | EncryptedSharedPrefs
+    |                             |                           |
+```
+
+The `RegisterDeviceRequest` includes device metadata and capability declarations:
+
+```kotlin
+RegisterDeviceRequest(
+    deviceName = "Emma's Pixel",
+    deviceModel = "Pixel 8 Pro",
+    osVersion = "14",
+    appVersion = "1.0.0",
+    capabilities = listOf(
+        "UsageStats",        // UsageStatsManager access
+        "DeviceAdmin",       // DevicePolicyManager enrollment
+        "VPN",               // Local VPN for DNS filtering
+        "Accessibility",     // Foreground app detection
+        "NotificationListener" // Notification filtering
+    )
+)
+```
+
+## Policy Sync
+
+### WorkManager-Based Sync
+
+The SDK uses WorkManager for reliable background policy synchronization:
+
+```kotlin
+class PolicySyncWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+
+    override suspend fun doWork(): Result {
+        val deviceKey = KeystoreHelper.loadDeviceKey(applicationContext) ?: return Result.failure()
+        val client = PhosraClient(PhosraConfiguration(deviceKey = deviceKey))
+
+        return try {
+            val currentVersion = PreferenceManager.getCurrentPolicyVersion(applicationContext)
+            val policy = client.fetchPolicy(sinceVersion = currentVersion) ?: return Result.success()
+
+            val engine = EnforcementEngine(applicationContext)
+            val results = engine.apply(policy)
+
+            client.submitReport(DeviceReport(
+                reportType = ReportType.ENFORCEMENT_STATUS,
+                payload = EnforcementStatusPayload(
+                    policyVersion = policy.version,
+                    results = results
+                )
+            ))
+            client.ackPolicyVersion(policy.version)
+
+            PreferenceManager.setCurrentPolicyVersion(applicationContext, policy.version)
+            Result.success()
+        } catch (e: Exception) {
+            Result.retry()
+        }
+    }
+}
+```
+
+### Firebase Cloud Messaging (FCM)
+
+For immediate policy refresh when a parent modifies rules, handle FCM data messages:
+
+```kotlin
+class PhosraMessagingService : FirebaseMessagingService() {
+
+    override fun onMessageReceived(message: RemoteMessage) {
+        val event = message.data["phosra_event"] ?: return
+        val version = message.data["phosra_version"]?.toIntOrNull() ?: return
+
+        if (event == "policy.updated") {
+            val currentVersion = PreferenceManager.getCurrentPolicyVersion(this)
+            if (version > currentVersion) {
+                // Enqueue immediate one-time sync
+                val syncRequest = OneTimeWorkRequestBuilder<PolicySyncWorker>()
+                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                    .build()
+                WorkManager.getInstance(this).enqueue(syncRequest)
+            }
+        }
+    }
+}
+```
+
+## Enforcement Engine
+
+Each enforcer handles a specific policy section and maps it to the appropriate Android API.
+
+### Content Filter Enforcer
+
+Monitors the foreground app using UsageStatsManager and AccessibilityService. Blocks restricted apps by displaying a full-screen overlay.
+
+| Policy Field | Android API | Mechanism |
+|---|---|---|
+| `contentFilter.blockedApps` | UsageStatsManager + Overlay | Detect foreground, show blocking overlay |
+| `contentFilter.ageRating` | PackageManager | Check app age rating metadata |
+| `contentFilter.allowlistMode` | UsageStatsManager + Overlay | Block all apps not in allowedApps |
+
+```kotlin
+// Detect foreground app and block if restricted
+val usageStatsManager = context.getSystemService(UsageStatsManager::class.java)
+val events = usageStatsManager.queryEvents(startTime, System.currentTimeMillis())
+
+val event = UsageEvents.Event()
+while (events.hasNextEvent()) {
+    events.getNextEvent(event)
+    if (event.eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
+        if (event.packageName in policy.contentFilter.blockedApps) {
+            showBlockingOverlay(event.packageName)
+        }
+    }
+}
+```
+
+### Screen Time Enforcer
+
+Tracks cumulative daily usage and enforces time limits.
+
+| Policy Field | Android API | Mechanism |
+|---|---|---|
+| `screenTime.dailyLimitMinutes` | UsageStatsManager | Aggregate daily usage, lock when exceeded |
+| `screenTime.perAppLimits` | UsageStatsManager | Track per-package usage |
+| `screenTime.downtimeWindows` | AlarmManager | Schedule device lock during downtime |
+| `screenTime.schedule` | AlarmManager | Enforce allowed-hours windows |
+
+### Web Filter Enforcer
+
+Runs a local VPN service that intercepts DNS queries and blocks restricted domains.
+
+| Policy Field | Android API | Mechanism |
+|---|---|---|
+| `webFilter.blockedDomains` | VpnService | DNS interception, return NXDOMAIN |
+| `webFilter.safeSearch` | VpnService | Redirect search DNS to safe search IPs |
+| `webFilter.blockedCategories` | VpnService | DNS-based category blocking |
+| `webFilter.level` | VpnService | Preset domain blocklists |
+
+```kotlin
+class PhosraVpnService : VpnService() {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val builder = Builder()
+            .addAddress("10.0.0.2", 32)
+            .addDnsServer("10.0.0.1")
+            .setSession("Phosra Web Filter")
+
+        val tunnel = builder.establish()
+        // DNS query interception loop
+        // Block domains matching policy.webFilter.blockedDomains
+        return START_STICKY
+    }
+}
+```
+
+### Purchase Enforcer
+
+| Policy Field | Android API | Mechanism |
+|---|---|---|
+| `purchases.requireApproval` | DevicePolicyManager | Restrict Play Store access |
+| `purchases.blockIAP` | DevicePolicyManager | Disable in-app purchase flows |
+| `purchases.spendingCapUSD` | None | Tracked in-app via Play Billing observer |
+
+### Social Enforcer
+
+| Policy Field | Android API | Mechanism |
+|---|---|---|
+| `social.chatMode` | Overlay + UsageStats | Block messaging apps based on mode |
+| `social.dmRestriction` | Overlay + UsageStats | Block DM-capable apps |
+| `social.multiplayerMode` | Overlay + UsageStats | Block multiplayer gaming apps |
+
+### Notification Enforcer
+
+| Policy Field | Android API | Mechanism |
+|---|---|---|
+| `notifications.curfewStart/End` | NotificationListenerService | Suppress notifications during curfew |
+| `notifications.usageTimerMinutes` | AlarmManager | Fire reminder notification at interval |
+
+## Permission Management
+
+Android requires several special permissions. Each must be granted by the parent through system settings.
+
+<Tabs>
+  <Tab title="Usage Stats Access">
+    Required for screen time tracking and foreground app detection.
+
+    ```kotlin
+    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+    startActivity(intent)
+    ```
+
+    **Check:** `AppOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, ...)`
+  </Tab>
+
+  <Tab title="Overlay Permission">
+    Required to display the blocking UI when a restricted app is opened.
+
+    ```kotlin
+    if (!Settings.canDrawOverlays(context)) {
+        val intent = Intent(
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:${context.packageName}")
+        )
+        startActivity(intent)
+    }
+    ```
+  </Tab>
+
+  <Tab title="Device Admin">
+    Required for device-level restrictions (disabling app installs, factory reset protection).
+
+    ```kotlin
+    val componentName = ComponentName(context, PhosraDeviceAdminReceiver::class.java)
+    val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
+        putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName)
+        putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+            "Required for enforcing child safety restrictions.")
+    }
+    startActivity(intent)
+    ```
+  </Tab>
+
+  <Tab title="VPN Service">
+    Required for DNS-based web content filtering.
+
+    ```kotlin
+    val vpnIntent = VpnService.prepare(context)
+    if (vpnIntent != null) {
+        startActivityForResult(vpnIntent, VPN_REQUEST_CODE)
+    }
+    ```
+  </Tab>
+
+  <Tab title="Notification Listener">
+    Required for notification filtering during curfew hours.
+
+    ```kotlin
+    val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+    startActivity(intent)
+    ```
+  </Tab>
+
+  <Tab title="Accessibility Service">
+    Required for accurate foreground app detection on some devices.
+
+    ```kotlin
+    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+    startActivity(intent)
+    ```
+  </Tab>
+</Tabs>
+
+## Reporting
+
+The SDK submits two types of reports to the Phosra API:
+
+### Enforcement Status Report
+
+Sent after applying a policy, contains per-category results:
+
+```kotlin
+DeviceReport(
+    reportType = ReportType.ENFORCEMENT_STATUS,
+    payload = EnforcementStatusPayload(
+        policyVersion = 3,
+        results = listOf(
+            CategoryEnforcementResult(
+                category = "content_rating",
+                status = "enforced",   // "enforced", "partial", "failed", "unsupported"
+                framework = "UsageStatsManager"
+            ),
+            CategoryEnforcementResult(
+                category = "web_filter_level",
+                status = "enforced",
+                framework = "VpnService"
+            )
+        )
+    )
+)
+```
+
+### Screen Time Report
+
+Aggregated daily usage data:
+
+```kotlin
+DeviceReport(
+    reportType = ReportType.SCREEN_TIME,
+    payload = ScreenTimePayload(
+        byCategory = mapOf("social-media" to 45, "gaming" to 30, "education" to 60),
+        topApps = mapOf("com.instagram.android" to 25, "com.google.android.youtube" to 20),
+        totalMinutes = 135,
+        date = "2026-02-23"
+    )
+)
+```
+
+## CompiledPolicy Structure
+
+The compiled policy is fetched from `GET /device/policy` and contains all enforcement rules organized by section:
+
+```json
+{
+  "version": 3,
+  "child_id": "uuid",
+  "child_age": 10,
+  "age_group": "tween",
+  "policy_id": "uuid",
+  "status": "active",
+  "generated_at": "2026-02-23T14:30:00Z",
+  "content_filter": {
+    "age_rating": "E10+",
+    "max_ratings": { "esrb": "E10+", "mpaa": "PG" },
+    "blocked_apps": ["com.instagram.android"],
+    "allowed_apps": [],
+    "allowlist_mode": false
+  },
+  "screen_time": {
+    "daily_limit_minutes": 120,
+    "per_app_limits": [
+      { "bundle_id": "com.google.android.youtube", "daily_minutes": 30 }
+    ],
+    "downtime_windows": [
+      { "days_of_week": ["monday","tuesday","wednesday","thursday","friday"],
+        "start_time": "21:00", "end_time": "07:00" }
+    ],
+    "always_allowed_apps": ["com.android.dialer", "com.android.mms", "com.google.android.apps.maps"]
+  },
+  "purchases": {
+    "require_approval": true,
+    "block_iap": false,
+    "spending_cap_usd": 10.00
+  },
+  "privacy": {
+    "location_sharing_enabled": true,
+    "profile_visibility": "private",
+    "account_creation_approval": true,
+    "data_sharing_restricted": true
+  },
+  "social": {
+    "chat_mode": "friends_only",
+    "dm_restriction": "contacts_only",
+    "multiplayer_mode": "friends_only"
+  },
+  "notifications": {
+    "curfew_start": "21:00",
+    "curfew_end": "07:00",
+    "usage_timer_minutes": 30
+  },
+  "web_filter": {
+    "level": "moderate",
+    "safe_search": true,
+    "blocked_domains": ["reddit.com"],
+    "allowed_domains": ["khanacademy.org"],
+    "blocked_categories": ["gambling", "adult"]
+  }
+}
+```
+
+## Supported Rule Categories
+
+All 45 Phosra rule categories with their Android framework mappings:
+
+### Content Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `content_rating` | PackageManager | App age rating metadata check |
+| `content_block_title` | UsageStatsManager + Overlay | Block by package name |
+| `content_allow_title` | UsageStatsManager + Overlay | Allow only listed packages |
+| `content_allowlist_mode` | UsageStatsManager + Overlay | Block all unlisted apps |
+| `content_descriptor_block` | PackageManager | Content descriptor filtering |
+
+### Time Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `time_daily_limit` | UsageStatsManager | Aggregate usage, lock at limit |
+| `time_scheduled_hours` | AlarmManager | Allow usage only during scheduled hours |
+| `time_per_app_limit` | UsageStatsManager | Per-package usage tracking |
+| `time_downtime` | AlarmManager | Lock device during downtime windows |
+
+### Purchase Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `purchase_approval` | DevicePolicyManager | Restrict Play Store access |
+| `purchase_block_iap` | DevicePolicyManager | Block in-app purchase flows |
+| `purchase_spending_cap` | None | Play Billing observer (in-app) |
+
+### Social Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `social_contacts` | ContactsContract | Restrict contact access |
+| `social_chat_control` | UsageStatsManager + Overlay | Block messaging apps |
+| `social_multiplayer` | UsageStatsManager + Overlay | Block multiplayer gaming apps |
+
+### Web Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `web_safesearch` | VpnService | DNS redirect to safe search |
+| `web_category_block` | VpnService | DNS-based category blocking |
+| `web_custom_allowlist` | VpnService | Allow only listed domains |
+| `web_custom_blocklist` | VpnService | Block listed domains |
+| `web_filter_level` | VpnService | Preset blocklist by level |
+
+### Privacy Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `privacy_location` | LocationManager | App-level location permission management |
+| `privacy_profile_visibility` | None | App-level enforcement |
+| `privacy_data_sharing` | None | App-level enforcement |
+| `privacy_account_creation` | None | In-app parental gate |
+
+### Monitoring Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `monitoring_activity` | UsageStatsManager | Query and report usage data |
+| `monitoring_alerts` | UsageStatsManager + AlarmManager | Threshold-based alerts |
+
+### Engagement Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `algo_feed_control` | UsageStatsManager + Overlay | Block/limit social apps |
+| `addictive_design_control` | UsageStatsManager + Overlay | Block offending apps |
+
+### Notification Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `notification_curfew` | NotificationListenerService | Suppress during curfew |
+| `usage_timer_notification` | AlarmManager | Periodic usage reminder |
+
+### Legislation-Driven Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `targeted_ad_block` | None | App-level (no system API) |
+| `dm_restriction` | UsageStatsManager + Overlay | Block messaging apps |
+| `age_gate` | None | In-app enforcement |
+| `data_deletion_request` | None | App-level support flow |
+| `geolocation_opt_in` | LocationManager | Per-app permission management |
+
+### Compliance Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `csam_reporting` | None | Server-side detection |
+| `library_filter_compliance` | VpnService | DNS-based web filtering |
+| `ai_minor_interaction` | UsageStatsManager + Overlay | Block AI apps |
+| `social_media_min_age` | UsageStatsManager + Overlay | Block social apps for underage |
+| `image_rights_minor` | None | App-level enforcement |
+
+### Parental / Legislative Rules
+
+| Category | Android API | Mechanism |
+|---|---|---|
+| `parental_consent_gate` | None | In-app parental auth flow |
+| `parental_event_notification` | AlarmManager + FCM | Push to parent on flagged events |
+| `screen_time_report` | UsageStatsManager | Generate and submit usage summary |
+| `commercial_data_ban` | None | App/server-level policy |
+| `algorithmic_audit` | None | Platform transparency requirement |
+
+## Google Play Compliance
+
+<Warning>
+  Apps using UsageStatsManager, AccessibilityService, VpnService, and Device Admin require additional review by Google Play. Plan for a longer review cycle.
+</Warning>
+
+### Required Declarations
+
+1. **Permissions Declaration Form**: Submit in Play Console for `QUERY_ALL_PACKAGES`, `PACKAGE_USAGE_STATS`, and Accessibility Service usage.
+
+2. **Data Safety section**: Declare all data collected from child devices. Phosra collects:
+   - App usage statistics (aggregated)
+   - Web activity (domain-level, via DNS)
+   - Device metadata (model, OS version)
+
+3. **VPN usage**: Declare that the VPN is used exclusively for local DNS filtering, not for routing traffic through external servers.
+
+4. **Target audience**: Set to "Parents" -- the app is a parental control tool, not a child-facing app.
+
+5. **Families Policy**: If your app appears in the Play Store's Family section, ensure compliance with [Google's Families Policy](https://support.google.com/googleplay/android-developer/answer/9893335).
+
+### Tips for Approval
+
+- Provide a detailed app description explaining the parental control use case
+- Include a demo video showing the parent setup flow and enforcement in action
+- Reference applicable child safety legislation (COPPA, KOSA, etc.)
+- Respond promptly to any review team questions about permission usage

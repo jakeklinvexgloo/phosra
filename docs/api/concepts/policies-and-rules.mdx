@@ -1,0 +1,25 @@
+---
+title: 'Policies & Rules'
+description: 'How policies organize rules across 45 safety categories'
+---
+
+# Policies & Rules
+
+A **policy** is a named collection of rules assigned to a child. Policies have a status (`draft`, `active`, or `paused`) and a priority number for ordering when multiple policies exist.
+
+A **rule** belongs to a policy and controls one of 45 **rule categories** -- from content ratings and screen time limits to privacy settings and algorithmic safety controls. Each rule has:
+
+- **category** -- Which of the 45 categories it controls (e.g., `time_daily_limit`, `content_rating`)
+- **enabled** -- Whether this rule is active
+- **config** -- Category-specific configuration JSON (e.g., `{"minutes": 90}` for screen time)
+
+You can create rules manually or use `generate-from-age` to auto-populate all 45 categories with age-appropriate defaults. The 45 categories span content, time, purchase, social, web, privacy, monitoring, algorithmic safety, notifications, advertising, compliance, and legislation-driven controls.
+
+Only **active** policies are enforced. You can have multiple policies per child (e.g., "School Day" and "Weekend") and switch between them using activate/pause.
+
+## Related API Endpoints
+
+- [Create a policy](/api-reference/policies/create) -- Create a new policy for a child
+- [Generate rules from age](/api-reference/policies/generate-from-age) -- Auto-populate all 45 rule categories
+- [Bulk upsert rules](/api-reference/rules/bulk-upsert) -- Create or update multiple rules in one call
+- [Activate a policy](/api-reference/policies/activate) -- Set a policy as active for enforcement

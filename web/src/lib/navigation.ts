@@ -1,4 +1,4 @@
-import { Home, Zap, Globe, Shield, Users, Settings, Rocket, LayoutDashboard, Send, Newspaper, Bot, Bell, Mail, Contact, CalendarDays, Mic, Monitor, DollarSign } from "lucide-react"
+import { Home, Zap, Globe, Shield, Users, Settings, Rocket, LayoutDashboard, Send, Newspaper, Bot, Bell, Mail, Contact, CalendarDays, Mic, Monitor, DollarSign, Code2, Key, BarChart3 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 export interface NavItem {
@@ -38,6 +38,14 @@ export const navGroups: NavGroup[] = [
     items: [
       { href: "/dashboard/settings", label: "Settings", icon: Settings },
       { href: "/dashboard/deploy", label: "Deploy", icon: Rocket },
+    ],
+  },
+  {
+    label: "Developer",
+    items: [
+      { href: "/dashboard/developers", label: "Overview", icon: Code2, exact: true },
+      { href: "/dashboard/developers/keys", label: "API Keys", icon: Key },
+      { href: "/dashboard/developers/usage", label: "Usage", icon: BarChart3 },
     ],
   },
 ]

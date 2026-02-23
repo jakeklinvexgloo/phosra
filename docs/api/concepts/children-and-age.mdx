@@ -1,0 +1,27 @@
+---
+title: 'Children & Age Groups'
+description: 'How Phosra models children and computes age-appropriate defaults'
+---
+
+# Children & Age Groups
+
+A **child** is a profile within a family, defined by their name and birth date. Phosra uses the birth date to compute the child's current age and map them to an **age group**, which determines the default rule configurations.
+
+Age groups are:
+
+| Group | Ages | Screen Time Default | Content Rating |
+|-------|------|-------------------|----------------|
+| Toddler | 0-2 | 30 min/day | TV-Y only |
+| Preschool | 3-5 | 60 min/day | TV-Y, G |
+| Elementary | 6-9 | 90 min/day | TV-Y7, PG, E |
+| Tween | 10-12 | 120 min/day | TV-PG, PG-13, E10+ |
+| Teen | 13-15 | 150 min/day | TV-14, PG-13, T |
+| Older Teen | 16-17 | 180 min/day | TV-14, R (with parent), T |
+
+When a child's age group changes (e.g., they turn 13), you can regenerate their policy rules to match the new bracket using `POST /policies/{policyID}/generate-from-age`.
+
+## Related API Endpoints
+
+- [Add a child](/api-reference/children/create) -- Add a child to a family
+- [Get age ratings](/api-reference/children/age-ratings) -- Content ratings appropriate for a child's age
+- [Generate rules from age](/api-reference/policies/generate-from-age) -- Auto-generate rules for the child's current age group

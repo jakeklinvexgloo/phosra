@@ -1,0 +1,27 @@
+---
+title: 'Enforcement'
+description: 'How Phosra pushes policies to connected platforms'
+---
+
+# Enforcement
+
+**Enforcement** is the process of pushing a child's active policy rules to connected platforms. When you trigger enforcement, Phosra creates an **enforcement job** that fans out to each connected platform, translating your universal rules into platform-specific configurations.
+
+The enforcement flow:
+
+1. **Trigger** -- Call `POST /children/{childID}/enforce` (optionally targeting specific platforms)
+2. **Job created** -- Returns a `202 Accepted` with the job ID
+3. **Fan-out** -- Phosra pushes rules to each connected platform in parallel
+4. **Results** -- Each platform returns a result: `completed`, `partial`, or `failed`
+5. **Job completes** -- Overall status reflects the aggregate result
+
+Enforcement can be triggered manually, automatically (when a policy changes), or via webhook events. You can also enforce a single compliance link with `POST /compliance/{linkID}/enforce`.
+
+Per-platform results include counts of `rules_applied`, `rules_skipped` (not supported by the platform), and `rules_failed`, plus an optional `error_message` for debugging.
+
+## Related API Endpoints
+
+- [Trigger enforcement](/api-reference/enforcement/trigger) -- Push rules to all or selected platforms
+- [Get job status](/api-reference/enforcement/get-job) -- Poll for completion
+- [Get results](/api-reference/enforcement/get-results) -- Per-platform breakdown
+- [Retry failed job](/api-reference/enforcement/retry) -- Re-attempt a failed enforcement

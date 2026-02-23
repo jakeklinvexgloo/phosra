@@ -1,0 +1,209 @@
+---
+title: 'Quickstart'
+description: 'Go from zero to enforced child safety policy in 5 minutes'
+---
+
+# Quickstart
+
+This guide walks you through the complete flow: authenticate, create a family, add a child, generate policies, connect a platform, and trigger enforcement.
+
+## Prerequisites
+
+- A Phosra account ([sign up here](https://www.phosra.com/signup))
+- An API key from the [Developer Portal](https://www.phosra.com/dashboard/developers/keys)
+
+Set your API key as an environment variable:
+
+```bash
+export PHOSRA_API_KEY="phosra_live_sk_your_key_here"
+```
+
+## Option A: Quick Setup (One Call)
+
+The fastest path. Creates everything in a single request:
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/setup/quick \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "child_name": "Emma",
+    "birth_date": "2016-03-15",
+    "strictness": "recommended"
+  }'
+```
+
+```typescript SDK
+import { PhosraClient } from '@phosra/sdk';
+
+const phosra = new PhosraClient({
+  apiKey: process.env.PHOSRA_API_KEY,
+});
+
+const result = await phosra.setup.quick({
+  child_name: 'Emma',
+  birth_date: '2016-03-15',
+  strictness: 'recommended',
+});
+
+console.log(`Family: ${result.family.name}`);
+console.log(`Age group: ${result.age_group}`);
+console.log(`Rules enabled: ${result.rule_summary.total_rules_enabled}`);
+```
+
+</CodeGroup>
+
+This returns a family, child, active policy, all 45 rules configured for the child's age, and a summary of key settings.
+
+## Option B: Step-by-Step
+
+For more control over each stage.
+
+### Step 1: Create a Family
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/families \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Doe Family"}'
+```
+
+```typescript SDK
+const family = await phosra.families.create({ name: 'Doe Family' });
+```
+
+</CodeGroup>
+
+### Step 2: Add a Child
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/families/$FAMILY_ID/children \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Emma",
+    "birth_date": "2016-03-15"
+  }'
+```
+
+```typescript SDK
+const child = await phosra.children.create(family.id, {
+  name: 'Emma',
+  birth_date: '2016-03-15',
+});
+```
+
+</CodeGroup>
+
+### Step 3: Create a Policy and Generate Rules
+
+<CodeGroup>
+
+```bash curl
+# Create policy
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/children/$CHILD_ID/policies \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Default Policy"}'
+
+# Generate age-appropriate rules
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/policies/$POLICY_ID/generate-from-age \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+
+# Activate the policy
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/policies/$POLICY_ID/activate \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+```typescript SDK
+const policy = await phosra.policies.create(child.id, {
+  name: 'Default Policy',
+});
+
+const rules = await phosra.policies.generateFromAge(policy.id);
+const active = await phosra.policies.activate(policy.id);
+```
+
+</CodeGroup>
+
+### Step 4: Connect a Platform
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/compliance \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "family_id": "'$FAMILY_ID'",
+    "platform_id": "nextdns",
+    "credentials": "your-nextdns-api-key"
+  }'
+```
+
+```typescript SDK
+const link = await phosra.compliance.create({
+  family_id: family.id,
+  platform_id: 'nextdns',
+  credentials: 'your-nextdns-api-key',
+});
+```
+
+</CodeGroup>
+
+### Step 5: Trigger Enforcement
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/children/$CHILD_ID/enforce \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+```typescript SDK
+const job = await phosra.enforcement.trigger(child.id);
+console.log(`Enforcement job: ${job.id} (${job.status})`);
+```
+
+</CodeGroup>
+
+### Step 6: Check Enforcement Results
+
+<CodeGroup>
+
+```bash curl
+curl https://phosra-api-production.up.railway.app/api/v1/enforcement/jobs/$JOB_ID/results \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+```typescript SDK
+const results = await phosra.enforcement.getResults(job.id);
+for (const result of results) {
+  console.log(`${result.platform_id}: ${result.status} (${result.rules_applied} rules applied)`);
+}
+```
+
+</CodeGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Core Concepts" icon="book" href="/concepts/families">
+    Understand families, policies, rules, and enforcement
+  </Card>
+  <Card title="Webhook Events" icon="bell" href="/guides/webhook-events">
+    Get notified when enforcement completes or policies change
+  </Card>
+  <Card title="Device Sync" icon="mobile" href="/guides/device-sync">
+    Push policies to Apple devices with on-device enforcement
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/overview">
+    Browse the full API reference with 82 endpoints
+  </Card>
+</CardGroup>

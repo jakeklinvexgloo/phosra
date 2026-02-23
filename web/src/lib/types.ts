@@ -264,3 +264,143 @@ export interface QuickSetupResponse {
   max_ratings: Record<string, string>
   rule_summary: RuleSummary
 }
+
+// Developer Portal
+export interface DeveloperOrg {
+  id: string
+  name: string
+  slug: string
+  description: string
+  website_url: string
+  logo_url: string
+  owner_user_id: string
+  tier: 'free' | 'growth' | 'enterprise'
+  rate_limit_rpm: number
+  created_at: string
+  updated_at: string
+}
+
+export interface DeveloperOrgMember {
+  id: string
+  org_id: string
+  user_id: string
+  role: 'owner' | 'admin' | 'member'
+  created_at: string
+}
+
+export interface DeveloperAPIKey {
+  id: string
+  org_id: string
+  name: string
+  key_prefix: string
+  environment: 'live' | 'test'
+  scopes: string[]
+  last_used_at: string | null
+  last_used_ip: string | null
+  expires_at: string | null
+  revoked_at: string | null
+  created_by: string
+  created_at: string
+}
+
+export interface DeveloperAPIKeyWithSecret extends DeveloperAPIKey {
+  key: string  // only returned on creation
+}
+
+export interface DeveloperAPIUsage {
+  key_id: string
+  org_id: string
+  hour: string
+  endpoint: string
+  status_2xx: number
+  status_4xx: number
+  status_5xx: number
+  total_requests: number
+}
+
+export const API_SCOPES = [
+  'read:families',
+  'write:families',
+  'read:policies',
+  'write:policies',
+  'read:enforcement',
+  'write:enforcement',
+  'read:ratings',
+  'read:platforms',
+  'write:compliance',
+  'device:manage',
+  'webhook:manage',
+] as const
+
+export type APIScope = typeof API_SCOPES[number]
+
+// Sources API
+export interface Source {
+  id: string
+  child_id: string
+  family_id: string
+  source_slug: string
+  display_name: string
+  api_tier: 'managed' | 'guided'
+  status: 'pending' | 'connected' | 'syncing' | 'error' | 'disconnected'
+  auto_sync: boolean
+  capabilities: SourceCapabilityEntry[]
+  config: Record<string, unknown>
+  last_sync_at: string | null
+  last_sync_status: string | null
+  sync_version: number
+  error_message: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface SourceCapabilityEntry {
+  category: RuleCategory
+  support_level: 'full' | 'partial' | 'none'
+  read_write: 'push_only' | 'pull_only' | 'bidirectional'
+  notes?: string
+}
+
+export interface SourceSyncJob {
+  id: string
+  source_id: string
+  sync_mode: 'full' | 'incremental' | 'single_rule'
+  trigger_type: 'manual' | 'auto' | 'webhook' | 'policy_change'
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'partial'
+  rules_pushed: number
+  rules_skipped: number
+  rules_failed: number
+  error_message: string | null
+  started_at: string | null
+  completed_at: string | null
+  created_at: string
+}
+
+export interface SourceSyncResult {
+  id: string
+  job_id: string
+  source_id: string
+  rule_category: RuleCategory
+  status: 'pushed' | 'skipped' | 'failed' | 'unsupported'
+  source_value: unknown
+  source_response: unknown
+  error_message: string | null
+  created_at: string
+}
+
+export interface AvailableSource {
+  slug: string
+  display_name: string
+  api_tier: 'managed' | 'guided'
+  auth_type: string
+  website: string
+  description: string
+}
+
+export interface GuidedStep {
+  step_number: number
+  title: string
+  description: string
+  image_url: string
+  deep_link: string
+}

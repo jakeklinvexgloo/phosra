@@ -1,0 +1,439 @@
+---
+title: 'Mobile App Integration'
+description: 'Build a parental control app with Phosra on iOS and Android'
+---
+
+# Mobile App Integration
+
+This guide covers how to build a full parental control application using Phosra's mobile SDKs. It walks through the complete lifecycle from family setup to on-device enforcement, covering both iOS and Android.
+
+## Architecture Overview
+
+A Phosra-powered parental control system has four components:
+
+```
++---------------------+         +------------------+
+|   Parent Dashboard  |         |   Phosra API     |
+|   (Web or Mobile)   | ------> | (REST + Webhooks)|
++---------------------+         +--------+---------+
+                                         |
+                        +----------------+----------------+
+                        |                                 |
+               +--------v---------+             +---------v--------+
+               |   iOS SDK        |             |   Android SDK    |
+               |  (FamilyControls |             |  (UsageStats,    |
+               |   ManagedSettings|             |   VPN, DeviceAdmin|
+               |   DeviceActivity)|             |   Accessibility) |
+               +------------------+             +------------------+
+                        |                                 |
+               +--------v---------+             +---------v--------+
+               | On-Device        |             | On-Device        |
+               | Enforcement      |             | Enforcement      |
+               +------------------+             +------------------+
+```
+
+**Data flow:**
+
+1. Parent creates a family and child profile via the dashboard or API
+2. Parent creates and activates a policy with age-appropriate rules
+3. Parent registers the child's device (iOS or Android)
+4. The device SDK fetches the compiled policy from the API
+5. The enforcement engine applies rules using native OS APIs
+6. The device reports enforcement status and usage data back to Phosra
+7. When the parent updates rules, a push notification triggers immediate re-sync
+
+## Registration Flow
+
+<Steps>
+
+### Create a Family
+
+The parent creates a family and adds a child via the Phosra API or TypeScript SDK:
+
+<CodeGroup>
+
+```typescript TypeScript SDK
+const setup = await phosra.setup.quick({
+  child_name: 'Emma',
+  birth_date: '2016-03-15',
+  strictness: 'recommended',
+});
+// setup.family.id, setup.child.id, setup.policy.id
+```
+
+```bash cURL
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/setup/quick \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "child_name": "Emma",
+    "birth_date": "2016-03-15",
+    "strictness": "recommended"
+  }'
+```
+
+</CodeGroup>
+
+### Register the Child's Device
+
+From the parent's app, register the child's device. This returns a one-time API key that the child's device stores locally.
+
+<Tabs>
+  <Tab title="iOS (Swift)">
+    ```swift
+    import PhosraSDK
+
+    let config = PhosraConfiguration(
+        parentToken: parentJWT,
+        childID: childUUID
+    )
+    let client = PhosraAPIClient(configuration: config)
+
+    let request = RegisterDeviceRequest(
+        deviceName: "Emma's iPad",
+        deviceModel: UIDevice.current.model,
+        osVersion: UIDevice.current.systemVersion,
+        appVersion: "1.0.0",
+        capabilities: ["FamilyControls", "ManagedSettings", "DeviceActivity"]
+    )
+
+    let response = try await client.registerDevice(request)
+
+    // Store in Keychain -- never returned again
+    try KeychainHelper.save(key: response.apiKey)
+    ```
+  </Tab>
+  <Tab title="Android (Kotlin)">
+    ```kotlin
+    import com.phosra.sdk.PhosraClient
+    import com.phosra.sdk.PhosraConfiguration
+    import com.phosra.sdk.models.RegisterDeviceRequest
+
+    val config = PhosraConfiguration(
+        parentToken = parentJWT,
+        childId = childUUID
+    )
+    val client = PhosraClient(config)
+
+    val request = RegisterDeviceRequest(
+        deviceName = "Emma's Pixel",
+        deviceModel = android.os.Build.MODEL,
+        osVersion = android.os.Build.VERSION.RELEASE,
+        appVersion = "1.0.0",
+        capabilities = listOf("UsageStats", "DeviceAdmin", "VPN", "Accessibility")
+    )
+
+    val response = client.registerDevice(request)
+
+    // Store in EncryptedSharedPreferences -- never returned again
+    KeystoreHelper.saveDeviceKey(context, response.apiKey)
+    ```
+  </Tab>
+</Tabs>
+
+### Grant Platform Permissions
+
+Each platform requires specific permissions before enforcement can begin.
+
+<Tabs>
+  <Tab title="iOS">
+    ```swift
+    import FamilyControls
+
+    // Request FamilyControls authorization
+    let center = AuthorizationCenter.shared
+    try await center.requestAuthorization(for: .individual)
+
+    // Enable push notifications for policy refresh
+    let settings = await UNUserNotificationCenter.current().notificationSettings()
+    if settings.authorizationStatus != .authorized {
+        try await UNUserNotificationCenter.current()
+            .requestAuthorization(options: [.alert, .badge, .sound])
+    }
+    UIApplication.shared.registerForRemoteNotifications()
+    ```
+  </Tab>
+  <Tab title="Android">
+    ```kotlin
+    // Guide parent through each required permission
+    val permissionManager = PermissionManager(context)
+    val missing = permissionManager.getMissingPermissions()
+
+    // Typical flow: UsageStats > Overlay > DeviceAdmin > VPN > Accessibility
+    for (permission in missing) {
+        permissionManager.requestPermission(activity, permission)
+    }
+    ```
+  </Tab>
+</Tabs>
+
+### Start Policy Sync
+
+Once permissions are granted and the device key is stored, start the policy sync loop.
+
+<Tabs>
+  <Tab title="iOS">
+    ```swift
+    let deviceKey = try KeychainHelper.load()!
+    let config = PhosraConfiguration(deviceKey: deviceKey)
+    let client = PhosraAPIClient(configuration: config)
+
+    let syncManager = PolicySyncManager(client: client)
+    syncManager.startPolling(interval: 300) // 5 minutes
+    ```
+  </Tab>
+  <Tab title="Android">
+    ```kotlin
+    val syncRequest = PeriodicWorkRequestBuilder<PolicySyncWorker>(
+        15, TimeUnit.MINUTES
+    ).setConstraints(
+        Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+    ).build()
+
+    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        "phosra_policy_sync",
+        ExistingPeriodicWorkPolicy.KEEP,
+        syncRequest
+    )
+    ```
+  </Tab>
+</Tabs>
+
+</Steps>
+
+## Policy Lifecycle
+
+A policy goes through these stages:
+
+```
+  Create        Generate        Activate        Push to Device     Enforce        Report
++--------+    +----------+    +----------+    +--------------+    +---------+    +--------+
+|  Draft | -> | Rules    | -> |  Active  | -> | Device Fetch | -> | Applied | -> | Status |
+|        |    | Generated|    |          |    | (poll/push)  |    | on-device|   | Report |
++--------+    +----------+    +----------+    +--------------+    +---------+    +--------+
+                                    |                                                |
+                                    +--- Parent modifies rule -----> Push notification
+```
+
+### 1. Create a Draft Policy
+
+```typescript
+const policy = await phosra.policies.create(childId, {
+  name: "Emma's School Year Policy"
+});
+```
+
+### 2. Generate Age-Appropriate Rules
+
+```typescript
+await phosra.policies.generateFromAge(policy.id);
+// Generates up to 45 rules based on the child's age group
+```
+
+### 3. Activate the Policy
+
+```typescript
+await phosra.policies.activate(policy.id);
+// Policy version increments, triggering device sync
+```
+
+### 4. Device Fetches the Compiled Policy
+
+The device SDK calls `GET /device/policy` and receives a `CompiledPolicy` with all rules translated into an enforceable format (content filters, screen time, web filters, etc.).
+
+### 5. On-Device Enforcement
+
+The enforcement engine maps each policy section to native OS APIs and applies the restrictions.
+
+### 6. Report Back
+
+The device submits an enforcement status report listing per-category results (`enforced`, `partial`, `failed`, `unsupported`).
+
+## Platform Comparison
+
+| Capability | iOS | Android |
+|---|---|---|
+| **Content filtering** | ManagedSettings (age rating + app blocking) | UsageStatsManager + Overlay |
+| **Screen time limits** | DeviceActivity (native schedules) | UsageStatsManager + AlarmManager |
+| **Web filtering** | ManagedSettings (webContent) | Local VPN (DNS interception) |
+| **Purchase controls** | ManagedSettings (appStore) | DevicePolicyManager |
+| **App blocking** | ManagedSettings (blockedApplications) | AccessibilityService + Overlay |
+| **Notification control** | ManagedSettings (iOS 16.4+) | NotificationListenerService |
+| **Background sync** | APNs silent push + Timer | WorkManager + FCM |
+| **Key storage** | Keychain | EncryptedSharedPreferences |
+| **Min OS version** | iOS 16.0 | Android 8.0 (API 26) |
+| **Special entitlements** | FamilyControls entitlement (Apple approval) | Permissions Declaration Form (Play Console) |
+| **Policy refresh** | APNs silent push + polling | FCM data message + WorkManager |
+
+## Handling Age Transitions
+
+When a child crosses an age bracket boundary (e.g., turning 13), the parent may want to adjust their policy. Phosra makes this straightforward:
+
+### Automatic Detection
+
+The Phosra API knows each child's birth date and automatically computes the age group. When the age group changes, a webhook event is fired:
+
+```json
+{
+  "event": "child.age_group_changed",
+  "data": {
+    "child_id": "uuid",
+    "previous_age_group": "tween",
+    "new_age_group": "teen",
+    "child_age": 13
+  }
+}
+```
+
+### Regenerate Rules
+
+Call `generateFromAge` to update rules for the new age group:
+
+```typescript
+// Regenerate rules based on new age
+await phosra.policies.generateFromAge(policyId);
+
+// Activate to push to device
+await phosra.policies.activate(policyId);
+```
+
+### Gradual Relaxation
+
+For a smoother transition, adjust specific rules rather than regenerating everything:
+
+```typescript
+// Allow social media for a new teen
+await phosra.rules.update(socialMediaRule.id, {
+  enabled: true,
+  config: { mode: 'friends_only' }
+});
+
+// Increase daily screen time limit
+await phosra.rules.update(dailyLimitRule.id, {
+  config: { daily_minutes: 180 }
+});
+```
+
+## Multi-Device Setup
+
+A single child can have multiple devices registered, and each receives the same compiled policy.
+
+### Register Multiple Devices
+
+```
+Child "Emma"
+├── iPad (iOS) ─── Device Key A ─── FamilyControls enforcement
+├── iPhone (iOS) ── Device Key B ─── FamilyControls enforcement
+└── Pixel (Android) ── Device Key C ── VPN + UsageStats enforcement
+```
+
+Each device:
+- Has its own unique API key (stored in that device's secure storage)
+- Fetches the same compiled policy
+- Reports enforcement status independently
+- Receives push notifications independently
+
+### Cross-Device Screen Time
+
+Screen time is tracked per-device. To enforce a combined limit across devices, use the Phosra API to aggregate:
+
+```typescript
+// Server-side: sum usage across all devices
+const devices = await phosra.devices.list(childId);
+let totalMinutes = 0;
+for (const device of devices) {
+  const reports = await getLatestScreenTimeReport(device.id);
+  totalMinutes += reports.totalMinutes;
+}
+
+// If combined usage exceeds limit, update policy to lock remaining devices
+if (totalMinutes >= policy.screenTime.dailyLimitMinutes) {
+  // Push a locked policy to remaining active devices
+}
+```
+
+### List Devices for a Child
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/children/CHILD_UUID/devices \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+## Offline Enforcement
+
+Both SDKs cache the most recent compiled policy on-device, enabling enforcement even without network connectivity.
+
+### How It Works
+
+1. When a policy is fetched, the SDK stores it locally:
+   - **iOS**: UserDefaults or app container (policy data is non-sensitive)
+   - **Android**: SharedPreferences
+
+2. On app launch or device reboot, the enforcement engine loads the cached policy and re-applies it immediately.
+
+3. When network returns, the SDK syncs with the API and applies any updates.
+
+### Cache Strategy
+
+```
+Device Boot / App Launch
+        │
+        ├── Load cached policy from local storage
+        ├── Apply enforcement immediately (no network needed)
+        │
+        └── Background: attempt API sync
+                │
+                ├── Success: update cache, re-apply if version changed
+                └── Failure: continue with cached policy, retry later
+```
+
+### Considerations
+
+- Cached policies remain enforced indefinitely until a newer version is fetched
+- Screen time counters persist across reboots (stored locally)
+- If a parent revokes a device, the revocation takes effect on the next successful API call
+- For maximum reliability, use APNs (iOS) or FCM (Android) to push policy updates immediately
+
+## Security Considerations
+
+### API Key Storage
+
+| Platform | Storage | Protection |
+|---|---|---|
+| iOS | Keychain | Hardware-backed, `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` |
+| Android | EncryptedSharedPreferences | AES-256 via Android Keystore |
+
+The device API key is:
+- Generated server-side as 32 random bytes (hex-encoded, 64 characters)
+- Returned exactly once during device registration
+- Stored as a SHA-256 hash on the server; the plaintext is never stored server-side
+- Used as `X-Device-Key` header for all device-authenticated API calls
+
+### Tamper Detection
+
+Prevent the child from bypassing enforcement:
+
+<CardGroup cols={2}>
+  <Card title="iOS" icon="apple">
+    - FamilyControls runs at the OS level; apps cannot bypass it
+    - ManagedSettings persists across app deletion and reinstall
+    - DeviceActivity monitoring continues even if the app is force-quit
+    - Shield UI is rendered by the OS, not the app
+  </Card>
+  <Card title="Android" icon="android">
+    - Device Admin prevents app uninstall without parent PIN
+    - VPN service runs as foreground service (persistent)
+    - AccessibilityService restarts automatically if killed
+    - Boot receiver re-applies enforcement after reboot
+    - Overlay blocks interaction with restricted apps
+  </Card>
+</CardGroup>
+
+### Communication Security
+
+- All API communication uses HTTPS (TLS 1.2+)
+- Device keys are transmitted only once (during registration)
+- Conditional fetching (`since_version`) minimizes data transfer
+- Push notifications contain only the event type and version number, not policy data

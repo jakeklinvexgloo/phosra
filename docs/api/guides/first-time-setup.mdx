@@ -1,0 +1,100 @@
+---
+title: 'First-Time Setup'
+description: 'Complete walkthrough for integrating Phosra into your application'
+---
+
+# First-Time Setup
+
+This guide covers integrating Phosra into your application from scratch, including account creation, API key management, and your first enforcement run.
+
+## 1. Create Your Account
+
+Register via the API or sign up at [phosra.com/signup](https://www.phosra.com/signup):
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "developer@yourapp.com",
+    "password": "securepassword123",
+    "name": "Your Name"
+  }'
+```
+
+## 2. Get an API Key
+
+Navigate to the [Developer Portal](https://www.phosra.com/dashboard/developers/keys) and generate an API key. Use `phosra_test_sk_*` keys during development and `phosra_live_sk_*` keys in production.
+
+```bash
+export PHOSRA_API_KEY="phosra_test_sk_your_key_here"
+```
+
+## 3. Use Quick Setup for Onboarding
+
+The fastest path for your end users. When a parent signs up and adds their first child in your app, call the quick setup endpoint:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/setup/quick \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "child_name": "Emma",
+    "birth_date": "2016-03-15",
+    "strictness": "recommended"
+  }'
+```
+
+This returns a family, child, active policy with 45 rules, and a summary of key settings. Store the `family.id` and `child.id` in your database for subsequent calls.
+
+## 4. Connect Platforms
+
+For each platform the family uses, create a compliance link:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/compliance \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "family_id": "FAMILY_UUID",
+    "platform_id": "nextdns",
+    "credentials": "nextdns-api-key"
+  }'
+```
+
+List available platforms with `GET /platforms` to see what integrations are supported.
+
+## 5. Register Webhooks
+
+Set up webhooks to receive real-time notifications when enforcement completes, policies change, or new activity is reported:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/webhooks \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "family_id": "FAMILY_UUID",
+    "url": "https://yourapp.com/webhooks/phosra",
+    "events": ["enforcement.completed", "policy.updated"]
+  }'
+```
+
+## 6. Trigger Enforcement
+
+Push the policy to all connected platforms:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/children/CHILD_UUID/enforce \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+Your webhook endpoint will receive a notification when enforcement completes.
+
+## Checklist
+
+- [ ] Account created and verified
+- [ ] API key generated (test and production)
+- [ ] Quick setup tested with a test child
+- [ ] At least one platform connected
+- [ ] Webhook endpoint registered and receiving events
+- [ ] Enforcement triggered and results verified
+- [ ] Error handling implemented for 4xx and 5xx responses

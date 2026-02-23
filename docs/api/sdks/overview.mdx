@@ -1,0 +1,69 @@
+---
+title: 'SDK Overview'
+description: 'Official Phosra SDKs and integration libraries'
+---
+
+# SDKs
+
+Phosra provides official SDKs to accelerate your integration. All SDKs wrap the REST API and provide typed interfaces, automatic retries, and token management.
+
+## Available SDKs
+
+<CardGroup cols={2}>
+  <Card title="TypeScript SDK" icon="js" href="/sdks/typescript">
+    Full-featured SDK for Node.js and browser applications. Typed interfaces for all 82 endpoints.
+    ```bash
+    npm install @phosra/sdk
+    ```
+  </Card>
+  <Card title="MCP Server" icon="robot" href="/sdks/mcp-server">
+    Model Context Protocol server for AI agent integration. Works with Claude, GPT, and other MCP-compatible agents.
+    ```bash
+    npx @phosra/mcp --api-key=KEY
+    ```
+  </Card>
+  <Card title="iOS SDK" icon="apple" href="/sdks/ios">
+    On-device child safety enforcement using FamilyControls, ManagedSettings, and DeviceActivity.
+    ```swift
+    .package(url: "https://github.com/jakeklinvexgloo/phosra.git", from: "1.0.0")
+    ```
+  </Card>
+  <Card title="Android SDK" icon="android" href="/sdks/android">
+    On-device enforcement using UsageStatsManager, VpnService, DevicePolicyManager, and AccessibilityService.
+    ```kotlin
+    implementation("com.phosra:sdk:1.0.0")
+    ```
+  </Card>
+</CardGroup>
+
+## Coming Soon
+
+| SDK | Language | Status |
+|-----|----------|--------|
+| Python SDK | Python | Planned |
+
+<Info>
+  Need an SDK in a different language? The [OpenAPI spec](/openapi.yaml) can be used with code generators like `openapi-generator` to create client libraries for any language.
+</Info>
+
+## SDK Comparison
+
+| Feature | TypeScript | MCP | iOS | Android |
+|---|---|---|---|---|
+| **Platform** | Node.js / Browser | AI Agents | iOS 16+ | Android 8.0+ |
+| **Auth methods** | API key, Bearer, Device key | API key | Parent JWT, Device key | Parent JWT, Device key |
+| **Install** | npm | npx | SPM | Gradle |
+| **On-device enforcement** | -- | -- | FamilyControls | UsageStats + VPN |
+| **Policy sync** | -- | -- | APNs + polling | FCM + WorkManager |
+| **Reporting** | -- | -- | Enforcement + screen time | Enforcement + screen time |
+
+## Direct API Access
+
+All SDKs are optional. You can call the Phosra REST API directly from any HTTP client:
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/families \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+See the [API Reference](/api-reference/overview) for complete endpoint documentation.

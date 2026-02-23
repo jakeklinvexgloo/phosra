@@ -32,13 +32,12 @@ func New(clientID, clientSecret string) *Adapter {
 func (a *Adapter) Info() provider.PlatformInfo {
 	return provider.PlatformInfo{
 		ID:          "android",
-		Name:        "Android (Google Family Link)",
+		Name:        "Android Device",
 		Category:    domain.PlatformCategoryDevice,
-		Tier:        domain.ComplianceLevelCompliant,
-		Description: "Android device management via Google Family Link / Android Management API",
-		AuthType:    "oauth2",
-		SetupURL:    "https://families.google.com",
-		DocsURL:     "https://developers.google.com/android/management",
+		Tier:        domain.ComplianceLevelProvisional,
+		Description: "On-device enforcement via Phosra Android app using DevicePolicyManager, UsageStatsManager, VpnService, AccessibilityService, and NotificationListenerService",
+		AuthType:    "device_sync",
+		DocsURL:     "https://developer.android.com/reference/android/app/admin/DevicePolicyManager",
 	}
 }
 

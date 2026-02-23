@@ -1,0 +1,58 @@
+---
+title: 'Introduction'
+description: 'Phosra Child Safety Standard (PCSS) — Define rules once, push everywhere'
+---
+
+# Welcome to Phosra
+
+Phosra is a universal child safety policy layer. Define age-appropriate rules once, then push them to every platform your child uses — from Netflix to NextDNS to Apple Screen Time.
+
+## What You Can Do
+
+<CardGroup cols={2}>
+  <Card title="Create Families" icon="users" href="/concepts/families">
+    Set up family groups with parents, guardians, and children
+  </Card>
+  <Card title="Generate Policies" icon="shield-check" href="/concepts/policies-and-rules">
+    Auto-generate age-appropriate rules across 45 categories
+  </Card>
+  <Card title="Push Enforcement" icon="rocket" href="/concepts/enforcement">
+    Push rules to connected platforms in one API call
+  </Card>
+  <Card title="Monitor Compliance" icon="chart-line" href="/guides/webhook-events">
+    Track enforcement status via webhooks and reports
+  </Card>
+</CardGroup>
+
+## Quick Example
+
+Set up a child with age-appropriate protections in a single API call:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/setup/quick \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "child_name": "Emma",
+    "birth_date": "2016-03-15",
+    "strictness": "recommended"
+  }'
+```
+
+This creates a family, adds the child, computes their age bracket, and generates all 45 rule categories with age-appropriate defaults.
+
+## Integration Methods
+
+| Method | Best For | Package |
+|--------|---------|---------|
+| REST API | Any language, server-to-server | Direct HTTP calls |
+| TypeScript SDK | Node.js / browser apps | `@phosra/sdk` |
+| MCP Server | AI agents (Claude, etc.) | `@phosra/mcp` |
+
+## Base URL
+
+All API requests use this base URL:
+
+```
+https://phosra-api-production.up.railway.app/api/v1
+```

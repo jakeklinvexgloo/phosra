@@ -351,6 +351,84 @@ class ApiClient {
   async getOutreachGoogleStatus(token?: string) { return this.fetch("/admin/outreach/google/status", {}, token) }
   async disconnectOutreachGoogle(token?: string) { return this.fetch("/admin/outreach/google/disconnect", { method: "DELETE" }, token) }
 
+  // Developer Portal
+  async createDeveloperOrg(token: string, data: { name: string; description?: string; website_url?: string }) {
+    return this.fetch('/developers/orgs', { method: 'POST', body: JSON.stringify(data) }, token)
+  }
+  async listDeveloperOrgs(token: string) {
+    return this.fetch('/developers/orgs', {}, token)
+  }
+  async getDeveloperOrg(token: string, orgId: string) {
+    return this.fetch(`/developers/orgs/${orgId}`, {}, token)
+  }
+  async updateDeveloperOrg(token: string, orgId: string, data: { name?: string; description?: string; website_url?: string }) {
+    return this.fetch(`/developers/orgs/${orgId}`, { method: 'PUT', body: JSON.stringify(data) }, token)
+  }
+  async deleteDeveloperOrg(token: string, orgId: string) {
+    return this.fetch(`/developers/orgs/${orgId}`, { method: 'DELETE' }, token)
+  }
+  async listDeveloperMembers(token: string, orgId: string) {
+    return this.fetch(`/developers/orgs/${orgId}/members`, {}, token)
+  }
+  async createDeveloperKey(token: string, orgId: string, data: { name: string; environment: string; scopes: string[] }) {
+    return this.fetch(`/developers/orgs/${orgId}/keys`, { method: 'POST', body: JSON.stringify(data) }, token)
+  }
+  async listDeveloperKeys(token: string, orgId: string) {
+    return this.fetch(`/developers/orgs/${orgId}/keys`, {}, token)
+  }
+  async revokeDeveloperKey(token: string, orgId: string, keyId: string) {
+    return this.fetch(`/developers/orgs/${orgId}/keys/${keyId}`, { method: 'DELETE' }, token)
+  }
+  async regenerateDeveloperKey(token: string, orgId: string, keyId: string) {
+    return this.fetch(`/developers/orgs/${orgId}/keys/${keyId}/regenerate`, { method: 'POST' }, token)
+  }
+  async getDeveloperUsage(token: string, orgId: string, days?: number) {
+    const q = days ? `?days=${days}` : ''
+    return this.fetch(`/developers/orgs/${orgId}/usage${q}`, {}, token)
+  }
+
+  // Sources
+  async listAvailableSources(token: string) {
+    return this.fetch('/sources/available', {}, token)
+  }
+  async connectSource(token: string, data: { child_id: string; family_id: string; source: string; credentials?: Record<string, string>; auto_sync?: boolean }) {
+    return this.fetch('/sources', { method: 'POST', body: JSON.stringify(data) }, token)
+  }
+  async getSource(token: string, sourceId: string) {
+    return this.fetch(`/sources/${sourceId}`, {}, token)
+  }
+  async listSourcesByChild(token: string, childId: string) {
+    return this.fetch(`/children/${childId}/sources`, {}, token)
+  }
+  async listSourcesByFamily(token: string, familyId: string) {
+    return this.fetch(`/families/${familyId}/sources`, {}, token)
+  }
+  async syncSource(token: string, sourceId: string, syncMode: string = 'full') {
+    return this.fetch(`/sources/${sourceId}/sync`, { method: 'POST', body: JSON.stringify({ sync_mode: syncMode }) }, token)
+  }
+  async pushSourceRule(token: string, sourceId: string, category: string, value: unknown) {
+    return this.fetch(`/sources/${sourceId}/rules`, { method: 'POST', body: JSON.stringify({ category, value }) }, token)
+  }
+  async getSourceGuidedSteps(token: string, sourceId: string, category: string) {
+    return this.fetch(`/sources/${sourceId}/guide/${category}`, {}, token)
+  }
+  async listSourceSyncJobs(token: string, sourceId: string, limit?: number) {
+    const q = limit ? `?limit=${limit}` : ''
+    return this.fetch(`/sources/${sourceId}/jobs${q}`, {}, token)
+  }
+  async getSourceSyncJob(token: string, sourceId: string, jobId: string) {
+    return this.fetch(`/sources/${sourceId}/jobs/${jobId}`, {}, token)
+  }
+  async getSourceSyncResults(token: string, sourceId: string, jobId: string) {
+    return this.fetch(`/sources/${sourceId}/jobs/${jobId}/results`, {}, token)
+  }
+  async retrySourceSync(token: string, sourceId: string, jobId: string) {
+    return this.fetch(`/sources/${sourceId}/jobs/${jobId}/retry`, { method: 'POST' }, token)
+  }
+  async disconnectSource(token: string, sourceId: string) {
+    return this.fetch(`/sources/${sourceId}`, { method: 'DELETE' }, token)
+  }
+
   async listFeedback(status?: string) {
     const qs = status ? `?status=${status}` : ""
     const res = await window.fetch(`${this.baseUrl}/feedback${qs}`, {

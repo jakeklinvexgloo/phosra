@@ -1,0 +1,29 @@
+---
+title: 'Strictness Levels'
+description: 'How strictness presets affect rule generation'
+---
+
+# Strictness Levels
+
+When generating rules (via quick setup or `generate-from-age`), you can specify a **strictness** preset that shifts all rule defaults tighter or looser relative to the age-group baseline.
+
+| Level | Behavior |
+|-------|----------|
+| `strict` | Tighter limits across the board. Less screen time, more restrictive content ratings, stronger web filters, social features disabled. Best for families who want maximum protection. |
+| `recommended` | Balanced defaults based on pediatric and child safety research. This is the default if no strictness is specified. |
+| `relaxed` | Looser limits that give older children more autonomy. More screen time, broader content access, social features enabled with monitoring. Best for families who want a lighter touch. |
+
+Strictness is applied at rule-generation time. After generation, you can customize any individual rule. Changing strictness later requires re-generating rules (which overwrites existing configurations for that policy).
+
+## Example: Screen Time by Strictness (Age 10)
+
+| Strictness | Daily Limit | Bedtime |
+|------------|------------|---------|
+| `strict` | 60 min | 8:00 PM |
+| `recommended` | 120 min | 9:00 PM |
+| `relaxed` | 180 min | 10:00 PM |
+
+## Related API Endpoints
+
+- [Quick setup](/api-reference/setup/quick) -- Pass `strictness` to configure defaults during onboarding
+- [Generate rules from age](/api-reference/policies/generate-from-age) -- Re-generate rules with a new strictness level

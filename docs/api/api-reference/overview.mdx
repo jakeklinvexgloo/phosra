@@ -1,0 +1,82 @@
+---
+title: 'API Reference'
+description: 'Complete reference for all Phosra API endpoints'
+---
+
+# API Reference
+
+The Phosra API provides 82 endpoints organized into the following groups. All endpoints use the base URL `https://phosra-api-production.up.railway.app/api/v1`.
+
+## Endpoint Groups
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/api-reference/auth/register">
+    Register, login, refresh tokens, and manage sessions.
+    5 endpoints
+  </Card>
+  <Card title="Families" icon="users" href="/api-reference/families/list">
+    Create and manage family groups and their members.
+    8 endpoints
+  </Card>
+  <Card title="Children" icon="child" href="/api-reference/children/list">
+    Add children to families, manage profiles, and get age ratings.
+    6 endpoints
+  </Card>
+  <Card title="Policies" icon="shield" href="/api-reference/policies/list">
+    Create, activate, pause, and auto-generate safety policies.
+    8 endpoints
+  </Card>
+  <Card title="Rules" icon="list-check" href="/api-reference/rules/list">
+    Manage individual rules across 45 safety categories.
+    5 endpoints
+  </Card>
+  <Card title="Enforcement" icon="rocket" href="/api-reference/enforcement/trigger">
+    Push policies to platforms and track enforcement jobs.
+    6 endpoints
+  </Card>
+  <Card title="Platforms" icon="puzzle-piece" href="/api-reference/platforms/list">
+    Browse and filter supported integration platforms.
+    4 endpoints
+  </Card>
+  <Card title="Compliance" icon="link" href="/api-reference/compliance/create">
+    Connect, verify, and manage platform connections.
+    5 endpoints
+  </Card>
+  <Card title="Webhooks" icon="bell" href="/api-reference/webhooks/create">
+    Register webhook endpoints for real-time event notifications.
+    6 endpoints
+  </Card>
+  <Card title="Standards" icon="certificate" href="/api-reference/standards/list">
+    Browse and adopt community safety standards.
+    5 endpoints
+  </Card>
+  <Card title="Ratings" icon="star" href="/api-reference/ratings/systems">
+    Content rating systems (MPAA, ESRB, PEGI) and age lookups.
+    2 endpoints
+  </Card>
+  <Card title="Devices" icon="mobile" href="/api-reference/devices/register">
+    Register Apple devices and manage on-device enforcement.
+    4 endpoints
+  </Card>
+</CardGroup>
+
+## Authentication
+
+Most endpoints require authentication via Bearer token or API key. See the [Authentication guide](/authentication) for details. Public endpoints (platforms, ratings, standards) are marked with `security: []` in the OpenAPI spec.
+
+## Response Format
+
+All responses return JSON. Successful responses return the resource directly. Error responses follow the format:
+
+```json
+{
+  "error": "error_code",
+  "message": "Human-readable description"
+}
+```
+
+See the [Errors page](/errors) for details on status codes and error handling.
+
+## OpenAPI Spec
+
+The full OpenAPI 3.1 specification is available at [`/openapi.yaml`](/openapi.yaml). Use it with code generators, Postman, Insomnia, or any OpenAPI-compatible tool.

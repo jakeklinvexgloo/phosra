@@ -177,13 +177,14 @@ func handleServiceError(w http.ResponseWriter, err error) {
 	case service.ErrFamilyNotFound, service.ErrChildNotFound, service.ErrPolicyNotFound,
 		service.ErrRuleNotFound, service.ErrPlatformNotFound, service.ErrComplianceLinkNotFound,
 		service.ErrEnforcementJobNotFound, service.ErrWebhookNotFound, service.ErrUserNotFound,
-		service.ErrRatingNotFound, service.ErrStandardNotFound, service.ErrDeviceNotFound:
+		service.ErrRatingNotFound, service.ErrStandardNotFound, service.ErrDeviceNotFound,
+		service.ErrSourceNotFound, service.ErrAdapterNotFound, service.ErrSyncJobNotFound:
 		httputil.Error(w, http.StatusNotFound, err.Error())
 	case service.ErrNotFamilyMember:
 		httputil.Error(w, http.StatusForbidden, err.Error())
 	case service.ErrInsufficientRole:
 		httputil.Error(w, http.StatusForbidden, err.Error())
-	case service.ErrNoActivePolicy:
+	case service.ErrNoActivePolicy, service.ErrSourceNotActive:
 		httputil.Error(w, http.StatusBadRequest, err.Error())
 	case service.ErrDeviceRevoked, service.ErrInvalidAPIKey:
 		httputil.Error(w, http.StatusUnauthorized, err.Error())

@@ -1,0 +1,150 @@
+---
+title: 'Errors'
+description: 'HTTP status codes, error response format, and rate limiting'
+---
+
+# Errors
+
+The Phosra API uses standard HTTP status codes and returns structured error responses.
+
+## Error Response Format
+
+All errors follow this structure:
+
+```json
+{
+  "error": "error_code",
+  "message": "A human-readable description of what went wrong"
+}
+```
+
+## HTTP Status Codes
+
+### Success Codes
+
+| Code | Meaning | Used For |
+|------|---------|----------|
+| `200` | OK | Successful read or update |
+| `201` | Created | Resource created successfully |
+| `202` | Accepted | Async job started (enforcement, sync) |
+| `204` | No Content | Successful delete |
+
+### Client Error Codes
+
+| Code | Meaning | Common Causes |
+|------|---------|---------------|
+| `400` | Bad Request | Missing required fields, invalid JSON, malformed parameters |
+| `401` | Unauthorized | Missing, expired, or invalid token/API key |
+| `403` | Forbidden | Valid auth but insufficient permissions or scope |
+| `404` | Not Found | Resource does not exist or is not accessible to your account |
+| `409` | Conflict | Duplicate resource (e.g., email already registered) |
+| `422` | Unprocessable Entity | Valid JSON but semantically invalid (e.g., birth date in the future) |
+| `429` | Too Many Requests | Rate limit exceeded |
+
+### Server Error Codes
+
+| Code | Meaning | Action |
+|------|---------|--------|
+| `500` | Internal Server Error | Retry with exponential backoff. If persistent, contact support |
+| `502` | Bad Gateway | Upstream platform unreachable (OAuth exchange, verification) |
+
+## Common Error Examples
+
+### Missing Required Field
+
+```json
+{
+  "error": "validation_error",
+  "message": "child_name is required"
+}
+```
+
+### Authentication Failure
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or expired access token"
+}
+```
+
+### Resource Not Found
+
+```json
+{
+  "error": "not_found",
+  "message": "Child 550e8400-e29b-41d4-a716-446655440000 not found"
+}
+```
+
+### Rate Limit Exceeded
+
+```json
+{
+  "error": "rate_limit_exceeded",
+  "message": "Rate limit exceeded. Retry after 30 seconds"
+}
+```
+
+## Rate Limiting
+
+API requests are rate limited per API key or access token. Rate limit information is included in every response via headers:
+
+| Header | Description |
+|--------|-------------|
+| `X-RateLimit-Limit` | Maximum requests allowed per window |
+| `X-RateLimit-Remaining` | Requests remaining in the current window |
+| `X-RateLimit-Reset` | Unix timestamp when the window resets |
+
+### Default Limits
+
+| Plan | Rate Limit |
+|------|-----------|
+| Free | 100 requests/minute |
+| Pro | 1,000 requests/minute |
+| Enterprise | Custom |
+
+### Handling Rate Limits
+
+When you receive a `429` response, read the `X-RateLimit-Reset` header and wait until that time before retrying:
+
+<CodeGroup>
+
+```bash curl
+# Check rate limit headers
+curl -i https://phosra-api-production.up.railway.app/api/v1/families \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+
+# Response headers include:
+# X-RateLimit-Limit: 1000
+# X-RateLimit-Remaining: 998
+# X-RateLimit-Reset: 1708700000
+```
+
+```typescript SDK
+try {
+  const families = await phosra.families.list();
+} catch (err) {
+  if (err.status === 429) {
+    const resetAt = err.headers['x-ratelimit-reset'];
+    const waitMs = (resetAt * 1000) - Date.now();
+    await new Promise(resolve => setTimeout(resolve, waitMs));
+    // Retry the request
+  }
+}
+```
+
+</CodeGroup>
+
+## Retry Guidance
+
+| Scenario | Strategy |
+|----------|----------|
+| `429` Rate Limited | Wait until `X-RateLimit-Reset`, then retry |
+| `500` Server Error | Exponential backoff: 1s, 2s, 4s, 8s (max 3 retries) |
+| `502` Bad Gateway | Retry once after 5 seconds; if persistent, check [status page](https://status.phosra.com) |
+| `401` Unauthorized | Refresh your access token, then retry once |
+
+<Info>
+  Enforcement jobs (`202` responses) are asynchronous. Poll `GET /enforcement/jobs/{jobID}` to check completion status rather than retrying the trigger.
+</Info>

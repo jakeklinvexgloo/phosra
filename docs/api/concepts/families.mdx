@@ -1,0 +1,23 @@
+---
+title: 'Families'
+description: 'How family groups work in Phosra'
+---
+
+# Families
+
+A **family** is the top-level organizational unit in Phosra. Every child, policy, platform connection, and webhook belongs to a family.
+
+Families can have multiple adult members, each with a role: **owner** (full control, including billing), **parent** (can manage children and policies), or **guardian** (read access plus limited management). A family must have at least one owner.
+
+When you create a family, you are automatically added as the owner. You can then invite other adults and add children. Children do not have user accounts -- they are represented as child profiles within the family.
+
+## Related API Endpoints
+
+- [List families](/api-reference/families/list) -- Get all families you belong to
+- [Create a family](/api-reference/families/create) -- Create a new family group
+- [Manage members](/api-reference/members/list) -- Add or remove parents and guardians
+- [Family overview report](/api-reference/overview) -- Dashboard with enforcement health and child status
+
+<Card title="Quick Setup" icon="bolt" href="/api-reference/setup/quick">
+  Skip the manual steps. The quick setup endpoint creates a family, adds a child, and generates a full policy in a single call.
+</Card>

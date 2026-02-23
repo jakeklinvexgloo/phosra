@@ -1,0 +1,251 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Phosra API Documentation",
+  "logo": {
+    "dark": "/logo-white.svg",
+    "light": "/logo.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#00D47E",
+    "light": "#00D47E",
+    "dark": "#00D47E",
+    "anchors": {
+      "from": "#00D47E",
+      "to": "#0EA5E9"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Dashboard",
+      "url": "https://www.phosra.com/dashboard"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get API Key",
+    "url": "https://www.phosra.com/dashboard/developers/keys"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    },
+    {
+      "name": "SDKs",
+      "url": "sdks"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/jakeklinvexgloo/phosra"
+    },
+    {
+      "name": "Status",
+      "icon": "signal",
+      "url": "https://status.phosra.com"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "authentication",
+        "quickstart",
+        "errors"
+      ]
+    },
+    {
+      "group": "Core Concepts",
+      "pages": [
+        "concepts/families",
+        "concepts/children-and-age",
+        "concepts/policies-and-rules",
+        "concepts/enforcement",
+        "concepts/strictness-levels"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/first-time-setup",
+        "guides/third-party-integration",
+        "guides/webhook-events",
+        "guides/device-sync",
+        "guides/mobile-integration"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/overview"
+      ]
+    },
+    {
+      "group": "Authentication",
+      "pages": [
+        "api-reference/auth/register",
+        "api-reference/auth/login",
+        "api-reference/auth/refresh",
+        "api-reference/auth/logout",
+        "api-reference/auth/me"
+      ]
+    },
+    {
+      "group": "Families",
+      "pages": [
+        "api-reference/families/list",
+        "api-reference/families/create",
+        "api-reference/families/get",
+        "api-reference/families/update",
+        "api-reference/families/delete"
+      ]
+    },
+    {
+      "group": "Family Members",
+      "pages": [
+        "api-reference/members/list",
+        "api-reference/members/add",
+        "api-reference/members/remove"
+      ]
+    },
+    {
+      "group": "Children",
+      "pages": [
+        "api-reference/children/list",
+        "api-reference/children/create",
+        "api-reference/children/get",
+        "api-reference/children/update",
+        "api-reference/children/delete",
+        "api-reference/children/age-ratings"
+      ]
+    },
+    {
+      "group": "Policies",
+      "pages": [
+        "api-reference/policies/list",
+        "api-reference/policies/create",
+        "api-reference/policies/get",
+        "api-reference/policies/update",
+        "api-reference/policies/delete",
+        "api-reference/policies/activate",
+        "api-reference/policies/pause",
+        "api-reference/policies/generate-from-age"
+      ]
+    },
+    {
+      "group": "Rules",
+      "pages": [
+        "api-reference/rules/list",
+        "api-reference/rules/create",
+        "api-reference/rules/update",
+        "api-reference/rules/delete",
+        "api-reference/rules/bulk-upsert"
+      ]
+    },
+    {
+      "group": "Enforcement",
+      "pages": [
+        "api-reference/enforcement/trigger",
+        "api-reference/enforcement/trigger-link",
+        "api-reference/enforcement/list-jobs",
+        "api-reference/enforcement/get-job",
+        "api-reference/enforcement/get-results",
+        "api-reference/enforcement/retry"
+      ]
+    },
+    {
+      "group": "Platforms",
+      "pages": [
+        "api-reference/platforms/list",
+        "api-reference/platforms/get",
+        "api-reference/platforms/by-category",
+        "api-reference/platforms/by-capability"
+      ]
+    },
+    {
+      "group": "Compliance",
+      "pages": [
+        "api-reference/compliance/create",
+        "api-reference/compliance/list",
+        "api-reference/compliance/verify",
+        "api-reference/compliance/delete",
+        "api-reference/compliance/enforce"
+      ]
+    },
+    {
+      "group": "Webhooks",
+      "pages": [
+        "api-reference/webhooks/create",
+        "api-reference/webhooks/get",
+        "api-reference/webhooks/update",
+        "api-reference/webhooks/delete",
+        "api-reference/webhooks/test",
+        "api-reference/webhooks/deliveries"
+      ]
+    },
+    {
+      "group": "Quick Setup",
+      "pages": [
+        "api-reference/setup/quick"
+      ]
+    },
+    {
+      "group": "Ratings",
+      "pages": [
+        "api-reference/ratings/systems",
+        "api-reference/ratings/by-age"
+      ]
+    },
+    {
+      "group": "Standards",
+      "pages": [
+        "api-reference/standards/list",
+        "api-reference/standards/get",
+        "api-reference/standards/for-child",
+        "api-reference/standards/adopt",
+        "api-reference/standards/remove"
+      ]
+    },
+    {
+      "group": "Devices",
+      "pages": [
+        "api-reference/devices/register",
+        "api-reference/devices/get-policy",
+        "api-reference/devices/report",
+        "api-reference/devices/ack"
+      ]
+    },
+    {
+      "group": "SDKs",
+      "pages": [
+        "sdks/overview",
+        "sdks/typescript",
+        "sdks/mcp-server",
+        "sdks/ios",
+        "sdks/android"
+      ]
+    }
+  ],
+  "openapi": ["/openapi.yaml"],
+  "api": {
+    "baseUrl": "https://phosra-api-production.up.railway.app/api/v1",
+    "auth": {
+      "method": "bearer"
+    },
+    "playground": {
+      "mode": "simple"
+    }
+  },
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true
+  },
+  "analytics": {
+    "posthog": {
+      "apiKey": ""
+    }
+  }
+}

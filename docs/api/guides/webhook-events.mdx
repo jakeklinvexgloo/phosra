@@ -1,0 +1,112 @@
+---
+title: 'Webhook Events'
+description: 'Receive real-time notifications for policy changes, enforcement, and activity'
+---
+
+# Webhook Events
+
+Webhooks let your application receive real-time HTTP POST notifications when events occur in Phosra. Instead of polling the API, register a webhook URL and Phosra will push events to you.
+
+## Setting Up Webhooks
+
+Create a webhook subscription for a family:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/webhooks \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "family_id": "FAMILY_UUID",
+    "url": "https://yourapp.com/webhooks/phosra",
+    "events": [
+      "policy.updated",
+      "policy.activated",
+      "enforcement.completed",
+      "enforcement.failed",
+      "child.created",
+      "compliance.verified",
+      "compliance.error"
+    ]
+  }'
+```
+
+## Event Types
+
+| Event | Trigger |
+|-------|---------|
+| `policy.updated` | A policy's rules were changed |
+| `policy.activated` | A policy was activated |
+| `policy.paused` | A policy was paused |
+| `enforcement.completed` | Enforcement job finished successfully |
+| `enforcement.failed` | Enforcement job failed |
+| `enforcement.partial` | Enforcement succeeded on some platforms, failed on others |
+| `child.created` | A child was added to the family |
+| `child.updated` | A child's profile was updated |
+| `compliance.verified` | A platform connection was verified |
+| `compliance.error` | A platform connection failed verification |
+| `device.registered` | A new device was registered |
+| `device.report` | A device submitted an activity report |
+
+## Webhook Payload
+
+Every webhook delivery is a JSON POST with this structure:
+
+```json
+{
+  "event": "enforcement.completed",
+  "timestamp": "2026-02-23T14:30:00Z",
+  "family_id": "550e8400-e29b-41d4-a716-446655440000",
+  "data": {
+    "job_id": "660e8400-e29b-41d4-a716-446655440001",
+    "child_id": "770e8400-e29b-41d4-a716-446655440002",
+    "status": "completed",
+    "platforms": [
+      {
+        "platform_id": "nextdns",
+        "rules_applied": 12,
+        "rules_skipped": 3,
+        "rules_failed": 0
+      }
+    ]
+  }
+}
+```
+
+## Testing Webhooks
+
+Send a test delivery to verify your endpoint is working:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/webhooks/WEBHOOK_UUID/test \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+## Viewing Delivery History
+
+Check past deliveries, including failures and retry attempts:
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/webhooks/WEBHOOK_UUID/deliveries?limit=20 \
+  -H "Authorization: Bearer $PHOSRA_API_KEY"
+```
+
+## Retry Behavior
+
+Failed deliveries are retried with exponential backoff:
+
+| Attempt | Delay |
+|---------|-------|
+| 1st retry | 1 minute |
+| 2nd retry | 5 minutes |
+| 3rd retry | 30 minutes |
+| 4th retry | 2 hours |
+| 5th retry | 12 hours |
+
+After 5 failed attempts, the delivery is marked as permanently failed. You can view the `next_retry_at` timestamp in the delivery record.
+
+## Best Practices
+
+- **Respond quickly** -- Return a `200` within 5 seconds. Process the payload asynchronously if needed.
+- **Verify idempotency** -- Webhooks may be delivered more than once. Use the event timestamp and job/resource IDs to deduplicate.
+- **Monitor delivery health** -- Check the deliveries endpoint periodically for failed deliveries.
+- **Use HTTPS** -- Webhook URLs must use HTTPS in production.

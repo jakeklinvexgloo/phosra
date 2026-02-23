@@ -1,0 +1,170 @@
+---
+title: 'Authentication'
+description: 'How to authenticate with the Phosra API using Bearer tokens, API keys, and device keys'
+---
+
+# Authentication
+
+Phosra supports three authentication methods depending on your use case.
+
+## Bearer Token (JWT)
+
+For user-facing applications. Obtain a token pair by registering or logging in, then pass the access token in the `Authorization` header.
+
+<CodeGroup>
+
+```bash curl
+curl https://phosra-api-production.up.railway.app/api/v1/families \
+  -H "Authorization: Bearer eyJhbGciOi..."
+```
+
+```typescript SDK
+import { PhosraClient } from '@phosra/sdk';
+
+const phosra = new PhosraClient({
+  accessToken: 'eyJhbGciOi...',
+});
+
+const families = await phosra.families.list();
+```
+
+</CodeGroup>
+
+### Getting a Token
+
+<CodeGroup>
+
+```bash Register
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "parent@example.com",
+    "password": "securepassword123",
+    "name": "Jane Doe"
+  }'
+```
+
+```bash Login
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "parent@example.com",
+    "password": "securepassword123"
+  }'
+```
+
+</CodeGroup>
+
+Both endpoints return a `TokenPair`:
+
+```json
+{
+  "user": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "email": "parent@example.com",
+    "name": "Jane Doe"
+  },
+  "tokens": {
+    "access_token": "eyJhbGciOi...",
+    "refresh_token": "dGhpcyBpcyBh...",
+    "expires_at": "2026-02-24T12:00:00Z"
+  }
+}
+```
+
+### Token Refresh
+
+Access tokens expire after 1 hour. Use the refresh token to get a new pair without re-authenticating:
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/auth/refresh \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh_token": "dGhpcyBpcyBh..."
+  }'
+```
+
+```typescript SDK
+const tokens = await phosra.auth.refresh('dGhpcyBpcyBh...');
+// Update client with new access token
+phosra.setAccessToken(tokens.access_token);
+```
+
+</CodeGroup>
+
+## Developer API Keys
+
+For server-to-server integrations. API keys are long-lived and scoped to your account. Generate them from the [Developer Portal](https://www.phosra.com/dashboard/developers/keys).
+
+API keys use the same `Authorization: Bearer` header:
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/families \
+  -H "Authorization: Bearer phosra_live_sk_abc123..."
+```
+
+### Key Prefixes
+
+| Prefix | Environment | Use Case |
+|--------|------------|----------|
+| `phosra_live_sk_` | Production | Live data, real enforcement |
+| `phosra_test_sk_` | Sandbox | Testing without affecting real platforms |
+
+<Warning>
+  Never expose API keys in client-side code or commit them to version control. Use environment variables and server-side calls.
+</Warning>
+
+## Device API Keys
+
+For on-device enforcement (iOS apps). Device keys are issued once during device registration and authenticate via the `X-Device-Key` header.
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/device/policy \
+  -H "X-Device-Key: phosra_dev_abc123..."
+```
+
+Device keys are returned from `POST /children/{childID}/devices` and should be stored securely in the iOS Keychain. They provide access only to the device-specific endpoints:
+
+- `GET /device/policy` -- Fetch compiled policy for this device
+- `POST /device/report` -- Submit activity reports
+- `POST /device/ack` -- Acknowledge policy version
+
+## Scopes Reference
+
+API keys and tokens are scoped to control access. The following scopes are available:
+
+| Scope | Description |
+|-------|-------------|
+| `families:read` | List and view family details |
+| `families:write` | Create, update, and delete families |
+| `children:read` | List and view children and their policies |
+| `children:write` | Create, update, and delete children |
+| `policies:read` | View policies and rules |
+| `policies:write` | Create, update, delete policies and rules |
+| `enforcement:read` | View enforcement jobs and results |
+| `enforcement:write` | Trigger enforcement and retry jobs |
+| `compliance:read` | View platform connections |
+| `compliance:write` | Connect and disconnect platforms |
+| `webhooks:manage` | Create, update, delete, and test webhooks |
+
+## Error Responses
+
+All authentication failures return `401 Unauthorized`:
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid or expired access token"
+}
+```
+
+Insufficient permissions return `403 Forbidden`:
+
+```json
+{
+  "error": "forbidden",
+  "message": "API key does not have the required scope: enforcement:write"
+}
+```

@@ -1,0 +1,212 @@
+---
+title: 'TypeScript SDK'
+description: 'Official TypeScript/JavaScript SDK for the Phosra API'
+---
+
+# TypeScript SDK
+
+The `@phosra/sdk` package provides a typed client for the Phosra API, with support for Node.js and browser environments.
+
+## Installation
+
+```bash
+npm install @phosra/sdk
+```
+
+## Quick Start
+
+```typescript
+import { PhosraClient } from '@phosra/sdk';
+
+const phosra = new PhosraClient({
+  apiKey: process.env.PHOSRA_API_KEY,
+});
+
+// One-call setup
+const result = await phosra.setup.quick({
+  child_name: 'Emma',
+  birth_date: '2016-03-15',
+  strictness: 'recommended',
+});
+
+console.log(`Created family: ${result.family.name}`);
+console.log(`Age group: ${result.age_group}`);
+console.log(`Rules enabled: ${result.rule_summary.total_rules_enabled}`);
+```
+
+## Authentication
+
+The client supports all three authentication methods:
+
+```typescript
+// API key (server-to-server)
+const phosra = new PhosraClient({
+  apiKey: 'phosra_live_sk_...',
+});
+
+// Bearer token (user sessions)
+const phosra = new PhosraClient({
+  accessToken: 'eyJhbGciOi...',
+});
+
+// Device key (iOS device)
+const phosra = new PhosraClient({
+  deviceKey: 'phosra_dev_...',
+});
+```
+
+## Resource Namespaces
+
+The client organizes endpoints into resource namespaces:
+
+```typescript
+// Auth
+phosra.auth.register({ email, password, name })
+phosra.auth.login({ email, password })
+phosra.auth.refresh(refreshToken)
+phosra.auth.logout()
+phosra.auth.me()
+
+// Families
+phosra.families.list()
+phosra.families.create({ name })
+phosra.families.get(familyId)
+phosra.families.update(familyId, { name })
+phosra.families.delete(familyId)
+
+// Children
+phosra.children.create(familyId, { name, birth_date })
+phosra.children.list(familyId)
+phosra.children.get(childId)
+phosra.children.update(childId, { name })
+phosra.children.delete(childId)
+phosra.children.ageRatings(childId)
+
+// Policies
+phosra.policies.create(childId, { name })
+phosra.policies.list(childId)
+phosra.policies.get(policyId)
+phosra.policies.update(policyId, { name, priority })
+phosra.policies.delete(policyId)
+phosra.policies.activate(policyId)
+phosra.policies.pause(policyId)
+phosra.policies.generateFromAge(policyId)
+
+// Rules
+phosra.rules.list(policyId)
+phosra.rules.create(policyId, { category, enabled, config })
+phosra.rules.update(ruleId, { enabled, config })
+phosra.rules.delete(ruleId)
+phosra.rules.bulkUpsert(policyId, rules)
+
+// Enforcement
+phosra.enforcement.trigger(childId, { platform_ids? })
+phosra.enforcement.listJobs(childId)
+phosra.enforcement.getJob(jobId)
+phosra.enforcement.getResults(jobId)
+phosra.enforcement.retry(jobId)
+
+// Compliance
+phosra.compliance.create({ family_id, platform_id, credentials })
+phosra.compliance.list(familyId)
+phosra.compliance.verify(linkId)
+phosra.compliance.delete(linkId)
+
+// Webhooks
+phosra.webhooks.create({ family_id, url, events })
+phosra.webhooks.list(familyId)
+phosra.webhooks.get(webhookId)
+phosra.webhooks.update(webhookId, { url, events, active })
+phosra.webhooks.delete(webhookId)
+phosra.webhooks.test(webhookId)
+phosra.webhooks.deliveries(webhookId)
+
+// Platforms
+phosra.platforms.list()
+phosra.platforms.get(platformId)
+phosra.platforms.byCategory(category)
+phosra.platforms.byCapability(capability)
+
+// Setup
+phosra.setup.quick({ child_name, birth_date, strictness? })
+```
+
+## Error Handling
+
+The SDK throws typed errors you can catch and handle:
+
+```typescript
+import { PhosraClient, PhosraError } from '@phosra/sdk';
+
+try {
+  const family = await phosra.families.get('nonexistent-id');
+} catch (err) {
+  if (err instanceof PhosraError) {
+    console.log(err.status);   // 404
+    console.log(err.code);     // "not_found"
+    console.log(err.message);  // "Family not found"
+  }
+}
+```
+
+### Automatic Retries
+
+The SDK retries on `429` (rate limit) and `500` (server error) with exponential backoff:
+
+```typescript
+const phosra = new PhosraClient({
+  apiKey: process.env.PHOSRA_API_KEY,
+  maxRetries: 3,        // default: 3
+  retryDelay: 1000,     // base delay in ms, default: 1000
+});
+```
+
+## Full Example: Setup to Enforcement
+
+```typescript
+import { PhosraClient } from '@phosra/sdk';
+
+const phosra = new PhosraClient({
+  apiKey: process.env.PHOSRA_API_KEY!,
+});
+
+async function main() {
+  // 1. Quick setup
+  const setup = await phosra.setup.quick({
+    child_name: 'Emma',
+    birth_date: '2016-03-15',
+    strictness: 'recommended',
+  });
+
+  console.log(`Created ${setup.age_group} policy with ${setup.rule_summary.total_rules_enabled} rules`);
+
+  // 2. Connect a platform
+  const link = await phosra.compliance.create({
+    family_id: setup.family.id,
+    platform_id: 'nextdns',
+    credentials: process.env.NEXTDNS_API_KEY!,
+  });
+
+  console.log(`Connected NextDNS: ${link.status}`);
+
+  // 3. Trigger enforcement
+  const job = await phosra.enforcement.trigger(setup.child.id);
+  console.log(`Enforcement job started: ${job.id}`);
+
+  // 4. Poll for results
+  let status = job.status;
+  while (status === 'pending' || status === 'running') {
+    await new Promise(r => setTimeout(r, 2000));
+    const updated = await phosra.enforcement.getJob(job.id);
+    status = updated.status;
+  }
+
+  // 5. Check results
+  const results = await phosra.enforcement.getResults(job.id);
+  for (const result of results) {
+    console.log(`${result.platform_id}: ${result.rules_applied} applied, ${result.rules_failed} failed`);
+  }
+}
+
+main();
+```

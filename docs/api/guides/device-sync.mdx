@@ -1,0 +1,151 @@
+---
+title: 'Device Sync'
+description: 'On-device policy enforcement for Apple devices using FamilyControls and ManagedSettings'
+---
+
+# Device Sync
+
+Phosra supports on-device policy enforcement for Apple devices (iPhone, iPad) using Apple's FamilyControls, ManagedSettings, and DeviceActivity frameworks. This guide covers the device registration and sync protocol.
+
+## How It Works
+
+1. **Register the device** -- The iOS app registers with Phosra, receiving a one-time device API key
+2. **Fetch compiled policy** -- The device polls `GET /device/policy` for a structured policy document
+3. **Apply locally** -- The iOS app translates the compiled policy into Apple framework calls
+4. **Report back** -- The device reports enforcement status and activity data to Phosra
+5. **Stay updated** -- APNs silent push notifications alert the device when policies change
+
+## Device Registration
+
+Register a device for a child:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/children/CHILD_UUID/devices \
+  -H "Authorization: Bearer $PHOSRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "device_name": "Emma'\''s iPad",
+    "device_model": "iPad Pro 11-inch",
+    "os_version": "17.4",
+    "app_version": "1.0.0",
+    "capabilities": ["FamilyControls", "ManagedSettings", "DeviceActivity"]
+  }'
+```
+
+The response includes a one-time `api_key` that the iOS app stores in Keychain:
+
+```json
+{
+  "device": { "id": "...", "status": "active" },
+  "api_key": "phosra_dev_abc123..."
+}
+```
+
+## Fetching the Compiled Policy
+
+The device uses its device key to fetch a structured policy document:
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/device/policy \
+  -H "X-Device-Key: phosra_dev_abc123..."
+```
+
+The response is a `CompiledPolicy` with sections for content filters, screen time, purchases, privacy, social, notifications, and web filters -- all in a format the iOS app can directly map to Apple framework calls.
+
+### Conditional Polling
+
+To avoid unnecessary downloads, pass the `since_version` parameter:
+
+```bash
+curl "https://phosra-api-production.up.railway.app/api/v1/device/policy?since_version=3" \
+  -H "X-Device-Key: phosra_dev_abc123..."
+```
+
+Returns `304 Not Modified` if the policy hasn't changed, or the full policy if it has been updated.
+
+## Reporting Activity
+
+The device reports activity data back to Phosra:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/device/report \
+  -H "X-Device-Key: phosra_dev_abc123..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "report_type": "enforcement_status",
+    "payload": {
+      "policy_version": 3,
+      "results": [
+        {
+          "category": "content_rating",
+          "status": "enforced",
+          "framework": "ManagedSettings",
+          "detail": ""
+        },
+        {
+          "category": "time_daily_limit",
+          "status": "enforced",
+          "framework": "DeviceActivity",
+          "detail": ""
+        }
+      ]
+    },
+    "reported_at": "2026-02-23T14:30:00Z"
+  }'
+```
+
+Supported report types: `screen_time`, `app_usage`, `web_activity`, `blocked_attempt`, `enforcement_status`.
+
+## Acknowledging Policy Versions
+
+After successfully applying a policy, the device confirms it:
+
+```bash
+curl -X POST https://phosra-api-production.up.railway.app/api/v1/device/ack \
+  -H "X-Device-Key: phosra_dev_abc123..." \
+  -H "Content-Type: application/json" \
+  -d '{"version": 3}'
+```
+
+## APNs Push Notifications
+
+When a policy is updated, Phosra sends a silent push notification to the device:
+
+```json
+{
+  "aps": { "content-available": 1 },
+  "phosra": {
+    "event": "policy.updated",
+    "version": 4
+  }
+}
+```
+
+The iOS app compares the `version` to its cached version and calls `GET /device/policy` if an update is needed.
+
+## Apple Framework Mapping
+
+Use `GET /platform-mappings/apple` to see which Apple framework and API class maps to each Phosra rule category:
+
+```bash
+curl https://phosra-api-production.up.railway.app/api/v1/platform-mappings/apple
+```
+
+This returns mappings like:
+
+```json
+{
+  "category_frameworks": {
+    "content_rating": {
+      "framework": "ManagedSettings",
+      "api_class": "ManagedSettingsStore.application",
+      "min_os": "16.0"
+    },
+    "time_daily_limit": {
+      "framework": "DeviceActivity",
+      "api_class": "DeviceActivitySchedule",
+      "min_os": "16.0"
+    }
+  }
+}
+```

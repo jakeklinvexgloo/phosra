@@ -130,6 +130,8 @@ components:
           enum: [active, paused, draft]
         priority:
           type: integer
+        version:
+          type: integer
         created_at:
           type: string
           format: date-time
@@ -144,34 +146,7 @@ components:
           type: string
           format: uuid
         category:
-          type: string
-          enum:
-            - content_rating
-            - content_block_title
-            - content_allow_title
-            - content_allowlist_mode
-            - content_descriptor_block
-            - time_daily_limit
-            - time_scheduled_hours
-            - time_per_app_limit
-            - time_downtime
-            - purchase_approval
-            - purchase_spending_cap
-            - purchase_block_iap
-            - social_contacts
-            - social_chat_control
-            - social_multiplayer
-            - web_safesearch
-            - web_category_block
-            - web_custom_allowlist
-            - web_custom_blocklist
-            - web_filter_level
-            - privacy_location
-            - privacy_profile_visibility
-            - privacy_data_sharing
-            - privacy_account_creation
-            - monitoring_activity
-            - monitoring_alerts
+          $ref: "#/components/schemas/RuleCategory"
         enabled:
           type: boolean
         config:
@@ -180,7 +155,69 @@ components:
           type: string
           format: date-time
 
-    Provider:
+    RuleCategory:
+      type: string
+      description: One of the 45 supported rule categories
+      enum:
+        # Content rules (5)
+        - content_rating
+        - content_block_title
+        - content_allow_title
+        - content_allowlist_mode
+        - content_descriptor_block
+        # Time rules (4)
+        - time_daily_limit
+        - time_scheduled_hours
+        - time_per_app_limit
+        - time_downtime
+        # Purchase rules (3)
+        - purchase_approval
+        - purchase_spending_cap
+        - purchase_block_iap
+        # Social rules (3)
+        - social_contacts
+        - social_chat_control
+        - social_multiplayer
+        # Web rules (5)
+        - web_safesearch
+        - web_category_block
+        - web_custom_allowlist
+        - web_custom_blocklist
+        - web_filter_level
+        # Privacy rules (4)
+        - privacy_location
+        - privacy_profile_visibility
+        - privacy_data_sharing
+        - privacy_account_creation
+        # Monitoring rules (2)
+        - monitoring_activity
+        - monitoring_alerts
+        # Algorithmic safety rules (2)
+        - algo_feed_control
+        - addictive_design_control
+        # Notification rules (2)
+        - notification_curfew
+        - usage_timer_notification
+        # Advertising & data rules (5)
+        - targeted_ad_block
+        - dm_restriction
+        - age_gate
+        - data_deletion_request
+        - geolocation_opt_in
+        # Compliance expansion rules (5)
+        - csam_reporting
+        - library_filter_compliance
+        - ai_minor_interaction
+        - social_media_min_age
+        - image_rights_minor
+        # Legislation-driven expansion (5)
+        - parental_consent_gate
+        - parental_event_notification
+        - screen_time_report
+        - commercial_data_ban
+        - algorithmic_audit
+
+    Platform:
       type: object
       properties:
         id:
@@ -192,16 +229,109 @@ components:
           enum: [dns, streaming, gaming, device, browser]
         tier:
           type: string
-          enum: [live, partial, stub]
+          enum: [compliant, provisional, pending]
         description:
+          type: string
+        icon_url:
           type: string
         auth_type:
           type: string
           enum: [api_key, oauth2, manual]
-        capabilities:
-          type: array
-          items:
-            type: string
+        enabled:
+          type: boolean
+
+    ComplianceLink:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        family_id:
+          type: string
+          format: uuid
+        platform_id:
+          type: string
+        status:
+          type: string
+          enum: [verified, unverified, error]
+        external_id:
+          type: string
+        last_enforcement_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_enforcement_status:
+          type: string
+        verified_at:
+          type: string
+          format: date-time
+
+    EnforcementJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        child_id:
+          type: string
+          format: uuid
+        policy_id:
+          type: string
+          format: uuid
+        trigger_type:
+          type: string
+          enum: [manual, auto, webhook]
+        status:
+          type: string
+          enum: [pending, running, completed, failed, partial]
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    EnforcementResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        enforcement_job_id:
+          type: string
+          format: uuid
+        compliance_link_id:
+          type: string
+          format: uuid
+        platform_id:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed, partial]
+        rules_applied:
+          type: integer
+        rules_skipped:
+          type: integer
+        rules_failed:
+          type: integer
+        error_message:
+          type: string
+          nullable: true
+        details:
+          type: object
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
 
     ProviderConnection:
       type: object
@@ -289,6 +419,8 @@ components:
           type: string
         media_type:
           type: string
+        description:
+          type: string
 
     Rating:
       type: object
@@ -302,10 +434,45 @@ components:
           type: string
         name:
           type: string
+        description:
+          type: string
         min_age:
+          type: integer
+        display_order:
           type: integer
         restrictive_idx:
           type: integer
+
+    ContentDescriptor:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        system_id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+
+    RatingEquivalence:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        rating_a:
+          type: string
+          format: uuid
+        rating_b:
+          type: string
+          format: uuid
+        strength:
+          type: number
+          description: "0-1, how equivalent the ratings are"
 
     AgeRatings:
       type: object
@@ -316,6 +483,262 @@ components:
           type: object
           additionalProperties:
             $ref: "#/components/schemas/Rating"
+
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        family_id:
+          type: string
+          format: uuid
+        url:
+          type: string
+        events:
+          type: array
+          items:
+            type: string
+        active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    WebhookDelivery:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhook_id:
+          type: string
+          format: uuid
+        event:
+          type: string
+        payload:
+          type: object
+        response_code:
+          type: integer
+          nullable: true
+        success:
+          type: boolean
+        attempts:
+          type: integer
+        next_retry_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    Standard:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+        name:
+          type: string
+        organization:
+          type: string
+        description:
+          type: string
+        long_description:
+          type: string
+        icon_url:
+          type: string
+        version:
+          type: string
+        published:
+          type: boolean
+        min_age:
+          type: integer
+          nullable: true
+        max_age:
+          type: integer
+          nullable: true
+        adoption_count:
+          type: integer
+        rules:
+          type: array
+          items:
+            $ref: "#/components/schemas/StandardRule"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    StandardRule:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        standard_id:
+          type: string
+          format: uuid
+        category:
+          $ref: "#/components/schemas/RuleCategory"
+        label:
+          type: string
+        enabled:
+          type: boolean
+        config:
+          type: object
+        sort_order:
+          type: integer
+
+    StandardAdoption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        child_id:
+          type: string
+          format: uuid
+        standard_id:
+          type: string
+          format: uuid
+        adopted_at:
+          type: string
+          format: date-time
+
+    UIFeedback:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        page_route:
+          type: string
+        css_selector:
+          type: string
+        component_hint:
+          type: string
+          nullable: true
+        comment:
+          type: string
+        reviewer_name:
+          type: string
+        status:
+          type: string
+          enum: [open, approved, dismissed, fixed]
+        viewport_width:
+          type: integer
+          nullable: true
+        viewport_height:
+          type: integer
+          nullable: true
+        click_x:
+          type: integer
+          nullable: true
+        click_y:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        resolved_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    QuickSetupRequest:
+      type: object
+      required: [child_name, birth_date]
+      properties:
+        family_id:
+          type: string
+          format: uuid
+          description: Optional existing family UUID to add the child to
+        family_name:
+          type: string
+          description: "Optional name for a new family (defaults to '{child_name}'s Family')"
+        child_name:
+          type: string
+          description: The child's display name
+        birth_date:
+          type: string
+          format: date
+          description: Child's birth date in YYYY-MM-DD format
+        strictness:
+          type: string
+          enum: [recommended, strict, relaxed]
+          description: "Strictness preset (default: recommended)"
+
+    QuickSetupResponse:
+      type: object
+      properties:
+        family:
+          $ref: "#/components/schemas/Family"
+        child:
+          $ref: "#/components/schemas/Child"
+        policy:
+          $ref: "#/components/schemas/ChildPolicy"
+        rules:
+          type: array
+          items:
+            $ref: "#/components/schemas/PolicyRule"
+        age_group:
+          type: string
+        max_ratings:
+          type: object
+          additionalProperties:
+            type: string
+        rule_summary:
+          $ref: "#/components/schemas/RuleSummary"
+
+    RuleSummary:
+      type: object
+      properties:
+        screen_time_minutes:
+          type: integer
+        bedtime_hour:
+          type: integer
+        web_filter_level:
+          type: string
+        content_rating:
+          type: string
+        total_rules_enabled:
+          type: integer
+
+    FamilyOverview:
+      type: object
+      properties:
+        children:
+          type: array
+          items:
+            type: object
+            properties:
+              child:
+                $ref: "#/components/schemas/Child"
+              active_policies:
+                type: integer
+              last_enforcement_at:
+                type: string
+                format: date-time
+                nullable: true
+              enforcement_status:
+                type: string
+        total_platforms:
+          type: integer
+        enforcement_health:
+          type: string
+          enum: [healthy, warning, error]
+        recent_enforcements:
+          type: array
+          items:
+            $ref: "#/components/schemas/EnforcementJob"
 
     DeviceRegistration:
       type: object
@@ -568,7 +991,7 @@ components:
 
     EnforcementStatusPayload:
       type: object
-      description: "Payload for report_type: enforcement_status — per-category enforcement results"
+      description: "Payload for report_type: enforcement_status -- per-category enforcement results"
       properties:
         policy_version:
           type: integer
@@ -621,14 +1044,14 @@ components:
           properties:
             content-available:
               type: integer
-              description: "Always 1 — marks as silent/background push"
+              description: "Always 1 -- marks as silent/background push"
               enum: [1]
         phosra:
           type: object
           properties:
             event:
               type: string
-              description: "Event type — currently always policy.updated"
+              description: "Event type -- currently always policy.updated"
               enum: ["policy.updated"]
             version:
               type: integer
@@ -668,11 +1091,225 @@ components:
             type: string
         category_frameworks:
           type: object
-          description: "Phosra rule category → Apple framework mapping for on-device enforcement"
+          description: "Phosra rule category -> Apple framework mapping for on-device enforcement"
           additionalProperties:
             $ref: "#/components/schemas/CategoryFrameworkMapping"
 
+    AndroidCategoryFrameworkMapping:
+      type: object
+      description: "Maps a Phosra rule category to the Android framework and API class needed to enforce it"
+      properties:
+        framework:
+          type: string
+          description: "Android framework: DevicePolicyManager, UsageStatsManager, VpnService, AccessibilityService, NotificationListenerService, PackageManager, ContentResolver, AlarmManager, NotificationManager, or none"
+        api_class:
+          type: string
+          description: "Specific API class or method (e.g. setPackagesSuspended, queryUsageStats, onAccessibilityEvent)"
+        min_sdk:
+          type: integer
+          description: "Minimum Android SDK version required (e.g. 26 for Android 8.0, 28 for Android 9.0)"
+        notes:
+          type: string
+          description: "Implementation hints for the Android app"
+
+    AndroidPlatformMappings:
+      type: object
+      properties:
+        age_ratings:
+          type: object
+          additionalProperties:
+            type: string
+        app_categories:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              package_names:
+                type: array
+                items:
+                  type: string
+              play_store_category:
+                type: string
+        system_apps:
+          type: object
+          additionalProperties:
+            type: string
+        always_allowed:
+          type: array
+          items:
+            type: string
+        category_frameworks:
+          type: object
+          description: "Phosra rule category -> Android framework mapping for on-device enforcement"
+          additionalProperties:
+            $ref: "#/components/schemas/AndroidCategoryFrameworkMapping"
+
+    # ── Sources ──────────────────────────────────────────────────────
+
+    Source:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        child_id:
+          type: string
+          format: uuid
+        family_id:
+          type: string
+          format: uuid
+        source_slug:
+          type: string
+        display_name:
+          type: string
+        api_tier:
+          type: string
+          enum: [managed, guided]
+        status:
+          type: string
+          enum: [pending, connected, syncing, error, disconnected]
+        auto_sync:
+          type: boolean
+        capabilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/SourceCapability"
+        config:
+          type: object
+        last_sync_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_sync_status:
+          type: string
+          nullable: true
+        sync_version:
+          type: integer
+        error_message:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    SourceCapability:
+      type: object
+      properties:
+        category:
+          $ref: "#/components/schemas/RuleCategory"
+        support_level:
+          type: string
+          enum: [full, partial, none]
+        read_write:
+          type: string
+          enum: [push_only, pull_only, bidirectional]
+        notes:
+          type: string
+
+    SourceSyncJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        source_id:
+          type: string
+          format: uuid
+        sync_mode:
+          type: string
+          enum: [full, incremental, single_rule]
+        trigger_type:
+          type: string
+          enum: [manual, auto, webhook, policy_change]
+        status:
+          type: string
+          enum: [pending, running, completed, failed, partial]
+        rules_pushed:
+          type: integer
+        rules_skipped:
+          type: integer
+        rules_failed:
+          type: integer
+        error_message:
+          type: string
+          nullable: true
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    SourceSyncResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        job_id:
+          type: string
+          format: uuid
+        source_id:
+          type: string
+          format: uuid
+        rule_category:
+          $ref: "#/components/schemas/RuleCategory"
+        status:
+          type: string
+          enum: [pushed, skipped, failed, unsupported]
+        source_value:
+          type: object
+        source_response:
+          type: object
+        error_message:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    AvailableSource:
+      type: object
+      properties:
+        slug:
+          type: string
+        display_name:
+          type: string
+        api_tier:
+          type: string
+          enum: [managed, guided]
+        auth_type:
+          type: string
+        website:
+          type: string
+        description:
+          type: string
+
+    GuidedStep:
+      type: object
+      properties:
+        step_number:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        image_url:
+          type: string
+        deep_link:
+          type: string
+
 paths:
+  # ── Auth ──────────────────────────────────────────────────────────
+
   /auth/register:
     post:
       summary: Register a new account
@@ -784,6 +1421,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
 
+  # ── Quick Setup ───────────────────────────────────────────────────
+
+  /setup/quick:
+    post:
+      summary: One-step onboarding
+      description: "Creates a family (or uses existing), adds a child, generates age-appropriate policy rules, and activates the policy."
+      tags: [Quick Setup]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuickSetupRequest"
+      responses:
+        "201":
+          description: Setup complete
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuickSetupResponse"
+        "400":
+          description: Invalid request (missing child_name or birth_date)
+
+  # ── Families ──────────────────────────────────────────────────────
+
   /families:
     get:
       summary: List user's families
@@ -836,6 +1498,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Family"
+        "404":
+          description: Family not found
     put:
       summary: Update family
       tags: [Families]
@@ -850,12 +1514,106 @@ paths:
       responses:
         "200":
           description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Family"
     delete:
       summary: Delete family
       tags: [Families]
       responses:
         "204":
           description: Deleted
+
+  # ── Family Members ────────────────────────────────────────────────
+
+  /families/{familyID}/members:
+    parameters:
+      - name: familyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List family members
+      description: List all members of a family with their roles (owner, parent, guardian).
+      tags: [Families]
+      responses:
+        "200":
+          description: Member list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FamilyMember"
+        "403":
+          description: Not a member of this family
+        "404":
+          description: Family not found
+    post:
+      summary: Add a member to a family
+      description: Add a user to a family with a specific role.
+      tags: [Families]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id, role]
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+                  description: User UUID to add
+                role:
+                  type: string
+                  enum: [owner, parent, guardian]
+      responses:
+        "200":
+          description: Member added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+        "400":
+          description: Invalid request body
+        "403":
+          description: Insufficient role to add members
+        "404":
+          description: Family or user not found
+
+  /families/{familyID}/members/{memberID}:
+    parameters:
+      - name: familyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: memberID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    delete:
+      summary: Remove a member from a family
+      tags: [Families]
+      responses:
+        "204":
+          description: Member removed
+        "403":
+          description: Insufficient role to remove members
+        "404":
+          description: Family or member not found
+
+  # ── Children ──────────────────────────────────────────────────────
 
   /families/{familyID}/children:
     parameters:
@@ -896,6 +1654,10 @@ paths:
       responses:
         "201":
           description: Child added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Child"
 
   /children/{childID}:
     parameters:
@@ -915,12 +1677,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Child"
+        "404":
+          description: Child not found
     put:
       summary: Update child
       tags: [Children]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                birth_date:
+                  type: string
+                  format: date
       responses:
         "200":
           description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Child"
     delete:
       summary: Delete child
       tags: [Children]
@@ -947,6 +1726,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/AgeRatings"
 
+  # ── Policies ──────────────────────────────────────────────────────
+
   /children/{childID}/policies:
     parameters:
       - name: childID
@@ -969,6 +1750,7 @@ paths:
                   $ref: "#/components/schemas/ChildPolicy"
     post:
       summary: Create policy for child
+      description: "Create a new policy for a child. Policies start in 'draft' status."
       tags: [Policies]
       requestBody:
         required: true
@@ -983,6 +1765,61 @@ paths:
       responses:
         "201":
           description: Policy created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChildPolicy"
+
+  /policies/{policyID}:
+    parameters:
+      - name: policyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get policy details
+      tags: [Policies]
+      responses:
+        "200":
+          description: Policy details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChildPolicy"
+        "404":
+          description: Policy not found
+    put:
+      summary: Update a policy's name or priority
+      tags: [Policies]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                priority:
+                  type: integer
+      responses:
+        "200":
+          description: Policy updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChildPolicy"
+        "404":
+          description: Policy not found
+    delete:
+      summary: Delete a policy and all its rules
+      tags: [Policies]
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Policy not found
 
   /policies/{policyID}/activate:
     post:
@@ -998,6 +1835,10 @@ paths:
       responses:
         "200":
           description: Policy activated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChildPolicy"
 
   /policies/{policyID}/pause:
     post:
@@ -1013,6 +1854,10 @@ paths:
       responses:
         "200":
           description: Policy paused
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChildPolicy"
 
   /policies/{policyID}/generate-from-age:
     post:
@@ -1035,6 +1880,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/PolicyRule"
 
+  # ── Policy Rules ──────────────────────────────────────────────────
+
   /policies/{policyID}/rules:
     parameters:
       - name: policyID
@@ -1049,27 +1896,716 @@ paths:
       responses:
         "200":
           description: Rule list
-    post:
-      summary: Create rule
-      tags: [Policy Rules]
-      responses:
-        "201":
-          description: Rule created
-
-  /providers:
-    get:
-      summary: List all providers
-      tags: [Providers]
-      security: []
-      responses:
-        "200":
-          description: Provider list
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Provider"
+                  $ref: "#/components/schemas/PolicyRule"
+    post:
+      summary: Create rule
+      tags: [Policy Rules]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [category, enabled, config]
+              properties:
+                category:
+                  $ref: "#/components/schemas/RuleCategory"
+                enabled:
+                  type: boolean
+                config:
+                  type: object
+                  description: Category-specific configuration JSON
+      responses:
+        "201":
+          description: Rule created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyRule"
+
+  /policies/{policyID}/rules/bulk:
+    put:
+      summary: Bulk upsert rules
+      description: Create or update multiple rules at once for a policy. Each rule in the array must include category, enabled, and config.
+      tags: [Policy Rules]
+      parameters:
+        - name: policyID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rules]
+              properties:
+                rules:
+                  type: array
+                  items:
+                    type: object
+                    required: [category, enabled, config]
+                    properties:
+                      category:
+                        $ref: "#/components/schemas/RuleCategory"
+                      enabled:
+                        type: boolean
+                      config:
+                        type: object
+      responses:
+        "200":
+          description: Rules upserted
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PolicyRule"
+
+  /rules/{ruleID}:
+    parameters:
+      - name: ruleID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    put:
+      summary: Update a rule's enabled status or config
+      tags: [Policy Rules]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                config:
+                  type: object
+                  description: Updated configuration JSON
+      responses:
+        "200":
+          description: Rule updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyRule"
+        "404":
+          description: Rule not found
+    delete:
+      summary: Delete a rule
+      tags: [Policy Rules]
+      responses:
+        "204":
+          description: Rule deleted
+        "404":
+          description: Rule not found
+
+  # ── Platforms ─────────────────────────────────────────────────────
+
+  /platforms:
+    get:
+      summary: List all platforms
+      description: List all platforms Phosra can integrate with, including category, compliance tier, auth type, and capabilities.
+      tags: [Platforms]
+      security: []
+      responses:
+        "200":
+          description: Platform list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Platform"
+
+  /platforms/{platformID}:
+    parameters:
+      - name: platformID
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get platform details
+      tags: [Platforms]
+      security: []
+      responses:
+        "200":
+          description: Platform details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Platform"
+        "404":
+          description: Platform not found
+
+  /platforms/by-category:
+    get:
+      summary: Filter platforms by category
+      tags: [Platforms]
+      security: []
+      parameters:
+        - name: category
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [dns, streaming, gaming, device, browser]
+      responses:
+        "200":
+          description: Filtered platform list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Platform"
+
+  /platforms/by-capability:
+    get:
+      summary: Filter platforms by capability
+      tags: [Platforms]
+      security: []
+      parameters:
+        - name: capability
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Filtered platform list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Platform"
+
+  /platforms/{platformID}/oauth/authorize:
+    parameters:
+      - name: platformID
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get OAuth authorization URL for a platform
+      tags: [Platforms]
+      security: []
+      parameters:
+        - name: state
+          in: query
+          schema:
+            type: string
+        - name: redirect_uri
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Authorization URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authorize_url:
+                    type: string
+        "400":
+          description: Platform does not support OAuth
+
+  /platforms/{platformID}/oauth/callback:
+    parameters:
+      - name: platformID
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Handle OAuth callback
+      tags: [Platforms]
+      security: []
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: redirect_uri
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OAuth tokens exchanged
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Platform-specific OAuth token response
+        "400":
+          description: Platform does not support OAuth
+        "502":
+          description: OAuth exchange failed
+
+  # ── Compliance Links ──────────────────────────────────────────────
+
+  /families/{familyID}/compliance:
+    parameters:
+      - name: familyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List compliance links for a family
+      description: List all platform connections for a family, showing verification status and last enforcement.
+      tags: [Compliance]
+      responses:
+        "200":
+          description: Compliance link list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ComplianceLink"
+
+  /compliance:
+    post:
+      summary: Connect a platform
+      description: Connect a platform to the family by providing credentials for verification.
+      tags: [Compliance]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [family_id, platform_id, credentials]
+              properties:
+                family_id:
+                  type: string
+                  format: uuid
+                platform_id:
+                  type: string
+                credentials:
+                  type: string
+      responses:
+        "201":
+          description: Platform connected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComplianceLink"
+
+  /compliance/{linkID}:
+    parameters:
+      - name: linkID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    delete:
+      summary: Disconnect a platform
+      tags: [Compliance]
+      responses:
+        "204":
+          description: Platform disconnected
+        "404":
+          description: Compliance link not found
+
+  /compliance/{linkID}/verify:
+    parameters:
+      - name: linkID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Re-verify a platform connection
+      description: Test that credentials still work for an existing platform connection.
+      tags: [Compliance]
+      responses:
+        "200":
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+        "502":
+          description: Verification failed
+
+  /compliance/{linkID}/enforce:
+    parameters:
+      - name: linkID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Trigger enforcement for a specific compliance link
+      description: Push the active policy rules to the platform associated with this compliance link.
+      tags: [Compliance]
+      responses:
+        "202":
+          description: Enforcement job started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnforcementJob"
+        "404":
+          description: Compliance link not found
+
+  # ── Enforcement ───────────────────────────────────────────────────
+
+  /children/{childID}/enforce:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Trigger enforcement for a child
+      description: "Push the child's active policy rules to connected platforms. If platform_ids is provided, only those platforms are targeted; otherwise enforcement fans out to ALL connected platforms."
+      tags: [Enforcement]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                platform_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: "Optional list of platform IDs to target. If omitted, pushes to ALL connected platforms."
+      responses:
+        "202":
+          description: Enforcement job started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnforcementJob"
+
+  /children/{childID}/enforcement/jobs:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List enforcement jobs for a child
+      tags: [Enforcement]
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of jobs to return (default 20)
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Enforcement job list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EnforcementJob"
+
+  /enforcement/jobs/{jobID}:
+    parameters:
+      - name: jobID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get enforcement job status
+      tags: [Enforcement]
+      responses:
+        "200":
+          description: Job status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnforcementJob"
+        "404":
+          description: Job not found
+
+  /enforcement/jobs/{jobID}/results:
+    parameters:
+      - name: jobID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get enforcement job results per platform
+      tags: [Enforcement]
+      responses:
+        "200":
+          description: Per-platform enforcement results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EnforcementResult"
+
+  /enforcement/jobs/{jobID}/retry:
+    parameters:
+      - name: jobID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Retry a failed enforcement job
+      tags: [Enforcement]
+      responses:
+        "202":
+          description: Retry job started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnforcementJob"
+        "404":
+          description: Job not found
+
+  # ── Standards / Movements ─────────────────────────────────────────
+
+  /standards:
+    get:
+      summary: List published community standards
+      description: Browse all published community standards/movements. No authentication required.
+      tags: [Standards]
+      security: []
+      responses:
+        "200":
+          description: Standards list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Standard"
+
+  /standards/{slug}:
+    parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a community standard by slug
+      tags: [Standards]
+      security: []
+      responses:
+        "200":
+          description: Standard details including rules
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Standard"
+        "404":
+          description: Standard not found
+
+  /children/{childID}/standards:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List standards adopted by a child
+      tags: [Standards]
+      responses:
+        "200":
+          description: Adopted standards list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Standard"
+    post:
+      summary: Adopt a standard for a child
+      description: Apply a community standard's rules to a child's policy.
+      tags: [Standards]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [standard_id]
+              properties:
+                standard_id:
+                  type: string
+                  format: uuid
+      responses:
+        "201":
+          description: Standard adopted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardAdoption"
+
+  /children/{childID}/standards/{standardID}:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: standardID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    delete:
+      summary: Unadopt a standard for a child
+      tags: [Standards]
+      responses:
+        "204":
+          description: Standard unadopted
+        "404":
+          description: Standard or child not found
+
+  # ── Ratings ───────────────────────────────────────────────────────
+
+  /ratings/systems:
+    get:
+      summary: List rating systems
+      description: "List all content rating systems (MPAA, TV, ESRB, PEGI, CSM)."
+      tags: [Ratings]
+      security: []
+      responses:
+        "200":
+          description: Rating systems
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RatingSystem"
+
+  /ratings/systems/{systemID}:
+    parameters:
+      - name: systemID
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get ratings for a specific rating system
+      description: Returns all individual ratings within the given rating system.
+      tags: [Ratings]
+      security: []
+      responses:
+        "200":
+          description: Ratings in the system
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Rating"
+
+  /ratings/systems/{systemID}/descriptors:
+    parameters:
+      - name: systemID
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get content descriptors for a rating system
+      tags: [Ratings]
+      security: []
+      responses:
+        "200":
+          description: Content descriptors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContentDescriptor"
+
+  /ratings/by-age:
+    get:
+      summary: Get ratings for a specific age
+      tags: [Ratings]
+      security: []
+      parameters:
+        - name: age
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Age-appropriate ratings across all systems
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgeRatings"
+
+  /ratings/{ratingID}/convert:
+    parameters:
+      - name: ratingID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Convert a rating to equivalents in other systems
+      tags: [Ratings]
+      security: []
+      responses:
+        "200":
+          description: Equivalent ratings across systems
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RatingEquivalence"
+
+  # ── Connections ───────────────────────────────────────────────────
 
   /connections:
     post:
@@ -1093,6 +2629,12 @@ paths:
       responses:
         "201":
           description: Connected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProviderConnection"
+
+  # ── Sync ──────────────────────────────────────────────────────────
 
   /children/{childID}/sync:
     post:
@@ -1153,31 +2695,287 @@ paths:
                 items:
                   $ref: "#/components/schemas/SyncJobResult"
 
-  /ratings/systems:
+  # ── Webhooks ──────────────────────────────────────────────────────
+
+  /families/{familyID}/webhooks:
+    parameters:
+      - name: familyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
     get:
-      summary: List rating systems
-      tags: [Ratings]
-      security: []
+      summary: List webhook subscriptions for a family
+      tags: [Webhooks]
       responses:
         "200":
-          description: Rating systems
+          description: Webhook list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Webhook"
 
-  /ratings/by-age:
+  /webhooks:
+    post:
+      summary: Create a webhook subscription
+      description: Register a webhook endpoint to receive event notifications.
+      tags: [Webhooks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [family_id, url, events]
+              properties:
+                family_id:
+                  type: string
+                  format: uuid
+                url:
+                  type: string
+                  description: Webhook URL to receive events
+                events:
+                  type: array
+                  items:
+                    type: string
+                  description: "Events to subscribe to (e.g. policy.updated, enforcement.completed)"
+      responses:
+        "201":
+          description: Webhook created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+
+  /webhooks/{webhookID}:
+    parameters:
+      - name: webhookID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
     get:
-      summary: Get ratings for a specific age
-      tags: [Ratings]
-      security: []
+      summary: Get webhook details
+      tags: [Webhooks]
+      responses:
+        "200":
+          description: Webhook details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+        "404":
+          description: Webhook not found
+    put:
+      summary: Update a webhook
+      tags: [Webhooks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                events:
+                  type: array
+                  items:
+                    type: string
+                active:
+                  type: boolean
+      responses:
+        "200":
+          description: Webhook updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+        "404":
+          description: Webhook not found
+    delete:
+      summary: Delete a webhook
+      tags: [Webhooks]
+      responses:
+        "204":
+          description: Webhook deleted
+        "404":
+          description: Webhook not found
+
+  /webhooks/{webhookID}/test:
+    parameters:
+      - name: webhookID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Send a test delivery to a webhook
+      tags: [Webhooks]
+      responses:
+        "200":
+          description: Test delivery result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookDelivery"
+        "404":
+          description: Webhook not found
+
+  /webhooks/{webhookID}/deliveries:
+    parameters:
+      - name: webhookID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List webhook deliveries
+      tags: [Webhooks]
       parameters:
-        - name: age
+        - name: limit
           in: query
-          required: true
+          description: Maximum number of deliveries to return (default 50)
           schema:
             type: integer
       responses:
         "200":
-          description: Age-appropriate ratings
+          description: Delivery history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WebhookDelivery"
 
-  # ── Apple Device Sync ────────────────────────────────────────────
+  # ── Reports ───────────────────────────────────────────────────────
+
+  /families/{familyID}/reports/overview:
+    parameters:
+      - name: familyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Family overview report
+      description: "Get a health dashboard for a family: children, active policies, enforcement status, and recommendations."
+      tags: [Reports]
+      responses:
+        "200":
+          description: Family overview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FamilyOverview"
+        "404":
+          description: Family not found
+
+  # ── Feedback ──────────────────────────────────────────────────────
+
+  /feedback:
+    post:
+      summary: Submit UI feedback
+      description: Submit visual feedback from reviewers. No authentication required.
+      tags: [Feedback]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [page_route, comment]
+              properties:
+                page_route:
+                  type: string
+                css_selector:
+                  type: string
+                component_hint:
+                  type: string
+                comment:
+                  type: string
+                reviewer_name:
+                  type: string
+                viewport_width:
+                  type: integer
+                viewport_height:
+                  type: integer
+                click_x:
+                  type: integer
+                click_y:
+                  type: integer
+      responses:
+        "201":
+          description: Feedback submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UIFeedback"
+    get:
+      summary: List feedback items
+      description: List all feedback items, optionally filtered by status. No authentication required.
+      tags: [Feedback]
+      security: []
+      parameters:
+        - name: status
+          in: query
+          description: Filter by status (open, approved, dismissed, fixed)
+          schema:
+            type: string
+            enum: [open, approved, dismissed, fixed]
+      responses:
+        "200":
+          description: Feedback list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UIFeedback"
+
+  /feedback/{feedbackID}/status:
+    parameters:
+      - name: feedbackID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    patch:
+      summary: Update feedback status
+      description: Update the status of a feedback item. Requires authentication.
+      tags: [Feedback]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [open, approved, dismissed, fixed]
+      responses:
+        "200":
+          description: Status updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+
+  # ── Apple Device Sync ─────────────────────────────────────────────
 
   /children/{childID}/devices:
     parameters:
@@ -1334,17 +3132,351 @@ paths:
         required: true
         schema:
           type: string
+          enum: [apple, android]
     get:
       summary: Get platform-specific identifier mappings
-      tags: [Apple Device Sync]
+      tags: [Device Sync]
       security: []
-      description: "Returns Apple bundle IDs, age ratings, system apps, always-allowed apps, and category_frameworks mapping (which Apple framework + API class to use for each Phosra rule category). Currently only supports platformID=apple."
+      description: "Returns platform-specific app identifiers, age ratings, system apps, always-allowed apps, and category_frameworks mapping (which framework + API class to use for each Phosra rule category). Supports platformID=apple and platformID=android."
       responses:
         "200":
           description: Platform mappings
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ApplePlatformMappings"
+                oneOf:
+                  - $ref: "#/components/schemas/ApplePlatformMappings"
+                  - $ref: "#/components/schemas/AndroidPlatformMappings"
         "404":
           description: Platform not supported
+
+  # ── Sources ──────────────────────────────────────────────────────
+
+  /sources/available:
+    get:
+      summary: List available source adapters
+      description: List all available parental control source adapters that can be connected.
+      tags: [Sources]
+      security: []
+      responses:
+        "200":
+          description: Available source list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AvailableSource"
+
+  /sources:
+    post:
+      summary: Connect a source
+      description: Connect a parental control app as a source for a child.
+      tags: [Sources]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [child_id, family_id, source]
+              properties:
+                child_id:
+                  type: string
+                  format: uuid
+                family_id:
+                  type: string
+                  format: uuid
+                source:
+                  type: string
+                  description: "Source slug (e.g., 'bark', 'qustodio')"
+                credentials:
+                  type: object
+                  description: Source credentials (for managed sources)
+                auto_sync:
+                  type: boolean
+                  description: Enable automatic sync on policy changes
+      responses:
+        "201":
+          description: Source connected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Source"
+
+  /sources/{sourceID}:
+    parameters:
+      - name: sourceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get source details
+      tags: [Sources]
+      responses:
+        "200":
+          description: Source details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Source"
+        "404":
+          description: Source not found
+    delete:
+      summary: Disconnect source
+      tags: [Sources]
+      responses:
+        "204":
+          description: Source disconnected
+        "404":
+          description: Source not found
+
+  /sources/{sourceID}/sync:
+    parameters:
+      - name: sourceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Sync source
+      description: Push all active policy rules to a connected source.
+      tags: [Sources]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sync_mode:
+                  type: string
+                  enum: [full, incremental]
+                  description: "Sync mode (default: full)"
+      responses:
+        "202":
+          description: Sync job started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceSyncJob"
+
+  /sources/{sourceID}/rules:
+    parameters:
+      - name: sourceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Push single rule
+      description: Push a single rule to a connected source.
+      tags: [Sources]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [category]
+              properties:
+                category:
+                  $ref: "#/components/schemas/RuleCategory"
+                value:
+                  type: object
+                  description: Rule value/config
+      responses:
+        "200":
+          description: Rule push result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceSyncResult"
+
+  /sources/{sourceID}/guide/{category}:
+    parameters:
+      - name: sourceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get guided steps
+      description: Get manual setup instructions for a guided-tier source.
+      tags: [Sources]
+      responses:
+        "200":
+          description: Guided steps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GuidedStep"
+        "404":
+          description: Source or category not found
+
+  /sources/{sourceID}/jobs:
+    parameters:
+      - name: sourceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List sync jobs
+      description: List sync job history for a source.
+      tags: [Sources]
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of jobs to return
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Sync job list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SourceSyncJob"
+
+  /sources/{sourceID}/jobs/{jobID}:
+    parameters:
+      - name: sourceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: jobID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get sync job
+      tags: [Sources]
+      responses:
+        "200":
+          description: Sync job details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceSyncJob"
+        "404":
+          description: Sync job not found
+
+  /sources/{sourceID}/jobs/{jobID}/results:
+    parameters:
+      - name: sourceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: jobID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get sync results
+      description: Get per-rule results for a sync job.
+      tags: [Sources]
+      responses:
+        "200":
+          description: Sync result list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SourceSyncResult"
+
+  /sources/{sourceID}/jobs/{jobID}/retry:
+    parameters:
+      - name: sourceID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: jobID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      summary: Retry sync
+      description: Retry a failed sync job.
+      tags: [Sources]
+      responses:
+        "202":
+          description: Retry job started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SourceSyncJob"
+        "404":
+          description: Sync job not found
+
+  /children/{childID}/sources:
+    parameters:
+      - name: childID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List sources for child
+      description: List all connected sources for a child.
+      tags: [Sources]
+      responses:
+        "200":
+          description: Source list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Source"
+
+  /families/{familyID}/sources:
+    parameters:
+      - name: familyID
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: List sources for family
+      description: List all connected sources for a family.
+      tags: [Sources]
+      responses:
+        "200":
+          description: Source list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Source"

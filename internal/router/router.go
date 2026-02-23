@@ -58,6 +58,8 @@ type Handlers struct {
 	Device      *handler.DeviceHandler
 	Admin      *handler.AdminHandler
 	AdminPitch *handler.AdminPitchHandler
+	Developer  *handler.DeveloperHandler
+	Source     *handler.SourceHandler
 }
 
 func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.DeviceAuthenticator, rateLimitRPS int, opts ...Option) http.Handler {
@@ -79,7 +81,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   corsOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Sandbox-Session", "X-Device-Key", "X-Worker-Key"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Sandbox-Session", "X-Device-Key", "X-Worker-Key", "X-Api-Key"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300,
@@ -127,6 +129,9 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 			// Public platform mappings (Apple bundle IDs, age ratings, etc.)
 			r.Get("/platform-mappings/{platformID}", h.Device.GetMappings)
+
+			// Inbound webhooks from source integrations (verified by webhook secret, no auth)
+			r.Post("/webhooks/inbound/{sourceSlug}", h.Source.InboundWebhook)
 		})
 
 		// Protected routes
@@ -171,6 +176,9 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 					// Reports
 					r.Get("/reports/overview", h.Report.FamilyOverview)
+
+					// Sources under family
+					r.Get("/sources", h.Source.ListByFamily)
 				})
 			})
 
@@ -200,6 +208,9 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 				// Enforcement for child
 				r.Post("/enforce", h.Enforcement.TriggerChildEnforcement)
 				r.Get("/enforcement/jobs", h.Enforcement.ListChildJobs)
+
+				// Sources under child
+				r.Get("/sources", h.Source.ListByChild)
 			})
 
 			// Device direct access (parent-auth)
@@ -244,6 +255,27 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 				r.Post("/retry", h.Enforcement.RetryJob)
 			})
 
+			// Sources API
+			r.Route("/sources", func(r chi.Router) {
+				r.Get("/available", h.Source.ListAvailable)
+				r.Post("/", h.Source.ConnectSource)
+				r.Route("/{sourceID}", func(r chi.Router) {
+					r.Get("/", h.Source.GetSource)
+					r.Delete("/", h.Source.DisconnectSource)
+					r.Post("/sync", h.Source.SyncSource)
+					r.Post("/rules", h.Source.PushRule)
+					r.Get("/guide/{category}", h.Source.GetGuidedSteps)
+					r.Route("/jobs", func(r chi.Router) {
+						r.Get("/", h.Source.ListSyncJobs)
+						r.Route("/{jobID}", func(r chi.Router) {
+							r.Get("/", h.Source.GetSyncJob)
+							r.Get("/results", h.Source.GetSyncResults)
+							r.Post("/retry", h.Source.RetrySyncJob)
+						})
+					})
+				})
+			})
+
 			// UI Feedback (protected: only owner can change status)
 			r.Patch("/feedback/{feedbackID}/status", h.Feedback.UpdateStatus)
 
@@ -255,6 +287,29 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 				r.Delete("/", h.Webhook.Delete)
 				r.Post("/test", h.Webhook.Test)
 				r.Get("/deliveries", h.Webhook.ListDeliveries)
+			})
+		})
+
+		// Developer Portal (user JWT auth)
+		r.Route("/developers", func(r chi.Router) {
+			if o.sandboxMode {
+				r.Use(middleware.SandboxAuth(userRepo))
+			} else {
+				r.Use(middleware.HybridAuth(o.workosClientID, userRepo))
+			}
+
+			r.Post("/orgs", h.Developer.CreateOrg)
+			r.Get("/orgs", h.Developer.ListOrgs)
+			r.Route("/orgs/{orgID}", func(r chi.Router) {
+				r.Get("/", h.Developer.GetOrg)
+				r.Put("/", h.Developer.UpdateOrg)
+				r.Delete("/", h.Developer.DeleteOrg)
+				r.Get("/members", h.Developer.ListMembers)
+				r.Post("/keys", h.Developer.CreateKey)
+				r.Get("/keys", h.Developer.ListKeys)
+				r.Delete("/keys/{keyID}", h.Developer.RevokeKey)
+				r.Post("/keys/{keyID}/regenerate", h.Developer.RegenerateKey)
+				r.Get("/usage", h.Developer.GetUsage)
 			})
 		})
 

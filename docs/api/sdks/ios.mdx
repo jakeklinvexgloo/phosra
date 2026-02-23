@@ -1,0 +1,585 @@
+---
+title: 'iOS SDK'
+description: 'On-device child safety enforcement for iOS using FamilyControls'
+---
+
+# iOS SDK
+
+The `PhosraSDK` Swift package provides on-device child safety enforcement for iOS using Apple's FamilyControls, ManagedSettings, and DeviceActivity frameworks.
+
+## Overview
+
+The SDK has a two-layer architecture:
+
+1. **API Client** -- Communicates with the Phosra API to register devices, fetch compiled policies, submit enforcement reports, and acknowledge policy versions.
+2. **Enforcement Engine** -- Translates the compiled policy document into native Apple framework calls to enforce content filters, screen time limits, web filtering, purchase controls, and more.
+
+<CardGroup cols={2}>
+  <Card title="API Client" icon="cloud">
+    Handles device registration, policy sync, and reporting via the Phosra REST API.
+  </Card>
+  <Card title="Enforcement Engine" icon="shield-check">
+    Maps policy rules to FamilyControls, ManagedSettings, and DeviceActivity calls.
+  </Card>
+</CardGroup>
+
+## Requirements
+
+| Requirement | Version |
+|---|---|
+| iOS | 16.0+ |
+| Swift | 5.9+ |
+| Xcode | 15+ |
+| FamilyControls Entitlement | Required ([request here](https://developer.apple.com/contact/request/family-controls-distribution)) |
+
+<Warning>
+  The FamilyControls entitlement must be approved by Apple before your app can enforce restrictions on-device. Request it early -- approval typically takes 1-2 weeks.
+</Warning>
+
+## Installation
+
+Add the PhosraSDK via Swift Package Manager:
+
+<CodeGroup>
+
+```swift Package.swift
+dependencies: [
+    .package(url: "https://github.com/jakeklinvexgloo/phosra.git", from: "1.0.0")
+]
+```
+
+```text Xcode
+File > Add Package Dependencies
+URL: https://github.com/jakeklinvexgloo/phosra.git
+Product: PhosraSDK
+```
+
+</CodeGroup>
+
+## Quick Start
+
+<Steps>
+
+### Request FamilyControls Authorization
+
+The child's device must authorize FamilyControls before any enforcement can occur:
+
+```swift
+import FamilyControls
+
+let center = AuthorizationCenter.shared
+
+do {
+    try await center.requestAuthorization(for: .individual)
+    print("FamilyControls authorized")
+} catch {
+    print("Authorization denied: \(error)")
+}
+```
+
+### Register the Device
+
+The parent initiates device registration from their authenticated session. This requires a parent JWT token:
+
+```swift
+import PhosraSDK
+
+let config = PhosraConfiguration(
+    parentToken: parentJWT,
+    childID: childUUID
+)
+let client = PhosraAPIClient(configuration: config)
+
+let request = RegisterDeviceRequest(
+    deviceName: "Emma's iPad",
+    deviceModel: UIDevice.current.model,
+    osVersion: UIDevice.current.systemVersion,
+    appVersion: "1.0.0",
+    capabilities: ["FamilyControls", "ManagedSettings", "DeviceActivity"]
+)
+
+let response = try await client.registerDevice(request)
+```
+
+### Store the API Key in Keychain
+
+The API key is returned exactly once during registration. The server only stores a SHA-256 hash; the plaintext is never returned again:
+
+```swift
+try KeychainHelper.save(key: response.apiKey)
+```
+
+### Fetch and Apply the Policy
+
+Switch to device-authenticated mode and fetch the compiled policy:
+
+```swift
+let deviceKey = try KeychainHelper.load()!
+let deviceConfig = PhosraConfiguration(deviceKey: deviceKey)
+let deviceClient = PhosraAPIClient(configuration: deviceConfig)
+
+let policy = try await deviceClient.fetchPolicy()
+print("Applying policy v\(policy.version) for \(policy.ageGroup)")
+
+// Apply via enforcement engine
+let engine = EnforcementEngine()
+let results = try await engine.apply(policy)
+
+// Report results back to Phosra
+let report = DeviceReport(
+    reportType: .enforcementStatus,
+    payload: .enforcementStatus(EnforcementStatusPayload(
+        policyVersion: policy.version,
+        results: results
+    ))
+)
+try await deviceClient.submitReport(report)
+try await deviceClient.ackPolicyVersion(policy.version)
+```
+
+</Steps>
+
+## Device Registration
+
+The registration flow requires parent authentication and produces a device-specific API key:
+
+```
+Parent App                    Phosra API                  Child Device
+    │                             │                           │
+    ├── POST /children/{id}/devices ──────────────────────>   │
+    │   (Authorization: Bearer parentJWT)                     │
+    │                             │                           │
+    │   <── { device, api_key } ──┤                           │
+    │                             │                           │
+    │   ── Transfer api_key ──────────────────────────────>   │
+    │                             │                           │ Store in Keychain
+    │                             │                           │
+```
+
+The `RegisterDeviceRequest` includes device metadata and capability declarations:
+
+```swift
+RegisterDeviceRequest(
+    deviceName: "Emma's iPad",
+    deviceModel: "iPad Pro 11-inch",     // UIDevice.current.model
+    osVersion: "17.4.1",                 // UIDevice.current.systemVersion
+    appVersion: "1.0.0",                 // Bundle version
+    capabilities: [
+        "FamilyControls",               // Core entitlement
+        "ManagedSettings",              // App/web blocking
+        "DeviceActivity",               // Usage monitoring
+        "WebContentFilter"              // Network extension filtering
+    ],
+    apnsToken: apnsDeviceToken           // Optional, for push-based sync
+)
+```
+
+## Policy Sync
+
+### Automatic Polling with PolicySyncManager
+
+The `PolicySyncManager` handles periodic policy fetching with conditional requests:
+
+```swift
+class PolicySyncManager {
+    private let client: PhosraAPIClient
+    private let engine: EnforcementEngine
+    private var currentVersion: Int = 0
+    private var timer: Timer?
+
+    /// Start polling for policy updates.
+    /// Default interval: 5 minutes (300 seconds).
+    func startPolling(interval: TimeInterval = 300) {
+        timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+            Task { await self?.sync() }
+        }
+    }
+
+    func stopPolling() {
+        timer?.invalidate()
+        timer = nil
+    }
+
+    private func sync() async {
+        do {
+            // Conditional fetch -- returns nil on 304 Not Modified
+            guard let policy = try await client.fetchPolicy(sinceVersion: currentVersion) else {
+                return // No update
+            }
+
+            currentVersion = policy.version
+            let results = try await engine.apply(policy)
+
+            // Report enforcement results
+            let report = DeviceReport(
+                reportType: .enforcementStatus,
+                payload: .enforcementStatus(EnforcementStatusPayload(
+                    policyVersion: policy.version,
+                    results: results
+                ))
+            )
+            try await client.submitReport(report)
+            try await client.ackPolicyVersion(policy.version)
+        } catch {
+            print("Policy sync failed: \(error)")
+        }
+    }
+}
+```
+
+### Push-Based Sync (APNs)
+
+For immediate policy refresh when a parent modifies rules, handle APNs silent push notifications:
+
+```swift
+func application(
+    _ application: UIApplication,
+    didReceiveRemoteNotification userInfo: [AnyHashable: Any]
+) async -> UIBackgroundFetchResult {
+    guard let phosra = userInfo["phosra"] as? [String: Any],
+          let event = phosra["event"] as? String,
+          event == "policy.updated",
+          let newVersion = phosra["version"] as? Int else {
+        return .noData
+    }
+
+    if newVersion > currentPolicyVersion {
+        do {
+            let policy = try await client.fetchPolicy()
+            try await engine.apply(policy)
+            try await client.ackPolicyVersion(policy.version)
+            return .newData
+        } catch {
+            return .failed
+        }
+    }
+    return .noData
+}
+```
+
+The push notification payload:
+
+```json
+{
+  "aps": { "content-available": 1 },
+  "phosra": {
+    "event": "policy.updated",
+    "version": 4
+  }
+}
+```
+
+## Enforcement Engine
+
+Each enforcer handles a specific policy section and maps it to the appropriate Apple framework.
+
+### Content Filter Enforcer
+
+Uses `ManagedSettings` to control app access based on age ratings and block/allow lists.
+
+| Policy Field | Apple Framework | API |
+|---|---|---|
+| `contentFilter.ageRating` | ManagedSettings | `ManagedSettingsStore.application` |
+| `contentFilter.blockedApps` | ManagedSettings | `blockedApplications` |
+| `contentFilter.allowlistMode` | ManagedSettings | `denyAppInstallation` |
+
+### Screen Time Enforcer
+
+Uses `DeviceActivity` to monitor and limit screen time.
+
+| Policy Field | Apple Framework | API |
+|---|---|---|
+| `screenTime.dailyLimitMinutes` | DeviceActivity | `DeviceActivitySchedule` |
+| `screenTime.perAppLimits` | DeviceActivity | Per-token schedule |
+| `screenTime.downtimeWindows` | DeviceActivity | `DeviceActivitySchedule` |
+| `screenTime.schedule` | DeviceActivity | `DateComponents` ranges |
+
+### Web Filter Enforcer
+
+Uses `ManagedSettings` web content filtering.
+
+| Policy Field | Apple Framework | API |
+|---|---|---|
+| `webFilter.safeSearch` | ManagedSettings | `webContent.autoFilter` |
+| `webFilter.blockedDomains` | ManagedSettings | `webContent.blockedDomains` |
+| `webFilter.allowedDomains` | ManagedSettings | `webContent.allowedDomains` |
+| `webFilter.level` | ManagedSettings | `webContent` filter mode |
+
+### Purchase Enforcer
+
+| Policy Field | Apple Framework | API |
+|---|---|---|
+| `purchases.requireApproval` | ManagedSettings | `appStore.requirePasswordForPurchases` |
+| `purchases.blockIAP` | ManagedSettings | `appStore.denyInAppPurchases` |
+| `purchases.spendingCapUSD` | None | Tracked via StoreKit observer |
+
+### Social Enforcer
+
+| Policy Field | Apple Framework | API |
+|---|---|---|
+| `social.multiplayerMode` | ManagedSettings | `gameCenter.denyMultiplayerGaming` |
+| `social.chatMode` | None | Block messaging apps via ManagedSettings |
+| `social.dmRestriction` | None | Block messaging apps via ManagedSettings |
+
+### Notification Enforcer
+
+| Policy Field | Apple Framework | API |
+|---|---|---|
+| `notifications.curfewStart/End` | ManagedSettings | `notification` (iOS 16.4+) |
+| `notifications.usageTimerMinutes` | DeviceActivity | `DeviceActivityMonitor` events |
+
+## Reporting
+
+The SDK submits two types of reports to the Phosra API:
+
+### Enforcement Status Report
+
+Sent after applying a policy, contains per-category results:
+
+```swift
+DeviceReport(
+    reportType: .enforcementStatus,
+    payload: .enforcementStatus(EnforcementStatusPayload(
+        policyVersion: 3,
+        results: [
+            CategoryEnforcementResult(
+                category: "content_rating",
+                status: "enforced",       // "enforced", "partial", "failed", "unsupported"
+                framework: "ManagedSettings"
+            ),
+            CategoryEnforcementResult(
+                category: "time_daily_limit",
+                status: "enforced",
+                framework: "DeviceActivity"
+            )
+        ]
+    ))
+)
+```
+
+### Screen Time Report
+
+Aggregated daily usage data:
+
+```swift
+DeviceReport(
+    reportType: .screenTime,
+    payload: .screenTime(ScreenTimePayload(
+        byCategory: ["social-media": 45, "gaming": 30, "education": 60],
+        topApps: ["com.burbn.instagram": 25, "com.google.ios.youtube": 20],
+        totalMinutes: 135,
+        date: "2026-02-23"
+    ))
+)
+```
+
+## CompiledPolicy Structure
+
+The compiled policy is fetched from `GET /device/policy` and contains all enforcement rules organized by section:
+
+```json
+{
+  "version": 3,
+  "child_id": "uuid",
+  "child_age": 10,
+  "age_group": "tween",
+  "policy_id": "uuid",
+  "status": "active",
+  "generated_at": "2026-02-23T14:30:00Z",
+  "content_filter": {
+    "age_rating": "9+",
+    "max_ratings": { "apple": "9+", "mpaa": "PG" },
+    "blocked_apps": [],
+    "allowed_apps": [],
+    "allowlist_mode": false
+  },
+  "screen_time": {
+    "daily_limit_minutes": 120,
+    "per_app_limits": [],
+    "downtime_windows": [
+      { "days_of_week": ["monday","tuesday","wednesday","thursday","friday"],
+        "start_time": "21:00", "end_time": "07:00" }
+    ],
+    "always_allowed_apps": ["com.apple.mobilephone", "com.apple.MobileSMS", "com.apple.Maps"],
+    "schedule": { "weekday": { "start": "07:00", "end": "21:00" },
+                  "weekend": { "start": "08:00", "end": "22:00" } }
+  },
+  "purchases": {
+    "require_approval": true,
+    "block_iap": false,
+    "spending_cap_usd": 10.00
+  },
+  "privacy": {
+    "location_sharing_enabled": true,
+    "profile_visibility": "private",
+    "account_creation_approval": true,
+    "data_sharing_restricted": true
+  },
+  "social": {
+    "chat_mode": "friends_only",
+    "dm_restriction": "contacts_only",
+    "multiplayer_mode": "friends_only"
+  },
+  "notifications": {
+    "curfew_start": "21:00",
+    "curfew_end": "07:00",
+    "usage_timer_minutes": 30
+  },
+  "web_filter": {
+    "level": "moderate",
+    "safe_search": true,
+    "blocked_domains": ["reddit.com"],
+    "allowed_domains": ["khanacademy.org"],
+    "blocked_categories": ["gambling", "adult"]
+  }
+}
+```
+
+## Supported Rule Categories
+
+All 45 Phosra rule categories with their Apple framework mappings:
+
+### Content Rules
+
+| Category | Apple Framework | API Class | Min iOS |
+|---|---|---|---|
+| `content_rating` | ManagedSettings | `ManagedSettingsStore.application` | 16.0 |
+| `content_block_title` | ManagedSettings | `blockedApplications` | 16.0 |
+| `content_allow_title` | ManagedSettings | `denyAppInstallation` | 16.0 |
+| `content_allowlist_mode` | ManagedSettings | `denyAppInstallation` | 16.0 |
+| `content_descriptor_block` | ManagedSettings | `ManagedSettingsStore.application` | 16.0 |
+
+### Time Rules
+
+| Category | Apple Framework | API Class | Min iOS |
+|---|---|---|---|
+| `time_daily_limit` | DeviceActivity | `DeviceActivitySchedule` | 16.0 |
+| `time_scheduled_hours` | DeviceActivity | `DeviceActivitySchedule` | 16.0 |
+| `time_per_app_limit` | DeviceActivity | `DeviceActivitySchedule` | 16.0 |
+| `time_downtime` | DeviceActivity | `DeviceActivitySchedule` | 16.0 |
+
+### Purchase Rules
+
+| Category | Apple Framework | API Class | Min iOS |
+|---|---|---|---|
+| `purchase_approval` | ManagedSettings | `appStore.requirePasswordForPurchases` | 16.0 |
+| `purchase_block_iap` | ManagedSettings | `appStore.denyInAppPurchases` | 16.0 |
+| `purchase_spending_cap` | None | StoreKit observer (tracked in-app) | -- |
+
+### Social Rules
+
+| Category | Apple Framework | API Class | Min iOS |
+|---|---|---|---|
+| `social_contacts` | FamilyControls | `AuthorizationCenter` | 16.0 |
+| `social_chat_control` | None | Block messaging apps via ManagedSettings | -- |
+| `social_multiplayer` | ManagedSettings | `gameCenter.denyMultiplayerGaming` | 16.0 |
+
+### Web Rules
+
+| Category | Apple Framework | API Class | Min iOS |
+|---|---|---|---|
+| `web_safesearch` | ManagedSettings | `webContent.autoFilter` | 16.0 |
+| `web_category_block` | ManagedSettings | `webContent.blockedByFilter` | 16.0 |
+| `web_custom_allowlist` | ManagedSettings | `webContent.allowedDomains` | 16.0 |
+| `web_custom_blocklist` | ManagedSettings | `webContent.blockedDomains` | 16.0 |
+| `web_filter_level` | ManagedSettings | `webContent` | 16.0 |
+
+### Privacy Rules
+
+| Category | Apple Framework | Notes |
+|---|---|---|
+| `privacy_location` | None | CLLocationManager delegation in-app |
+| `privacy_profile_visibility` | None | App-level concern |
+| `privacy_data_sharing` | None | App-level logic; ATT covers ads only |
+| `privacy_account_creation` | None | Gate via FamilyControls auth check |
+
+### Monitoring Rules
+
+| Category | Apple Framework | API Class | Min iOS |
+|---|---|---|---|
+| `monitoring_activity` | DeviceActivity | `DeviceActivityReport` | 16.0 |
+| `monitoring_alerts` | DeviceActivity | `DeviceActivityMonitor` | 16.0 |
+
+### Engagement Rules
+
+| Category | Apple Framework | Notes |
+|---|---|---|
+| `algo_feed_control` | None | Block/limit social apps via ManagedSettings |
+| `addictive_design_control` | None | Block offending apps via ManagedSettings |
+
+### Notification Rules
+
+| Category | Apple Framework | API Class | Min iOS |
+|---|---|---|---|
+| `notification_curfew` | ManagedSettings | `notification` | 16.4 |
+| `usage_timer_notification` | DeviceActivity | `DeviceActivityMonitor` | 16.0 |
+
+### Legislation-Driven Rules
+
+| Category | Apple Framework | Notes |
+|---|---|---|
+| `targeted_ad_block` | None | ATT is per-prompt; no blanket block |
+| `dm_restriction` | None | Block messaging apps as proxy |
+| `age_gate` | None | Enforce in-app |
+| `data_deletion_request` | None | App-level support flow |
+| `geolocation_opt_in` | None | CLLocationManager per-app |
+
+### Compliance Rules
+
+| Category | Apple Framework | Notes |
+|---|---|---|
+| `csam_reporting` | None | Apple handles via iCloud Photos |
+| `library_filter_compliance` | ManagedSettings | Same as web content filtering |
+| `ai_minor_interaction` | None | Block AI apps via ManagedSettings |
+| `social_media_min_age` | None | Block social BundleIDs for underage |
+| `image_rights_minor` | None | App-level enforcement |
+
+### Parental / Legislative Rules
+
+| Category | Apple Framework | API Class | Min iOS |
+|---|---|---|---|
+| `parental_consent_gate` | FamilyControls | `AuthorizationCenter` | 16.0 |
+| `parental_event_notification` | DeviceActivity | `DeviceActivityMonitor` | 16.0 |
+| `screen_time_report` | DeviceActivity | `DeviceActivityReport` | 16.0 |
+| `commercial_data_ban` | None | App/server-level policy |
+| `algorithmic_audit` | None | Platform transparency requirement |
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="FamilyControls authorization fails">
+    - Ensure your app has the `com.apple.developer.family-controls` entitlement
+    - The entitlement must be approved by Apple for distribution builds
+    - For development, use the automatic provisioning profile in Xcode
+    - Check that the device is not already managed by another FamilyControls app
+  </Accordion>
+
+  <Accordion title="ManagedSettingsStore changes not applying">
+    - Verify FamilyControls authorization status is `.approved`
+    - `ManagedSettingsStore` changes are transactional; create a new store instance if the previous one has stale state
+    - Check the device logs: `log stream --predicate 'subsystem == "com.apple.ManagedSettings"'`
+  </Accordion>
+
+  <Accordion title="DeviceActivity monitoring not starting">
+    - The `DeviceActivityMonitor` extension must be a separate target in your Xcode project
+    - Verify the extension's bundle ID matches the App Group
+    - Maximum of 20 concurrent `DeviceActivitySchedule` instances per app
+  </Accordion>
+
+  <Accordion title="Policy fetch returns 304 Not Modified">
+    This is expected behavior. When you pass `sinceVersion`, the server returns 304 if the policy has not changed. The SDK returns `nil` in this case -- no action is needed.
+  </Accordion>
+
+  <Accordion title="Keychain errors on first launch">
+    - Ensure Keychain Sharing capability is enabled if using app extensions
+    - Use `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` (the SDK default) for device keys
+    - On simulator, Keychain behavior may differ from physical devices
+  </Accordion>
+
+  <Accordion title="App Store rejection for FamilyControls usage">
+    - Provide a detailed description of your child safety use case in App Store Connect
+    - Include screenshots showing the parent consent flow
+    - Reference applicable legislation (COPPA, KOSA, etc.) in your review notes
+    - Ensure your privacy policy covers data collected from child devices
+  </Accordion>
+</AccordionGroup>

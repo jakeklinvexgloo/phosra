@@ -29,6 +29,8 @@ import (
 	"github.com/guardiangate/api/internal/repository/postgres"
 	"github.com/guardiangate/api/internal/router"
 	"github.com/guardiangate/api/internal/service"
+	"github.com/guardiangate/api/internal/source"
+	sourcestubs "github.com/guardiangate/api/internal/source/stubs"
 )
 
 func main() {
@@ -83,6 +85,9 @@ func main() {
 	deviceRegRepo := postgres.NewDeviceRegistrationRepo(db)
 	deviceReportRepo := postgres.NewDeviceReportRepo(db)
 
+	// Developer portal repository
+	developerRepo := postgres.NewDeveloperRepo(db)
+
 	// Admin repositories
 	adminOutreachRepo := postgres.NewAdminOutreachRepo(db)
 	adminWorkerRepo := postgres.NewAdminWorkerRepo(db)
@@ -90,6 +95,9 @@ func main() {
 	adminAlertsRepo := postgres.NewAdminAlertsRepo(db)
 	adminGoogleRepo := postgres.NewAdminGoogleRepo(db)
 	adminPitchRepo := postgres.NewAdminPitchRepo(db)
+
+	// Source repository
+	sourceRepo := postgres.NewSourceRepo(db)
 
 	// Phosra service-layer repositories
 	notificationScheduleRepo := postgres.NewNotificationScheduleRepo(db)
@@ -112,6 +120,11 @@ func main() {
 	registry.Register(apple.New())
 	stubs.RegisterAll(registry.Register)
 	log.Info().Int("platforms", len(registry.List())).Msg("registered platform adapters")
+
+	// Source adapter registry (parental control integrations)
+	sourceRegistry := source.NewRegistry()
+	sourcestubs.RegisterAll(sourceRegistry)
+	log.Info().Int("sources", len(sourceRegistry.List())).Msg("registered source adapters")
 
 	// APNs silent push (optional — only created when APNS_TEAM_ID is set)
 	var pushSvc service.PolicyUpdateNotifier
@@ -162,6 +175,8 @@ func main() {
 	reportSvc := service.NewReportService(childRepo, policyRepo, enforcementJobRepo, enforcementResultRepo, complianceLinkRepo, memberRepo)
 	setupSvc := service.NewQuickSetupService(familyRepo, memberRepo, childRepo, policyRepo, ruleRepo, ratingRepo, policySvc, complianceLinkRepo)
 	standardSvc := service.NewStandardService(standardRepo, standardAdoptionRepo, childRepo, memberRepo)
+	developerSvc := service.NewDeveloperService(developerRepo)
+	sourceSvc := service.NewSourceService(sourceRepo, policyRepo, childRepo, sourceRegistry)
 
 	// Google Workspace clients (optional — only configured when GOOGLE_CLIENT_ID is set)
 	var googlePersonal, googleOutreach *googleapi.Client
@@ -202,6 +217,8 @@ func main() {
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
 		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googlePersonal, googleOutreach, cfg.WorkerAPIKey),
 		AdminPitch: handler.NewAdminPitchHandler(adminPitchRepo, cfg.OpenAIAPIKey, service.NewTranscriptionService(cfg.AssemblyAIKey), service.NewEmotionService(cfg.HumeAIKey)),
+		Developer:  handler.NewDeveloperHandler(developerSvc),
+		Source:     handler.NewSourceHandler(sourceSvc),
 	}
 
 	// Router

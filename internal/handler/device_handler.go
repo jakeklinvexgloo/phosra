@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/guardiangate/api/internal/handler/middleware"
+	androidProvider "github.com/guardiangate/api/internal/provider/android"
 	appleProvider "github.com/guardiangate/api/internal/provider/apple"
 	"github.com/guardiangate/api/internal/service"
 	"github.com/guardiangate/api/pkg/httputil"
@@ -174,9 +175,12 @@ func (h *DeviceHandler) AckVersion(w http.ResponseWriter, r *http.Request) {
 
 func (h *DeviceHandler) GetMappings(w http.ResponseWriter, r *http.Request) {
 	platformID := chi.URLParam(r, "platformID")
-	if platformID != "apple" {
+	switch platformID {
+	case "apple":
+		httputil.JSON(w, http.StatusOK, appleProvider.GetPlatformMappings())
+	case "android":
+		httputil.JSON(w, http.StatusOK, androidProvider.GetPlatformMappings())
+	default:
 		httputil.Error(w, http.StatusNotFound, "platform mappings not available for: "+platformID)
-		return
 	}
-	httputil.JSON(w, http.StatusOK, appleProvider.GetPlatformMappings())
 }

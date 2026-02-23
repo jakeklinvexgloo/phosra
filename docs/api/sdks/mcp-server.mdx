@@ -1,0 +1,142 @@
+---
+title: 'MCP Server'
+description: 'Use Phosra with AI agents via the Model Context Protocol'
+---
+
+# MCP Server
+
+The `@phosra/mcp` package exposes the Phosra API as MCP (Model Context Protocol) tools, allowing AI agents like Claude to manage child safety policies through natural conversation.
+
+## Installation
+
+Run directly with npx:
+
+```bash
+npx @phosra/mcp --api-key=phosra_live_sk_your_key_here
+```
+
+Or install globally:
+
+```bash
+npm install -g @phosra/mcp
+phosra-mcp --api-key=phosra_live_sk_your_key_here
+```
+
+## Claude Desktop Configuration
+
+Add this to your Claude Desktop `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "phosra": {
+      "command": "npx",
+      "args": [
+        "@phosra/mcp",
+        "--api-key=phosra_live_sk_your_key_here"
+      ]
+    }
+  }
+}
+```
+
+<Info>
+  On macOS, the config file is at `~/Library/Application Support/Claude/claude_desktop_config.json`.
+</Info>
+
+## Available Tools
+
+The MCP server exposes tools grouped by domain:
+
+### Families
+
+| Tool | Description |
+|------|-------------|
+| `list_families` | List all families for the authenticated user |
+| `create_family` | Create a new family group |
+| `get_family` | Get details for a specific family |
+| `delete_family` | Delete a family and all associated data |
+
+### Children
+
+| Tool | Description |
+|------|-------------|
+| `list_children` | List children in a family |
+| `add_child` | Add a child to a family with name and birth date |
+| `get_child` | Get a child's details and age group |
+| `delete_child` | Remove a child from a family |
+| `get_age_ratings` | Get age-appropriate content ratings for a child |
+
+### Policies & Rules
+
+| Tool | Description |
+|------|-------------|
+| `list_policies` | List policies for a child |
+| `create_policy` | Create a new policy for a child |
+| `activate_policy` | Activate a draft or paused policy |
+| `pause_policy` | Pause an active policy |
+| `generate_rules` | Auto-generate age-appropriate rules for a policy |
+| `list_rules` | List all rules in a policy |
+| `update_rule` | Modify a specific rule's config or enabled state |
+| `bulk_upsert_rules` | Create or update multiple rules at once |
+
+### Enforcement
+
+| Tool | Description |
+|------|-------------|
+| `trigger_enforcement` | Push active policy to connected platforms |
+| `get_enforcement_status` | Check the status of an enforcement job |
+| `get_enforcement_results` | Get per-platform enforcement results |
+| `retry_enforcement` | Retry a failed enforcement job |
+
+### Platforms & Compliance
+
+| Tool | Description |
+|------|-------------|
+| `list_platforms` | Browse all supported platforms |
+| `connect_platform` | Connect a platform to a family |
+| `verify_connection` | Re-verify platform credentials |
+| `disconnect_platform` | Remove a platform connection |
+
+### Quick Setup
+
+| Tool | Description |
+|------|-------------|
+| `quick_setup` | One-call onboarding: create family, child, policy, and rules |
+
+## Example Conversations
+
+### Setting Up a New Child
+
+> **User:** Set up parental controls for my 8-year-old daughter Maya.
+>
+> **Claude:** I'll use Phosra to set up age-appropriate protections for Maya. Let me create everything in one step.
+>
+> *Calls `quick_setup` with child_name="Maya", birth_date="2017-06-15", strictness="recommended"*
+>
+> Done! I've set up Maya's protections:
+> - **Age group:** 6-9 (Elementary)
+> - **Screen time:** 90 minutes/day
+> - **Content rating:** TV-Y7, PG movies, E for games
+> - **Web filter:** Strict (safe search enforced)
+> - **45 rules** configured across all categories
+
+### Adjusting Rules
+
+> **User:** Maya's teacher said she needs access to YouTube for homework. Can you allow that?
+>
+> *Calls `list_rules` to find the web_custom_allowlist rule*
+> *Calls `update_rule` to add youtube.com to the allowlist*
+>
+> Done. I've added youtube.com to Maya's web allowlist. She'll be able to access YouTube while all other web filters remain in place.
+
+### Checking Enforcement
+
+> **User:** Did the rules push to NextDNS successfully?
+>
+> *Calls `get_enforcement_status` for the most recent job*
+> *Calls `get_enforcement_results` to see per-platform details*
+>
+> Yes, enforcement completed successfully:
+> - **NextDNS:** 12 rules applied, 0 failed
+> - Last enforced 3 hours ago
