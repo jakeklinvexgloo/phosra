@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
@@ -43,6 +44,11 @@ func (h *DeveloperHandler) CreateOrg(w http.ResponseWriter, r *http.Request) {
 
 	org, err := h.developers.CreateOrg(r.Context(), userID, req.Name, req.Description, req.WebsiteURL)
 	if err != nil {
+		// Check for unique constraint violation (Postgres error code 23505)
+		if strings.Contains(err.Error(), "23505") || strings.Contains(err.Error(), "unique constraint") || strings.Contains(err.Error(), "duplicate key") {
+			httputil.Error(w, http.StatusConflict, "organization slug already exists, please try again")
+			return
+		}
 		httputil.Error(w, http.StatusInternalServerError, "failed to create organization")
 		return
 	}

@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react"
 import { BarChart3, TrendingUp, CheckCircle2, AlertTriangle } from "lucide-react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
-import type { DeveloperOrg, DeveloperAPIUsage, DeveloperAPIKey } from "@/lib/types"
+import type { DeveloperAPIUsage } from "@/lib/types"
+import { useDevOrg } from "@/contexts/dev-org-context"
 
 interface DailyStats {
   date: string
@@ -29,39 +30,32 @@ interface KeyStats {
 
 export default function UsagePage() {
   const { getToken } = useApi()
-  const [org, setOrg] = useState<DeveloperOrg | null>(null)
+  const { org, keys } = useDevOrg()
   const [usage, setUsage] = useState<DeveloperAPIUsage[]>([])
-  const [keys, setKeys] = useState<DeveloperAPIKey[]>([])
   const [days, setDays] = useState(7)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchData = useCallback(async () => {
+  const fetchUsage = useCallback(async () => {
+    if (!org) return
+    setLoading(true)
+    setError(null)
     try {
       const token = (await getToken()) ?? undefined
       if (!token) return
-      const orgs = await api.listDeveloperOrgs(token)
-      if (orgs && orgs.length > 0) {
-        setOrg(orgs[0])
-        const [usageData, keysData] = await Promise.all([
-          api.getDeveloperUsage(token, orgs[0].id, days),
-          api.listDeveloperKeys(token, orgs[0].id),
-        ])
-        setUsage(usageData || [])
-        setKeys(keysData || [])
-      }
+      const usageData = await api.getDeveloperUsage(token, org.id, days)
+      setUsage(usageData || [])
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to load usage data"
       setError(message)
     } finally {
       setLoading(false)
     }
-  }, [getToken, days])
+  }, [getToken, org, days])
 
   useEffect(() => {
-    setLoading(true)
-    fetchData()
-  }, [fetchData])
+    fetchUsage()
+  }, [fetchUsage])
 
   // Aggregate daily stats
   const dailyMap = new Map<string, DailyStats>()
@@ -110,6 +104,16 @@ export default function UsagePage() {
   // Bar chart scale
   const maxDaily = Math.max(...dailyStats.map((d) => d.total), 1)
 
+  if (!org) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-pulse text-muted-foreground text-sm">
+          Waiting for developer organization...
+        </div>
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -123,27 +127,11 @@ export default function UsagePage() {
       <div className="flex flex-col items-center justify-center py-20 gap-4">
         <p className="text-sm text-destructive">{error}</p>
         <button
-          onClick={() => { setError(null); setLoading(true); fetchData() }}
+          onClick={() => { setError(null); fetchUsage() }}
           className="text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           Try again
         </button>
-      </div>
-    )
-  }
-
-  if (!org) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <p className="text-sm text-muted-foreground">
-          You need to create a developer organization first.
-        </p>
-        <a
-          href="/dashboard/developers"
-          className="text-sm text-foreground underline hover:no-underline"
-        >
-          Go to Developer Portal
-        </a>
       </div>
     )
   }

@@ -84,13 +84,14 @@ func (s *DeveloperService) CreateOrg(ctx context.Context, userID uuid.UUID, name
 	slug := generateSlug(name)
 
 	org := &domain.DeveloperOrg{
-		ID:          uuid.New(),
-		Name:        name,
-		Slug:        slug,
-		Description: description,
-		WebsiteURL:  websiteURL,
-		OwnerUserID: userID,
-		Tier:        domain.DeveloperTierFree,
+		ID:           uuid.New(),
+		Name:         name,
+		Slug:         slug,
+		Description:  description,
+		WebsiteURL:   websiteURL,
+		OwnerUserID:  userID,
+		Tier:         domain.DeveloperTierFree,
+		RateLimitRPM: domain.DefaultFreeRateLimitRPM,
 	}
 
 	if err := s.repo.CreateOrg(ctx, org); err != nil {
@@ -366,12 +367,19 @@ func (s *DeveloperService) CheckOrgAdmin(ctx context.Context, orgID, userID uuid
 	return nil
 }
 
-// generateSlug converts a name to a URL-friendly slug.
+// generateSlug converts a name to a URL-friendly slug with a random suffix to prevent collisions.
 func generateSlug(name string) string {
 	slug := strings.ToLower(name)
 	slug = slugRegexp.ReplaceAllString(slug, "")
 	slug = strings.ReplaceAll(slug, " ", "-")
 	slug = multiHyphenRegexp.ReplaceAllString(slug, "-")
 	slug = strings.Trim(slug, "-")
+
+	// Append a random 4-char hex suffix to prevent collisions
+	suffix := make([]byte, 2)
+	if _, err := rand.Read(suffix); err == nil {
+		slug = slug + "-" + hex.EncodeToString(suffix)
+	}
+
 	return slug
 }

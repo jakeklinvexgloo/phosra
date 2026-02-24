@@ -18,6 +18,9 @@ const (
 	DeveloperTierEnterprise DeveloperTier = "enterprise"
 )
 
+// DefaultFreeRateLimitRPM is the default rate limit (requests per minute) for free-tier orgs.
+const DefaultFreeRateLimitRPM = 100
+
 // DeveloperRole defines a member's role within a developer org.
 type DeveloperRole string
 

@@ -321,15 +321,18 @@ export interface DeveloperAPIUsage {
 export const API_SCOPES = [
   'read:families',
   'write:families',
+  'read:children',
+  'write:children',
   'read:policies',
   'write:policies',
   'read:enforcement',
   'write:enforcement',
+  'read:devices',
+  'write:devices',
+  'read:webhooks',
+  'write:webhooks',
   'read:ratings',
   'read:platforms',
-  'write:compliance',
-  'device:manage',
-  'webhook:manage',
 ] as const
 
 export type APIScope = typeof API_SCOPES[number]

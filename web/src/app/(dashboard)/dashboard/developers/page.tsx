@@ -1,53 +1,11 @@
 "use client"
 
-import { useCallback, useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { Code2, Key, BarChart3, ArrowRight, BookOpen, Play } from "lucide-react"
-import { useStytchUser } from "@stytch/nextjs"
-import { api } from "@/lib/api"
-import { useApi } from "@/lib/useApi"
-import type { DeveloperOrg, DeveloperAPIKey } from "@/lib/types"
-import { toast } from "@/hooks/use-toast"
+import { useDevOrg } from "@/contexts/dev-org-context"
 
 export default function DeveloperPortalPage() {
-  const { getToken } = useApi()
-  const { user } = useStytchUser()
-  const [org, setOrg] = useState<DeveloperOrg | null>(null)
-  const [keys, setKeys] = useState<DeveloperAPIKey[]>([])
-  const autoProvisionAttempted = useRef(false)
-
-  const fetchData = useCallback(async () => {
-    try {
-      const token = (await getToken()) ?? undefined
-      if (!token) return
-      const orgs = await api.listDeveloperOrgs(token)
-      if (orgs && orgs.length > 0) {
-        setOrg(orgs[0])
-        const orgKeys = await api.listDeveloperKeys(token, orgs[0].id)
-        setKeys(orgKeys || [])
-      } else if (!autoProvisionAttempted.current) {
-        autoProvisionAttempted.current = true
-        const name = user?.name?.first_name
-          ? `${user.name.first_name}${user.name.last_name ? ` ${user.name.last_name}` : ""}'s Organization`
-          : user?.emails?.[0]?.email
-            ? `${user.emails[0].email.split("@")[0]}'s Organization`
-            : "My Organization"
-        try {
-          const newOrg = await api.createDeveloperOrg(token, { name })
-          setOrg(newOrg)
-          toast({ title: "Developer organization created", variant: "success" })
-        } catch (err) {
-          console.warn("Auto-provision failed:", err)
-        }
-      }
-    } catch {
-      // fetch errors are non-blocking — page content renders regardless
-    }
-  }, [getToken, user])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
+  const { org, keys } = useDevOrg()
 
   const activeKeys = keys.filter((k) => !k.revoked_at)
   const tierLabel = org?.tier ? org.tier.charAt(0).toUpperCase() + org.tier.slice(1) : ""

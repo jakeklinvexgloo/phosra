@@ -1,34 +1,52 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useState } from "react"
 import { Key, Plus, Copy, Check, AlertTriangle, Trash2, Shield } from "lucide-react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
-import type { DeveloperOrg, DeveloperAPIKey, DeveloperAPIKeyWithSecret } from "@/lib/types"
+import type { DeveloperAPIKeyWithSecret } from "@/lib/types"
 import { API_SCOPES } from "@/lib/types"
 import { toast } from "@/hooks/use-toast"
+import { useDevOrg } from "@/contexts/dev-org-context"
 
 const SCOPE_GROUPS: { label: string; scopes: typeof API_SCOPES[number][] }[] = [
   {
-    label: "Read",
-    scopes: ["read:families", "read:policies", "read:enforcement", "read:ratings", "read:platforms"],
+    label: "Families",
+    scopes: ["read:families", "write:families"],
   },
   {
-    label: "Write",
-    scopes: ["write:families", "write:policies", "write:enforcement", "write:compliance"],
+    label: "Children",
+    scopes: ["read:children", "write:children"],
   },
   {
-    label: "Manage",
-    scopes: ["device:manage", "webhook:manage"],
+    label: "Policies",
+    scopes: ["read:policies", "write:policies"],
+  },
+  {
+    label: "Enforcement",
+    scopes: ["read:enforcement", "write:enforcement"],
+  },
+  {
+    label: "Devices",
+    scopes: ["read:devices", "write:devices"],
+  },
+  {
+    label: "Webhooks",
+    scopes: ["read:webhooks", "write:webhooks"],
+  },
+  {
+    label: "Ratings",
+    scopes: ["read:ratings"],
+  },
+  {
+    label: "Platforms",
+    scopes: ["read:platforms"],
   },
 ]
 
 export default function ApiKeysPage() {
   const { getToken } = useApi()
-  const [org, setOrg] = useState<DeveloperOrg | null>(null)
-  const [keys, setKeys] = useState<DeveloperAPIKey[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { org, keys, refetch } = useDevOrg()
 
   // Create key form
   const [showCreate, setShowCreate] = useState(false)
@@ -43,28 +61,6 @@ export default function ApiKeysPage() {
 
   // Revoke confirmation
   const [revokeTarget, setRevokeTarget] = useState<string | null>(null)
-
-  const fetchData = useCallback(async () => {
-    try {
-      const token = (await getToken()) ?? undefined
-      if (!token) return
-      const orgs = await api.listDeveloperOrgs(token)
-      if (orgs && orgs.length > 0) {
-        setOrg(orgs[0])
-        const orgKeys = await api.listDeveloperKeys(token, orgs[0].id)
-        setKeys(orgKeys || [])
-      }
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to load keys"
-      setError(message)
-    } finally {
-      setLoading(false)
-    }
-  }, [getToken])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
 
   const toggleScope = (scope: string) => {
     const next = new Set(keyScopes)
@@ -99,12 +95,12 @@ export default function ApiKeysPage() {
         scopes: Array.from(keyScopes),
       })
       setNewKey(created)
-      setKeys((prev) => [created, ...prev])
       setShowCreate(false)
       setKeyName("")
       setKeyEnv("test")
       setKeyScopes(new Set())
       toast({ title: "API key created", variant: "success" })
+      refetch()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to create key"
       toast({ title: "Error", description: message, variant: "destructive" })
@@ -127,11 +123,9 @@ export default function ApiKeysPage() {
       const token = (await getToken()) ?? undefined
       if (!token) return
       await api.revokeDeveloperKey(token, org.id, keyId)
-      setKeys((prev) =>
-        prev.map((k) => (k.id === keyId ? { ...k, revoked_at: new Date().toISOString() } : k))
-      )
       setRevokeTarget(null)
       toast({ title: "API key revoked", variant: "success" })
+      refetch()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to revoke key"
       toast({ title: "Error", description: message, variant: "destructive" })
@@ -158,40 +152,12 @@ export default function ApiKeysPage() {
     return "Just now"
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <div className="animate-pulse text-muted-foreground text-sm">Loading API keys...</div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <p className="text-sm text-destructive">{error}</p>
-        <button
-          onClick={() => { setError(null); setLoading(true); fetchData() }}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Try again
-        </button>
-      </div>
-    )
-  }
-
   if (!org) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <p className="text-sm text-muted-foreground">
-          You need to create a developer organization first.
-        </p>
-        <a
-          href="/dashboard/developers"
-          className="text-sm text-foreground underline hover:no-underline"
-        >
-          Go to Developer Portal
-        </a>
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-pulse text-muted-foreground text-sm">
+          Waiting for developer organization...
+        </div>
       </div>
     )
   }
