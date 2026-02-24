@@ -30,7 +30,7 @@ export default function DevelopersLayout({ children }: { children: React.ReactNo
       } else if (token) {
         headers["Authorization"] = `Bearer ${token}`
       } else {
-        setError("Not authenticated")
+        // Token not ready yet — parent layout guarantees auth, so just wait
         setLoading(false)
         return
       }
@@ -76,30 +76,6 @@ export default function DevelopersLayout({ children }: { children: React.ReactNo
   useEffect(() => {
     provision()
   }, [provision])
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <div className="animate-pulse text-muted-foreground text-sm">
-          Setting up developer environment...
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <p className="text-sm text-destructive">{error}</p>
-        <button
-          onClick={provision}
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Try again
-        </button>
-      </div>
-    )
-  }
 
   return (
     <DevOrgContext.Provider value={{ org, keys, loading, error, refetch: provision }}>
