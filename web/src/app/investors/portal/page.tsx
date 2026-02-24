@@ -503,6 +503,7 @@ function InvestorPortalContent() {
   const searchParams = useSearchParams()
   const inviteCode = searchParams.get("invite")
   const [showInviteModal, setShowInviteModal] = useState(false)
+  const [safeId, setSafeId] = useState<string | null>(null)
 
   // Auto-claim invite when returning authenticated user arrives via invite link
   useEffect(() => {
@@ -652,7 +653,7 @@ function InvestorPortalContent() {
       {/* ============================================================ */}
       {/*  Section 4: SAFE Document                                     */}
       {/* ============================================================ */}
-      <SafeSection investorPhone={investor.phone} investorName={investor.name || ""} investorCompany={investor.company || ""} />
+      <SafeSection investorPhone={investor.phone} investorName={investor.name || ""} investorCompany={investor.company || ""} onSafeChange={setSafeId} />
 
       {/* ============================================================ */}
       {/*  Section 4: Data Room Links                                   */}
@@ -670,12 +671,15 @@ function InvestorPortalContent() {
         <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" staggerDelay={0.06}>
           {DATA_ROOM_LINKS.map((link) => {
             const Icon = CATEGORY_ICONS[link.category]
+            const url = link.label === "SAFE Agreement" && safeId
+              ? `/api/investors/safe/${safeId}/pdf`
+              : link.url
             return (
               <a
                 key={link.label}
-                href={link.url}
-                target={link.url.startsWith("/") ? undefined : "_blank"}
-                rel={link.url.startsWith("/") ? undefined : "noopener noreferrer"}
+                href={url}
+                target={url.startsWith("/") ? undefined : "_blank"}
+                rel={url.startsWith("/") ? undefined : "noopener noreferrer"}
                 className="group block"
               >
                 <div className="glass-card rounded-xl p-5 h-full flex flex-col transition-all hover:bg-white/[0.08]">

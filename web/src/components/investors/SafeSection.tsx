@@ -466,10 +466,12 @@ export default function SafeSection({
   investorPhone,
   investorName,
   investorCompany,
+  onSafeChange,
 }: {
   investorPhone: string
   investorName: string
   investorCompany: string
+  onSafeChange?: (safeId: string | null) => void
 }) {
   const [viewState, setViewState] = useState<ViewState>("loading")
   const [safe, setSafe] = useState<SafeRecord | null>(null)
@@ -496,6 +498,7 @@ export default function SafeSection({
       const data = await res.json()
       if (data.safe) {
         setSafe(data.safe)
+        onSafeChange?.(data.safe.id)
         switch (data.safe.status) {
           case "pending_investor":
             setViewState("signing")
@@ -514,12 +517,13 @@ export default function SafeSection({
             setViewState("no_safe")
         }
       } else {
+        onSafeChange?.(null)
         setViewState("no_safe")
       }
     } catch {
       setViewState("no_safe")
     }
-  }, [])
+  }, [onSafeChange])
 
   useEffect(() => {
     fetchSafe()
@@ -548,6 +552,7 @@ export default function SafeSection({
       const data = await res.json()
       if (res.ok) {
         setSafe({ ...data.safe, investor_name: legalName.trim(), status: "pending_investor" } as SafeRecord)
+        onSafeChange?.(data.safe.id)
         setSignatureName(legalName.trim())
         setViewState("signing")
         // Refetch to get full record
