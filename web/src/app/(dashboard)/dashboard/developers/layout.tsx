@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useStytchUser } from "@stytch/nextjs"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
@@ -14,6 +14,7 @@ export default function DevelopersLayout({ children }: { children: React.ReactNo
   const [keys, setKeys] = useState<DeveloperAPIKey[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const provision = useCallback(async () => {
     setLoading(true)
@@ -30,8 +31,10 @@ export default function DevelopersLayout({ children }: { children: React.ReactNo
       } else if (token) {
         headers["Authorization"] = `Bearer ${token}`
       } else {
-        // Token not ready yet — parent layout guarantees auth, so just wait
+        // Token not ready yet — parent layout guarantees auth, so retry shortly
         setLoading(false)
+        if (retryTimer.current) clearTimeout(retryTimer.current)
+        retryTimer.current = setTimeout(() => provision(), 500)
         return
       }
 
@@ -75,6 +78,9 @@ export default function DevelopersLayout({ children }: { children: React.ReactNo
 
   useEffect(() => {
     provision()
+    return () => {
+      if (retryTimer.current) clearTimeout(retryTimer.current)
+    }
   }, [provision])
 
   return (
