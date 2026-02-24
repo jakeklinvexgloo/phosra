@@ -96,7 +96,7 @@ export default async function DeveloperDocsPage({ params }: PageProps) {
   if (mdxSource) {
     const headings = extractHeadings(mdxSource)
 
-    const { content, frontmatter } = await compileMDX<{ title?: string; description?: string }>({
+    const { content, frontmatter } = await compileMDX<{ title?: string; description?: string; hideHeader?: boolean }>({
       source: mdxSource,
       components: mdxComponents,
       options: {
@@ -116,10 +116,12 @@ export default async function DeveloperDocsPage({ params }: PageProps) {
     return (
       <div className="flex gap-6">
         <div className="flex-1 min-w-0">
-          <DevDocsHeader
-            title={frontmatter.title}
-            slug={slug}
-          />
+          {!frontmatter.hideHeader && (
+            <DevDocsHeader
+              title={frontmatter.title}
+              slug={slug}
+            />
+          )}
           <div className="prose-developers">
             {content}
           </div>
