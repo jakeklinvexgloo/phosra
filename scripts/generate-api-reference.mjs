@@ -455,6 +455,16 @@ const tags = Array.from(tagSet.entries()).map(([name, description]) => ({
 
 const searchIndex = []
 
+// Section name mapping for known subdirectories
+const SECTION_NAMES = {
+  concepts: "Core Concepts",
+  guides: "Guides",
+  sdks: "SDKs",
+  reference: "Reference",
+  recipes: "Recipes",
+  "api-reference": "API Reference",
+}
+
 // 1. MDX pages from docs/api/
 function walkDir(dir) {
   if (!existsSync(dir)) return []
@@ -483,16 +493,17 @@ for (const file of mdxFiles) {
 
   // Build href from file path relative to docs/api/
   const rel = file.slice(DOCS_API_DIR.length).replace(/\.mdx$/, "").replace(/\/index$/, "")
-  const href = `/developers/docs${rel}`
+  const href = `/developers${rel}`
 
   // Determine section from subdirectory
   const parts = rel.split("/").filter(Boolean)
-  const section = parts.length > 1 ? parts[0] : "Getting Started"
+  const subdir = parts.length > 1 ? parts[0] : null
+  const section = subdir ? (SECTION_NAMES[subdir] || subdir.charAt(0).toUpperCase() + subdir.slice(1)) : "Getting Started"
 
   searchIndex.push({
     title,
     href,
-    section: section.charAt(0).toUpperCase() + section.slice(1),
+    section,
     excerpt: description,
   })
 }
@@ -501,11 +512,74 @@ for (const file of mdxFiles) {
 for (const ep of endpoints) {
   searchIndex.push({
     title: `${ep.method} ${ep.path}`,
-    href: `/developers/docs/api-reference/${ep.slug}`,
+    href: `/developers/api-reference/${ep.slug}`,
     section: ep.tag,
     excerpt: ep.summary || ep.description,
     method: ep.method,
   })
+}
+
+// 3. Static pages (playground + dashboard)
+searchIndex.push({
+  title: "Playground",
+  href: "/developers/playground",
+  section: "Playground",
+  excerpt: "Interactive MCP sandbox — try 45 API tools with a pre-built demo family",
+})
+
+searchIndex.push({
+  title: "Dashboard Overview",
+  href: "/developers/dashboard",
+  section: "Dashboard",
+  excerpt: "Manage your organization, API keys, and usage analytics",
+})
+
+searchIndex.push({
+  title: "API Keys",
+  href: "/developers/dashboard/keys",
+  section: "Dashboard",
+  excerpt: "Create, manage, and revoke API keys with granular scope control",
+})
+
+searchIndex.push({
+  title: "Usage Analytics",
+  href: "/developers/dashboard/usage",
+  section: "Dashboard",
+  excerpt: "View request volume, success rates, top endpoints, and per-key breakdowns",
+})
+
+// 4. Rule categories from categories.ts
+const CATEGORIES_PATH = join(ROOT, "web", "src", "lib", "docs", "categories.ts")
+if (existsSync(CATEGORIES_PATH)) {
+  const catSource = readFileSync(CATEGORIES_PATH, "utf-8")
+  // Extract CATEGORY_REFERENCE entries: { id: "...", name: "...", description: "..." }
+  const catRegex = /\{\s*id:\s*"([^"]+)",\s*name:\s*"([^"]+)",\s*group:\s*"[^"]+",\s*description:\s*"([^"]+)"/g
+  let catMatch
+  let catCount = 0
+  while ((catMatch = catRegex.exec(catSource)) !== null) {
+    searchIndex.push({
+      title: catMatch[2],
+      href: `/developers/reference/categories#${catMatch[1]}`,
+      section: "Rule Categories",
+      excerpt: catMatch[3].slice(0, 120),
+    })
+    catCount++
+  }
+  // Also extract NEW_CATEGORIES: { name: "...", desc: "..." }
+  const newCatRegex = /\{\s*name:\s*"([^"]+)",\s*desc:\s*"([^"]+)"/g
+  let newCatMatch
+  while ((newCatMatch = newCatRegex.exec(catSource)) !== null) {
+    searchIndex.push({
+      title: newCatMatch[1].replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+      href: `/developers/reference/categories#${newCatMatch[1]}`,
+      section: "Rule Categories",
+      excerpt: newCatMatch[2].slice(0, 120),
+    })
+    catCount++
+  }
+  if (catCount > 0) {
+    console.log(`  Added ${catCount} rule categories to search index`)
+  }
 }
 
 // ── Write output ─────────────────────────────────────────────────────────────
@@ -518,7 +592,9 @@ writeFileSync(apiRefPath, JSON.stringify({ endpoints, tags }, null, 2))
 const searchPath = join(OUT_DIR, "search-index.json")
 writeFileSync(searchPath, JSON.stringify(searchIndex, null, 2))
 
+const mdxCount = mdxFiles.length
+const staticCount = 4 // playground + 3 dashboard
 console.log(`Generated ${endpoints.length} endpoints across ${tags.length} tags`)
-console.log(`Search index: ${searchIndex.length} entries (${mdxFiles.length} MDX + ${endpoints.length} endpoints)`)
+console.log(`Search index: ${searchIndex.length} entries (${mdxCount} MDX + ${endpoints.length} endpoints + ${staticCount} static + categories)`)
 console.log(`  -> ${apiRefPath}`)
 console.log(`  -> ${searchPath}`)

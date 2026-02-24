@@ -9,7 +9,7 @@ import { InspectorPanel } from "@/components/playground/InspectorPanel"
 import type { ToolCallInfo } from "@/lib/playground/types"
 import { type EntityMap, extractEntities } from "@/lib/playground/entity-registry"
 
-export default function PublicPlaygroundPage() {
+export default function PlaygroundPage() {
   const [sessionId] = useState(
     () => `s-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
   )
@@ -54,7 +54,6 @@ export default function PublicPlaygroundPage() {
           }
           if (part.state === "output-available") {
             tc.result = part.output
-            // Extract entity labels from completed tool results
             extractEntities(getToolName(part), part.output, newEntities)
           }
           newToolCalls.push(tc)
@@ -91,7 +90,7 @@ export default function PublicPlaygroundPage() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Playground info bar — hidden on mobile to maximise chat space */}
+      {/* Playground info bar */}
       <div className="hidden md:flex items-center justify-between px-6 py-3 border-b border-border bg-muted/30 flex-shrink-0">
         <div className="flex items-center gap-3">
           <h1 className="text-sm font-semibold text-foreground">MCP Playground</h1>
@@ -115,7 +114,7 @@ export default function PublicPlaygroundPage() {
         </div>
       </div>
 
-      {/* Mobile tab bar — compact to maximise chat space */}
+      {/* Mobile tab bar */}
       <div className="flex md:hidden border-b border-border flex-shrink-0">
         <button
           onClick={() => setActivePanel("chat")}

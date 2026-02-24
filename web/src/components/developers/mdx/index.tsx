@@ -10,6 +10,17 @@ import { SmartLink } from "./SmartLink"
 import { ProseTable } from "./ProseTable"
 import { Tabs, Tab } from "./Tabs"
 
+// Reference components (from /docs migration)
+import { SpecificationView } from "@/components/developers/reference/SpecificationView"
+import { CategoryBrowser } from "@/components/developers/reference/CategoryBrowser"
+import { RatingsBrowser } from "@/components/developers/reference/RatingsBrowser"
+import { PlatformMatrix } from "@/components/developers/reference/PlatformMatrix"
+import { LegislationBrowser } from "@/components/developers/reference/LegislationBrowser"
+
+// Recipe components
+import { RecipeViewer } from "@/components/developers/recipes/RecipeViewer"
+import { RecipeIndex } from "@/components/developers/recipes/RecipeIndex"
+
 // Map Mintlify component names to our implementations
 export const mdxComponents: MDXComponents = {
   // Mintlify callouts
@@ -37,6 +48,17 @@ export const mdxComponents: MDXComponents = {
   Tabs: Tabs as any,
   Tab: Tab as any,
 
+  // Reference components
+  SpecificationView: SpecificationView as any,
+  CategoryBrowser: CategoryBrowser as any,
+  RatingsBrowser: RatingsBrowser as any,
+  PlatformMatrix: PlatformMatrix as any,
+  LegislationBrowser: LegislationBrowser as any,
+
+  // Recipe components
+  RecipeViewer: RecipeViewer as any,
+  RecipeIndex: RecipeIndex as any,
+
   // HTML element overrides
   a: SmartLink as any,
   table: ProseTable as any,
@@ -57,4 +79,11 @@ export {
   ProseTable,
   Tabs,
   Tab,
+  SpecificationView,
+  CategoryBrowser,
+  RatingsBrowser,
+  PlatformMatrix,
+  LegislationBrowser,
+  RecipeViewer,
+  RecipeIndex,
 }

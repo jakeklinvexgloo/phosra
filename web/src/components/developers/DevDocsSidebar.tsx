@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Lock } from "lucide-react"
 import { DOCS_NAV, type NavGroup } from "@/lib/developers/docs-nav"
 
 const METHOD_COLORS: Record<string, string> = {
@@ -50,6 +50,9 @@ export function DevDocsSidebar({ onNavigate }: DevDocsSidebarProps) {
                 className={`w-3 h-3 transition-transform ${openGroups[group.title] ? "rotate-90" : ""}`}
               />
               {group.title}
+              {group.authRequired && (
+                <Lock className="w-3 h-3 text-muted-foreground/60 ml-auto" />
+              )}
             </button>
 
             {/* Group items */}
@@ -74,6 +77,9 @@ export function DevDocsSidebar({ onNavigate }: DevDocsSidebarProps) {
                         </span>
                       )}
                       <span className="truncate">{item.title}</span>
+                      {item.authRequired && (
+                        <Lock className="w-3 h-3 text-muted-foreground/50 ml-auto flex-shrink-0" />
+                      )}
                     </Link>
                   )
                 })}

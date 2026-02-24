@@ -2,12 +2,14 @@ export interface NavItem {
   title: string
   href: string
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
+  authRequired?: boolean
 }
 
 export interface NavGroup {
   title: string
   items: NavItem[]
   defaultOpen?: boolean
+  authRequired?: boolean
 }
 
 export const DOCS_NAV: NavGroup[] = [
@@ -201,6 +203,56 @@ export const DOCS_NAV: NavGroup[] = [
       { title: "Sync Source", href: "/developers/api-reference/sources/post-sources-sync", method: "POST" },
       { title: "Push Rule", href: "/developers/api-reference/sources/post-sources-rules", method: "POST" },
       { title: "Guided Steps", href: "/developers/api-reference/sources/get-sources-guide", method: "GET" },
+    ],
+  },
+  // ── Reference (from /docs) ──────────────────────────────────────────────
+  {
+    title: "Reference",
+    items: [
+      { title: "PCSS Specification", href: "/developers/reference/specification" },
+      { title: "Rule Categories", href: "/developers/reference/categories" },
+      { title: "Age Ratings", href: "/developers/reference/ratings" },
+      { title: "Platform Support", href: "/developers/reference/platforms" },
+      { title: "Legislation", href: "/developers/reference/legislation" },
+    ],
+  },
+  // ── Recipes (from /docs Recipes tab) ────────────────────────────────────
+  {
+    title: "Recipes",
+    items: [
+      { title: "Overview", href: "/developers/recipes" },
+      { title: "First-Time Setup", href: "/developers/recipes/first-time-setup" },
+      { title: "App Integration", href: "/developers/recipes/app-integration" },
+      { title: "DNS Web Protection", href: "/developers/recipes/dns-protection" },
+      { title: "Child Turns 13", href: "/developers/recipes/child-turns-13" },
+      { title: "Multi-Child Family", href: "/developers/recipes/multi-child" },
+      { title: "Co-Parenting", href: "/developers/recipes/co-parenting" },
+      { title: "Block a Game", href: "/developers/recipes/block-game" },
+      { title: "Apple Device Sync", href: "/developers/recipes/apple-device-sync" },
+      { title: "Re-Verification", href: "/developers/recipes/re-verification" },
+      { title: "Webhook Dashboard", href: "/developers/recipes/webhook-dashboard" },
+      { title: "Emergency Pause", href: "/developers/recipes/emergency-pause" },
+      { title: "Custom Blocklist", href: "/developers/recipes/custom-blocklist" },
+      { title: "School District", href: "/developers/recipes/school-district" },
+      { title: "Community Standard", href: "/developers/recipes/adopt-standard" },
+      { title: "Parental Control App", href: "/developers/recipes/connect-parental-source" },
+    ],
+  },
+  // ── Playground (from /playground) ───────────────────────────────────────
+  {
+    title: "Playground",
+    items: [
+      { title: "MCP Sandbox", href: "/developers/playground" },
+    ],
+  },
+  // ── Dashboard (auth required, from /dashboard/developers) ───────────────
+  {
+    title: "Dashboard",
+    authRequired: true,
+    items: [
+      { title: "Overview", href: "/developers/dashboard", authRequired: true },
+      { title: "API Keys", href: "/developers/dashboard/keys", authRequired: true },
+      { title: "Usage", href: "/developers/dashboard/usage", authRequired: true },
     ],
   },
 ]

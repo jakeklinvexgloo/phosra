@@ -1,13 +1,25 @@
 "use client"
 
 import { useState } from "react"
+import { usePathname } from "next/navigation"
 import { List, X } from "lucide-react"
 import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
 import { DevDocsSidebar } from "@/components/developers/DevDocsSidebar"
 import { DevDocsSearch } from "@/components/developers/DevDocsSearch"
 
+// Routes that need full-width layout (no sidebar/TOC)
+const FULL_WIDTH_ROUTES = ["/developers/playground"]
+
 export default function DeveloperDocsLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const isFullWidth = FULL_WIDTH_ROUTES.some((route) => pathname.startsWith(route))
+
+  // Full-width mode: playground gets its own layout via nested layout.tsx
+  if (isFullWidth) {
+    return <>{children}</>
+  }
 
   return (
     <div className="min-h-screen bg-background">

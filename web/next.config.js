@@ -26,6 +26,32 @@ const nextConfig = {
         destination: '/technology-services/:path*',
         permanent: true,
       },
+      // Unified developer platform redirects
+      {
+        source: '/docs',
+        destination: '/developers/reference/specification',
+        permanent: true,
+      },
+      {
+        source: '/playground',
+        destination: '/developers/playground',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/developers',
+        destination: '/developers/dashboard',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/developers/keys',
+        destination: '/developers/dashboard/keys',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/developers/usage',
+        destination: '/developers/dashboard/usage',
+        permanent: true,
+      },
     ]
   },
 }
