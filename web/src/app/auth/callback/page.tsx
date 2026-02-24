@@ -45,8 +45,9 @@ function CallbackHandler() {
             session_duration_minutes: 60 * 24 * 7,
           })
         }
-        // SDK sets cookies automatically — redirect to dashboard
-        router.replace("/dashboard")
+        // SDK sets cookies automatically — redirect to return_to or dashboard
+        const returnTo = searchParams.get("return_to")
+        router.replace(returnTo && returnTo.startsWith("/") ? returnTo : "/dashboard")
       } catch (err: any) {
         console.error("Auth callback error:", err)
         const msg = err?.message || err?.error_message || JSON.stringify(err)
