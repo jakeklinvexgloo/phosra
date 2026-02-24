@@ -60,6 +60,7 @@ export const mdxComponents: MDXComponents = {
   RecipeIndex: RecipeIndex as any,
 
   // HTML element overrides
+  h1: () => null, // Suppress MDX H1 — DevDocsHeader renders the title from frontmatter
   a: SmartLink as any,
   table: ProseTable as any,
   pre: CodeBlock as any,
