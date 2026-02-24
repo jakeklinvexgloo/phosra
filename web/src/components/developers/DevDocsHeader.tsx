@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ChevronRight, Pencil } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
 interface DevDocsHeaderProps {
   title?: string
@@ -14,8 +14,6 @@ export function DevDocsHeader({ title, slug }: DevDocsHeaderProps) {
       .replace(/\b\w/g, (c) => c.toUpperCase()),
     href: "/developers/" + slug.slice(0, i + 1).join("/"),
   }))
-
-  const githubEditUrl = `https://github.com/jakeklinvexgloo/phosra/edit/main/docs/api/${slug.join("/")}.mdx`
 
   return (
     <div className="mb-8">
@@ -40,23 +38,11 @@ export function DevDocsHeader({ title, slug }: DevDocsHeaderProps) {
         </nav>
       )}
 
-      {/* Title + Edit link */}
-      <div className="flex items-start justify-between gap-4">
-        {title && (
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-            {title}
-          </h1>
-        )}
-        <a
-          href={githubEditUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors flex-shrink-0 mt-2"
-        >
-          <Pencil className="w-3.5 h-3.5" />
-          Edit
-        </a>
-      </div>
+      {title && (
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+          {title}
+        </h1>
+      )}
     </div>
   )
 }

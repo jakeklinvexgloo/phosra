@@ -11,6 +11,34 @@ import { DevDocsToc } from "@/components/developers/DevDocsToc"
 import { DevDocsHeader } from "@/components/developers/DevDocsHeader"
 import type { Metadata } from "next"
 
+/* ── Rehype plugin: add id attributes to headings ──────────────── */
+
+function getTextContent(node: any): string {
+  if (node.type === "text") return node.value || ""
+  if (node.children) return node.children.map(getTextContent).join("")
+  return ""
+}
+
+/** Adds id attributes to h1–h6 using the same algorithm as extractHeadings */
+function rehypeHeadingIds() {
+  return (tree: any) => {
+    function visit(node: any) {
+      if (node.type === "element" && /^h[1-6]$/.test(node.tagName)) {
+        const text = getTextContent(node)
+        const id = text
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "")
+        node.properties = { ...node.properties, id }
+      }
+      if (node.children) {
+        node.children.forEach(visit)
+      }
+    }
+    visit(tree)
+  }
+}
+
 function loadApiReferenceData(): any {
   try {
     const filePath = path.join(process.cwd(), "src", "lib", "developers", "generated", "api-reference.json")
@@ -104,6 +132,7 @@ export default async function DeveloperDocsPage({ params }: PageProps) {
         mdxOptions: {
           remarkPlugins: [remarkGfm],
           rehypePlugins: [
+            rehypeHeadingIds,
             [rehypePrettyCode, {
               theme: "github-dark",
               keepBackground: true,
