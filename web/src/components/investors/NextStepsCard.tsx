@@ -151,7 +151,7 @@ export default function NextStepsCard({ onInviteClick }: NextStepsCardProps) {
               {/* Google OAuth button */}
               <button
                 onClick={handleGoogleLink}
-                className="w-full flex items-center justify-center gap-2.5 py-2.5 bg-white/[0.06] border border-white/10 rounded-lg text-sm text-white hover:bg-white/[0.1] transition-colors"
+                className="w-full flex items-center justify-center gap-2.5 py-2.5 bg-white border border-white/20 rounded-lg text-sm text-[#1f1f1f] font-medium hover:bg-white/90 transition-colors"
               >
                 <GoogleIcon className="w-4 h-4" />
                 Continue with Google
