@@ -38,18 +38,18 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/dashboard/developers',
-        destination: '/developers/dashboard',
+        source: '/developers/dashboard',
+        destination: '/dashboard/developers',
         permanent: true,
       },
       {
-        source: '/dashboard/developers/keys',
-        destination: '/developers/dashboard/keys',
+        source: '/developers/dashboard/keys',
+        destination: '/dashboard/developers/keys',
         permanent: true,
       },
       {
-        source: '/dashboard/developers/usage',
-        destination: '/developers/dashboard/usage',
+        source: '/developers/dashboard/usage',
+        destination: '/dashboard/developers/usage',
         permanent: true,
       },
     ]

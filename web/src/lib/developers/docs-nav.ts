@@ -245,14 +245,4 @@ export const DOCS_NAV: NavGroup[] = [
       { title: "MCP Sandbox", href: "/developers/playground" },
     ],
   },
-  // ── Dashboard (auth required, from /dashboard/developers) ───────────────
-  {
-    title: "Dashboard",
-    authRequired: true,
-    items: [
-      { title: "Overview", href: "/developers/dashboard", authRequired: true },
-      { title: "API Keys", href: "/developers/dashboard/keys", authRequired: true },
-      { title: "Usage", href: "/developers/dashboard/usage", authRequired: true },
-    ],
-  },
 ]

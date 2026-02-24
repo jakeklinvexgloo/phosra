@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { BookOpen } from "lucide-react"
-import { ApiKeyPanel } from "@/components/dashboard/ApiKeyPanel"
 import { WebhookPanel } from "@/components/dashboard/WebhookPanel"
 import { useStytchUser } from "@stytch/nextjs"
 
@@ -32,7 +31,13 @@ export default function SettingsPage() {
         </div>
 
         {/* API Keys */}
-        <ApiKeyPanel />
+        <div className="plaid-card">
+          <h3 className="section-header mb-2">API Keys</h3>
+          <p className="text-sm text-muted-foreground mb-3">Manage your API keys for the Phosra platform.</p>
+          <Link href="/dashboard/developers/keys" className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors">
+            Manage API Keys <span aria-hidden>→</span>
+          </Link>
+        </div>
 
         {/* Webhooks */}
         <WebhookPanel />

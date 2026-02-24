@@ -66,7 +66,7 @@ export default function DashboardHome() {
                 View platforms <ArrowRight className="w-4 h-4" />
               </span>
             </Link>
-            <Link href="/dashboard/docs" className="plaid-card block group">
+            <Link href="/developers" className="plaid-card block group">
               <BookOpen className="w-6 h-6 text-brand-green mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-1">API Reference</h3>
               <p className="text-sm text-muted-foreground mb-4">Read the PCSS v1.0 specification and integration guide.</p>

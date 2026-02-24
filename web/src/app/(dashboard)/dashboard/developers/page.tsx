@@ -255,7 +255,7 @@ export default function DeveloperPortalPage() {
             <h2 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Link
-                href="/developers/dashboard/keys"
+                href="/dashboard/developers/keys"
                 className="plaid-card flex items-center gap-3 hover:border-foreground/20 transition-colors group"
               >
                 <div className="p-2 rounded-md bg-blue-100 dark:bg-blue-900/30">
@@ -268,7 +268,7 @@ export default function DeveloperPortalPage() {
                 <ArrowRight className="w-4 h-4 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
               </Link>
               <Link
-                href="/developers/dashboard/usage"
+                href="/dashboard/developers/usage"
                 className="plaid-card flex items-center gap-3 hover:border-foreground/20 transition-colors group"
               >
                 <div className="p-2 rounded-md bg-amber-100 dark:bg-amber-900/30">

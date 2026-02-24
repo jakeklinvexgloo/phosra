@@ -187,7 +187,7 @@ export default function ApiKeysPage() {
           You need to create a developer organization first.
         </p>
         <a
-          href="/developers/dashboard"
+          href="/dashboard/developers"
           className="text-sm text-foreground underline hover:no-underline"
         >
           Go to Developer Portal
