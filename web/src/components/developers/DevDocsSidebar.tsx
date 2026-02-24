@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Key, BarChart3, LayoutDashboard } from "lucide-react"
 import { DOCS_NAV, type NavGroup } from "@/lib/developers/docs-nav"
 
 const METHOD_COLORS: Record<string, string> = {
@@ -14,12 +14,19 @@ const METHOD_COLORS: Record<string, string> = {
   PATCH: "text-purple-600",
 }
 
+const DASHBOARD_LINKS = [
+  { title: "Overview", href: "/dashboard/developers", icon: LayoutDashboard },
+  { title: "API Keys", href: "/dashboard/developers/keys", icon: Key },
+  { title: "Usage", href: "/dashboard/developers/usage", icon: BarChart3 },
+]
+
 interface DevDocsSidebarProps {
   onNavigate?: () => void
 }
 
 export function DevDocsSidebar({ onNavigate }: DevDocsSidebarProps) {
   const pathname = usePathname()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {}
     DOCS_NAV.forEach((group) => {
@@ -31,6 +38,13 @@ export function DevDocsSidebar({ onNavigate }: DevDocsSidebarProps) {
     })
     return initial
   })
+
+  // Detect auth state via Stytch session cookie or sandbox mode
+  useEffect(() => {
+    const hasCookie = document.cookie.includes("stytch_session")
+    const hasSandbox = !!localStorage.getItem("sandbox-session")
+    setIsAuthenticated(hasCookie || hasSandbox)
+  }, [])
 
   const toggleGroup = (title: string) => {
     setOpenGroups((prev) => ({ ...prev, [title]: !prev[title] }))
@@ -81,6 +95,31 @@ export function DevDocsSidebar({ onNavigate }: DevDocsSidebarProps) {
             )}
           </div>
         ))}
+
+        {/* Dashboard links — shown when user is authenticated */}
+        {isAuthenticated && (
+          <div className="pt-3 mt-3 border-t border-border/50">
+            <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-brand-green">
+              Your Dashboard
+            </div>
+            <div className="ml-3 border-l border-brand-green/30 space-y-0.5 mb-2">
+              {DASHBOARD_LINKS.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onNavigate}
+                    className="flex items-center gap-2 px-3 py-1.5 text-[13px] text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors rounded-r-md"
+                  >
+                    <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span className="truncate">{item.title}</span>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   )

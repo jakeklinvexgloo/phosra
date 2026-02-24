@@ -8,7 +8,7 @@ import { useStytchUser, useStytch } from "@stytch/nextjs"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 const NAV_LINKS = [
-  { href: "/docs", label: "Docs" },
+  { href: "/developers", label: "Developers" },
   { href: "/parental-controls", label: "Parental Controls" },
   { href: "/technology-services", label: "Services" },
   { href: "/compliance", label: "Compliance" },

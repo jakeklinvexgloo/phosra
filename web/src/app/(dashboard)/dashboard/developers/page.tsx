@@ -1,8 +1,9 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { Code2, Key, BarChart3, Plus, Building2, ArrowRight } from "lucide-react"
+import { Code2, Key, BarChart3, Building2, ArrowRight, BookOpen, Play } from "lucide-react"
+import { useStytchUser } from "@stytch/nextjs"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import type { DeveloperOrg, DeveloperAPIKey } from "@/lib/types"
@@ -10,17 +11,12 @@ import { toast } from "@/hooks/use-toast"
 
 export default function DeveloperPortalPage() {
   const { getToken } = useApi()
+  const { user } = useStytchUser()
   const [org, setOrg] = useState<DeveloperOrg | null>(null)
   const [keys, setKeys] = useState<DeveloperAPIKey[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  // Create org form state
-  const [showCreate, setShowCreate] = useState(false)
-  const [createName, setCreateName] = useState("")
-  const [createDescription, setCreateDescription] = useState("")
-  const [createWebsite, setCreateWebsite] = useState("")
-  const [creating, setCreating] = useState(false)
+  const autoProvisionAttempted = useRef(false)
 
   const fetchData = useCallback(async () => {
     try {
@@ -31,6 +27,21 @@ export default function DeveloperPortalPage() {
         setOrg(orgs[0])
         const orgKeys = await api.listDeveloperKeys(token, orgs[0].id)
         setKeys(orgKeys || [])
+      } else if (!autoProvisionAttempted.current) {
+        // Auto-provision a developer org using Stytch user info
+        autoProvisionAttempted.current = true
+        const name = user?.name?.first_name
+          ? `${user.name.first_name}${user.name.last_name ? ` ${user.name.last_name}` : ""}'s Organization`
+          : user?.emails?.[0]?.email
+            ? `${user.emails[0].email.split("@")[0]}'s Organization`
+            : "My Organization"
+        try {
+          const newOrg = await api.createDeveloperOrg(token, { name })
+          setOrg(newOrg)
+          toast({ title: "Developer organization created", variant: "success" })
+        } catch {
+          // Auto-provision failed silently — user can still create manually
+        }
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Failed to load developer data"
@@ -38,36 +49,11 @@ export default function DeveloperPortalPage() {
     } finally {
       setLoading(false)
     }
-  }, [getToken])
+  }, [getToken, user])
 
   useEffect(() => {
     fetchData()
   }, [fetchData])
-
-  const handleCreateOrg = async () => {
-    if (!createName.trim()) return
-    setCreating(true)
-    try {
-      const token = (await getToken()) ?? undefined
-      if (!token) return
-      const newOrg = await api.createDeveloperOrg(token, {
-        name: createName.trim(),
-        description: createDescription.trim() || undefined,
-        website_url: createWebsite.trim() || undefined,
-      })
-      setOrg(newOrg)
-      setShowCreate(false)
-      setCreateName("")
-      setCreateDescription("")
-      setCreateWebsite("")
-      toast({ title: "Organization created", variant: "success" })
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to create organization"
-      toast({ title: "Error", description: message, variant: "destructive" })
-    } finally {
-      setCreating(false)
-    }
-  }
 
   const activeKeys = keys.filter((k) => !k.revoked_at)
   const tierLabel = org?.tier ? org.tier.charAt(0).toUpperCase() + org.tier.slice(1) : ""
@@ -75,7 +61,7 @@ export default function DeveloperPortalPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="animate-pulse text-muted-foreground text-sm">Loading developer portal...</div>
+        <div className="animate-pulse text-muted-foreground text-sm">Setting up developer portal...</div>
       </div>
     )
   }
@@ -99,87 +85,30 @@ export default function DeveloperPortalPage() {
       <div>
         <h1 className="text-2xl font-semibold text-foreground">Developer Portal</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Manage your organization, API keys, and monitor usage
+          Manage your API keys, monitor usage, and explore the documentation
         </p>
       </div>
 
-      {/* No org yet -- show create form */}
-      {!org && !showCreate && (
+      {/* Org not yet provisioned — show a friendly setup state */}
+      {!org && (
         <div className="plaid-card flex flex-col items-center justify-center py-12 text-center">
           <div className="p-3 rounded-full bg-muted mb-4">
             <Building2 className="w-6 h-6 text-muted-foreground" />
           </div>
-          <h3 className="text-base font-medium text-foreground mb-1">No developer organization</h3>
+          <h3 className="text-base font-medium text-foreground mb-1">Setting up your organization...</h3>
           <p className="text-sm text-muted-foreground mb-6 max-w-md">
-            Create a developer organization to start using the Phosra API. You will be able to generate API keys and monitor usage.
+            We&apos;re creating your developer organization. If this takes too long, try refreshing the page.
           </p>
           <button
-            onClick={() => setShowCreate(true)}
+            onClick={() => { setLoading(true); autoProvisionAttempted.current = false; fetchData() }}
             className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
           >
-            <Plus className="w-4 h-4" />
-            Create Organization
+            Retry
           </button>
         </div>
       )}
 
-      {/* Create org form */}
-      {!org && showCreate && (
-        <div className="plaid-card">
-          <h3 className="text-base font-medium text-foreground mb-4">Create Organization</h3>
-          <div className="space-y-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1">
-                Organization Name <span className="text-destructive">*</span>
-              </label>
-              <input
-                type="text"
-                value={createName}
-                onChange={(e) => setCreateName(e.target.value)}
-                placeholder="My Company"
-                className="plaid-input"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1">Description</label>
-              <input
-                type="text"
-                value={createDescription}
-                onChange={(e) => setCreateDescription(e.target.value)}
-                placeholder="Brief description of your project"
-                className="plaid-input"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1">Website URL</label>
-              <input
-                type="url"
-                value={createWebsite}
-                onChange={(e) => setCreateWebsite(e.target.value)}
-                placeholder="https://example.com"
-                className="plaid-input"
-              />
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={handleCreateOrg}
-              disabled={!createName.trim() || creating}
-              className="bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {creating ? "Creating..." : "Create Organization"}
-            </button>
-            <button
-              onClick={() => setShowCreate(false)}
-              className="px-5 py-2.5 rounded-full text-sm border border-foreground text-foreground hover:bg-muted transition"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Org exists -- show details */}
+      {/* Org exists -- show details + quick actions */}
       {org && (
         <>
           {/* Org details card */}
@@ -250,7 +179,7 @@ export default function DeveloperPortalPage() {
             </div>
           </div>
 
-          {/* Quick links */}
+          {/* Quick actions */}
           <div>
             <h2 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -277,6 +206,52 @@ export default function DeveloperPortalPage() {
                 <div className="flex-1">
                   <div className="text-sm font-medium text-foreground">View Usage</div>
                   <div className="text-xs text-muted-foreground">Monitor API requests and analytics</div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Developer resources — cross-links to docs and playground */}
+          <div>
+            <h2 className="text-lg font-semibold text-foreground mb-4">Developer Resources</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Link
+                href="/developers"
+                className="plaid-card flex items-center gap-3 hover:border-foreground/20 transition-colors group"
+              >
+                <div className="p-2 rounded-md bg-emerald-100 dark:bg-emerald-900/30">
+                  <BookOpen className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-foreground">API Docs</div>
+                  <div className="text-xs text-muted-foreground">Guides, reference, and recipes</div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
+              </Link>
+              <Link
+                href="/developers/playground"
+                className="plaid-card flex items-center gap-3 hover:border-foreground/20 transition-colors group"
+              >
+                <div className="p-2 rounded-md bg-purple-100 dark:bg-purple-900/30">
+                  <Play className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-foreground">Playground</div>
+                  <div className="text-xs text-muted-foreground">Interactive MCP sandbox</div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
+              </Link>
+              <Link
+                href="/developers/quickstart"
+                className="plaid-card flex items-center gap-3 hover:border-foreground/20 transition-colors group"
+              >
+                <div className="p-2 rounded-md bg-orange-100 dark:bg-orange-900/30">
+                  <Code2 className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-medium text-foreground">Quickstart</div>
+                  <div className="text-xs text-muted-foreground">Get up and running in minutes</div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-muted-foreground/0 group-hover:text-muted-foreground transition-colors" />
               </Link>

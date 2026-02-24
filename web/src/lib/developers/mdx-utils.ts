@@ -8,6 +8,9 @@ export function resolveSlugToMdxPath(slug: string[]): string | null {
   const relativePath = slug.join("/") + ".mdx"
   const fullPath = path.join(DOCS_DIR, relativePath)
   if (fs.existsSync(fullPath)) return fullPath
+  // Fallback: check for index.mdx inside a directory (e.g. recipes/ → recipes/index.mdx)
+  const indexPath = path.join(DOCS_DIR, ...slug, "index.mdx")
+  if (fs.existsSync(indexPath)) return indexPath
   return null
 }
 
@@ -30,7 +33,12 @@ export function getAllMdxSlugs(): string[][] {
         walk(path.join(dir, entry.name), [...prefix, entry.name])
       } else if (entry.name.endsWith(".mdx")) {
         const name = entry.name.replace(".mdx", "")
-        slugs.push([...prefix, name])
+        // index.mdx maps to the parent directory slug (e.g. recipes/index.mdx → ["recipes"])
+        if (name === "index") {
+          slugs.push([...prefix])
+        } else {
+          slugs.push([...prefix, name])
+        }
       }
     }
   }
