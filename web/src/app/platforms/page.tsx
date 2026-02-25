@@ -195,7 +195,7 @@ export default function PlatformsPage() {
           Platform Coverage
         </h1>
         <p className="text-muted-foreground text-lg max-w-2xl mb-4">
-          Explore the {PLATFORM_STATS.marketingTotal} platforms Phosra supports across{" "}
+          Explore the {PLATFORM_STATS.marketingTotal} platforms in the kids{"\u2019"} ecosystem across{" "}
           {PLATFORM_STATS.categoryCount} categories — streaming, social media, gaming,
           DNS filtering, devices, and more.
         </p>

@@ -214,3 +214,122 @@ This means:
 4. **Add profile creation monitor:** New component not needed for Netflix
 5. **Reduce write scope:** No title restriction setter needed; maturity setter is account-wide
 6. **Adjust reporting:** Account for weaker data availability in Phosra compliance reports
+
+---
+
+## 7. API Accessibility Reality Check
+
+### Complete Absence of Any API Path
+
+Peacock represents the **worst-case API accessibility scenario** among major streaming platforms. The platform has even less API accessibility than Netflix:
+
+- **No public API has ever existed.** NBCUniversal's developer portal (`developer.nbcuniversal.com`) no longer resolves — the domain returns DNS failures.
+- **No partner program** of any kind — no OAuth, no delegated access, no API keys, no webhook system.
+- **No developer documentation** — no published endpoints, no schemas, no rate limits.
+- **Internal APIs are HMAC-gated** — unlike Netflix, where session cookies alone enable read access, Peacock requires HMAC signatures on every GraphQL request. These signatures use runtime keys that must be extracted from the JavaScript bundle via dynamic instrumentation tools like Frida.
+- **GraphQL introspection is disabled in production** — the schema cannot be discovered via standard tooling. All queries must be reverse-engineered from network traffic capture.
+- **JWT tokens expire ~4 hours** with ~30-day refresh tokens.
+- **All parental control writes are web-only** — not available in mobile apps, making browser automation the only write path at any level.
+
+**Per-capability summary: ZERO capabilities have any form of API access** — not even unofficial read-only access for viewing history. This is strictly worse than Netflix, where session cookie-authenticated reads work for profile data and viewing history.
+
+### HMAC Authentication Barrier
+
+The HMAC signature requirement is the defining technical barrier for Peacock:
+
+1. Every GraphQL request must include an HMAC-signed header
+2. The signing key is embedded in the JavaScript bundle and changes with deployments
+3. Extracting the key requires runtime analysis (Frida or similar dynamic instrumentation)
+4. The key must be re-extracted whenever Peacock deploys a new frontend version
+5. Incorrect HMAC signatures result in immediate 401/403 responses
+
+This means the "GraphQL API for reads" strategy described in previous sections is significantly harder than originally assessed. The practical implication is that **Playwright-based reads (DOM scraping within an authenticated browser context) may be more reliable than direct API calls** — the browser handles HMAC signing automatically.
+
+### Household Sharing Detection Risks
+
+Since November 2024, Peacock enforces household sharing restrictions that directly impact Phosra's automation:
+
+| Risk | Scenario | Consequence |
+|---|---|---|
+| **IP flagging** | Phosra's cloud servers make API/browser calls from data center IPs | Account flagged for out-of-household access; verification prompt or block |
+| **Geolocation mismatch** | Phosra server in us-east-1, user household in California | Sessions flagged as geographically inconsistent |
+| **Device telemetry anomaly** | Playwright browser fingerprint differs from user's real devices | Behavioral anomaly detection triggers review |
+| **Concurrent sessions** | Phosra automation running while user watches on their device | May count against stream limit (1-3 depending on plan) |
+
+**Mitigation hierarchy:**
+1. **Best:** Local agent on household WiFi network — eliminates all IP/geo concerns
+2. **Good:** Residential proxy in user's metro area — reduces IP risk significantly
+3. **Acceptable:** Cloud execution with consistent fingerprint and human-like timing — highest detection risk
+4. **Unacceptable:** Cloud execution without stealth measures — near-certain detection
+
+### What Bark, Qustodio, and Other Apps Actually Do with Peacock
+
+No parental control app has achieved any level of direct Peacock integration:
+
+| App | Peacock-Specific Features | Actual Approach |
+|---|---|---|
+| **Bark** | None | Monitors device notifications for Peacock-related alerts. Cannot see content watched |
+| **Qustodio** | None | Can block the Peacock app at the device level. Sets device-level time limits. Zero content visibility |
+| **Mobicip** | None | Device-level app blocking and time schedules. No Peacock content awareness |
+| **Canopy** | None | Web filtering and device screen time. No streaming-specific integration |
+| **Safes** | None | App usage tracking (open/close times). Cannot see what is watched on Peacock |
+| **Google Family Link** | None | Can restrict Peacock app installation/usage on Android. No content controls |
+| **Apple Screen Time** | None | Can set time limits on Peacock app. No content controls |
+
+**Conclusion:** The entire parental control industry treats Peacock as an opaque, uncontrollable app. Phosra's browser automation approach would be a first-of-its-kind integration. This is both a competitive advantage and a risk — no one has validated this approach at scale.
+
+### Regulatory Context
+
+Emerging child safety legislation may change the API accessibility landscape:
+
+| Regulation | Relevant Requirement | Potential Impact on Peacock API Access |
+|---|---|---|
+| **KOSA (Kids Online Safety Act)** | Platforms must provide parents with tools to supervise minors' use | Could mandate API or interoperability requirements for parental control tools |
+| **EU Digital Services Act (DSA)** | Transparency obligations for very large platforms | Could require Peacock to publish content classification APIs |
+| **California AADC** | Age-appropriate design obligations | Could require Peacock to expose parental control APIs |
+| **UK Age Appropriate Design Code** | Best interests of child users | Could pressure Peacock to enable third-party parental control integration |
+
+**Current reality:** No regulation currently mandates that Peacock provide API access for parental control apps. All existing requirements focus on platform-provided controls, not third-party interoperability. However, KOSA's "duty to enable parental tools" language, if interpreted broadly, could create a legal basis for demanding API access.
+
+### Risk Matrix for Browser Automation Approach
+
+| Risk | Likelihood | Impact | Mitigation | Residual Risk |
+|---|---|---|---|---|
+| **ToS violation — account suspension** | Low | High (user loses Peacock access) | Stealth mode, human-like timing, user consent | Medium |
+| **ToS violation — legal action** | Very Low | Very High (cease & desist) | Legal review, user indemnification clause | Low |
+| **Household sharing detection** | Medium | Medium (verification prompt disrupts automation) | Local agent or residential proxy | Low-Medium |
+| **HMAC key rotation breaks API reads** | Medium | Medium (fallback to Playwright reads) | Monitor for key changes, dual-path architecture | Low |
+| **Peacock UI redesign breaks Playwright selectors** | Medium | High (adapter fully broken until updated) | Selector resilience, automated regression tests | Medium |
+| **JWT token expiry during operation** | Low | Low (retry with refresh token) | Token lifecycle management, proactive refresh | Very Low |
+| **Stream limit conflict** | Low | Low (user gets kicked from stream) | Check active streams before automation | Very Low |
+| **Peacock adds aggressive bot detection** | Low | High (adapter becomes unreliable) | Stealth hardening, behavioral randomization | Medium |
+
+### Comparison: Netflix vs Peacock API Accessibility
+
+| Dimension | Netflix | Peacock | Winner for Phosra |
+|---|---|---|---|
+| **Historical public API** | Yes (2008-2014, deprecated) | Never existed | Netflix |
+| **Developer portal** | Deprecated but was documented | Domain defunct | Netflix |
+| **Unofficial API reads** | Session cookies sufficient | HMAC signatures required | **Netflix (significantly)** |
+| **Unofficial API writes** | Possible (MFA-gated) | Undocumented, HMAC-gated | Netflix |
+| **Schema discovery** | Partial (Falcor path exploration) | Disabled (no introspection) | Netflix |
+| **Viewing history access** | Yes (timestamps, per-profile) | Continue Watching only (no timestamps) | **Netflix (significantly)** |
+| **Bot detection** | Aggressive (custom fingerprinting) | Standard (AWS WAF) | **Peacock** |
+| **MFA complexity** | High (3 methods) | None (PIN only) | **Peacock (significantly)** |
+| **Household sharing enforcement** | Aggressive (since 2023) | Active (since Nov 2024) | Peacock (slightly) |
+| **Parental control write complexity** | High (MFA + per-profile) | Medium (PIN + account-wide) | **Peacock** |
+| **Feature coverage** | Rich (per-title, per-profile) | Limited (account-wide only) | **Netflix (significantly)** |
+| **Parental control app integrations** | None direct | None at any level | Tie (both zero) |
+| **Overall API accessibility score** | 3/10 | **1/10** | **Netflix** |
+
+### Strategic Implications for Phosra
+
+1. **Playwright-first architecture is mandatory** — Unlike Netflix where a hybrid (API reads + Playwright writes) strategy works, Peacock's HMAC barrier means Playwright is the primary tool for both reads and writes.
+
+2. **HMAC implementation is an optional upgrade, not a prerequisite** — If Phosra invests in HMAC key extraction and signing, direct GraphQL reads become possible and more efficient. But the adapter should launch with Playwright-only and treat HMAC as a performance optimization.
+
+3. **Local agent model is strongly recommended** — Given household sharing detection, running Playwright from the user's home network is far safer than cloud-based execution. This is a bigger architectural consideration for Peacock than for Netflix.
+
+4. **Competitive moat is real** — No parental control app has achieved Peacock integration. If Phosra succeeds, it would be the first, creating a genuine competitive advantage. The technical barriers (HMAC, no API, web-only controls) are the same barriers keeping competitors out.
+
+5. **Regulatory tailwind is possible but uncertain** — KOSA and EU DSA could eventually force Peacock to provide API access, making the browser automation approach temporary. But there is no timeline for this, and Phosra should not depend on regulatory changes.

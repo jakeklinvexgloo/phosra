@@ -188,7 +188,7 @@ The question now is implementation. And the honest answer is that building COPPA
 
 That is why we built Phosra.
 
-Phosra is the infrastructure layer for child safety compliance. One API integration to handle age verification, parental consent, content restrictions, and audit reporting across 200+ platforms. Every requirement in the FTC's amended COPPA Rule maps directly to a Phosra enforcement rule.
+Phosra is the infrastructure layer for child safety compliance. One API integration to handle age verification, parental consent, content restrictions, and audit reporting across every platform that adopts the standard. Every requirement in the FTC's amended COPPA Rule maps directly to a Phosra enforcement rule.
 
 Here is how:
 

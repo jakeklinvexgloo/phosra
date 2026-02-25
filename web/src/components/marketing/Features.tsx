@@ -140,7 +140,7 @@ function getFeatureBullets(type: "screentime" | "content" | "enforcement"): stri
       ]
     case "enforcement":
       return [
-        `Real-time status across ${PLATFORM_STATS.marketingTotal} platforms`,
+        `Covers ${PLATFORM_STATS.marketingTotal} platforms in the kids\u2019 ecosystem`,
         "Legislative compliance tracking (KOSA, COPPA, EU DSA)",
         "Instant failure alerts with automatic retry",
       ]

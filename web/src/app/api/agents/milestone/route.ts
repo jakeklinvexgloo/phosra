@@ -81,7 +81,7 @@ function buildSystemPrompt(
 - **Product:** Single API mapping 45 enforcement rule categories across 78+ child safety laws to 15+ provider adapters
 - **Raise:** $950K pre-seed, post-money SAFE, $6M cap, May 31 2026 deadline
 - **Regulatory tailwind:** COPPA 2.0 enforcement April 22, 2026
-- **Key metrics:** 78 laws tracked, 45 rule categories, 220+ platforms, 31 standards
+- **Key metrics:** 78 laws tracked, 45 rule categories, 320+ platforms mapped in kids' ecosystem, 31 standards
 - **Founder:** Serial entrepreneur with 3 exits, Mastercard infrastructure background, 5 kids dog-fooding
 
 ## Behavioral Instructions

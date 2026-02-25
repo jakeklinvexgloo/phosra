@@ -178,3 +178,114 @@ Netflix Games (mobile) has a separate experience:
 - Phosra cannot manage Netflix Games via web automation
 
 **Recommendation:** Document as out-of-scope for initial Netflix adapter. Revisit if Netflix adds web-based game controls.
+
+---
+
+## 7. API Accessibility Reality Check
+
+### Complete Absence of Legitimate API Access
+
+Netflix shut down its public API in **November 2014**. Since then:
+
+- **No public API** has been made available for any purpose
+- **No partner program** exists for parental control or child safety tools (Open Connect serves ISP/device partners for CDN optimization only)
+- **No OAuth flow** or delegated access mechanism exists
+- **No developer portal**, API keys, or partner tokens are available
+- **No third-party application** has been granted authorized access to Netflix user accounts
+
+This is not a temporary gap or an access request pending approval. Netflix has made a deliberate, decade-long strategic decision to operate as a closed platform with zero third-party API access.
+
+### What Phosra Wants vs. What's Actually Available
+
+| Phosra Goal | What's Needed | What's Available | Gap |
+|---|---|---|---|
+| Read child's profile settings | Authorized API to query maturity level, restrictions | Unofficial Shakti/Falcor internal API (fragile, ToS violation) | No legitimate access path |
+| Set content maturity level | Write API for parental controls | Nothing — no write endpoint exists even unofficially | Must use browser automation (Playwright) |
+| Block specific titles | Write API for title restrictions | Nothing — no write endpoint exists even unofficially | Must use browser automation + MFA handling |
+| Set/manage profile PIN | Write API for profile lock | Nothing — no write endpoint exists even unofficially | Must use browser automation |
+| Monitor viewing history | Read API for watch activity | Unofficial Shakti read endpoint (most reliable unofficial capability, but still fragile) | Fragile unofficial read, ToS violation |
+| Enforce screen time limits | Native screen time API or reliable write access | Netflix has no screen time feature; no write API exists | Must chain viewing history reads + profile lock via browser automation |
+| Create kids profile | Write API for profile management | Nothing — no known endpoint even in unofficial API surface | Must use browser automation |
+| Real-time viewing alerts | Streaming/webhook API for current activity | Nothing — Netflix does not expose real-time viewing status anywhere | Not achievable by any method |
+
+### Current State of the Art: What Competitors Actually Do
+
+Every major parental control product treats Netflix as an opaque, device-level application. None have solved the API access problem:
+
+**Bark:**
+- Monitors device-level app usage (detects Netflix is open)
+- Cannot see what content is being watched
+- Cannot modify any Netflix settings
+- Approach: OS-level screen time monitoring only
+
+**Qustodio:**
+- Applies device-level time limits to the Netflix app
+- Can block the Netflix app entirely on a schedule
+- Cannot interact with Netflix profiles, maturity settings, or content
+- Approach: Treat Netflix as a black box, control at OS level
+
+**Net Nanny:**
+- Web/app filtering at the device level
+- Binary control: allow Netflix or block Netflix
+- Cannot filter within Netflix (e.g., block mature content but allow kids content)
+- Approach: All-or-nothing device-level blocking
+
+**Canopy:**
+- OS-level screen time management
+- Aggregates Netflix into overall device usage time
+- No visibility into Netflix content or settings
+- Approach: Device-level time management only
+
+**Mobicip:**
+- Device-level app scheduling and blocking
+- Can restrict Netflix to certain hours of the day
+- Cannot interact with Netflix internal controls
+- Approach: Schedule-based device-level blocking
+
+**FamiSafe:**
+- Device-level app usage monitoring and time limits
+- Reports how long Netflix was open (not what was watched)
+- Cannot modify Netflix settings
+- Approach: Passive monitoring + device-level time limits
+
+**Key insight:** Phosra's proposed approach of directly integrating with Netflix (reading settings, modifying controls, monitoring content) would be **unprecedented in the industry**. No competitor has attempted this, likely because the ToS/legal risk and maintenance burden outweigh the benefits given Netflix's hostile API posture.
+
+### Regulatory Context: Forces That Could Change the Landscape
+
+Several legislative efforts could eventually compel Netflix to provide APIs for child safety tools:
+
+**KOSA (Kids Online Safety Act — US):**
+- Would require covered platforms to provide tools that allow parents to supervise minors' use
+- Could be interpreted to mandate API access for authorized parental control tools
+- Status: Passed Senate in 2024, reintroduced with bipartisan support. Enactment would create pressure but specific API mandate is uncertain
+
+**EU Digital Services Act (DSA):**
+- Requires "very large online platforms" (Netflix qualifies) to assess and mitigate systemic risks to minors
+- Article 35 mandates independent auditing of algorithmic systems
+- Could create framework for authorized third-party access for child safety purposes
+- Status: In force. Enforcement actions beginning. API access mandates are plausible but not yet specified
+
+**UK Online Safety Act:**
+- Requires platforms to implement age verification and protect children from harmful content
+- Ofcom (regulator) has broad powers to mandate technical measures
+- Could potentially require platforms to support third-party parental control integration
+- Status: Enacted. Ofcom developing enforcement codes of practice
+
+**Age Appropriate Design Code (UK, California):**
+- Requires platforms to default to highest privacy/safety settings for users likely to be children
+- Does not currently mandate third-party API access but creates regulatory environment favorable to such mandates
+
+**Timeline estimate:** If legislation forces open APIs, the earliest realistic implementation would be **2027-2028** given rulemaking, compliance periods, and legal challenges. Phosra should not depend on this but should position to be an early adopter when/if it happens.
+
+### Risk Matrix: Browser Automation Approach
+
+| Risk | Likelihood | Impact | Severity | Mitigation |
+|---|---|---|---|---|
+| **Netflix detects automation, suspends user's account** | Medium | Critical — user loses Netflix service entirely | **Critical** | Stealth mode, human-like timing, minimal frequency, prominent user consent/disclosure |
+| **Netflix changes DOM/UI, breaking Playwright selectors** | High (happens regularly) | High — write operations fail until adapter updated | **High** | Robust selector strategy (data-testid, aria attributes over CSS classes), automated regression testing, rapid response maintenance team |
+| **Netflix migrates web app from Falcor to GraphQL** | Medium (happened on mobile in 2022) | Critical — all read operations break simultaneously | **Critical** | Monitor Netflix engineering blog, maintain Playwright fallback for reads, design adapter to swap transport layer |
+| **MFA flow changes or adds new verification methods** | Medium | High — write operations blocked until MFA handler updated | **High** | Support all 3 current MFA methods, design extensible MFA handler |
+| **Netflix rate-limits or blocks Phosra's IP ranges** | Low-Medium | High — all operations fail for affected users | **High** | Distribute operations across residential IPs, use user's own network when possible |
+| **Legal action from Netflix (C&D or lawsuit)** | Low | Critical — existential threat to Netflix integration | **Critical** | Legal review before launch, clear user consent, monitor for C&D signals, maintain device-level fallback |
+| **User credential compromise via Phosra's storage** | Low | Critical — Netflix account + personal data exposed | **Critical** | AES-256 encryption at rest, per-user encryption keys, HSM for key management, SOC 2 compliance |
+| **Netflix adds native parental control APIs** | Low (but desirable) | Positive — eliminates all above risks | **Positive** | Design adapter interface to swap implementation from automation to official API with minimal code changes |

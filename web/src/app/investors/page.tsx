@@ -12,7 +12,7 @@ import { InterestModal } from "@/components/investors/InterestModal"
 /* ------------------------------------------------------------------ */
 
 const METRICS = [
-  { value: "220+", label: "Platforms Connected" },
+  { value: "320+", label: "Platforms in Ecosystem" },
   { value: "78", label: "Child Safety Laws Tracked" },
   { value: "31", label: "Community Movements" },
   { value: "50K+", label: "Families" },
@@ -86,7 +86,7 @@ const PRODUCT_LINKS = [
   { href: "/docs", label: "API Documentation", sublabel: "PCSS v1.0 specification and integration guides" },
   { href: "/compliance", label: "Compliance Hub", sublabel: "78 laws mapped to enforcement actions" },
   { href: "/movements", label: "Community Movements", sublabel: "31 movements, 50K families, 2K schools" },
-  { href: "/technology-services", label: "Technology Services", sublabel: "220+ connected platforms and growing" },
+  { href: "/technology-services", label: "Technology Services", sublabel: "320+ platforms mapped across the kids\u2019 ecosystem" },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -169,7 +169,7 @@ export default function InvestorsPage() {
               Phosra is the infrastructure that makes this possible. We&apos;re not another parental control
               app — we&apos;re the layer underneath. Parents set rules once. Parental control apps
               plug in to extend their reach. Platforms connect to offer compliant, interoperable controls.
-              Rules enforce across 220+ services automatically.
+              Our open standard covers 320+ platforms in the kids&apos; ecosystem — any platform that adopts the spec gets instant interoperability.
             </p>
 
             <p>

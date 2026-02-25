@@ -23,6 +23,8 @@ export const PLATFORM_STATS = {
   stubCount: stub.length,
   plannedCount: planned.length,
   integratedCount: live.length + partial.length + stub.length,
-  /** Marketing-friendly rounded total, e.g. "200+" */
+  /** Marketing-friendly rounded total, e.g. "320+" — describes platforms in the kids' ecosystem, not integrations */
   marketingTotal: `${Math.floor(total / 10) * 10}+`,
+  /** Count of platforms with live or partial integrations */
+  liveTotal: `${live.length + partial.length}`,
 } as const

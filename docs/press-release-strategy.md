@@ -37,11 +37,11 @@ This hybrid works because:
 
 ### Subhead
 
-*The company's API tracks 78 laws across 25+ jurisdictions and maps them to enforceable actions across 220+ platforms.*
+*The company's API tracks 78 laws across 25+ jurisdictions and maps them to 320+ platforms in the kids' ecosystem.*
 
 ### The Lede
 
-> Phosra, the child safety compliance infrastructure company, today announced $950,000 in pre-seed funding to build the universal layer connecting child safety regulation to platform enforcement. The raise comes as the FTC's amended COPPA Rule takes full effect on April 22, 2026 — imposing penalties of $53,088 per violation, per child, per instance — and as more than 300 state-level child safety bills advance across 45 states. Phosra's API already tracks 78 laws across 25+ jurisdictions and maps them to enforceable actions across 220+ platforms, positioning the company as the compliance infrastructure layer for a regulatory wave that shows no sign of slowing.
+> Phosra, the child safety compliance infrastructure company, today announced $950,000 in pre-seed funding to build the universal layer connecting child safety regulation to platform enforcement. The raise comes as the FTC's amended COPPA Rule takes full effect on April 22, 2026 — imposing penalties of $53,088 per violation, per child, per instance — and as more than 300 state-level child safety bills advance across 45 states. Phosra's API already tracks 78 laws across 25+ jurisdictions and maps 320+ platforms in the kids' ecosystem, positioning the company as the compliance infrastructure layer for a regulatory wave that shows no sign of slowing.
 
 ### Five Key Messages
 
@@ -76,7 +76,7 @@ If a former FTC commissioner endorsement can be secured before launch, use this 
 
 > **About Phosra**
 >
-> Phosra is the child safety compliance infrastructure company. Its API tracks 78 laws across 25+ jurisdictions and maps them to enforceable actions across 220+ platforms, giving technology companies a single integration point for the world's fastest-growing regulatory domain. Phosra's Phosra Child Safety Standard (PCSS v1.0) defines 45 rule categories spanning age verification, content moderation, parental controls, data handling, and algorithmic transparency. Founded by Jake and Susannah Klinvex — parents of five with three prior exits — the company is headquartered in Colorado. For more information, visit phosra.com.
+> Phosra is the child safety compliance infrastructure company. Its API tracks 78 laws across 25+ jurisdictions and maps 320+ platforms in the kids' ecosystem, giving technology companies a single integration point for the world's fastest-growing regulatory domain. Phosra's Phosra Child Safety Standard (PCSS v1.0) defines 45 rule categories spanning age verification, content moderation, parental controls, data handling, and algorithmic transparency. Founded by Jake and Susannah Klinvex — parents of five with three prior exits — the company is headquartered in Colorado. For more information, visit phosra.com.
 
 ---
 
@@ -86,13 +86,13 @@ If a former FTC commissioner endorsement can be secured before launch, use this 
 **Phosra Emerges from Stealth with $950K to Become the Plaid of Child Safety Compliance**
 
 ### Section 2: Subhead
-*The company's API tracks 78 laws across 25+ jurisdictions and maps them to enforceable actions across 220+ platforms.*
+*The company's API tracks 78 laws across 25+ jurisdictions and maps 320+ platforms in the kids' ecosystem.*
 
 ### Section 3: Dateline
 DENVER — March 3, 2026 —
 
 ### Section 4: Lede (Paragraph 1)
-> Phosra, the child safety compliance infrastructure company, today announced $950,000 in pre-seed funding to build the universal layer connecting child safety regulation to platform enforcement. The raise comes as the FTC's amended COPPA Rule takes full effect on April 22, 2026 — imposing penalties of $53,088 per violation, per child, per instance — and as more than 300 state-level child safety bills advance across 45 states. Phosra's API already tracks 78 laws across 25+ jurisdictions and maps them to enforceable actions across 220+ platforms, positioning the company as the compliance infrastructure layer for a regulatory wave that shows no sign of slowing.
+> Phosra, the child safety compliance infrastructure company, today announced $950,000 in pre-seed funding to build the universal layer connecting child safety regulation to platform enforcement. The raise comes as the FTC's amended COPPA Rule takes full effect on April 22, 2026 — imposing penalties of $53,088 per violation, per child, per instance — and as more than 300 state-level child safety bills advance across 45 states. Phosra's API already tracks 78 laws across 25+ jurisdictions and maps 320+ platforms in the kids' ecosystem, positioning the company as the compliance infrastructure layer for a regulatory wave that shows no sign of slowing.
 
 ### Section 5: The Problem (Paragraph 2)
 > The child safety regulatory landscape has fragmented beyond any single platform's ability to manage. Nineteen states have passed age verification laws. Virginia mandates a one-hour screen time limit for minors. Florida requires platforms to terminate accounts for users under 14. The EU's Digital Services Act imposes fines of up to 6% of global turnover. Meanwhile, the TAKE IT DOWN Act — enacted in May 2025 — added federal criminal penalties. For platforms serving minors, the question is no longer whether to comply, but how to comply with dozens of conflicting requirements simultaneously.
@@ -107,7 +107,7 @@ DENVER — March 3, 2026 —
 > The regulatory wave is accelerating. The Zuckerberg trial — which began February 18, 2026 — has put platform liability for minors' safety at the center of public discourse. A jury already returned a $425 million verdict against Meta in a related case, and internal documents revealed the company's "17x" engagement policy for teen users. The PTA has publicly severed ties with Meta. The Technology Coalition has expanded to 59 members and committed $350,000 to new child safety research. The age verification market alone is projected to grow from $2.5 billion to $6.3 billion by 2035, while parental controls are projected to reach $4.12 billion by 2034 — a combined addressable market exceeding $8-10 billion.
 
 ### Section 9: Traction (Paragraph 5)
-> Phosra's platform already serves 50,000+ families and 2,000+ schools. The company tracks 78 laws, monitors 220+ platforms, incorporates 5 rating systems, and has mapped 31 community safety movements. Its open standard, PCSS v1.0, has been published and is available for industry adoption.
+> Phosra's platform already serves 50,000+ families and 2,000+ schools. The company tracks 78 laws, maps 320+ platforms in the kids' ecosystem, incorporates 5 rating systems, and has mapped 31 community safety movements. Its open standard, PCSS v1.0, has been published and is available for industry adoption.
 
 ### Section 10: Team (Paragraph 6)
 > Phosra was founded by Jake and Susannah Klinvex, parents of five children who bring three prior exits — to Fidelity, Mastercard, and Gloo (IPO 2025) — and five years of experience at Mastercard to the company. The company is advised by Steve Haggerty, the first Facebook intern and founder of Comfy (acquired by Siemens), who holds a PhD in Computer Science from UC Berkeley.
@@ -124,7 +124,7 @@ DENVER — March 3, 2026 —
 ### Section 14: Boilerplate + Contact
 > **About Phosra**
 >
-> Phosra is the child safety compliance infrastructure company. Its API tracks 78 laws across 25+ jurisdictions and maps them to enforceable actions across 220+ platforms, giving technology companies a single integration point for the world's fastest-growing regulatory domain. Phosra's Phosra Child Safety Standard (PCSS v1.0) defines 45 rule categories spanning age verification, content moderation, parental controls, data handling, and algorithmic transparency. Founded by Jake and Susannah Klinvex — parents of five with three prior exits — the company is headquartered in Colorado. For more information, visit phosra.com.
+> Phosra is the child safety compliance infrastructure company. Its API tracks 78 laws across 25+ jurisdictions and maps 320+ platforms in the kids' ecosystem, giving technology companies a single integration point for the world's fastest-growing regulatory domain. Phosra's Phosra Child Safety Standard (PCSS v1.0) defines 45 rule categories spanning age verification, content moderation, parental controls, data handling, and algorithmic transparency. Founded by Jake and Susannah Klinvex — parents of five with three prior exits — the company is headquartered in Colorado. For more information, visit phosra.com.
 >
 > **Media Contact:**
 > Jake Klinvex
@@ -263,7 +263,7 @@ Structure:
 1. "Today we're announcing Phosra -- the compliance infrastructure layer for child safety. We raised $950K to build the Plaid of child safety regulation. Here's why this matters right now. [thread]"
 2. "The COPPA Rule amendments take full effect on April 22, 2026. Penalties: $53,088 per violation, per child, per instance. 300+ state bills are advancing. 19 states have passed age verification laws. The regulatory wave is here."
 3. "But there's no infrastructure to make these laws enforceable at platform scale. Every platform is building one-off tools that break when the next law passes. That's the problem Phosra solves."
-4. "Our API tracks 78 laws across 25+ jurisdictions and maps them to enforceable actions across 220+ platforms. One integration. Every law. We call it the Phosra Child Safety Standard (PCSS v1.0) -- 45 rule categories, open standard."
+4. "Our API tracks 78 laws across 25+ jurisdictions and maps them to 320+ platforms in the kids' ecosystem. One integration. Every law. We call it the Phosra Child Safety Standard (PCSS v1.0) -- 45 rule categories, open standard."
 5. "We're parents of 5 kids. We've built 3 companies to exits (Fidelity, Mastercard, Gloo IPO). We built Phosra because the gap between what lawmakers promise and what platforms deliver is a solvable engineering problem."
 6. "If you're building a platform that serves minors, you need compliance infrastructure. If you're investing in the $8-10B child safety market, we should talk. phosra.com"
 
@@ -483,7 +483,7 @@ These assets should be drafted by March 1 and finalized by March 2 for deploymen
 
 - **78** laws tracked
 - **45** rule categories in PCSS v1.0
-- **220+** platforms monitored
+- **320+** platforms in the kids' ecosystem
 - **25+** jurisdictions covered
 - **50K+** families served
 - **2K+** schools

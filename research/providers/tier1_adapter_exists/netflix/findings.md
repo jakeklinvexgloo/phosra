@@ -191,3 +191,83 @@ Netflix Account (1 per subscription)
 4. **Playwright for writes** — Setting changes (maturity, PIN, title blocks) likely need browser automation
 5. **No OAuth** — Netflix has no partner/third-party OAuth; credential storage required
 6. **Session management** — Phosra needs to maintain valid session cookies and handle re-auth
+
+---
+
+## 8. API Accessibility & Third-Party Integration
+
+### Public API Status
+
+Netflix shut down its public API in **November 2014**. There has been no replacement, no successor program, and no indication that Netflix intends to re-open API access to third parties. The original public API provided catalog search and user queue management but never included parental controls or account management features.
+
+### Partner Program
+
+Netflix operates **Open Connect**, an ISP/device partner program for CDN appliance placement and streaming device certification. This program is exclusively for content delivery optimization and hardware partnerships. There is **no partner program** for parental control apps, child safety tools, or account management integrations of any kind.
+
+### OAuth / Delegated Access
+
+Netflix provides **no OAuth flow, no delegated access mechanism, and no token-based third-party authentication** of any kind. Unlike platforms such as YouTube (Google OAuth), Apple TV+ (Sign in with Apple), or even Spotify, Netflix offers zero pathways for a third-party application to obtain authorized access to a user's account on their behalf.
+
+### Unofficial API Landscape
+
+#### Shakti / Falcor (Internal Web API)
+- Netflix's web application uses an internal API surface known as **Shakti** (the endpoint namespace) and **Falcor** (Netflix's custom JSON Graph protocol)
+- These endpoints are undocumented, unauthenticated for third parties, and subject to change without notice
+- The Falcor pathEvaluator endpoint (`/nq/website/memberapi/release/pathEvaluator`) serves as the primary data layer for the Netflix web app
+- **Stability:** Low. Netflix has historically changed API structures, endpoint paths, and authentication requirements without warning. The Shakti build version (the `*` in `/api/shakti/*/...`) changes with every Netflix deployment
+
+#### Migration to Federated GraphQL (Mobile)
+- In **2022**, Netflix migrated its mobile applications from Falcor to a **federated GraphQL** architecture
+- The web application still uses Falcor as of this research date, but a similar migration is anticipated
+- This means any integration built on Falcor endpoints faces a **ticking clock** — when Netflix migrates the web app to GraphQL, all Falcor-based read operations will break simultaneously
+
+#### Community / Open Source Efforts
+- **CastagnaIT Kodi Plugin:** The most sophisticated community effort to interface with Netflix APIs. Development was **suspended** due to Netflix repeatedly breaking the integration with infrastructure changes
+- **node-netflix2 (npm):** An unofficial Node.js library for Netflix API interaction. **Unmaintained** since approximately 2019-2020. Non-functional with current Netflix infrastructure
+- No actively maintained open-source library exists for Netflix API interaction
+
+### What Existing Parental Control Apps Actually Do
+
+Every major parental control application operates at the **device or OS level only** when it comes to Netflix. None integrate with Netflix APIs:
+
+| App | Netflix Integration Approach | API Usage |
+|---|---|---|
+| **Bark** | Monitors device-level activity; can detect Netflix is open but cannot see what's being watched | None |
+| **Qustodio** | Time limits via device-level app blocking; cannot control Netflix content settings | None |
+| **Net Nanny** | Device-level web/app filtering; blocks Netflix entirely or allows entirely | None |
+| **Canopy** | OS-level screen time management only | None |
+| **Mobicip** | Device-level app scheduling and blocking | None |
+| **FamiSafe** | Device-level app usage monitoring and time limits | None |
+
+**Key takeaway:** No parental control product on the market has solved the Netflix API access problem. The industry standard is to treat Netflix as an opaque app that can only be allowed, blocked, or time-limited at the device level.
+
+### Per-Capability API Accessibility
+
+| Capability | Feature Exists in Netflix | Public API | Unofficial API (Shakti/Falcor) | 3rd Party Access Method | Verdict |
+|---|---|---|---|---|---|
+| **View profiles** | Yes | None | Read-only via Falcor (fragile) | Session cookie injection | Unofficial read possible, ToS violation |
+| **View maturity settings** | Yes | None | Read-only via Shakti (fragile) | Session cookie injection | Unofficial read possible, ToS violation |
+| **Change maturity level** | Yes | None | No known write endpoint | Browser automation only | No API access — Playwright required |
+| **Set/change profile PIN** | Yes | None | No known write endpoint | Browser automation only | No API access — Playwright required |
+| **Block specific titles** | Yes | None | No known write endpoint | Browser automation only | No API access — Playwright required |
+| **View watching history** | Yes | None | Read-only via Shakti (fragile) | Session cookie injection | Unofficial read possible, ToS violation |
+| **Screen time limits** | No (feature does not exist) | N/A | N/A | N/A | Not possible at any level |
+| **Create/delete profile** | Yes | None | No known endpoint even unofficially | Browser automation only | No API access — Playwright required |
+| **Autoplay settings** | Yes | None | No known write endpoint | Browser automation only | No API access — Playwright required |
+| **Real-time viewing status** | No (not exposed in web UI) | None | No known endpoint | None | Not possible |
+
+### Terms of Service Constraints
+
+Netflix Terms of Use **Section 4.6** explicitly prohibits:
+
+> - Use of **robots, spiders, scrapers**, or other automated means to access the Netflix service
+> - **Reverse engineering**, decompiling, or disassembling Netflix software
+> - Use of the service via any **automated means** (including scripts or web crawlers)
+> - Using **machine learning tools** against Netflix content or infrastructure
+
+**Implications for Phosra:**
+1. **Every method of integration** (Falcor API reads, Playwright browser automation) constitutes a ToS violation
+2. Account suspension is a real risk if Netflix's detection systems flag automated access
+3. There is no "approved" pathway to build the integration Phosra needs
+4. This is not unique to Phosra — every competitor faces the identical constraint, which is why none have solved it
+5. Legislative pressure (KOSA, EU DSA, UK Online Safety Act) may eventually force Netflix to provide APIs for child safety tools, but no such mandate exists today

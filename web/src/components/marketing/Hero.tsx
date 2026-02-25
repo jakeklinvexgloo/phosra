@@ -64,7 +64,7 @@ export function Hero() {
 
             <AnimatedSection delay={0.2}>
               <p className="text-lg sm:text-xl text-white/50 leading-relaxed mb-10 max-w-lg">
-                The enforcement layer for child safety. Set rules through one API {"\u2014"} Phosra pushes them across {PLATFORM_STATS.marketingTotal} platforms, from streaming and gaming to devices and browsers, with built-in compliance for KOSA, COPPA, and the EU&nbsp;DSA.
+                Kids use {PLATFORM_STATS.marketingTotal} apps and platforms {"\u2014"} each with different, fragmented parental controls. Phosra is an open standard and API that unifies them. Platforms adopt the spec; parents set rules once.
               </p>
             </AnimatedSection>
 
@@ -100,7 +100,7 @@ export function Hero() {
         {/* Platform marquee */}
         <div className="mt-14 sm:mt-20 pt-8 sm:pt-10 border-t border-white/[0.06]">
           <p className="text-xs text-white/25 text-center mb-6 tracking-wider uppercase font-medium">
-            Pushes rules to {PLATFORM_STATS.marketingTotal} platforms
+            An open standard for {PLATFORM_STATS.marketingTotal} platforms
           </p>
           <div
             className="relative overflow-hidden"

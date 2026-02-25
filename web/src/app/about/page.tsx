@@ -8,7 +8,7 @@ import { PLATFORM_STATS } from "@/lib/platforms"
 
 const METRICS = [
   { value: "45", label: "Rule Categories" },
-  { value: PLATFORM_STATS.marketingTotal, label: "Platform Integrations" },
+  { value: PLATFORM_STATS.marketingTotal, label: "Platforms Mapped" },
   { value: "5", label: "Rating Systems" },
   { value: "78+", label: "Compliance Laws" },
 ]

@@ -94,7 +94,7 @@ export function Footer() {
             <img src="/logo-white.svg" alt="Phosra" className="h-5" />
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08]">
               <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
-              <span className="text-[11px] text-white/40">{PLATFORM_STATS.marketingTotal} platforms protected</span>
+              <span className="text-[11px] text-white/40">{PLATFORM_STATS.marketingTotal} platforms mapped</span>
             </div>
           </div>
 

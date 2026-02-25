@@ -64,7 +64,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Phosra's API was designed around the full landscape of child safety regulation, and the amended COPPA Rule's requirements map directly to existing enforcement capabilities. The parental_consent_gate rule category handles verifiable parental consent workflows, including the new requirement for separate consent on third-party disclosures. The privacy_data_sharing and commercial_data_ban rules enforce granular controls over how children's data flows to third parties, ensuring operators maintain compliant data-sharing practices. The data_deletion_request rule powers the eraser button functionality that the amended rule contemplates for data retention compliance. The targeted_ad_block rule disables advertising mechanisms that rely on children's personal information. Beyond individual rules, Phosra's compliance attestation system generates the audit trails that regulators expect — documented proof that consent was obtained, data policies were enforced, and third-party providers were vetted. All of this works across 200+ platforms through a single API call, which means organizations don't need to implement compliance logic separately for every service they operate.",
+        text: "Phosra's API was designed around the full landscape of child safety regulation, and the amended COPPA Rule's requirements map directly to existing enforcement capabilities. The parental_consent_gate rule category handles verifiable parental consent workflows, including the new requirement for separate consent on third-party disclosures. The privacy_data_sharing and commercial_data_ban rules enforce granular controls over how children's data flows to third parties, ensuring operators maintain compliant data-sharing practices. The data_deletion_request rule powers the eraser button functionality that the amended rule contemplates for data retention compliance. The targeted_ad_block rule disables advertising mechanisms that rely on children's personal information. Beyond individual rules, Phosra's compliance attestation system generates the audit trails that regulators expect — documented proof that consent was obtained, data policies were enforced, and third-party providers were vetted. All of this works across every platform that adopts the Phosra Child Safety Standard, which means organizations don't need to implement compliance logic separately for every service they operate.",
       },
       {
         type: "heading",
@@ -90,7 +90,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Today we're launching Phosra to fix this. Phosra is infrastructure — a universal control layer that connects to 190+ platforms through a single API. Parents set their rules once, and those rules enforce everywhere automatically. Parental control providers can plug into Phosra to extend their reach from a handful of platforms to all of them.",
+        text: "Today we're launching Phosra to fix this. Phosra is an open standard and API that covers 320+ platforms in the kids' ecosystem. When platforms adopt the spec, parents set rules once and enforcement works everywhere. Parental control providers can plug into Phosra to extend their reach across the entire ecosystem.",
       },
       {
         type: "quote",
@@ -184,11 +184,11 @@ export const NEWSROOM: NewsEntry[] = [
   },
   {
     slug: "190-platforms-connected",
-    title: "Phosra Reaches 190+ Platform Connections",
+    title: "Phosra Maps 320+ Platforms in the Kids' Ecosystem",
     date: "2025-02-10",
     category: "milestone",
     excerpt:
-      "Phosra's platform coverage now spans 190+ services — from streaming and social media to gaming and education — making it the most comprehensive parental control infrastructure available.",
+      "Phosra's platform registry now maps 320+ services kids use daily — from streaming and social media to gaming and education — defining the standard each can adopt for interoperable parental controls.",
     content: [
       {
         type: "paragraph",
@@ -196,11 +196,11 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Phosra now connects to over 190 platforms spanning streaming, social media, gaming, education, communication, and web browsing. This includes the platforms families use most — YouTube, Netflix, TikTok, Instagram, Roblox, Minecraft, Discord, and Snapchat — as well as hundreds of others that traditional parental control apps don't reach.",
+        text: "Phosra's registry now maps over 320 platforms spanning streaming, social media, gaming, education, communication, and web browsing — including YouTube, Netflix, TikTok, Instagram, Roblox, Minecraft, Discord, and Snapchat. Each platform that adopts the Phosra Child Safety Standard gets instant interoperability with parental control providers and compliance tooling.",
       },
       {
         type: "paragraph",
-        text: "For developers building parental control features, this means a single Phosra integration gives you access to the entire ecosystem. For parents, it means rules that actually work — everywhere. Explore the full platform directory at phosra.com/platforms.",
+        text: "For platforms, adopting the spec means compliance-ready parental controls out of the box. For developers building parental control features, a single Phosra integration covers the entire ecosystem. For parents, it means rules that work everywhere. Explore the full platform directory at phosra.com/platforms.",
       },
     ],
   },
