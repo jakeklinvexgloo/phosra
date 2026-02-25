@@ -26,6 +26,12 @@ web/out/
 # Claude local credentials
 CLAUDE.local.md
 
+# Platform research credentials (sensitive)
+platform-credentials.local.json
+
+# Platform research screenshots (dev artifacts)
+research-screenshots/
+
 # Playwright MCP logs
 .playwright-mcp/
 
