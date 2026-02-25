@@ -14,6 +14,8 @@ import {
   MessageCircle,
   Smartphone,
   GraduationCap,
+  ShieldCheck,
+  Baby,
 } from "lucide-react"
 import type { Platform, PlatformResearchResult, PlatformCategory } from "@/lib/platform-research"
 
@@ -23,6 +25,8 @@ const CATEGORY_ICONS: Record<PlatformCategory, typeof Monitor> = {
   social: MessageCircle,
   device: Smartphone,
   education: GraduationCap,
+  parental_control: ShieldCheck,
+  kids_app: Baby,
 }
 
 const CATEGORY_COLORS: Record<PlatformCategory, string> = {
@@ -31,6 +35,14 @@ const CATEGORY_COLORS: Record<PlatformCategory, string> = {
   social: "bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400",
   device: "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400",
   education: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
+  parental_control: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400",
+  kids_app: "bg-sky-100 text-sky-600 dark:bg-sky-900/30 dark:text-sky-400",
+}
+
+const RESEARCH_METHOD_LABELS: Record<string, { label: string; color: string }> = {
+  playwright: { label: "Web", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" },
+  appium: { label: "iOS", color: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300" },
+  both: { label: "Web + iOS", color: "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300" },
 }
 
 interface PlatformCardProps {
@@ -180,6 +192,14 @@ export function PlatformCard({
           <ExternalLink className="w-2.5 h-2.5" />
           Visit
         </a>
+        {(() => {
+          const method = RESEARCH_METHOD_LABELS[platform.researchMethod]
+          return method ? (
+            <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${method.color}`}>
+              {method.label}
+            </span>
+          ) : null
+        })()}
         {platform.hasApi && (
           <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-brand-green/10 text-brand-green font-medium">
             API

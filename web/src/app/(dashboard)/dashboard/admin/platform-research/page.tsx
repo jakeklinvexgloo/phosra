@@ -13,6 +13,8 @@ import {
   Zap,
   Terminal,
   RefreshCw,
+  ShieldCheck,
+  Baby,
 } from "lucide-react"
 import { platformRegistry, CATEGORY_LABELS, CATEGORY_ORDER } from "@/lib/platform-research"
 import type {
@@ -27,6 +29,8 @@ import { ResearchDetail } from "./_components/ResearchDetail"
 // ── Category filter config ──────────────────────────────────────
 
 const CATEGORY_ICON: Record<PlatformCategory, typeof Monitor> = {
+  parental_control: ShieldCheck,
+  kids_app: Baby,
   streaming: Monitor,
   gaming: Gamepad2,
   social: MessageCircle,
@@ -369,38 +373,59 @@ export default function PlatformResearchPage() {
       </div>
 
       {/* CLI Instructions */}
-      <div className="plaid-card !p-4">
-        <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
-          <Terminal className="w-3.5 h-3.5" />
-          Running Research Scripts
-        </h3>
-        <div className="text-xs text-muted-foreground space-y-2">
-          <p>
-            <strong>1.</strong> Copy credentials template:{" "}
-            <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-[11px]">
-              cp .env.platform-credentials.example .env.platform-credentials
-            </code>
-          </p>
-          <p>
-            <strong>2.</strong> Fill in your credentials for the platforms you want to research.
-          </p>
-          <p>
-            <strong>3.</strong> Run the research script:
-          </p>
-          <div className="bg-muted/50 rounded-md p-3 font-mono text-[11px] space-y-1">
-            <div className="text-muted-foreground"># Research all platforms with configured credentials</div>
-            <div>node scripts/platform-research/research-runner.mjs</div>
-            <div className="text-muted-foreground mt-2"># Research a specific platform</div>
-            <div>node scripts/platform-research/research-runner.mjs --platform netflix</div>
-            <div className="text-muted-foreground mt-2"># Research a category</div>
-            <div>node scripts/platform-research/research-runner.mjs --category streaming</div>
-            <div className="text-muted-foreground mt-2"># List platforms and credential status</div>
-            <div>node scripts/platform-research/research-runner.mjs --list</div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="plaid-card !p-4">
+          <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+            <Monitor className="w-3.5 h-3.5" />
+            Playwright — Web Research
+          </h3>
+          <div className="text-xs text-muted-foreground space-y-2">
+            <p>
+              <strong>1.</strong> Copy credentials:{" "}
+              <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-[11px]">
+                cp .env.platform-credentials.example .env.platform-credentials
+              </code>
+            </p>
+            <p>
+              <strong>2.</strong> Fill in login credentials for target platforms.
+            </p>
+            <p>
+              <strong>3.</strong> Run the Playwright research script:
+            </p>
+            <div className="bg-muted/50 rounded-md p-3 font-mono text-[11px] space-y-1">
+              <div className="text-muted-foreground"># Research all web platforms</div>
+              <div>node scripts/platform-research/research-runner.mjs</div>
+              <div className="text-muted-foreground mt-2"># Research a specific platform</div>
+              <div>node scripts/platform-research/research-runner.mjs --platform netflix</div>
+              <div className="text-muted-foreground mt-2"># List platforms and credential status</div>
+              <div>node scripts/platform-research/research-runner.mjs --list</div>
+            </div>
           </div>
-          <p className="mt-2">
-            <strong>MCP Browser alternative:</strong> You can also use the Playwright MCP Chrome browser
-            to interactively research platforms in real-time with AI guidance.
-          </p>
+        </div>
+
+        <div className="plaid-card !p-4">
+          <h3 className="text-sm font-semibold text-foreground mb-2 flex items-center gap-2">
+            <Smartphone className="w-3.5 h-3.5" />
+            Appium — iOS Simulator Research
+          </h3>
+          <div className="text-xs text-muted-foreground space-y-2">
+            <p>
+              <strong>Prerequisites:</strong> macOS + Xcode + Appium + XCUITest driver
+            </p>
+            <div className="bg-muted/50 rounded-md p-3 font-mono text-[11px] space-y-1">
+              <div className="text-muted-foreground"># Install Appium (one-time)</div>
+              <div>npm install -g appium</div>
+              <div>appium driver install xcuitest</div>
+              <div className="text-muted-foreground mt-2"># Check prerequisites</div>
+              <div>node scripts/platform-research/appium-runner.mjs --check</div>
+              <div className="text-muted-foreground mt-2"># Research iOS Screen Time</div>
+              <div>node scripts/platform-research/appium-runner.mjs --platform apple-screen-time</div>
+              <div className="text-muted-foreground mt-2"># Research all iOS parental control apps</div>
+              <div>node scripts/platform-research/appium-runner.mjs --category parental_control</div>
+              <div className="text-muted-foreground mt-2"># List iOS platforms</div>
+              <div>node scripts/platform-research/appium-runner.mjs --list</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

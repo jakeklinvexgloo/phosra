@@ -1,9 +1,12 @@
 // ── Platform Research Types ──────────────────────────────────────
 
-export type PlatformCategory = "streaming" | "gaming" | "social" | "device" | "education"
+export type PlatformCategory = "streaming" | "gaming" | "social" | "device" | "education" | "parental_control" | "kids_app"
 export type ResearchStatus = "not_started" | "in_progress" | "completed" | "needs_update" | "error"
 export type ParentalControlComplexity = "simple" | "moderate" | "complex"
 export type AgeGatingMethod = "profile_based" | "account_level" | "content_rating" | "time_based" | "none"
+
+/** How this platform is researched */
+export type ResearchMethod = "playwright" | "appium" | "both"
 
 /** A platform that Phosra can potentially enforce parental controls on */
 export interface Platform {
@@ -25,13 +28,17 @@ export interface Platform {
   /** Quick description of the platform's audience */
   audience: string
   tags: string[]
+  /** How this platform is researched: web browser or iOS simulator */
+  researchMethod: ResearchMethod
+  /** iOS bundle ID for Appium-based research (e.g., "com.netflix.Netflix") */
+  iosBundleId?: string
 }
 
-/** Result of a Playwright research session for one platform */
+/** Result of a research session for one platform */
 export interface PlatformResearchResult {
   platformId: string
   researchedAt: string // ISO 8601
-  researchedBy: "playwright" | "mcp_browser" | "manual"
+  researchedBy: "playwright" | "appium" | "mcp_browser" | "manual"
   status: ResearchStatus
   /** How long the research session took (ms) */
   durationMs?: number
@@ -64,8 +71,8 @@ export interface ParentalControlFeature {
   phosraRuleCategory?: string
   /** Can this be set programmatically? */
   automatable: boolean
-  /** How: API, Playwright, manual only */
-  automationMethod?: "api" | "playwright" | "manual_only"
+  /** How: API, Playwright (web), Appium (iOS), or manual only */
+  automationMethod?: "api" | "playwright" | "appium" | "manual_only"
   /** Current default setting */
   defaultValue?: string
   /** Available options/values */

@@ -4,8 +4,10 @@ import type { Platform } from "./types"
  * Registry of all kids' applications and streaming providers that Phosra
  * researches for parental control capabilities.
  *
- * Organized by category. Each entry includes the credential env var keys
- * so Playwright scripts know which credentials to load.
+ * Organized by category. Each entry includes:
+ * - Credential env var keys for login
+ * - researchMethod: "playwright" (web), "appium" (iOS simulator), or "both"
+ * - iosBundleId: for Appium-based research on iOS simulator
  */
 export const platformRegistry: Platform[] = [
   // ══════════════════════════════════════════════════════════════
@@ -23,6 +25,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "50M+",
     audience: "Family streaming — profiles, maturity ratings, Kids experience",
     tags: ["profiles", "maturity-ratings", "kids-profile", "pin-protection", "viewing-activity"],
+    researchMethod: "both",
+    iosBundleId: "com.netflix.Netflix",
   },
   {
     id: "disney-plus",
@@ -36,6 +40,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "40M+",
     audience: "Family-first streaming — content ratings, Junior Mode, profiles",
     tags: ["profiles", "content-ratings", "junior-mode", "pin-protection", "group-watch"],
+    researchMethod: "both",
+    iosBundleId: "com.disney.disneyplus",
   },
   {
     id: "amazon-prime-video",
@@ -49,6 +55,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "30M+",
     audience: "Family streaming with Amazon Kids+ integration and purchase controls",
     tags: ["profiles", "pin-protection", "purchase-controls", "kids-plus", "content-ratings"],
+    researchMethod: "both",
+    iosBundleId: "com.amazon.aiv.AIVApp",
   },
   {
     id: "youtube",
@@ -62,6 +70,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "80M+",
     audience: "Largest video platform — Supervised accounts, Restricted Mode, YouTube Kids app",
     tags: ["supervised-accounts", "restricted-mode", "youtube-kids", "search-controls", "comment-controls", "watch-history"],
+    researchMethod: "both",
+    iosBundleId: "com.google.ios.youtube",
   },
   {
     id: "apple-tv-plus",
@@ -75,6 +85,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "15M+",
     audience: "Apple ecosystem streaming with Screen Time integration",
     tags: ["content-ratings", "screen-time", "family-sharing", "restrictions"],
+    researchMethod: "both",
+    iosBundleId: "com.apple.tv",
   },
   {
     id: "hulu",
@@ -88,6 +100,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "15M+",
     audience: "Streaming with Kids Hub and content age ratings",
     tags: ["kids-hub", "profiles", "content-ratings", "pin-protection"],
+    researchMethod: "both",
+    iosBundleId: "com.hulu.plus",
   },
   {
     id: "peacock",
@@ -101,6 +115,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "8M+",
     audience: "NBC Universal streaming with Kids Mode",
     tags: ["kids-mode", "content-ratings", "profiles", "pin-protection"],
+    researchMethod: "both",
+    iosBundleId: "com.peacocktv.peacockios",
   },
   {
     id: "paramount-plus",
@@ -114,6 +130,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "10M+",
     audience: "Family streaming with Nickelodeon content and kids profiles",
     tags: ["kids-mode", "content-ratings", "nickelodeon", "profiles"],
+    researchMethod: "both",
+    iosBundleId: "com.cbs.app",
   },
   {
     id: "hbo-max",
@@ -127,6 +145,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "12M+",
     audience: "Family streaming with Kids Profile and Cartoon Network/HBO content",
     tags: ["kids-profile", "content-ratings", "pin-protection", "profiles"],
+    researchMethod: "both",
+    iosBundleId: "com.wbd.stream",
   },
 
   // ══════════════════════════════════════════════════════════════
@@ -144,6 +164,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "70M+",
     audience: "Largest kids gaming platform — age verification, spending limits, chat filters",
     tags: ["age-verification", "spending-limits", "chat-filters", "experience-ratings", "screen-time", "contact-restrictions"],
+    researchMethod: "both",
+    iosBundleId: "com.roblox.robloxmobile",
   },
   {
     id: "minecraft",
@@ -157,6 +179,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "40M+",
     audience: "Block-building game — Xbox family settings, multiplayer controls, chat",
     tags: ["xbox-family", "multiplayer-controls", "chat-controls", "realms-permissions", "marketplace"],
+    researchMethod: "both",
+    iosBundleId: "com.mojang.minecraftpe",
   },
   {
     id: "fortnite",
@@ -170,6 +194,7 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "30M+",
     audience: "Battle royale with Cabined Accounts, playtime limits, spending controls",
     tags: ["cabined-accounts", "playtime-limits", "spending-controls", "voice-chat", "text-chat", "content-ratings"],
+    researchMethod: "playwright",
   },
 
   // ══════════════════════════════════════════════════════════════
@@ -187,6 +212,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "50M+",
     audience: "Short-form video — Family Pairing, screen time, restricted mode, DM controls",
     tags: ["family-pairing", "screen-time", "restricted-mode", "dm-controls", "content-filters", "privacy-settings"],
+    researchMethod: "both",
+    iosBundleId: "com.zhiliaoapp.musically",
   },
   {
     id: "instagram",
@@ -200,6 +227,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "40M+",
     audience: "Photo/video social — Teen Accounts, supervision, sensitive content controls",
     tags: ["teen-accounts", "supervision", "sensitive-content", "dm-controls", "time-limits", "notification-pausing"],
+    researchMethod: "both",
+    iosBundleId: "com.burbn.instagram",
   },
   {
     id: "snapchat",
@@ -213,6 +242,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "30M+",
     audience: "Messaging/stories — Family Center, contact restrictions, content controls",
     tags: ["family-center", "contact-restrictions", "content-controls", "location-sharing", "my-ai-controls"],
+    researchMethod: "both",
+    iosBundleId: "com.toyopagroup.picaboo",
   },
   {
     id: "discord",
@@ -226,6 +257,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "25M+",
     audience: "Gaming/community chat — Family Center, content filters, DM safety",
     tags: ["family-center", "safe-messaging", "content-filters", "server-discovery", "age-verification"],
+    researchMethod: "both",
+    iosBundleId: "com.hammerandchisel.discord",
   },
 
   // ══════════════════════════════════════════════════════════════
@@ -243,6 +276,7 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "50M+",
     audience: "Android/Chrome device management — app approval, screen time, location, web filters",
     tags: ["app-approval", "screen-time", "location-tracking", "web-filters", "purchase-approval", "device-lock"],
+    researchMethod: "playwright",
   },
   {
     id: "apple-screen-time",
@@ -256,6 +290,8 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "60M+",
     audience: "iOS/macOS device controls — app limits, downtime, content restrictions, communication limits",
     tags: ["app-limits", "downtime", "content-restrictions", "communication-limits", "purchase-controls", "location"],
+    researchMethod: "appium",
+    iosBundleId: "com.apple.Preferences",
   },
   {
     id: "amazon-kids-plus",
@@ -269,6 +305,200 @@ export const platformRegistry: Platform[] = [
     estimatedKidUsers: "10M+",
     audience: "Amazon tablet/Fire controls — curated content, time limits, educational goals, web browser filters",
     tags: ["curated-content", "time-limits", "educational-goals", "web-filters", "age-filters", "bedtime-settings"],
+    researchMethod: "playwright",
+  },
+  {
+    id: "apple-family-sharing",
+    name: "Apple Family Sharing",
+    category: "device",
+    website: "https://support.apple.com/family-sharing",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "APPLE_FAMILY_SHARING_EMAIL", password: "APPLE_FAMILY_SHARING_PASSWORD" },
+    estimatedKidUsers: "60M+",
+    audience: "Apple ecosystem family management — purchase sharing, location, Ask to Buy, child accounts",
+    tags: ["ask-to-buy", "location-sharing", "purchase-sharing", "child-accounts", "shared-subscriptions"],
+    researchMethod: "appium",
+    iosBundleId: "com.apple.Preferences",
+  },
+
+  // ══════════════════════════════════════════════════════════════
+  // PARENTAL CONTROL APPS (iOS-first / iOS-only)
+  // ══════════════════════════════════════════════════════════════
+  {
+    id: "bark",
+    name: "Bark",
+    category: "parental_control",
+    website: "https://www.bark.us",
+    parentalControlsUrl: "https://www.bark.us/app",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "BARK_EMAIL", password: "BARK_PASSWORD" },
+    estimatedKidUsers: "6M+",
+    audience: "Monitoring app — alerts for cyberbullying, depression, suicidal ideation, sexting, online predators",
+    tags: ["content-monitoring", "alert-system", "social-media-monitoring", "text-monitoring", "email-monitoring", "screen-time"],
+    researchMethod: "appium",
+    iosBundleId: "us.bark.appParent",
+  },
+  {
+    id: "qustodio",
+    name: "Qustodio",
+    category: "parental_control",
+    website: "https://www.qustodio.com",
+    parentalControlsUrl: "https://family.qustodio.com",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "QUSTODIO_EMAIL", password: "QUSTODIO_PASSWORD" },
+    estimatedKidUsers: "4M+",
+    audience: "Cross-platform monitoring — web filtering, screen time, location, app controls, call/SMS monitoring",
+    tags: ["web-filtering", "screen-time", "location-tracking", "app-controls", "call-monitoring", "panic-button"],
+    researchMethod: "both",
+    iosBundleId: "com.qustodio.qustodioapp",
+  },
+  {
+    id: "net-nanny",
+    name: "Net Nanny",
+    category: "parental_control",
+    website: "https://www.netnanny.com",
+    parentalControlsUrl: "https://www.netnanny.com/features/",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "NET_NANNY_EMAIL", password: "NET_NANNY_PASSWORD" },
+    estimatedKidUsers: "3M+",
+    audience: "Web filtering and screen time — real-time content filtering, app blocking, profanity masking",
+    tags: ["web-filtering", "screen-time", "app-blocking", "profanity-masking", "location-tracking", "youtube-monitoring"],
+    researchMethod: "both",
+    iosBundleId: "com.contentwatch.netnanny",
+  },
+  {
+    id: "kidslox",
+    name: "Kidslox",
+    category: "parental_control",
+    website: "https://kidslox.com",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "KIDSLOX_EMAIL", password: "KIDSLOX_PASSWORD" },
+    estimatedKidUsers: "2M+",
+    audience: "Screen time and app blocking — daily limits, scheduled access, app blocking, web filtering",
+    tags: ["screen-time", "app-blocking", "scheduled-access", "web-filtering", "location-tracking"],
+    researchMethod: "appium",
+    iosBundleId: "com.kidslox.KidsloxApp",
+  },
+  {
+    id: "ourpact",
+    name: "OurPact",
+    category: "parental_control",
+    website: "https://ourpact.com",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "OUR_PACT_EMAIL", password: "OUR_PACT_PASSWORD" },
+    estimatedKidUsers: "2M+",
+    audience: "App blocking and screen time — block/allow apps, scheduled access, GPS tracking, geofencing",
+    tags: ["app-blocking", "screen-time", "gps-tracking", "geofencing", "screen-grabs", "scheduled-access"],
+    researchMethod: "appium",
+    iosBundleId: "com.ourpact.OurPact",
+  },
+
+  // ══════════════════════════════════════════════════════════════
+  // KIDS APPS (iOS-first / Education)
+  // ══════════════════════════════════════════════════════════════
+  {
+    id: "messenger-kids",
+    name: "Messenger Kids",
+    category: "kids_app",
+    website: "https://messengerkids.com",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "MESSENGER_KIDS_EMAIL", password: "MESSENGER_KIDS_PASSWORD" },
+    estimatedKidUsers: "7M+",
+    audience: "Meta's kids messaging — parent-approved contacts, no ads, sleep mode, supervised video calls",
+    tags: ["parent-approved-contacts", "no-ads", "sleep-mode", "video-calls", "reporting", "supervised-messaging"],
+    researchMethod: "appium",
+    iosBundleId: "com.facebook.talk",
+  },
+  {
+    id: "youtube-kids",
+    name: "YouTube Kids",
+    category: "kids_app",
+    website: "https://www.youtubekids.com",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "YOUTUBE_KIDS_EMAIL", password: "YOUTUBE_KIDS_PASSWORD" },
+    estimatedKidUsers: "35M+",
+    audience: "Curated YouTube for kids — age-based content tiers, search control, timer, approved content only mode",
+    tags: ["age-tiers", "search-control", "timer", "approved-content-only", "parental-passcode", "content-levels"],
+    researchMethod: "appium",
+    iosBundleId: "com.google.ios.youtubekids",
+  },
+  {
+    id: "spotify-kids",
+    name: "Spotify Kids",
+    category: "kids_app",
+    website: "https://www.spotify.com/kids/",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "SPOTIFY_KIDS_EMAIL", password: "SPOTIFY_KIDS_PASSWORD" },
+    estimatedKidUsers: "5M+",
+    audience: "Kid-safe music streaming — curated playlists, no explicit content, audio-only (no podcasts for young kids)",
+    tags: ["curated-playlists", "no-explicit", "audio-only", "age-appropriate", "offline-mode"],
+    researchMethod: "appium",
+    iosBundleId: "com.spotify.client",
+  },
+  {
+    id: "pbs-kids",
+    name: "PBS Kids",
+    category: "kids_app",
+    website: "https://pbskids.org",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "PBS_KIDS_EMAIL", password: "PBS_KIDS_PASSWORD" },
+    estimatedKidUsers: "10M+",
+    audience: "Educational videos and games — no ads, no in-app purchases, free, PBS content library",
+    tags: ["no-ads", "no-iap", "free", "educational", "video-games", "offline-downloads"],
+    researchMethod: "appium",
+    iosBundleId: "org.pbskids.video",
+  },
+  {
+    id: "nick-jr",
+    name: "Nick Jr.",
+    category: "kids_app",
+    website: "https://www.nickjr.com",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "NICK_JR_EMAIL", password: "NICK_JR_PASSWORD" },
+    estimatedKidUsers: "8M+",
+    audience: "Preschool streaming — Nickelodeon shows, educational games, PAW Patrol, Peppa Pig",
+    tags: ["preschool", "educational-games", "streaming", "offline-downloads", "no-in-app-chat"],
+    researchMethod: "appium",
+    iosBundleId: "com.nickjr.NickJr",
+  },
+  {
+    id: "abc-mouse",
+    name: "ABCmouse",
+    category: "kids_app",
+    website: "https://www.abcmouse.com",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "ABC_MOUSE_EMAIL", password: "ABC_MOUSE_PASSWORD" },
+    estimatedKidUsers: "10M+",
+    audience: "Early learning platform — reading, math, science, art for ages 2-8, progress tracking",
+    tags: ["early-learning", "progress-tracking", "curriculum-based", "offline-activities", "parent-dashboard"],
+    researchMethod: "appium",
+    iosBundleId: "com.ageoflearning.ABCmouse",
+  },
+  {
+    id: "khan-academy-kids",
+    name: "Khan Academy Kids",
+    category: "kids_app",
+    website: "https://learn.khanacademy.org/khan-academy-kids/",
+    hasApi: false,
+    hasOAuth: false,
+    credentialKeys: { email: "KHAN_ACADEMY_KIDS_EMAIL", password: "KHAN_ACADEMY_KIDS_PASSWORD" },
+    estimatedKidUsers: "6M+",
+    audience: "Free educational platform — reading, math, social-emotional learning for ages 2-8, no ads, no subscriptions",
+    tags: ["free", "no-ads", "educational", "adaptive-learning", "offline-mode", "progress-reports"],
+    researchMethod: "appium",
+    iosBundleId: "org.khanacademy.kids",
   },
 ]
 
@@ -279,9 +509,11 @@ export function getPlatform(id: string): Platform | undefined {
 }
 
 export function getPlatformsByCategory(category: Platform["category"]): Platform[] {
-  return platformRegistry.find((p) => p.category === category)
-    ? platformRegistry.filter((p) => p.category === category)
-    : []
+  return platformRegistry.filter((p) => p.category === category)
+}
+
+export function getPlatformsByResearchMethod(method: Platform["researchMethod"]): Platform[] {
+  return platformRegistry.filter((p) => p.researchMethod === method || p.researchMethod === "both")
 }
 
 export const CATEGORY_LABELS: Record<Platform["category"], string> = {
@@ -290,6 +522,8 @@ export const CATEGORY_LABELS: Record<Platform["category"], string> = {
   social: "Social & Video",
   device: "Device / OS Controls",
   education: "Education",
+  parental_control: "Parental Control Apps",
+  kids_app: "Kids Apps",
 }
 
 export const CATEGORY_ORDER: Platform["category"][] = [
@@ -297,5 +531,7 @@ export const CATEGORY_ORDER: Platform["category"][] = [
   "gaming",
   "social",
   "device",
+  "parental_control",
+  "kids_app",
   "education",
 ]
