@@ -1,12 +1,26 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
+const DIRECT_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"
 
 class ApiClient {
-  private baseUrl: string
+  /** Direct backend URL (for server-side or explicit token usage) */
+  private directBaseUrl: string
+  /** Proxy URL (same-origin, cookies forwarded automatically) */
+  private proxyBaseUrl: string
 
-  constructor(baseUrl: string) {
-    this.baseUrl = `${baseUrl}/api/v1`
+  constructor(backendUrl: string) {
+    this.directBaseUrl = `${backendUrl}/api/v1`
+    this.proxyBaseUrl = "/api/backend"
   }
 
+  /**
+   * Make an API request.
+   *
+   * When called from the browser without an explicit token, routes through
+   * the Next.js proxy at /api/backend/* which reads the Stytch session JWT
+   * from the HttpOnly cookie and forwards it to the Go backend.
+   *
+   * When an explicit token is provided (server-side calls), hits the
+   * Go backend directly.
+   */
   async fetch(path: string, options: RequestInit = {}, token?: string): Promise<any> {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -16,13 +30,29 @@ class ApiClient {
     // Sandbox mode: send X-Sandbox-Session header instead of auth token (dev only)
     const isSandboxEnabled = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true"
     const sandboxSession = isSandboxEnabled && typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
+
+    let url: string
     if (sandboxSession) {
+      // Sandbox: hit backend directly with sandbox header
       headers["X-Sandbox-Session"] = sandboxSession
+      url = `${this.directBaseUrl}${path}`
     } else if (token) {
+      // Explicit token: hit backend directly
       headers["Authorization"] = `Bearer ${token}`
+      url = `${this.directBaseUrl}${path}`
+    } else if (typeof window !== "undefined") {
+      // Browser without explicit token: use proxy (cookie-based auth)
+      url = `${this.proxyBaseUrl}${path}`
+    } else {
+      // Server-side without token: hit backend directly (will likely 401)
+      url = `${this.directBaseUrl}${path}`
     }
 
-    const res = await fetch(`${this.baseUrl}${path}`, { ...options, headers })
+    const res = await fetch(url, {
+      ...options,
+      headers,
+      credentials: typeof window !== "undefined" && !token ? "same-origin" : undefined,
+    })
 
     if (res.status === 401) {
       throw new Error("Session expired")
@@ -121,7 +151,7 @@ class ApiClient {
     click_x?: number
     click_y?: number
   }) {
-    const res = await window.fetch(`${this.baseUrl}/feedback`, {
+    const res = await window.fetch(`${this.directBaseUrl}/feedback`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -250,7 +280,7 @@ class ApiClient {
 
   /** Returns the WebSocket URL for the pitch session relay. */
   getPitchWSUrl(sessionId: string, token?: string): string {
-    const base = this.baseUrl.replace(/^http/, "ws")
+    const base = this.directBaseUrl.replace(/^http/, "ws")
     const qs = token ? `?token=${encodeURIComponent(token)}` : ""
     return `${base}/admin/pitch/sessions/${sessionId}/ws${qs}`
   }
@@ -269,7 +299,7 @@ class ApiClient {
       headers["Authorization"] = `Bearer ${token}`
     }
 
-    const res = await fetch(`${this.baseUrl}/admin/pitch/sessions/${sessionId}/recording`, {
+    const res = await fetch(`${this.directBaseUrl}/admin/pitch/sessions/${sessionId}/recording`, {
       method: "POST",
       headers,
       body: formData,
@@ -283,7 +313,7 @@ class ApiClient {
 
   /** Get the URL for streaming a pitch session recording. */
   getPitchRecordingUrl(sessionId: string): string {
-    return `${this.baseUrl}/admin/pitch/sessions/${sessionId}/recording`
+    return `${this.directBaseUrl}/admin/pitch/sessions/${sessionId}/recording`
   }
 
   // ── Outreach Autopilot ──────────────────────────────────────
@@ -430,7 +460,7 @@ class ApiClient {
 
   async listFeedback(status?: string) {
     const qs = status ? `?status=${status}` : ""
-    const res = await window.fetch(`${this.baseUrl}/feedback${qs}`, {
+    const res = await window.fetch(`${this.directBaseUrl}/feedback${qs}`, {
       headers: { "Content-Type": "application/json" },
     })
     if (!res.ok) throw new Error(await res.text())
@@ -438,4 +468,4 @@ class ApiClient {
   }
 }
 
-export const api = new ApiClient(API_URL)
+export const api = new ApiClient(DIRECT_API_URL)
