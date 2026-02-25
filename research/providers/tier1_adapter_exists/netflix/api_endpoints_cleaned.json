@@ -1,0 +1,308 @@
+[
+  {
+    "method": "GET",
+    "path": "/account",
+    "fullUrl": "https://www.netflix.com/account",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/account/devices",
+    "fullUrl": "https://www.netflix.com/account/devices",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/account/parental-controls",
+    "fullUrl": "https://www.netflix.com/account/parental-controls",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/account/profile/transfercontext",
+    "fullUrl": "https://www.netflix.com/account/profile/transfercontext",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/account/profiles",
+    "fullUrl": "https://www.netflix.com/account/profiles",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/account/security",
+    "fullUrl": "https://www.netflix.com/account/security",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/api/ftl/probe",
+    "fullUrl": "https://www.netflix.com/api/ftl/probe?monotonic=false&device=web&iter=0",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/en/api/notifications",
+    "fullUrl": "https://help.netflix.com/en/api/notifications",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/nq/website/memberapi/release/profiles/switch",
+    "fullUrl": "https://www.netflix.com/nq/website/memberapi/release/profiles/switch?switchProfileGuid=IUJ4RFGSNBB37IVR2DMKPSEKHQ&_=1772034589553&authURL=c1.1772034581747.AgiMlOvcAxIgVzMQImFXlaH8VRIA%2BZpAhEmyHHptlfC4Im2Qz0sLEsEYAg%3D%3D",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/profiles/manage",
+    "fullUrl": "https://www.netflix.com/profiles/manage",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "fullUrl": "https://www.netflix.com/settings/2CLVMNZPRFEOBK32A26RG4FNJQ?referrer=ManageProfiles",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "fullUrl": "https://www.netflix.com/settings/4GSBFXDY4FGBDJLJMCAVJDROXA?referrer=ManageProfiles",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "fullUrl": "https://www.netflix.com/settings/63N6R2CUCBCONFXN3YQXV3JGRI?referrer=ManageProfiles",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/autoplay",
+    "fullUrl": "https://www.netflix.com/settings/autoplay",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "fullUrl": "https://www.netflix.com/settings/FTVLJUZKORCHFF4PHAFU5ZVDPQ?referrer=ManageProfiles",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "fullUrl": "https://www.netflix.com/settings/IUJ4RFGSNBB37IVR2DMKPSEKHQ?referrer=ManageProfiles",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/lock/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "fullUrl": "https://www.netflix.com/settings/lock/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/lock/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "fullUrl": "https://www.netflix.com/settings/lock/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/lock/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "fullUrl": "https://www.netflix.com/settings/lock/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/lock/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "fullUrl": "https://www.netflix.com/settings/lock/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/lock/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "fullUrl": "https://www.netflix.com/settings/lock/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/maturity",
+    "fullUrl": "https://www.netflix.com/settings/maturity",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/maturity-level",
+    "fullUrl": "https://www.netflix.com/settings/maturity-level",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/parental-controls",
+    "fullUrl": "https://www.netflix.com/settings/parental-controls",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/parental-controls/profile",
+    "fullUrl": "https://www.netflix.com/settings/parental-controls/profile",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/pin",
+    "fullUrl": "https://www.netflix.com/settings/pin",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/playback/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "fullUrl": "https://www.netflix.com/settings/playback/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/playback/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "fullUrl": "https://www.netflix.com/settings/playback/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/playback/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "fullUrl": "https://www.netflix.com/settings/playback/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/playback/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "fullUrl": "https://www.netflix.com/settings/playback/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/playback/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "fullUrl": "https://www.netflix.com/settings/playback/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/privacy/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "fullUrl": "https://www.netflix.com/settings/privacy/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/privacy/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "fullUrl": "https://www.netflix.com/settings/privacy/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/profile-lock",
+    "fullUrl": "https://www.netflix.com/settings/profile-lock",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/profileTransfer/enable",
+    "fullUrl": "https://www.netflix.com/settings/profileTransfer/enable",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/restrictions/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "fullUrl": "https://www.netflix.com/settings/restrictions/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/restrictions/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "fullUrl": "https://www.netflix.com/settings/restrictions/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/restrictions/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "fullUrl": "https://www.netflix.com/settings/restrictions/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/restrictions/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "fullUrl": "https://www.netflix.com/settings/restrictions/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/restrictions/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "fullUrl": "https://www.netflix.com/settings/restrictions/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/viewed/",
+    "fullUrl": "https://www.netflix.com/settings/viewed/",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/viewed/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "fullUrl": "https://www.netflix.com/settings/viewed/2CLVMNZPRFEOBK32A26RG4FNJQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/viewed/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "fullUrl": "https://www.netflix.com/settings/viewed/4GSBFXDY4FGBDJLJMCAVJDROXA",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/viewed/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "fullUrl": "https://www.netflix.com/settings/viewed/63N6R2CUCBCONFXN3YQXV3JGRI",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/viewed/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "fullUrl": "https://www.netflix.com/settings/viewed/FTVLJUZKORCHFF4PHAFU5ZVDPQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/viewed/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "fullUrl": "https://www.netflix.com/settings/viewed/IUJ4RFGSNBB37IVR2DMKPSEKHQ",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/viewing-activity",
+    "fullUrl": "https://www.netflix.com/settings/viewing-activity",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/settings/viewing-restrictions",
+    "fullUrl": "https://www.netflix.com/settings/viewing-restrictions",
+    "postData": null
+  },
+  {
+    "method": "GET",
+    "path": "/viewingactivity",
+    "fullUrl": "https://www.netflix.com/viewingactivity",
+    "postData": null
+  },
+  {
+    "method": "POST",
+    "path": "/nq/msl_v1/nrdjs/pbo_tokens/%5E1.0.0/router",
+    "fullUrl": "https://www.netflix.com/nq/msl_v1/nrdjs/pbo_tokens/%5E1.0.0/router?reqAttempt=1&reqName=aleProvision&reqId=bad138f56ef49345d2628745702d1bf8&clienttype=akira&uiversion=v623330a8&browsername=chrome&browserversion=120.0.0.0&osname=mac&osversion=10.15.7",
+    "postData": "{\"mastertoken\":{\"tokendata\":\"eyJzZXNzaW9uZGF0YSI6IkJRQ0FBQUVCRU1saFdaTVdyeWg5NmNPMGZrVnAyMENCUUpGUXdnYmZlM1g3dmswRW5oNjI1VUt4bVBHWktKeno5ZkozSzdxdVB3ZFFpd0NCZ2c5RStvUHJ5MlhpanM0aGh5b3ZBUitKdTlMWE8xT3RKRm9KUEtBU3dhWU1PSnRDNTVDUkZSYVU1dXloTmlJSFk3cDdvL3hkTldJUVYwU28wRDVvc3ZJa1hCcXFpL0cxUGlDWC9oU01yMWtGY0N1bVU5aVJLa2JMeXNYR29MTkM4Z29GRXBCeVl3d203MWFoS0Nmbmpwd2p3amgvZlh4N3BMNU5QS3AwL0F6RTdEZXZodnoza2pWNWtlcnEyeGxFK05XRzdKR2R3MzBWMDJkR2NGTFhtbm56dFZudzhES1hxRmJzdmpsTTNPdXIvbnJrT1NJYUwvU3BlNmliNm9SSGV"
+  },
+  {
+    "method": "POST",
+    "path": "/nq/website/memberapi/release/pathEvaluator",
+    "fullUrl": "https://www.netflix.com/nq/website/memberapi/release/pathEvaluator?webp=true&drmSystem=widevine&isVolatileBillboardsEnabled=true&isTop10Supported=true&hasVideoMerchInBob=true&hasVideoMerchInJaw=true&falcor_server=0.1.0&withSize=true&materialize=true&original_path=%2Fshakti%2Fmre%2FpathEvaluator",
+    "postData": "path=%5B%22loco%22%2C%5B%22componentSummary%22%2C%22debugRequest%22%5D%5D&path=%5B%22loco%22%2C%5B0%2C1%2C2%2C3%2C%22continueWatching%22%5D%2C%22componentSummary%22%5D&path=%5B%22loco%22%2C%22meta%22%2C%5B%22responseExpiration%22%2C%22statusCode%22%5D%5D&path=%5B%22loco%22%2C0%2C0%2C%22itemSummary%22%5D&path=%5B%22loco%22%2C0%2C0%2C%22reference%22%2C%5B%22availability%22%2C%22bbSupplementalMessage%22%2C%22bbSupplementalMessageIcon%22%2C%22maturity%22%2C%22mostWatchedData%22%2C%22summary%22%5D%5D"
+  }
+]

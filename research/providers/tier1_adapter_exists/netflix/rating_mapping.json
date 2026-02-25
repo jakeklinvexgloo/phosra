@@ -1,0 +1,93 @@
+{
+  "platform": "netflix",
+  "platform_name": "Netflix",
+  "research_date": "2026-02-25",
+
+  "netflix_to_phosra": {
+    "Little Kids": "all_ages",
+    "Older Kids": "ages_7_plus",
+    "Teens": "ages_13_plus",
+    "All Maturity Ratings": "adults_only"
+  },
+
+  "phosra_to_netflix": {
+    "all_ages": "Little Kids",
+    "ages_7_plus": "Older Kids",
+    "ages_13_plus": "Teens",
+    "adults_only": "All Maturity Ratings"
+  },
+
+  "netflix_tiers": {
+    "Little Kids": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y", "TV-G"],
+      "description": "Content suitable for all ages. Simplified Kids UI with restricted navigation.",
+      "age_range": "0-6",
+      "is_kids_profile": true
+    },
+    "Older Kids": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G", "PG"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"],
+      "description": "Content suitable for older children. May include mild fantasy violence or thematic elements.",
+      "age_range": "7-12",
+      "is_kids_profile": true
+    },
+    "Teens": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14"],
+      "description": "Content suitable for teens. May include moderate violence, language, and suggestive content.",
+      "age_range": "13-17",
+      "is_kids_profile": false
+    },
+    "All Maturity Ratings": {
+      "phosra_tier": "adults_only",
+      "mpaa_ratings": ["G", "PG", "PG-13", "R", "NC-17"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "No content restrictions. All content visible including mature/adult content.",
+      "age_range": "18+",
+      "is_kids_profile": false
+    }
+  },
+
+  "content_descriptors": {
+    "supported": [
+      "violence",
+      "sex",
+      "language",
+      "substances",
+      "nudity",
+      "smoking",
+      "self-harm",
+      "mature themes"
+    ],
+    "notes": "Netflix shows content descriptors (e.g., 'violence, language') on title detail pages but does not allow filtering by individual descriptors. Filtering is tier-based only."
+  },
+
+  "rating_systems_coverage": {
+    "MPAA": {
+      "supported": true,
+      "ratings": ["G", "PG", "PG-13", "R", "NC-17"],
+      "notes": "Full MPAA coverage for films"
+    },
+    "TV_Parental_Guidelines": {
+      "supported": true,
+      "ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "notes": "Full TV rating coverage for series"
+    },
+    "ESRB": {
+      "supported": false,
+      "notes": "Netflix Games exist but use a separate rating system not integrated with profile maturity tiers"
+    },
+    "PEGI": {
+      "supported": false,
+      "notes": "Not applicable to Netflix content"
+    },
+    "Common_Sense_Media": {
+      "supported": "partial",
+      "notes": "CSM age ratings displayed on some titles as supplementary info but not used for filtering"
+    }
+  }
+}
