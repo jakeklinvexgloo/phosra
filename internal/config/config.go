@@ -46,6 +46,9 @@ type Config struct {
 	APNsBundleID       string
 	APNsProduction     bool
 
+	// Stytch (auth)
+	StytchProjectID string
+
 	// Sandbox / MCP Playground
 	SandboxMode    bool
 	AnthropicAPIKey string
@@ -98,6 +101,8 @@ func Load() *Config {
 		APNsAuthKeyBase64: getEnv("APNS_AUTH_KEY_BASE64", ""),
 		APNsBundleID:      getEnv("APNS_BUNDLE_ID", ""),
 		APNsProduction:    getBool("APNS_PRODUCTION", false),
+
+		StytchProjectID: getEnv("STYTCH_PROJECT_ID", ""),
 
 		SandboxMode:    getBool("SANDBOX_MODE", false),
 		AnthropicAPIKey: getEnv("ANTHROPIC_API_KEY", ""),

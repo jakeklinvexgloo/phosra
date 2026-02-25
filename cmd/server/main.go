@@ -225,7 +225,10 @@ func main() {
 	var routerOpts []router.Option
 	if cfg.SandboxMode {
 		routerOpts = append(routerOpts, router.WithSandboxMode())
-		log.Info().Msg("sandbox mode enabled — using session-based auth (no WorkOS)")
+		log.Info().Msg("sandbox mode enabled — using session-based auth")
+	} else if cfg.StytchProjectID != "" {
+		routerOpts = append(routerOpts, router.WithStytchProjectID(cfg.StytchProjectID))
+		log.Info().Str("project_id", cfg.StytchProjectID).Msg("Stytch authentication enabled")
 	} else if cfg.WorkOSClientID != "" {
 		routerOpts = append(routerOpts, router.WithWorkOSClientID(cfg.WorkOSClientID))
 		log.Info().Msg("WorkOS authentication enabled")

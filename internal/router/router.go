@@ -13,10 +13,11 @@ import (
 )
 
 type options struct {
-	sandboxMode    bool
-	corsOrigins    string
-	workosClientID string
-	workerAPIKey   string
+	sandboxMode      bool
+	corsOrigins      string
+	workosClientID   string
+	stytchProjectID  string
+	workerAPIKey     string
 }
 
 // Option configures the router.
@@ -30,6 +31,11 @@ func WithSandboxMode() Option {
 // WithWorkOSClientID sets the WorkOS client ID for JWT validation.
 func WithWorkOSClientID(clientID string) Option {
 	return func(o *options) { o.workosClientID = clientID }
+}
+
+// WithStytchProjectID sets the Stytch project ID for JWT validation.
+func WithStytchProjectID(projectID string) Option {
+	return func(o *options) { o.stytchProjectID = projectID }
 }
 
 // WithCORSOrigins sets the allowed CORS origins (comma-separated).
@@ -67,6 +73,22 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 	for _, opt := range opts {
 		opt(o)
 	}
+
+	// Build the auth middleware once based on config priority:
+	// 1. Sandbox mode (dev/playground)
+	// 2. Stytch JWT validation (production)
+	// 3. WorkOS JWT validation (legacy)
+	var authMiddleware func(http.Handler) http.Handler
+	if o.sandboxMode {
+		authMiddleware = middleware.SandboxAuth(userRepo)
+	} else if o.stytchProjectID != "" {
+		authMiddleware = middleware.StytchAuth(o.stytchProjectID, userRepo)
+	} else if o.workosClientID != "" {
+		authMiddleware = middleware.WorkOSAuth(o.workosClientID, userRepo)
+	} else {
+		authMiddleware = middleware.SandboxAuth(userRepo) // fallback for local dev
+	}
+
 	r := chi.NewRouter()
 
 	// Global middleware
@@ -136,11 +158,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 		// Protected routes
 		r.Group(func(r chi.Router) {
-			if o.sandboxMode {
-				r.Use(middleware.SandboxAuth(userRepo))
-			} else {
-				r.Use(middleware.WorkOSAuth(o.workosClientID, userRepo))
-			}
+			r.Use(authMiddleware)
 
 			// Auth
 			r.Post("/auth/logout", h.Auth.Logout)
@@ -292,11 +310,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 		// Developer Portal (user JWT auth)
 		r.Route("/developers", func(r chi.Router) {
-			if o.sandboxMode {
-				r.Use(middleware.SandboxAuth(userRepo))
-			} else {
-				r.Use(middleware.WorkOSAuth(o.workosClientID, userRepo))
-			}
+			r.Use(authMiddleware)
 
 			r.Post("/orgs", h.Developer.CreateOrg)
 			r.Get("/orgs", h.Developer.ListOrgs)
@@ -315,11 +329,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 		// Admin routes (auth + admin role required)
 		r.Route("/admin", func(r chi.Router) {
-			if o.sandboxMode {
-				r.Use(middleware.SandboxAuth(userRepo))
-			} else {
-				r.Use(middleware.WorkOSAuth(o.workosClientID, userRepo))
-			}
+			r.Use(authMiddleware)
 			r.Use(middleware.RequireAdmin(userRepo))
 
 			r.Get("/stats", h.Admin.GetStats)
