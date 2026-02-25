@@ -4,14 +4,30 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
-  Megaphone, Plus, Search, FileText, Send as SendIcon,
-  Calendar, CheckCircle2, Lightbulb, Clock,
-  PenLine, Eye, Sparkles, Target, Loader2,
+  Megaphone, Plus, FileText, Send as SendIcon,
+  Calendar, CheckCircle2, Lightbulb,
+  PenLine, Eye, Sparkles, Target,
   ArrowUp, ArrowDown, ChevronDown
 } from "lucide-react"
 import { useApi } from "@/lib/useApi"
 import type { PressRelease, PressStats, PressReleaseStatus, ReleaseType } from "@/lib/press/types"
-import { STATUS_LABELS, STATUS_COLORS, RELEASE_TYPE_LABELS } from "@/lib/press/types"
+import { STATUS_LABELS, RELEASE_TYPE_LABELS } from "@/lib/press/types"
+import { PageHeader } from "@/components/ui/page-header"
+import { Button } from "@/components/ui/button"
+import { StatCard } from "@/components/ui/stat-card"
+import { SearchInput } from "@/components/ui/search-input"
+import { Badge } from "@/components/ui/badge"
+import { EmptyState } from "@/components/ui/empty-state"
+
+const STATUS_BADGE_VARIANT: Record<PressReleaseStatus, "default" | "info" | "warning" | "success" | "purple"> = {
+  idea: "default",
+  draft: "info",
+  in_review: "warning",
+  approved: "success",
+  scheduled: "purple",
+  distributed: "success",
+  archived: "default",
+}
 
 type SortField = "publish_date" | "created_at" | "updated_at"
 type SortDir = "asc" | "desc"
@@ -179,39 +195,24 @@ export default function PressCenterPage() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl font-semibold text-foreground tracking-tight">Press Center</h1>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1 tracking-wide uppercase">
-            {releases.length} releases &middot; manage, draft, and distribute
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {milestoneLinkedCount === 0 && (
-            <button
-              onClick={handleGeneratePlan}
-              disabled={generatingPlan}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
-            >
-              {generatingPlan ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                <Sparkles className="w-3.5 h-3.5" />
-              )}
-              {generatingPlan ? "Generating Plan..." : "Generate Press Plan"}
-            </button>
-          )}
-          <button
-            onClick={() => setShowNewForm(!showNewForm)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:bg-foreground/90 transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            New Release
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        title="Press Center"
+        description={`${releases.length} releases \u00b7 manage, draft, and distribute`}
+        actions={
+          <>
+            {milestoneLinkedCount === 0 && (
+              <Button variant="accent" size="sm" loading={generatingPlan} onClick={handleGeneratePlan}>
+                {!generatingPlan && <Sparkles className="w-3.5 h-3.5" />}
+                {generatingPlan ? "Generating Plan..." : "Generate Press Plan"}
+              </Button>
+            )}
+            <Button variant="primary" size="sm" onClick={() => setShowNewForm(!showNewForm)}>
+              <Plus className="w-3.5 h-3.5" />
+              New Release
+            </Button>
+          </>
+        }
+      />
 
       {/* Plan generation error */}
       {planError && (
@@ -242,40 +243,25 @@ export default function PressCenterPage() {
                 <option key={k} value={k}>{v}</option>
               ))}
             </select>
-            <button
-              onClick={handleCreate}
-              disabled={!newTitle.trim() || creating}
-              className="h-9 px-4 text-xs font-medium bg-foreground text-background rounded-lg hover:bg-foreground/90 disabled:opacity-50 transition-colors"
-            >
+            <Button variant="primary" size="lg" onClick={handleCreate} disabled={!newTitle.trim()} loading={creating}>
               {creating ? "Creating..." : "Create"}
-            </button>
-            <button
-              onClick={() => { setShowNewForm(false); setNewTitle(""); setNewType("product_launch") }}
-              className="h-9 px-3 text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
+            </Button>
+            <Button variant="ghost" size="lg" onClick={() => { setShowNewForm(false); setNewTitle(""); setNewType("product_launch") }}>
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {/* Stats */}
       <div className={`grid gap-2.5 ${milestoneLinkedCount > 0 ? "grid-cols-5" : "grid-cols-4"}`}>
-        {[
-          { label: "Total", value: stats.total, icon: FileText, color: "text-foreground/60" },
-          { label: "Drafts", value: stats.drafts, icon: PenLine, color: "text-blue-500" },
-          { label: "Scheduled", value: stats.scheduled, icon: Calendar, color: "text-purple-500" },
-          { label: "Distributed", value: stats.distributed, icon: SendIcon, color: "text-emerald-500" },
-          ...(milestoneLinkedCount > 0 ? [{ label: "From Plan", value: milestoneLinkedCount, icon: Target, color: "text-pink-500" }] : []),
-        ].map(s => (
-          <div key={s.label} className="bg-card rounded-lg px-3.5 py-2.5 border border-border/50 hover:border-border transition-colors">
-            <div className="flex items-center gap-2">
-              <s.icon className={`w-3.5 h-3.5 ${s.color}`} />
-              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">{s.label}</span>
-            </div>
-            <div className="text-xl font-semibold tabular-nums mt-0.5 text-foreground">{s.value}</div>
-          </div>
-        ))}
+        <StatCard label="Total" value={stats.total} icon={FileText} iconColor="text-foreground/60" />
+        <StatCard label="Drafts" value={stats.drafts} icon={PenLine} iconColor="text-blue-500" />
+        <StatCard label="Scheduled" value={stats.scheduled} icon={Calendar} iconColor="text-purple-500" />
+        <StatCard label="Distributed" value={stats.distributed} icon={SendIcon} iconColor="text-emerald-500" />
+        {milestoneLinkedCount > 0 && (
+          <StatCard label="From Plan" value={milestoneLinkedCount} icon={Target} iconColor="text-pink-500" />
+        )}
       </div>
 
       {/* Tabs + Search */}
@@ -327,49 +313,29 @@ export default function PressCenterPage() {
             <option value="updated_at">Updated</option>
           </select>
         </div>
-        <button
+        <Button
+          variant="outline"
+          size="icon-sm"
           onClick={() => setSortDir(d => d === "asc" ? "desc" : "asc")}
           title={sortDir === "asc" ? "Ascending" : "Descending"}
-          className="h-8 w-8 flex items-center justify-center bg-card border border-border/50 rounded-lg hover:border-foreground/30 transition-all"
         >
           {sortDir === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ArrowDown className="w-3.5 h-3.5 text-muted-foreground" />}
-        </button>
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Filter..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="h-8 w-48 pl-8 pr-3 text-xs bg-card border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 placeholder:text-muted-foreground/50 transition-all"
-          />
-        </div>
+        </Button>
+        <SearchInput compact value={search} onChange={setSearch} placeholder="Filter..." className="w-48" />
       </div>
 
       {/* Release list */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center py-16 text-center">
-          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mb-3">
-            <Megaphone className="w-4 h-4 text-muted-foreground" />
-          </div>
-          <p className="text-sm text-muted-foreground mb-3">
-            {releases.length === 0 ? "No press releases yet." : "No releases match your filters."}
-          </p>
-          {releases.length === 0 && (
-            <button
-              onClick={handleGeneratePlan}
-              disabled={generatingPlan}
-              className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
-            >
-              {generatingPlan ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              ) : (
-                <Sparkles className="w-3.5 h-3.5" />
-              )}
+        <EmptyState
+          icon={Megaphone}
+          description={releases.length === 0 ? "No press releases yet." : "No releases match your filters."}
+          action={releases.length === 0 ? (
+            <Button variant="accent" size="sm" loading={generatingPlan} onClick={handleGeneratePlan}>
+              {!generatingPlan && <Sparkles className="w-3.5 h-3.5" />}
               {generatingPlan ? "Generating..." : "Generate Press Plan from Fundraise Milestones"}
-            </button>
-          )}
-        </div>
+            </Button>
+          ) : undefined}
+        />
       ) : (
         <div className="space-y-[1px] rounded-lg overflow-hidden border border-border/50">
           {filtered.map(release => (
@@ -380,15 +346,15 @@ export default function PressCenterPage() {
             >
               <div className="flex items-center gap-3 px-4 py-3">
                 {/* Status badge */}
-                <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${STATUS_COLORS[release.status]}`}>
+                <Badge variant={STATUS_BADGE_VARIANT[release.status]} size="md">
                   {STATUS_LABELS[release.status]}
-                </span>
+                </Badge>
 
                 {/* Milestone badge */}
                 {release.milestone_id && (
-                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400">
+                  <Badge variant="pink" size="sm">
                     {release.milestone_id.toUpperCase()}
-                  </span>
+                  </Badge>
                 )}
 
                 {/* Title */}
@@ -399,9 +365,9 @@ export default function PressCenterPage() {
                 </div>
 
                 {/* Release type */}
-                <span className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-muted/80 text-muted-foreground font-medium">
+                <Badge variant="default" size="sm" className="hidden sm:inline-flex">
                   {RELEASE_TYPE_LABELS[release.release_type] || release.release_type}
-                </span>
+                </Badge>
 
                 {/* Publish date */}
                 <span className="hidden sm:inline text-[11px] text-muted-foreground tabular-nums min-w-16 text-right">

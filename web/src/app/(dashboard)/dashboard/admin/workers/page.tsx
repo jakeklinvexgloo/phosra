@@ -17,6 +17,10 @@ import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import { workerRegistry } from "@/lib/admin/worker-registry"
 import type { WorkerRun } from "@/lib/admin/types"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { PageHeader } from "@/components/ui/page-header"
+import { StatCard } from "@/components/ui/stat-card"
 
 export default function WorkersPage() {
   const { getToken } = useApi()
@@ -100,36 +104,21 @@ export default function WorkersPage() {
     }
   }
 
-  const statusBadge = (status?: string) => {
+  const statusBadgeVariant = (status?: string): "success" | "destructive" | "warning" | "default" => {
     switch (status) {
-      case "completed":
-        return (
-          <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400">
-            <span className="w-1 h-1 rounded-full bg-emerald-500" />
-            Completed
-          </span>
-        )
-      case "failed":
-        return (
-          <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400">
-            <span className="w-1 h-1 rounded-full bg-red-500" />
-            Failed
-          </span>
-        )
-      case "running":
-        return (
-          <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
-            <span className="w-1 h-1 rounded-full bg-amber-500 animate-pulse" />
-            Running
-          </span>
-        )
-      default:
-        return (
-          <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
-            <span className="w-1 h-1 rounded-full bg-muted-foreground" />
-            Idle
-          </span>
-        )
+      case "completed": return "success"
+      case "failed": return "destructive"
+      case "running": return "warning"
+      default: return "default"
+    }
+  }
+
+  const statusBadgeLabel = (status?: string) => {
+    switch (status) {
+      case "completed": return "Completed"
+      case "failed": return "Failed"
+      case "running": return "Running"
+      default: return "Idle"
     }
   }
 
@@ -169,45 +158,26 @@ export default function WorkersPage() {
   const running = Object.values(workerRuns).filter((r) => r.status === "running").length
   const healthy = Object.values(workerRuns).filter((r) => r.status === "completed").length
   const failed = Object.values(workerRuns).filter((r) => r.status === "failed").length
-  const idle = total - running - healthy - failed
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Workers</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Automated workers that handle outreach, news monitoring, and compliance tracking
-          </p>
-        </div>
-        <button
-          onClick={fetchWorkers}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          Refresh
-        </button>
-      </div>
+      <PageHeader
+        title="Workers"
+        description="Automated workers that handle outreach, news monitoring, and compliance tracking"
+        actions={
+          <Button variant="ghost" size="sm" onClick={fetchWorkers}>
+            <RotateCcw className="w-3.5 h-3.5" />
+            Refresh
+          </Button>
+        }
+      />
 
       {/* Stats row */}
       <div className="grid grid-cols-4 gap-3">
-        {[
-          { label: "Total", value: total, icon: Activity, color: "text-foreground" },
-          { label: "Healthy", value: healthy, icon: CheckCircle2, color: "text-emerald-500" },
-          { label: "Running", value: running, icon: RefreshCw, color: "text-amber-500" },
-          { label: "Failed", value: failed, icon: XCircle, color: "text-red-500" },
-        ].map((stat) => (
-          <div key={stat.label} className="plaid-card !py-3">
-            <div className="flex items-center gap-2">
-              <stat.icon className={`w-4 h-4 ${stat.color}`} />
-              <div>
-                <div className="text-lg font-semibold text-foreground">{stat.value}</div>
-                <div className="text-[10px] text-muted-foreground uppercase tracking-wide">{stat.label}</div>
-              </div>
-            </div>
-          </div>
-        ))}
+        <StatCard label="Total" value={total} icon={Activity} />
+        <StatCard label="Healthy" value={healthy} icon={CheckCircle2} iconColor="text-emerald-500" />
+        <StatCard label="Running" value={running} icon={RefreshCw} iconColor="text-amber-500" />
+        <StatCard label="Failed" value={failed} icon={XCircle} iconColor="text-red-500" />
       </div>
 
       {/* Worker list */}
@@ -220,7 +190,7 @@ export default function WorkersPage() {
           const isTriggering = triggeringWorker === worker.id
 
           return (
-            <div key={worker.id} className="plaid-card !p-0 overflow-hidden">
+            <div key={worker.id} className="plaid-card-flush overflow-hidden">
               {/* Main row */}
               <div className="flex items-center gap-3 px-4 py-3">
                 {/* Status icon */}
@@ -232,7 +202,9 @@ export default function WorkersPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-medium text-foreground">{worker.name}</h3>
-                    {statusBadge(run?.status)}
+                    <Badge variant={statusBadgeVariant(run?.status)} size="sm" dot dotPulse={run?.status === "running"}>
+                      {statusBadgeLabel(run?.status)}
+                    </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
                     {worker.description}
@@ -249,28 +221,28 @@ export default function WorkersPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-1.5 flex-shrink-0">
-                  <button
-                    onClick={() => handleTrigger(worker.id)}
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="rounded-full"
+                    loading={isRunning}
                     disabled={isTriggering || isRunning}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[11px] font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    onClick={() => handleTrigger(worker.id)}
                   >
-                    {isRunning ? (
-                      <RefreshCw className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <Play className="w-3 h-3" />
-                    )}
+                    {!isRunning && <Play className="w-3 h-3" />}
                     {isRunning ? "Running" : isTriggering ? "Starting..." : "Run"}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
                     onClick={() => toggleHistory(worker.id)}
-                    className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
                   >
                     {isExpanded ? (
                       <ChevronDown className="w-4 h-4" />
                     ) : (
                       <ChevronRight className="w-4 h-4" />
                     )}
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -318,13 +290,9 @@ export default function WorkersPage() {
                               {formatDuration(histRun.started_at, histRun.completed_at)}
                             </div>
                             <div>
-                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                                histRun.trigger_type === "manual"
-                                  ? "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
-                                  : "bg-muted text-muted-foreground"
-                              }`}>
+                              <Badge variant={histRun.trigger_type === "manual" ? "info" : "default"} size="sm">
                                 {histRun.trigger_type}
-                              </span>
+                              </Badge>
                             </div>
                             <div className="text-xs text-muted-foreground text-right">
                               {histRun.items_processed || 0}
@@ -340,7 +308,7 @@ export default function WorkersPage() {
                       </div>
                     ) : (
                       <div className="text-xs text-muted-foreground py-3 text-center">
-                        No runs yet. Click "Run" to execute this worker.
+                        No runs yet. Click &quot;Run&quot; to execute this worker.
                       </div>
                     )}
                   </div>

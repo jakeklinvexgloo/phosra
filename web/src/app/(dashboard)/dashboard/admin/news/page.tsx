@@ -20,6 +20,12 @@ import {
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import type { NewsItem } from "@/lib/admin/types"
+import { PageHeader } from "@/components/ui/page-header"
+import { StatCard } from "@/components/ui/stat-card"
+import { SearchInput } from "@/components/ui/search-input"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { EmptyState } from "@/components/ui/empty-state"
 
 // ── Tabs ─────────────────────────────────────────────────────────
 type FeedTab = "priority" | "all" | "saved" | "unread"
@@ -300,42 +306,27 @@ export default function NewsFeedPage() {
   return (
     <div className="space-y-5">
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl font-semibold text-foreground tracking-tight">Intelligence Feed</h1>
+      <PageHeader
+        title={
+          <span className="flex items-center gap-2.5">
+            Intelligence Feed
             {unreadCount > 0 && (
               <span className="tabular-nums text-[11px] font-semibold px-2 py-0.5 rounded-full bg-foreground text-background">
                 {unreadCount}
               </span>
             )}
-          </div>
-          <p className="text-xs text-muted-foreground mt-1 tracking-wide uppercase">
-            {items.length} signals &middot; {sources.length} sources &middot; {allTags.length} topics
-          </p>
-        </div>
-        <ActivityBar items={items} />
-      </div>
+          </span>
+        }
+        description={`${items.length} signals \u00b7 ${sources.length} sources \u00b7 ${allTags.length} topics`}
+        actions={<ActivityBar items={items} />}
+      />
 
       {/* ── Stat ticker ────────────────────────────────────── */}
       <div className="grid grid-cols-4 gap-2.5">
-        {[
-          { label: "Priority", value: priorityCount, icon: Zap, color: "text-amber-500" },
-          { label: "Unread", value: unreadCount, icon: Radio, color: "text-blue-500" },
-          { label: "Total", value: items.length, icon: BarChart3, color: "text-foreground/60" },
-          { label: "Sources", value: sources.length, icon: TrendingUp, color: "text-emerald-500" },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="bg-card rounded-lg px-3.5 py-2.5 border border-border/50 hover:border-border transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <s.icon className={`w-3.5 h-3.5 ${s.color}`} />
-              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">{s.label}</span>
-            </div>
-            <div className="text-xl font-semibold tabular-nums mt-0.5 text-foreground">{s.value}</div>
-          </div>
-        ))}
+        <StatCard label="Priority" value={priorityCount} icon={Zap} iconColor="text-amber-500" />
+        <StatCard label="Unread" value={unreadCount} icon={Radio} iconColor="text-blue-500" />
+        <StatCard label="Total" value={items.length} icon={BarChart3} iconColor="text-foreground/60" />
+        <StatCard label="Sources" value={sources.length} icon={TrendingUp} iconColor="text-emerald-500" />
       </div>
 
       {/* ── Filter bar ─────────────────────────────────────── */}
@@ -372,25 +363,13 @@ export default function NewsFeedPage() {
 
           <div className="flex-1" />
 
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Filter… (⌘K)"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-8 w-48 pl-8 pr-3 text-xs bg-card border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 placeholder:text-muted-foreground/50 transition-all"
-            />
-          </div>
+          <SearchInput compact value={search} onChange={setSearch} placeholder="Filter... (\u2318K)" className="w-48" />
 
           {unreadCount > 0 && (
-            <button
-              onClick={handleMarkAllRead}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground rounded-md hover:bg-muted/60 transition-colors"
-            >
+            <Button variant="ghost" size="sm" onClick={handleMarkAllRead}>
               <CheckCheck className="w-3.5 h-3.5" />
               Mark all read
-            </button>
+            </Button>
           )}
         </div>
 
@@ -453,16 +432,12 @@ export default function NewsFeedPage() {
 
       {/* ── Feed ───────────────────────────────────────────── */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center py-16 text-center">
-          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mb-3">
-            <Search className="w-4 h-4 text-muted-foreground" />
-          </div>
-          <p className="text-sm text-muted-foreground">
-            {items.length === 0
-              ? "No signals yet. Run the News Monitor worker to start scanning."
-              : "No items match your filters."}
-          </p>
-        </div>
+        <EmptyState
+          icon={Search}
+          description={items.length === 0
+            ? "No signals yet. Run the News Monitor worker to start scanning."
+            : "No items match your filters."}
+        />
       ) : (
         <>
           {/* Keyboard hint */}
@@ -547,12 +522,9 @@ export default function NewsFeedPage() {
                     {item.tags && item.tags.length > 0 && (
                       <div className="hidden sm:flex items-center gap-1 flex-shrink-0">
                         {item.tags.slice(0, 2).map((t) => (
-                          <span
-                            key={t}
-                            className="text-[9px] px-1.5 py-0.5 rounded bg-muted/80 text-muted-foreground font-medium"
-                          >
+                          <Badge key={t} variant="default" size="sm">
                             {t}
-                          </span>
+                          </Badge>
                         ))}
                       </div>
                     )}

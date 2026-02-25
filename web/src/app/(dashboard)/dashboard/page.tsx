@@ -6,6 +6,7 @@ import { Users, ShieldCheck, Activity, Plus, ArrowRight, Zap, Globe, BookOpen } 
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import { UsageChart } from "@/components/dashboard/UsageChart"
+import { Button } from "@/components/ui/button"
 import type { Family, FamilyOverview } from "@/lib/types"
 
 export default function DashboardHome() {
@@ -88,25 +89,19 @@ export default function DashboardHome() {
             </Link>
           </div>
 
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
-          >
+          <Button variant="primary" onClick={() => setShowCreate(true)}>
             <Plus className="w-4 h-4" />
             Create Family
-          </button>
+          </Button>
         </>
       ) : (
         <>
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-h3 text-foreground">Overview</h2>
-            <button
-              onClick={() => setShowCreate(true)}
-              className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
-            >
+            <Button variant="primary" onClick={() => setShowCreate(true)}>
               <Plus className="w-4 h-4" />
               New Family
-            </button>
+            </Button>
           </div>
 
           {overview && (
@@ -158,7 +153,7 @@ export default function DashboardHome() {
           </div>
 
           {overview?.children && overview.children.length > 0 && (
-            <div className="plaid-card !p-0 overflow-hidden">
+            <div className="plaid-card-flush overflow-hidden">
               <div className="px-6 py-4 border-b border-border">
                 <h3 className="text-sm font-semibold text-foreground">Children</h3>
               </div>
@@ -203,8 +198,8 @@ export default function DashboardHome() {
               />
             </div>
             <div className="flex gap-3 mt-4">
-              <button onClick={createFamily} className="bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">Create</button>
-              <button onClick={() => setShowCreate(false)} className="px-5 py-2.5 rounded-full text-sm border border-foreground text-foreground hover:bg-muted transition">Cancel</button>
+              <Button variant="primary" onClick={createFamily}>Create</Button>
+              <Button variant="outline" onClick={() => setShowCreate(false)}>Cancel</Button>
             </div>
           </div>
         </div>

@@ -1,12 +1,26 @@
 "use client"
 
-import { Fragment, useEffect, useMemo, useRef, useState } from "react"
-import { Search, ChevronDown, ChevronUp, X, ShieldCheck, Star } from "lucide-react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { ChevronDown, X, ShieldCheck, Star } from "lucide-react"
 import { api } from "@/lib/api"
 import type { Family, ComplianceLink } from "@/lib/types"
 import { DASHBOARD_PLATFORM_ENTRIES, type DashboardPlatformEntry } from "@/lib/platforms/adapters/to-dashboard-table"
 import { PLATFORM_STATS } from "@/lib/platforms/stats"
 import { CATEGORY_META } from "@/lib/platforms/registry"
+import { PageHeader } from "@/components/ui/page-header"
+import { StatCard } from "@/components/ui/stat-card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { SearchInput } from "@/components/ui/search-input"
+import {
+  DataTable,
+  DataTableHeader,
+  DataTableRow,
+  DataTableEmpty,
+  DataTableFooter,
+  type ColumnDef,
+  type SortState,
+} from "@/components/ui/data-table"
 
 /* ── Capability groups ─────────────────────────────────────────── */
 
@@ -24,19 +38,97 @@ function hasCapGroup(platform: DashboardPlatformEntry, groupKey: string): boolea
   return group.caps.some(c => platform.capabilities.includes(c))
 }
 
-/* ── Tier badge config ─────────────────────────────────────────── */
+/* ── Tier badge mapping ──────────────────────────────────────── */
 
-const TIER_BADGE: Record<string, { bg: string; text: string }> = {
-  API: { bg: "bg-emerald-500/10", text: "text-emerald-600" },
-  Hybrid: { bg: "bg-blue-500/10", text: "text-blue-600" },
-  Guide: { bg: "bg-amber-500/10", text: "text-amber-600" },
-  Roadmap: { bg: "bg-muted", text: "text-muted-foreground" },
+const TIER_BADGE_VARIANT: Record<string, "success" | "info" | "warning" | "default"> = {
+  API: "success",
+  Hybrid: "info",
+  Guide: "warning",
+  Roadmap: "default",
 }
 
 /* ── Types ─────────────────────────────────────────────────────── */
 
-type SortField = "name" | "category" | "side" | "tier" | "content" | "time" | "web" | "social" | "purchase"
 type SideFilter = "all" | "source" | "target"
+
+/* ── Tier sort order mapping ──────────────────────────────────── */
+
+const TIER_SORT_ORDER: Record<string, number> = { API: 0, Hybrid: 1, Guide: 2, Roadmap: 3 }
+
+/* ── Column definitions ──────────────────────────────────────── */
+
+const columns: ColumnDef<DashboardPlatformEntry>[] = [
+  {
+    id: "name",
+    accessor: "name",
+    header: "Platform",
+    sortable: true,
+    className: "min-w-[180px]",
+    cell: (_, row) => (
+      <div className="flex items-center gap-2">
+        {row.hex && (
+          <span
+            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+            style={{ backgroundColor: `#${row.hex}` }}
+          />
+        )}
+        <span className={`font-medium text-sm ${row.tier === "planned" ? "text-muted-foreground" : "text-foreground"}`}>
+          {row.name}
+        </span>
+      </div>
+    ),
+  },
+  {
+    id: "category",
+    accessor: "categoryLabel",
+    header: "Category",
+    sortable: true,
+    cell: (_, row) => (
+      <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        <span
+          className="w-2 h-2 rounded-full flex-shrink-0"
+          style={{ backgroundColor: `#${row.accentHex}` }}
+        />
+        {row.categoryLabel}
+      </span>
+    ),
+  },
+  {
+    id: "side",
+    accessor: "side",
+    header: "Side",
+    sortable: true,
+    cell: (v) => (
+      <Badge variant={(v as string) === "source" ? "info" : "purple"} size="sm">
+        {(v as string) === "source" ? "Source" : "Target"}
+      </Badge>
+    ),
+  },
+  {
+    id: "tier",
+    accessor: (row) => TIER_SORT_ORDER[row.tierLabel] ?? 9,
+    header: "Tier",
+    sortable: true,
+    cell: (_, row) => (
+      <Badge variant={TIER_BADGE_VARIANT[row.tierLabel] || "default"} size="sm">
+        {row.tierLabel}
+      </Badge>
+    ),
+  },
+  ...CAP_GROUPS.map((g): ColumnDef<DashboardPlatformEntry> => ({
+    id: g.key,
+    accessor: (row) => hasCapGroup(row, g.key),
+    header: g.label,
+    sortable: true,
+    align: "center",
+    cell: (v, row) =>
+      v ? (
+        <span className={`font-medium ${row.tier === "planned" ? "text-muted-foreground" : "text-success"}`}>&#10003;</span>
+      ) : (
+        <span className="text-muted-foreground/40">&mdash;</span>
+      ),
+  })),
+]
 
 /* ── Component ─────────────────────────────────────────────────── */
 
@@ -49,8 +141,7 @@ export default function PlatformsPage() {
   const [tierFilter, setTierFilter] = useState("all")
   const [selectedCaps, setSelectedCaps] = useState<string[]>([])
   const [featuredOnly, setFeaturedOnly] = useState(false)
-  const [sortField, setSortField] = useState<SortField>("name")
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
+  const [sort, setSort] = useState<SortState | null>({ key: "name", direction: "asc" })
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [capsOpen, setCapsOpen] = useState(false)
   const [verifyingTo, setVerifyingTo] = useState<string | null>(null)
@@ -88,18 +179,14 @@ export default function PlatformsPage() {
     setSelectedCaps(prev => prev.filter(c => c !== cap))
   }
 
-  const toggleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDir(d => d === "asc" ? "desc" : "asc")
-    } else {
-      setSortField(field)
-      setSortDir("asc")
-    }
+  const toggleSort = (key: string) => {
+    setSort((prev) => {
+      if (prev?.key === key) {
+        return prev.direction === "asc" ? { key, direction: "desc" as const } : null
+      }
+      return { key, direction: "asc" as const }
+    })
   }
-
-  /* ── Tier sort order mapping for sort ────────────────────────── */
-
-  const TIER_SORT_ORDER: Record<string, number> = { API: 0, Hybrid: 1, Guide: 2, Roadmap: 3 }
 
   /* ── Filtered + sorted platforms ─────────────────────────────── */
 
@@ -131,36 +218,34 @@ export default function PlatformsPage() {
       result = result.filter(p => p.marquee)
     }
 
-    result.sort((a, b) => {
-      let av: string | boolean | number, bv: string | boolean | number
-      if (sortField === "name" || sortField === "category" || sortField === "side") {
-        av = sortField === "name" ? a.name : sortField === "category" ? a.categoryLabel : a.side
-        bv = sortField === "name" ? b.name : sortField === "category" ? b.categoryLabel : b.side
-      } else if (sortField === "tier") {
-        av = TIER_SORT_ORDER[a.tierLabel] ?? 9
-        bv = TIER_SORT_ORDER[b.tierLabel] ?? 9
-      } else {
-        av = hasCapGroup(a, sortField)
-        bv = hasCapGroup(b, sortField)
-      }
+    // Sort using the column definitions
+    if (sort) {
+      const col = columns.find(c => c.id === sort.key)
+      if (col) {
+        result.sort((a, b) => {
+          const accessor = col.accessor
+          const av = typeof accessor === "function" ? accessor(a) : a[accessor as keyof DashboardPlatformEntry]
+          const bv = typeof accessor === "function" ? accessor(b) : b[accessor as keyof DashboardPlatformEntry]
 
-      if (typeof av === "boolean") {
-        if (av === bv) return 0
-        const cmp = av ? -1 : 1
-        return sortDir === "asc" ? cmp : -cmp
-      }
+          if (typeof av === "boolean" && typeof bv === "boolean") {
+            if (av === bv) return 0
+            const cmp = av ? -1 : 1
+            return sort.direction === "asc" ? cmp : -cmp
+          }
 
-      if (typeof av === "number") {
-        const cmp = (av as number) - (bv as number)
-        return sortDir === "asc" ? cmp : -cmp
-      }
+          if (typeof av === "number" && typeof bv === "number") {
+            const cmp = av - bv
+            return sort.direction === "asc" ? cmp : -cmp
+          }
 
-      const cmp = (av as string).localeCompare(bv as string)
-      return sortDir === "asc" ? cmp : -cmp
-    })
+          const cmp = String(av ?? "").localeCompare(String(bv ?? ""))
+          return sort.direction === "asc" ? cmp : -cmp
+        })
+      }
+    }
 
     return result
-  }, [search, sideFilter, categoryFilter, tierFilter, selectedCaps, featuredOnly, sortField, sortDir])
+  }, [search, sideFilter, categoryFilter, tierFilter, selectedCaps, featuredOnly, sort])
 
   /* ── Compliance helpers ──────────────────────────────────────── */
 
@@ -192,48 +277,113 @@ export default function PlatformsPage() {
 
   const marqueeCount = DASHBOARD_PLATFORM_ENTRIES.filter(p => p.marquee).length
 
-  /* ── Sort header component ───────────────────────────────────── */
+  /* ── Expanded row content renderer ─────────────────────────── */
 
-  const SortHeader = ({ field, children, className = "" }: { field: SortField; children: React.ReactNode; className?: string }) => (
-    <th
-      className={`px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider cursor-pointer select-none hover:text-foreground transition ${className}`}
-      onClick={() => toggleSort(field)}
-    >
-      <span className="inline-flex items-center gap-1">
-        {children}
-        {sortField === field ? (
-          sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />
-        ) : (
-          <ChevronDown className="w-3 h-3 opacity-0 group-hover:opacity-30" />
+  const renderExpandedContent = (platform: DashboardPlatformEntry) => {
+    const dbId = platform.dbPlatformId
+    const link = dbId ? links.find(c => c.platform_id === dbId) : undefined
+    const verified = dbId ? isVerified(dbId) : false
+
+    return (
+      <div className="space-y-4">
+        {/* Description */}
+        {platform.description && (
+          <p className="text-sm text-muted-foreground">{platform.description}</p>
         )}
-      </span>
-    </th>
-  )
+
+        {/* Capabilities tags */}
+        <div>
+          <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Capabilities</p>
+          <div className="flex flex-wrap gap-1.5">
+            {platform.capabilities.length > 0 ? (
+              platform.capabilities.map(cap => (
+                <span key={cap} className="px-2 py-0.5 bg-accent/10 text-brand-green rounded text-xs">
+                  {cap.replace(/_/g, " ")}
+                </span>
+              ))
+            ) : (
+              <span className="text-xs text-muted-foreground">None listed</span>
+            )}
+          </div>
+        </div>
+
+        {/* Auth type (if present) */}
+        {platform.authType && (
+          <div>
+            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-1">Auth Type</p>
+            <span className="text-sm text-muted-foreground">{platform.authType}</span>
+          </div>
+        )}
+
+        {/* Compliance section -- tier-aware */}
+        <div>
+          <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Compliance</p>
+
+          {(platform.tier === "live" || platform.tier === "partial") && dbId ? (
+            /* Live/Partial with backend adapter: verify/revoke flow */
+            verified ? (
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-1.5 text-sm text-success font-medium">
+                  <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
+                  Verified
+                </span>
+                {link && (
+                  <button onClick={(e) => { e.stopPropagation(); revoke(link.id) }} className="text-xs text-destructive hover:underline">
+                    Revoke
+                  </button>
+                )}
+              </div>
+            ) : verifyingTo === platform.id ? (
+              <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+                {platform.authType === "api_key" && (
+                  <input
+                    type="text"
+                    placeholder="API Key"
+                    value={apiKey}
+                    onChange={e => setApiKey(e.target.value)}
+                    className="rounded border border-input bg-background px-2 py-1 text-sm text-foreground focus:outline-none focus:border-foreground"
+                  />
+                )}
+                <Button size="sm" onClick={() => verify(dbId)}>
+                  Verify
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setVerifyingTo(null)}>
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <Button
+                size="sm"
+                onClick={(e) => { e.stopPropagation(); setVerifyingTo(platform.id) }}
+              >
+                {platform.authType === "manual" ? "View Instructions" : "Verify Compliance"}
+              </Button>
+            )
+          ) : platform.tier === "stub" ? (
+            <p className="text-sm text-amber-600">Setup guide available — follow the platform-specific instructions to configure parental controls.</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">On our roadmap — coming soon.</p>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
       {/* Header */}
-      <h2 className="text-h2 text-foreground mb-2">Platform Coverage Explorer</h2>
-      <p className="text-muted-foreground mb-6">Browse all {PLATFORM_STATS.total} platforms across {PLATFORM_STATS.categoryCount} categories</p>
+      <PageHeader
+        title="Platform Coverage Explorer"
+        description={`Browse all ${PLATFORM_STATS.total} platforms across ${PLATFORM_STATS.categoryCount} categories`}
+        className="mb-6"
+      />
 
       {/* Stats bar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="plaid-card !py-4 !px-5">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Total</p>
-          <p className="text-2xl font-bold text-foreground">{PLATFORM_STATS.total}</p>
-        </div>
-        <div className="plaid-card !py-4 !px-5">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">API Integrated</p>
-          <p className="text-2xl font-bold text-emerald-600">{PLATFORM_STATS.liveCount}</p>
-        </div>
-        <div className="plaid-card !py-4 !px-5">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Categories</p>
-          <p className="text-2xl font-bold text-foreground">{PLATFORM_STATS.categoryCount}</p>
-        </div>
-        <div className="plaid-card !py-4 !px-5">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Featured</p>
-          <p className="text-2xl font-bold text-foreground">{marqueeCount}</p>
-        </div>
+        <StatCard label="Total" value={PLATFORM_STATS.total} />
+        <StatCard label="API Integrated" value={PLATFORM_STATS.liveCount} iconColor="text-emerald-600" />
+        <StatCard label="Categories" value={PLATFORM_STATS.categoryCount} />
+        <StatCard label="Featured" value={marqueeCount} />
       </div>
 
       {/* Filters */}
@@ -309,7 +459,7 @@ export default function PlatformsPage() {
                   <span className={`w-4 h-4 rounded-sm border flex items-center justify-center text-xs ${
                     selectedCaps.includes(g.key) ? "bg-foreground border-foreground text-background" : "border-border"
                   }`}>
-                    {selectedCaps.includes(g.key) && "✓"}
+                    {selectedCaps.includes(g.key) && "\u2713"}
                   </span>
                   {g.label}
                 </button>
@@ -353,214 +503,64 @@ export default function PlatformsPage() {
       )}
 
       {/* Search */}
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Search platforms by name"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="plaid-input pl-10 w-full"
-        />
-      </div>
+      <SearchInput
+        value={search}
+        onChange={setSearch}
+        placeholder="Search platforms by name"
+        className="mb-6"
+      />
 
       {/* Table */}
-      <div className="plaid-card !p-0 overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-border bg-muted/30">
-              <SortHeader field="name" className="min-w-[180px]">Platform</SortHeader>
-              <SortHeader field="category">Category</SortHeader>
-              <SortHeader field="side">Side</SortHeader>
-              <SortHeader field="tier">Tier</SortHeader>
-              <SortHeader field="content">Content</SortHeader>
-              <SortHeader field="time">Time</SortHeader>
-              <SortHeader field="web">Web</SortHeader>
-              <SortHeader field="social">Social</SortHeader>
-              <SortHeader field="purchase">Purchase</SortHeader>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map(platform => {
+      <DataTable>
+        <DataTableHeader columns={columns} sort={sort} onSort={toggleSort} />
+        <tbody>
+          {filtered.length === 0 ? (
+            <DataTableEmpty
+              description="No platforms match your filters."
+              colSpan={columns.length}
+            />
+          ) : (
+            filtered.map(platform => {
               const isExpanded = expandedId === platform.id
-              const badge = TIER_BADGE[platform.tierLabel] || TIER_BADGE.Roadmap
-              const isPlanned = platform.tier === "planned"
-              const dbId = platform.dbPlatformId
-              const link = dbId ? links.find(c => c.platform_id === dbId) : undefined
-              const verified = dbId ? isVerified(dbId) : false
+              const verified = platform.dbPlatformId ? isVerified(platform.dbPlatformId) : false
 
               return (
-                <Fragment key={platform.id}>
-                  <tr
-                    className={`border-b border-border cursor-pointer transition ${
-                      isExpanded ? "bg-muted/30" : "hover:bg-muted/50"
-                    }`}
-                    onClick={() => setExpandedId(isExpanded ? null : platform.id)}
-                  >
-                    {/* Platform name + brand dot */}
-                    <td className="px-4 py-4">
-                      <div className="flex items-center gap-2">
-                        {platform.hex && (
-                          <span
-                            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                            style={{ backgroundColor: `#${platform.hex}` }}
-                          />
-                        )}
-                        <span className={`font-medium text-sm ${isPlanned ? "text-muted-foreground" : "text-foreground"}`}>
-                          {platform.name}
-                        </span>
-                        {verified && <ShieldCheck className="w-4 h-4 text-success" />}
-                      </div>
-                    </td>
-
-                    {/* Category */}
-                    <td className="px-4 py-4">
-                      <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                        <span
-                          className="w-2 h-2 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: `#${platform.accentHex}` }}
-                        />
-                        {platform.categoryLabel}
-                      </span>
-                    </td>
-
-                    {/* Side */}
-                    <td className="px-4 py-4">
-                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
-                        platform.side === "source"
-                          ? "bg-blue-500/10 text-blue-600"
-                          : "bg-purple-500/10 text-purple-600"
-                      }`}>
-                        {platform.side === "source" ? "Source" : "Target"}
-                      </span>
-                    </td>
-
-                    {/* Tier */}
-                    <td className="px-4 py-4">
-                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${badge.bg} ${badge.text}`}>
-                        {platform.tierLabel}
-                      </span>
-                    </td>
-
-                    {/* Capability columns */}
-                    {CAP_GROUPS.map(g => (
-                      <td key={g.key} className="px-4 py-4 text-center">
-                        {hasCapGroup(platform, g.key) ? (
-                          <span className={`font-medium ${isPlanned ? "text-muted-foreground" : "text-success"}`}>✓</span>
-                        ) : (
-                          <span className="text-muted-foreground/40">—</span>
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-
-                  {/* Expanded row */}
-                  {isExpanded && (
-                    <tr className="border-b border-border">
-                      <td colSpan={9} className="bg-muted/20 px-6 py-5">
-                        <div className="space-y-4">
-                          {/* Description */}
-                          {platform.description && (
-                            <p className="text-sm text-muted-foreground">{platform.description}</p>
-                          )}
-
-                          {/* Capabilities tags */}
-                          <div>
-                            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Capabilities</p>
-                            <div className="flex flex-wrap gap-1.5">
-                              {platform.capabilities.length > 0 ? (
-                                platform.capabilities.map(cap => (
-                                  <span key={cap} className="px-2 py-0.5 bg-accent/10 text-brand-green rounded text-xs">
-                                    {cap.replace(/_/g, " ")}
-                                  </span>
-                                ))
-                              ) : (
-                                <span className="text-xs text-muted-foreground">None listed</span>
+                <DataTableRow
+                  key={platform.id}
+                  row={platform}
+                  columns={columns.map((col, idx) =>
+                    idx === 0
+                      ? {
+                          ...col,
+                          cell: (_, row: DashboardPlatformEntry) => (
+                            <div className="flex items-center gap-2">
+                              {row.hex && (
+                                <span
+                                  className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                  style={{ backgroundColor: `#${row.hex}` }}
+                                />
                               )}
+                              <span className={`font-medium text-sm ${row.tier === "planned" ? "text-muted-foreground" : "text-foreground"}`}>
+                                {row.name}
+                              </span>
+                              {verified && <ShieldCheck className="w-4 h-4 text-success" />}
                             </div>
-                          </div>
-
-                          {/* Auth type (if present) */}
-                          {platform.authType && (
-                            <div>
-                              <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-1">Auth Type</p>
-                              <span className="text-sm text-muted-foreground">{platform.authType}</span>
-                            </div>
-                          )}
-
-                          {/* Compliance section — tier-aware */}
-                          <div>
-                            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Compliance</p>
-
-                            {(platform.tier === "live" || platform.tier === "partial") && dbId ? (
-                              /* Live/Partial with backend adapter: verify/revoke flow */
-                              verified ? (
-                                <div className="flex items-center gap-3">
-                                  <span className="flex items-center gap-1.5 text-sm text-success font-medium">
-                                    <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-                                    Verified
-                                  </span>
-                                  {link && (
-                                    <button onClick={(e) => { e.stopPropagation(); revoke(link.id) }} className="text-xs text-destructive hover:underline">
-                                      Revoke
-                                    </button>
-                                  )}
-                                </div>
-                              ) : verifyingTo === platform.id ? (
-                                <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
-                                  {platform.authType === "api_key" && (
-                                    <input
-                                      type="text"
-                                      placeholder="API Key"
-                                      value={apiKey}
-                                      onChange={e => setApiKey(e.target.value)}
-                                      className="rounded border border-input bg-background px-2 py-1 text-sm text-foreground focus:outline-none focus:border-foreground"
-                                    />
-                                  )}
-                                  <button onClick={() => verify(dbId)} className="bg-foreground text-background px-3 py-1 rounded-full text-xs font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition">
-                                    Verify
-                                  </button>
-                                  <button onClick={() => setVerifyingTo(null)} className="px-3 py-1 rounded-full border border-foreground text-foreground text-xs hover:bg-muted transition">
-                                    Cancel
-                                  </button>
-                                </div>
-                              ) : (
-                                <button
-                                  onClick={(e) => { e.stopPropagation(); setVerifyingTo(platform.id) }}
-                                  className="bg-foreground text-background px-3 py-1 rounded-full text-xs font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
-                                >
-                                  {platform.authType === "manual" ? "View Instructions" : "Verify Compliance"}
-                                </button>
-                              )
-                            ) : platform.tier === "stub" ? (
-                              <p className="text-sm text-amber-600">Setup guide available — follow the platform-specific instructions to configure parental controls.</p>
-                            ) : (
-                              <p className="text-sm text-muted-foreground">On our roadmap — coming soon.</p>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
+                          ),
+                        }
+                      : col
                   )}
-                </Fragment>
+                  onClick={() => setExpandedId(isExpanded ? null : platform.id)}
+                  isExpanded={isExpanded}
+                  expandedContent={renderExpandedContent(platform)}
+                />
               )
-            })}
+            })
+          )}
+        </tbody>
+      </DataTable>
 
-            {filtered.length === 0 && (
-              <tr>
-                <td colSpan={9} className="px-6 py-12 text-center text-sm text-muted-foreground">
-                  No platforms match your filters.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        {/* Footer */}
-        <div className="px-6 py-3 border-t border-border text-sm text-muted-foreground">
-          Showing {filtered.length} of {DASHBOARD_PLATFORM_ENTRIES.length} platforms
-        </div>
-      </div>
+      {/* Footer */}
+      <DataTableFooter showing={filtered.length} total={DASHBOARD_PLATFORM_ENTRIES.length} />
     </div>
   )
 }

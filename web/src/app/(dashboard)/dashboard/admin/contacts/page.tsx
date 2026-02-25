@@ -1,10 +1,58 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import { Search, Users, RefreshCw, Download, ArrowRight, CheckCircle2, Loader2 } from "lucide-react"
+import { Users, RefreshCw, Download, ArrowRight, CheckCircle2 } from "lucide-react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import type { GoogleConnectionStatus, GoogleContact, ContactSyncPreview, ContactSyncResult } from "@/lib/admin/types"
+import { PageHeader } from "@/components/ui/page-header"
+import { Button } from "@/components/ui/button"
+import { SearchInput } from "@/components/ui/search-input"
+import { EmptyState } from "@/components/ui/empty-state"
+import {
+  DataTable,
+  DataTableHeader,
+  DataTableRow,
+  DataTableEmpty,
+  DataTableFooter,
+  useDataTable,
+  type ColumnDef,
+} from "@/components/ui/data-table"
+
+const columns: ColumnDef<GoogleContact>[] = [
+  {
+    id: "name",
+    accessor: "name",
+    header: "Name",
+    sortable: true,
+    cell: (_, row) => (
+      <div className="min-w-0">
+        <div className="text-sm font-medium text-foreground truncate">{row.name || "—"}</div>
+        {row.title && <div className="text-xs text-muted-foreground truncate">{row.title}</div>}
+      </div>
+    ),
+  },
+  {
+    id: "email",
+    accessor: "email",
+    header: "Email",
+    sortable: true,
+    cell: (v) => <span className="text-sm text-muted-foreground truncate">{(v as string) || "—"}</span>,
+  },
+  {
+    id: "org",
+    accessor: "org",
+    header: "Organization",
+    sortable: true,
+    cell: (v) => <span className="text-sm text-muted-foreground truncate">{(v as string) || "—"}</span>,
+  },
+  {
+    id: "phone",
+    accessor: "phone",
+    header: "Phone",
+    cell: (v) => <span className="text-sm text-muted-foreground truncate">{(v as string) || "—"}</span>,
+  },
+]
 
 export default function ContactSyncPage() {
   const { getToken } = useApi()
@@ -12,7 +60,6 @@ export default function ContactSyncPage() {
   const [loading, setLoading] = useState(true)
   const [contacts, setContacts] = useState<GoogleContact[]>([])
   const [totalPeople, setTotalPeople] = useState(0)
-  const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<GoogleContact[] | null>(null)
 
   // Sync state
@@ -20,6 +67,15 @@ export default function ContactSyncPage() {
   const [syncResult, setSyncResult] = useState<ContactSyncResult | null>(null)
   const [previewing, setPreviewing] = useState(false)
   const [syncing, setSyncing] = useState(false)
+
+  const displayContacts = searchResults !== null ? searchResults : contacts
+
+  const { rows, sort, toggleSort, search, setSearch } = useDataTable({
+    data: displayContacts,
+    columns,
+    initialSort: { key: "name", direction: "asc" },
+    searchKeys: ["name", "email", "org", "phone"],
+  })
 
   const checkConnection = useCallback(async () => {
     try {
@@ -56,13 +112,13 @@ export default function ContactSyncPage() {
   }, [checkConnection, fetchContacts])
 
   const handleSearch = async () => {
-    if (!searchQuery) {
+    if (!search) {
       setSearchResults(null)
       return
     }
     try {
       const token = (await getToken()) ?? undefined
-      const results = await api.searchGoogleContacts(searchQuery, token)
+      const results = await api.searchGoogleContacts(search, token)
       setSearchResults(results)
     } catch {
       setSearchResults([])
@@ -109,8 +165,6 @@ export default function ContactSyncPage() {
     }
   }
 
-  const displayContacts = searchResults !== null ? searchResults : contacts
-
   if (loading) {
     return <div className="py-20 text-center text-muted-foreground text-sm animate-pulse">Loading contacts...</div>
   }
@@ -119,24 +173,22 @@ export default function ContactSyncPage() {
   if (!status?.connected) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Google Contacts</h1>
-          <p className="text-sm text-muted-foreground mt-1">Connect Google to sync contacts into your outreach pipeline.</p>
-        </div>
-        <div className="plaid-card text-center py-12 max-w-md mx-auto">
-          <Users className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
-          <h2 className="text-lg font-semibold text-foreground mb-2">Connect Google</h2>
-          <p className="text-sm text-muted-foreground mb-6">
-            Link your Google account to import contacts into the outreach pipeline.
-          </p>
-          <button
-            onClick={handleConnect}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity"
-          >
-            <Users className="w-4 h-4" />
-            Connect Google Account
-          </button>
-        </div>
+        <PageHeader
+          title="Google Contacts"
+          description="Connect Google to sync contacts into your outreach pipeline."
+        />
+        <EmptyState
+          icon={Users}
+          title="Connect Google"
+          description="Link your Google account to import contacts into the outreach pipeline."
+          action={
+            <Button onClick={handleConnect}>
+              <Users className="w-4 h-4" />
+              Connect Google Account
+            </Button>
+          }
+          className="plaid-card max-w-md mx-auto"
+        />
       </div>
     )
   }
@@ -144,32 +196,22 @@ export default function ContactSyncPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">Google Contacts</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {status.email} &middot; {totalPeople} contacts
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handlePreview}
-            disabled={previewing}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-sm font-medium text-foreground hover:bg-muted/80 transition-colors disabled:opacity-50"
-          >
-            {previewing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-            Preview Sync
-          </button>
-          <button
-            onClick={handleSync}
-            disabled={syncing}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-          >
-            {syncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-            Sync Now
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        title="Google Contacts"
+        description={`${status.email} \u00b7 ${totalPeople} contacts`}
+        actions={
+          <>
+            <Button variant="secondary" onClick={handlePreview} loading={previewing}>
+              <RefreshCw className="w-3.5 h-3.5" />
+              Preview Sync
+            </Button>
+            <Button onClick={handleSync} loading={syncing}>
+              <Download className="w-3.5 h-3.5" />
+              Sync Now
+            </Button>
+          </>
+        }
+      />
 
       {/* Sync Preview */}
       {syncPreview && (
@@ -190,14 +232,10 @@ export default function ContactSyncPage() {
             </div>
           </div>
           <div className="mt-4 flex justify-end">
-            <button
-              onClick={handleSync}
-              disabled={syncing}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-foreground text-background text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-            >
-              {syncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ArrowRight className="w-3.5 h-3.5" />}
+            <Button onClick={handleSync} loading={syncing}>
+              <ArrowRight className="w-3.5 h-3.5" />
               Execute Sync
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -216,65 +254,52 @@ export default function ContactSyncPage() {
       )}
 
       {/* Search */}
-      <div className="relative flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search contacts..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            className="plaid-input pl-9"
-          />
-        </div>
-        <button
-          onClick={handleSearch}
-          className="px-4 py-2 rounded-lg bg-muted text-sm font-medium text-foreground hover:bg-muted/80 transition-colors"
-        >
+      <div className="flex gap-2">
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          onClear={() => setSearchResults(null)}
+          placeholder="Search contacts..."
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          className="flex-1"
+        />
+        <Button variant="secondary" onClick={handleSearch}>
           Search
-        </button>
+        </Button>
         {searchResults !== null && (
-          <button
-            onClick={() => { setSearchResults(null); setSearchQuery("") }}
-            className="px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
+          <Button
+            variant="ghost"
+            onClick={() => { setSearchResults(null); setSearch("") }}
           >
             Clear
-          </button>
+          </Button>
         )}
       </div>
 
       {/* Contacts Table */}
-      {displayContacts.length === 0 ? (
-        <div className="plaid-card text-center py-12">
-          <p className="text-muted-foreground text-sm">
-            {searchResults !== null ? "No contacts match your search." : "No contacts found in your Google account."}
-          </p>
-        </div>
-      ) : (
-        <div className="plaid-card p-0 overflow-hidden">
-          {/* Header */}
-          <div className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-2 px-5 py-2.5 border-b border-border text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-wider">
-            <div>Name</div>
-            <div>Email</div>
-            <div>Organization</div>
-            <div>Phone</div>
-          </div>
+      <DataTable>
+        <DataTableHeader columns={columns} sort={sort} onSort={toggleSort} />
+        <tbody>
+          {rows.length === 0 ? (
+            <DataTableEmpty
+              icon={Users}
+              description={searchResults !== null ? "No contacts match your search." : "No contacts found in your Google account."}
+              colSpan={columns.length}
+            />
+          ) : (
+            rows.map((contact, i) => (
+              <DataTableRow
+                key={contact.resource_name || i}
+                row={contact}
+                columns={columns}
+              />
+            ))
+          )}
+        </tbody>
+      </DataTable>
 
-          <div className="divide-y divide-border">
-            {displayContacts.map((contact, i) => (
-              <div key={contact.resource_name || i} className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-2 px-5 py-3 items-center hover:bg-muted/30 transition-colors">
-                <div className="min-w-0">
-                  <div className="text-sm font-medium text-foreground truncate">{contact.name || "—"}</div>
-                  {contact.title && <div className="text-xs text-muted-foreground truncate">{contact.title}</div>}
-                </div>
-                <div className="text-sm text-muted-foreground truncate">{contact.email || "—"}</div>
-                <div className="text-sm text-muted-foreground truncate">{contact.org || "—"}</div>
-                <div className="text-sm text-muted-foreground truncate">{contact.phone || "—"}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+      {rows.length > 0 && (
+        <DataTableFooter showing={rows.length} total={displayContacts.length} />
       )}
     </div>
   )

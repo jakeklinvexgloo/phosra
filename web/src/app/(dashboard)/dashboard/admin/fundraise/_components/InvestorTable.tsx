@@ -1,15 +1,13 @@
 "use client"
 
-import { Fragment, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import {
   ChevronDown,
-  ChevronUp,
   Linkedin,
   Twitter,
   Mail,
   Globe,
   ExternalLink,
-  Search,
   Star,
   X,
 } from "lucide-react"
@@ -20,6 +18,16 @@ import type {
   InvestorCategory,
   InvestorType,
 } from "@/lib/investors/warm-intro-network"
+import { Badge } from "@/components/ui/badge"
+import { SearchInput } from "@/components/ui/search-input"
+import {
+  DataTable,
+  DataTableHeader,
+  DataTableRow,
+  DataTableEmpty,
+  type ColumnDef,
+  type SortState,
+} from "@/components/ui/data-table"
 
 export type InvestorRating = 1 | 2 | 3 | 4 | 5 | "x"
 
@@ -59,9 +67,6 @@ const TYPE_LABELS: Partial<Record<InvestorType, string>> = {
   "impact-fund": "Impact Fund",
 }
 
-type SortKey = "name" | "tier" | "category" | "thesisAlignment" | "paths" | "rating"
-type SortDir = "asc" | "desc"
-
 const PIPELINE_OPTIONS: PipelineStatus[] = [
   "identified",
   "connector-contacted",
@@ -76,16 +81,16 @@ const PIPELINE_OPTIONS: PipelineStatus[] = [
   "passed",
 ]
 
-const TIER_COLORS: Record<PriorityTier, string> = {
-  1: "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400",
-  2: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
-  3: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400",
+const TIER_BADGE_VARIANT: Record<PriorityTier, "destructive" | "warning" | "info"> = {
+  1: "destructive",
+  2: "warning",
+  3: "info",
 }
 
-const THESIS_COLORS: Record<string, string> = {
-  perfect: "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400",
-  good: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
-  adjacent: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
+const THESIS_BADGE_VARIANT: Record<string, "success" | "warning" | "default"> = {
+  perfect: "success",
+  good: "warning",
+  adjacent: "default",
 }
 
 export default function InvestorTable({
@@ -109,8 +114,7 @@ export default function InvestorTable({
   const [thesisFilter, setThesisFilter] = useState<string>("all")
   const [ratingFilter, setRatingFilter] = useState<string>("all")
   const [searchQuery, setSearchQuery] = useState("")
-  const [sortKey, setSortKey] = useState<SortKey>("tier")
-  const [sortDir, setSortDir] = useState<SortDir>("asc")
+  const [sort, setSort] = useState<SortState | null>({ key: "tier", direction: "asc" })
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const categories = useMemo(
@@ -137,6 +141,15 @@ export default function InvestorTable({
     setRatingFilter("all")
   }
 
+  const toggleSort = (key: string) => {
+    setSort((prev) => {
+      if (prev?.key === key) {
+        return prev.direction === "asc" ? { key, direction: "desc" as const } : null
+      }
+      return { key, direction: "asc" as const }
+    })
+  }
+
   const filtered = useMemo(() => {
     const q = searchQuery.toLowerCase()
     let result = targets.filter((t) => {
@@ -155,48 +168,389 @@ export default function InvestorTable({
       return true
     })
     // Sort
-    const thesisOrder = { perfect: 0, good: 1, adjacent: 2 }
-    result.sort((a, b) => {
-      let cmp = 0
-      switch (sortKey) {
-        case "name": cmp = a.name.localeCompare(b.name); break
-        case "tier": cmp = a.tier - b.tier; break
-        case "category": cmp = a.category.localeCompare(b.category); break
-        case "thesisAlignment": cmp = thesisOrder[a.thesisAlignment] - thesisOrder[b.thesisAlignment]; break
-        case "paths": cmp = b.introPaths.length - a.introPaths.length; break
-        case "rating": {
-          const ratingVal = (id: string) => {
-            const r = ratings?.[id]
-            if (r === undefined) return 0
-            if (r === "x") return -1
-            return r
+    const thesisOrder: Record<string, number> = { perfect: 0, good: 1, adjacent: 2 }
+    if (sort) {
+      result.sort((a, b) => {
+        let cmp = 0
+        switch (sort.key) {
+          case "name": cmp = a.name.localeCompare(b.name); break
+          case "tier": cmp = a.tier - b.tier; break
+          case "category": cmp = a.category.localeCompare(b.category); break
+          case "thesisAlignment": cmp = thesisOrder[a.thesisAlignment] - thesisOrder[b.thesisAlignment]; break
+          case "paths": cmp = b.introPaths.length - a.introPaths.length; break
+          case "rating": {
+            const ratingVal = (id: string) => {
+              const r = ratings?.[id]
+              if (r === undefined) return 0
+              if (r === "x") return -1
+              return r
+            }
+            cmp = ratingVal(b.id) - ratingVal(a.id)
+            break
           }
-          cmp = ratingVal(b.id) - ratingVal(a.id)
-          break
         }
-      }
-      return sortDir === "asc" ? cmp : -cmp
-    })
-    return result
-  }, [targets, tierFilter, categoryFilter, typeFilter, thesisFilter, ratingFilter, searchQuery, sortKey, sortDir, ratings])
-
-  const toggleSort = (key: SortKey) => {
-    if (sortKey === key) {
-      setSortDir((d) => (d === "asc" ? "desc" : "asc"))
-    } else {
-      setSortKey(key)
-      setSortDir(key === "rating" ? "asc" : "asc")
+        return sort.direction === "asc" ? cmp : -cmp
+      })
     }
-  }
+    return result
+  }, [targets, tierFilter, categoryFilter, typeFilter, thesisFilter, ratingFilter, searchQuery, sort, ratings])
 
-  const SortIcon = ({ col }: { col: SortKey }) => {
-    if (sortKey !== col) return null
-    return sortDir === "asc" ? (
-      <ChevronUp className="w-3 h-3 inline ml-0.5" />
-    ) : (
-      <ChevronDown className="w-3 h-3 inline ml-0.5" />
-    )
-  }
+  /* ── Column definitions (inside component for closure over ratings/handlers) ── */
+
+  const columns: ColumnDef<WarmIntroTarget>[] = useMemo(() => [
+    {
+      id: "name",
+      accessor: "name",
+      header: "Name",
+      sortable: true,
+      cell: (_, row) => (
+        <span className="flex items-center gap-1.5 text-foreground font-medium max-w-[180px] truncate">
+          <ChevronDown
+            className={`w-3 h-3 text-muted-foreground shrink-0 transition-transform ${expandedId === row.id ? "" : "-rotate-90"}`}
+          />
+          {row.name}
+        </span>
+      ),
+    },
+    {
+      id: "fund",
+      accessor: "fundOrCompany",
+      header: "Fund",
+      cell: (v) => <span className="text-muted-foreground max-w-[140px] truncate">{v as string}</span>,
+    },
+    {
+      id: "tier",
+      accessor: "tier",
+      header: "Tier",
+      sortable: true,
+      cell: (_, row) => (
+        <Badge variant={TIER_BADGE_VARIANT[row.tier]} size="sm">
+          Tier {row.tier}
+        </Badge>
+      ),
+    },
+    {
+      id: "category",
+      accessor: "category",
+      header: "Category",
+      sortable: true,
+      hideBelow: "md",
+      cell: (v) => <span className="text-muted-foreground">{CATEGORY_LABELS[v as InvestorCategory] ?? (v as string).replace(/-/g, " ")}</span>,
+    },
+    {
+      id: "checkSize",
+      accessor: "checkSizeRange",
+      header: "Check Size",
+      hideBelow: "lg",
+      cell: (v) => <span className="text-muted-foreground tabular-nums">{v as string}</span>,
+    },
+    {
+      id: "thesisAlignment",
+      accessor: "thesisAlignment",
+      header: "Thesis",
+      sortable: true,
+      cell: (v) => (
+        <Badge variant={THESIS_BADGE_VARIANT[v as string] || "default"} size="sm">
+          {v as string}
+        </Badge>
+      ),
+    },
+    {
+      id: "status",
+      accessor: "status",
+      header: "Status",
+      interactive: true,
+      cell: (_, row) => (
+        <select
+          value={row.status}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) =>
+            onStatusChange(
+              row.id,
+              e.target.value as PipelineStatus,
+            )
+          }
+          className="text-[11px] px-1.5 py-1 rounded border border-border bg-background"
+        >
+          {PIPELINE_OPTIONS.map((s) => (
+            <option key={s} value={s}>
+              {s.replace(/-/g, " ")}
+            </option>
+          ))}
+        </select>
+      ),
+    },
+    {
+      id: "rating",
+      accessor: (row) => ratings?.[row.id],
+      header: "Rating",
+      sortable: true,
+      interactive: true,
+      cell: (_, row) => {
+        const currentRating = ratings?.[row.id]
+        return (
+          <div className="flex items-center gap-0.5">
+            {currentRating === "x" ? (
+              <>
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => onRatingChange?.(row.id, s as InvestorRating)}
+                    className="p-0"
+                  >
+                    <Star className="w-3 h-3 text-border" />
+                  </button>
+                ))}
+                <button
+                  onClick={() => onRatingChange?.(row.id, null)}
+                  className="p-0 ml-1"
+                  title="Clear not-a-fit"
+                >
+                  <X className="w-3 h-3 text-red-500 fill-red-500" />
+                </button>
+              </>
+            ) : (
+              <>
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <button
+                    key={s}
+                    onClick={() =>
+                      onRatingChange?.(
+                        row.id,
+                        currentRating === s ? null : (s as InvestorRating),
+                      )
+                    }
+                    className="p-0"
+                  >
+                    <Star
+                      className={`w-3 h-3 ${
+                        currentRating !== undefined &&
+                        s <= (currentRating as number)
+                          ? "text-amber-400 fill-amber-400"
+                          : "text-border"
+                      }`}
+                    />
+                  </button>
+                ))}
+                <button
+                  onClick={() => onRatingChange?.(row.id, "x")}
+                  className="p-0 ml-1"
+                  title="Not a fit"
+                >
+                  <X className="w-3 h-3 text-border hover:text-red-500" />
+                </button>
+              </>
+            )}
+          </div>
+        )
+      },
+    },
+    {
+      id: "paths",
+      accessor: (row) => row.introPaths.length,
+      header: "Paths",
+      sortable: true,
+      align: "right",
+      cell: (v) => <span className="tabular-nums">{v as number}</span>,
+    },
+  ], [expandedId, ratings, onStatusChange, onRatingChange])
+
+  /* ── Expanded row content renderer ── */
+
+  const renderExpandedContent = (t: WarmIntroTarget) => (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+      {/* Column 1: Contact & Links */}
+      <div className="space-y-3">
+        <div>
+          <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+            Contact
+          </h4>
+          <div className="space-y-1">
+            {t.contact?.linkedin && (
+              <a
+                href={t.contact.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <Linkedin className="w-3 h-3" />
+                LinkedIn
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            )}
+            {t.contact?.twitter && (
+              <a
+                href={`https://twitter.com/${t.contact.twitter.replace("@", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <Twitter className="w-3 h-3" />
+                {t.contact.twitter}
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            )}
+            {t.contact?.email && (
+              <a
+                href={`mailto:${t.contact.email}`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <Mail className="w-3 h-3" />
+                {t.contact.email}
+              </a>
+            )}
+            {t.contact?.website && (
+              <a
+                href={t.contact.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <Globe className="w-3 h-3" />
+                Website
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            )}
+            {t.website && (
+              <a
+                href={t.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <Globe className="w-3 h-3" />
+                {t.fundOrCompany}
+                <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            )}
+            {!t.contact && !t.website && (
+              <span className="text-muted-foreground">
+                No contact info
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Intro Paths */}
+        <div>
+          <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+            Intro Paths
+          </h4>
+          <div className="space-y-1.5">
+            {t.introPaths.map((p, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-2"
+              >
+                <div className="flex gap-0.5 mt-0.5 shrink-0">
+                  {Array.from({ length: 5 }).map(
+                    (_, s) => (
+                      <div
+                        key={s}
+                        className={`w-1 h-1 rounded-full ${s < p.strength ? "bg-brand-green" : "bg-border"}`}
+                      />
+                    ),
+                  )}
+                </div>
+                <span className="text-muted-foreground leading-tight">
+                  <span className="text-foreground font-medium capitalize">
+                    {p.type.replace(/-/g, " ")}
+                  </span>
+                  {" \u2014 "}
+                  {p.description}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Column 2: Approach Strategy */}
+      <div className="space-y-3">
+        {t.approachStrategy ? (
+          <>
+            <div>
+              <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+                Recommended Approach
+              </h4>
+              <p className="text-foreground leading-relaxed">
+                {t.approachStrategy.recommended}
+              </p>
+            </div>
+            <div>
+              <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+                Steps
+              </h4>
+              <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
+                {t.approachStrategy.steps.map(
+                  (step, i) => (
+                    <li
+                      key={i}
+                      className="leading-relaxed"
+                    >
+                      {step}
+                    </li>
+                  ),
+                )}
+              </ol>
+            </div>
+            {t.approachStrategy.timing && (
+              <div>
+                <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">
+                  Timing
+                </h4>
+                <p className="text-muted-foreground">
+                  {t.approachStrategy.timing}
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="text-muted-foreground">
+            No approach strategy
+          </p>
+        )}
+      </div>
+
+      {/* Column 3: Opening Angle & Notes */}
+      <div className="space-y-3">
+        {t.approachStrategy?.openingAngle && (
+          <div>
+            <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+              Opening Angle
+            </h4>
+            <p className="text-foreground leading-relaxed italic">
+              &ldquo;{t.approachStrategy.openingAngle}
+              &rdquo;
+            </p>
+          </div>
+        )}
+        <div>
+          <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+            Thesis Note
+          </h4>
+          <p className="text-muted-foreground leading-relaxed">
+            {t.thesisNote}
+          </p>
+        </div>
+        {t.notes && (
+          <div>
+            <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
+              Notes
+            </h4>
+            <p className="text-muted-foreground leading-relaxed">
+              {t.notes}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 
   const selectClass =
     "px-3 py-2 rounded-lg border border-border bg-background text-sm"
@@ -212,16 +566,11 @@ export default function InvestorTable({
     <div>
       {/* Search + Filters */}
       <div className="space-y-2 mb-3">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search investors by name, fund, or notes..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-background text-sm placeholder:text-muted-foreground/50 outline-none focus:border-brand-green"
-          />
-        </div>
+        <SearchInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search investors by name, fund, or notes..."
+        />
 
         {/* Quick-filter chips */}
         <div className="flex flex-wrap gap-1.5">
@@ -328,362 +677,31 @@ export default function InvestorTable({
       </div>
 
       {/* Table */}
-      <div className="plaid-card p-0 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-border">
-                <th onClick={() => toggleSort("name")} className="text-left py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
-                  Name <SortIcon col="name" />
-                </th>
-                <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Fund</th>
-                <th onClick={() => toggleSort("tier")} className="text-left py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
-                  Tier <SortIcon col="tier" />
-                </th>
-                <th onClick={() => toggleSort("category")} className="text-left py-2.5 px-4 text-muted-foreground font-medium hidden md:table-cell cursor-pointer hover:text-foreground select-none">
-                  Category <SortIcon col="category" />
-                </th>
-                <th className="text-left py-2.5 px-4 text-muted-foreground font-medium hidden lg:table-cell">Check Size</th>
-                <th onClick={() => toggleSort("thesisAlignment")} className="text-left py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
-                  Thesis <SortIcon col="thesisAlignment" />
-                </th>
-                <th className="text-left py-2.5 px-4 text-muted-foreground font-medium">Status</th>
-                <th onClick={() => toggleSort("rating")} className="text-left py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
-                  Rating <SortIcon col="rating" />
-                </th>
-                <th onClick={() => toggleSort("paths")} className="text-right py-2.5 px-4 text-muted-foreground font-medium cursor-pointer hover:text-foreground select-none">
-                  Paths <SortIcon col="paths" />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((t) => {
-                const isExpanded = expandedId === t.id
-                const currentRating = ratings?.[t.id]
-                return (
-                  <Fragment key={t.id}>
-                    <tr
-                      onClick={() =>
-                        setExpandedId(isExpanded ? null : t.id)
-                      }
-                      className="border-b border-border/50 hover:bg-muted/20 transition-colors cursor-pointer"
-                    >
-                      <td className="py-2.5 px-4 text-foreground font-medium max-w-[180px] truncate">
-                        <span className="flex items-center gap-1.5">
-                          <ChevronDown
-                            className={`w-3 h-3 text-muted-foreground shrink-0 transition-transform ${isExpanded ? "" : "-rotate-90"}`}
-                          />
-                          {t.name}
-                        </span>
-                      </td>
-                      <td className="py-2.5 px-4 text-muted-foreground max-w-[140px] truncate">
-                        {t.fundOrCompany}
-                      </td>
-                      <td className="py-2.5 px-4">
-                        <span
-                          className={`inline-flex text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${TIER_COLORS[t.tier]}`}
-                        >
-                          Tier {t.tier}
-                        </span>
-                      </td>
-                      <td className="py-2.5 px-4 text-muted-foreground hidden md:table-cell">
-                        {CATEGORY_LABELS[t.category] ?? t.category.replace(/-/g, " ")}
-                      </td>
-                      <td className="py-2.5 px-4 text-muted-foreground tabular-nums hidden lg:table-cell">
-                        {t.checkSizeRange}
-                      </td>
-                      <td className="py-2.5 px-4">
-                        <span
-                          className={`inline-flex text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${THESIS_COLORS[t.thesisAlignment]}`}
-                        >
-                          {t.thesisAlignment}
-                        </span>
-                      </td>
-                      <td className="py-2.5 px-4">
-                        <select
-                          value={t.status}
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) =>
-                            onStatusChange(
-                              t.id,
-                              e.target.value as PipelineStatus,
-                            )
-                          }
-                          className="text-[11px] px-1.5 py-1 rounded border border-border bg-background"
-                        >
-                          {PIPELINE_OPTIONS.map((s) => (
-                            <option key={s} value={s}>
-                              {s.replace(/-/g, " ")}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="py-2.5 px-4" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center gap-0.5">
-                          {currentRating === "x" ? (
-                            <>
-                              {[1, 2, 3, 4, 5].map((s) => (
-                                <button
-                                  key={s}
-                                  onClick={() => onRatingChange?.(t.id, s as InvestorRating)}
-                                  className="p-0"
-                                >
-                                  <Star className="w-3 h-3 text-border" />
-                                </button>
-                              ))}
-                              <button
-                                onClick={() => onRatingChange?.(t.id, null)}
-                                className="p-0 ml-1"
-                                title="Clear not-a-fit"
-                              >
-                                <X className="w-3 h-3 text-red-500 fill-red-500" />
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              {[1, 2, 3, 4, 5].map((s) => (
-                                <button
-                                  key={s}
-                                  onClick={() =>
-                                    onRatingChange?.(
-                                      t.id,
-                                      currentRating === s ? null : (s as InvestorRating),
-                                    )
-                                  }
-                                  className="p-0"
-                                >
-                                  <Star
-                                    className={`w-3 h-3 ${
-                                      currentRating !== undefined &&
-                                      s <= (currentRating as number)
-                                        ? "text-amber-400 fill-amber-400"
-                                        : "text-border"
-                                    }`}
-                                  />
-                                </button>
-                              ))}
-                              <button
-                                onClick={() => onRatingChange?.(t.id, "x")}
-                                className="p-0 ml-1"
-                                title="Not a fit"
-                              >
-                                <X className="w-3 h-3 text-border hover:text-red-500" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-2.5 px-4 text-right tabular-nums">
-                        {t.introPaths.length}
-                      </td>
-                    </tr>
-
-                    {/* Expanded detail row */}
-                    {isExpanded && (
-                      <tr className="border-b border-border/50 bg-muted/10">
-                        <td colSpan={9} className="px-4 py-4">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                            {/* Column 1: Contact & Links */}
-                            <div className="space-y-3">
-                              <div>
-                                <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-                                  Contact
-                                </h4>
-                                <div className="space-y-1">
-                                  {t.contact?.linkedin && (
-                                    <a
-                                      href={t.contact.linkedin}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
-                                    >
-                                      <Linkedin className="w-3 h-3" />
-                                      LinkedIn
-                                      <ExternalLink className="w-2.5 h-2.5" />
-                                    </a>
-                                  )}
-                                  {t.contact?.twitter && (
-                                    <a
-                                      href={`https://twitter.com/${t.contact.twitter.replace("@", "")}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
-                                    >
-                                      <Twitter className="w-3 h-3" />
-                                      {t.contact.twitter}
-                                      <ExternalLink className="w-2.5 h-2.5" />
-                                    </a>
-                                  )}
-                                  {t.contact?.email && (
-                                    <a
-                                      href={`mailto:${t.contact.email}`}
-                                      onClick={(e) => e.stopPropagation()}
-                                      className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
-                                    >
-                                      <Mail className="w-3 h-3" />
-                                      {t.contact.email}
-                                    </a>
-                                  )}
-                                  {t.contact?.website && (
-                                    <a
-                                      href={t.contact.website}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
-                                    >
-                                      <Globe className="w-3 h-3" />
-                                      Website
-                                      <ExternalLink className="w-2.5 h-2.5" />
-                                    </a>
-                                  )}
-                                  {t.website && (
-                                    <a
-                                      href={t.website}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:underline"
-                                    >
-                                      <Globe className="w-3 h-3" />
-                                      {t.fundOrCompany}
-                                      <ExternalLink className="w-2.5 h-2.5" />
-                                    </a>
-                                  )}
-                                  {!t.contact && !t.website && (
-                                    <span className="text-muted-foreground">
-                                      No contact info
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Intro Paths */}
-                              <div>
-                                <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-                                  Intro Paths
-                                </h4>
-                                <div className="space-y-1.5">
-                                  {t.introPaths.map((p, i) => (
-                                    <div
-                                      key={i}
-                                      className="flex items-start gap-2"
-                                    >
-                                      <div className="flex gap-0.5 mt-0.5 shrink-0">
-                                        {Array.from({ length: 5 }).map(
-                                          (_, s) => (
-                                            <div
-                                              key={s}
-                                              className={`w-1 h-1 rounded-full ${s < p.strength ? "bg-brand-green" : "bg-border"}`}
-                                            />
-                                          ),
-                                        )}
-                                      </div>
-                                      <span className="text-muted-foreground leading-tight">
-                                        <span className="text-foreground font-medium capitalize">
-                                          {p.type.replace(/-/g, " ")}
-                                        </span>
-                                        {" — "}
-                                        {p.description}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Column 2: Approach Strategy */}
-                            <div className="space-y-3">
-                              {t.approachStrategy ? (
-                                <>
-                                  <div>
-                                    <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-                                      Recommended Approach
-                                    </h4>
-                                    <p className="text-foreground leading-relaxed">
-                                      {t.approachStrategy.recommended}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-                                      Steps
-                                    </h4>
-                                    <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-                                      {t.approachStrategy.steps.map(
-                                        (step, i) => (
-                                          <li
-                                            key={i}
-                                            className="leading-relaxed"
-                                          >
-                                            {step}
-                                          </li>
-                                        ),
-                                      )}
-                                    </ol>
-                                  </div>
-                                  {t.approachStrategy.timing && (
-                                    <div>
-                                      <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1">
-                                        Timing
-                                      </h4>
-                                      <p className="text-muted-foreground">
-                                        {t.approachStrategy.timing}
-                                      </p>
-                                    </div>
-                                  )}
-                                </>
-                              ) : (
-                                <p className="text-muted-foreground">
-                                  No approach strategy
-                                </p>
-                              )}
-                            </div>
-
-                            {/* Column 3: Opening Angle & Notes */}
-                            <div className="space-y-3">
-                              {t.approachStrategy?.openingAngle && (
-                                <div>
-                                  <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-                                    Opening Angle
-                                  </h4>
-                                  <p className="text-foreground leading-relaxed italic">
-                                    &ldquo;{t.approachStrategy.openingAngle}
-                                    &rdquo;
-                                  </p>
-                                </div>
-                              )}
-                              <div>
-                                <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-                                  Thesis Note
-                                </h4>
-                                <p className="text-muted-foreground leading-relaxed">
-                                  {t.thesisNote}
-                                </p>
-                              </div>
-                              {t.notes && (
-                                <div>
-                                  <h4 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">
-                                    Notes
-                                  </h4>
-                                  <p className="text-muted-foreground leading-relaxed">
-                                    {t.notes}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </Fragment>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <DataTable className="text-xs">
+        <DataTableHeader columns={columns} sort={sort} onSort={toggleSort} />
+        <tbody>
+          {filtered.length === 0 ? (
+            <DataTableEmpty
+              description="No investors match your filters."
+              colSpan={columns.length}
+            />
+          ) : (
+            filtered.map((t) => {
+              const isExpanded = expandedId === t.id
+              return (
+                <DataTableRow
+                  key={t.id}
+                  row={t}
+                  columns={columns}
+                  onClick={() => setExpandedId(isExpanded ? null : t.id)}
+                  isExpanded={isExpanded}
+                  expandedContent={renderExpandedContent(t)}
+                />
+              )
+            })
+          )}
+        </tbody>
+      </DataTable>
     </div>
   )
 }

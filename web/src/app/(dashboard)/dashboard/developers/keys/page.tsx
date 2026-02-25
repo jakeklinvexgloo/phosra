@@ -8,6 +8,10 @@ import type { DeveloperAPIKeyWithSecret } from "@/lib/types"
 import { API_SCOPES } from "@/lib/types"
 import { toast } from "@/hooks/use-toast"
 import { useDevOrg } from "@/contexts/dev-org-context"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { PageHeader } from "@/components/ui/page-header"
+import { EmptyState } from "@/components/ui/empty-state"
 
 const SCOPE_GROUPS: { label: string; scopes: typeof API_SCOPES[number][] }[] = [
   {
@@ -164,23 +168,18 @@ export default function ApiKeysPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">API Keys</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Create and manage API keys for {org.name}
-          </p>
-        </div>
-        {!showCreate && (
-          <button
-            onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition"
-          >
-            <Plus className="w-4 h-4" />
-            Create Key
-          </button>
-        )}
-      </div>
+      <PageHeader
+        title="API Keys"
+        description={`Create and manage API keys for ${org.name}`}
+        actions={
+          !showCreate ? (
+            <Button variant="primary" onClick={() => setShowCreate(true)}>
+              <Plus className="w-4 h-4" />
+              Create Key
+            </Button>
+          ) : undefined
+        }
+      />
 
       {/* Newly created key banner */}
       {newKey && (
@@ -211,12 +210,9 @@ export default function ApiKeysPage() {
             </button>
           </div>
           <div className="flex justify-end mt-3">
-            <button
-              onClick={() => setNewKey(null)}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <Button variant="ghost" size="sm" onClick={() => setNewKey(null)}>
               Dismiss
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -330,19 +326,20 @@ export default function ApiKeysPage() {
           </div>
 
           <div className="flex gap-3 mt-6">
-            <button
+            <Button
+              variant="primary"
               onClick={handleCreateKey}
               disabled={!keyName.trim() || keyScopes.size === 0 || creating}
-              className="bg-foreground text-background px-5 py-2.5 rounded-full text-sm font-medium hover:bg-foreground/90 hover:shadow-sm active:scale-[0.98] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              loading={creating}
             >
-              {creating ? "Creating..." : "Create Key"}
-            </button>
-            <button
+              Create Key
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => { setShowCreate(false); setKeyName(""); setKeyEnv("test"); setKeyScopes(new Set()) }}
-              className="px-5 py-2.5 rounded-full text-sm border border-foreground text-foreground hover:bg-muted transition"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -353,13 +350,13 @@ export default function ApiKeysPage() {
           Active Keys ({activeKeys.length})
         </h2>
         {activeKeys.length === 0 ? (
-          <div className="plaid-card text-center py-8">
-            <Shield className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">No active API keys</p>
-            <p className="text-xs text-muted-foreground mt-1">Create a key to start using the API</p>
-          </div>
+          <EmptyState
+            icon={Shield}
+            description="No active API keys"
+            action={<p className="text-xs text-muted-foreground">Create a key to start using the API</p>}
+          />
         ) : (
-          <div className="plaid-card p-0 divide-y divide-border">
+          <div className="plaid-card-flush divide-y divide-border">
             {activeKeys.map((k) => (
               <div
                 key={k.id}
@@ -371,15 +368,9 @@ export default function ApiKeysPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-foreground">{k.name}</span>
-                    <span
-                      className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${
-                        k.environment === "live"
-                          ? "bg-brand-green/10 text-brand-green"
-                          : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-                      }`}
-                    >
+                    <Badge variant={k.environment === "live" ? "brand" : "info"} size="md">
                       {k.environment}
-                    </span>
+                    </Badge>
                   </div>
                   <div className="flex items-center gap-3 mt-0.5">
                     <code className="text-xs font-mono text-muted-foreground">
@@ -401,27 +392,23 @@ export default function ApiKeysPage() {
                 <div className="flex-shrink-0">
                   {revokeTarget === k.id ? (
                     <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleRevokeKey(k.id)}
-                        className="text-xs text-destructive font-medium hover:underline"
-                      >
+                      <Button variant="destructive" size="sm" onClick={() => handleRevokeKey(k.id)}>
                         Confirm
-                      </button>
-                      <button
-                        onClick={() => setRevokeTarget(null)}
-                        className="text-xs text-muted-foreground hover:text-foreground"
-                      >
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => setRevokeTarget(null)}>
                         Cancel
-                      </button>
+                      </Button>
                     </div>
                   ) : (
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
                       onClick={() => setRevokeTarget(k.id)}
-                      className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
                       title="Revoke key"
+                      className="hover:text-destructive"
                     >
                       <Trash2 className="w-4 h-4" />
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -436,7 +423,7 @@ export default function ApiKeysPage() {
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Revoked Keys ({revokedKeys.length})
           </h2>
-          <div className="plaid-card p-0 divide-y divide-border opacity-60">
+          <div className="plaid-card-flush divide-y divide-border opacity-60">
             {revokedKeys.map((k) => (
               <div key={k.id} className="flex items-center gap-4 px-5 py-4">
                 <div className="flex-shrink-0">
@@ -447,9 +434,7 @@ export default function ApiKeysPage() {
                     <span className="text-sm font-medium text-foreground line-through">
                       {k.name}
                     </span>
-                    <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                      revoked
-                    </span>
+                    <Badge variant="default" size="md">revoked</Badge>
                   </div>
                   <code className="text-xs font-mono text-muted-foreground mt-0.5 block">
                     {k.key_prefix}...
