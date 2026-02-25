@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useStytchUser } from "@stytch/nextjs"
 import { useApi } from "@/lib/useApi"
@@ -9,6 +9,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter()
   const { user } = useStytchUser()
   const { fetch: authedFetch } = useApi()
+  const fetchRef = useRef(authedFetch)
+  fetchRef.current = authedFetch
   const [authorized, setAuthorized] = useState<boolean | null>(null)
 
   useEffect(() => {
@@ -17,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return
     }
 
-    authedFetch("/auth/me")
+    fetchRef.current("/auth/me")
       .then((me: { is_admin?: boolean }) => {
         if (me?.is_admin) {
           setAuthorized(true)
@@ -25,8 +27,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           setAuthorized(false)
         }
       })
-      .catch(() => setAuthorized(false))
-  }, [user, authedFetch])
+      .catch(() => {
+        // Only deny if we haven't already authorized
+        setAuthorized(prev => prev === true ? true : false)
+      })
+  }, [user?.user_id]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (authorized === false) {
