@@ -183,6 +183,20 @@ export default function PressReleaseDetailPage() {
     setError("")
     try {
       const headers = await getHeaders(true)
+      // Save form fields first so the API has current title, date, dateline
+      await fetch(`/api/press/${id}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({
+          title, subtitle, release_type: releaseType,
+          dateline_city: datelineCity, dateline_state: datelineState,
+          publish_date: publishDate || null,
+          embargo_date: embargoDate || null,
+          body, quotes, boilerplate,
+          contact_name: contactName, contact_email: contactEmail, contact_phone: contactPhone,
+          notes, draft_inputs: draftInputs,
+        }),
+      })
       const res = await fetch(`/api/press/${id}/draft`, {
         method: "POST",
         headers,

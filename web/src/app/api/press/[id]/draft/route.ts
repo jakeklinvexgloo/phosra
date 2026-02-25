@@ -80,6 +80,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 - Target Audience: ${draftInputs.audience || "Technology and compliance media"}
 - Quote Attribution: ${draftInputs.quote_attribution || "Jake Klinvex, Founder & CEO of Phosra"}
 - Dateline: ${release.dateline_city || "PITTSBURGH"}, ${release.dateline_state || "PA"}
+- Date: ${release.publish_date ? new Date(release.publish_date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
 ${draftInputs.additional_context ? `- Additional Context: ${draftInputs.additional_context}` : ""}`
     } else {
       userPrompt = `Here is the current press release draft:
