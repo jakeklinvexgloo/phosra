@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import {
   Megaphone, Plus, Search, FileText, Send as SendIcon,
   Calendar, CheckCircle2, Lightbulb, Clock,
-  PenLine, Eye
+  PenLine, Eye, Sparkles, Target, Loader2
 } from "lucide-react"
 import { useApi } from "@/lib/useApi"
 import type { PressRelease, PressStats, PressReleaseStatus } from "@/lib/press/types"
@@ -35,19 +36,26 @@ export default function PressCenterPage() {
   const [newTitle, setNewTitle] = useState("")
   const [newType, setNewType] = useState("product_launch")
   const [creating, setCreating] = useState(false)
+  const [generatingPlan, setGeneratingPlan] = useState(false)
+  const [planError, setPlanError] = useState("")
+
+  const getHeaders = useCallback(async (json = false) => {
+    const headers: Record<string, string> = {}
+    if (json) headers["Content-Type"] = "application/json"
+    const sandbox = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && typeof window !== "undefined"
+      ? localStorage.getItem("sandbox-session") : null
+    if (sandbox) {
+      headers["X-Sandbox-Session"] = sandbox
+    } else {
+      const token = await getToken()
+      if (token) headers["Authorization"] = `Bearer ${token}`
+    }
+    return headers
+  }, [getToken])
 
   const fetchReleases = useCallback(async () => {
     try {
-      const headers: Record<string, string> = {}
-      const sandbox = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && typeof window !== "undefined"
-        ? localStorage.getItem("sandbox-session") : null
-      if (sandbox) {
-        headers["X-Sandbox-Session"] = sandbox
-      } else {
-        const token = await getToken()
-        if (token) headers["Authorization"] = `Bearer ${token}`
-      }
-
+      const headers = await getHeaders()
       const res = await fetch("/api/press", { headers })
       if (res.ok) {
         const data = await res.json()
@@ -57,7 +65,7 @@ export default function PressCenterPage() {
     } catch {} finally {
       setLoading(false)
     }
-  }, [getToken])
+  }, [getHeaders])
 
   useEffect(() => { fetchReleases() }, [fetchReleases])
 
@@ -65,16 +73,7 @@ export default function PressCenterPage() {
     if (!newTitle.trim()) return
     setCreating(true)
     try {
-      const headers: Record<string, string> = { "Content-Type": "application/json" }
-      const sandbox = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && typeof window !== "undefined"
-        ? localStorage.getItem("sandbox-session") : null
-      if (sandbox) {
-        headers["X-Sandbox-Session"] = sandbox
-      } else {
-        const token = await getToken()
-        if (token) headers["Authorization"] = `Bearer ${token}`
-      }
-
+      const headers = await getHeaders(true)
       const res = await fetch("/api/press", {
         method: "POST",
         headers,
@@ -86,6 +85,28 @@ export default function PressCenterPage() {
       }
     } catch {} finally {
       setCreating(false)
+    }
+  }
+
+  const handleGeneratePlan = async () => {
+    setGeneratingPlan(true)
+    setPlanError("")
+    try {
+      const headers = await getHeaders(true)
+      const res = await fetch("/api/press/generate-plan", {
+        method: "POST",
+        headers,
+      })
+      const data = await res.json()
+      if (res.ok) {
+        await fetchReleases()
+      } else {
+        setPlanError(data.error || "Failed to generate plan")
+      }
+    } catch {
+      setPlanError("Network error — please try again")
+    } finally {
+      setGeneratingPlan(false)
     }
   }
 
@@ -107,6 +128,8 @@ export default function PressCenterPage() {
     if (key === "all") return releases.length
     return releases.filter(r => r.status === key).length
   }
+
+  const milestoneLinkedCount = releases.filter(r => r.milestone_id).length
 
   const timeAgo = (d: string) => {
     const ms = Date.now() - new Date(d).getTime()
@@ -142,14 +165,37 @@ export default function PressCenterPage() {
             {releases.length} releases &middot; manage, draft, and distribute
           </p>
         </div>
-        <button
-          onClick={() => setShowNewForm(!showNewForm)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:bg-foreground/90 transition-colors"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          New Release
-        </button>
+        <div className="flex items-center gap-2">
+          {milestoneLinkedCount === 0 && (
+            <button
+              onClick={handleGeneratePlan}
+              disabled={generatingPlan}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+            >
+              {generatingPlan ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Sparkles className="w-3.5 h-3.5" />
+              )}
+              {generatingPlan ? "Generating Plan..." : "Generate Press Plan"}
+            </button>
+          )}
+          <button
+            onClick={() => setShowNewForm(!showNewForm)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:bg-foreground/90 transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            New Release
+          </button>
+        </div>
       </div>
+
+      {/* Plan generation error */}
+      {planError && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-4 py-3 text-xs text-red-600 dark:text-red-400">
+          {planError}
+        </div>
+      )}
 
       {/* New release inline form */}
       {showNewForm && (
@@ -191,12 +237,13 @@ export default function PressCenterPage() {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-2.5">
+      <div className={`grid gap-2.5 ${milestoneLinkedCount > 0 ? "grid-cols-5" : "grid-cols-4"}`}>
         {[
           { label: "Total", value: stats.total, icon: FileText, color: "text-foreground/60" },
           { label: "Drafts", value: stats.drafts, icon: PenLine, color: "text-blue-500" },
           { label: "Scheduled", value: stats.scheduled, icon: Calendar, color: "text-purple-500" },
           { label: "Distributed", value: stats.distributed, icon: SendIcon, color: "text-emerald-500" },
+          ...(milestoneLinkedCount > 0 ? [{ label: "From Plan", value: milestoneLinkedCount, icon: Target, color: "text-pink-500" }] : []),
         ].map(s => (
           <div key={s.label} className="bg-card rounded-lg px-3.5 py-2.5 border border-border/50 hover:border-border transition-colors">
             <div className="flex items-center gap-2">
@@ -250,9 +297,23 @@ export default function PressCenterPage() {
           <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mb-3">
             <Megaphone className="w-4 h-4 text-muted-foreground" />
           </div>
-          <p className="text-sm text-muted-foreground">
-            {releases.length === 0 ? "No press releases yet. Create your first one." : "No releases match your filters."}
+          <p className="text-sm text-muted-foreground mb-3">
+            {releases.length === 0 ? "No press releases yet." : "No releases match your filters."}
           </p>
+          {releases.length === 0 && (
+            <button
+              onClick={handleGeneratePlan}
+              disabled={generatingPlan}
+              className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+            >
+              {generatingPlan ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Sparkles className="w-3.5 h-3.5" />
+              )}
+              {generatingPlan ? "Generating..." : "Generate Press Plan from Fundraise Milestones"}
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-[1px] rounded-lg overflow-hidden border border-border/50">
@@ -267,6 +328,13 @@ export default function PressCenterPage() {
                 <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${STATUS_COLORS[release.status]}`}>
                   {STATUS_LABELS[release.status]}
                 </span>
+
+                {/* Milestone badge */}
+                {release.milestone_id && (
+                  <span className="text-[9px] font-medium px-1.5 py-0.5 rounded bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400">
+                    {release.milestone_id.toUpperCase()}
+                  </span>
+                )}
 
                 {/* Title */}
                 <div className="flex-1 min-w-0">
@@ -302,8 +370,18 @@ export default function PressCenterPage() {
         </div>
       )}
 
-      <div className="text-center text-[10px] text-muted-foreground/40 uppercase tracking-widest pt-2">
-        {filtered.length} of {releases.length} releases
+      <div className="flex items-center justify-between pt-2">
+        <div className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
+          {filtered.length} of {releases.length} releases
+        </div>
+        {milestoneLinkedCount > 0 && (
+          <Link
+            href="/dashboard/admin/fundraise"
+            className="text-[10px] text-pink-500 hover:text-pink-600 font-medium transition-colors"
+          >
+            View Fundraise Timeline
+          </Link>
+        )}
       </div>
     </div>
   )

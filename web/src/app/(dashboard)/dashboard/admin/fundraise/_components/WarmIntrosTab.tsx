@@ -22,13 +22,16 @@ export default function WarmIntrosTab() {
 
   const [ratings, setRatings] = useState<Record<string, InvestorRating>>({})
 
-  // Load ratings from server on mount
+  // Load ratings + pipeline status from server on mount
   useEffect(() => {
-    fetch("/api/admin/fundraise-state")
+    fetch("/api/admin/dashboard-state")
       .then((res) => res.json())
       .then((data) => {
         if (data.investor_ratings && Object.keys(data.investor_ratings).length > 0) {
           setRatings(data.investor_ratings)
+        }
+        if (data.pipeline_status && Object.keys(data.pipeline_status).length > 0) {
+          setStatusOverrides(data.pipeline_status)
         }
       })
       .catch(() => {})
@@ -43,7 +46,7 @@ export default function WarmIntrosTab() {
         } else {
           next[id] = rating
         }
-        fetch("/api/admin/fundraise-state", {
+        fetch("/api/admin/dashboard-state", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ key: "investor_ratings", value: next }),
@@ -77,7 +80,15 @@ export default function WarmIntrosTab() {
 
   const handleStatusChange = useCallback(
     (id: string, status: PipelineStatus) => {
-      setStatusOverrides((prev) => ({ ...prev, [id]: status }))
+      setStatusOverrides((prev) => {
+        const next = { ...prev, [id]: status }
+        fetch("/api/admin/dashboard-state", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: "pipeline_status", value: next }),
+        }).catch(() => {})
+        return next
+      })
     },
     [],
   )

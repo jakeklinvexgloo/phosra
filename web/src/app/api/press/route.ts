@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json()
-  const { title, release_type, dateline_city, dateline_state, notes } = body
+  const { title, release_type, dateline_city, dateline_state, notes, milestone_id, publish_date, draft_inputs } = body
 
   if (!title?.trim()) {
     return NextResponse.json({ error: "Title is required" }, { status: 400 })
@@ -56,8 +56,8 @@ export async function POST(req: NextRequest) {
   const slug = title.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
 
   const release = await queryOne<PressRelease>(
-    `INSERT INTO press_releases (title, slug, release_type, dateline_city, dateline_state, notes)
-     VALUES ($1, $2, $3, $4, $5, $6)
+    `INSERT INTO press_releases (title, slug, release_type, dateline_city, dateline_state, notes, milestone_id, publish_date, draft_inputs)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::jsonb)
      RETURNING *`,
     [
       title.trim(),
@@ -66,6 +66,9 @@ export async function POST(req: NextRequest) {
       dateline_city || "AUSTIN",
       dateline_state || "TX",
       notes || "",
+      milestone_id || null,
+      publish_date || null,
+      JSON.stringify(draft_inputs || {}),
     ]
   )
 

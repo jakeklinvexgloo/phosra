@@ -44,7 +44,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     "title", "subtitle", "slug", "status", "release_type",
     "dateline_city", "dateline_state", "publish_date", "embargo_date",
     "headline", "body", "boilerplate", "contact_name", "contact_email",
-    "contact_phone", "notes",
+    "contact_phone", "notes", "milestone_id",
   ]
   const jsonbFields = ["quotes", "draft_inputs", "revision_history"]
 

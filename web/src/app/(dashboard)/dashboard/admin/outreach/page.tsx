@@ -63,8 +63,17 @@ export default function OutreachPage() {
     try {
       const token = (await getToken()) ?? undefined
 
-      // Read last visit from localStorage
-      const storedLastVisit = typeof window !== "undefined" ? localStorage.getItem("outreach-last-visit") : null
+      // Read last visit from server
+      let storedLastVisit: string | null = null
+      try {
+        const stateRes = await fetch("/api/admin/dashboard-state")
+        if (stateRes.ok) {
+          const stateData = await stateRes.json()
+          if (stateData.outreach_last_visit) {
+            storedLastVisit = stateData.outreach_last_visit as string
+          }
+        }
+      } catch {}
       setLastVisit(storedLastVisit)
 
       const promises: Promise<unknown>[] = [
@@ -101,10 +110,12 @@ export default function OutreachPage() {
       if (activitiesRes.status === "fulfilled") setRecentActivities(activitiesRes.value as OutreachActivityWithContact[])
       if (summaryRes && summaryRes.status === "fulfilled") setActivitySummary(summaryRes.value as OutreachActivitySummary)
 
-      // Update last visit timestamp
-      if (typeof window !== "undefined") {
-        localStorage.setItem("outreach-last-visit", new Date().toISOString())
-      }
+      // Update last visit timestamp on server
+      fetch("/api/admin/dashboard-state", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "outreach_last_visit", value: new Date().toISOString() }),
+      }).catch(() => {})
     } catch {
       // ignore
     } finally {

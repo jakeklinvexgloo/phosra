@@ -83,6 +83,7 @@ export interface PressRelease {
   draft_inputs: DraftInputs
   revision_history: RevisionEntry[]
   notes: string
+  milestone_id: string | null
   word_count: number
   created_by: string
   created_at: string

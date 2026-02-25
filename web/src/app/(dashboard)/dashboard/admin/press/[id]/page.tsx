@@ -8,9 +8,11 @@ import {
   Lightbulb, PenLine, Eye, CheckCircle2,
   Calendar, Send as SendIcon, Archive, Clock
 } from "lucide-react"
+import Link from "next/link"
 import { useApi } from "@/lib/useApi"
 import type { PressRelease, PressReleaseStatus, PressReleaseQuote, DraftInputs, RevisionEntry } from "@/lib/press/types"
 import { STATUS_LABELS, STATUS_COLORS, RELEASE_TYPE_LABELS } from "@/lib/press/types"
+import { getAllMilestones } from "@/lib/fundraise/milestones"
 
 const STATUS_FLOW: PressReleaseStatus[] = [
   "idea", "draft", "in_review", "approved", "scheduled", "distributed"
@@ -264,6 +266,12 @@ export default function PressReleaseDetailPage() {
     )
   }
 
+  // Resolve milestone context if linked
+  const allMilestones = getAllMilestones()
+  const linkedMilestone = release?.milestone_id
+    ? allMilestones.find(m => m.id === release.milestone_id)
+    : null
+
   if (!release) {
     return (
       <div className="flex flex-col items-center py-16 text-center">
@@ -325,6 +333,38 @@ export default function PressReleaseDetailPage() {
           })}
         </div>
       </div>
+
+      {/* Milestone context (if linked to a fundraise milestone) */}
+      {linkedMilestone && (
+        <div className="bg-pink-50 dark:bg-pink-900/10 rounded-lg border border-pink-200 dark:border-pink-800/30 px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400">
+                {linkedMilestone.id.toUpperCase()}
+              </span>
+              <span className="text-xs font-medium text-foreground">{linkedMilestone.title}</span>
+            </div>
+            <Link
+              href="/dashboard/admin/fundraise"
+              className="text-[10px] text-pink-500 hover:text-pink-600 font-medium transition-colors"
+            >
+              View in Fundraise
+            </Link>
+          </div>
+          <p className="text-[11px] text-muted-foreground mt-1.5 leading-relaxed">{linkedMilestone.description}</p>
+          <div className="flex items-center gap-3 mt-1.5">
+            <span className="text-[10px] text-muted-foreground">
+              Phase: <span className="font-medium text-foreground">{linkedMilestone.phaseName}</span>
+            </span>
+            <span className="text-[10px] text-muted-foreground">
+              Due: <span className="font-medium text-foreground">{linkedMilestone.dueDate}</span>
+            </span>
+            <span className="text-[10px] text-muted-foreground">
+              Owner: <span className="font-medium text-foreground">{linkedMilestone.owner}</span>
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Two-column layout */}
       <div className="flex gap-5">
