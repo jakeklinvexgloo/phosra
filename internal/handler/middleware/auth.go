@@ -43,12 +43,14 @@ func StytchAuth(projectID string, userRepo repository.UserRepository) func(http.
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			authHeader := r.Header.Get("Authorization")
 			if authHeader == "" {
+				log.Warn().Str("method", r.Method).Str("path", r.URL.Path).Str("remote", r.RemoteAddr).Msg("auth: missing authorization header")
 				httputil.Error(w, http.StatusUnauthorized, "missing authorization header")
 				return
 			}
 
 			tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 			if tokenString == authHeader {
+				log.Warn().Str("method", r.Method).Str("path", r.URL.Path).Str("remote", r.RemoteAddr).Msg("auth: invalid header format")
 				httputil.Error(w, http.StatusUnauthorized, "invalid authorization header format")
 				return
 			}
@@ -57,7 +59,7 @@ func StytchAuth(projectID string, userRepo repository.UserRepository) func(http.
 				jwt.WithIssuer(issuer),
 			)
 			if err != nil || !token.Valid {
-				log.Debug().Err(err).Msg("Stytch JWT validation failed")
+				log.Warn().Err(err).Str("method", r.Method).Str("path", r.URL.Path).Str("remote", r.RemoteAddr).Msg("Stytch JWT validation failed")
 				httputil.Error(w, http.StatusUnauthorized, "invalid or expired token")
 				return
 			}
@@ -77,6 +79,7 @@ func StytchAuth(projectID string, userRepo repository.UserRepository) func(http.
 			// Look up local user by Stytch user ID
 			user, err := userRepo.GetByExternalAuthID(r.Context(), stytchUserID)
 			if err != nil {
+				log.Error().Err(err).Str("stytch_user_id", stytchUserID).Str("path", r.URL.Path).Msg("auth: failed to look up user")
 				httputil.Error(w, http.StatusInternalServerError, "failed to look up user")
 				return
 			}

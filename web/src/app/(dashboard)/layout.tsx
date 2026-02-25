@@ -9,6 +9,7 @@ import { CommandPalette } from "@/components/ui/command-palette"
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
 import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar"
+import { SentryUserIdentify } from "@/components/SentryUserIdentify"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -68,6 +69,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className={isPlayground ? "h-dvh flex flex-col bg-background overflow-hidden" : "min-h-screen bg-background"}>
+      <SentryUserIdentify />
       {/* Shared header — same as docs/compliance pages */}
       <PublicPageHeader onSearchClick={() => setCmdkOpen(true)} />
 

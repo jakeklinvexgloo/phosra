@@ -59,6 +59,9 @@ type Config struct {
 
 	// Hume AI (Pitch Coaching — vocal emotion analysis, Phase 3)
 	HumeAIKey string
+
+	// Sentry (error tracking)
+	SentryDSN string
 }
 
 func Load() *Config {
@@ -108,6 +111,8 @@ func Load() *Config {
 		AssemblyAIKey: getEnv("ASSEMBLYAI_API_KEY", ""),
 
 		HumeAIKey: getEnv("HUME_API_KEY", ""),
+
+		SentryDSN: getEnv("SENTRY_DSN", ""),
 	}
 }
 

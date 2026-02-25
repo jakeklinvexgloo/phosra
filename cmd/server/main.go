@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -44,6 +45,20 @@ func main() {
 	level, err := zerolog.ParseLevel(cfg.LogLevel)
 	if err == nil {
 		zerolog.SetGlobalLevel(level)
+	}
+
+	// Sentry error tracking (optional — only enabled if SENTRY_DSN is set)
+	if cfg.SentryDSN != "" {
+		if err := sentry.Init(sentry.ClientOptions{
+			Dsn:              cfg.SentryDSN,
+			TracesSampleRate: 0.2,
+			Environment:      envOrDefault("FLY_APP_NAME", "development"),
+		}); err != nil {
+			log.Warn().Err(err).Msg("Sentry initialization failed")
+		} else {
+			log.Info().Msg("Sentry error tracking enabled")
+			defer sentry.Flush(2 * time.Second)
+		}
 	}
 
 	// Auto-migrate if enabled
@@ -273,4 +288,11 @@ func main() {
 	}
 
 	log.Info().Msg("server stopped")
+}
+
+func envOrDefault(key, fallback string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return fallback
 }

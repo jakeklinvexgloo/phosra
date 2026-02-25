@@ -5,6 +5,7 @@ go 1.24.0
 require (
 	github.com/MicahParks/keyfunc/v3 v3.7.0
 	github.com/coder/websocket v1.8.14
+	github.com/getsentry/sentry-go v0.43.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/httprate v0.14.1

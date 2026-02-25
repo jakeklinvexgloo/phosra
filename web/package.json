@@ -34,6 +34,7 @@
     "@radix-ui/react-toast": "^1.2.0",
     "@radix-ui/react-tooltip": "^1.1.0",
     "@react-pdf/renderer": "^4.3.2",
+    "@sentry/nextjs": "^10.40.0",
     "@stytch/nextjs": "^22.0.2",
     "@stytch/react": "^20.0.2",
     "@tailwindcss/typography": "^0.5.19",

@@ -1,3 +1,5 @@
+const { withSentryConfig } = require("@sentry/nextjs")
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
@@ -57,4 +59,9 @@ const nextConfig = {
 }
 
 
-module.exports = nextConfig
+module.exports = withSentryConfig(nextConfig, {
+  // Suppress source map upload warnings when SENTRY_AUTH_TOKEN is not set
+  silent: !process.env.SENTRY_AUTH_TOKEN,
+  // Don't widen the existing Next.js config
+  disableLogger: true,
+})

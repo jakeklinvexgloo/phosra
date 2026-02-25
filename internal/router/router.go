@@ -85,6 +85,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 	// Global middleware
 	r.Use(chimiddleware.RequestID)
 	r.Use(chimiddleware.RealIP)
+	r.Use(middleware.SentryRecovery)
 	r.Use(middleware.Logging)
 	r.Use(chimiddleware.Recoverer)
 	corsOrigins := []string{"http://localhost:3000"}
