@@ -24,12 +24,33 @@ export function useApi() {
     }
   }, [stytch])
 
+  const refreshToken = useCallback(async (): Promise<string | null> => {
+    try {
+      // Force the SDK to refresh the session and get a fresh JWT
+      const resp = await stytch.session.authenticate({ session_duration_minutes: 60 * 24 * 7 })
+      return resp.session_jwt ?? null
+    } catch {
+      return null
+    }
+  }, [stytch])
+
   const authedFetch = useCallback(
     async (path: string, options?: RequestInit) => {
       const token = await getToken()
-      return api.fetch(path, options, token ?? undefined)
+      try {
+        return await api.fetch(path, options, token ?? undefined)
+      } catch (err) {
+        // On 401, force a session refresh and retry once
+        if (err instanceof Error && err.message === "Session expired") {
+          const freshToken = await refreshToken()
+          if (freshToken) {
+            return api.fetch(path, options, freshToken)
+          }
+        }
+        throw err
+      }
     },
-    [getToken]
+    [getToken, refreshToken]
   )
 
   return { fetch: authedFetch, getToken }
