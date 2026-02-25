@@ -8,7 +8,7 @@ export const runtime = "nodejs"
  * Verify the caller is an authenticated admin via Stytch (or sandbox session).
  */
 async function checkAdmin(req: NextRequest): Promise<{ authorized: true } | { authorized: false; response: NextResponse }> {
-  const sandbox = req.headers.get("x-sandbox-session")
+  const sandbox = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" ? req.headers.get("x-sandbox-session") : null
   if (sandbox) return { authorized: true }
 
   const auth = await requireAdmin()

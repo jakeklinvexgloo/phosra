@@ -139,7 +139,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			if o.sandboxMode {
 				r.Use(middleware.SandboxAuth(userRepo))
 			} else {
-				r.Use(middleware.HybridAuth(o.workosClientID, userRepo))
+				r.Use(middleware.WorkOSAuth(o.workosClientID, userRepo))
 			}
 
 			// Auth
@@ -295,7 +295,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			if o.sandboxMode {
 				r.Use(middleware.SandboxAuth(userRepo))
 			} else {
-				r.Use(middleware.HybridAuth(o.workosClientID, userRepo))
+				r.Use(middleware.WorkOSAuth(o.workosClientID, userRepo))
 			}
 
 			r.Post("/orgs", h.Developer.CreateOrg)
@@ -318,7 +318,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			if o.sandboxMode {
 				r.Use(middleware.SandboxAuth(userRepo))
 			} else {
-				r.Use(middleware.HybridAuth(o.workosClientID, userRepo))
+				r.Use(middleware.WorkOSAuth(o.workosClientID, userRepo))
 			}
 			r.Use(middleware.RequireAdmin(userRepo))
 

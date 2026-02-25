@@ -20,10 +20,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [cmdkOpen, setCmdkOpen] = useState(false)
 
   useEffect(() => {
-    const sandbox = localStorage.getItem("sandbox-session")
-    if (sandbox) {
-      setIsSandbox(true)
-      return
+    if (process.env.NEXT_PUBLIC_SANDBOX_MODE === "true") {
+      const sandbox = localStorage.getItem("sandbox-session")
+      if (sandbox) {
+        setIsSandbox(true)
+        return
+      }
     }
     if (isInitialized && !user) {
       router.push("/login")

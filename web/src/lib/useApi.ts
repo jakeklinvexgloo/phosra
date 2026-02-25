@@ -8,8 +8,8 @@ export function useApi() {
   const stytch = useStytch()
 
   const getToken = useCallback(async (): Promise<string | null> => {
-    // Sandbox mode bypass
-    if (typeof window !== "undefined" && localStorage.getItem("sandbox-session")) {
+    // Sandbox mode bypass (dev only)
+    if (process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && typeof window !== "undefined" && localStorage.getItem("sandbox-session")) {
       return null
     }
     try {

@@ -31,10 +31,10 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
   const { user, isInitialized } = useStytchUser()
   const stytchClient = useStytch()
 
-  // Check sandbox mode
+  // Check sandbox mode (dev only)
   const [isSandbox, setIsSandbox] = useState(false)
   useEffect(() => {
-    setIsSandbox(!!localStorage.getItem("sandbox-session"))
+    setIsSandbox(process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && !!localStorage.getItem("sandbox-session"))
   }, [])
 
   const isAuthenticated = isInitialized && (!!user || isSandbox)

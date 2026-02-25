@@ -39,10 +39,10 @@ export function DevDocsSidebar({ onNavigate }: DevDocsSidebarProps) {
     return initial
   })
 
-  // Detect auth state via Stytch session cookie or sandbox mode
+  // Detect auth state via Stytch session cookie or sandbox mode (dev only)
   useEffect(() => {
     const hasCookie = document.cookie.includes("stytch_session")
-    const hasSandbox = !!localStorage.getItem("sandbox-session")
+    const hasSandbox = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && !!localStorage.getItem("sandbox-session")
     setIsAuthenticated(hasCookie || hasSandbox)
   }, [])
 

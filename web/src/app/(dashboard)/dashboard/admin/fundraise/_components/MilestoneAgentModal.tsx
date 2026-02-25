@@ -55,7 +55,7 @@ export default function MilestoneAgentModal({
         headers: () => {
           const h: Record<string, string> = {}
           const sandbox =
-            typeof window !== "undefined"
+            process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && typeof window !== "undefined"
               ? localStorage.getItem("sandbox-session")
               : null
           if (sandbox) h["X-Sandbox-Session"] = sandbox

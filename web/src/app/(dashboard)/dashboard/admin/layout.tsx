@@ -12,9 +12,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [authorized, setAuthorized] = useState<boolean | null>(null)
 
   useEffect(() => {
-    const sandbox = typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
-
-    if (!user && !sandbox) {
+    if (!user) {
       setAuthorized(false)
       return
     }

@@ -25,7 +25,7 @@ export default function DevelopersLayout({ children }: { children: React.ReactNo
       // Build auth headers for the ensure-dev-org route
       const headers: Record<string, string> = { "Content-Type": "application/json" }
       const sandboxSession =
-        typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
+        process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
       if (sandboxSession) {
         headers["X-Sandbox-Session"] = sandboxSession
       } else if (token) {

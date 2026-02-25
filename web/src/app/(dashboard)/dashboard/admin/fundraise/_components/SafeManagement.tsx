@@ -103,7 +103,7 @@ export default function SafeManagement() {
 
   const headers = useCallback((extra?: Record<string, string>) => {
     const h: Record<string, string> = { "Content-Type": "application/json", ...extra }
-    const sandbox = typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
+    const sandbox = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
     if (sandbox) h["X-Sandbox-Session"] = sandbox
     return h
   }, [])

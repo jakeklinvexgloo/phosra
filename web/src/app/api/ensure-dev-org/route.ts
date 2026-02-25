@@ -15,7 +15,7 @@ const API_BASE =
 export async function POST(req: Request) {
   // Forward auth headers to the Go backend
   const authHeader = req.headers.get("authorization")
-  const sandboxHeader = req.headers.get("x-sandbox-session")
+  const sandboxHeader = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" ? req.headers.get("x-sandbox-session") : null
 
   if (!authHeader && !sandboxHeader) {
     return Response.json({ error: "Unauthorized" }, { status: 401 })

@@ -13,8 +13,9 @@ class ApiClient {
       ...((options.headers as Record<string, string>) || {}),
     }
 
-    // Sandbox mode: send X-Sandbox-Session header instead of auth token
-    const sandboxSession = typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
+    // Sandbox mode: send X-Sandbox-Session header instead of auth token (dev only)
+    const isSandboxEnabled = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true"
+    const sandboxSession = isSandboxEnabled && typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
     if (sandboxSession) {
       headers["X-Sandbox-Session"] = sandboxSession
     } else if (token) {
@@ -263,9 +264,10 @@ class ApiClient {
     formData.append("recording", blob, "recording.webm")
 
     const headers: Record<string, string> = {}
-    const sandboxSession = typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
-    if (sandboxSession) {
-      headers["X-Sandbox-Session"] = sandboxSession
+    const isSandbox = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true"
+    const sandboxSess = isSandbox && typeof window !== "undefined" ? localStorage.getItem("sandbox-session") : null
+    if (sandboxSess) {
+      headers["X-Sandbox-Session"] = sandboxSess
     } else if (token) {
       headers["Authorization"] = `Bearer ${token}`
     }
