@@ -112,32 +112,33 @@ export function PlatformResearchCard({
 
       {/* Action footer */}
       <div className="border-t border-border/50 px-4 py-2.5 bg-muted/20 flex items-center justify-between">
-        {isResearched && (
+        {isResearched ? (
           <span className="flex items-center gap-1 text-[11px] font-medium text-foreground/70 group-hover:text-foreground transition-colors">
             View Report
             <ArrowRight className="w-3 h-3" />
           </span>
+        ) : (
+          <div className="flex items-center gap-2 ml-auto">
+            {hasAdapter ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  onTriggerResearch()
+                }}
+                disabled={result?.status === "running"}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <Play className="w-3 h-3" />
+                {result?.status === "running" ? "Running..." : "Research"}
+              </button>
+            ) : (
+              <span className="text-[11px] text-muted-foreground">
+                No adapter
+              </span>
+            )}
+          </div>
         )}
-        <div className="flex items-center gap-2 ml-auto">
-          {hasAdapter ? (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-                onTriggerResearch()
-              }}
-              disabled={result?.status === "running"}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              <Play className="w-3 h-3" />
-              {result?.status === "running" ? "Running..." : "Research"}
-            </button>
-          ) : (
-            <span className="text-[11px] text-muted-foreground">
-              No adapter
-            </span>
-          )}
-        </div>
       </div>
     </>
   )
