@@ -26,6 +26,11 @@ web/out/
 # Playwright MCP logs
 .playwright-mcp/
 
+# Platform research credentials (NEVER commit real credentials)
+.env.platform-credentials
+web/.env.platform-credentials
+platform-credentials.json
+
 # Screenshots (development artifacts)
 *.png
 *.jpeg

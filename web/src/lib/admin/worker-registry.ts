@@ -77,6 +77,14 @@ export const workerRegistry: WorkerDef[] = [
     cron: "Daily (10am UTC)",
     enabled: true,
   },
+  {
+    id: "platform-researcher",
+    name: "Platform Researcher",
+    description: "Runs Playwright sessions to research parental controls across kids' apps and streaming providers",
+    script: "scripts/platform-research/research-runner.mjs",
+    cron: "Monthly (1st, 8am UTC)",
+    enabled: true,
+  },
 ]
 
 export function getWorker(id: string): WorkerDef | undefined {
