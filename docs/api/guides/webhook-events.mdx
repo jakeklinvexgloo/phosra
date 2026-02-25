@@ -12,7 +12,7 @@ Webhooks let your application receive real-time HTTP POST notifications when eve
 Create a webhook subscription for a family:
 
 ```bash
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/webhooks \
+curl -X POST https://phosra-api.fly.dev/api/v1/webhooks \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -77,7 +77,7 @@ Every webhook delivery is a JSON POST with this structure:
 Send a test delivery to verify your endpoint is working:
 
 ```bash
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/webhooks/WEBHOOK_UUID/test \
+curl -X POST https://phosra-api.fly.dev/api/v1/webhooks/WEBHOOK_UUID/test \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 
@@ -86,7 +86,7 @@ curl -X POST https://phosra-api-production.up.railway.app/api/v1/webhooks/WEBHOO
 Check past deliveries, including failures and retry attempts:
 
 ```bash
-curl https://phosra-api-production.up.railway.app/api/v1/webhooks/WEBHOOK_UUID/deliveries?limit=20 \
+curl https://phosra-api.fly.dev/api/v1/webhooks/WEBHOOK_UUID/deliveries?limit=20 \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 

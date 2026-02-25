@@ -29,7 +29,7 @@ Phosra is a universal child safety policy layer. Define age-appropriate rules on
 Set up a child with age-appropriate protections in a single API call:
 
 ```bash
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/setup/quick \
+curl -X POST https://phosra-api.fly.dev/api/v1/setup/quick \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -54,5 +54,5 @@ This creates a family, adds the child, computes their age bracket, and generates
 All API requests use this base URL:
 
 ```
-https://phosra-api-production.up.railway.app/api/v1
+https://phosra-api.fly.dev/api/v1
 ```

@@ -19,7 +19,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { buildServer } from "./server.js";
 
 const DEFAULT_API_URL =
-  "https://phosra-api-production.up.railway.app/api/v1";
+  "https://phosra-api.fly.dev/api/v1";
 
 // -- Parse CLI args --------------------------------------------------
 

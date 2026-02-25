@@ -15,7 +15,7 @@ data class PhosraConfiguration(
     val childId: String? = null
 ) {
     companion object {
-        const val DEFAULT_BASE_URL = "https://phosra-api-production.up.railway.app/api/v1"
+        const val DEFAULT_BASE_URL = "https://phosra-api.fly.dev/api/v1"
     }
 
     /**

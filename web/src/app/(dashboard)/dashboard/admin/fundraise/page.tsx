@@ -511,7 +511,7 @@ const AGENTS: Agent[] = [
       "Expand platform adapter coverage (Netflix, Disney+ stubs → partial)",
       "Ship features that drive pilot customer conversations",
     ],
-    tools: ["Claude Code", "GitHub", "Vercel", "Railway"],
+    tools: ["Claude Code", "GitHub", "Vercel", "Fly.io"],
     cadence: "Continuous development",
   },
 ]

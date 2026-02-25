@@ -450,7 +450,7 @@ export interface GuidedStep {
 // ── Client Config ────────────────────────────────────────────────────────────
 
 export interface PhosraClientConfig {
-  /** API base URL. Defaults to https://phosra-api-production.up.railway.app/api/v1 */
+  /** API base URL. Defaults to https://phosra-api.fly.dev/api/v1 */
   baseUrl?: string;
   /** Bearer token for user-authenticated requests. */
   accessToken?: string;

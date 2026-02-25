@@ -20,7 +20,7 @@ Phosra supports on-device policy enforcement for Apple devices (iPhone, iPad) us
 Register a device for a child:
 
 ```bash
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/children/CHILD_UUID/devices \
+curl -X POST https://phosra-api.fly.dev/api/v1/children/CHILD_UUID/devices \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -46,7 +46,7 @@ The response includes a one-time `api_key` that the iOS app stores in Keychain:
 The device uses its device key to fetch a structured policy document:
 
 ```bash
-curl https://phosra-api-production.up.railway.app/api/v1/device/policy \
+curl https://phosra-api.fly.dev/api/v1/device/policy \
   -H "X-Device-Key: phosra_dev_abc123..."
 ```
 
@@ -57,7 +57,7 @@ The response is a `CompiledPolicy` with sections for content filters, screen tim
 To avoid unnecessary downloads, pass the `since_version` parameter:
 
 ```bash
-curl "https://phosra-api-production.up.railway.app/api/v1/device/policy?since_version=3" \
+curl "https://phosra-api.fly.dev/api/v1/device/policy?since_version=3" \
   -H "X-Device-Key: phosra_dev_abc123..."
 ```
 
@@ -68,7 +68,7 @@ Returns `304 Not Modified` if the policy hasn't changed, or the full policy if i
 The device reports activity data back to Phosra:
 
 ```bash
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/device/report \
+curl -X POST https://phosra-api.fly.dev/api/v1/device/report \
   -H "X-Device-Key: phosra_dev_abc123..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -101,7 +101,7 @@ Supported report types: `screen_time`, `app_usage`, `web_activity`, `blocked_att
 After successfully applying a policy, the device confirms it:
 
 ```bash
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/device/ack \
+curl -X POST https://phosra-api.fly.dev/api/v1/device/ack \
   -H "X-Device-Key: phosra_dev_abc123..." \
   -H "Content-Type: application/json" \
   -d '{"version": 3}'
@@ -128,7 +128,7 @@ The iOS app compares the `version` to its cached version and calls `GET /device/
 Use `GET /platform-mappings/apple` to see which Apple framework and API class maps to each Phosra rule category:
 
 ```bash
-curl https://phosra-api-production.up.railway.app/api/v1/platform-mappings/apple
+curl https://phosra-api.fly.dev/api/v1/platform-mappings/apple
 ```
 
 This returns mappings like:

@@ -112,7 +112,7 @@ When you receive a `429` response, read the `X-RateLimit-Reset` header and wait 
 
 ```bash curl
 # Check rate limit headers
-curl -i https://phosra-api-production.up.railway.app/api/v1/families \
+curl -i https://phosra-api.fly.dev/api/v1/families \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 
 # Response headers include:

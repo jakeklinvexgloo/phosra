@@ -14,7 +14,7 @@ For user-facing applications. Obtain a token pair by registering or logging in, 
 <CodeGroup>
 
 ```bash curl
-curl https://phosra-api-production.up.railway.app/api/v1/families \
+curl https://phosra-api.fly.dev/api/v1/families \
   -H "Authorization: Bearer eyJhbGciOi..."
 ```
 
@@ -35,7 +35,7 @@ const families = await phosra.families.list();
 <CodeGroup>
 
 ```bash Register
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/auth/register \
+curl -X POST https://phosra-api.fly.dev/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "parent@example.com",
@@ -45,7 +45,7 @@ curl -X POST https://phosra-api-production.up.railway.app/api/v1/auth/register \
 ```
 
 ```bash Login
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/auth/login \
+curl -X POST https://phosra-api.fly.dev/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "parent@example.com",
@@ -79,7 +79,7 @@ Access tokens expire after 1 hour. Use the refresh token to get a new pair witho
 <CodeGroup>
 
 ```bash curl
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/auth/refresh \
+curl -X POST https://phosra-api.fly.dev/api/v1/auth/refresh \
   -H "Content-Type: application/json" \
   -d '{
     "refresh_token": "dGhpcyBpcyBh..."
@@ -101,7 +101,7 @@ For server-to-server integrations. API keys are long-lived and scoped to your ac
 API keys use the same `Authorization: Bearer` header:
 
 ```bash
-curl https://phosra-api-production.up.railway.app/api/v1/families \
+curl https://phosra-api.fly.dev/api/v1/families \
   -H "Authorization: Bearer phosra_live_sk_abc123..."
 ```
 
@@ -121,7 +121,7 @@ curl https://phosra-api-production.up.railway.app/api/v1/families \
 For on-device enforcement (iOS apps). Device keys are issued once during device registration and authenticate via the `X-Device-Key` header.
 
 ```bash
-curl https://phosra-api-production.up.railway.app/api/v1/device/policy \
+curl https://phosra-api.fly.dev/api/v1/device/policy \
   -H "X-Device-Key: phosra_dev_abc123..."
 ```
 

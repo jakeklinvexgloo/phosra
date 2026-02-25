@@ -4,7 +4,7 @@
 
 - **Credentials & tokens:** See `CLAUDE.local.md` (gitignored)
 - **Vercel:** Frontend deployed from `web/`
-- **Railway:** Backend API (`railway.toml`) + Worker (`railway-worker.toml`)
+- **Fly.io:** Backend API deployed on Fly.io (`phosra-api.fly.dev`)
 - **Auth:** Stytch
 - **Database:** Supabase (Postgres)
 
@@ -90,7 +90,7 @@ cd web && npx playwright test --ui         # Interactive Playwright UI
 
 ### Production Testing
 - **Frontend:** Use Chrome MCP to navigate to `www.phosra.com` and verify deployed changes
-- **Backend API:** Test endpoints at the Railway production URL (see `CLAUDE.local.md`)
+- **Backend API:** Test endpoints at `https://phosra-api.fly.dev` (see `CLAUDE.local.md`)
 - Always test production **after deploying** to confirm changes are live and working
 
 ### What to Test

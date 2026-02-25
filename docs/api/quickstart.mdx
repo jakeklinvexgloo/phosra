@@ -25,7 +25,7 @@ The fastest path. Creates everything in a single request:
 <CodeGroup>
 
 ```bash curl
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/setup/quick \
+curl -X POST https://phosra-api.fly.dev/api/v1/setup/quick \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -66,7 +66,7 @@ For more control over each stage.
 <CodeGroup>
 
 ```bash curl
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/families \
+curl -X POST https://phosra-api.fly.dev/api/v1/families \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"name": "Doe Family"}'
@@ -83,7 +83,7 @@ const family = await phosra.families.create({ name: 'Doe Family' });
 <CodeGroup>
 
 ```bash curl
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/families/$FAMILY_ID/children \
+curl -X POST https://phosra-api.fly.dev/api/v1/families/$FAMILY_ID/children \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -107,17 +107,17 @@ const child = await phosra.children.create(family.id, {
 
 ```bash curl
 # Create policy
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/children/$CHILD_ID/policies \
+curl -X POST https://phosra-api.fly.dev/api/v1/children/$CHILD_ID/policies \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"name": "Default Policy"}'
 
 # Generate age-appropriate rules
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/policies/$POLICY_ID/generate-from-age \
+curl -X POST https://phosra-api.fly.dev/api/v1/policies/$POLICY_ID/generate-from-age \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 
 # Activate the policy
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/policies/$POLICY_ID/activate \
+curl -X POST https://phosra-api.fly.dev/api/v1/policies/$POLICY_ID/activate \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 
@@ -137,7 +137,7 @@ const active = await phosra.policies.activate(policy.id);
 <CodeGroup>
 
 ```bash curl
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/compliance \
+curl -X POST https://phosra-api.fly.dev/api/v1/compliance \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -162,7 +162,7 @@ const link = await phosra.compliance.create({
 <CodeGroup>
 
 ```bash curl
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/children/$CHILD_ID/enforce \
+curl -X POST https://phosra-api.fly.dev/api/v1/children/$CHILD_ID/enforce \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 
@@ -178,7 +178,7 @@ console.log(`Enforcement job: ${job.id} (${job.status})`);
 <CodeGroup>
 
 ```bash curl
-curl https://phosra-api-production.up.railway.app/api/v1/enforcement/jobs/$JOB_ID/results \
+curl https://phosra-api.fly.dev/api/v1/enforcement/jobs/$JOB_ID/results \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 

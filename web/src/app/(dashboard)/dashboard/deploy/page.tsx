@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Rocket, Globe, Server, CheckCircle2, AlertCircle, Loader2 } from "lucide-react"
 
-type Target = "vercel-preview" | "vercel-production" | "railway"
+type Target = "vercel-preview" | "vercel-production" | "fly"
 type DeployStatus = "idle" | "deploying" | "success" | "error"
 
 interface DeployState {
@@ -27,9 +27,9 @@ const TARGETS: { id: Target; label: string; description: string; icon: typeof Gl
     color: "bg-brand-green",
   },
   {
-    id: "railway",
+    id: "fly",
     label: "Deploy API",
-    description: "Rebuild and deploy the Go API backend on Railway",
+    description: "Rebuild and deploy the Go API backend on Fly.io",
     icon: Server,
     color: "bg-purple-500",
   },
@@ -39,7 +39,7 @@ export default function DeployPage() {
   const [states, setStates] = useState<Record<Target, DeployState>>({
     "vercel-preview": { status: "idle" },
     "vercel-production": { status: "idle" },
-    "railway": { status: "idle" },
+    "fly": { status: "idle" },
   })
 
   const trigger = async (target: Target) => {
@@ -138,7 +138,7 @@ export default function DeployPage() {
         <div className="space-y-1.5 font-mono text-xs text-muted-foreground">
           <p><span className="text-foreground">VERCEL_DEPLOY_HOOK_PREVIEW</span> — Vercel &gt; Project Settings &gt; Git &gt; Deploy Hooks</p>
           <p><span className="text-foreground">VERCEL_DEPLOY_HOOK_PRODUCTION</span> — Same section, set branch to <code className="bg-muted px-1 rounded">main</code></p>
-          <p><span className="text-foreground">RAILWAY_DEPLOY_HOOK</span> — Railway &gt; Project Settings &gt; Deploy Triggers</p>
+          <p><span className="text-foreground">FLY_DEPLOY_HOOK</span> — Fly.io deploy webhook URL</p>
         </div>
       </div>
     </div>

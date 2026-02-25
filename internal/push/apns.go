@@ -54,7 +54,7 @@ type APNsConfig struct {
 
 // NewAPNsService creates an APNs service from config.
 // Returns nil if config is incomplete (allows no-op when APNs is not configured).
-// Accepts the .p8 key via either AuthKeyBase64 (preferred, for Railway/cloud)
+// Accepts the .p8 key via either AuthKeyBase64 (preferred, for cloud deploys)
 // or AuthKeyPath (local dev). Base64 takes precedence if both are set.
 func NewAPNsService(cfg APNsConfig, devices repository.DeviceRegistrationRepository) (*APNsService, error) {
 	if cfg.TeamID == "" || cfg.KeyID == "" || cfg.BundleID == "" {

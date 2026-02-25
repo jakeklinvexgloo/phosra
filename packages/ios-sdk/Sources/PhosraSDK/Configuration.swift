@@ -19,7 +19,7 @@ public struct PhosraConfiguration {
     public let childID: String?
 
     /// Default Phosra API base URL.
-    public static let defaultBaseURL = URL(string: "https://phosra-api-production.up.railway.app/api/v1")!
+    public static let defaultBaseURL = URL(string: "https://phosra-api.fly.dev/api/v1")!
 
     /// Creates a new configuration.
     ///

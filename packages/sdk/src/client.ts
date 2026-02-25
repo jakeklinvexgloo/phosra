@@ -11,7 +11,7 @@ import {
   PhosraValidationError,
 } from "./errors.js";
 
-const DEFAULT_BASE_URL = "https://phosra-api-production.up.railway.app/api/v1";
+const DEFAULT_BASE_URL = "https://phosra-api.fly.dev/api/v1";
 
 export class BaseClient {
   private baseUrl: string;

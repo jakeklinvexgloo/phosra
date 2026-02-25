@@ -5,7 +5,7 @@ export const runtime = "nodejs"
 const HOOKS: Record<string, string | undefined> = {
   "vercel-preview": process.env.VERCEL_DEPLOY_HOOK_PREVIEW,
   "vercel-production": process.env.VERCEL_DEPLOY_HOOK_PRODUCTION,
-  "railway": process.env.RAILWAY_DEPLOY_HOOK,
+  "fly": process.env.FLY_DEPLOY_HOOK,
 }
 
 export async function POST(req: NextRequest) {

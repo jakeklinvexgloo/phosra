@@ -22,14 +22,14 @@ Platforms are grouped by category:
 List all platforms:
 
 ```bash
-curl https://phosra-api-production.up.railway.app/api/v1/platforms \
+curl https://phosra-api.fly.dev/api/v1/platforms \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 
 Filter by category:
 
 ```bash
-curl "https://phosra-api-production.up.railway.app/api/v1/platforms/by-category?category=dns" \
+curl "https://phosra-api.fly.dev/api/v1/platforms/by-category?category=dns" \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 
@@ -40,7 +40,7 @@ curl "https://phosra-api-production.up.railway.app/api/v1/platforms/by-category?
 For platforms that use API keys (like NextDNS), pass the credentials directly:
 
 ```bash
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/compliance \
+curl -X POST https://phosra-api.fly.dev/api/v1/compliance \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -56,13 +56,13 @@ For OAuth platforms, redirect the user through the authorization flow:
 
 ```bash
 # 1. Get the authorization URL
-curl "https://phosra-api-production.up.railway.app/api/v1/platforms/netflix/oauth/authorize?redirect_uri=https://yourapp.com/callback" \
+curl "https://phosra-api.fly.dev/api/v1/platforms/netflix/oauth/authorize?redirect_uri=https://yourapp.com/callback" \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 
 # 2. User authorizes in browser, redirected to your callback with ?code=...
 
 # 3. Exchange the code
-curl "https://phosra-api-production.up.railway.app/api/v1/platforms/netflix/oauth/callback?code=AUTH_CODE&redirect_uri=https://yourapp.com/callback" \
+curl "https://phosra-api.fly.dev/api/v1/platforms/netflix/oauth/callback?code=AUTH_CODE&redirect_uri=https://yourapp.com/callback" \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 
@@ -81,7 +81,7 @@ Each platform has a compliance tier indicating how well Phosra can enforce rules
 After connecting, verify that credentials are still valid:
 
 ```bash
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/compliance/LINK_UUID/verify \
+curl -X POST https://phosra-api.fly.dev/api/v1/compliance/LINK_UUID/verify \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 
@@ -99,6 +99,6 @@ Not every platform supports every rule category. When Phosra enforces a policy, 
 Check enforcement results to see which rules were applied per platform:
 
 ```bash
-curl https://phosra-api-production.up.railway.app/api/v1/enforcement/jobs/JOB_UUID/results \
+curl https://phosra-api.fly.dev/api/v1/enforcement/jobs/JOB_UUID/results \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```

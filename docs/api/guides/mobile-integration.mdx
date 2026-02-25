@@ -62,7 +62,7 @@ const setup = await phosra.setup.quick({
 ```
 
 ```bash cURL
-curl -X POST https://phosra-api-production.up.railway.app/api/v1/setup/quick \
+curl -X POST https://phosra-api.fly.dev/api/v1/setup/quick \
   -H "Authorization: Bearer $PHOSRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -357,7 +357,7 @@ if (totalMinutes >= policy.screenTime.dailyLimitMinutes) {
 ### List Devices for a Child
 
 ```bash
-curl https://phosra-api-production.up.railway.app/api/v1/children/CHILD_UUID/devices \
+curl https://phosra-api.fly.dev/api/v1/children/CHILD_UUID/devices \
   -H "Authorization: Bearer $PHOSRA_API_KEY"
 ```
 
