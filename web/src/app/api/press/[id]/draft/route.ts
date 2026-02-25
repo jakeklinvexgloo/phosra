@@ -36,7 +36,8 @@ Style Rules:
 Output the press release as plain text. Do NOT use markdown formatting.`
 
 // POST /api/press/[id]/draft
-// Body: { action: "generate" | "redraft", feedback?: string }
+// Body: { inputs?: Record<string, unknown>, feedback?: string }
+// If feedback is present -> redraft; otherwise -> generate
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   const sandbox = process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" ? req.headers.get("x-sandbox-session") : null
   if (!sandbox) {
@@ -56,10 +57,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (!release) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
   const body = await req.json()
-  const { action, feedback } = body as { action: "generate" | "redraft"; feedback?: string }
+  const { inputs, feedback } = body as { inputs?: Record<string, unknown>; feedback?: string }
+
+  // Determine action from what's present in the body
+  const action: "generate" | "redraft" = feedback ? "redraft" : "generate"
 
   // Parse JSONB fields
-  const draftInputs = typeof release.draft_inputs === "string" ? JSON.parse(release.draft_inputs) : (release.draft_inputs || {})
+  const dbDraftInputs = typeof release.draft_inputs === "string" ? JSON.parse(release.draft_inputs) : (release.draft_inputs || {})
+  // Use inputs from request body, falling back to DB draft_inputs for backwards compat
+  const draftInputs = inputs || dbDraftInputs
   const revisionHistory: RevisionEntry[] = typeof release.revision_history === "string" ? JSON.parse(release.revision_history) : (release.revision_history || [])
 
   let userPrompt: string
@@ -72,7 +78,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 - Product/Feature: ${draftInputs.product_name || "Phosra compliance API"}
 - Target Audience: ${draftInputs.audience || "Technology and compliance media"}
 - Quote Attribution: ${draftInputs.quote_attribution || "Jake Klinvex, Founder & CEO of Phosra"}
-- Dateline: ${release.dateline_city || "AUSTIN"}, ${release.dateline_state || "TX"}
+- Dateline: ${release.dateline_city || "PITTSBURGH"}, ${release.dateline_state || "PA"}
 ${draftInputs.additional_context ? `- Additional Context: ${draftInputs.additional_context}` : ""}`
   } else {
     userPrompt = `Here is the current press release draft:
@@ -121,16 +127,17 @@ ${feedback || "Improve the overall quality and clarity."}`
   // Calculate word count
   const wordCount = generatedText.trim().split(/\s+/).filter(Boolean).length
 
-  // Update DB
+  // Update DB (also persist draft_inputs so they're available for future redrafts)
   const updated = await queryOne<PressRelease>(
     `UPDATE press_releases
      SET body = $1, headline = $2, word_count = $3,
          revision_history = $4::jsonb,
+         draft_inputs = $5::jsonb,
          status = CASE WHEN status = 'idea' THEN 'draft' ELSE status END,
          updated_at = NOW()
-     WHERE id = $5
+     WHERE id = $6
      RETURNING *`,
-    [generatedText, headline, wordCount, JSON.stringify(updatedHistory), params.id]
+    [generatedText, headline, wordCount, JSON.stringify(updatedHistory), JSON.stringify(draftInputs), params.id]
   )
 
   return NextResponse.json({

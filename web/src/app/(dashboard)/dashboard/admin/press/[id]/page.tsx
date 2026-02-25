@@ -28,6 +28,9 @@ const STATUS_ICONS: Record<string, typeof Lightbulb> = {
   archived: Archive,
 }
 
+const DEFAULT_BOILERPLATE =
+  "Phosra is the compliance infrastructure platform for child safety. Like Plaid for fintech, Phosra provides a single API that maps 45 enforcement rule categories across 78+ child safety laws to platform-native controls. Founded by Jake Klinvex, Phosra enables platforms to achieve and maintain compliance with evolving global regulations through automated policy enforcement, age verification, and real-time monitoring."
+
 export default function PressReleaseDetailPage() {
   const params = useParams()
   const router = useRouter()
@@ -60,9 +63,16 @@ export default function PressReleaseDetailPage() {
   const [feedback, setFeedback] = useState("")
   const [generating, setGenerating] = useState(false)
 
+  // Two-phase state
+  const [phase, setPhase] = useState<"setup" | "edit">("setup")
+  const [showInputs, setShowInputs] = useState(false)
+  const [manualMode, setManualMode] = useState(false)
+
   // Collapsible panels
-  const [showAI, setShowAI] = useState(true)
-  const [showPreview, setShowPreview] = useState(false)
+  const [showBoilerplate, setShowBoilerplate] = useState(false)
+  const [showContact, setShowContact] = useState(false)
+  const [showAdvanced, setShowAdvanced] = useState(false)
+  const [showPreview, setShowPreview] = useState(true)
   const [showHistory, setShowHistory] = useState(false)
   const [copied, setCopied] = useState(false)
 
@@ -92,18 +102,23 @@ export default function PressReleaseDetailPage() {
         setTitle(data.title)
         setSubtitle(data.subtitle)
         setReleaseType(data.release_type)
-        setDatelineCity(data.dateline_city)
-        setDatelineState(data.dateline_state)
+        setDatelineCity(data.dateline_city || "PITTSBURGH")
+        setDatelineState(data.dateline_state || "PA")
         setPublishDate(data.publish_date || "")
         setEmbargoDate(data.embargo_date || "")
         setBody(data.body)
         setQuotes(data.quotes || [])
-        setBoilerplate(data.boilerplate)
-        setContactName(data.contact_name)
-        setContactEmail(data.contact_email)
-        setContactPhone(data.contact_phone)
+        setBoilerplate(data.boilerplate || DEFAULT_BOILERPLATE)
+        setContactName(data.contact_name || "Jake Klinvex")
+        setContactEmail(data.contact_email || "jake.k.klinvex@phosra.com")
+        setContactPhone(data.contact_phone || "412-566-7932")
         setNotes(data.notes)
         setDraftInputs(data.draft_inputs || {})
+
+        // Phase detection
+        if (data.body && data.body.trim().length > 0) {
+          setPhase("edit")
+        }
       }
     } catch {} finally {
       setLoading(false)
@@ -170,6 +185,7 @@ export default function PressReleaseDetailPage() {
       })
       if (res.ok) {
         await fetchRelease()
+        setPhase("edit")
       }
     } catch {} finally {
       setGenerating(false)
@@ -283,58 +299,99 @@ export default function PressReleaseDetailPage() {
     )
   }
 
-  return (
-    <div className="space-y-5">
-      {/* Top bar: back + title + status workflow */}
-      <div className="space-y-3">
-        <button
-          onClick={() => router.push("/dashboard/admin/press")}
-          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Press Center
-        </button>
+  // Check if boilerplate / contact are still the defaults (for "defaults" badge)
+  const isBoilerplateDefault = boilerplate === DEFAULT_BOILERPLATE
+  const isContactDefault =
+    contactName === "Jake Klinvex" &&
+    contactEmail === "jake.k.klinvex@phosra.com" &&
+    contactPhone === "412-566-7932"
 
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-xl font-semibold text-foreground tracking-tight truncate">{release.title}</h1>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-foreground text-background rounded-lg hover:bg-foreground/90 disabled:opacity-50 transition-colors"
-          >
-            {saved ? <Check className="w-3.5 h-3.5" /> : <Save className="w-3.5 h-3.5" />}
-            {saving ? "Saving..." : saved ? "Saved" : "Save"}
-          </button>
-        </div>
+  // ─── AI Input Fields (shared between Phase 1 and Phase 2 expanded) ───
+  const renderAIInputFields = () => (
+    <div className="space-y-3">
+      <div>
+        <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Key Message</label>
+        <input
+          type="text"
+          value={draftInputs.key_message || ""}
+          onChange={e => setDraftInputs({ ...draftInputs, key_message: e.target.value })}
+          placeholder="What's the main announcement?"
+          className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+        />
+      </div>
+      <div>
+        <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Product / Feature</label>
+        <input
+          type="text"
+          value={draftInputs.product_name || ""}
+          onChange={e => setDraftInputs({ ...draftInputs, product_name: e.target.value })}
+          placeholder="Product or feature name"
+          className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+        />
+      </div>
+      <div>
+        <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Target Audience</label>
+        <input
+          type="text"
+          value={draftInputs.audience || ""}
+          onChange={e => setDraftInputs({ ...draftInputs, audience: e.target.value })}
+          placeholder="e.g., Tech media, compliance officers"
+          className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+        />
+      </div>
+      <div>
+        <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Quote Attribution</label>
+        <input
+          type="text"
+          value={draftInputs.quote_attribution || ""}
+          onChange={e => setDraftInputs({ ...draftInputs, quote_attribution: e.target.value })}
+          placeholder="e.g., Jake Klinvex, Founder & CEO of Phosra"
+          className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+        />
+      </div>
+      <div>
+        <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Additional Context</label>
+        <textarea
+          value={draftInputs.additional_context || ""}
+          onChange={e => setDraftInputs({ ...draftInputs, additional_context: e.target.value })}
+          rows={3}
+          placeholder="Any extra context, data points, or details..."
+          className="mt-1 w-full px-3 py-2.5 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
+        />
+      </div>
+    </div>
+  )
 
-        {/* Status workflow */}
-        <div className="flex items-center gap-1">
-          {STATUS_FLOW.map((s, idx) => {
-            const Icon = STATUS_ICONS[s]
-            const isCurrent = release.status === s
-            const currentIdx = STATUS_FLOW.indexOf(release.status)
-            const isPast = idx < currentIdx
-            return (
-              <button
-                key={s}
-                onClick={() => handleStatusChange(s)}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
-                  isCurrent
-                    ? STATUS_COLORS[s]
-                    : isPast
-                      ? "bg-muted/80 text-muted-foreground"
-                      : "bg-muted/40 text-muted-foreground/50 hover:bg-muted/60 hover:text-muted-foreground"
-                }`}
-              >
-                <Icon className="w-3 h-3" />
-                {STATUS_LABELS[s]}
-              </button>
-            )
-          })}
-        </div>
+  // ─── Status pills + milestone banner (shared across phases) ───
+  const renderStatusAndMilestone = () => (
+    <>
+      {/* Status workflow */}
+      <div className="flex items-center gap-1">
+        {STATUS_FLOW.map((s, idx) => {
+          const Icon = STATUS_ICONS[s]
+          const isCurrent = release.status === s
+          const currentIdx = STATUS_FLOW.indexOf(release.status)
+          const isPast = idx < currentIdx
+          return (
+            <button
+              key={s}
+              onClick={() => handleStatusChange(s)}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all ${
+                isCurrent
+                  ? STATUS_COLORS[s]
+                  : isPast
+                    ? "bg-muted/80 text-muted-foreground"
+                    : "bg-muted/40 text-muted-foreground/50 hover:bg-muted/60 hover:text-muted-foreground"
+              }`}
+            >
+              <Icon className="w-3 h-3" />
+              {STATUS_LABELS[s]}
+            </button>
+          )
+        })}
       </div>
 
-      {/* Milestone context (if linked to a fundraise milestone) */}
+      {/* Milestone context */}
       {linkedMilestone && (
         <div className="bg-pink-50 dark:bg-pink-900/10 rounded-lg border border-pink-200 dark:border-pink-800/30 px-4 py-3">
           <div className="flex items-center justify-between">
@@ -365,13 +422,32 @@ export default function PressReleaseDetailPage() {
           </div>
         </div>
       )}
+    </>
+  )
 
-      {/* Two-column layout */}
-      <div className="flex gap-5">
-        {/* Left column - editor */}
-        <div className="flex-1 lg:w-3/5 space-y-4">
-          {/* Title + subtitle */}
-          <div className="bg-card rounded-lg border border-border/50 p-4 space-y-3">
+  // ─────────────────────────────────────────────────────────────────────
+  // PHASE 1: Setup (body is empty and user hasn't skipped AI)
+  // ─────────────────────────────────────────────────────────────────────
+  if (phase === "setup" && !manualMode) {
+    return (
+      <div className="space-y-5">
+        {/* Top bar */}
+        <div className="space-y-3">
+          <button
+            onClick={() => router.push("/dashboard/admin/press")}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Press Center
+          </button>
+
+          {renderStatusAndMilestone()}
+        </div>
+
+        {/* Centered setup card */}
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-card rounded-lg border border-border/50 p-6 space-y-4">
+            {/* Title */}
             <div>
               <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Title</label>
               <input
@@ -381,54 +457,21 @@ export default function PressReleaseDetailPage() {
                 className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
               />
             </div>
-            <div>
-              <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Subtitle</label>
-              <input
-                type="text"
-                value={subtitle}
-                onChange={e => setSubtitle(e.target.value)}
-                className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Release Type</label>
-              <select
-                value={releaseType}
-                onChange={e => setReleaseType(e.target.value)}
-                className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none"
-              >
-                {Object.entries(RELEASE_TYPE_LABELS).map(([k, v]) => (
-                  <option key={k} value={k}>{v}</option>
-                ))}
-              </select>
-            </div>
-          </div>
 
-          {/* Dateline + dates */}
-          <div className="bg-card rounded-lg border border-border/50 p-4 space-y-3">
+            {/* Release Type + Publish Date row */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Dateline City</label>
-                <input
-                  type="text"
-                  value={datelineCity}
-                  onChange={e => setDatelineCity(e.target.value)}
-                  placeholder="San Francisco"
-                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                />
+                <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Release Type</label>
+                <select
+                  value={releaseType}
+                  onChange={e => setReleaseType(e.target.value)}
+                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none"
+                >
+                  {Object.entries(RELEASE_TYPE_LABELS).map(([k, v]) => (
+                    <option key={k} value={k}>{v}</option>
+                  ))}
+                </select>
               </div>
-              <div>
-                <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Dateline State</label>
-                <input
-                  type="text"
-                  value={datelineState}
-                  onChange={e => setDatelineState(e.target.value)}
-                  placeholder="CA"
-                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Publish Date</label>
                 <input
@@ -438,32 +481,150 @@ export default function PressReleaseDetailPage() {
                   className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
                 />
               </div>
-              <div>
-                <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Embargo Date</label>
-                <input
-                  type="date"
-                  value={embargoDate}
-                  onChange={e => setEmbargoDate(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                />
+            </div>
+
+            {/* Divider */}
+            <div className="relative py-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-border/50" />
               </div>
+              <div className="relative flex justify-center">
+                <span className="px-3 text-[10px] font-medium text-muted-foreground bg-card uppercase tracking-widest">
+                  AI Generation
+                </span>
+              </div>
+            </div>
+
+            {/* AI input fields */}
+            {renderAIInputFields()}
+
+            {/* Generate button */}
+            <button
+              onClick={handleGenerateDraft}
+              disabled={generating}
+              className="w-full flex items-center justify-center gap-2 h-11 text-sm font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+            >
+              <Sparkles className="w-4 h-4" />
+              {generating ? "Generating Press Release..." : "Generate Press Release"}
+            </button>
+
+            {/* Skip AI link */}
+            <div className="text-center">
+              <button
+                onClick={() => {
+                  setManualMode(true)
+                  setPhase("edit")
+                }}
+                className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+              >
+                Skip AI &mdash; write manually &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  // PHASE 2: Edit & Distribute
+  // ─────────────────────────────────────────────────────────────────────
+  return (
+    <div className="space-y-5">
+      {/* Top bar: back + title + status workflow */}
+      <div className="space-y-3">
+        <button
+          onClick={() => router.push("/dashboard/admin/press")}
+          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          Press Center
+        </button>
+
+        {renderStatusAndMilestone()}
+      </div>
+
+      {/* Summary bar (only if not manual mode) */}
+      {!manualMode && (
+        <div className="space-y-0">
+          <div className="bg-card rounded-lg border border-border/50 p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 font-medium flex-shrink-0">
+                {RELEASE_TYPE_LABELS[releaseType as keyof typeof RELEASE_TYPE_LABELS] || releaseType}
+              </span>
+              <span className="text-sm font-medium truncate">{title}</span>
+              {publishDate && (
+                <span className="text-xs text-muted-foreground flex-shrink-0">
+                  {new Date(publishDate + "T00:00:00").toLocaleDateString()}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => setShowInputs(!showInputs)}
+                className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-medium text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted rounded-lg transition-colors"
+              >
+                {showInputs ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                Edit Inputs
+              </button>
+              <button
+                onClick={handleGenerateDraft}
+                disabled={generating}
+                className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+              >
+                <Sparkles className="w-3 h-3" />
+                {generating ? "Generating..." : "Regenerate"}
+              </button>
             </div>
           </div>
 
-          {/* Body */}
-          <div className="bg-card rounded-lg border border-border/50 p-4">
+          {/* Expanded AI inputs */}
+          {showInputs && (
+            <div className="bg-card rounded-b-lg border border-t-0 border-border/50 p-4">
+              {renderAIInputFields()}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Two-column layout */}
+      <div className="flex gap-5">
+        {/* Left column - editor */}
+        <div className="flex-1 space-y-4">
+          {/* Body card with inline dateline */}
+          <div className="bg-card rounded-lg border border-border/50 p-4 space-y-3">
             <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Body</label>
+
+            {/* Inline dateline row */}
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={datelineCity}
+                onChange={e => setDatelineCity(e.target.value)}
+                placeholder="PITTSBURGH"
+                className="w-40 h-8 px-3 text-xs font-medium uppercase bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+              />
+              <span className="text-xs text-muted-foreground">,</span>
+              <input
+                type="text"
+                value={datelineState}
+                onChange={e => setDatelineState(e.target.value)}
+                placeholder="PA"
+                className="w-16 h-8 px-3 text-xs font-medium uppercase bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+              />
+            </div>
+
             <textarea
               value={body}
               onChange={e => setBody(e.target.value)}
-              className="mt-1 w-full min-h-[400px] px-3 py-2.5 text-sm font-mono bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y leading-relaxed"
+              className="w-full min-h-[400px] px-3 py-2.5 text-sm font-mono bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y leading-relaxed"
             />
-            <div className="text-right text-[10px] text-muted-foreground/50 mt-1 tabular-nums">
+            <div className="text-right text-[10px] text-muted-foreground/50 tabular-nums">
               {body.trim() ? body.trim().split(/\s+/).length : 0} words
             </div>
           </div>
 
-          {/* Quotes */}
+          {/* Quotes card */}
           <div className="bg-card rounded-lg border border-border/50 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Quotes</label>
@@ -500,62 +661,117 @@ export default function PressReleaseDetailPage() {
             ))}
           </div>
 
-          {/* Boilerplate */}
-          <div className="bg-card rounded-lg border border-border/50 p-4">
-            <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Boilerplate</label>
-            <textarea
-              value={boilerplate}
-              onChange={e => setBoilerplate(e.target.value)}
-              rows={4}
-              placeholder="About Phosra..."
-              className="mt-1 w-full px-3 py-2.5 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
-            />
+          {/* Collapsible: Boilerplate */}
+          <div className="bg-card rounded-lg border border-border/50">
+            <button
+              onClick={() => setShowBoilerplate(!showBoilerplate)}
+              className="flex items-center justify-between w-full px-4 py-3"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-foreground">Boilerplate</span>
+                {isBoilerplateDefault && (
+                  <span className="text-[9px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">defaults</span>
+                )}
+              </div>
+              {showBoilerplate ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
+            </button>
+            {showBoilerplate && (
+              <div className="px-4 pb-4 border-t border-border/30 pt-3">
+                <textarea
+                  value={boilerplate}
+                  onChange={e => setBoilerplate(e.target.value)}
+                  rows={5}
+                  placeholder="About Phosra..."
+                  className="w-full px-3 py-2.5 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
+                />
+              </div>
+            )}
           </div>
 
-          {/* Contact fields */}
-          <div className="bg-card rounded-lg border border-border/50 p-4 space-y-3">
-            <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Media Contact</label>
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <input
-                  type="text"
-                  value={contactName}
-                  onChange={e => setContactName(e.target.value)}
-                  placeholder="Name"
-                  className="w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                />
+          {/* Collapsible: Media Contact */}
+          <div className="bg-card rounded-lg border border-border/50">
+            <button
+              onClick={() => setShowContact(!showContact)}
+              className="flex items-center justify-between w-full px-4 py-3"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-foreground">Media Contact</span>
+                {isContactDefault && (
+                  <span className="text-[9px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">defaults</span>
+                )}
               </div>
-              <div>
-                <input
-                  type="email"
-                  value={contactEmail}
-                  onChange={e => setContactEmail(e.target.value)}
-                  placeholder="Email"
-                  className="w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                />
+              {showContact ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
+            </button>
+            {showContact && (
+              <div className="px-4 pb-4 border-t border-border/30 pt-3 space-y-3">
+                <div>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Name</label>
+                  <input
+                    type="text"
+                    value={contactName}
+                    onChange={e => setContactName(e.target.value)}
+                    placeholder="Name"
+                    className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Email</label>
+                  <input
+                    type="email"
+                    value={contactEmail}
+                    onChange={e => setContactEmail(e.target.value)}
+                    placeholder="Email"
+                    className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Phone</label>
+                  <input
+                    type="tel"
+                    value={contactPhone}
+                    onChange={e => setContactPhone(e.target.value)}
+                    placeholder="Phone"
+                    className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                  />
+                </div>
               </div>
-              <div>
-                <input
-                  type="tel"
-                  value={contactPhone}
-                  onChange={e => setContactPhone(e.target.value)}
-                  placeholder="Phone"
-                  className="w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                />
-              </div>
-            </div>
+            )}
           </div>
 
-          {/* Notes */}
-          <div className="bg-card rounded-lg border border-border/50 p-4">
-            <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Internal Notes</label>
-            <textarea
-              value={notes}
-              onChange={e => setNotes(e.target.value)}
-              rows={3}
-              placeholder="Internal notes (not published)..."
-              className="mt-1 w-full px-3 py-2.5 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
-            />
+          {/* Collapsible: Advanced */}
+          <div className="bg-card rounded-lg border border-border/50">
+            <button
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="flex items-center justify-between w-full px-4 py-3"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-medium text-foreground">Advanced</span>
+              </div>
+              {showAdvanced ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
+            </button>
+            {showAdvanced && (
+              <div className="px-4 pb-4 border-t border-border/30 pt-3 space-y-3">
+                <div>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Embargo Date</label>
+                  <input
+                    type="date"
+                    value={embargoDate}
+                    onChange={e => setEmbargoDate(e.target.value)}
+                    className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Internal Notes</label>
+                  <textarea
+                    value={notes}
+                    onChange={e => setNotes(e.target.value)}
+                    rows={3}
+                    placeholder="Internal notes (not published)..."
+                    className="mt-1 w-full px-3 py-2.5 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Save button (bottom) */}
@@ -571,108 +787,9 @@ export default function PressReleaseDetailPage() {
           </div>
         </div>
 
-        {/* Right column - AI + preview + history */}
+        {/* Right column */}
         <div className="w-full lg:w-2/5 space-y-4">
-          {/* AI Draft Panel */}
-          <div className="bg-card rounded-lg border border-border/50">
-            <button
-              onClick={() => setShowAI(!showAI)}
-              className="flex items-center justify-between w-full px-4 py-3"
-            >
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-3.5 h-3.5 text-purple-500" />
-                <span className="text-xs font-medium text-foreground">AI Draft</span>
-              </div>
-              {showAI ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />}
-            </button>
-            {showAI && (
-              <div className="px-4 pb-4 border-t border-border/30 pt-3 space-y-3">
-                {!body.trim() ? (
-                  <>
-                    <div>
-                      <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Key Message</label>
-                      <input
-                        type="text"
-                        value={draftInputs.key_message || ""}
-                        onChange={e => setDraftInputs({ ...draftInputs, key_message: e.target.value })}
-                        placeholder="What is the main message?"
-                        className="mt-1 w-full h-8 px-3 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Product Name</label>
-                      <input
-                        type="text"
-                        value={draftInputs.product_name || ""}
-                        onChange={e => setDraftInputs({ ...draftInputs, product_name: e.target.value })}
-                        placeholder="Product or feature name"
-                        className="mt-1 w-full h-8 px-3 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Audience</label>
-                      <input
-                        type="text"
-                        value={draftInputs.audience || ""}
-                        onChange={e => setDraftInputs({ ...draftInputs, audience: e.target.value })}
-                        placeholder="Target audience"
-                        className="mt-1 w-full h-8 px-3 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Quote Attribution</label>
-                      <input
-                        type="text"
-                        value={draftInputs.quote_attribution || ""}
-                        onChange={e => setDraftInputs({ ...draftInputs, quote_attribution: e.target.value })}
-                        placeholder="e.g., Jane Doe, CEO of Phosra"
-                        className="mt-1 w-full h-8 px-3 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Additional Context</label>
-                      <textarea
-                        value={draftInputs.additional_context || ""}
-                        onChange={e => setDraftInputs({ ...draftInputs, additional_context: e.target.value })}
-                        rows={3}
-                        placeholder="Any extra context, data points, or details..."
-                        className="mt-1 w-full px-3 py-2 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
-                      />
-                    </div>
-                    <button
-                      onClick={handleGenerateDraft}
-                      disabled={generating}
-                      className="w-full flex items-center justify-center gap-1.5 h-9 text-xs font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      {generating ? "Generating..." : "Generate Draft"}
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-[11px] text-muted-foreground">Provide feedback to refine the draft.</p>
-                    <textarea
-                      value={feedback}
-                      onChange={e => setFeedback(e.target.value)}
-                      rows={4}
-                      placeholder="e.g., Make it more concise, emphasize the compliance angle, add more data points..."
-                      className="w-full px-3 py-2 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
-                    />
-                    <button
-                      onClick={handleRedraft}
-                      disabled={generating || !feedback.trim()}
-                      className="w-full flex items-center justify-center gap-1.5 h-9 text-xs font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      {generating ? "Generating..." : "Redraft"}
-                    </button>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Distribution Preview */}
+          {/* Distribution Preview (open by default) */}
           <div className="bg-card rounded-lg border border-border/50">
             <button
               onClick={() => setShowPreview(!showPreview)}
@@ -702,7 +819,33 @@ export default function PressReleaseDetailPage() {
             )}
           </div>
 
-          {/* Revision History */}
+          {/* AI Redraft panel (only when body exists) */}
+          {body.trim() && (
+            <div className="bg-card rounded-lg border border-border/50 p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5 text-purple-500" />
+                <span className="text-xs font-medium text-foreground">AI Redraft</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground">Provide feedback to refine the draft.</p>
+              <textarea
+                value={feedback}
+                onChange={e => setFeedback(e.target.value)}
+                rows={4}
+                placeholder="e.g., Make it more concise, emphasize the compliance angle, add more data points..."
+                className="w-full px-3 py-2 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
+              />
+              <button
+                onClick={handleRedraft}
+                disabled={generating || !feedback.trim()}
+                className="w-full flex items-center justify-center gap-1.5 h-9 text-xs font-medium bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                {generating ? "Generating..." : "Redraft"}
+              </button>
+            </div>
+          )}
+
+          {/* Revision History (collapsed) */}
           <div className="bg-card rounded-lg border border-border/50">
             <button
               onClick={() => setShowHistory(!showHistory)}
