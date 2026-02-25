@@ -5,6 +5,13 @@ import { useStytch } from "@stytch/nextjs"
 import * as Sentry from "@sentry/nextjs"
 import { api } from "./api"
 
+/** Read the Stytch session JWT directly from the browser cookie. */
+function getJwtFromCookie(): string | null {
+  if (typeof document === "undefined") return null
+  const match = document.cookie.match(/(?:^|;\s*)stytch_session_jwt=([^;]*)/)
+  return match ? decodeURIComponent(match[1]) : null
+}
+
 export function useApi() {
   const stytch = useStytch()
 
@@ -13,21 +20,43 @@ export function useApi() {
     if (process.env.NEXT_PUBLIC_SANDBOX_MODE === "true" && typeof window !== "undefined" && localStorage.getItem("sandbox-session")) {
       return null
     }
+
+    // 1. Try the SDK's getTokens() first
     try {
       const tokens = stytch.session.getTokens()
-      if (tokens?.session_jwt) return tokens.session_jwt
-      console.debug("[useApi] No JWT on first try, waiting 500ms...")
-      // SDK may not have initialized tokens yet — wait briefly and retry
-      await new Promise(r => setTimeout(r, 500))
-      const retry = stytch.session.getTokens()
-      if (!retry?.session_jwt) {
-        console.warn("[useApi] No JWT after retry — session may not be ready")
+      if (tokens?.session_jwt) {
+        console.debug("[useApi] Got JWT from SDK getTokens()")
+        return tokens.session_jwt
       }
-      return retry?.session_jwt ?? null
-    } catch (err) {
-      console.warn("[useApi] getToken error:", err)
-      return null
+    } catch {}
+
+    // 2. Fall back to reading the cookie directly (most reliable)
+    const cookieJwt = getJwtFromCookie()
+    if (cookieJwt) {
+      console.debug("[useApi] Got JWT from cookie fallback")
+      return cookieJwt
     }
+
+    // 3. SDK may not have initialized yet — wait briefly and retry both
+    console.debug("[useApi] No JWT yet, waiting 500ms for SDK init...")
+    await new Promise(r => setTimeout(r, 500))
+
+    try {
+      const retry = stytch.session.getTokens()
+      if (retry?.session_jwt) {
+        console.debug("[useApi] Got JWT from SDK after wait")
+        return retry.session_jwt
+      }
+    } catch {}
+
+    const retryCookie = getJwtFromCookie()
+    if (retryCookie) {
+      console.debug("[useApi] Got JWT from cookie after wait")
+      return retryCookie
+    }
+
+    console.warn("[useApi] No JWT available from SDK or cookie")
+    return null
   }, [stytch])
 
   const refreshToken = useCallback(async (): Promise<string | null> => {
