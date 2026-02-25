@@ -6,11 +6,15 @@ import Link from "next/link"
 import {
   Megaphone, Plus, Search, FileText, Send as SendIcon,
   Calendar, CheckCircle2, Lightbulb, Clock,
-  PenLine, Eye, Sparkles, Target, Loader2
+  PenLine, Eye, Sparkles, Target, Loader2,
+  ArrowUp, ArrowDown, ChevronDown
 } from "lucide-react"
 import { useApi } from "@/lib/useApi"
-import type { PressRelease, PressStats, PressReleaseStatus } from "@/lib/press/types"
+import type { PressRelease, PressStats, PressReleaseStatus, ReleaseType } from "@/lib/press/types"
 import { STATUS_LABELS, STATUS_COLORS, RELEASE_TYPE_LABELS } from "@/lib/press/types"
+
+type SortField = "publish_date" | "created_at" | "updated_at"
+type SortDir = "asc" | "desc"
 
 type FilterTab = "all" | PressReleaseStatus
 
@@ -38,6 +42,9 @@ export default function PressCenterPage() {
   const [creating, setCreating] = useState(false)
   const [generatingPlan, setGeneratingPlan] = useState(false)
   const [planError, setPlanError] = useState("")
+  const [sortBy, setSortBy] = useState<SortField>("publish_date")
+  const [sortDir, setSortDir] = useState<SortDir>("asc")
+  const [typeFilter, setTypeFilter] = useState<"all" | ReleaseType>("all")
 
   const getHeaders = useCallback(async (json = false) => {
     const headers: Record<string, string> = {}
@@ -127,8 +134,18 @@ export default function PressCenterPage() {
         r.body.toLowerCase().includes(q)
       )
     }
+    if (typeFilter !== "all") out = out.filter(r => r.release_type === typeFilter)
+    out.sort((a, b) => {
+      const aVal = a[sortBy]
+      const bVal = b[sortBy]
+      if (!aVal && !bVal) return 0
+      if (!aVal) return 1
+      if (!bVal) return -1
+      const cmp = new Date(aVal).getTime() - new Date(bVal).getTime()
+      return sortDir === "asc" ? cmp : -cmp
+    })
     return out
-  }, [releases, tab, search])
+  }, [releases, tab, search, typeFilter, sortBy, sortDir])
 
   const tabCount = (key: FilterTab) => {
     if (key === "all") return releases.length
@@ -285,6 +302,38 @@ export default function PressCenterPage() {
           })}
         </div>
         <div className="flex-1" />
+        <div className="relative">
+          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
+          <select
+            value={typeFilter}
+            onChange={e => setTypeFilter(e.target.value as "all" | ReleaseType)}
+            className="h-8 pl-2.5 pr-7 text-xs bg-card border border-border/50 rounded-lg appearance-none focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 transition-all"
+          >
+            <option value="all">All Types</option>
+            {Object.entries(RELEASE_TYPE_LABELS).map(([k, v]) => (
+              <option key={k} value={k}>{v}</option>
+            ))}
+          </select>
+        </div>
+        <div className="relative">
+          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
+          <select
+            value={sortBy}
+            onChange={e => setSortBy(e.target.value as SortField)}
+            className="h-8 pl-2.5 pr-7 text-xs bg-card border border-border/50 rounded-lg appearance-none focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 transition-all"
+          >
+            <option value="publish_date">Publish Date</option>
+            <option value="created_at">Created</option>
+            <option value="updated_at">Updated</option>
+          </select>
+        </div>
+        <button
+          onClick={() => setSortDir(d => d === "asc" ? "desc" : "asc")}
+          title={sortDir === "asc" ? "Ascending" : "Descending"}
+          className="h-8 w-8 flex items-center justify-center bg-card border border-border/50 rounded-lg hover:border-foreground/30 transition-all"
+        >
+          {sortDir === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ArrowDown className="w-3.5 h-3.5 text-muted-foreground" />}
+        </button>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
           <input
