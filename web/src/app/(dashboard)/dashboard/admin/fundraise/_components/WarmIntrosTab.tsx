@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import { Users, Target, Sparkles, Layers } from "lucide-react"
 import {
   WARM_INTRO_TARGETS,
@@ -14,22 +14,25 @@ import SuperConnectorsSection from "./SuperConnectorsSection"
 import PipelineFunnel from "./PipelineFunnel"
 import InvestorResearchModal from "./InvestorResearchModal"
 
-const RATINGS_KEY = "fundraise-investor-ratings"
-
 export default function WarmIntrosTab() {
   const [statusOverrides, setStatusOverrides] = useState<
     Record<string, PipelineStatus>
   >({})
   const [showResearch, setShowResearch] = useState(false)
 
-  const [ratings, setRatings] = useState<Record<string, InvestorRating>>(() => {
-    if (typeof window === "undefined") return {}
-    try {
-      return JSON.parse(localStorage.getItem(RATINGS_KEY) || "{}")
-    } catch {
-      return {}
-    }
-  })
+  const [ratings, setRatings] = useState<Record<string, InvestorRating>>({})
+
+  // Load ratings from server on mount
+  useEffect(() => {
+    fetch("/api/admin/fundraise-state")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.investor_ratings && Object.keys(data.investor_ratings).length > 0) {
+          setRatings(data.investor_ratings)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const handleRatingChange = useCallback(
     (id: string, rating: InvestorRating | null) => {
@@ -40,7 +43,11 @@ export default function WarmIntrosTab() {
         } else {
           next[id] = rating
         }
-        localStorage.setItem(RATINGS_KEY, JSON.stringify(next))
+        fetch("/api/admin/fundraise-state", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: "investor_ratings", value: next }),
+        }).catch(() => {})
         return next
       })
     },

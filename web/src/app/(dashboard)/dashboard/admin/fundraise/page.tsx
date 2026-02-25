@@ -577,19 +577,27 @@ export default function FundraiseCommandCenter() {
   const [commentDraft, setCommentDraft] = useState("")
   const commentInputRef = useRef<HTMLTextAreaElement>(null)
 
-  // Load milestone state from localStorage on mount
+  // Load milestone state from server on mount
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("fundraise-milestones")
-      if (saved) setMilestoneOverrides(JSON.parse(saved))
-    } catch { /* ignore */ }
+    fetch("/api/admin/fundraise-state")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.milestones && Object.keys(data.milestones).length > 0) {
+          setMilestoneOverrides(data.milestones)
+        }
+      })
+      .catch(() => {})
   }, [])
 
-  // Persist milestone state to localStorage
+  // Persist milestone state to server
   const saveMilestoneOverrides = useCallback(
     (next: Record<string, { status: "done" | "active" | "upcoming"; comment?: string }>) => {
       setMilestoneOverrides(next)
-      try { localStorage.setItem("fundraise-milestones", JSON.stringify(next)) } catch { /* ignore */ }
+      fetch("/api/admin/fundraise-state", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "milestones", value: next }),
+      }).catch(() => {})
     },
     [],
   )
