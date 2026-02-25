@@ -94,7 +94,7 @@ ${feedback || "Improve the overall quality and clarity."}`
 
     const anthropic = createAnthropic({ apiKey })
     const result = await generateText({
-      model: anthropic("claude-sonnet-4-5-20250514"),
+      model: anthropic("claude-sonnet-4-6"),
       system: SYSTEM_PROMPT,
       prompt: userPrompt,
     })
