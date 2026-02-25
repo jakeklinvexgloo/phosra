@@ -9,77 +9,26 @@ import {
   ArrowDown,
   AlertTriangle,
   Timer,
+  type LucideIcon,
 } from "lucide-react"
 import { SectionCard } from "./SectionCard"
+import type { EnforcementFlowData } from "@/lib/platform-research/research-data-types"
 
-const steps = [
-  {
-    id: "monitor",
-    icon: Eye,
-    title: "Monitor",
-    description: "Track viewing activity",
-    detail: "Check viewing history every 30 min via Falcor API using cached session cookies",
-    color: "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
-    dotColor: "bg-blue-500",
-    headerBg: "bg-blue-500/10",
-  },
-  {
-    id: "detect",
-    icon: Gauge,
-    title: "Detect",
-    description: "Compare against daily limit",
-    detail: "Calculate total watch time from history entries and compare vs parent-set limit (e.g., 2h 15m / 2h)",
-    color: "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
-    dotColor: "bg-amber-500",
-    headerBg: "bg-amber-500/10",
-  },
-  {
-    id: "lock",
-    icon: Lock,
-    title: "Lock",
-    description: "Restrict profile access",
-    detail: "Change child's profile PIN to a Phosra-generated value via Playwright automation",
-    color: "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
-    dotColor: "bg-red-500",
-    headerBg: "bg-red-500/10",
-  },
-  {
-    id: "notify",
-    icon: Bell,
-    title: "Notify",
-    description: "Alert parent",
-    detail: "Push real-time notification to parent via Phosra app with viewing summary and lock confirmation",
-    color: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
-    dotColor: "bg-emerald-500",
-    headerBg: "bg-emerald-500/10",
-  },
-]
+const ICON_MAP: Record<string, LucideIcon> = {
+  Eye, Gauge, Lock, Bell, ArrowRight, ArrowDown, AlertTriangle, Timer,
+}
 
-const limitations = [
-  {
-    icon: Timer,
-    title: "~30 min polling delay",
-    description: "Viewing activity is polled, not real-time. Children may overshoot the limit by up to 30 minutes before the profile is locked.",
-  },
-  {
-    icon: AlertTriangle,
-    title: "No native Netflix API",
-    description: "All write operations require Playwright browser automation. Session cookies must be refreshed every 7-14 days.",
-  },
-  {
-    icon: Lock,
-    title: "PIN managed by Phosra vault",
-    description: "Phosra stores and rotates the child profile PIN. Original PIN is preserved for restore. Mid-stream lockout may disrupt viewing.",
-  },
-]
+interface EnforcementFlowProps {
+  data: EnforcementFlowData
+}
 
-export function EnforcementFlow() {
+export function EnforcementFlow({ data }: EnforcementFlowProps) {
   return (
     <SectionCard
       id="enforcement-flow"
       title="Screen Time Enforcement Cycle"
       icon={Timer}
-      badge="4-step loop"
+      badge={`${data.steps.length}-step loop`}
     >
       <div className="space-y-6">
         {/* Flow diagram */}
@@ -90,8 +39,8 @@ export function EnforcementFlow() {
 
           {/* Desktop: horizontal flow */}
           <div className="hidden md:flex items-stretch gap-0">
-            {steps.map((step, idx) => {
-              const Icon = step.icon
+            {data.steps.map((step, idx) => {
+              const Icon = ICON_MAP[step.icon] ?? Eye
               return (
                 <div key={step.id} className="flex items-stretch flex-1">
                   <div
@@ -111,7 +60,7 @@ export function EnforcementFlow() {
                       {step.detail}
                     </p>
                   </div>
-                  {idx < steps.length - 1 && (
+                  {idx < data.steps.length - 1 && (
                     <div className="flex items-center px-2 text-muted-foreground">
                       <ArrowRight className="w-4 h-4" />
                     </div>
@@ -123,8 +72,8 @@ export function EnforcementFlow() {
 
           {/* Mobile: vertical stack */}
           <div className="flex md:hidden flex-col gap-0">
-            {steps.map((step, idx) => {
-              const Icon = step.icon
+            {data.steps.map((step, idx) => {
+              const Icon = ICON_MAP[step.icon] ?? Eye
               return (
                 <div key={step.id}>
                   <div
@@ -144,7 +93,7 @@ export function EnforcementFlow() {
                       {step.detail}
                     </p>
                   </div>
-                  {idx < steps.length - 1 && (
+                  {idx < data.steps.length - 1 && (
                     <div className="flex items-center justify-center py-1.5 text-muted-foreground">
                       <ArrowDown className="w-4 h-4" />
                     </div>
@@ -158,7 +107,7 @@ export function EnforcementFlow() {
           <div className="flex items-center justify-center mt-3 text-xs text-muted-foreground">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 border border-border/50">
               <ArrowRight className="w-3 h-3" />
-              <span>Repeats daily until parent adjusts limits</span>
+              <span>{data.loopLabel}</span>
             </div>
           </div>
         </div>
@@ -169,8 +118,8 @@ export function EnforcementFlow() {
             Known Limitations
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {limitations.map((lim) => {
-              const Icon = lim.icon
+            {data.limitations.map((lim) => {
+              const Icon = ICON_MAP[lim.icon] ?? AlertTriangle
               return (
                 <div
                   key={lim.title}

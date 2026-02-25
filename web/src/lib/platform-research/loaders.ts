@@ -7,6 +7,7 @@ import type {
   PlatformResearchData,
   RatingMappingData,
   ScreenshotGroup,
+  SectionData,
 } from "./research-data-types"
 
 // ── Constants ──────────────────────────────────────────────────────
@@ -31,12 +32,13 @@ export async function loadPlatformResearch(
 
   const platformName = getPlatformName(platformId)
 
-  const [findings, adapterAssessment, integrationNotes, ratingMapping] =
+  const [findings, adapterAssessment, integrationNotes, ratingMapping, sectionData] =
     await Promise.all([
       readMarkdownFile(path.join(dir, "findings.md")),
       readMarkdownFile(path.join(dir, "adapter_assessment.md")),
       readMarkdownFile(path.join(dir, "phosra_integration_notes.md")),
       readJsonFile<RawRatingMapping>(path.join(dir, "rating_mapping.json")),
+      readJsonFile<SectionData>(path.join(dir, "section_data.json")),
     ])
 
   const screenshotDir = path.join(dir, "screenshots")
@@ -62,6 +64,7 @@ export async function loadPlatformResearch(
     screenshots,
     screenshotCount,
     capabilities,
+    sectionData,
   }
 }
 
@@ -87,7 +90,18 @@ async function readJsonFile<T>(filePath: string): Promise<T | null> {
 // ── Rating Mapping Transform ───────────────────────────────────────
 
 interface RawRatingMapping {
-  netflix_tiers: Record<
+  // Support both legacy "netflix_tiers" and new "platform_tiers" keys
+  netflix_tiers?: Record<
+    string,
+    {
+      phosra_tier: string
+      mpaa_ratings: string[]
+      tv_ratings: string[]
+      age_range: string
+      is_kids_profile: boolean
+    }
+  >
+  platform_tiers?: Record<
     string,
     {
       phosra_tier: string
@@ -108,9 +122,10 @@ interface RawRatingMapping {
 }
 
 function transformRatingMapping(raw: RawRatingMapping): RatingMappingData {
-  const netflixTiers: RatingMappingData["netflixTiers"] = {}
-  for (const [key, val] of Object.entries(raw.netflix_tiers)) {
-    netflixTiers[key] = {
+  const rawTiers = raw.platform_tiers ?? raw.netflix_tiers ?? {}
+  const platformTiers: RatingMappingData["platformTiers"] = {}
+  for (const [key, val] of Object.entries(rawTiers)) {
+    platformTiers[key] = {
       phosraTier: val.phosra_tier,
       mpaaRatings: val.mpaa_ratings,
       tvRatings: val.tv_ratings,
@@ -128,7 +143,7 @@ function transformRatingMapping(raw: RawRatingMapping): RatingMappingData {
     }
   }
 
-  return { netflixTiers, ratingSystems }
+  return { platformTiers, ratingSystems }
 }
 
 // ── Screenshot Grouping ────────────────────────────────────────────
@@ -310,6 +325,7 @@ function buildScreenshotGroups(
 function getPlatformName(platformId: string): string {
   const names: Record<string, string> = {
     netflix: "Netflix",
+    peacock: "Peacock",
     disney_plus: "Disney+",
     hulu: "Hulu",
     max: "Max",
@@ -324,6 +340,9 @@ function getPlatformName(platformId: string): string {
 function getCapabilitySummary(platformId: string): CapabilitySummary {
   if (platformId === "netflix") {
     return getNetflixCapabilities()
+  }
+  if (platformId === "peacock") {
+    return getPeacockCapabilities()
   }
   return { fullyEnforceable: [], partiallyEnforceable: [], notApplicable: [] }
 }
@@ -432,6 +451,146 @@ function getNetflixCapabilities(): CapabilitySummary {
       ruleCategory: "social_control",
       label: "Social Control",
       platformFeature: "No social features on Netflix",
+      enforcementMethod: "N/A — no social/messaging features",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "location_tracking",
+      label: "Location Tracking",
+      platformFeature: "No location features",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "web_filtering",
+      label: "Web Filtering",
+      platformFeature: "Closed content platform — no web browsing",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "safe_search",
+      label: "Safe Search",
+      platformFeature: "No search engine — internal content search only",
+      enforcementMethod: "N/A — content search respects maturity tier",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "app_control",
+      label: "App Control",
+      platformFeature: "Single-purpose app — no app installation",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+  ]
+
+  return { fullyEnforceable, partiallyEnforceable, notApplicable }
+}
+
+function getPeacockCapabilities(): CapabilitySummary {
+  const fullyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "content_rating_filter",
+      label: "Content Rating Filter",
+      platformFeature: "5 maturity tiers (Little Kids / Older Kids / Family / Teen / Adult)",
+      enforcementMethod: "Playwright — set account-wide maturity level via web parental controls",
+      confidence: 0.9,
+    },
+    {
+      ruleCategory: "profile_lock",
+      label: "Profile Lock (PIN)",
+      platformFeature: "4-digit PIN required to switch from Kids profile",
+      enforcementMethod: "Playwright — set/change PIN via web settings",
+      confidence: 0.9,
+    },
+    {
+      ruleCategory: "parental_consent_gate",
+      label: "Parental Consent Gate",
+      platformFeature: "PIN required to change parental control settings",
+      enforcementMethod: "Built-in — Peacock requires PIN to modify controls",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "age_gate",
+      label: "Age Gate",
+      platformFeature: "Kids profile enforces age-appropriate content (TV-PG/PG and below)",
+      enforcementMethod: "Profile type flag restricts content catalog and UI",
+      confidence: 0.9,
+    },
+    {
+      ruleCategory: "viewing_history_access",
+      label: "Viewing History Access",
+      platformFeature: "Per-profile Continue Watching and viewing history",
+      enforcementMethod: "GraphQL API — query viewing history per profile",
+      confidence: 0.8,
+    },
+    {
+      ruleCategory: "autoplay_control",
+      label: "Autoplay Control",
+      platformFeature: "Autoplay next episode toggle",
+      enforcementMethod: "Playwright — toggle autoplay setting per profile",
+      confidence: 0.85,
+    },
+  ]
+
+  const partiallyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "screen_time_limit",
+      label: "Screen Time Limit",
+      platformFeature: "No native screen time limits",
+      enforcementMethod: "Not directly available via Peacock",
+      confidence: 0.3,
+      gap: "Peacock has no built-in screen time limit feature",
+      workaround: "Enforce via OS-level controls (Screen Time, Family Link) or DNS-based blocking",
+    },
+    {
+      ruleCategory: "screen_time_report",
+      label: "Screen Time Report",
+      platformFeature: "Continue Watching list (titles only)",
+      enforcementMethod: "Derive watch activity from Continue Watching API data",
+      confidence: 0.4,
+      gap: "No native duration tracking — only title-level Continue Watching",
+      workaround: "Aggregate Continue Watching data to estimate session activity",
+    },
+    {
+      ruleCategory: "bedtime_schedule",
+      label: "Bedtime Schedule",
+      platformFeature: "No native bedtime/scheduling feature",
+      enforcementMethod: "Not directly available via Peacock",
+      confidence: 0.2,
+      gap: "Peacock has no time-of-day restrictions",
+      workaround: "Enforce via DNS blocking or OS-level scheduling",
+    },
+    {
+      ruleCategory: "parental_event_notification",
+      label: "Parental Event Notification",
+      platformFeature: "No native notifications to parents",
+      enforcementMethod: "Poll viewing history for new entries",
+      confidence: 0.35,
+      gap: "No push notifications — requires polling",
+      workaround: "Phosra worker polls viewing data and sends notifications",
+    },
+  ]
+
+  const notApplicable: CapabilityEntry[] = [
+    {
+      ruleCategory: "title_restriction",
+      label: "Title Restriction",
+      platformFeature: "Peacock does not support per-title blocking",
+      enforcementMethod: "N/A — only tier-based filtering available",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "purchase_control",
+      label: "Purchase Control",
+      platformFeature: "No in-app purchases on Peacock",
+      enforcementMethod: "N/A — subscription-only model",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "social_control",
+      label: "Social Control",
+      platformFeature: "No social features on Peacock",
       enforcementMethod: "N/A — no social/messaging features",
       confidence: 1.0,
     },

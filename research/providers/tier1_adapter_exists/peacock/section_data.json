@@ -1,0 +1,235 @@
+{
+  "profileStructure": {
+    "accountLabel": "Peacock Account",
+    "accountDescription": "Premium Plus Subscription",
+    "accountMeta": "Max 6 profiles \u00b7 3 simultaneous streams",
+    "accountBorderColor": "#069DE0",
+    "accountLabelColor": "#38bdf8",
+    "hierarchyDescription": "Peacock Account \u2192 Profiles \u2192 Account-wide Settings",
+    "profiles": [
+      { "name": "Account Holder", "maturity": "Adult", "type": "standard", "pinEnabled": true },
+      { "name": "Partner", "maturity": "Adult", "type": "standard", "pinEnabled": false },
+      { "name": "Teen", "maturity": "Teen", "type": "standard", "pinEnabled": false },
+      { "name": "Kids 1", "maturity": "Family", "type": "kids", "pinEnabled": false },
+      { "name": "Kids 2", "maturity": "Little Kids", "type": "kids", "pinEnabled": false },
+      { "name": "Guest", "maturity": "Adult", "type": "standard", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Display Name", "configurable": true },
+      { "setting": "Avatar Image", "configurable": true },
+      { "setting": "Kids Profile Toggle", "configurable": true },
+      { "setting": "Account-wide Maturity Level", "configurable": true },
+      { "setting": "Autoplay Next Episode", "configurable": true },
+      { "setting": "Parental Controls PIN", "configurable": true },
+      { "setting": "Per-Title Blocking", "configurable": false },
+      { "setting": "Per-Profile Maturity Level", "configurable": false }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Peacock Select (Ads)", "streams": "1", "resolution": "1080p" },
+      { "plan": "Peacock Premium (Ads)", "streams": "3", "resolution": "1080p" },
+      { "plan": "Peacock Premium Plus", "streams": "3", "resolution": "4K UHD" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "AWS AppSync GraphQL API, endpoints, and authentication",
+    "apiArchitecture": {
+      "title": "AWS AppSync GraphQL API",
+      "description": "Peacock uses AWS AppSync with GraphQL as its primary API layer. All data queries and mutations flow through GraphQL endpoints hosted on AWS infrastructure. The mobile apps were migrated from React Native to fully native implementations in 2023.",
+      "codeExample": {
+        "comment": "// GraphQL query for profile data",
+        "method": "POST",
+        "endpoint": "/graphql",
+        "exampleComment": "// Example query for user profiles",
+        "exampleCode": "{ \"query\": \"{ viewer { profiles { id name isKids maturityRating } } }\" }"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "/graphql", "purpose": "Primary GraphQL API (queries + mutations)", "auth": "Bearer Token" },
+      { "endpoint": "/api/v3/auth/signin", "purpose": "Authentication (email/password login)", "auth": "None (returns token)" },
+      { "endpoint": "/api/v3/profiles", "purpose": "Profile management (list, create, edit, delete)", "auth": "Bearer Token" },
+      { "endpoint": "/api/v3/profiles/switch", "purpose": "Switch active profile context", "auth": "Bearer Token" },
+      { "endpoint": "/api/v3/parental-controls", "purpose": "Read/write parental control settings", "auth": "Bearer Token + PIN" },
+      { "endpoint": "/api/v3/continue-watching", "purpose": "Continue Watching list per profile", "auth": "Bearer Token" },
+      { "endpoint": "/api/v3/content/search", "purpose": "Content search and discovery", "auth": "Bearer Token" }
+    ],
+    "authDetails": [
+      { "label": "Primary Auth", "value": "JWT Bearer Token", "description": "OAuth-style JWT token issued at login. Token refresh via refresh token flow." },
+      { "label": "Device Registration", "value": "X-Peacock-Device-Id", "description": "Device fingerprint header required for all API calls. Tied to household." },
+      { "label": "Profile Context", "value": "X-Peacock-Profile-Id", "description": "Header that scopes requests to a specific profile." },
+      { "label": "CSRF Protection", "value": "Standard CSRF token", "description": "Anti-CSRF token on mutating web requests." }
+    ],
+    "rateLimitNotes": [
+      "Standard API rate limiting observed (429 responses on rapid requests)",
+      "Household-based device verification since November 2024",
+      "GraphQL introspection disabled in production",
+      "JWT tokens expire after ~4 hours; refresh tokens last ~30 days"
+    ]
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Peacock Terms of Use \u2014 Automated Access",
+      "description": "Peacock Terms of Use prohibit using automated means to access the service, including bots, scrapers, or similar tools. There is no public API or partner program for third-party parental control integration. Household sharing restrictions were tightened in November 2024."
+    },
+    "overallRisk": {
+      "level": "Medium",
+      "description": "similar to Netflix \u2014 manageable with stealth browser automation and rate limiting"
+    },
+    "detectionVectors": [
+      { "vector": "Headless browser detection", "risk": "Medium", "mitigation": "Use Playwright stealth plugin to mask automation signals" },
+      { "vector": "Household verification", "risk": "Medium", "mitigation": "Run automation from same IP/location as legitimate usage" },
+      { "vector": "API rate limiting", "risk": "Low", "mitigation": "Respect 429 responses; implement exponential backoff" },
+      { "vector": "Device fingerprinting", "risk": "Medium", "mitigation": "Maintain persistent device ID and browser profile" },
+      { "vector": "Unusual setting changes", "risk": "Low", "mitigation": "Batch changes; add random delays between actions" }
+    ],
+    "mitigationsChecklist": [
+      "Enable Playwright stealth mode for all browser sessions",
+      "Maintain persistent device registration to avoid new-device triggers",
+      "Implement exponential backoff on 429 rate limit responses",
+      "Use GraphQL API for reads; reserve Playwright for web-only control changes",
+      "Add human-like random delays (2-8s) between navigation steps",
+      "Run from consistent IP to satisfy household verification",
+      "Monitor for challenge/captcha responses and alert on detection",
+      "Batch parental control changes into single PIN-verified sessions"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Peacock",
+    "stats": [
+      { "label": "Native", "value": 6, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 4, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 10, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 25, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Screen Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Peacock Gap",
+        "gap": "Peacock has ZERO screen time controls. No native way for parents to restrict daily viewing hours.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra monitors Continue Watching data via GraphQL API. When daily limit is reached, the child\u2019s profile PIN is changed to a Phosra-managed value to lock access."
+      },
+      {
+        "icon": "Bell",
+        "title": "Activity Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Peacock Gap",
+        "gap": "Peacock sends no parent alerts. Parents have zero visibility into what their child watches.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra polls viewing data and pushes real-time notifications to parents when flagged content is watched or unusual patterns are detected."
+      },
+      {
+        "icon": "Moon",
+        "title": "Bedtime Mode",
+        "ruleCategory": "bedtime_schedule",
+        "gapLabel": "Peacock Gap",
+        "gap": "Peacock has no time-of-day restrictions. Children can watch content at any hour.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra locks and unlocks profiles on a parent-defined schedule via cron-triggered PIN changes. Profile access is toggled to enforce bedtime windows."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Read Layer", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Write Layer", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Session Manager", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Screen Time Enforcer", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "Peacock email", "purpose": "Login", "sensitivity": "High", "encryption": "AES-256", "retention": "Until disconnected" },
+      { "name": "Peacock password", "purpose": "Login", "sensitivity": "Critical", "encryption": "AES-256 + per-user key", "retention": "Until disconnected" },
+      { "name": "JWT tokens", "purpose": "API reads/writes", "sensitivity": "High", "encryption": "AES-256", "retention": "~4 hours (auto-refresh)" },
+      { "name": "Device ID", "purpose": "Device registration", "sensitivity": "Medium", "encryption": "Standard", "retention": "Persistent" },
+      { "name": "Profile IDs", "purpose": "Profile mapping", "sensitivity": "Low", "encryption": "Standard", "retention": "Until disconnected" },
+      { "name": "Phosra-managed PINs", "purpose": "Screen time lock/unlock", "sensitivity": "Medium", "encryption": "AES-256 + vault", "retention": "Active enforcement only" }
+    ],
+    "platformBgColor": "rgba(6,157,224,0.05)",
+    "platformIconLetter": "P",
+    "platformIconBg": "#069DE0",
+    "apiDescription": "GraphQL API (reads) + Playwright (writes)",
+    "adapterName": "Peacock Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track viewing activity",
+        "detail": "Poll Continue Watching data via GraphQL API every 30 min using cached JWT tokens",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "detect",
+        "icon": "Gauge",
+        "title": "Detect",
+        "description": "Compare against daily limit",
+        "detail": "Estimate watch time from Continue Watching progress data and compare vs parent-set limit",
+        "color": "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
+        "dotColor": "bg-amber-500",
+        "headerBg": "bg-amber-500/10"
+      },
+      {
+        "id": "lock",
+        "icon": "Lock",
+        "title": "Lock",
+        "description": "Restrict profile access",
+        "detail": "Change parental controls PIN to a Phosra-generated value via Playwright (web-only controls)",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent",
+        "detail": "Push real-time notification to parent via Phosra app with viewing summary and lock confirmation",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Timer",
+        "title": "~30 min polling delay",
+        "description": "Viewing data is polled, not real-time. Children may overshoot the limit by up to 30 minutes before profile is locked."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "Web-only parental controls",
+        "description": "Peacock parental controls can only be configured via web browser \u2014 not in the mobile app. All write operations require Playwright."
+      },
+      {
+        "icon": "Lock",
+        "title": "Account-wide restrictions",
+        "description": "Non-Kids profiles share the same maturity restriction. Cannot set different levels for different profiles (unlike Netflix)."
+      }
+    ],
+    "loopLabel": "Repeats daily until parent adjusts limits"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "authenticate", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Use stealth mode. Cache JWT/refresh tokens. Handle household verification." },
+      { "name": "listProfiles", "approach": "GraphQL API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "GraphQL query with cached Bearer token. Returns up to 6 profiles." },
+      { "name": "getProfileSettings", "approach": "GraphQL API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "GraphQL query. Note: maturity restrictions are account-wide, not per-profile." },
+      { "name": "setContentRestrictions", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "High", "risk": "Medium", "recommendation": "Playwright (web-only controls). Requires PIN entry. Note: sets account-wide, affects all non-Kids profiles." },
+      { "name": "setTitleRestrictions", "approach": "Not Supported", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "None", "risk": "None", "recommendation": "Peacock does not support per-title blocking. Rating tier filtering is the only option." },
+      { "name": "setProfilePIN", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low-Medium", "recommendation": "Playwright via web settings. PIN is 4 digits numeric only." },
+      { "name": "getWatchHistory", "approach": "GraphQL API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low-Medium", "risk": "Low", "recommendation": "Query Continue Watching data via GraphQL. Less granular than Netflix viewing history." },
+      { "name": "lockProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Change PIN via web UI. Store original PIN for restore. Primary enforcement mechanism." },
+      { "name": "createKidsProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low-Medium", "risk": "Low", "recommendation": "Easier than Netflix \u2014 no password required to create profiles. Verify count < 6." },
+      { "name": "supportsNativeScreenTime", "approach": "Static", "approachColor": "bg-muted text-muted-foreground", "complexity": "None", "risk": "None", "recommendation": "Returns false. Peacock has zero native screen time features." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Foundation", "components": "Session Manager (2-3d), Read Layer (1-2d)", "minDays": 3, "maxDays": 5, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "Write Layer (3-4d), Testing (2-3d)", "minDays": 5, "maxDays": 7, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Intelligence", "components": "Screen Time Enforcer (2-3d)", "minDays": 2, "maxDays": 3, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "10-15 days",
+    "maxTotal": 15
+  }
+}

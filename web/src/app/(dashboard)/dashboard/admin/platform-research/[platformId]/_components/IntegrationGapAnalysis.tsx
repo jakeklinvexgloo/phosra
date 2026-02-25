@@ -9,54 +9,20 @@ import {
   Lock,
   KeyRound,
   Database,
+  AlertTriangle,
+  Eye,
+  type LucideIcon,
 } from "lucide-react"
 import { SectionCard } from "./SectionCard"
+import type { IntegrationGapData } from "@/lib/platform-research/research-data-types"
 
-const stats = [
-  { label: "Native", value: 7, color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
-  { label: "Phosra-Added", value: 4, color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
-  { label: "N/A", value: 9, color: "bg-muted text-muted-foreground" },
-  { label: "Future", value: 25, color: "bg-muted/60 text-muted-foreground/70" },
-]
+const ICON_MAP: Record<string, LucideIcon> = {
+  Clock, Bell, Moon, Shield, ArrowRight, Lock, KeyRound, Database, AlertTriangle, Eye,
+}
 
-const gapOpportunities = [
-  {
-    icon: Clock,
-    title: "Screen Time Limits",
-    ruleCategory: "screen_time_limit",
-    gap: "Netflix has ZERO time limits. No native way for parents to restrict daily viewing hours.",
-    solution: "Phosra monitors viewing history via API every 30 minutes. When the daily limit is reached, the child's profile is locked by changing the PIN to a Phosra-managed value.",
-  },
-  {
-    icon: Bell,
-    title: "Activity Alerts",
-    ruleCategory: "parental_event_notification",
-    gap: "Netflix sends no parent alerts. Parents have no visibility into what their child watches in real-time.",
-    solution: "Phosra monitors viewing activity data and pushes real-time notifications to parents when flagged content is watched or unusual patterns are detected.",
-  },
-  {
-    icon: Moon,
-    title: "Bedtime Mode",
-    ruleCategory: "bedtime_schedule",
-    gap: "Netflix has no scheduling. Children can watch content at any hour with no time-of-day restrictions.",
-    solution: "Phosra locks and unlocks profiles on a parent-defined schedule via cron-triggered Playwright automation. Profile PIN is toggled to enforce bedtime windows.",
-  },
-]
-
-const adapterLayers = [
-  { label: "Read Layer", color: "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
-  { label: "Write Layer", color: "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
-  { label: "Session Manager", color: "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
-  { label: "Screen Time Enforcer", color: "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" },
-]
-
-const credentials = [
-  { name: "Netflix email", purpose: "Login", sensitivity: "High", encryption: "AES-256", retention: "Until disconnected" },
-  { name: "Netflix password", purpose: "Login + MFA", sensitivity: "Critical", encryption: "AES-256 + per-user key", retention: "Until disconnected" },
-  { name: "Session cookies", purpose: "API reads", sensitivity: "High", encryption: "AES-256", retention: "7-14 days (auto-rotate)" },
-  { name: "Profile GUIDs", purpose: "Profile mapping", sensitivity: "Low", encryption: "Standard", retention: "Until disconnected" },
-  { name: "Phosra-managed PINs", purpose: "Screen time lock/unlock", sensitivity: "Medium", encryption: "AES-256 + vault", retention: "Active enforcement only" },
-]
+interface IntegrationGapAnalysisProps {
+  data: IntegrationGapData
+}
 
 function sensitivityBadge(level: string) {
   switch (level) {
@@ -71,13 +37,15 @@ function sensitivityBadge(level: string) {
   }
 }
 
-export function IntegrationGapAnalysis() {
+export function IntegrationGapAnalysis({ data }: IntegrationGapAnalysisProps) {
+  const gapCount = data.stats.find((s) => s.label === "Phosra-Added")?.value ?? 0
+
   return (
     <SectionCard
       id="integration-gap-analysis"
-      title="What Phosra Adds to Netflix"
+      title={`What Phosra Adds to ${data.platformName}`}
       icon={Shield}
-      badge="4 gaps filled"
+      badge={`${gapCount} gaps filled`}
     >
       <div className="space-y-8">
         {/* Report card stats */}
@@ -86,7 +54,7 @@ export function IntegrationGapAnalysis() {
             Rule Category Coverage (of 45 total)
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {stats.map((s) => (
+            {data.stats.map((s) => (
               <div
                 key={s.label}
                 className={`rounded-lg px-4 py-3 text-center ${s.color}`}
@@ -104,8 +72,8 @@ export function IntegrationGapAnalysis() {
             Key Gap Opportunities
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {gapOpportunities.map((gap) => {
-              const Icon = gap.icon
+            {data.gapOpportunities.map((gap) => {
+              const Icon = ICON_MAP[gap.icon] ?? Clock
               return (
                 <div
                   key={gap.title}
@@ -121,7 +89,7 @@ export function IntegrationGapAnalysis() {
                   </div>
                   <div>
                     <div className="text-[10px] text-red-500 dark:text-red-400 uppercase tracking-wide font-medium mb-1">
-                      Netflix Gap
+                      {gap.gapLabel}
                     </div>
                     <p className="text-xs text-muted-foreground leading-relaxed">
                       {gap.gap}
@@ -129,7 +97,7 @@ export function IntegrationGapAnalysis() {
                   </div>
                   <div>
                     <div className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase tracking-wide font-medium mb-1">
-                      Phosra Solution
+                      {gap.solutionLabel}
                     </div>
                     <p className="text-xs text-muted-foreground leading-relaxed">
                       {gap.solution}
@@ -169,14 +137,14 @@ export function IntegrationGapAnalysis() {
               <ArrowRight className="w-4 h-4 rotate-90" />
             </div>
 
-            {/* Netflix Adapter box */}
+            {/* Adapter box */}
             <div className="flex-[1.5] p-4 bg-muted/30 border-b md:border-b-0 md:border-r border-border">
               <div className="flex items-center gap-2 mb-3">
                 <Database className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-semibold text-foreground">Netflix Adapter</span>
+                <span className="text-sm font-semibold text-foreground">{data.adapterName}</span>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {adapterLayers.map((layer) => (
+                {data.adapterLayers.map((layer) => (
                   <div
                     key={layer.label}
                     className={`text-[10px] font-medium px-2.5 py-1.5 rounded border text-center ${layer.color}`}
@@ -195,16 +163,19 @@ export function IntegrationGapAnalysis() {
               <ArrowRight className="w-4 h-4 rotate-90" />
             </div>
 
-            {/* Netflix box */}
-            <div className="flex-1 p-4 bg-red-500/5">
+            {/* Platform box */}
+            <div className="flex-1 p-4" style={{ backgroundColor: `${data.platformBgColor}` }}>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-4 h-4 rounded bg-red-600 flex items-center justify-center">
-                  <span className="text-white text-[8px] font-bold">N</span>
+                <div
+                  className="w-4 h-4 rounded flex items-center justify-center"
+                  style={{ backgroundColor: data.platformIconBg }}
+                >
+                  <span className="text-white text-[8px] font-bold">{data.platformIconLetter}</span>
                 </div>
-                <span className="text-sm font-semibold text-foreground">Netflix</span>
+                <span className="text-sm font-semibold text-foreground">{data.platformName}</span>
               </div>
               <p className="text-xs text-muted-foreground">
-                Falcor API (reads) + Playwright (writes)
+                {data.apiDescription}
               </p>
             </div>
           </div>
@@ -240,7 +211,7 @@ export function IntegrationGapAnalysis() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
-                {credentials.map((cred) => (
+                {data.credentials.map((cred) => (
                   <tr key={cred.name}>
                     <td className="px-3 py-2 text-xs font-medium text-foreground">
                       <div className="flex items-center gap-1.5">

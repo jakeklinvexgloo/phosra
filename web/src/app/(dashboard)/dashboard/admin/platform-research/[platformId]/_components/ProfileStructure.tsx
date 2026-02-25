@@ -1,6 +1,7 @@
 "use client"
 
 import { Users, Lock, Shield, Eye } from "lucide-react"
+import type { ProfileStructureData } from "@/lib/platform-research/research-data-types"
 
 interface ProfileNode {
   name: string
@@ -9,26 +10,11 @@ interface ProfileNode {
   pinEnabled: boolean
 }
 
-const NETFLIX_PROFILES: ProfileNode[] = [
-  { name: "Ramsay!", maturity: "All Maturity", type: "standard", pinEnabled: false },
-  { name: "Mom and Dad", maturity: "All Maturity", type: "standard", pinEnabled: false },
-  { name: "Samson", maturity: "Kids", type: "kids", pinEnabled: false },
-  { name: "Chap", maturity: "Kids", type: "kids", pinEnabled: false },
-  { name: "BANANA!!!", maturity: "Kids", type: "kids", pinEnabled: false },
-]
+interface ProfileStructureProps {
+  data: ProfileStructureData
+}
 
-const PROFILE_SETTINGS = [
-  { setting: "Display Name", configurable: true },
-  { setting: "Avatar Image", configurable: true },
-  { setting: "Language Preference", configurable: true },
-  { setting: "Maturity Rating Level", configurable: true },
-  { setting: "Autoplay Next Episode", configurable: true },
-  { setting: "Autoplay Previews", configurable: true },
-  { setting: "Viewing Restrictions", configurable: true },
-  { setting: "Profile Lock (PIN)", configurable: true },
-]
-
-export function ProfileStructure() {
+export function ProfileStructure({ data }: ProfileStructureProps) {
   return (
     <section id="account-structure" className="space-y-6">
       {/* Section header */}
@@ -38,7 +24,7 @@ export function ProfileStructure() {
         </div>
         <div>
           <h2 className="text-lg font-semibold text-foreground">Account Structure</h2>
-          <p className="text-sm text-muted-foreground">Netflix Account &rarr; Profiles &rarr; Settings hierarchy</p>
+          <p className="text-sm text-muted-foreground">{data.hierarchyDescription}</p>
         </div>
       </div>
 
@@ -46,10 +32,18 @@ export function ProfileStructure() {
       <div className="plaid-card overflow-x-auto">
         {/* Root node */}
         <div className="flex flex-col items-center">
-          <div className="rounded-lg border-2 border-red-500 bg-zinc-900 text-white px-5 py-3 text-center">
-            <div className="text-xs font-medium text-red-400 uppercase tracking-wide mb-0.5">Netflix Account</div>
-            <div className="text-sm font-semibold">Premium Subscription</div>
-            <div className="text-xs text-zinc-400 mt-1">Max 5 profiles &middot; 4 simultaneous streams</div>
+          <div
+            className="rounded-lg border-2 bg-zinc-900 text-white px-5 py-3 text-center"
+            style={{ borderColor: data.accountBorderColor }}
+          >
+            <div
+              className="text-xs font-medium uppercase tracking-wide mb-0.5"
+              style={{ color: data.accountLabelColor }}
+            >
+              {data.accountLabel}
+            </div>
+            <div className="text-sm font-semibold">{data.accountDescription}</div>
+            <div className="text-xs text-zinc-400 mt-1">{data.accountMeta}</div>
           </div>
 
           {/* Connector line down from root */}
@@ -62,7 +56,7 @@ export function ProfileStructure() {
 
           {/* Profile cards — desktop: flex row, mobile: stacked list */}
           <div className="hidden md:flex items-start justify-center gap-3 mt-0">
-            {NETFLIX_PROFILES.map((profile, idx) => (
+            {data.profiles.map((profile) => (
               <div key={profile.name} className="flex flex-col items-center">
                 {/* Vertical connector from horizontal bar */}
                 <div className="w-px h-4 bg-border" />
@@ -73,7 +67,7 @@ export function ProfileStructure() {
 
           {/* Mobile: indented list */}
           <div className="md:hidden space-y-2 w-full mt-2">
-            {NETFLIX_PROFILES.map((profile) => (
+            {data.profiles.map((profile) => (
               <div key={profile.name} className="flex items-center gap-2 pl-4">
                 <div className="w-px h-8 bg-border flex-shrink-0" />
                 <ProfileCard profile={profile} />
@@ -92,12 +86,18 @@ export function ProfileStructure() {
           </h3>
         </div>
         <div className="divide-y divide-border">
-          {PROFILE_SETTINGS.map((item) => (
+          {data.settings.map((item) => (
             <div key={item.setting} className="flex items-center justify-between px-4 py-2.5">
               <span className="text-sm text-foreground">{item.setting}</span>
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                Configurable
+              <span className={`inline-flex items-center gap-1 text-xs font-medium ${
+                item.configurable
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-muted-foreground"
+              }`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${
+                  item.configurable ? "bg-emerald-500" : "bg-muted-foreground"
+                }`} />
+                {item.configurable ? "Configurable" : "Not Available"}
               </span>
             </div>
           ))}
@@ -121,21 +121,15 @@ export function ProfileStructure() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">
-            <tr>
-              <td className="px-4 py-2.5 text-foreground">Standard with Ads</td>
-              <td className="px-4 py-2.5 text-muted-foreground">2</td>
-              <td className="px-4 py-2.5 text-muted-foreground">1080p</td>
-            </tr>
-            <tr>
-              <td className="px-4 py-2.5 text-foreground">Standard</td>
-              <td className="px-4 py-2.5 text-muted-foreground">2</td>
-              <td className="px-4 py-2.5 text-muted-foreground">1080p</td>
-            </tr>
-            <tr>
-              <td className="px-4 py-2.5 text-foreground font-medium">Premium</td>
-              <td className="px-4 py-2.5 text-muted-foreground">4</td>
-              <td className="px-4 py-2.5 text-muted-foreground">4K UHD</td>
-            </tr>
+            {data.subscriptionTiers.map((tier, idx) => (
+              <tr key={tier.plan}>
+                <td className={`px-4 py-2.5 text-foreground ${idx === data.subscriptionTiers.length - 1 ? "font-medium" : ""}`}>
+                  {tier.plan}
+                </td>
+                <td className="px-4 py-2.5 text-muted-foreground">{tier.streams}</td>
+                <td className="px-4 py-2.5 text-muted-foreground">{tier.resolution}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

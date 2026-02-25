@@ -1,53 +1,13 @@
 "use client"
 
 import { AlertTriangle, ShieldAlert, CheckSquare } from "lucide-react"
+import type { RiskAssessmentData } from "@/lib/platform-research/research-data-types"
 
-interface DetectionVector {
-  vector: string
-  risk: "Low" | "Medium" | "High"
-  mitigation: string
+interface RiskAssessmentProps {
+  data: RiskAssessmentData
 }
 
-const DETECTION_VECTORS: DetectionVector[] = [
-  {
-    vector: "Headless browser detection",
-    risk: "Medium",
-    mitigation: "Use Playwright stealth plugin (playwright-extra) to mask automation signals",
-  },
-  {
-    vector: "Request frequency analysis",
-    risk: "Low",
-    mitigation: "Rate limit to 1 action per 5-10 seconds; cache aggressively",
-  },
-  {
-    vector: "Login from new device/IP",
-    risk: "Medium",
-    mitigation: "Maintain persistent browser profile and cookies across sessions",
-  },
-  {
-    vector: "Unusual navigation patterns",
-    risk: "Low",
-    mitigation: "Randomize delays between actions; follow natural page flow",
-  },
-  {
-    vector: "Multiple rapid setting changes",
-    risk: "Medium",
-    mitigation: "Batch changes within single sessions; add jitter between actions",
-  },
-]
-
-const MITIGATIONS_CHECKLIST = [
-  "Enable Playwright stealth mode for all browser sessions",
-  "Cache session cookies with 7-14 day TTL to minimize logins",
-  "Implement exponential backoff on retry logic",
-  "Use Falcor API for reads; reserve browser automation for writes only",
-  "Add human-like random delays (2-8s) between navigation steps",
-  "Maintain persistent browser profiles to avoid new-device triggers",
-  "Monitor for captcha/challenge responses and alert on detection",
-  "Batch parental control changes into single MFA-verified sessions",
-]
-
-export function RiskAssessment() {
+export function RiskAssessment({ data }: RiskAssessmentProps) {
   return (
     <section id="risk-assessment" className="space-y-6">
       {/* Section header */}
@@ -67,12 +27,10 @@ export function RiskAssessment() {
           <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
           <div>
             <h3 className="text-sm font-semibold text-amber-800 dark:text-amber-200">
-              Netflix Terms of Service &mdash; Section 6
+              {data.tosWarning.title}
             </h3>
             <p className="text-sm text-amber-700 dark:text-amber-400 mt-1 leading-relaxed">
-              Netflix ToS explicitly prohibits automated access, scraping, and use of bots or similar
-              technology. There is no public API or partner program for parental control integration.
-              Account suspension is possible if automation is detected.
+              {data.tosWarning.description}
             </p>
           </div>
         </div>
@@ -86,9 +44,9 @@ export function RiskAssessment() {
         <div>
           <div className="text-sm font-medium text-foreground">Overall Risk Level</div>
           <div className="flex items-center gap-2 mt-0.5">
-            <RiskBadge risk="Medium" size="lg" />
+            <RiskBadge risk={data.overallRisk.level} size="lg" />
             <span className="text-sm text-muted-foreground">
-              &mdash; manageable with stealth mode and rate limiting
+              &mdash; {data.overallRisk.description}
             </span>
           </div>
         </div>
@@ -109,7 +67,7 @@ export function RiskAssessment() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/50">
-              {DETECTION_VECTORS.map((dv) => (
+              {data.detectionVectors.map((dv) => (
                 <tr key={dv.vector} className="hover:bg-muted/20 transition-colors">
                   <td className="px-4 py-2.5 font-medium text-foreground whitespace-nowrap">{dv.vector}</td>
                   <td className="px-4 py-2.5">
@@ -130,7 +88,7 @@ export function RiskAssessment() {
           Recommended Mitigations
         </h3>
         <div className="space-y-2">
-          {MITIGATIONS_CHECKLIST.map((item, idx) => (
+          {data.mitigationsChecklist.map((item, idx) => (
             <label
               key={idx}
               className="flex items-start gap-2.5 text-sm text-muted-foreground cursor-default"

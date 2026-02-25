@@ -19,12 +19,16 @@ import { IntegrationGapAnalysis } from "./IntegrationGapAnalysis"
 import { EnforcementFlow } from "./EnforcementFlow"
 import { AdapterRoadmap } from "./AdapterRoadmap"
 import { RiskAssessment } from "./RiskAssessment"
+import { PLATFORM_REGISTRY } from "@/lib/platforms/registry"
 
 interface SectionContentProps {
   data: PlatformResearchData
 }
 
 export function SectionContent({ data }: SectionContentProps) {
+  const platform = PLATFORM_REGISTRY.find((p) => p.id === data.platformId)
+  const platformHex = platform?.hex ?? "888888"
+
   return (
     <>
       {/* Capabilities */}
@@ -40,19 +44,23 @@ export function SectionContent({ data }: SectionContentProps) {
       {/* Rating Mapping */}
       {data.ratingMapping && (
         <SectionCard id="ratings" title="Rating Mapping" icon={Star}>
-          <RatingMappingChart ratingMapping={data.ratingMapping} />
+          <RatingMappingChart ratingMapping={data.ratingMapping} platformHex={platformHex} />
         </SectionCard>
       )}
 
       {/* Account Structure */}
-      <SectionCard id="account-structure" title="Account Structure" icon={Users}>
-        <ProfileStructure />
-      </SectionCard>
+      {data.sectionData?.profileStructure && (
+        <SectionCard id="account-structure" title="Account Structure" icon={Users}>
+          <ProfileStructure data={data.sectionData.profileStructure} />
+        </SectionCard>
+      )}
 
       {/* API & Technical */}
-      <SectionCard id="api-technical" title="API & Technical" icon={Code2}>
-        <TechnicalRecon />
-      </SectionCard>
+      {data.sectionData?.technicalRecon && (
+        <SectionCard id="api-technical" title="API & Technical" icon={Code2}>
+          <TechnicalRecon data={data.sectionData.technicalRecon} />
+        </SectionCard>
+      )}
 
       {/* Screenshots */}
       {data.screenshots.length > 0 && (
@@ -70,23 +78,31 @@ export function SectionContent({ data }: SectionContentProps) {
       )}
 
       {/* Phosra Integration — self-wrapping */}
-      <IntegrationGapAnalysis />
+      {data.sectionData?.integrationGap && (
+        <IntegrationGapAnalysis data={data.sectionData.integrationGap} />
+      )}
 
       {/* Enforcement Flow — self-wrapping */}
-      <EnforcementFlow />
+      {data.sectionData?.enforcementFlow && (
+        <EnforcementFlow data={data.sectionData.enforcementFlow} />
+      )}
 
       {/* Adapter Roadmap — self-wrapping */}
-      <AdapterRoadmap />
+      {data.sectionData?.adapterRoadmap && (
+        <AdapterRoadmap data={data.sectionData.adapterRoadmap} />
+      )}
 
       {/* Risk Assessment */}
-      <SectionCard
-        id="risk-assessment"
-        title="Risk & Terms of Service"
-        icon={AlertTriangle}
-        defaultCollapsed
-      >
-        <RiskAssessment />
-      </SectionCard>
+      {data.sectionData?.riskAssessment && (
+        <SectionCard
+          id="risk-assessment"
+          title="Risk & Terms of Service"
+          icon={AlertTriangle}
+          defaultCollapsed
+        >
+          <RiskAssessment data={data.sectionData.riskAssessment} />
+        </SectionCard>
+      )}
     </>
   )
 }

@@ -7,7 +7,7 @@ import type { ResearchResult } from "@/lib/platform-research/types"
 import { ResearchStatusBadge } from "./ResearchStatusBadge"
 
 // Platforms with completed research reports (will be replaced with dynamic detection later)
-const RESEARCHED_PLATFORMS = ["netflix"] as const
+const RESEARCHED_PLATFORMS = ["netflix", "peacock"] as const
 const researchedSet = new Set<string>(RESEARCHED_PLATFORMS)
 
 interface PlatformResearchCardProps {

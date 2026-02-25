@@ -101,7 +101,7 @@ export const PLATFORM_REGISTRY: PlatformRegistryEntry[] = [
   p("hulu", "Hulu", "streaming", "target", "stub", null, null, { marquee: true, dbPlatformId: "hulu" }),
   p("max", "Max", "streaming", "target", "stub", null, null, { marquee: true, dbPlatformId: "max" }),
   p("paramount_plus", "Paramount+", "streaming", "target", "planned", "siParamountplus", "0064FF", { marquee: true }),
-  p("peacock", "Peacock", "streaming", "target", "planned", null, null, { marquee: true }),
+  p("peacock", "Peacock", "streaming", "target", "stub", null, "069DE0", { marquee: true }),
   p("apple_tv_plus", "Apple TV+", "streaming", "target", "planned", "siAppletv", "000000"),
   p("prime_video", "Prime Video", "streaming", "target", "stub", null, null, { marquee: true, dbPlatformId: "prime_video" }),
   p("youtube_tv", "YouTube TV", "streaming", "target", "planned", "siYoutubetv", "FF0000"),

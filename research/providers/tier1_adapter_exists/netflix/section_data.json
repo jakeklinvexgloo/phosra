@@ -1,0 +1,235 @@
+{
+  "profileStructure": {
+    "accountLabel": "Netflix Account",
+    "accountDescription": "Premium Subscription",
+    "accountMeta": "Max 5 profiles \u00b7 4 simultaneous streams",
+    "accountBorderColor": "#E50914",
+    "accountLabelColor": "#f87171",
+    "hierarchyDescription": "Netflix Account \u2192 Profiles \u2192 Settings hierarchy",
+    "profiles": [
+      { "name": "Ramsay!", "maturity": "All Maturity", "type": "standard", "pinEnabled": false },
+      { "name": "Mom and Dad", "maturity": "All Maturity", "type": "standard", "pinEnabled": false },
+      { "name": "Samson", "maturity": "Kids", "type": "kids", "pinEnabled": false },
+      { "name": "Chap", "maturity": "Kids", "type": "kids", "pinEnabled": false },
+      { "name": "BANANA!!!", "maturity": "Kids", "type": "kids", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Display Name", "configurable": true },
+      { "setting": "Avatar Image", "configurable": true },
+      { "setting": "Language Preference", "configurable": true },
+      { "setting": "Maturity Rating Level", "configurable": true },
+      { "setting": "Autoplay Next Episode", "configurable": true },
+      { "setting": "Autoplay Previews", "configurable": true },
+      { "setting": "Viewing Restrictions", "configurable": true },
+      { "setting": "Profile Lock (PIN)", "configurable": true }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Standard with Ads", "streams": "2", "resolution": "1080p" },
+      { "plan": "Standard", "streams": "2", "resolution": "1080p" },
+      { "plan": "Premium", "streams": "4", "resolution": "4K UHD" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Falcor JSON Graph protocol, endpoints, and authentication",
+    "apiArchitecture": {
+      "title": "Falcor JSON Graph Protocol",
+      "description": "Netflix uses a custom data-fetching protocol called Falcor. All data flows through a single endpoint with path-based queries. Requests are POSTs with path parameter arrays; responses are nested JSON graphs with $type references for deduplication.",
+      "codeExample": {
+        "comment": "// Single entry point for all data",
+        "method": "POST",
+        "endpoint": "/nq/website/memberapi/release/pathEvaluator",
+        "exampleComment": "// Example path query for profiles",
+        "exampleCode": "{ \"paths\": [[\"profiles\", \"current\", [\"name\", \"maturityLevel\", \"isKids\"]]] }"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "/nq/website/memberapi/release/pathEvaluator", "purpose": "Primary data API (Falcor JSON Graph)", "auth": "Session Cookie" },
+      { "endpoint": "/nq/website/memberapi/release/profiles/switch", "purpose": "Switch active profile", "auth": "Session Cookie" },
+      { "endpoint": "/api/shakti/*/profiles", "purpose": "Profile management (list, create, edit)", "auth": "Session Cookie + Tokens" },
+      { "endpoint": "/api/shakti/*/parentalControls", "purpose": "Read parental control settings", "auth": "Session Cookie" },
+      { "endpoint": "/api/shakti/*/parentalControls/pin", "purpose": "PIN management (set, remove, verify)", "auth": "Session Cookie + MFA" },
+      { "endpoint": "/api/shakti/*/viewingactivity", "purpose": "Viewing history data per profile", "auth": "Session Cookie" },
+      { "endpoint": "/api/shakti/*/maturityRestrictions", "purpose": "Maturity level settings (read/write)", "auth": "Session Cookie + MFA" },
+      { "endpoint": "/api/shakti/*/titleRestrictions", "purpose": "Title block list management", "auth": "Session Cookie + MFA" }
+    ],
+    "authDetails": [
+      { "label": "Primary Auth", "value": "NetflixId + SecureNetflixId", "description": "Session cookies set at login. ~2-week TTL before re-auth required." },
+      { "label": "MSL Tokens", "value": "Message Security Layer", "description": "Netflix's proprietary protocol for DRM and secure API calls." },
+      { "label": "CSRF Protection", "value": "x-netflix-request-client-atag", "description": "Required header on all mutating requests." },
+      { "label": "Profile Context", "value": "x-netflix-profileguid", "description": "Header that scopes requests to a specific profile." }
+    ],
+    "rateLimitNotes": [
+      "No explicit rate limiting observed during research sessions",
+      "Netflix uses device fingerprinting and behavioral analysis",
+      "Headless browser detection present \u2014 Playwright stealth mode recommended",
+      "Session cookies last ~2 weeks before re-authentication required"
+    ],
+    "harCaptureCount": "51 unique paths captured via HAR"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Netflix Terms of Service \u2014 Section 6",
+      "description": "Netflix ToS explicitly prohibits automated access, scraping, and use of bots or similar technology. There is no public API or partner program for parental control integration. Account suspension is possible if automation is detected."
+    },
+    "overallRisk": {
+      "level": "Medium",
+      "description": "manageable with stealth mode and rate limiting"
+    },
+    "detectionVectors": [
+      { "vector": "Headless browser detection", "risk": "Medium", "mitigation": "Use Playwright stealth plugin (playwright-extra) to mask automation signals" },
+      { "vector": "Request frequency analysis", "risk": "Low", "mitigation": "Rate limit to 1 action per 5-10 seconds; cache aggressively" },
+      { "vector": "Login from new device/IP", "risk": "Medium", "mitigation": "Maintain persistent browser profile and cookies across sessions" },
+      { "vector": "Unusual navigation patterns", "risk": "Low", "mitigation": "Randomize delays between actions; follow natural page flow" },
+      { "vector": "Multiple rapid setting changes", "risk": "Medium", "mitigation": "Batch changes within single sessions; add jitter between actions" }
+    ],
+    "mitigationsChecklist": [
+      "Enable Playwright stealth mode for all browser sessions",
+      "Cache session cookies with 7-14 day TTL to minimize logins",
+      "Implement exponential backoff on retry logic",
+      "Use Falcor API for reads; reserve browser automation for writes only",
+      "Add human-like random delays (2-8s) between navigation steps",
+      "Maintain persistent browser profiles to avoid new-device triggers",
+      "Monitor for captcha/challenge responses and alert on detection",
+      "Batch parental control changes into single MFA-verified sessions"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Netflix",
+    "stats": [
+      { "label": "Native", "value": 7, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 4, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 9, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 25, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Screen Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Netflix Gap",
+        "gap": "Netflix has ZERO time limits. No native way for parents to restrict daily viewing hours.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra monitors viewing history via API every 30 minutes. When the daily limit is reached, the child's profile is locked by changing the PIN to a Phosra-managed value."
+      },
+      {
+        "icon": "Bell",
+        "title": "Activity Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Netflix Gap",
+        "gap": "Netflix sends no parent alerts. Parents have no visibility into what their child watches in real-time.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra monitors viewing activity data and pushes real-time notifications to parents when flagged content is watched or unusual patterns are detected."
+      },
+      {
+        "icon": "Moon",
+        "title": "Bedtime Mode",
+        "ruleCategory": "bedtime_schedule",
+        "gapLabel": "Netflix Gap",
+        "gap": "Netflix has no scheduling. Children can watch content at any hour with no time-of-day restrictions.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra locks and unlocks profiles on a parent-defined schedule via cron-triggered Playwright automation. Profile PIN is toggled to enforce bedtime windows."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Read Layer", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Write Layer", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Session Manager", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Screen Time Enforcer", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "Netflix email", "purpose": "Login", "sensitivity": "High", "encryption": "AES-256", "retention": "Until disconnected" },
+      { "name": "Netflix password", "purpose": "Login + MFA", "sensitivity": "Critical", "encryption": "AES-256 + per-user key", "retention": "Until disconnected" },
+      { "name": "Session cookies", "purpose": "API reads", "sensitivity": "High", "encryption": "AES-256", "retention": "7-14 days (auto-rotate)" },
+      { "name": "Profile GUIDs", "purpose": "Profile mapping", "sensitivity": "Low", "encryption": "Standard", "retention": "Until disconnected" },
+      { "name": "Phosra-managed PINs", "purpose": "Screen time lock/unlock", "sensitivity": "Medium", "encryption": "AES-256 + vault", "retention": "Active enforcement only" }
+    ],
+    "platformBgColor": "rgba(229,9,20,0.05)",
+    "platformIconLetter": "N",
+    "platformIconBg": "#dc2626",
+    "apiDescription": "Falcor API (reads) + Playwright (writes)",
+    "adapterName": "Netflix Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track viewing activity",
+        "detail": "Check viewing history every 30 min via Falcor API using cached session cookies",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "detect",
+        "icon": "Gauge",
+        "title": "Detect",
+        "description": "Compare against daily limit",
+        "detail": "Calculate total watch time from history entries and compare vs parent-set limit (e.g., 2h 15m / 2h)",
+        "color": "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
+        "dotColor": "bg-amber-500",
+        "headerBg": "bg-amber-500/10"
+      },
+      {
+        "id": "lock",
+        "icon": "Lock",
+        "title": "Lock",
+        "description": "Restrict profile access",
+        "detail": "Change child's profile PIN to a Phosra-generated value via Playwright automation",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent",
+        "detail": "Push real-time notification to parent via Phosra app with viewing summary and lock confirmation",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Timer",
+        "title": "~30 min polling delay",
+        "description": "Viewing activity is polled, not real-time. Children may overshoot the limit by up to 30 minutes before the profile is locked."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No native Netflix API",
+        "description": "All write operations require Playwright browser automation. Session cookies must be refreshed every 7-14 days."
+      },
+      {
+        "icon": "Lock",
+        "title": "PIN managed by Phosra vault",
+        "description": "Phosra stores and rotates the child profile PIN. Original PIN is preserved for restore. Mid-stream lockout may disrupt viewing."
+      }
+    ],
+    "loopLabel": "Repeats daily until parent adjusts limits"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "authenticate", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Use stealth mode. Cache session cookies for 7-14 days to minimize login frequency." },
+      { "name": "listProfiles", "approach": "Falcor API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Use Falcor API directly with cached session cookies." },
+      { "name": "getProfileSettings", "approach": "Falcor API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "API call. Parse Falcor JSON graph response." },
+      { "name": "setContentRestrictions", "approach": "Playwright + MFA", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "High", "risk": "Medium", "recommendation": "Playwright with MFA code retrieval. Prefer password-based MFA path." },
+      { "name": "setTitleRestrictions", "approach": "Playwright + MFA", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "High", "risk": "Medium", "recommendation": "Playwright. Batch title changes in a single MFA-verified session." },
+      { "name": "setProfilePIN", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low-Medium", "recommendation": "Playwright with password re-entry handling." },
+      { "name": "getWatchHistory", "approach": "Falcor API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low-Medium", "risk": "Low", "recommendation": "Try API first; fall back to Playwright scrape of viewing activity page." },
+      { "name": "lockProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Store original PIN to restore later. Primary screen time enforcement mechanism." },
+      { "name": "createKidsProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low", "recommendation": "Playwright. Verify profile count before attempting (max 5)." },
+      { "name": "supportsNativeScreenTime", "approach": "Static", "approachColor": "bg-muted text-muted-foreground", "complexity": "None", "risk": "None", "recommendation": "Returns false. Netflix has zero native screen time features." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Foundation", "components": "Session Manager (2-3d), Read Layer (1-2d)", "minDays": 3, "maxDays": 5, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "Write Layer (3-5d), Testing (2-3d)", "minDays": 5, "maxDays": 8, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Intelligence", "components": "Screen Time Enforcer (2-3d)", "minDays": 2, "maxDays": 3, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "10-16 days",
+    "maxTotal": 16
+  }
+}

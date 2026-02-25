@@ -11,6 +11,7 @@ export interface PlatformResearchData {
   screenshots: ScreenshotGroup[]
   screenshotCount: number
   capabilities: CapabilitySummary
+  sectionData: SectionData | null
 }
 
 export interface ScreenshotGroup {
@@ -20,7 +21,7 @@ export interface ScreenshotGroup {
 }
 
 export interface RatingMappingData {
-  netflixTiers: Record<
+  platformTiers: Record<
     string,
     {
       phosraTier: string
@@ -54,4 +55,123 @@ export interface CapabilityEntry {
   confidence: number
   gap?: string
   workaround?: string
+}
+
+// ── Section Data Types ───────────────────────────────────────────
+// Data-driven section content loaded from section_data.json per platform.
+
+export interface SectionData {
+  profileStructure: ProfileStructureData
+  technicalRecon: TechnicalReconData
+  riskAssessment: RiskAssessmentData
+  integrationGap: IntegrationGapData
+  enforcementFlow: EnforcementFlowData
+  adapterRoadmap: AdapterRoadmapData
+}
+
+export interface ProfileStructureData {
+  accountLabel: string
+  accountDescription: string
+  accountMeta: string
+  accountBorderColor: string
+  accountLabelColor: string
+  hierarchyDescription: string
+  profiles: { name: string; maturity: string; type: "standard" | "kids"; pinEnabled: boolean }[]
+  settings: { setting: string; configurable: boolean }[]
+  subscriptionTiers: { plan: string; streams: string; resolution: string }[]
+}
+
+export interface TechnicalReconData {
+  subtitle: string
+  apiArchitecture: {
+    title: string
+    description: string
+    codeExample: {
+      comment: string
+      method: string
+      endpoint: string
+      exampleComment: string
+      exampleCode: string
+    }
+  }
+  endpoints: { endpoint: string; purpose: string; auth: string }[]
+  authDetails: { label: string; value: string; description: string }[]
+  rateLimitNotes: string[]
+  harCaptureCount?: string
+}
+
+export interface RiskAssessmentData {
+  tosWarning: { title: string; description: string }
+  overallRisk: { level: "Low" | "Medium" | "High"; description: string }
+  detectionVectors: { vector: string; risk: "Low" | "Medium" | "High"; mitigation: string }[]
+  mitigationsChecklist: string[]
+}
+
+export interface IntegrationGapData {
+  platformName: string
+  stats: { label: string; value: number; color: string }[]
+  gapOpportunities: {
+    icon: string
+    title: string
+    ruleCategory: string
+    gapLabel: string
+    gap: string
+    solutionLabel: string
+    solution: string
+  }[]
+  adapterLayers: { label: string; color: string }[]
+  credentials: {
+    name: string
+    purpose: string
+    sensitivity: string
+    encryption: string
+    retention: string
+  }[]
+  platformBgColor: string
+  platformIconLetter: string
+  platformIconBg: string
+  apiDescription: string
+  adapterName: string
+}
+
+export interface EnforcementFlowData {
+  steps: {
+    id: string
+    icon: string
+    title: string
+    description: string
+    detail: string
+    color: string
+    dotColor: string
+    headerBg: string
+  }[]
+  limitations: {
+    icon: string
+    title: string
+    description: string
+  }[]
+  loopLabel: string
+}
+
+export interface AdapterRoadmapData {
+  methods: {
+    name: string
+    approach: string
+    approachColor: string
+    complexity: string
+    risk: string
+    recommendation: string
+  }[]
+  timelinePhases: {
+    priority: string
+    label: string
+    components: string
+    minDays: number
+    maxDays: number
+    color: string
+    barColor: string
+    hatchColor: string
+  }[]
+  totalEstimate: string
+  maxTotal: number
 }

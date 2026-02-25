@@ -5,7 +5,7 @@ import { ArrowRight, Check, X, Minus } from "lucide-react"
 // ── Types ───────────────────────────────────────────────────────
 
 export interface RatingMappingData {
-  netflixTiers: Record<
+  platformTiers: Record<
     string,
     {
       phosraTier: string
@@ -40,13 +40,31 @@ const TIER_COLORS: Record<string, { bg: string; text: string; pillBg: string; pi
     pillBg: "bg-teal-100 dark:bg-teal-900/30",
     pillText: "text-teal-700 dark:text-teal-300",
   },
+  "Family": {
+    bg: "bg-blue-50 dark:bg-blue-900/10",
+    text: "text-blue-700 dark:text-blue-300",
+    pillBg: "bg-blue-100 dark:bg-blue-900/30",
+    pillText: "text-blue-700 dark:text-blue-300",
+  },
   "Teens": {
     bg: "bg-amber-50 dark:bg-amber-900/10",
     text: "text-amber-700 dark:text-amber-300",
     pillBg: "bg-amber-100 dark:bg-amber-900/30",
     pillText: "text-amber-700 dark:text-amber-300",
   },
+  "Teen": {
+    bg: "bg-amber-50 dark:bg-amber-900/10",
+    text: "text-amber-700 dark:text-amber-300",
+    pillBg: "bg-amber-100 dark:bg-amber-900/30",
+    pillText: "text-amber-700 dark:text-amber-300",
+  },
   "All Maturity Ratings": {
+    bg: "bg-red-50 dark:bg-red-900/10",
+    text: "text-red-700 dark:text-red-300",
+    pillBg: "bg-red-100 dark:bg-red-900/30",
+    pillText: "text-red-700 dark:text-red-300",
+  },
+  "Adult": {
     bg: "bg-red-50 dark:bg-red-900/10",
     text: "text-red-700 dark:text-red-300",
     pillBg: "bg-red-100 dark:bg-red-900/30",
@@ -66,6 +84,7 @@ const DEFAULT_COLORS = {
 const PHOSRA_TIER_LABELS: Record<string, string> = {
   all_ages: "All Ages",
   ages_7_plus: "Ages 7+",
+  ages_10_plus: "Ages 10+",
   ages_13_plus: "Ages 13+",
   adults_only: "Adults Only",
 }
@@ -74,9 +93,10 @@ const PHOSRA_TIER_LABELS: Record<string, string> = {
 
 interface RatingMappingChartProps {
   ratingMapping: RatingMappingData | null
+  platformHex?: string
 }
 
-export function RatingMappingChart({ ratingMapping }: RatingMappingChartProps) {
+export function RatingMappingChart({ ratingMapping, platformHex = "E50914" }: RatingMappingChartProps) {
   if (!ratingMapping) {
     return (
       <div className="text-sm text-muted-foreground text-center py-8">
@@ -85,7 +105,7 @@ export function RatingMappingChart({ ratingMapping }: RatingMappingChartProps) {
     )
   }
 
-  const tierEntries = Object.entries(ratingMapping.netflixTiers)
+  const tierEntries = Object.entries(ratingMapping.platformTiers)
   const systemEntries = Object.entries(ratingMapping.ratingSystems)
 
   return (
@@ -117,8 +137,11 @@ export function RatingMappingChart({ ratingMapping }: RatingMappingChartProps) {
             <div key={tierName}>
               {/* Desktop: 3-column flow */}
               <div className="hidden md:grid md:grid-cols-[1fr_auto_1.5fr_auto_1fr] gap-3 items-center">
-                {/* Netflix tier */}
-                <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#141414] border-l-4 border-[#E50914]">
+                {/* Platform tier */}
+                <div
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#141414] border-l-4"
+                  style={{ borderLeftColor: `#${platformHex}` }}
+                >
                   <div className="min-w-0">
                     <div className="text-sm font-medium text-white truncate">
                       {tierName}
@@ -126,7 +149,7 @@ export function RatingMappingChart({ ratingMapping }: RatingMappingChartProps) {
                     <div className="text-[10px] text-zinc-400 tabular-nums">
                       {tier.ageRange}
                       {tier.isKidsProfile && (
-                        <span className="ml-1.5 text-[#E50914]">Kids Profile</span>
+                        <span className="ml-1.5" style={{ color: `#${platformHex}` }}>Kids Profile</span>
                       )}
                     </div>
                   </div>
@@ -167,13 +190,13 @@ export function RatingMappingChart({ ratingMapping }: RatingMappingChartProps) {
               <div className={`md:hidden rounded-lg ${colors.bg} p-3 space-y-2`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-1 h-8 rounded-full bg-[#E50914]" />
+                    <div className="w-1 h-8 rounded-full" style={{ backgroundColor: `#${platformHex}` }} />
                     <div>
                       <div className="text-sm font-medium text-foreground">{tierName}</div>
                       <div className="text-[10px] text-muted-foreground tabular-nums">
                         {tier.ageRange}
                         {tier.isKidsProfile && (
-                          <span className="ml-1.5 text-[#E50914]">Kids Profile</span>
+                          <span className="ml-1.5" style={{ color: `#${platformHex}` }}>Kids Profile</span>
                         )}
                       </div>
                     </div>
