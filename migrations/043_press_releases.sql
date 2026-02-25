@@ -1,4 +1,4 @@
-CREATE TABLE press_releases (
+CREATE TABLE IF NOT EXISTS press_releases (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title TEXT NOT NULL DEFAULT '',
     subtitle TEXT NOT NULL DEFAULT '',
@@ -30,7 +30,7 @@ CREATE TABLE press_releases (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE UNIQUE INDEX idx_press_releases_slug ON press_releases(slug) WHERE slug != '';
-CREATE INDEX idx_press_releases_status ON press_releases(status);
-CREATE INDEX idx_press_releases_publish_date ON press_releases(publish_date);
-CREATE INDEX idx_press_releases_created_at ON press_releases(created_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_press_releases_slug ON press_releases(slug) WHERE slug != '';
+CREATE INDEX IF NOT EXISTS idx_press_releases_status ON press_releases(status);
+CREATE INDEX IF NOT EXISTS idx_press_releases_publish_date ON press_releases(publish_date);
+CREATE INDEX IF NOT EXISTS idx_press_releases_created_at ON press_releases(created_at DESC);
