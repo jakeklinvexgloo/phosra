@@ -25,9 +25,6 @@ class ApiClient {
     const res = await fetch(`${this.baseUrl}${path}`, { ...options, headers })
 
     if (res.status === 401) {
-      if (typeof window !== "undefined") {
-        window.location.href = "/"
-      }
       throw new Error("Session expired")
     }
 

@@ -1,30 +1,42 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { Users, ShieldCheck, Activity, Plus, ArrowRight, Zap, Globe, BookOpen } from "lucide-react"
 import { api } from "@/lib/api"
+import { useApi } from "@/lib/useApi"
 import { UsageChart } from "@/components/dashboard/UsageChart"
 import type { Family, FamilyOverview } from "@/lib/types"
 
 export default function DashboardHome() {
+  const { getToken } = useApi()
   const [families, setFamilies] = useState<Family[]>([])
   const [overview, setOverview] = useState<FamilyOverview | null>(null)
   const [newFamilyName, setNewFamilyName] = useState("")
   const [showCreate, setShowCreate] = useState(false)
 
-  useEffect(() => {
-    api.listFamilies().then((data) => {
+  const loadData = useCallback(async () => {
+    try {
+      const token = (await getToken()) ?? undefined
+      const data = await api.listFamilies(token)
       setFamilies(data || [])
       if (data && data.length > 0) {
-        api.familyOverview(data[0].id).then(setOverview).catch(() => {})
+        api.familyOverview(data[0].id, token).then(setOverview).catch(() => {})
       }
-    })
-  }, [])
+    } catch {
+      // API not available — show empty state
+      setFamilies([])
+    }
+  }, [getToken])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const createFamily = async () => {
     if (!newFamilyName) return
-    const family = await api.createFamily(newFamilyName)
+    const token = (await getToken()) ?? undefined
+    const family = await api.createFamily(newFamilyName, token)
     setFamilies([...families, family])
     setNewFamilyName("")
     setShowCreate(false)
