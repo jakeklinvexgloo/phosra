@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { loadPlatformResearch } from "@/lib/platform-research/loaders"
 import { PLATFORM_REGISTRY } from "@/lib/platforms/registry"
 import { PlatformResearchPageLayout } from "./_components/PlatformResearchPageLayout"
+import { SectionContent } from "./_components/SectionContent"
 
 export default async function PlatformResearchDetailPage({
   params,
@@ -20,10 +21,7 @@ export default async function PlatformResearchDetailPage({
 
   return (
     <PlatformResearchPageLayout platform={platform} data={data}>
-      {/* Section components will be rendered here by other tasks */}
-      <div className="text-sm text-muted-foreground">
-        Loading research sections...
-      </div>
+      <SectionContent data={data} />
     </PlatformResearchPageLayout>
   )
 }
