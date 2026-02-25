@@ -97,14 +97,20 @@ export default function PressCenterPage() {
         method: "POST",
         headers,
       })
-      const data = await res.json()
       if (res.ok) {
         await fetchReleases()
       } else {
-        setPlanError(data.error || "Failed to generate plan")
+        let msg = `Server error (${res.status})`
+        try {
+          const data = await res.json()
+          msg = data.error || msg
+        } catch {
+          // response wasn't JSON (e.g. timeout HTML page)
+        }
+        setPlanError(msg)
       }
-    } catch {
-      setPlanError("Network error — please try again")
+    } catch (err) {
+      setPlanError(`Request failed: ${err instanceof Error ? err.message : "unknown error"}`)
     } finally {
       setGeneratingPlan(false)
     }

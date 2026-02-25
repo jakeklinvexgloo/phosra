@@ -83,12 +83,18 @@ ${JSON.stringify(milestoneContext, null, 2)}
 
 Generate a press release plan (10-15 entries) that maps to these milestones. Use 2026 dates. The fundraise runs Feb 21 - May 31, 2026.`
 
-  const anthropic = createAnthropic({ apiKey })
-  const result = await generateText({
-    model: anthropic("claude-sonnet-4-5-20250514"),
-    system: PLAN_SYSTEM_PROMPT,
-    prompt: userPrompt,
-  })
+  let result
+  try {
+    const anthropic = createAnthropic({ apiKey })
+    result = await generateText({
+      model: anthropic("claude-sonnet-4-5-20250514"),
+      system: PLAN_SYSTEM_PROMPT,
+      prompt: userPrompt,
+    })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown AI error"
+    return NextResponse.json({ error: `AI generation failed: ${message}` }, { status: 500 })
+  }
 
   // Parse the AI response
   let planEntries: Array<{
