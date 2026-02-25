@@ -191,11 +191,16 @@ export default function PressReleaseDetailPage() {
         await fetchRelease()
         setPhase("edit")
       } else {
-        const data = await res.json().catch(() => ({}))
-        setError(data.error || `Generation failed (${res.status})`)
+        const text = await res.text().catch(() => "")
+        let msg = `Generation failed (${res.status})`
+        try { const j = JSON.parse(text); msg = j.error || msg } catch {}
+        setError(msg)
+        alert(`Draft API error ${res.status}: ${msg}\n\n${text.slice(0, 500)}`)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Network error")
+      const msg = err instanceof Error ? err.message : "Network error"
+      setError(msg)
+      alert(`Draft fetch error: ${msg}`)
     } finally {
       setGenerating(false)
     }
