@@ -63,6 +63,9 @@ export default function PressReleaseDetailPage() {
   const [feedback, setFeedback] = useState("")
   const [generating, setGenerating] = useState(false)
 
+  // Error display
+  const [error, setError] = useState("")
+
   // Two-phase state
   const [phase, setPhase] = useState<"setup" | "edit">("setup")
   const [showInputs, setShowInputs] = useState(false)
@@ -176,6 +179,7 @@ export default function PressReleaseDetailPage() {
   // Generate AI draft
   const handleGenerateDraft = async () => {
     setGenerating(true)
+    setError("")
     try {
       const headers = await getHeaders(true)
       const res = await fetch(`/api/press/${id}/draft`, {
@@ -186,8 +190,13 @@ export default function PressReleaseDetailPage() {
       if (res.ok) {
         await fetchRelease()
         setPhase("edit")
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setError(data.error || `Generation failed (${res.status})`)
       }
-    } catch {} finally {
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Network error")
+    } finally {
       setGenerating(false)
     }
   }
@@ -507,6 +516,13 @@ export default function PressReleaseDetailPage() {
               <Sparkles className="w-4 h-4" />
               {generating ? "Generating Press Release..." : "Generate Press Release"}
             </button>
+
+            {/* Error display */}
+            {error && (
+              <div className="p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/30 rounded-lg">
+                <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+              </div>
+            )}
 
             {/* Skip AI link */}
             <div className="text-center">
