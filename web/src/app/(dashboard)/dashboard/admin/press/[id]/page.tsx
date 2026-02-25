@@ -78,6 +78,7 @@ export default function PressReleaseDetailPage() {
   const [showPreview, setShowPreview] = useState(true)
   const [showHistory, setShowHistory] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [copiedHtml, setCopiedHtml] = useState(false)
 
   // Auth headers helper
   const getHeaders = useCallback(async (json = false) => {
@@ -191,16 +192,11 @@ export default function PressReleaseDetailPage() {
         await fetchRelease()
         setPhase("edit")
       } else {
-        const text = await res.text().catch(() => "")
-        let msg = `Generation failed (${res.status})`
-        try { const j = JSON.parse(text); msg = j.error || msg } catch {}
-        setError(msg)
-        alert(`Draft API error ${res.status}: ${msg}\n\n${text.slice(0, 500)}`)
+        const data = await res.json().catch(() => ({}))
+        setError(data.error || `Generation failed (${res.status})`)
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Network error"
-      setError(msg)
-      alert(`Draft fetch error: ${msg}`)
+      setError(err instanceof Error ? err.message : "Network error")
     } finally {
       setGenerating(false)
     }
@@ -226,12 +222,67 @@ export default function PressReleaseDetailPage() {
     }
   }
 
-  // Copy preview to clipboard
+  // Copy preview to clipboard (plain text)
   const handleCopy = async () => {
     const text = buildPreview()
     await navigator.clipboard.writeText(text)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  // Copy preview to clipboard (HTML)
+  const handleCopyHtml = async () => {
+    const html = buildPreviewHtml()
+    await navigator.clipboard.write([
+      new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }) })
+    ])
+    setCopiedHtml(true)
+    setTimeout(() => setCopiedHtml(false), 2000)
+  }
+
+  // Build preview HTML (styled)
+  const buildPreviewHtml = () => {
+    const parts: string[] = []
+    if (embargoDate) {
+      parts.push(`<p style="color:#dc2626;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;">EMBARGO: Not for release until ${new Date(embargoDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>`)
+    }
+    parts.push(`<p style="font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:#6b7280;">FOR IMMEDIATE RELEASE</p>`)
+    parts.push('<br/>')
+    if (title) parts.push(`<h1 style="font-size:20px;font-weight:700;line-height:1.3;margin:0;">${title.toUpperCase()}</h1>`)
+    if (subtitle) parts.push(`<p style="font-size:14px;font-style:italic;color:#6b7280;margin:4px 0 0 0;">${subtitle}</p>`)
+    parts.push('<br/>')
+    const dateline = [datelineCity, datelineState].filter(Boolean).join(", ")
+    if (dateline && publishDate) {
+      parts.push(`<p style="font-size:13px;"><strong>${dateline}</strong> &mdash; ${new Date(publishDate).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} &mdash;</p>`)
+    }
+    if (body) {
+      const paragraphs = body.split(/\n\n+/).filter(Boolean)
+      for (const p of paragraphs) {
+        parts.push(`<p style="font-size:13px;line-height:1.7;margin:12px 0;">${p.replace(/\n/g, '<br/>')}</p>`)
+      }
+    }
+    if (quotes.length > 0) {
+      for (const q of quotes) {
+        if (q.text) {
+          parts.push(`<blockquote style="border-left:3px solid #d1d5db;padding-left:16px;margin:16px 0;font-style:italic;font-size:13px;line-height:1.6;">"${q.text}"</blockquote>`)
+          if (q.attribution) parts.push(`<p style="font-size:12px;color:#6b7280;margin:-12px 0 16px 19px;">&mdash; ${q.attribution}</p>`)
+        }
+      }
+    }
+    if (boilerplate) {
+      parts.push(`<hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0 16px 0;"/>`)
+      parts.push(`<p style="font-size:12px;font-weight:700;margin:0 0 4px 0;">About Phosra</p>`)
+      parts.push(`<p style="font-size:12px;line-height:1.6;color:#6b7280;">${boilerplate}</p>`)
+    }
+    if (contactName || contactEmail || contactPhone) {
+      parts.push(`<hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0;"/>`)
+      parts.push(`<p style="font-size:12px;font-weight:700;margin:0 0 4px 0;">Media Contact</p>`)
+      if (contactName) parts.push(`<p style="font-size:12px;margin:0;line-height:1.6;">${contactName}</p>`)
+      if (contactEmail) parts.push(`<p style="font-size:12px;margin:0;line-height:1.6;">${contactEmail}</p>`)
+      if (contactPhone) parts.push(`<p style="font-size:12px;margin:0;line-height:1.6;">${contactPhone}</p>`)
+    }
+    parts.push(`<p style="text-align:center;font-size:14px;font-weight:700;margin:24px 0 0 0;">###</p>`)
+    return parts.join('\n')
   }
 
   // Build preview text
@@ -824,18 +875,28 @@ export default function PressReleaseDetailPage() {
             </button>
             {showPreview && (
               <div className="px-4 pb-4 border-t border-border/30 pt-3 space-y-3">
-                <div className="bg-background rounded-lg border border-border/30 p-3 max-h-[500px] overflow-y-auto">
-                  <pre className="text-xs font-mono whitespace-pre-wrap text-foreground/80 leading-relaxed">
-                    {buildPreview()}
-                  </pre>
+                {/* Formatted preview */}
+                <div
+                  className="bg-white dark:bg-zinc-900 rounded-lg border border-border/30 p-5 max-h-[600px] overflow-y-auto"
+                  dangerouslySetInnerHTML={{ __html: buildPreviewHtml() }}
+                />
+                {/* Copy buttons */}
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={handleCopy}
+                    className="flex items-center justify-center gap-1.5 h-8 text-xs font-medium bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? "Copied" : "Copy Text"}
+                  </button>
+                  <button
+                    onClick={handleCopyHtml}
+                    className="flex items-center justify-center gap-1.5 h-8 text-xs font-medium bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
+                  >
+                    {copiedHtml ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedHtml ? "Copied" : "Copy HTML"}
+                  </button>
                 </div>
-                <button
-                  onClick={handleCopy}
-                  className="w-full flex items-center justify-center gap-1.5 h-8 text-xs font-medium bg-muted text-foreground rounded-lg hover:bg-muted/80 transition-colors"
-                >
-                  {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                  {copied ? "Copied" : "Copy to Clipboard"}
-                </button>
               </div>
             )}
           </div>
