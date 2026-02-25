@@ -1,2 +1,2 @@
-// Auth is now handled by WorkOS AuthKit. See useAuth() from @workos-inc/authkit-nextjs/components.
-// This file is kept as an empty placeholder to avoid import errors during migration.
+// Auth is handled by Stytch. See the Stytch SDK integration in the app.
+// This file is kept as an empty placeholder to avoid import errors.

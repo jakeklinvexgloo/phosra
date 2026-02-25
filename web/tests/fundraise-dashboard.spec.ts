@@ -5,11 +5,11 @@ const PASSWORD = process.env.TEST_PASSWORD || ""
 
 test.describe("Fundraise Dashboard", () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the fundraise dashboard (will redirect to WorkOS login)
+    // Navigate to the fundraise dashboard (will redirect to Stytch login)
     await page.goto("https://www.phosra.com/dashboard/admin/fundraise")
 
-    // Wait for WorkOS AuthKit login page
-    await page.waitForURL(/workos|authkit/, { timeout: 15000 })
+    // Wait for Stytch login page
+    await page.waitForURL(/login|stytch/, { timeout: 15000 })
 
     // Fill in email and continue
     const emailInput = page.locator('input[type="email"], input[name="email"]')

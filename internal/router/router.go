@@ -13,24 +13,18 @@ import (
 )
 
 type options struct {
-	sandboxMode      bool
-	corsOrigins      string
-	workosClientID   string
-	stytchProjectID  string
+	sandboxMode     bool
+	corsOrigins     string
+	stytchProjectID string
 	workerAPIKey     string
 }
 
 // Option configures the router.
 type Option func(*options)
 
-// WithSandboxMode enables sandbox authentication (no WorkOS, session-based users).
+// WithSandboxMode enables sandbox authentication (session-based users).
 func WithSandboxMode() Option {
 	return func(o *options) { o.sandboxMode = true }
-}
-
-// WithWorkOSClientID sets the WorkOS client ID for JWT validation.
-func WithWorkOSClientID(clientID string) Option {
-	return func(o *options) { o.workosClientID = clientID }
 }
 
 // WithStytchProjectID sets the Stytch project ID for JWT validation.
@@ -77,14 +71,11 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 	// Build the auth middleware once based on config priority:
 	// 1. Sandbox mode (dev/playground)
 	// 2. Stytch JWT validation (production)
-	// 3. WorkOS JWT validation (legacy)
 	var authMiddleware func(http.Handler) http.Handler
 	if o.sandboxMode {
 		authMiddleware = middleware.SandboxAuth(userRepo)
 	} else if o.stytchProjectID != "" {
 		authMiddleware = middleware.StytchAuth(o.stytchProjectID, userRepo)
-	} else if o.workosClientID != "" {
-		authMiddleware = middleware.WorkOSAuth(o.workosClientID, userRepo)
 	} else {
 		authMiddleware = middleware.SandboxAuth(userRepo) // fallback for local dev
 	}

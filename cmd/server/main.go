@@ -229,9 +229,6 @@ func main() {
 	} else if cfg.StytchProjectID != "" {
 		routerOpts = append(routerOpts, router.WithStytchProjectID(cfg.StytchProjectID))
 		log.Info().Str("project_id", cfg.StytchProjectID).Msg("Stytch authentication enabled")
-	} else if cfg.WorkOSClientID != "" {
-		routerOpts = append(routerOpts, router.WithWorkOSClientID(cfg.WorkOSClientID))
-		log.Info().Msg("WorkOS authentication enabled")
 	}
 	if cfg.CORSOrigins != "" {
 		routerOpts = append(routerOpts, router.WithCORSOrigins(cfg.CORSOrigins))

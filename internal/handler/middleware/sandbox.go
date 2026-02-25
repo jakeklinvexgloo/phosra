@@ -20,7 +20,7 @@ var (
 )
 
 // SandboxAuth is a lightweight auth middleware for sandbox/playground mode.
-// Instead of validating WorkOS JWTs, it accepts an X-Sandbox-Session header
+// Instead of validating JWTs, it accepts an X-Sandbox-Session header
 // and creates or retrieves a sandbox user keyed by that session ID.
 // If no session header is provided, it falls back to a default sandbox session.
 func SandboxAuth(userRepo repository.UserRepository) func(http.Handler) http.Handler {
