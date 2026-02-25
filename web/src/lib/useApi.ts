@@ -14,7 +14,11 @@ export function useApi() {
     }
     try {
       const tokens = stytch.session.getTokens()
-      return tokens?.session_jwt ?? null
+      if (tokens?.session_jwt) return tokens.session_jwt
+      // SDK may not have initialized tokens yet — wait briefly and retry
+      await new Promise(r => setTimeout(r, 500))
+      const retry = stytch.session.getTokens()
+      return retry?.session_jwt ?? null
     } catch {
       return null
     }
