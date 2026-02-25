@@ -1,0 +1,48 @@
+# Node dependencies
+node_modules/
+web/node_modules/
+packages/*/node_modules/
+scripts/workers/node_modules/
+
+# Build artifacts
+web/.next/
+web/out/
+packages/*/dist/
+
+# Development files
+.git/
+.github/
+.claude/
+.vercel/
+.vscode/
+.idea/
+.DS_Store
+
+# Test files
+web/test-*.mjs
+web/tests/
+web/test-screenshots/
+web/test-results/
+web/playwright-report/
+web/e2e/
+
+# Env files
+.env*
+web/.env*
+
+# Large assets not needed in backend container
+web/public/
+pitch-deck.html
+docs/
+
+# Documentation
+*.md
+!migrations/*.sql
+
+# Old Railway config
+railway.toml
+railway-worker.toml
+
+# SDK packages (not used by Go backend)
+packages/android-sdk/
+packages/ios-sdk/
