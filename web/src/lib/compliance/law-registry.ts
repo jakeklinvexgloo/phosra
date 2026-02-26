@@ -390,11 +390,11 @@ input: {
     jurisdiction: "United States (Federal)",
     jurisdictionGroup: "us-federal",
     country: "US",
-    status: "passed",
-    statusLabel: "Passed Senate as part of KOSMA (Jul 2024)",
-    introduced: "2024 (S. 1418, 118th Congress)",
+    status: "pending",
+    statusLabel: "Reintroduced in 119th Congress (S.836, 2025)",
+    introduced: "2024 (reintroduced 2025, S.836 / H.R.6291)",
     summary:
-      "Extends COPPA to teens under 17, bans all targeted advertising to minors, and creates an Eraser Button for data deletion.",
+      "Extends COPPA to teens under 17, bans all targeted advertising to minors, and creates an Eraser Button for data deletion. Passed the Senate 91-3 as part of KOSMA in July 2024 (118th Congress) but the House never voted and the bill expired Jan 3, 2025. Reintroduced in the 119th Congress as S.836 (Senate, March 2025, Senators Markey & Cassidy) and H.R.6291 (House, November 2025). Not yet signed into law.",
     keyProvisions: [
       "Extends COPPA from children under 13 to all minors under 17",
       "Complete ban on targeted advertising directed at minors",
@@ -724,11 +724,11 @@ input: {
     jurisdiction: "United States (Federal)",
     jurisdictionGroup: "us-federal",
     country: "US",
-    status: "passed",
-    statusLabel: "Passed Senate (Jul 2024)",
-    introduced: "2024 (S. 1409 + S. 1418, 118th Congress)",
+    status: "pending",
+    statusLabel: "Expired (passed Senate Jul 2024, 118th Congress); awaiting reintroduction in 119th Congress",
+    introduced: "2024 (S. 1409 + S. 1418, 118th Congress; passed Senate 91-3 Jul 2024 but expired Jan 3, 2025)",
     summary:
-      "Combined KOSA + COPPA 2.0 package extending protections to all minors under 17, with mandatory age verification.",
+      "Combined KOSA + COPPA 2.0 package extending protections to all minors under 17, with mandatory age verification. Passed the Senate 91-3 in July 2024 (118th Congress) but the House never voted and the bill expired on Jan 3, 2025. Must be reintroduced and repassed in the 119th Congress. Component bills KOSA and COPPA 2.0 have been individually reintroduced.",
     keyProvisions: [
       "Extends COPPA protections from under-13 to all minors under 17",
       "Requires platforms to obtain verifiable parental consent for data collection on minors",
@@ -765,18 +765,24 @@ input: {
     jurisdictionGroup: "us-federal",
     country: "US",
     status: "enacted",
-    statusLabel: "In force (updated 2024)",
-    introduced: "1998 (16 CFR Part 312)",
+    statusLabel: "In Force",
+    introduced: "1998 (16 CFR Part 312; amended 2013; amended 2025)",
     summary:
-      "The original COPPA enforcement rule requiring verifiable parental consent for data collection on children under 13.",
+      "The FTC's COPPA enforcement rule requiring verifiable parental consent for data collection on children under 13. The FTC finalized major amendments in January 2025 (5-0 vote), published in the Federal Register on April 22, 2025, with legal effect June 23, 2025 and a full compliance deadline of April 22, 2026. The 2025 amendments add mandatory information security programs, data retention/deletion policies, enhanced direct notice requirements, expanded personal information definitions (biometrics, government IDs), new consent methods, and separate consent for third-party data sharing.",
     keyProvisions: [
       "Verifiable parental consent required before collecting personal information from children under 13",
+      "Separate verifiable parental consent required for third-party data sharing (disclosures for ads, AI training, and monetization are never considered 'integral' to the service)",
+      "Mandatory written information security program to protect children's data",
+      "Mandatory written data retention and deletion policy with defined retention limits",
+      "Enhanced direct notice to parents must disclose identities or categories of all third parties receiving children's data",
+      "Expanded definition of personal information to include biometric identifiers (voiceprints, facial templates, gait patterns) and government-issued IDs",
+      "New verifiable parental consent methods: knowledge-based authentication, facial recognition matching, and text-plus verification",
       "Operators must post clear privacy policies describing data practices for children",
       "Parents have the right to review, delete, and refuse further collection of their child's data",
-      "Operators must maintain confidentiality, security, and integrity of collected children's data",
-      "FTC enforcement with civil penalties per violation",
+      "Safe Harbor program transparency requirements (public reporting and accountability)",
+      "FTC enforcement with civil penalties of up to $53,088 per violation (inflation-adjusted)",
     ],
-    ruleCategories: ["targeted_ad_block", "data_deletion_request", "parental_consent_gate"],
+    ruleCategories: ["targeted_ad_block", "data_deletion_request", "parental_consent_gate", "parental_event_notification", "screen_time_report", "commercial_data_ban"],
     platforms: ["YouTube", "Roblox", "Instagram", "TikTok"],
     mcpSnippet: `// Enforce FTC COPPA Rule
 tool: trigger_child_enforcement
@@ -792,13 +798,38 @@ input: {
 \u2192 Instagram  data collection blocked   \u2713
 \u2192 TikTok     ad tracking disabled      \u2713`,
     ageThreshold: "Under 13",
-    penaltyRange: "Up to $50,120 per violation",
+    penaltyRange: "Up to $53,088 per violation (inflation-adjusted)",
     detailedPage: {
       provisions: [
         {
           title: "Verifiable Parental Consent (VPC)",
           description:
-            "Operators must obtain verifiable parental consent before collecting, using, or disclosing personal information from children under 13. Acceptable methods include signed consent forms, credit card verification, government ID checks, and knowledge-based authentication.",
+            "Operators must obtain verifiable parental consent before collecting, using, or disclosing personal information from children under 13. Acceptable methods include signed consent forms, credit card verification, government ID checks, knowledge-based authentication, facial recognition matching, and text-plus verification (added in 2025 amendments).",
+        },
+        {
+          title: "Separate Consent for Third-Party Data Sharing",
+          description:
+            "The 2025 amendments require operators to obtain separate verifiable parental consent before sharing children's data with third parties. Disclosures for advertising, AI model training, and data monetization are explicitly defined as never being 'integral' to the service, meaning blanket consent cannot cover these uses.",
+        },
+        {
+          title: "Mandatory Written Information Security Program",
+          description:
+            "Operators must establish and maintain a comprehensive written information security program to protect the confidentiality, security, and integrity of personal information collected from children. This is a new mandatory requirement under the 2025 amendments.",
+        },
+        {
+          title: "Mandatory Data Retention and Deletion Policy",
+          description:
+            "Operators must implement a written data retention and deletion policy with defined retention limits. Children's personal information must be deleted when no longer necessary for the purpose for which it was collected.",
+        },
+        {
+          title: "Enhanced Direct Notice to Parents",
+          description:
+            "The 2025 amendments require enhanced direct notice to parents that must disclose the identities or categories of all third parties receiving children's personal information, providing greater transparency about data flows.",
+        },
+        {
+          title: "Expanded Definition of Personal Information",
+          description:
+            "The definition of personal information is expanded to include biometric identifiers (voiceprints, facial templates, gait patterns) and government-issued identification numbers, broadening the scope of data subject to COPPA protections.",
         },
         {
           title: "Clear Privacy Policy for Children",
@@ -811,11 +842,6 @@ input: {
             "Parents have the right to review all personal information collected from their child, request its deletion, and refuse further collection. Operators must honor these requests in a timely manner.",
         },
         {
-          title: "Data Security Requirements",
-          description:
-            "Operators must maintain reasonable procedures to protect the confidentiality, security, and integrity of personal information collected from children, including encryption and access controls.",
-        },
-        {
           title: "Data Minimization",
           description:
             "Operators may not condition a child's participation in an activity on the child providing more personal information than is reasonably necessary for that activity.",
@@ -823,7 +849,7 @@ input: {
         {
           title: "FTC Enforcement and Safe Harbor",
           description:
-            "The FTC enforces COPPA with civil penalties per violation. Industry self-regulatory programs can apply for safe harbor status, providing guidelines that participating operators follow in lieu of direct FTC oversight.",
+            "The FTC enforces COPPA with civil penalties of up to $53,088 per violation. Industry self-regulatory programs can apply for safe harbor status, with new transparency requirements under the 2025 amendments requiring public reporting and accountability.",
         },
       ],
       phosraFeatures: [

@@ -15,7 +15,7 @@ Company context:
 - Phosra = "Plaid for child safety compliance"
 - Single API mapping 45 enforcement rule categories across 78+ child safety laws
 - Founder: Jake Klinvex, serial entrepreneur with 3 exits
-- COPPA 2.0 compliance deadline: April 22, 2026
+- FTC amended COPPA Rule compliance deadline: April 22, 2026
 - Raise target: $950K pre-seed, Feb-May 2026
 
 Your job: Generate a press release plan that maps to fundraise milestones. Each entry should have a clear PR angle, suggested release type, and context for the AI drafter.

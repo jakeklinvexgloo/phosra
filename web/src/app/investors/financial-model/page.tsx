@@ -610,7 +610,7 @@ function FinancialModelContent() {
               <div className="space-y-4">
                 <h3 className="text-white font-semibold text-xs uppercase tracking-wider">Revenue Drivers</h3>
                 <div className="space-y-3 text-white/50 leading-relaxed">
-                  <p><span className="text-white/80 font-medium">COPPA 2.0 deadline (Apr 2026)</span> — Creates compliance urgency; platforms must adopt solutions or face penalties up to $50K per violation</p>
+                  <p><span className="text-white/80 font-medium">FTC COPPA Rule deadline (Apr 2026)</span> — Creates compliance urgency; platforms must adopt solutions or face penalties up to $50K per violation</p>
                   <p><span className="text-white/80 font-medium">Land and expand</span> — Customers start with 1-2 compliance use cases, expand as new laws take effect (modeled at 130-140% NRR)</p>
                   <p><span className="text-white/80 font-medium">Usage compounds</span> — Per-user pricing means revenue grows as customer platforms grow their user base</p>
                   <p><span className="text-white/80 font-medium">Regulatory tailwind</span> — 67+ child safety laws create non-discretionary demand; market growth is mandate-driven, not budget-driven</p>
@@ -640,7 +640,7 @@ function FinancialModelContent() {
                 <div className="text-sm text-white/50 leading-relaxed space-y-2">
                   <p><span className="text-white/80">Plaid:</span> $2.8M seed → ~$100M ARR in 6 years. Per-connection pricing, 80% gross margins, 130%+ NRR.</p>
                   <p><span className="text-white/80">Twilio:</span> $3.7M Series A → $166M ARR in 5 years. Per-API-call pricing, 50% gross margins, 123% NRR.</p>
-                  <p><span className="text-white/80">Phosra advantage:</span> Regulatory mandate creates forcing function absent in Plaid/Twilio&apos;s early days. COPPA 2.0 alone affects every platform with minor users.</p>
+                  <p><span className="text-white/80">Phosra advantage:</span> Regulatory mandate creates forcing function absent in Plaid/Twilio&apos;s early days. The FTC&apos;s amended COPPA Rule alone affects every platform with minor users.</p>
                 </div>
               </div>
             </div>

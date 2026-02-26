@@ -106,7 +106,7 @@ const AGENTS: Agent[] = [
     automationLevel: 70,
     tasks: [
       "Draft 2x/week blog posts analyzing legislation changes",
-      "Create COPPA 2.0 compliance guide (flagship content piece)",
+      "Create FTC COPPA Rule compliance guide (flagship content piece)",
       "Write weekly newsletter for subscriber list",
       "Draft case studies from pilot customer data",
       "Generate SEO-optimized landing pages per law",
@@ -143,7 +143,7 @@ const AGENTS: Agent[] = [
     bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
     automationLevel: 65,
     tasks: [
-      "Identify platforms facing COPPA 2.0 April deadline",
+      "Identify platforms facing FTC COPPA Rule April deadline",
       "Monitor job boards for 'trust and safety' / 'compliance' hiring",
       "Track recent funding rounds (freshly funded = compliance pressure)",
       "Enrich leads with company size, tech stack, decision makers",
@@ -610,7 +610,7 @@ export default function FundraiseCommandCenter() {
             <div className="p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/30">
               <TrendingUp className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             </div>
-            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">COPPA 2.0</span>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">FTC COPPA Rule</span>
           </div>
           <div className="text-xl font-semibold tabular-nums text-red-600 dark:text-red-400">Apr 22</div>
           <div className="text-[10px] text-muted-foreground mt-0.5">compliance deadline</div>
@@ -631,7 +631,7 @@ export default function FundraiseCommandCenter() {
         </div>
         <div className="flex justify-between mt-2 text-[10px] text-muted-foreground">
           <span>Feb 21</span>
-          <span className="text-red-500 font-medium">Apr 22 COPPA</span>
+          <span className="text-red-500 font-medium">Apr 22 FTC COPPA</span>
           <span>May 31</span>
         </div>
       </div>
@@ -895,7 +895,7 @@ export default function FundraiseCommandCenter() {
             </h3>
             <div className="space-y-2 text-xs text-muted-foreground leading-relaxed">
               <p>
-                <strong className="text-foreground">The problem:</strong> 67+ child safety laws are now in effect or pending. Platforms face a compliance cliff — COPPA 2.0 enforcement hits April 2026, half of US states mandate age gating, EU DSA enforcement is ramping. Every platform is building bespoke compliance solutions because no unified API exists.
+                <strong className="text-foreground">The problem:</strong> 67+ child safety laws are now in effect or pending. Platforms face a compliance cliff — FTC amended COPPA Rule enforcement hits April 2026, half of US states mandate age gating, EU DSA enforcement is ramping. Every platform is building bespoke compliance solutions because no unified API exists.
               </p>
               <p>
                 <strong className="text-foreground">The solution:</strong> Phosra is the Plaid for child safety compliance — a single API that maps 45 enforcement rule categories across 67+ laws and pushes controls to 15+ provider adapters. Define once, enforce everywhere.
@@ -904,7 +904,7 @@ export default function FundraiseCommandCenter() {
                 <strong className="text-foreground">The market:</strong> $5-8B combined market (parental controls + age verification + compliance tooling) growing at 12%+ CAGR, driven by regulatory mandate, not discretionary spend.
               </p>
               <p>
-                <strong className="text-foreground">The timing:</strong> COPPA 2.0 compliance deadline is April 22, 2026. Platforms are panicking now. Every month of delay increases their regulatory risk and our urgency-driven sales motion.
+                <strong className="text-foreground">The timing:</strong> FTC COPPA Rule compliance deadline is April 22, 2026. Platforms are panicking now. Every month of delay increases their regulatory risk and our urgency-driven sales motion.
               </p>
               <p>
                 <strong className="text-foreground">The ask:</strong> $950K pre-seed to sign 10 pilot customers, expand law coverage to 75+ jurisdictions, and build the sales motion for seed.
@@ -1067,7 +1067,7 @@ export default function FundraiseCommandCenter() {
             <div className="space-y-3 text-xs text-muted-foreground">
               <div className="flex items-start gap-2">
                 <span className="text-brand-green font-bold">1.</span>
-                <p><strong className="text-foreground">COPPA 2.0 April 22 is your #1 asset.</strong> Every content piece, every sales convo, every investor meeting should reference this deadline. Urgency sells.</p>
+                <p><strong className="text-foreground">FTC COPPA Rule April 22 is your #1 asset.</strong> Every content piece, every sales convo, every investor meeting should reference this deadline. Urgency sells.</p>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-brand-green font-bold">2.</span>
