@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { ArrowLeft, FlaskConical, FileSearch, Shield } from "lucide-react"
 import { loadPlatformResearch } from "@/lib/platform-research/loaders"
 import { PLATFORM_REGISTRY } from "@/lib/platforms/registry"
+import { getSectionsForCategory } from "@/lib/platform-research/section-registry"
 import { PlatformResearchPageLayout } from "./_components/PlatformResearchPageLayout"
 import { SectionContent } from "./_components/SectionContent"
 
@@ -22,9 +23,10 @@ export default async function PlatformResearchDetailPage({
 
   // If research data exists, show the full report
   if (data) {
+    const sections = getSectionsForCategory(platform.category)
     return (
-      <PlatformResearchPageLayout platform={platform} data={data}>
-        <SectionContent data={data} />
+      <PlatformResearchPageLayout platform={platform} data={data} sections={sections}>
+        <SectionContent data={data} category={platform.category} />
       </PlatformResearchPageLayout>
     )
   }

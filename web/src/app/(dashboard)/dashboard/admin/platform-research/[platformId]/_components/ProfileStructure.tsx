@@ -15,6 +15,15 @@ interface ProfileStructureProps {
 }
 
 export function ProfileStructure({ data }: ProfileStructureProps) {
+  const showStreamsColumn = data.subscriptionTiers.some(
+    (t) => t.streams && t.streams !== "N/A" && t.streams !== "n/a"
+  )
+
+  const isVideoResolution = data.subscriptionTiers.some(
+    (t) => /\d{3,4}p|4K|UHD|HD|SD/i.test(t.resolution)
+  )
+  const resolutionLabel = isVideoResolution ? "Resolution" : "Features"
+
   return (
     <section id="account-structure" className="space-y-6">
       {/* Section header */}
@@ -116,8 +125,8 @@ export function ProfileStructure({ data }: ProfileStructureProps) {
           <thead>
             <tr className="border-b border-border bg-muted/20">
               <th className="px-4 py-2.5 text-left font-medium text-foreground">Plan</th>
-              <th className="px-4 py-2.5 text-left font-medium text-foreground">Streams</th>
-              <th className="px-4 py-2.5 text-left font-medium text-foreground">Resolution</th>
+              {showStreamsColumn && <th className="px-4 py-2.5 text-left font-medium text-foreground">Streams</th>}
+              <th className="px-4 py-2.5 text-left font-medium text-foreground">{resolutionLabel}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">
@@ -126,7 +135,7 @@ export function ProfileStructure({ data }: ProfileStructureProps) {
                 <td className={`px-4 py-2.5 text-foreground ${idx === data.subscriptionTiers.length - 1 ? "font-medium" : ""}`}>
                   {tier.plan}
                 </td>
-                <td className="px-4 py-2.5 text-muted-foreground">{tier.streams}</td>
+                {showStreamsColumn && <td className="px-4 py-2.5 text-muted-foreground">{tier.streams}</td>}
                 <td className="px-4 py-2.5 text-muted-foreground">{tier.resolution}</td>
               </tr>
             ))}

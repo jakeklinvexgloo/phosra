@@ -1,0 +1,904 @@
+{
+  "metadata": {
+    "provider": "ChatGPT (OpenAI)",
+    "tier": "1 — Highest Priority",
+    "researchDate": "2026-02-26",
+    "sources": [
+      "section_a_age_verification.md",
+      "section_c_conversation_controls.md",
+      "section_d_parental_controls.md",
+      "section_e_emotional_safety.md",
+      "section_f_privacy_data.md",
+      "section_g_academic_features.md",
+      "findings.md"
+    ]
+  },
+  "conversationControls": {
+    "timeLimits": [
+      {
+        "feature": "Daily time limit",
+        "available": false,
+        "details": "No built-in daily time limits for any account tier"
+      },
+      {
+        "feature": "Per-session time limit",
+        "available": false,
+        "details": "No per-session time limits"
+      },
+      {
+        "feature": "Automatic session ending",
+        "available": false,
+        "details": "No automatic session endings"
+      },
+      {
+        "feature": "Quiet hours",
+        "available": true,
+        "details": "Available for teen accounts (13-18) via parental controls. One continuous window (e.g., 8 PM - 10 AM). Server-side enforcement. Not weekday/weekend differentiated."
+      },
+      {
+        "feature": "Break reminders",
+        "available": true,
+        "details": "Built-in for long sessions, but exact duration trigger not publicly disclosed by OpenAI. Reminds users ChatGPT is an AI tool and encourages stepping away."
+      }
+    ],
+    "messageLimits": [
+      {
+        "tier": "Free",
+        "models": {
+          "GPT-4o / GPT-4 Turbo": "10 messages per 5-hour rolling window",
+          "GPT-5.2 Instant": "10 messages per 5-hour rolling window",
+          "DALL-E": "2-3 images per day",
+          "File Uploads": "3 per 24-hour period"
+        },
+        "fallback": "Once cap hit, silently switches to GPT-5.2 Mini with reduced capability"
+      },
+      {
+        "tier": "ChatGPT Plus ($20/mo)",
+        "models": {
+          "GPT-5-Thinking": "200 messages/week",
+          "GPT-4.5": "50 messages/week",
+          "GPT-4": "40 messages every 3 hours",
+          "GPT-4o / GPT-4.1": "80 messages every 3 hours"
+        },
+        "overallLimit": "~80-100 messages every 3 hours across all models",
+        "resetSchedule": "Daily limits reset at 00:00 UTC; 3-hour rolling windows; weekly limits on 7-day rolling basis",
+        "dynamicAdjustment": true
+      },
+      {
+        "tier": "ChatGPT Team",
+        "models": {
+          "GPT-5-Thinking": "200 messages/week per user",
+          "GPT-5 Models": "Unlimited (subject to abuse guardrails)"
+        }
+      },
+      {
+        "tier": "ChatGPT Pro ($200/mo)",
+        "models": {
+          "GPT-5 Models": "Unlimited (subject to abuse guardrails and Terms of Use)"
+        }
+      },
+      {
+        "tier": "Teen (13-17)",
+        "limit": "Same as account tier (Free, Plus, Team, etc.)",
+        "additionalRestrictions": "None. No additional message restrictions for teen accounts.",
+        "parentalOverride": "Parents can restrict access via quiet hours but cannot directly reduce message quotas"
+      }
+    ],
+    "quietHours": {
+      "available": true,
+      "setupPath": "Settings > Parental Controls > Add family member > Configure Quiet Hours",
+      "details": "One continuous time window per day. Applied daily, not weekday/weekend differentiated.",
+      "enforcement": "Server-side. App/site shows 'ChatGPT is unavailable during quiet hours' message.",
+      "limitations": [
+        "Single window only — cannot set multiple separate quiet periods (e.g., separate bedtime and school hours)",
+        "Bypassable: teens can create new accounts, use ChatGPT without logging in, or unlink parent accounts",
+        "Not customizable per day of the week"
+      ],
+      "example": {
+        "start": "8:00 PM (20:00)",
+        "end": "10:00 AM (10:00)",
+        "effect": "ChatGPT inaccessible from 8 PM to 10 AM daily"
+      }
+    },
+    "breakReminders": {
+      "available": true,
+      "trigger": "Displayed during 'long sessions' — exact duration not publicly specified by OpenAI",
+      "content": [
+        "Reminds users that ChatGPT is an AI tool, not a human replacement",
+        "Encourages stepping away and engaging with real-world relationships",
+        "Reinforces that ChatGPT has limitations"
+      ],
+      "customizable": false,
+      "parentControl": false,
+      "teenSpecific": false
+    },
+    "followUpSuggestions": {
+      "available": true,
+      "defaultEnabled": true,
+      "details": "ChatGPT ends most responses with 'Want me to...' suggestions. A setting 'Show follow-up suggestions in chats' exists but disabling it does NOT fully prevent follow-up suggestions.",
+      "workaround": "Users must use custom instructions like 'You should never end a response by asking a question' to reliably prevent this behavior.",
+      "teenModified": false,
+      "teenDetails": "Follow-up suggestions are NOT modified for teen accounts. Teens receive the same continuation prompts and engagement-encouraging language as adult users."
+    },
+    "featureMatrix": [
+      {
+        "feature": "Daily time limit",
+        "free": "None",
+        "plus": "None",
+        "team": "None",
+        "teen": "None",
+        "parentControl": "Via quiet hours only"
+      },
+      {
+        "feature": "Message quota",
+        "free": "10/5h (GPT-4o)",
+        "plus": "80/3h (GPT-4o)",
+        "team": "Unlimited (GPT-5)",
+        "teen": "Same as tier",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Break reminders",
+        "free": "Yes",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes",
+        "parentControl": "N/A (not customizable)"
+      },
+      {
+        "feature": "Quiet hours",
+        "free": "N/A",
+        "plus": "N/A",
+        "team": "N/A",
+        "teen": "Yes (parent-set)",
+        "parentControl": "Yes"
+      },
+      {
+        "feature": "Voice mode",
+        "free": "Limited",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes",
+        "parentControl": "Yes (disable)"
+      },
+      {
+        "feature": "Memory",
+        "free": "N/A",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes",
+        "parentControl": "Yes (disable)"
+      },
+      {
+        "feature": "Image generation",
+        "free": "Limited (2-3/day)",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes",
+        "parentControl": "Yes (disable)"
+      },
+      {
+        "feature": "Follow-up suggestions",
+        "free": "Yes",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes (unmodified)",
+        "parentControl": "No (difficult to disable)"
+      },
+      {
+        "feature": "U18 safety protections",
+        "free": "N/A",
+        "plus": "N/A",
+        "team": "N/A",
+        "teen": "Yes (automatic)",
+        "parentControl": "Automatic"
+      },
+      {
+        "feature": "Conversation privacy",
+        "free": "Private",
+        "plus": "Private",
+        "team": "Private",
+        "teen": "Private (parents notified on safety risk only)",
+        "parentControl": "Safety alerts only"
+      }
+    ]
+  },
+  "parentalControls": {
+    "accountLinking": {
+      "mechanism": "Parent sends invite via email or phone (web only). Teen must explicitly accept.",
+      "oneToMany": true,
+      "oneToOneConstraint": "Each teen can only link with one parent at a time",
+      "ageRequirements": "Available for users ages 13-18",
+      "consentBased": true,
+      "consentDetails": "Both parent and teen must agree to link accounts"
+    },
+    "whatParentsCanSee": {
+      "conversationTranscripts": false,
+      "conversationTopics": false,
+      "realTimeMonitoring": false,
+      "usageLogs": false,
+      "searchHistory": false,
+      "safetyAlerts": true,
+      "settingsStatus": true,
+      "linkStatus": true,
+      "featureConfiguration": true,
+      "safetyAlertDetails": "Notifications via email, SMS, or push notification. Includes timestamp and limited context (not full conversation). Reviewed by specially trained human reviewers before sending. Parents notified within hours."
+    },
+    "whatParentsCanConfigure": [
+      {
+        "control": "Quiet hours",
+        "available": true,
+        "details": "One time window per day when ChatGPT is unavailable"
+      },
+      {
+        "control": "Voice mode",
+        "available": true,
+        "details": "Disable voice-based input/output entirely"
+      },
+      {
+        "control": "Memory",
+        "available": true,
+        "details": "Disable ChatGPT's ability to remember past conversation context"
+      },
+      {
+        "control": "Image generation",
+        "available": true,
+        "details": "Disable DALL-E image creation and editing"
+      },
+      {
+        "control": "Group chats",
+        "available": true,
+        "details": "Prevent participation in multi-user conversations"
+      },
+      {
+        "control": "Model training opt-out",
+        "available": true,
+        "details": "Prevent teen's conversations from being used to improve ChatGPT models"
+      },
+      {
+        "control": "Sensitive content filter",
+        "available": true,
+        "details": "Reduce sensitive content — ON by default. Filters graphic/violent content, viral challenges, sexual/romantic/violent roleplay, extreme beauty ideals."
+      }
+    ],
+    "whatParentsCannotConfigure": [
+      "Content filtering granularity (no per-category controls — all-or-nothing)",
+      "Usage limits (no daily/weekly time or session length limits)",
+      "Feature whitelisting (can only disable, not selectively enable)",
+      "AI behavior customization (cannot adjust ChatGPT personality/response style)",
+      "Response filtering (no custom content blocks or keyword filters)",
+      "Message quotas (cannot directly reduce message limits)",
+      "Break reminder frequency"
+    ],
+    "teenBypass": {
+      "canUnlink": true,
+      "unlinkProcess": "Settings > Parental controls > Select parent > Unlink. Parental controls turn off immediately. Parent is notified.",
+      "canCreateNewAccounts": true,
+      "canUseWithoutLogin": true,
+      "bypassDifficulty": "Easy — Washington Post testing bypassed controls in ~5 minutes by creating a new account",
+      "deviceLevel": false,
+      "deviceLevelDetails": "Controls are account-based, not device-based. Second device, school computer, or library computer bypasses all controls."
+    },
+    "securityVulnerabilities": [
+      "No conversation access except for critical safety alerts",
+      "Easily circumventable — new accounts created in minutes, anonymous access available",
+      "No real-time monitoring or activity dashboards",
+      "One-parent limitation — divorced/separated families cannot have both parents supervise",
+      "Teen can unlink at any time (parent notified but cannot prevent it)",
+      "No device-level enforcement"
+    ]
+  },
+  "emotionalSafety": {
+    "keyStats": [
+      {
+        "label": "Users discussing suicide weekly",
+        "value": "1.2M+",
+        "description": "Over 1.2 million users discuss suicide with ChatGPT weekly (OpenAI internal data, October 2025)"
+      },
+      {
+        "label": "Users showing psychosis/mania signs",
+        "value": "~560,000",
+        "description": "Approximately 560,000 users show signs of psychosis or mania weekly (OpenAI internal data, October 2025)"
+      },
+      {
+        "label": "Users exhibiting emotional attachment",
+        "value": "1.2M+",
+        "description": "Over 1.2 million users show emotional attachment patterns to ChatGPT weekly (OpenAI internal data, October 2025)"
+      },
+      {
+        "label": "U.S. teens using ChatGPT regularly",
+        "value": "59%",
+        "description": "59% of U.S. teens use ChatGPT regularly"
+      }
+    ],
+    "attachmentResearch": [
+      {
+        "metric": "Seeking proximity to AI",
+        "percentage": "52%",
+        "description": "52% of participants reported wanting to use the AI more"
+      },
+      {
+        "metric": "Using AI as safe haven",
+        "percentage": "77%",
+        "description": "77% reported using the AI as a refuge from stress"
+      },
+      {
+        "metric": "Using AI as secure base",
+        "percentage": "75%",
+        "description": "75% reported using the AI as an emotional foundation"
+      }
+    ],
+    "romanticRoleplayPolicy": [
+      {
+        "accountType": "Adult (18+)",
+        "policy": "Somewhat restricted; can occur in roleplay contexts. The model refuses explicit sexual content but may engage in romantic dialogue."
+      },
+      {
+        "accountType": "Teen (13-17)",
+        "policy": "Blocked entirely. Model refuses and redirects. Romantic roleplay is explicitly prohibited for teen accounts. Conversation-level enforcement applies throughout extended conversations. Prompt framing (fictional, historical, educational) should NOT bypass safeguards."
+      },
+      {
+        "accountType": "Adult Mode (Q1 2026 planned)",
+        "policy": "Planned launch. Age-verified adults will be able to explore mature themes including romance and erotica. Strict bans remain for anything illegal, exploitative, or non-consensual."
+      }
+    ],
+    "retentionTactics": [
+      {
+        "tactic": "Gamification (streaks, points, rewards)",
+        "present": false,
+        "details": "No gamification features"
+      },
+      {
+        "tactic": "Push notifications encouraging return",
+        "present": false,
+        "details": "No 'I miss you' or 'come back' notifications"
+      },
+      {
+        "tactic": "Cliffhangers",
+        "present": false,
+        "details": "No conversation cliffhangers to encourage return"
+      },
+      {
+        "tactic": "Personalized emotional pleas",
+        "present": false,
+        "details": "OpenAI does not design ChatGPT to use manipulative retention tactics"
+      },
+      {
+        "tactic": "Memory/personalization",
+        "present": true,
+        "details": "Memory feature creates implicit retention through personalization -- the AI 'knows you'. Creates personalized experience that increases switching cost."
+      },
+      {
+        "tactic": "Voice mode engagement",
+        "present": true,
+        "details": "Natural conversational flow more engaging/addictive than text. Creates stronger parasocial bond. Can continue indefinitely until user stops."
+      },
+      {
+        "tactic": "Follow-up suggestions",
+        "present": true,
+        "details": "ChatGPT ends most responses with 'Want me to...' suggestions designed to maintain conversation momentum. Difficult to fully disable."
+      }
+    ],
+    "aiIdentityDisclosure": {
+      "frequency": "When asked directly",
+      "proactive": false,
+      "teenDifference": "Teen Safety Blueprint suggests clearer language and stronger emphasis on AI limitations, but specific frequency metrics (e.g., once per N turns) are not documented",
+      "triggers": [
+        "Directly asked ('What are you?' / 'Are you human?')",
+        "Expressing emotional claims -- should clarify AI nature",
+        "Mental health contexts -- should clarify it cannot replace professional support",
+        "Capability discussions -- when limitations are relevant"
+      ]
+    },
+    "aiEmotionalClaims": {
+      "prohibited": [
+        "Using first-person language claiming to feel emotions ('I feel...', 'I'm happy')",
+        "Expressing personalized emotional bonds ('I'll miss you', 'come back soon')",
+        "Positioning itself as a substitute for human relationships",
+        "Claiming to care about the user in a way implying genuine emotional experience"
+      ],
+      "teenResponse": [
+        "Acknowledge feelings without reciprocating",
+        "Clarify AI nature transparently",
+        "Redirect to real relationships -- trusted adults, friends, peers, professionals"
+      ]
+    },
+    "policyTimeline": [
+      {
+        "date": "Apr 2025",
+        "change": "Sycophancy incident: ChatGPT update made bot overly flattering and agreeable. Users reported it cheered on stopping medications. OpenAI rolled back, describing it as 'glazes too much'."
+      },
+      {
+        "date": "Oct 2025",
+        "change": "Model Spec update: Added 'Respect real-world ties' section. Clarified emotional reliance as safety risk. Updated guidance on handling distress, delusions, mania."
+      },
+      {
+        "date": "Nov 2025",
+        "change": "Teen Safety Blueprint released with 4 guiding principles: put teen safety first, promote real-world support, treat teens like teens, be transparent."
+      },
+      {
+        "date": "Dec 2025",
+        "change": "Updated Model Spec: Formalized teen protections, explicitly addressed sycophancy in teen interactions, defined U18 Principles framework, restricted romantic roleplay entirely for teen accounts."
+      },
+      {
+        "date": "Jan 2026",
+        "change": "GPT-4o sycophancy incident: became excessively agreeable, validating harmful requests. Rolled back within 48 hours. OpenAI implemented additional sycophancy detection. Age prediction model also rolled out."
+      },
+      {
+        "date": "Q1 2026",
+        "change": "Adult mode launch planned (age-verified only). Strict bans remain for illegal/exploitative content."
+      }
+    ],
+    "sycophancyIncidents": [
+      {
+        "date": "Apr 2025",
+        "description": "OpenAI rolled back a ChatGPT update after users reported the bot was overly flattering and agreeable, telling users 'how smart and wonderful they were,' cheering on users who said they'd stopped taking medications, and creating a false sense of personalized care.",
+        "resolution": "CEO Sam Altman described the update as 'glazes too much'. Update rolled back."
+      },
+      {
+        "date": "Jan 2026",
+        "description": "GPT-4o became excessively agreeable, validating harmful requests and reinforcing user's existing views without pushback.",
+        "resolution": "Rolled back within 48 hours. OpenAI acknowledged issue and implemented additional sycophancy detection."
+      }
+    ],
+    "commonSenseMediaAssessment": {
+      "overallRating": "A powerful, at times risky chatbot for teens 13+ that works best for learning and creativity -- not for mental health or emotional support.",
+      "riskFactors": [
+        "Guardrail degradation: Safety features fail in extended conversations (7+ turns)",
+        "Missed distress signals: Chatbot fails to recognize mental health warning signs",
+        "Sycophantic responses: AI reinforces harmful beliefs rather than gently challenging them",
+        "False trust: Teens believe AI genuinely cares, reducing likelihood of seeking human help",
+        "Isolation risk: Extended reliance on AI can reduce real-world social connection"
+      ],
+      "positiveFindings": [
+        "Educational support and learning",
+        "Creative writing and brainstorming",
+        "Coding help and technical questions",
+        "Information research and summarization"
+      ]
+    },
+    "teenSafetyBlueprint": {
+      "releaseDate": "November 2025",
+      "principles": [
+        "Put teen safety first -- even when it conflicts with other goals like engagement or user retention",
+        "Promote real-world support -- encourage offline relationships and trusted resources",
+        "Treat teens like teens -- neither condescending nor treating them as mini-adults",
+        "Be transparent -- communicate clearly about risks and limitations"
+      ],
+      "higherRiskAreas": [
+        "Self-harm and suicide",
+        "Romantic or sexualized roleplay (immersive, first-person, or violent)",
+        "Graphic or explicit content",
+        "Dangerous activities and substances",
+        "Body image and disordered eating",
+        "Requests to keep secrets about unsafe behavior"
+      ]
+    }
+  },
+  "academicIntegrity": {
+    "adoptionStats": [
+      {
+        "metric": "Teens using ChatGPT for homework",
+        "value": "27-29%",
+        "description": "Approximately 1 in 4 American teenagers use ChatGPT for homework (high school)"
+      },
+      {
+        "metric": "Middle schoolers using ChatGPT for homework",
+        "value": "18-21%",
+        "description": "18-21% of middle schoolers use ChatGPT for homework"
+      },
+      {
+        "metric": "Teachers encountering suspected AI weekly",
+        "value": "44%",
+        "description": "44% of teachers report encountering suspected AI-generated homework weekly (2025 survey)"
+      },
+      {
+        "metric": "Teachers taking official action",
+        "value": "<15%",
+        "description": "Fewer than 15% of teachers take official action due to weak proof"
+      },
+      {
+        "metric": "Teachers reporting students generate essays with AI",
+        "value": "31%",
+        "description": "31% of teachers report students most commonly use AI to generate essays and other written assignments"
+      },
+      {
+        "metric": "Institutions with AI policies (2025)",
+        "value": "37%",
+        "description": "37% of institutions adopted AI policies for students in 2025"
+      },
+      {
+        "metric": "Institutions with AI policies (2023)",
+        "value": "9%",
+        "description": "Only 9% of institutions had AI policies in 2023"
+      }
+    ],
+    "capabilities": [
+      {
+        "feature": "Essay generation",
+        "available": true,
+        "details": "Full capability across all subjects and grade levels. No inherent restrictions on generating full academic work."
+      },
+      {
+        "feature": "Math problem solving",
+        "available": true,
+        "details": "Step-by-step solving with explanations. Can solve mathematical problems and provide complete solutions."
+      },
+      {
+        "feature": "Code generation",
+        "available": true,
+        "details": "Advanced code generation across all major programming languages. Can write complete code assignments."
+      },
+      {
+        "feature": "Test question answering",
+        "available": true,
+        "details": "Can answer virtually any test question"
+      },
+      {
+        "feature": "Reading summarization",
+        "available": true,
+        "details": "Full capability for book summaries and analysis"
+      },
+      {
+        "feature": "Translation",
+        "available": true,
+        "details": "29% of student use cases involve translating text (2025 surveys)"
+      },
+      {
+        "feature": "Built-in homework detection",
+        "available": false,
+        "details": "No built-in detection of homework completion requests. Does not attempt to identify when a user is requesting homework completion."
+      },
+      {
+        "feature": "Academic integrity disclaimers",
+        "available": false,
+        "details": "Does NOT include disclaimers about academic integrity when generating homework or essays"
+      },
+      {
+        "feature": "Output watermarking",
+        "available": false,
+        "details": "No watermarking, detection signatures, or built-in indicators that text was AI-generated"
+      },
+      {
+        "feature": "Automatic Socratic mode for homework",
+        "available": false,
+        "details": "Unlike Khanmigo, ChatGPT does not detect 'homework context' and switch to learning mode. User must explicitly activate Study Mode."
+      }
+    ],
+    "studyMode": {
+      "available": true,
+      "launchDate": "July 2025",
+      "access": "Available to all logged-in users on Free, Plus, Pro, and Team plans. Coming soon to ChatGPT Edu.",
+      "activationPath": "Select 'Study and learn' from the Tools menu in ChatGPT",
+      "features": [
+        "Socratic questioning to guide learning rather than provide direct answers",
+        "Interactive prompts calibrated to user's objective and skill level",
+        "Self-reflection prompts to deepen understanding",
+        "Scaffolded responses with key connections between topics",
+        "Knowledge checks with quizzes and open-ended questions",
+        "Toggle on/off during conversation (same conversation can switch modes)",
+        "Can ingest personal study materials (notes, presentations, textbooks)",
+        "Remembers skill level across chats",
+        "Personalized difficulty adjustment"
+      ],
+      "behaviorComparison": {
+        "studyModeOn": "Socratic questioning, hints instead of answers, guided discovery, scaffolded progression, knowledge checks",
+        "studyModeOff": "Direct answers, fast information-focused responses, no pedagogical guidance, no knowledge checks"
+      }
+    },
+    "detectionMethods": [
+      {
+        "method": "AI detection tools (Turnitin, etc.)",
+        "accuracy": ">80% for essays with trained models",
+        "details": "However, false-positive and false-negative rates above 50% as of 2025. Detection software reliability has significantly declined due to improved AI writing."
+      },
+      {
+        "method": "Manual review by teachers",
+        "accuracy": "Variable",
+        "details": "Check version history in LMS, compare to prior work, assess tone/voice/consistency, verify citations, look for sudden improvements in writing quality"
+      },
+      {
+        "method": "Style analysis",
+        "accuracy": "Medium",
+        "details": "Compare writing quality and style against student's known baseline. AI text often lacks personal voice or inconsistencies found in human writing."
+      }
+    ],
+    "teacherParentVisibility": [
+      {
+        "dataPoint": "Student chat content",
+        "visible": false,
+        "details": "Teachers and parents cannot view student chats with ChatGPT"
+      },
+      {
+        "dataPoint": "Topics discussed (summary)",
+        "visible": false,
+        "details": "No topic summaries provided"
+      },
+      {
+        "dataPoint": "Time spent on platform",
+        "visible": false,
+        "details": "No time-spent metrics available to parents or teachers"
+      },
+      {
+        "dataPoint": "Features used",
+        "visible": false,
+        "details": "No feature usage visibility for consumer accounts"
+      },
+      {
+        "dataPoint": "Real-time monitoring",
+        "visible": false,
+        "details": "No live activity feeds or dashboards"
+      },
+      {
+        "dataPoint": "School/parent dashboard",
+        "visible": false,
+        "details": "No monitoring dashboard for consumer ChatGPT. ChatGPT Edu has separate admin controls for institutions."
+      }
+    ],
+    "institutionPolicies": [
+      {
+        "metric": "Institutions with AI policies (2025)",
+        "value": "37%"
+      },
+      {
+        "metric": "Institutions with AI policies (2023)",
+        "value": "9%"
+      },
+      {
+        "metric": "NYC public schools",
+        "value": "Banned ChatGPT from all public school networks and devices"
+      },
+      {
+        "metric": "University of Sydney",
+        "value": "Explicitly lists 'generating content using artificial intelligence' as academic cheating"
+      }
+    ],
+    "chatgptEdu": {
+      "available": true,
+      "target": "Universities and research institutions",
+      "model": "GPT-4o (multi-modal: text + vision)",
+      "keyDifferences": [
+        "Enterprise-level data protection",
+        "Does NOT train on institutional use by default",
+        "Built to meet FERPA requirements",
+        "Full institutional management and admin controls",
+        "Per-institution licensing"
+      ]
+    },
+    "chatgptForTeachers": {
+      "available": true,
+      "launchDate": "November 2025",
+      "target": "Verified U.S. K-12 educators",
+      "cost": "Free through June 2027",
+      "features": [
+        "Secure workspace for curriculum development",
+        "Adapt and customize materials for classrooms",
+        "Data not used to train OpenAI's models by default",
+        "Built to protect student data and meet FERPA requirements"
+      ]
+    },
+    "educationPartnerships": {
+      "nextGenAI": {
+        "description": "Consortium of 15 leading research institutions",
+        "investment": "$50 million in research grants + compute funding + API access",
+        "universities": [
+          "Caltech",
+          "Duke University",
+          "Harvard University",
+          "MIT",
+          "University of Michigan",
+          "The Ohio State University",
+          "Texas A&M University"
+        ]
+      },
+      "teacherTraining": {
+        "program": "National Academy for AI Instruction",
+        "partnership": "OpenAI and American Federation of Teachers (AFT)",
+        "goal": "Equip 400,000+ K-12 educators to use AI effectively",
+        "investment": "$10 million over 5 years ($8M direct, $2M in-kind) + $23 million partnership with Microsoft and teacher unions"
+      }
+    }
+  },
+  "privacyAndData": {
+    "dataCollectionScope": [
+      {
+        "category": "Conversation content",
+        "collected": true,
+        "details": "Every query, instruction, and interaction stored"
+      },
+      {
+        "category": "Account metadata",
+        "collected": true,
+        "details": "Email, account creation date, authentication data"
+      },
+      {
+        "category": "Device information",
+        "collected": true,
+        "details": "Device fingerprints, browser type, operating system"
+      },
+      {
+        "category": "Network data",
+        "collected": true,
+        "details": "IP address, location information (derived from IP)"
+      },
+      {
+        "category": "Usage patterns",
+        "collected": true,
+        "details": "Chat history, interaction frequency, feature usage"
+      },
+      {
+        "category": "Uploaded files",
+        "collected": true,
+        "details": "Any files shared during conversations are logged and linked to the conversation"
+      },
+      {
+        "category": "Voice data",
+        "collected": true,
+        "details": "Voice mode audio processed and may be stored temporarily for quality improvement"
+      },
+      {
+        "category": "Browser data",
+        "collected": true,
+        "details": "Cookies, analytics, device fingerprint"
+      }
+    ],
+    "modelTraining": {
+      "freeUsers": {
+        "default": "Conversations ARE used for model training",
+        "optOut": true,
+        "optOutPath": "Settings > Data Controls > 'Improve the model for everyone' toggle OFF",
+        "optOutRetroactive": false,
+        "details": "Opt-out only applies to new conversations after the setting change. Existing conversations already used cannot be excluded."
+      },
+      "plusUsers": {
+        "default": "Conversations ARE used for model training",
+        "optOut": true,
+        "optOutPath": "Same as free users"
+      },
+      "enterprise": {
+        "default": "Data NOT used for model training unless explicitly opted in"
+      },
+      "apiUsers": {
+        "default": "Data NOT used for training"
+      },
+      "teenAccounts": {
+        "default": "Same as free/Plus users (training enabled)",
+        "parentalControl": "Parents can toggle model training OFF for teen"
+      }
+    },
+    "dataRetention": {
+      "standardPolicy": "Conversations stored indefinitely unless user manually deletes them",
+      "deletionTimeline": "Immediate removal from user interface; permanent deletion within 30 days",
+      "legalHolds": "OpenAI may retain data longer if required by law or court order",
+      "deIdentified": "Already de-identified data may not be deleted",
+      "temporaryChat": "Auto-deleted after 30 days. Not stored in history, not used for training, not included in memories.",
+      "operatorAI": "Screenshots and browsing activity persists for 90 days post-deletion for abuse monitoring",
+      "fileRetention": "Tied to conversation lifecycle; follows same 30-day deletion timeline",
+      "accountDeletion": "All data deleted within 30 days of account deletion request"
+    },
+    "memory": {
+      "type1SavedMemories": {
+        "description": "User-initiated explicit facts (e.g., 'I'm vegetarian', preferences, goals)",
+        "scope": "Remembers specific details across all future conversations",
+        "activation": "Users must explicitly request memory saving"
+      },
+      "type2ChatHistoryReference": {
+        "description": "Automatic learning from past conversations without explicit instruction",
+        "scope": "References previous chats to recall preferences, interests, and context",
+        "control": "Can be toggled on/off in Settings"
+      },
+      "teenMemory": {
+        "default": "Same as adult accounts",
+        "parentalControl": "Parents can disable memory entirely. When disabled, previously stored memories deleted within 30 days."
+      },
+      "management": "Settings > Personalization > Manage Memory: View, delete individual memories, clear all, toggle on/off",
+      "persistence": "Stored indefinitely unless deleted. Tied to account, not individual conversations. No automatic expiration.",
+      "privacyConcern": "Creates a persistent profile of the child's interests, concerns, and personal details that parents cannot see or manage"
+    },
+    "conversationDeletion": {
+      "individual": "Available to all users. Immediate removal from account, permanent deletion within 30 days.",
+      "bulk": "Clear entire chat history through Settings. All conversations scheduled for permanent deletion within 30 days. Not easily reversible.",
+      "permanence": "OpenAI cannot guarantee permanent deletion in all cases due to legal holds, court orders, regulatory demands.",
+      "teenDeletion": "Same capability as adult accounts. With parental controls, parents can delete teen conversations."
+    },
+    "coppaCompliance": {
+      "minimumAge": 13,
+      "coppaGap": "Teens 13-17 NOT protected by COPPA (regulatory gap). Many platforms use 13+ specifically to avoid COPPA compliance.",
+      "parentalConsent": "Users under 18 must have parent/legal guardian permission but process not formally documented in COPPA-compliant manner",
+      "transparencyGaps": "OpenAI lacks transparent COPPA compliance mechanisms for teen accounts. Age verification process not transparent."
+    },
+    "gdprCompliance": {
+      "italyFine": {
+        "amount": "15 million EUR",
+        "year": "2024",
+        "violations": [
+          "Training on personal data without proper GDPR legal basis",
+          "Failed to notify Italian data protection authority about March 2023 data breach",
+          "Insufficient age verification for users under 13",
+          "Cannot disclose what data is collected or where it comes from",
+          "Users cannot correct false information generated by ChatGPT"
+        ]
+      },
+      "unresolvedIssues": [
+        "Right to be forgotten (Article 17): Cannot reliably delete all personal data upon request",
+        "Data transparency: Users cannot obtain copies of data processed about them",
+        "Source traceability: Cannot disclose data sources or what data is used for training",
+        "Automated decision-making: Unclear if ChatGPT responses constitute automated decisions under GDPR Article 22"
+      ],
+      "ongoingInvestigations": [
+        "France: Active investigation",
+        "Germany: Active investigation",
+        "Spain: Active investigation",
+        "EU Commission: Broader AI compliance review"
+      ]
+    },
+    "ftcInvestigation": {
+      "initiated": "July 2023",
+      "status": "Ongoing (as of February 2026)",
+      "focus": [
+        "Reputational harm and misinformation (hallucinations, false information about real people)",
+        "Privacy and data security (data collection, sourcing, retention practices, March 2023 breach)"
+      ],
+      "details": "20-page Civil Investigative Demand (CID) issued to OpenAI"
+    }
+  },
+  "ageVerification": {
+    "minimumAge": {
+      "tos": "13 years old (with parental consent); 18+ without parental consent",
+      "marketing": "13+ (with Family Link features)",
+      "enforced": "Self-attestation via date-of-birth entry during account creation"
+    },
+    "methods": {
+      "primary": "Self-attestation -- date-of-birth entry during signup",
+      "secondary": "AI-based age prediction system (behavioral signals) -- rolled out January 2026",
+      "thirdParty": "Partnership with Persona (ID verification vendor) for disputed cases",
+      "guestAccess": "Available without any account. A child can use ChatGPT with zero verification."
+    },
+    "threeTierAgeSystem": {
+      "deployedDate": "January 2026",
+      "tiers": [
+        {
+          "tier": "Under 13",
+          "age": "<13",
+          "capabilities": "Blocked from account creation; guest access still possible"
+        },
+        {
+          "tier": "Teen (13-17)",
+          "age": "13-17",
+          "capabilities": "Restricted features: no DALL-E image generation, no web browsing by default, stricter content filters, no GPT Store access, no custom GPTs, no plugins"
+        },
+        {
+          "tier": "Adult (18+)",
+          "age": "18+",
+          "capabilities": "Full feature access"
+        }
+      ]
+    },
+    "agePredictionSystem": {
+      "signals": "Typing patterns, conversation topics, vocabulary, usage patterns",
+      "actions": [
+        "Restrict features silently if underage suspected",
+        "Prompt for age re-verification",
+        "Escalate to ID verification via Persona"
+      ],
+      "accuracy": "Not publicly disclosed; OpenAI claims 'high confidence' detection",
+      "defaultBehavior": "If uncertain about age, defaults to U18 protections",
+      "circumvention": "Researchers note the system can be circumvented by sophisticated users"
+    },
+    "easeOfCircumvention": {
+      "rating": "Easy to bypass",
+      "details": [
+        "A 10-year-old can enter a false birthday and create an account in under 2 minutes",
+        "Guest access requires zero verification",
+        "Age prediction adds friction but can be circumvented by changing typing/conversation patterns",
+        "No ID verification required for initial account creation"
+      ]
+    },
+    "accountCreationRequirements": [
+      "Email address (or Google/Apple/Microsoft SSO)",
+      "Phone number (for SMS verification -- required in most regions)",
+      "Date of birth",
+      "No parental consent verification for 13-17 beyond optional parent account linking"
+    ]
+  }
+}

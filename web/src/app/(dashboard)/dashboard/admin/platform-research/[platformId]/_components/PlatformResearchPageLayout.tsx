@@ -3,26 +3,29 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import type { PlatformRegistryEntry } from "@/lib/platforms/types"
 import type { PlatformResearchData } from "@/lib/platform-research/research-data-types"
+import type { SectionDef } from "@/lib/platform-research/section-registry"
 import { ResearchHero } from "./ResearchHero"
-import { SectionNav, SECTIONS } from "./SectionNav"
+import { SectionNav } from "./SectionNav"
 
 interface PlatformResearchPageLayoutProps {
   platform: PlatformRegistryEntry
   data: PlatformResearchData
+  sections: SectionDef[]
   children: ReactNode
 }
 
 export function PlatformResearchPageLayout({
   platform,
   data,
+  sections,
   children,
 }: PlatformResearchPageLayoutProps) {
-  const [activeSection, setActiveSection] = useState(SECTIONS[0].id)
+  const [activeSection, setActiveSection] = useState(sections[0]?.id ?? "overview")
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   /* ── Scroll-spy via IntersectionObserver ─────────────────────────── */
   useEffect(() => {
-    const sectionIds = SECTIONS.map((s) => s.id)
+    const sectionIds = sections.map((s) => s.id)
     const elements: HTMLElement[] = []
 
     for (const id of sectionIds) {
@@ -71,7 +74,7 @@ export function PlatformResearchPageLayout({
     return () => {
       observerRef.current?.disconnect()
     }
-  }, [])
+  }, [sections])
 
   return (
     <div className="space-y-6">
@@ -80,13 +83,13 @@ export function PlatformResearchPageLayout({
 
       {/* Mobile section nav */}
       <div className="lg:hidden sticky top-14 z-10 bg-background/95 backdrop-blur-sm py-2 -mx-1 px-1">
-        <SectionNav activeSection={activeSection} />
+        <SectionNav activeSection={activeSection} sections={sections} />
       </div>
 
       {/* Main content area with sidebar TOC */}
       <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-8">
         {/* Desktop sidebar TOC */}
-        <SectionNav activeSection={activeSection} />
+        <SectionNav activeSection={activeSection} sections={sections} />
 
         {/* Content sections */}
         <div className="space-y-6 min-w-0">{children}</div>

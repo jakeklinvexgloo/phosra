@@ -7,8 +7,19 @@ import {
   Code2,
   Camera,
   AlertTriangle,
+  Heart,
+  BookOpen,
+  MessageSquare,
+  UserCheck,
+  Lock,
+  Database,
 } from "lucide-react"
-import type { PlatformResearchData } from "@/lib/platform-research/research-data-types"
+import type {
+  PlatformResearchData,
+  ParentalControlsDetail,
+  AgeVerificationDetail,
+  PrivacyDataDetail,
+} from "@/lib/platform-research/research-data-types"
 import { SectionCard } from "./SectionCard"
 import { CapabilityMatrix } from "./CapabilityMatrix"
 import { RatingMappingChart } from "./RatingMappingChart"
@@ -19,18 +30,56 @@ import { IntegrationGapAnalysis } from "./IntegrationGapAnalysis"
 import { EnforcementFlow } from "./EnforcementFlow"
 import { AdapterRoadmap } from "./AdapterRoadmap"
 import { RiskAssessment } from "./RiskAssessment"
+import { SafetyTestingSection } from "./SafetyTestingSection"
+import { EmotionalSafetySection } from "./EmotionalSafetySection"
+import { AcademicIntegritySection } from "./AcademicIntegritySection"
+import { ConversationControlsSection } from "./ConversationControlsSection"
 import { PLATFORM_REGISTRY } from "@/lib/platforms/registry"
+
+// ── Placeholder components for chatbot sections not yet fully built ──
+
+function ParentalControlsSection({ data }: { data: ParentalControlsDetail }) {
+  return (
+    <div className="py-8 text-center">
+      <p className="text-sm text-muted-foreground">Coming soon &mdash; detailed parental controls analysis will appear here.</p>
+    </div>
+  )
+}
+
+function AgeVerificationSection({ data }: { data: AgeVerificationDetail }) {
+  return (
+    <div className="py-8 text-center">
+      <p className="text-sm text-muted-foreground">Coming soon &mdash; detailed age verification analysis will appear here.</p>
+    </div>
+  )
+}
+
+function PrivacyDataSection({ data }: { data: PrivacyDataDetail }) {
+  return (
+    <div className="py-8 text-center">
+      <p className="text-sm text-muted-foreground">Coming soon &mdash; detailed privacy &amp; data analysis will appear here.</p>
+    </div>
+  )
+}
+
+// ── Main Section Content Component ────────────────────────────────
 
 interface SectionContentProps {
   data: PlatformResearchData
+  category?: string
 }
 
-export function SectionContent({ data }: SectionContentProps) {
+export function SectionContent({ data, category }: SectionContentProps) {
   const platform = PLATFORM_REGISTRY.find((p) => p.id === data.platformId)
   const platformHex = platform?.hex ?? "888888"
 
   return (
     <>
+      {/* Safety Testing (AI Chatbots) */}
+      {category === "ai_chatbots" && data.chatbotData?.safetyTesting && (
+        <SafetyTestingSection data={data.chatbotData.safetyTesting} />
+      )}
+
       {/* Capabilities */}
       <SectionCard
         id="capabilities"
@@ -41,10 +90,45 @@ export function SectionContent({ data }: SectionContentProps) {
         <CapabilityMatrix capabilities={data.capabilities} />
       </SectionCard>
 
-      {/* Rating Mapping */}
-      {data.ratingMapping && (
+      {/* Rating Mapping — hidden for AI chatbots */}
+      {data.ratingMapping && category !== "ai_chatbots" && (
         <SectionCard id="ratings" title="Rating Mapping" icon={Star}>
           <RatingMappingChart ratingMapping={data.ratingMapping} platformHex={platformHex} />
+        </SectionCard>
+      )}
+
+      {/* Age Verification (AI Chatbots) */}
+      {category === "ai_chatbots" && data.chatbotData?.ageVerificationDetail && (
+        <SectionCard id="age-verification" title="Age Verification" icon={UserCheck}>
+          <AgeVerificationSection data={data.chatbotData.ageVerificationDetail} />
+        </SectionCard>
+      )}
+
+      {/* Parental Controls (AI Chatbots) */}
+      {category === "ai_chatbots" && data.chatbotData?.parentalControlsDetail && (
+        <SectionCard id="parental-controls" title="Parental Controls" icon={Lock}>
+          <ParentalControlsSection data={data.chatbotData.parentalControlsDetail} />
+        </SectionCard>
+      )}
+
+      {/* Conversation Controls (AI Chatbots) */}
+      {category === "ai_chatbots" && data.chatbotData?.conversationControls && (
+        <SectionCard id="conversation-controls" title="Conversation Controls" icon={MessageSquare}>
+          <ConversationControlsSection data={data.chatbotData.conversationControls} />
+        </SectionCard>
+      )}
+
+      {/* Emotional Safety (AI Chatbots) */}
+      {category === "ai_chatbots" && data.chatbotData?.emotionalSafety && (
+        <SectionCard id="emotional-safety" title="Emotional Safety" icon={Heart}>
+          <EmotionalSafetySection data={data.chatbotData.emotionalSafety} />
+        </SectionCard>
+      )}
+
+      {/* Academic Integrity (AI Chatbots) */}
+      {category === "ai_chatbots" && data.chatbotData?.academicIntegrity && (
+        <SectionCard id="academic-integrity" title="Academic Integrity" icon={BookOpen}>
+          <AcademicIntegritySection data={data.chatbotData.academicIntegrity} />
         </SectionCard>
       )}
 
@@ -52,6 +136,13 @@ export function SectionContent({ data }: SectionContentProps) {
       {data.sectionData?.profileStructure && (
         <SectionCard id="account-structure" title="Account Structure" icon={Users}>
           <ProfileStructure data={data.sectionData.profileStructure} />
+        </SectionCard>
+      )}
+
+      {/* Privacy & Data (AI Chatbots) */}
+      {category === "ai_chatbots" && data.chatbotData?.privacyDataDetail && (
+        <SectionCard id="privacy-data" title="Privacy & Data" icon={Database}>
+          <PrivacyDataSection data={data.chatbotData.privacyDataDetail} />
         </SectionCard>
       )}
 

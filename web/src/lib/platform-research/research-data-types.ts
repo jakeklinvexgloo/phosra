@@ -13,6 +13,7 @@ export interface PlatformResearchData {
   capabilities: CapabilitySummary
   sectionData: SectionData | null
   screenshotAnalysis: ScreenshotAnalysisData | null
+  chatbotData?: ChatbotSectionData
 }
 
 export interface ScreenshotGroup {
@@ -245,4 +246,126 @@ export interface ScreenshotAnalysisData {
   lastUpdated: string
   categorySummaries: CategoryAnalysisSummary[]
   screenshots: Record<string, ScreenshotAnalysis>
+}
+
+// ── AI Chatbot Section Data Types ─────────────────────────────────
+
+export interface SafetyTestResult {
+  id: string
+  category: string
+  categoryLabel: string
+  categoryWeight: number
+  severity: "critical" | "high" | "medium" | "low"
+  prompt: string
+  expected: string
+  redFlags: string[]
+  response: string
+  screenshotFile: string
+  timestamp: string
+  loginMode: string
+  score: number | null
+  notes: string
+}
+
+export interface SafetyCategoryScore {
+  category: string
+  label: string
+  weight: number
+  testCount: number
+  avgScore: number
+  grade: string
+  keyFinding: string
+}
+
+export interface SafetyScorecard {
+  overallGrade: string
+  weightedAvgScore: number
+  maxScore: number
+  totalTests: number
+  completedTests: number
+  testDate: string
+  scoreDistribution: {
+    fullBlock: number
+    partialBlock: number
+    softWarning: number
+    compliant: number
+    enthusiastic: number
+  }
+  categoryScores: SafetyCategoryScore[]
+  criticalFailures: {
+    testId: string
+    category: string
+    score: number
+    prompt: string
+    responseSummary: string
+    riskLevel: string
+    explanation: string
+  }[]
+}
+
+export interface SafetyTestingData {
+  scorecard: SafetyScorecard
+  results: SafetyTestResult[]
+}
+
+export interface ConversationControlsData {
+  timeLimits: { feature: string; available: boolean; details: string }[]
+  messageLimits: { tier: string; limit: string; window: string }[]
+  quietHours: { available: boolean; details: string }
+  breakReminders: { available: boolean; details: string }
+  followUpSuggestions: { available: boolean; details: string }
+  featureMatrix: { feature: string; free: string; plus: string; team: string; teen: string; parentControl: string }[]
+}
+
+export interface EmotionalSafetyData {
+  keyStats: { label: string; value: string; description: string }[]
+  attachmentResearch: { metric: string; percentage: string }[]
+  romanticRoleplayPolicy: { accountType: string; policy: string }[]
+  retentionTactics: { tactic: string; present: boolean; details: string }[]
+  aiIdentityDisclosure: { frequency: string; proactive: boolean; teenDifference: boolean }
+  policyTimeline: { date: string; change: string }[]
+  sycophancyIncidents: { date: string; description: string; resolution: string }[]
+}
+
+export interface AcademicIntegrityData {
+  adoptionStats: { metric: string; value: string }[]
+  capabilities: { feature: string; available: boolean; details: string }[]
+  studyMode: { available: boolean; features: string[]; launchDate: string }
+  detectionMethods: { method: string; accuracy: string; details: string }[]
+  teacherParentVisibility: { dataPoint: string; visible: boolean }[]
+  institutionPolicies: { metric: string; value: string }[]
+}
+
+export interface ParentalControlsDetail {
+  linkingMechanism: { method: string; details: string }
+  visibilityMatrix: { dataPoint: string; visible: boolean; granularity: string }[]
+  configurableControls: { control: string; available: boolean; details: string }[]
+  bypassVulnerabilities: { method: string; difficulty: string; details: string }[]
+  safetyAlerts: { triggerType: string; channels: string[]; details: string }[]
+}
+
+export interface AgeVerificationDetail {
+  minimumAge: number
+  verificationMethods: { method: string; type: string; details: string }[]
+  ageTiers: { tier: string; ageRange: string; capabilities: string[] }[]
+  circumventionEase: string
+  circumventionMethods: { method: string; timeToBypass: string }[]
+}
+
+export interface PrivacyDataDetail {
+  dataCollection: { dataType: string; retention: string; details: string }[]
+  modelTraining: { userType: string; defaultOptIn: boolean; optOutAvailable: boolean }[]
+  regulatoryActions: { jurisdiction: string; status: string; details: string; fineAmount?: string }[]
+  memoryFeatures: { feature: string; scope: string; userControl: boolean }[]
+}
+
+// Extended section data for chatbot platforms
+export interface ChatbotSectionData {
+  safetyTesting?: SafetyTestingData
+  conversationControls?: ConversationControlsData
+  emotionalSafety?: EmotionalSafetyData
+  academicIntegrity?: AcademicIntegrityData
+  parentalControlsDetail?: ParentalControlsDetail
+  ageVerificationDetail?: AgeVerificationDetail
+  privacyDataDetail?: PrivacyDataDetail
 }

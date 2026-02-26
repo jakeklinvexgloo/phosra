@@ -42,4 +42,5 @@ export {
 export {
   researchPlatform,
   researchPlatforms,
+  analyzeScreenshots,
 } from "./runner"

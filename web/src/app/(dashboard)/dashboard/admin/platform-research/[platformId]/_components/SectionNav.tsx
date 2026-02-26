@@ -1,41 +1,23 @@
 "use client"
 
-import {
-  LayoutDashboard,
-  ShieldCheck,
-  Star,
-  Users,
-  Code2,
-  Camera,
-  Plug,
-  Map,
-  AlertTriangle,
-  type LucideIcon,
-} from "lucide-react"
+import { type LucideIcon } from "lucide-react"
 
 export interface SectionDef {
   id: string
   label: string
   icon: LucideIcon
+  defaultCollapsed?: boolean
 }
 
-export const SECTIONS: SectionDef[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "capabilities", label: "Capabilities", icon: ShieldCheck },
-  { id: "ratings", label: "Ratings", icon: Star },
-  { id: "account-structure", label: "Account Structure", icon: Users },
-  { id: "api-technical", label: "API & Technical", icon: Code2 },
-  { id: "screenshots", label: "Screenshots", icon: Camera },
-  { id: "phosra-integration", label: "Phosra Integration", icon: Plug },
-  { id: "adapter-roadmap", label: "Adapter Roadmap", icon: Map },
-  { id: "risk-tos", label: "Risk & ToS", icon: AlertTriangle },
-]
+// Re-export for backwards compatibility
+export { SECTION_REGISTRY as SECTIONS } from "@/lib/platform-research/section-registry"
 
 interface SectionNavProps {
   activeSection: string
+  sections: SectionDef[]
 }
 
-export function SectionNav({ activeSection }: SectionNavProps) {
+export function SectionNav({ activeSection, sections }: SectionNavProps) {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id)
     if (el) {
@@ -50,7 +32,7 @@ export function SectionNav({ activeSection }: SectionNavProps) {
         <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide mb-3">
           Sections
         </div>
-        {SECTIONS.map((s) => {
+        {sections.map((s) => {
           const active = activeSection === s.id
           return (
             <button
@@ -76,7 +58,7 @@ export function SectionNav({ activeSection }: SectionNavProps) {
 
       {/* Mobile: horizontal scrollable pills */}
       <nav className="lg:hidden flex gap-1.5 overflow-x-auto no-scrollbar pb-2 -mx-1 px-1">
-        {SECTIONS.map((s) => {
+        {sections.map((s) => {
           const active = activeSection === s.id
           return (
             <button
