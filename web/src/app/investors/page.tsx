@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ArrowRight, FileText, Globe, Layers, TrendingUp, Lock, Shield, BadgeCheck, DollarSign } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, GradientMesh, StaggerChildren } from "@/components/marketing/shared"
-import { getRecentNews, CATEGORY_CONFIG } from "@/lib/newsroom"
+import { getRecentPosts, BLOG_CATEGORY_CONFIG } from "@/lib/blog"
 import { InterestModal } from "@/components/investors/InterestModal"
 
 /* ------------------------------------------------------------------ */
@@ -94,7 +94,7 @@ const PRODUCT_LINKS = [
 /* ------------------------------------------------------------------ */
 
 export default function InvestorsPage() {
-  const recentNews = getRecentNews(3)
+  const recentNews = getRecentPosts(3)
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
@@ -423,7 +423,7 @@ export default function InvestorsPage() {
                 Recent announcements
               </h2>
             </div>
-            <Link href="/newsroom" className="hidden sm:flex items-center gap-1.5 text-sm text-brand-green hover:underline">
+            <Link href="/blog" className="hidden sm:flex items-center gap-1.5 text-sm text-brand-green hover:underline">
               View all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -431,9 +431,9 @@ export default function InvestorsPage() {
 
         <StaggerChildren className="grid sm:grid-cols-3 gap-6" staggerDelay={0.08}>
           {recentNews.map((entry) => {
-            const cat = CATEGORY_CONFIG[entry.category]
+            const cat = BLOG_CATEGORY_CONFIG[entry.category]
             return (
-              <Link key={entry.slug} href={`/newsroom/${entry.slug}`} className="group block">
+              <Link key={entry.slug} href={`/blog/${entry.slug}`} className="group block">
                 <div className="plaid-card p-5 h-full flex flex-col transition-shadow hover:shadow-md">
                   <div className="flex items-center gap-2 mb-3">
                     <time className="text-xs text-muted-foreground font-mono">
@@ -455,8 +455,8 @@ export default function InvestorsPage() {
           })}
         </StaggerChildren>
 
-        <Link href="/newsroom" className="sm:hidden flex items-center justify-center gap-1.5 text-sm text-brand-green mt-8">
-          View all announcements <ArrowRight className="w-3.5 h-3.5" />
+        <Link href="/blog" className="sm:hidden flex items-center justify-center gap-1.5 text-sm text-brand-green mt-8">
+          View all posts <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </section>
 

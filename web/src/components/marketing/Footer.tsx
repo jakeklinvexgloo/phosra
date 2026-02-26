@@ -37,7 +37,8 @@ const FOOTER_SECTIONS = [
     title: "Company",
     links: [
       { label: "About", href: "/about" },
-      { label: "Newsroom", href: "/newsroom" },
+      { label: "Blog", href: "/blog" },
+      { label: "Press", href: "/press" },
       { label: "Brand", href: "/brand" },
       { label: "Investors", href: "/investors" },
       { label: "Pricing", href: "/pricing" },

@@ -54,6 +54,17 @@ const nextConfig = {
         destination: '/dashboard/developers/usage',
         permanent: true,
       },
+      // Newsroom → Blog redirects
+      {
+        source: '/newsroom',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/newsroom/:slug',
+        destination: '/blog/:slug',
+        permanent: true,
+      },
     ]
   },
 }

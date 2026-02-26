@@ -171,7 +171,7 @@ export default function COPPADeadlinePage() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                href="/newsroom/coppa-rule-deadline-april-2026"
+                href="/blog/coppa-rule-deadline-april-2026"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-medium border border-white/20 text-white/80 hover:bg-white/5 transition"
               >
                 Read the Full Analysis

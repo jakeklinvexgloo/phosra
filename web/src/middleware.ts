@@ -25,6 +25,7 @@ const publicPathPatterns = [
   /^\/api\/investors(.*)/,
   /^\/api\/agents(.*)/,
   /^\/newsroom(.*)/,
+  /^\/blog(.*)/,
   /^\/privacy(.*)/,
   /^\/terms(.*)/,
   /^\/auth\/callback(.*)/,
