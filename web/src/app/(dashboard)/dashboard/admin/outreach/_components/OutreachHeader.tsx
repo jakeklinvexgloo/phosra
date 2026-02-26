@@ -1,25 +1,23 @@
 "use client"
 
 import { Settings } from "lucide-react"
-import type { OutreachConfig, AutopilotStats } from "@/lib/admin/types"
+import type { OutreachConfig, AutopilotStats, GoogleAccountInfo } from "@/lib/admin/types"
 
 interface OutreachHeaderProps {
   config: OutreachConfig | null
   stats: AutopilotStats | null
-  gmailConnected: boolean
-  gmailEmail: string
+  googleAccounts: GoogleAccountInfo[]
   onToggle: () => void
-  onConnectGmail: () => void
+  onManageAccounts: () => void
   onOpenSettings: () => void
 }
 
 export function OutreachHeader({
   config,
   stats,
-  gmailConnected,
-  gmailEmail,
+  googleAccounts,
   onToggle,
-  onConnectGmail,
+  onManageAccounts,
   onOpenSettings,
 }: OutreachHeaderProps) {
   const isActive = config?.autopilot_enabled ?? false
@@ -62,19 +60,22 @@ export function OutreachHeader({
           </div>
         )}
 
-        {/* Right: Gmail badge + settings gear */}
+        {/* Right: Accounts badge + settings gear */}
         <div className="flex items-center gap-3">
-          {gmailConnected ? (
-            <span className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground">
+          {googleAccounts.length > 0 ? (
+            <button
+              onClick={onManageAccounts}
+              className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
               <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-              {gmailEmail || "Gmail connected"}
-            </span>
+              {googleAccounts.length} account{googleAccounts.length !== 1 ? "s" : ""}
+            </button>
           ) : (
             <button
-              onClick={onConnectGmail}
+              onClick={onManageAccounts}
               className="text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors"
             >
-              Connect Gmail
+              Connect Accounts
             </button>
           )}
           <button

@@ -262,8 +262,12 @@ func (h *AdminHandler) ApprovePendingEmail(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// Send via outreach Gmail
-	if h.googleOutreach == nil {
+	// Resolve which Google account to use
+	gmailClient := h.googleOutreach // default fallback
+	if pe.GoogleAccountKey != "" && h.googleManager != nil {
+		gmailClient = h.googleManager.GetClient(pe.GoogleAccountKey)
+	}
+	if gmailClient == nil {
 		httputil.Error(w, http.StatusServiceUnavailable, "outreach Google account not configured")
 		return
 	}
@@ -282,7 +286,7 @@ func (h *AdminHandler) ApprovePendingEmail(w http.ResponseWriter, r *http.Reques
 	}
 	htmlBody := email.WrapWithSignature(pe.Body, sigParams)
 
-	sent, err := h.googleOutreach.SendMessage(r.Context(), pe.ToEmail, pe.Subject, htmlBody, "")
+	sent, err := gmailClient.SendMessage(r.Context(), pe.ToEmail, pe.Subject, htmlBody, "")
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google account disconnected — please reconnect")
@@ -392,7 +396,12 @@ func (h *AdminHandler) SendQueuedEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if h.googleOutreach == nil {
+	// Resolve which Google account to use
+	queuedGmailClient := h.googleOutreach // default fallback
+	if pe.GoogleAccountKey != "" && h.googleManager != nil {
+		queuedGmailClient = h.googleManager.GetClient(pe.GoogleAccountKey)
+	}
+	if queuedGmailClient == nil {
 		httputil.Error(w, http.StatusServiceUnavailable, "outreach Google account not configured")
 		return
 	}
@@ -411,7 +420,7 @@ func (h *AdminHandler) SendQueuedEmail(w http.ResponseWriter, r *http.Request) {
 	}
 	htmlBody := email.WrapWithSignature(pe.Body, sigParams)
 
-	sent, err := h.googleOutreach.SendMessage(r.Context(), pe.ToEmail, pe.Subject, htmlBody, "")
+	sent, err := queuedGmailClient.SendMessage(r.Context(), pe.ToEmail, pe.Subject, htmlBody, "")
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google account disconnected — please reconnect")
@@ -613,22 +622,32 @@ func (h *AdminHandler) DisconnectOutreachGoogle(w http.ResponseWriter, r *http.R
 // ── Worker API Endpoints ────────────────────────────────────────
 
 func (h *AdminHandler) WorkerSendGmail(w http.ResponseWriter, r *http.Request) {
-	if !h.requireOutreachGoogle(w) {
-		return
-	}
-
 	var req struct {
 		To               string `json:"to"`
 		Subject          string `json:"subject"`
 		Body             string `json:"body"`
 		ReplyToMessageID string `json:"reply_to_message_id,omitempty"`
+		AccountKey       string `json:"account_key,omitempty"`
 	}
 	if err := httputil.DecodeJSON(r, &req); err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid request body")
 		return
 	}
 
-	sent, err := h.googleOutreach.SendMessage(r.Context(), req.To, req.Subject, req.Body, req.ReplyToMessageID)
+	accountKey := req.AccountKey
+	if accountKey == "" {
+		accountKey = "outreach"
+	}
+	client := h.googleOutreach
+	if h.googleManager != nil {
+		client = h.googleManager.GetClient(accountKey)
+	}
+	if client == nil {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google account not configured")
+		return
+	}
+
+	sent, err := client.SendMessage(r.Context(), req.To, req.Subject, req.Body, req.ReplyToMessageID)
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google disconnected")
@@ -641,7 +660,16 @@ func (h *AdminHandler) WorkerSendGmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) WorkerSearchGmail(w http.ResponseWriter, r *http.Request) {
-	if !h.requireOutreachGoogle(w) {
+	accountKey := r.URL.Query().Get("account_key")
+	if accountKey == "" {
+		accountKey = "outreach"
+	}
+	client := h.googleOutreach
+	if h.googleManager != nil {
+		client = h.googleManager.GetClient(accountKey)
+	}
+	if client == nil {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google account not configured")
 		return
 	}
 
@@ -651,7 +679,7 @@ func (h *AdminHandler) WorkerSearchGmail(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	msgs, err := h.googleOutreach.SearchMessages(r.Context(), query, 20)
+	msgs, err := client.SearchMessages(r.Context(), query, 20)
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google disconnected")
@@ -664,7 +692,16 @@ func (h *AdminHandler) WorkerSearchGmail(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *AdminHandler) WorkerGetGmailMessage(w http.ResponseWriter, r *http.Request) {
-	if !h.requireOutreachGoogle(w) {
+	accountKey := r.URL.Query().Get("account_key")
+	if accountKey == "" {
+		accountKey = "outreach"
+	}
+	client := h.googleOutreach
+	if h.googleManager != nil {
+		client = h.googleManager.GetClient(accountKey)
+	}
+	if client == nil {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google account not configured")
 		return
 	}
 
@@ -674,7 +711,7 @@ func (h *AdminHandler) WorkerGetGmailMessage(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	msg, err := h.googleOutreach.GetMessage(r.Context(), messageID)
+	msg, err := client.GetMessage(r.Context(), messageID)
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google disconnected")
@@ -687,14 +724,23 @@ func (h *AdminHandler) WorkerGetGmailMessage(w http.ResponseWriter, r *http.Requ
 }
 
 func (h *AdminHandler) WorkerListCalendarEvents(w http.ResponseWriter, r *http.Request) {
-	if !h.requireOutreachGoogle(w) {
+	accountKey := r.URL.Query().Get("account_key")
+	if accountKey == "" {
+		accountKey = "outreach"
+	}
+	client := h.googleOutreach
+	if h.googleManager != nil {
+		client = h.googleManager.GetClient(accountKey)
+	}
+	if client == nil {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google account not configured")
 		return
 	}
 
 	timeMin := time.Now()
 	timeMax := timeMin.AddDate(0, 0, 7)
 
-	events, err := h.googleOutreach.ListEvents(r.Context(), timeMin, timeMax, 50, "")
+	events, err := client.ListEvents(r.Context(), timeMin, timeMax, 50, "")
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google disconnected")
@@ -707,7 +753,16 @@ func (h *AdminHandler) WorkerListCalendarEvents(w http.ResponseWriter, r *http.R
 }
 
 func (h *AdminHandler) WorkerCreateCalendarEvent(w http.ResponseWriter, r *http.Request) {
-	if !h.requireOutreachGoogle(w) {
+	accountKey := r.URL.Query().Get("account_key")
+	if accountKey == "" {
+		accountKey = "outreach"
+	}
+	client := h.googleOutreach
+	if h.googleManager != nil {
+		client = h.googleManager.GetClient(accountKey)
+	}
+	if client == nil {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google account not configured")
 		return
 	}
 
@@ -742,7 +797,7 @@ func (h *AdminHandler) WorkerCreateCalendarEvent(w http.ResponseWriter, r *http.
 		Attendees:   req.Attendees,
 	}
 
-	created, err := h.googleOutreach.CreateEvent(r.Context(), event)
+	created, err := client.CreateEvent(r.Context(), event)
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google disconnected")

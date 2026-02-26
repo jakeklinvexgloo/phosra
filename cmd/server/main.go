@@ -194,7 +194,8 @@ func main() {
 	sourceSvc := service.NewSourceService(sourceRepo, policyRepo, childRepo, sourceRegistry)
 
 	// Google Workspace clients (optional — only configured when GOOGLE_CLIENT_ID is set)
-	var googlePersonal, googleOutreach *googleapi.Client
+	var googlePersonal *googleapi.Client
+	var googleManager *googleapi.GoogleClientManager
 	if cfg.GoogleClientID != "" {
 		googlePersonal = googleapi.NewClient(
 			cfg.GoogleClientID,
@@ -204,16 +205,18 @@ func main() {
 			"personal",
 			adminGoogleRepo,
 		)
-		googleOutreach = googleapi.NewClient(
+		googleManager = googleapi.NewGoogleClientManager(
 			cfg.GoogleClientID,
 			cfg.GoogleClientSecret,
 			cfg.GoogleOutreachRedirectURI,
 			cfg.EncryptionKey,
-			"outreach",
 			adminGoogleRepo,
 		)
-		log.Info().Str("redirect_uri", cfg.GoogleRedirectURI).Msg("Google Workspace integration enabled (personal + outreach)")
+		log.Info().Str("redirect_uri", cfg.GoogleRedirectURI).Msg("Google Workspace integration enabled (personal + multi-account outreach)")
 	}
+
+	// Persona account mapping repo
+	adminPersonaRepo := postgres.NewAdminPersonaRepo(db)
 
 	// Handlers
 	handlers := router.Handlers{
@@ -230,7 +233,7 @@ func main() {
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 		Standard:    handler.NewStandardHandler(standardSvc),
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
-		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googlePersonal, googleOutreach, cfg.WorkerAPIKey),
+		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googlePersonal, googleManager, adminGoogleRepo, adminPersonaRepo, cfg.WorkerAPIKey),
 		AdminPitch: handler.NewAdminPitchHandler(adminPitchRepo, cfg.OpenAIAPIKey, service.NewTranscriptionService(cfg.AssemblyAIKey), service.NewEmotionService(cfg.HumeAIKey)),
 		Developer:  handler.NewDeveloperHandler(developerSvc),
 		Source:     handler.NewSourceHandler(sourceSvc),

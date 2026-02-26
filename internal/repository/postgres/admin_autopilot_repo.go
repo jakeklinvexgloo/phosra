@@ -144,10 +144,10 @@ func (r *AdminOutreachRepo) CreatePendingEmail(ctx context.Context, pe *domain.O
 	pe.UpdatedAt = now
 	_, err := r.Pool.Exec(ctx,
 		`INSERT INTO admin_outreach_pending_emails
-		 (id, contact_id, sequence_id, step_number, to_email, subject, body, status, gmail_message_id, generation_model, created_at, updated_at)
-		 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+		 (id, contact_id, sequence_id, step_number, to_email, subject, body, status, gmail_message_id, generation_model, google_account_key, created_at, updated_at)
+		 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
 		pe.ID, pe.ContactID, pe.SequenceID, pe.StepNumber, pe.ToEmail, pe.Subject, pe.Body,
-		pe.Status, pe.GmailMessageID, pe.GenerationModel, pe.CreatedAt, pe.UpdatedAt,
+		pe.Status, pe.GmailMessageID, pe.GenerationModel, pe.GoogleAccountKey, pe.CreatedAt, pe.UpdatedAt,
 	)
 	return err
 }
@@ -155,7 +155,8 @@ func (r *AdminOutreachRepo) CreatePendingEmail(ctx context.Context, pe *domain.O
 // ListPendingEmails returns pending emails filtered by status.
 func (r *AdminOutreachRepo) ListPendingEmails(ctx context.Context, status string) ([]domain.OutreachPendingEmail, error) {
 	query := `SELECT pe.id, pe.contact_id, pe.sequence_id, pe.step_number, pe.to_email, pe.subject, pe.body,
-	                  pe.status, pe.gmail_message_id, pe.generation_model, pe.created_at, pe.updated_at,
+	                  pe.status, pe.gmail_message_id, pe.generation_model, COALESCE(pe.google_account_key, ''),
+	                  pe.created_at, pe.updated_at,
 	                  c.name, c.org
 	           FROM admin_outreach_pending_emails pe
 	           JOIN admin_outreach_contacts c ON c.id = pe.contact_id`
@@ -179,7 +180,8 @@ func (r *AdminOutreachRepo) ListPendingEmails(ctx context.Context, status string
 		var pe domain.OutreachPendingEmail
 		if err := rows.Scan(
 			&pe.ID, &pe.ContactID, &pe.SequenceID, &pe.StepNumber, &pe.ToEmail, &pe.Subject, &pe.Body,
-			&pe.Status, &pe.GmailMessageID, &pe.GenerationModel, &pe.CreatedAt, &pe.UpdatedAt,
+			&pe.Status, &pe.GmailMessageID, &pe.GenerationModel, &pe.GoogleAccountKey,
+			&pe.CreatedAt, &pe.UpdatedAt,
 			&pe.ContactName, &pe.ContactOrg,
 		); err != nil {
 			return nil, err
@@ -194,14 +196,16 @@ func (r *AdminOutreachRepo) GetPendingEmailByID(ctx context.Context, id uuid.UUI
 	var pe domain.OutreachPendingEmail
 	err := r.Pool.QueryRow(ctx,
 		`SELECT pe.id, pe.contact_id, pe.sequence_id, pe.step_number, pe.to_email, pe.subject, pe.body,
-		        pe.status, pe.gmail_message_id, pe.generation_model, pe.created_at, pe.updated_at,
+		        pe.status, pe.gmail_message_id, pe.generation_model, COALESCE(pe.google_account_key, ''),
+		        pe.created_at, pe.updated_at,
 		        c.name, c.org
 		 FROM admin_outreach_pending_emails pe
 		 JOIN admin_outreach_contacts c ON c.id = pe.contact_id
 		 WHERE pe.id = $1`, id,
 	).Scan(
 		&pe.ID, &pe.ContactID, &pe.SequenceID, &pe.StepNumber, &pe.ToEmail, &pe.Subject, &pe.Body,
-		&pe.Status, &pe.GmailMessageID, &pe.GenerationModel, &pe.CreatedAt, &pe.UpdatedAt,
+		&pe.Status, &pe.GmailMessageID, &pe.GenerationModel, &pe.GoogleAccountKey,
+		&pe.CreatedAt, &pe.UpdatedAt,
 		&pe.ContactName, &pe.ContactOrg,
 	)
 	if err == pgx.ErrNoRows {
@@ -218,9 +222,9 @@ func (r *AdminOutreachRepo) UpdatePendingEmail(ctx context.Context, pe *domain.O
 	pe.UpdatedAt = time.Now()
 	_, err := r.Pool.Exec(ctx,
 		`UPDATE admin_outreach_pending_emails
-		 SET subject = $1, body = $2, status = $3, gmail_message_id = $4, updated_at = $5
-		 WHERE id = $6`,
-		pe.Subject, pe.Body, pe.Status, pe.GmailMessageID, pe.UpdatedAt, pe.ID,
+		 SET subject = $1, body = $2, status = $3, gmail_message_id = $4, google_account_key = $5, updated_at = $6
+		 WHERE id = $7`,
+		pe.Subject, pe.Body, pe.Status, pe.GmailMessageID, pe.GoogleAccountKey, pe.UpdatedAt, pe.ID,
 	)
 	return err
 }

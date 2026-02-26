@@ -138,22 +138,41 @@ const (
 
 // OutreachPendingEmail represents an email awaiting review/approval.
 type OutreachPendingEmail struct {
-	ID              uuid.UUID          `json:"id"`
-	ContactID       uuid.UUID          `json:"contact_id"`
-	SequenceID      *uuid.UUID         `json:"sequence_id,omitempty"`
-	StepNumber      int                `json:"step_number"`
-	ToEmail         string             `json:"to_email"`
-	Subject         string             `json:"subject"`
-	Body            string             `json:"body"`
-	Status          PendingEmailStatus `json:"status"`
-	GmailMessageID  *string            `json:"gmail_message_id,omitempty"`
-	GenerationModel *string            `json:"generation_model,omitempty"`
-	CreatedAt       time.Time          `json:"created_at"`
-	UpdatedAt       time.Time          `json:"updated_at"`
+	ID               uuid.UUID          `json:"id"`
+	ContactID        uuid.UUID          `json:"contact_id"`
+	SequenceID       *uuid.UUID         `json:"sequence_id,omitempty"`
+	StepNumber       int                `json:"step_number"`
+	ToEmail          string             `json:"to_email"`
+	Subject          string             `json:"subject"`
+	Body             string             `json:"body"`
+	Status           PendingEmailStatus `json:"status"`
+	GmailMessageID   *string            `json:"gmail_message_id,omitempty"`
+	GenerationModel  *string            `json:"generation_model,omitempty"`
+	GoogleAccountKey string             `json:"google_account_key"`
+	CreatedAt        time.Time          `json:"created_at"`
+	UpdatedAt        time.Time          `json:"updated_at"`
 
 	// Joined fields
 	ContactName string `json:"contact_name,omitempty"`
 	ContactOrg  string `json:"contact_org,omitempty"`
+}
+
+// PersonaAccountMapping links a persona to Google account keys.
+type PersonaAccountMapping struct {
+	PersonaKey         string    `json:"persona_key"`
+	GoogleAccountKey   string    `json:"google_account_key"`
+	CalendarAccountKey string    `json:"calendar_account_key"`
+	DisplayName        string    `json:"display_name"`
+	SenderEmail        string    `json:"sender_email"`
+	CreatedAt          time.Time `json:"created_at"`
+	UpdatedAt          time.Time `json:"updated_at"`
+}
+
+// GoogleAccountInfo represents a connected Google account's status.
+type GoogleAccountInfo struct {
+	AccountKey string `json:"account_key"`
+	Email      string `json:"email"`
+	Connected  bool   `json:"connected"`
 }
 
 // OutreachConfig holds the autopilot configuration.

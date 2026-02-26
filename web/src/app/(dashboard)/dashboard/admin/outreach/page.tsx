@@ -13,6 +13,7 @@ import type {
   OutreachActivitySummary,
   GmailMessage,
   GmailListResponse,
+  GoogleAccountInfo,
 } from "@/lib/admin/types"
 import { OutreachHeader } from "./_components/OutreachHeader"
 import { SinceLastVisit } from "./_components/SinceLastVisit"
@@ -22,6 +23,7 @@ import { ActiveConversations } from "./_components/ActiveConversations"
 import { MeetingsSection } from "./_components/MeetingsSection"
 import { UpNextQueue } from "./_components/UpNextQueue"
 import { SenderConfig } from "./_components/SenderConfig"
+import { GoogleAccountsManager } from "./_components/GoogleAccountsManager"
 
 export default function OutreachPage() {
   const { getToken } = useApi()
@@ -35,8 +37,7 @@ export default function OutreachPage() {
   // ── Autopilot ─────────────────────────────────────────────────
   const [config, setConfig] = useState<OutreachConfig | null>(null)
   const [stats, setStats] = useState<AutopilotStats | null>(null)
-  const [gmailConnected, setGmailConnected] = useState(false)
-  const [gmailEmail, setGmailEmail] = useState("")
+  const [googleAccounts, setGoogleAccounts] = useState<GoogleAccountInfo[]>([])
 
   // ── Activity Feed ───────────────────────────────────────────
   const [recentActivities, setRecentActivities] = useState<OutreachActivityWithContact[]>([])
@@ -48,6 +49,7 @@ export default function OutreachPage() {
 
   // ── UI ────────────────────────────────────────────────────────
   const [showSettings, setShowSettings] = useState(false)
+  const [showAccountsManager, setShowAccountsManager] = useState(false)
   const [feedOpen, setFeedOpen] = useState(true)
   const [activeOpen, setActiveOpen] = useState(true)
   const [meetingsOpen, setMeetingsOpen] = useState(false)
@@ -80,7 +82,7 @@ export default function OutreachPage() {
         api.listOutreach(token),
         api.getAutopilotConfig(token),
         api.getAutopilotStats(token),
-        api.getOutreachGoogleStatus(token),
+        api.listGoogleAccounts(token),
         api.listPendingEmails(undefined, token).then((all: unknown) =>
           (all as OutreachPendingEmail[]).filter(
             (e) => e.status === "pending_review" || e.status === "approved"
@@ -101,9 +103,7 @@ export default function OutreachPage() {
       if (configRes.status === "fulfilled") setConfig(configRes.value as OutreachConfig)
       if (statsRes.status === "fulfilled") setStats(statsRes.value as AutopilotStats)
       if (gmailRes.status === "fulfilled") {
-        const val = gmailRes.value as { connected: boolean; email: string }
-        setGmailConnected(val.connected)
-        setGmailEmail(val.email || "")
+        setGoogleAccounts(gmailRes.value as GoogleAccountInfo[])
       }
       if (pendingRes.status === "fulfilled") setPendingEmails(pendingRes.value as OutreachPendingEmail[])
       if (seqRes.status === "fulfilled") setSequences(seqRes.value as OutreachSequence[])
@@ -159,16 +159,10 @@ export default function OutreachPage() {
     }
   }, [getToken])
 
-  // ── Gmail connect ─────────────────────────────────────────────
-  const handleConnectGmail = useCallback(async () => {
-    try {
-      const token = (await getToken()) ?? undefined
-      const { url } = await api.getOutreachGoogleAuthURL(token)
-      window.location.href = url
-    } catch {
-      // ignore
-    }
-  }, [getToken])
+  // ── Manage Google accounts ───────────────────────────────────
+  const handleManageAccounts = useCallback(() => {
+    setShowAccountsManager(true)
+  }, [])
 
   // ── Draft next email (1 at a time) ───────────────────────────
   const handleDraftNext = useCallback(async () => {
@@ -238,7 +232,7 @@ export default function OutreachPage() {
       setExpandedContactId(contactId)
       setGmailThreads([])
 
-      if (gmailConnected && email) {
+      if (googleAccounts.length > 0 && email) {
         setGmailLoading(true)
         try {
           const token = (await getToken()) ?? undefined
@@ -271,7 +265,7 @@ export default function OutreachPage() {
         }
       }
     },
-    [expandedContactId, getToken, gmailConnected]
+    [expandedContactId, getToken, googleAccounts]
   )
 
   // ── Render ────────────────────────────────────────────────────
@@ -282,10 +276,9 @@ export default function OutreachPage() {
       <OutreachHeader
         config={config}
         stats={stats}
-        gmailConnected={gmailConnected}
-        gmailEmail={gmailEmail}
+        googleAccounts={googleAccounts}
         onToggle={handleToggle}
-        onConnectGmail={handleConnectGmail}
+        onManageAccounts={handleManageAccounts}
         onOpenSettings={() => setShowSettings(true)}
       />
 
@@ -331,6 +324,12 @@ export default function OutreachPage() {
       <SenderConfig
         open={showSettings}
         onClose={() => setShowSettings(false)}
+      />
+
+      <GoogleAccountsManager
+        open={showAccountsManager}
+        onClose={() => setShowAccountsManager(false)}
+        onAccountsChanged={fetchAll}
       />
     </div>
   )

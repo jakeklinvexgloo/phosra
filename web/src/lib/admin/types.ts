@@ -70,6 +70,7 @@ export interface OutreachPendingEmail {
   status: PendingEmailStatus
   gmail_message_id?: string
   generation_model?: string
+  google_account_key?: string
   created_at: string
   updated_at: string
   contact_name?: string
@@ -206,6 +207,22 @@ export interface GoogleConnectionStatus {
   connected: boolean
   email: string
   scopes: string[]
+}
+
+export interface GoogleAccountInfo {
+  account_key: string
+  email: string
+  connected: boolean
+}
+
+export interface PersonaAccountMapping {
+  persona_key: string
+  google_account_key: string
+  calendar_account_key: string
+  display_name: string
+  sender_email: string
+  created_at: string
+  updated_at: string
 }
 
 export interface GmailMessage {

@@ -75,3 +75,30 @@ func (r *AdminGoogleRepo) DeleteTokens(ctx context.Context, accountKey string) e
 	_, err := r.Pool.Exec(ctx, `DELETE FROM admin_google_tokens WHERE account_key = $1`, accountKey)
 	return err
 }
+
+// ListAllAccounts returns all stored Google account keys and emails.
+func (r *AdminGoogleRepo) ListAllAccounts(ctx context.Context) ([]struct {
+	AccountKey  string
+	GoogleEmail string
+}, error) {
+	rows, err := r.Pool.Query(ctx, `SELECT account_key, google_email FROM admin_google_tokens ORDER BY account_key`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var accounts []struct {
+		AccountKey  string
+		GoogleEmail string
+	}
+	for rows.Next() {
+		var a struct {
+			AccountKey  string
+			GoogleEmail string
+		}
+		if err := rows.Scan(&a.AccountKey, &a.GoogleEmail); err != nil {
+			return nil, err
+		}
+		accounts = append(accounts, a)
+	}
+	return accounts, rows.Err()
+}

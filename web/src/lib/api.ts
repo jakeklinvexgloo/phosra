@@ -380,6 +380,26 @@ class ApiClient {
   async getOutreachGoogleStatus(token?: string) { return this.fetch("/admin/outreach/google/status", {}, token) }
   async disconnectOutreachGoogle(token?: string) { return this.fetch("/admin/outreach/google/disconnect", { method: "DELETE" }, token) }
 
+  // Multi-account Google management
+  async listGoogleAccounts(token?: string) {
+    return this.fetch("/admin/google/accounts", {}, token)
+  }
+  async getGoogleAccountAuthURL(accountKey: string, token?: string) {
+    return this.fetch(`/admin/google/accounts/${accountKey}/auth-url`, {}, token)
+  }
+  async submitGoogleAccountCallback(accountKey: string, code: string, token?: string) {
+    return this.fetch(`/admin/google/accounts/${accountKey}/callback`, { method: "POST", body: JSON.stringify({ code }) }, token)
+  }
+  async disconnectGoogleAccount(accountKey: string, token?: string) {
+    return this.fetch(`/admin/google/accounts/${accountKey}`, { method: "DELETE" }, token)
+  }
+  async listPersonaAccounts(token?: string) {
+    return this.fetch("/admin/outreach/persona-accounts", {}, token)
+  }
+  async upsertPersonaAccount(personaKey: string, data: { google_account_key: string; calendar_account_key: string; display_name: string; sender_email: string }, token?: string) {
+    return this.fetch(`/admin/outreach/persona-accounts/${personaKey}`, { method: "PUT", body: JSON.stringify(data) }, token)
+  }
+
   // Developer Portal
   async createDeveloperOrg(token: string, data: { name: string; description?: string; website_url?: string }) {
     return this.fetch('/developers/orgs', { method: 'POST', body: JSON.stringify(data) }, token)

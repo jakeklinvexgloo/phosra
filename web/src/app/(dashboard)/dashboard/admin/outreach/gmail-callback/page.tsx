@@ -32,13 +32,24 @@ export default function OutreachGoogleOAuthCallback() {
     async function exchangeCode() {
       try {
         const token = (await getToken()) ?? undefined
-        const result = await api.submitOutreachGoogleCallback(code!, token)
-        setStatus("success")
-        setMessage(`Connected outreach account as ${result.email}`)
+        const stateParam = searchParams.get("state") || ""
+
+        // Check if this is a multi-account callback: state = "phosra-outreach:{accountKey}"
+        if (stateParam.startsWith("phosra-outreach:")) {
+          const accountKey = stateParam.replace("phosra-outreach:", "")
+          const result = await api.submitGoogleAccountCallback(accountKey, code!, token)
+          setStatus("success")
+          setMessage(`Connected account "${accountKey}" as ${result.email}`)
+        } else {
+          // Legacy single-account callback
+          const result = await api.submitOutreachGoogleCallback(code!, token)
+          setStatus("success")
+          setMessage(`Connected outreach account as ${result.email}`)
+        }
         setTimeout(() => router.push("/dashboard/admin/outreach"), 2000)
       } catch (err: unknown) {
         setStatus("error")
-        setMessage(err instanceof Error ? err.message : "Failed to connect outreach Google account")
+        setMessage(err instanceof Error ? err.message : "Failed to connect Google account")
       }
     }
 

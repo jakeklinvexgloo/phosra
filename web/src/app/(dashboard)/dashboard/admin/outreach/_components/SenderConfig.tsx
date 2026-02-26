@@ -1,9 +1,10 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import { Loader2 } from "lucide-react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
-import type { OutreachConfig } from "@/lib/admin/types"
+import type { OutreachConfig, GoogleAccountInfo, PersonaAccountMapping } from "@/lib/admin/types"
 
 const SENDER_PERSONAS: Record<string, {
   sender_name: string
@@ -38,18 +39,45 @@ export function SenderConfig({ open, onClose }: SenderConfigProps) {
   const [config, setConfig] = useState<OutreachConfig | null>(null)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [googleAccounts, setGoogleAccounts] = useState<GoogleAccountInfo[]>([])
+  const [personaAccounts, setPersonaAccounts] = useState<PersonaAccountMapping[]>([])
+  const [savingPersona, setSavingPersona] = useState<string | null>(null)
 
   useEffect(() => {
     if (!open) return
     async function load() {
       try {
         const token = (await getToken()) ?? undefined
-        const cfg = await api.getAutopilotConfig(token)
+        const [cfg, accts, personas] = await Promise.all([
+          api.getAutopilotConfig(token),
+          api.listGoogleAccounts(token),
+          api.listPersonaAccounts(token),
+        ])
         setConfig(cfg)
+        setGoogleAccounts(accts as GoogleAccountInfo[])
+        setPersonaAccounts(personas as PersonaAccountMapping[])
       } catch { /* ignore */ }
     }
     load()
   }, [open, getToken])
+
+  const handlePersonaAccountChange = useCallback(async (personaKey: string, field: "google_account_key" | "calendar_account_key", value: string) => {
+    const persona = personaAccounts.find((p) => p.persona_key === personaKey)
+    if (!persona) return
+    setSavingPersona(personaKey)
+    try {
+      const token = (await getToken()) ?? undefined
+      const updated = { ...persona, [field]: value }
+      await api.upsertPersonaAccount(personaKey, {
+        google_account_key: updated.google_account_key,
+        calendar_account_key: updated.calendar_account_key,
+        display_name: updated.display_name,
+        sender_email: updated.sender_email,
+      }, token)
+      setPersonaAccounts((prev) => prev.map((p) => p.persona_key === personaKey ? { ...p, [field]: value } : p))
+    } catch { /* ignore */ }
+    finally { setSavingPersona(null) }
+  }, [personaAccounts, getToken])
 
   const handlePersonaChange = useCallback((personaKey: string) => {
     if (!config) return
@@ -160,6 +188,65 @@ export function SenderConfig({ open, onClose }: SenderConfigProps) {
                 </div>
               </div>
             </div>
+
+            {/* Google Account Mapping */}
+            {personaAccounts.length > 0 && googleAccounts.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium">Google Account Mapping</h3>
+                <p className="text-xs text-muted-foreground">Which Google account sends emails and books calendar events for each persona.</p>
+                {personaAccounts.map((persona) => (
+                  <div key={persona.persona_key} className="p-3 border rounded-lg space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">{persona.display_name}</span>
+                      <span className="text-xs text-muted-foreground">({persona.sender_email})</span>
+                      {savingPersona === persona.persona_key && (
+                        <Loader2 className="w-3 h-3 animate-spin text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs text-muted-foreground">Gmail Account</label>
+                        <select
+                          value={persona.google_account_key}
+                          onChange={(e) => handlePersonaAccountChange(persona.persona_key, "google_account_key", e.target.value)}
+                          className="w-full text-sm border rounded px-2 py-1.5 mt-1 bg-background"
+                        >
+                          {googleAccounts.map((a) => (
+                            <option key={a.account_key} value={a.account_key}>
+                              {a.account_key} ({a.email})
+                            </option>
+                          ))}
+                          {!googleAccounts.find((a) => a.account_key === persona.google_account_key) && (
+                            <option value={persona.google_account_key}>
+                              {persona.google_account_key} (not connected)
+                            </option>
+                          )}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs text-muted-foreground">Calendar Account</label>
+                        <select
+                          value={persona.calendar_account_key}
+                          onChange={(e) => handlePersonaAccountChange(persona.persona_key, "calendar_account_key", e.target.value)}
+                          className="w-full text-sm border rounded px-2 py-1.5 mt-1 bg-background"
+                        >
+                          {googleAccounts.map((a) => (
+                            <option key={a.account_key} value={a.account_key}>
+                              {a.account_key} ({a.email})
+                            </option>
+                          ))}
+                          {!googleAccounts.find((a) => a.account_key === persona.calendar_account_key) && (
+                            <option value={persona.calendar_account_key}>
+                              {persona.calendar_account_key} (not connected)
+                            </option>
+                          )}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Company Brief */}
             <div>

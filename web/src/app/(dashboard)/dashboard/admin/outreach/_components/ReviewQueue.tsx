@@ -144,9 +144,16 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
                     <span className="text-sm text-muted-foreground truncate">&middot; {email.contact_org}</span>
                   )}
                 </div>
-                <span className="text-xs bg-muted px-2 py-0.5 rounded font-medium flex-shrink-0 ml-2">
-                  {STEP_LABELS[email.step_number] ?? `Step ${email.step_number + 1}`}
-                </span>
+                <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                  {email.google_account_key && email.google_account_key !== "outreach" && (
+                    <span className="text-xs text-muted-foreground">
+                      via {email.google_account_key}
+                    </span>
+                  )}
+                  <span className="text-xs bg-muted px-2 py-0.5 rounded font-medium">
+                    {STEP_LABELS[email.step_number] ?? `Step ${email.step_number + 1}`}
+                  </span>
+                </div>
               </div>
 
               {editingId === email.id ? (

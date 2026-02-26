@@ -31,11 +31,23 @@ type AdminHandler struct {
 	alerts         *postgres.AdminAlertsRepo
 	google         *google.Client // personal Google account (nil when not configured)
 	googleOutreach *google.Client // outreach Google account (nil when not configured)
+	googleManager  *google.GoogleClientManager
+	googleRepo     *postgres.AdminGoogleRepo
+	personaRepo    *postgres.AdminPersonaRepo
 	workerAPIKey   string
 }
 
-func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, news *postgres.AdminNewsRepo, alerts *postgres.AdminAlertsRepo, googleClient *google.Client, googleOutreach *google.Client, workerAPIKey string) *AdminHandler {
-	return &AdminHandler{outreach: outreach, workers: workers, news: news, alerts: alerts, google: googleClient, googleOutreach: googleOutreach, workerAPIKey: workerAPIKey}
+func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, news *postgres.AdminNewsRepo, alerts *postgres.AdminAlertsRepo, googleClient *google.Client, googleManager *google.GoogleClientManager, googleRepo *postgres.AdminGoogleRepo, personaRepo *postgres.AdminPersonaRepo, workerAPIKey string) *AdminHandler {
+	var googleOutreach *google.Client
+	if googleManager != nil {
+		googleOutreach = googleManager.GetClient("outreach")
+	}
+	return &AdminHandler{
+		outreach: outreach, workers: workers, news: news, alerts: alerts,
+		google: googleClient, googleOutreach: googleOutreach,
+		googleManager: googleManager, googleRepo: googleRepo, personaRepo: personaRepo,
+		workerAPIKey: workerAPIKey,
+	}
 }
 
 // ── Stats ───────────────────────────────────────────────────────
@@ -1042,4 +1054,164 @@ func (h *AdminHandler) DeleteCalendarEvent(w http.ResponseWriter, r *http.Reques
 	}
 
 	httputil.NoContent(w)
+}
+
+// ── Multi-Account Google Management ─────────────────────────────
+
+// ListGoogleAccounts returns all connected outreach Google accounts.
+func (h *AdminHandler) ListGoogleAccounts(w http.ResponseWriter, r *http.Request) {
+	if h.googleRepo == nil {
+		httputil.JSON(w, http.StatusOK, []domain.GoogleAccountInfo{})
+		return
+	}
+	dbAccounts, err := h.googleRepo.ListAllAccounts(r.Context())
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to list Google accounts")
+		return
+	}
+	accounts := make([]domain.GoogleAccountInfo, 0, len(dbAccounts))
+	for _, a := range dbAccounts {
+		// Skip the "personal" account — it's managed separately
+		if a.AccountKey == "personal" {
+			continue
+		}
+		accounts = append(accounts, domain.GoogleAccountInfo{
+			AccountKey: a.AccountKey,
+			Email:      a.GoogleEmail,
+			Connected:  true,
+		})
+	}
+	httputil.JSON(w, http.StatusOK, accounts)
+}
+
+// GetGoogleAccountAuthURL returns the OAuth URL for a specific outreach account key.
+func (h *AdminHandler) GetGoogleAccountAuthURL(w http.ResponseWriter, r *http.Request) {
+	if h.googleManager == nil || !h.googleManager.IsConfigured() {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google integration not configured")
+		return
+	}
+	accountKey := chi.URLParam(r, "accountKey")
+	if accountKey == "" || accountKey == "personal" {
+		httputil.Error(w, http.StatusBadRequest, "invalid account key")
+		return
+	}
+	client := h.googleManager.GetClient(accountKey)
+	state := "phosra-outreach:" + accountKey
+	url := client.AuthorizeURL(state)
+	httputil.JSON(w, http.StatusOK, map[string]string{"url": url})
+}
+
+// GoogleAccountCallback exchanges the OAuth code for a specific account key.
+func (h *AdminHandler) GoogleAccountCallback(w http.ResponseWriter, r *http.Request) {
+	if h.googleManager == nil || !h.googleManager.IsConfigured() {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google integration not configured")
+		return
+	}
+	accountKey := chi.URLParam(r, "accountKey")
+	if accountKey == "" || accountKey == "personal" {
+		httputil.Error(w, http.StatusBadRequest, "invalid account key")
+		return
+	}
+
+	var req struct {
+		Code string `json:"code"`
+	}
+	if err := httputil.DecodeJSON(r, &req); err != nil || req.Code == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing authorization code")
+		return
+	}
+
+	client := h.googleManager.GetClient(accountKey)
+	tokens, err := client.ExchangeCode(r.Context(), req.Code)
+	if err != nil {
+		log.Error().Err(err).Str("account_key", accountKey).Msg("Google OAuth code exchange failed")
+		httputil.Error(w, http.StatusBadRequest, "failed to exchange code: "+err.Error())
+		return
+	}
+
+	httputil.JSON(w, http.StatusOK, map[string]interface{}{
+		"connected":   true,
+		"email":       tokens.GoogleEmail,
+		"account_key": accountKey,
+	})
+}
+
+// GetGoogleAccountStatus returns the connection status for a specific account key.
+func (h *AdminHandler) GetGoogleAccountStatus(w http.ResponseWriter, r *http.Request) {
+	if h.googleManager == nil || !h.googleManager.IsConfigured() {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google integration not configured")
+		return
+	}
+	accountKey := chi.URLParam(r, "accountKey")
+	client := h.googleManager.GetClient(accountKey)
+	connected, email, err := client.IsConnected(r.Context())
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to check account status")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, domain.GoogleAccountInfo{
+		AccountKey: accountKey,
+		Email:      email,
+		Connected:  connected,
+	})
+}
+
+// DisconnectGoogleAccount removes tokens for a specific account key.
+func (h *AdminHandler) DisconnectGoogleAccount(w http.ResponseWriter, r *http.Request) {
+	if h.googleManager == nil || !h.googleManager.IsConfigured() {
+		httputil.Error(w, http.StatusServiceUnavailable, "Google integration not configured")
+		return
+	}
+	accountKey := chi.URLParam(r, "accountKey")
+	if accountKey == "" || accountKey == "personal" {
+		httputil.Error(w, http.StatusBadRequest, "invalid account key")
+		return
+	}
+	client := h.googleManager.GetClient(accountKey)
+	if err := client.Disconnect(r.Context()); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to disconnect account")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, map[string]string{"status": "disconnected"})
+}
+
+// ── Persona Account Mapping ─────────────────────────────────────
+
+// ListPersonaAccounts returns all persona-to-account mappings.
+func (h *AdminHandler) ListPersonaAccounts(w http.ResponseWriter, r *http.Request) {
+	if h.personaRepo == nil {
+		httputil.JSON(w, http.StatusOK, []domain.PersonaAccountMapping{})
+		return
+	}
+	mappings, err := h.personaRepo.List(r.Context())
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to list persona accounts")
+		return
+	}
+	if mappings == nil {
+		mappings = []domain.PersonaAccountMapping{}
+	}
+	httputil.JSON(w, http.StatusOK, mappings)
+}
+
+// UpsertPersonaAccount creates or updates a persona-to-account mapping.
+func (h *AdminHandler) UpsertPersonaAccount(w http.ResponseWriter, r *http.Request) {
+	if h.personaRepo == nil {
+		httputil.Error(w, http.StatusServiceUnavailable, "persona accounts not configured")
+		return
+	}
+	personaKey := chi.URLParam(r, "personaKey")
+
+	var req domain.PersonaAccountMapping
+	if err := httputil.DecodeJSON(r, &req); err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	req.PersonaKey = personaKey
+
+	if err := h.personaRepo.Upsert(r.Context(), &req); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to upsert persona account")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, req)
 }

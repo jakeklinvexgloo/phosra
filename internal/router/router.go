@@ -399,11 +399,22 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Post("/outreach/pending-emails/{emailID}/reject", h.Admin.RejectPendingEmail)
 			r.Put("/outreach/pending-emails/{emailID}", h.Admin.EditPendingEmail)
 
-			// Outreach Google OAuth
+			// Outreach Google OAuth (legacy single-account)
 			r.Get("/outreach/google/auth-url", h.Admin.GetOutreachGoogleAuthURL)
 			r.Post("/outreach/google/callback", h.Admin.OutreachGoogleCallback)
 			r.Get("/outreach/google/status", h.Admin.GetOutreachGoogleStatus)
 			r.Delete("/outreach/google/disconnect", h.Admin.DisconnectOutreachGoogle)
+
+			// Multi-account Google management
+			r.Get("/google/accounts", h.Admin.ListGoogleAccounts)
+			r.Get("/google/accounts/{accountKey}/auth-url", h.Admin.GetGoogleAccountAuthURL)
+			r.Post("/google/accounts/{accountKey}/callback", h.Admin.GoogleAccountCallback)
+			r.Get("/google/accounts/{accountKey}/status", h.Admin.GetGoogleAccountStatus)
+			r.Delete("/google/accounts/{accountKey}", h.Admin.DisconnectGoogleAccount)
+
+			// Persona-to-account mapping
+			r.Get("/outreach/persona-accounts", h.Admin.ListPersonaAccounts)
+			r.Put("/outreach/persona-accounts/{personaKey}", h.Admin.UpsertPersonaAccount)
 
 			// Pitch Coaching
 			r.Route("/pitch", func(r chi.Router) {
