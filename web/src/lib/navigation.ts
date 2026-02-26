@@ -1,4 +1,4 @@
-import { Home, Zap, Globe, Shield, Users, Settings, Rocket, LayoutDashboard, Send, Newspaper, Bot, Bell, Mail, Contact, CalendarDays, Mic, Monitor, DollarSign, Code2, Key, BarChart3, Megaphone, Search } from "lucide-react"
+import { Home, Zap, Globe, Shield, Users, Settings, Rocket, LayoutDashboard, Send, Newspaper, Bot, Bell, Mail, Contact, CalendarDays, Mic, Monitor, DollarSign, Code2, Key, BarChart3, Megaphone, Search, PenSquare } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 
 export interface NavItem {
@@ -59,6 +59,7 @@ export const adminNavGroups: NavGroup[] = [
       { href: "/dashboard/admin/outreach", label: "Outreach", icon: Send },
       { href: "/dashboard/admin/news", label: "News Feed", icon: Newspaper },
       { href: "/dashboard/admin/press", label: "Press Center", icon: Megaphone },
+      { href: "/dashboard/admin/journalists", label: "Journalists", icon: PenSquare },
       { href: "/dashboard/admin/workers", label: "Workers", icon: Bot },
       { href: "/dashboard/admin/compliance-alerts", label: "Alerts", icon: Bell },
       { href: "/dashboard/admin/fundraise", label: "Fundraise", icon: DollarSign },
