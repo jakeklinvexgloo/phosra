@@ -337,6 +337,34 @@ export default function PressReleaseDetailPage() {
     return parts.join("\n")
   }
 
+  // Update dateline in body text when city, state, or date changes
+  const updateDatelineInBody = (newCity: string, newState: string, newDate: string) => {
+    if (!body) return
+    // Match AP-style dateline: "CITY, State, Month Day, Year --" or "CITY, State -- Month Day, Year --"
+    const datelinePattern = /^([A-Z][A-Z\s]+,\s*[A-Za-z.]+,?\s*)((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s*\d{4})\s*--/m
+    const datelinePattern2 = /^([A-Z][A-Z\s]+,\s*[A-Za-z.]+)\s*--\s*((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s*\d{4})\s*--/m
+
+    const formatDate = (d: string) => {
+      if (!d) return ""
+      const date = new Date(d + "T12:00:00")
+      return date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+    }
+
+    // Build the state abbreviation in AP style (Pa., Texas, etc.)
+    const stateAbbr = newState || datelineState
+    const city = newCity || datelineCity
+    const formattedDate = formatDate(newDate || publishDate)
+    if (!city || !formattedDate) return
+
+    const newDateline = `${city}, ${stateAbbr}, ${formattedDate} --`
+
+    if (datelinePattern.test(body)) {
+      setBody(body.replace(datelinePattern, newDateline))
+    } else if (datelinePattern2.test(body)) {
+      setBody(body.replace(datelinePattern2, newDateline))
+    }
+  }
+
   // Quote management
   const addQuote = () => setQuotes([...quotes, { text: "", attribution: "" }])
   const removeQuote = (idx: number) => setQuotes(quotes.filter((_, i) => i !== idx))
@@ -686,7 +714,8 @@ export default function PressReleaseDetailPage() {
               <input
                 type="text"
                 value={datelineCity}
-                onChange={e => setDatelineCity(e.target.value)}
+                onChange={e => { setDatelineCity(e.target.value); updateDatelineInBody(e.target.value, datelineState, publishDate) }}
+                onBlur={e => updateDatelineInBody(e.target.value, datelineState, publishDate)}
                 placeholder="PITTSBURGH"
                 className="w-40 h-8 px-3 text-xs font-medium uppercase bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
               />
@@ -694,7 +723,8 @@ export default function PressReleaseDetailPage() {
               <input
                 type="text"
                 value={datelineState}
-                onChange={e => setDatelineState(e.target.value)}
+                onChange={e => { setDatelineState(e.target.value); updateDatelineInBody(datelineCity, e.target.value, publishDate) }}
+                onBlur={e => updateDatelineInBody(datelineCity, e.target.value, publishDate)}
                 placeholder="PA"
                 className="w-16 h-8 px-3 text-xs font-medium uppercase bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
               />
@@ -702,7 +732,7 @@ export default function PressReleaseDetailPage() {
               <input
                 type="date"
                 value={publishDate}
-                onChange={e => setPublishDate(e.target.value)}
+                onChange={e => { setPublishDate(e.target.value); updateDatelineInBody(datelineCity, datelineState, e.target.value) }}
                 className="h-8 px-2 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
               />
               <span className="text-xs text-muted-foreground">&mdash;</span>
