@@ -334,6 +334,7 @@ function getPlatformName(platformId: string): string {
     max: "Max",
     prime_video: "Prime Video",
     youtube: "YouTube",
+    chatgpt: "ChatGPT",
   }
   return names[platformId] ?? platformId.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 }
@@ -346,6 +347,9 @@ function getCapabilitySummary(platformId: string): CapabilitySummary {
   }
   if (platformId === "peacock") {
     return getPeacockCapabilities()
+  }
+  if (platformId === "chatgpt") {
+    return getChatGPTCapabilities()
   }
   return { fullyEnforceable: [], partiallyEnforceable: [], notApplicable: [] }
 }
@@ -482,6 +486,120 @@ function getNetflixCapabilities(): CapabilitySummary {
       ruleCategory: "app_control",
       label: "App Control",
       platformFeature: "Single-purpose app — no app installation",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+  ]
+
+  return { fullyEnforceable, partiallyEnforceable, notApplicable }
+}
+
+function getChatGPTCapabilities(): CapabilitySummary {
+  const fullyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "screen_time_limit",
+      label: "Daily Time Limit",
+      platformFeature: "No native time limits",
+      enforcementMethod: "Browser extension tracks session duration + DNS blocking when limit reached",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "message_rate_limit",
+      label: "Message Limit",
+      platformFeature: "Only technical rate limits (billing), not safety controls",
+      enforcementMethod: "Browser extension counts messages and blocks input when limit reached",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "bedtime_schedule",
+      label: "Schedule / Quiet Hours",
+      platformFeature: "Quiet hours available for parent-linked teen accounts",
+      enforcementMethod: "DNS-level domain blocking during restricted hours + Playwright sync",
+      confidence: 0.9,
+    },
+    {
+      ruleCategory: "engagement_check",
+      label: "Break Reminders",
+      platformFeature: "No native break reminders or wellness check-ins",
+      enforcementMethod: "Browser extension injects break prompts at configured intervals",
+      confidence: 0.9,
+    },
+  ]
+
+  const partiallyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "content_rating_filter",
+      label: "Content Safety Filter",
+      platformFeature: "11-category moderation taxonomy, stricter defaults for teen accounts",
+      enforcementMethod: "OpenAI Moderation API classifies captured text; extension alerts on violations",
+      confidence: 0.6,
+      gap: "Cannot configure ChatGPT's content filter level via API — teen defaults are fixed",
+      workaround: "Use Moderation API for independent content classification + parent alerts",
+    },
+    {
+      ruleCategory: "parental_event_notification",
+      label: "Safety Alerts",
+      platformFeature: "Limited parent notifications, weekly usage summary only",
+      enforcementMethod: "Extension detects crisis UI + Moderation API flags → instant parent push notification",
+      confidence: 0.6,
+      gap: "No webhook/API for safety events — requires client-side detection",
+      workaround: "Extension monitors DOM for crisis elements and classifies messages via Moderation API",
+    },
+    {
+      ruleCategory: "screen_time_report",
+      label: "Usage Analytics",
+      platformFeature: "Basic usage stats visible to linked parents",
+      enforcementMethod: "Extension tracks detailed usage metrics (messages, duration, models used)",
+      confidence: 0.7,
+      gap: "No API to retrieve usage stats — extension tracking is desktop-only",
+      workaround: "Supplement with Playwright scraping of parent dashboard stats",
+    },
+    {
+      ruleCategory: "academic_integrity",
+      label: "Homework Detection",
+      platformFeature: "No native homework detection or Socratic mode enforcement",
+      enforcementMethod: "Client-side NLP on captured messages to detect academic queries",
+      confidence: 0.4,
+      gap: "NLP detection has limited accuracy — false positives/negatives expected",
+      workaround: "Use heuristic patterns (math equations, essay prompts, citation requests) + parent review",
+    },
+    {
+      ruleCategory: "age_gate",
+      label: "Age Verification",
+      platformFeature: "Self-attestation DOB + AI age prediction (Jan 2026)",
+      enforcementMethod: "Extension can detect account tier; cannot strengthen age verification",
+      confidence: 0.3,
+      gap: "Guest access requires zero verification — biggest loophole",
+      workaround: "DNS blocking prevents guest access; extension detects and blocks guest mode",
+    },
+  ]
+
+  const notApplicable: CapabilityEntry[] = [
+    {
+      ruleCategory: "purchase_control",
+      label: "Purchase Control",
+      platformFeature: "Subscription-only — no in-conversation purchases",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "location_tracking",
+      label: "Location Tracking",
+      platformFeature: "No location features in ChatGPT",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "autoplay_control",
+      label: "Autoplay Control",
+      platformFeature: "Text-based interaction — no autoplay content",
+      enforcementMethod: "N/A — voice mode continues until user stops but has no autoplay",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "title_restriction",
+      label: "Title Restriction",
+      platformFeature: "No content library — generative AI, not curated content",
       enforcementMethod: "N/A",
       confidence: 1.0,
     },

@@ -1,0 +1,74 @@
+{
+  "platform": "chatgpt",
+  "platform_name": "ChatGPT",
+  "research_date": "2026-02-26",
+
+  "chatgpt_to_phosra": {
+    "Under 13 (Blocked)": "blocked",
+    "Teen (13-17)": "ages_13_plus",
+    "Adult (18+)": "adults_only"
+  },
+
+  "phosra_to_chatgpt": {
+    "blocked": "Under 13 (Blocked)",
+    "ages_13_plus": "Teen (13-17)",
+    "adults_only": "Adult (18+)"
+  },
+
+  "platform_tiers": {
+    "Under 13 (Blocked)": {
+      "phosra_tier": "blocked",
+      "mpaa_ratings": [],
+      "tv_ratings": [],
+      "age_range": "0-12",
+      "is_kids_profile": true
+    },
+    "Teen (13-17)": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": [],
+      "tv_ratings": [],
+      "age_range": "13-17",
+      "is_kids_profile": false
+    },
+    "Adult (18+)": {
+      "phosra_tier": "adults_only",
+      "mpaa_ratings": [],
+      "tv_ratings": [],
+      "age_range": "18+",
+      "is_kids_profile": false
+    }
+  },
+
+  "content_descriptors": {
+    "supported": [
+      "explicit/sexual",
+      "graphic violence",
+      "self-harm/suicide",
+      "substance use",
+      "hate speech",
+      "weapons/dangerous activities",
+      "profanity"
+    ],
+    "notes": "ChatGPT uses an 11-category moderation taxonomy. Content filtering is tier-based (stricter for teens) and not individually configurable per category."
+  },
+
+  "rating_systems_coverage": {
+    "OpenAI_Moderation": {
+      "supported": true,
+      "ratings": ["hate", "harassment", "self-harm", "sexual", "violence"],
+      "notes": "OpenAI's proprietary 11-category moderation system with sub-categories for severity"
+    },
+    "Common_Sense_Media": {
+      "supported": "partial",
+      "notes": "Common Sense Media rated ChatGPT as 'High Risk' for teens"
+    },
+    "MPAA": {
+      "supported": false,
+      "notes": "Not applicable — ChatGPT is conversational AI, not rated media content"
+    },
+    "TV_Parental_Guidelines": {
+      "supported": false,
+      "notes": "Not applicable — ChatGPT is conversational AI, not rated media content"
+    }
+  }
+}
