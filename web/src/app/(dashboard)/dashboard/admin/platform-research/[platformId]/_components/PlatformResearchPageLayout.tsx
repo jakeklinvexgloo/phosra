@@ -3,23 +3,24 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import type { PlatformRegistryEntry } from "@/lib/platforms/types"
 import type { PlatformResearchData } from "@/lib/platform-research/research-data-types"
-import type { SectionDef } from "@/lib/platform-research/section-registry"
+import { getSectionsForCategory } from "@/lib/platform-research/section-registry"
 import { ResearchHero } from "./ResearchHero"
 import { SectionNav } from "./SectionNav"
 
 interface PlatformResearchPageLayoutProps {
   platform: PlatformRegistryEntry
   data: PlatformResearchData
-  sections: SectionDef[]
+  category: string
   children: ReactNode
 }
 
 export function PlatformResearchPageLayout({
   platform,
   data,
-  sections,
+  category,
   children,
 }: PlatformResearchPageLayoutProps) {
+  const sections = getSectionsForCategory(category)
   const [activeSection, setActiveSection] = useState(sections[0]?.id ?? "overview")
   const observerRef = useRef<IntersectionObserver | null>(null)
 
