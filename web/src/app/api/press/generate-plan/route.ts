@@ -135,8 +135,8 @@ Generate a press release plan (10-15 entries) that maps to these milestones. Use
         entry.release_type || "other",
         entry.milestone_id,
         entry.publish_date || null,
-        "AUSTIN",
-        "TX",
+        "PITTSBURGH",
+        "PA",
         entry.notes || "",
         JSON.stringify({
           key_message: entry.key_message,

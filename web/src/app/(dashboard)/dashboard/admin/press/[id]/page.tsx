@@ -698,6 +698,14 @@ export default function PressReleaseDetailPage() {
                 placeholder="PA"
                 className="w-16 h-8 px-3 text-xs font-medium uppercase bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
               />
+              <span className="text-xs text-muted-foreground">&mdash;</span>
+              <input
+                type="date"
+                value={publishDate}
+                onChange={e => setPublishDate(e.target.value)}
+                className="h-8 px-2 text-xs bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+              />
+              <span className="text-xs text-muted-foreground">&mdash;</span>
             </div>
 
             <textarea

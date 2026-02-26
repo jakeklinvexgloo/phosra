@@ -56,8 +56,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   // Dateline + body placeholder
   const now = new Date()
   const dateStr = now.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
-  const city = release.dateline_city || "AUSTIN"
-  const state = release.dateline_state || "TX"
+  const city = release.dateline_city || "PITTSBURGH"
+  const state = release.dateline_state || "PA"
   parts.push(`${city}, ${state}, ${dateStr} --`)
   parts.push("")
 
