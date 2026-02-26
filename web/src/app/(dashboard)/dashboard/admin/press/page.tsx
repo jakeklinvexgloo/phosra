@@ -7,7 +7,7 @@ import {
   Megaphone, Plus, FileText, Send as SendIcon,
   Calendar, CheckCircle2, Lightbulb,
   PenLine, Eye, Sparkles, Target,
-  ArrowUp, ArrowDown, ChevronDown
+  ChevronDown
 } from "lucide-react"
 import { useApi } from "@/lib/useApi"
 import type { PressRelease, PressStats, PressReleaseStatus, ReleaseType } from "@/lib/press/types"
@@ -17,7 +17,15 @@ import { Button } from "@/components/ui/button"
 import { StatCard } from "@/components/ui/stat-card"
 import { SearchInput } from "@/components/ui/search-input"
 import { Badge } from "@/components/ui/badge"
-import { EmptyState } from "@/components/ui/empty-state"
+import {
+  DataTable,
+  DataTableHeader,
+  DataTableRow,
+  DataTableEmpty,
+  DataTableFooter,
+  useDataTable,
+  type ColumnDef,
+} from "@/components/ui/data-table"
 
 const STATUS_BADGE_VARIANT: Record<PressReleaseStatus, "default" | "info" | "warning" | "success" | "purple"> = {
   idea: "default",
@@ -28,9 +36,6 @@ const STATUS_BADGE_VARIANT: Record<PressReleaseStatus, "default" | "info" | "war
   distributed: "success",
   archived: "default",
 }
-
-type SortField = "publish_date" | "created_at" | "updated_at"
-type SortDir = "asc" | "desc"
 
 type FilterTab = "all" | PressReleaseStatus
 
@@ -44,6 +49,116 @@ const TABS: { key: FilterTab; label: string; icon: typeof FileText }[] = [
   { key: "distributed", label: "Distributed", icon: SendIcon },
 ]
 
+function timeAgo(d: string) {
+  const ms = Date.now() - new Date(d).getTime()
+  const mins = Math.floor(ms / 60000)
+  if (mins < 60) return `${mins}m`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `${hrs}h`
+  const days = Math.floor(hrs / 24)
+  return `${days}d`
+}
+
+const columns: ColumnDef<PressRelease>[] = [
+  {
+    id: "status",
+    accessor: "status",
+    header: "Status",
+    sortable: true,
+    cell: (_, row) => (
+      <Badge variant={STATUS_BADGE_VARIANT[row.status]} size="md">
+        {STATUS_LABELS[row.status]}
+      </Badge>
+    ),
+  },
+  {
+    id: "title",
+    accessor: "title",
+    header: "Title",
+    sortable: true,
+    cell: (_, row) => (
+      <div className="flex items-center gap-2 min-w-0">
+        {row.milestone_id && (
+          <Badge variant="pink" size="sm">
+            {row.milestone_id.toUpperCase()}
+          </Badge>
+        )}
+        <span className="text-[13px] font-medium leading-tight truncate text-foreground">
+          {row.title}
+        </span>
+      </div>
+    ),
+  },
+  {
+    id: "release_type",
+    accessor: "release_type",
+    header: "Type",
+    sortable: true,
+    hideBelow: "sm",
+    cell: (_, row) => (
+      <Badge variant="default" size="sm">
+        {RELEASE_TYPE_LABELS[row.release_type] || row.release_type}
+      </Badge>
+    ),
+  },
+  {
+    id: "publish_date",
+    accessor: "publish_date",
+    header: "Published",
+    sortable: true,
+    hideBelow: "sm",
+    align: "right",
+    sortFn: (a, b, dir) => {
+      const aVal = a.publish_date
+      const bVal = b.publish_date
+      if (!aVal && !bVal) return 0
+      if (!aVal) return 1
+      if (!bVal) return -1
+      const cmp = new Date(aVal).getTime() - new Date(bVal).getTime()
+      return dir === "asc" ? cmp : -cmp
+    },
+    cell: (v) => (
+      <span className="text-[11px] text-muted-foreground tabular-nums">
+        {v ? new Date(v as string).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"}
+      </span>
+    ),
+  },
+  {
+    id: "word_count",
+    accessor: "word_count",
+    header: "Words",
+    sortable: true,
+    hideBelow: "sm",
+    align: "right",
+    cell: (v) => (
+      <span className="text-[10px] text-muted-foreground/60 tabular-nums">
+        {(v as number) > 0 ? `${v}w` : "—"}
+      </span>
+    ),
+  },
+  {
+    id: "updated_at",
+    accessor: (r) => r.updated_at || r.created_at,
+    header: "Updated",
+    sortable: true,
+    align: "right",
+    sortFn: (a, b, dir) => {
+      const aVal = a.updated_at || a.created_at
+      const bVal = b.updated_at || b.created_at
+      if (!aVal && !bVal) return 0
+      if (!aVal) return 1
+      if (!bVal) return -1
+      const cmp = new Date(aVal).getTime() - new Date(bVal).getTime()
+      return dir === "asc" ? cmp : -cmp
+    },
+    cell: (_, row) => (
+      <span className="text-[11px] text-muted-foreground tabular-nums">
+        {timeAgo(row.updated_at || row.created_at)}
+      </span>
+    ),
+  },
+]
+
 export default function PressCenterPage() {
   const router = useRouter()
   const { getToken } = useApi()
@@ -51,15 +166,12 @@ export default function PressCenterPage() {
   const [stats, setStats] = useState<PressStats>({ total: 0, drafts: 0, scheduled: 0, distributed: 0 })
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<FilterTab>("all")
-  const [search, setSearch] = useState("")
   const [showNewForm, setShowNewForm] = useState(false)
   const [newTitle, setNewTitle] = useState("")
   const [newType, setNewType] = useState("product_launch")
   const [creating, setCreating] = useState(false)
   const [generatingPlan, setGeneratingPlan] = useState(false)
   const [planError, setPlanError] = useState("")
-  const [sortBy, setSortBy] = useState<SortField>("publish_date")
-  const [sortDir, setSortDir] = useState<SortDir>("asc")
   const [typeFilter, setTypeFilter] = useState<"all" | ReleaseType>("all")
 
   const getHeaders = useCallback(async (json = false) => {
@@ -139,29 +251,19 @@ export default function PressCenterPage() {
     }
   }
 
-  const filtered = useMemo(() => {
+  const preFiltered = useMemo(() => {
     let out = [...releases]
     if (tab !== "all") out = out.filter(r => r.status === tab)
-    if (search) {
-      const q = search.toLowerCase()
-      out = out.filter(r =>
-        r.title.toLowerCase().includes(q) ||
-        r.headline.toLowerCase().includes(q) ||
-        r.body.toLowerCase().includes(q)
-      )
-    }
     if (typeFilter !== "all") out = out.filter(r => r.release_type === typeFilter)
-    out.sort((a, b) => {
-      const aVal = a[sortBy]
-      const bVal = b[sortBy]
-      if (!aVal && !bVal) return 0
-      if (!aVal) return 1
-      if (!bVal) return -1
-      const cmp = new Date(aVal).getTime() - new Date(bVal).getTime()
-      return sortDir === "asc" ? cmp : -cmp
-    })
     return out
-  }, [releases, tab, search, typeFilter, sortBy, sortDir])
+  }, [releases, tab, typeFilter])
+
+  const { rows, sort, toggleSort, search, setSearch } = useDataTable({
+    data: preFiltered,
+    columns,
+    initialSort: { key: "publish_date", direction: "asc" },
+    searchKeys: ["title", "headline", "body"],
+  })
 
   const tabCount = (key: FilterTab) => {
     if (key === "all") return releases.length
@@ -169,16 +271,6 @@ export default function PressCenterPage() {
   }
 
   const milestoneLinkedCount = releases.filter(r => r.milestone_id).length
-
-  const timeAgo = (d: string) => {
-    const ms = Date.now() - new Date(d).getTime()
-    const mins = Math.floor(ms / 60000)
-    if (mins < 60) return `${mins}m`
-    const hrs = Math.floor(mins / 60)
-    if (hrs < 24) return `${hrs}h`
-    const days = Math.floor(hrs / 24)
-    return `${days}d`
-  }
 
   if (loading) {
     return (
@@ -301,109 +393,50 @@ export default function PressCenterPage() {
             ))}
           </select>
         </div>
-        <div className="relative">
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
-          <select
-            value={sortBy}
-            onChange={e => setSortBy(e.target.value as SortField)}
-            className="h-8 pl-2.5 pr-7 text-xs bg-card border border-border/50 rounded-lg appearance-none focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 transition-all"
-          >
-            <option value="publish_date">Publish Date</option>
-            <option value="created_at">Created</option>
-            <option value="updated_at">Updated</option>
-          </select>
-        </div>
-        <Button
-          variant="outline"
-          size="icon-sm"
-          onClick={() => setSortDir(d => d === "asc" ? "desc" : "asc")}
-          title={sortDir === "asc" ? "Ascending" : "Descending"}
-        >
-          {sortDir === "asc" ? <ArrowUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ArrowDown className="w-3.5 h-3.5 text-muted-foreground" />}
-        </Button>
         <SearchInput compact value={search} onChange={setSearch} placeholder="Filter..." className="w-48" />
       </div>
 
-      {/* Release list */}
-      {filtered.length === 0 ? (
-        <EmptyState
-          icon={Megaphone}
-          description={releases.length === 0 ? "No press releases yet." : "No releases match your filters."}
-          action={releases.length === 0 ? (
-            <Button variant="accent" size="sm" loading={generatingPlan} onClick={handleGeneratePlan}>
-              {!generatingPlan && <Sparkles className="w-3.5 h-3.5" />}
-              {generatingPlan ? "Generating..." : "Generate Press Plan from Fundraise Milestones"}
-            </Button>
-          ) : undefined}
-        />
-      ) : (
-        <div className="space-y-[1px] rounded-lg overflow-hidden border border-border/50">
-          {filtered.map(release => (
-            <div
-              key={release.id}
-              onClick={() => router.push(`/dashboard/admin/press/${release.id}`)}
-              className="group relative cursor-pointer bg-card/50 hover:bg-card transition-colors"
+      {/* Release table */}
+      <DataTable>
+        <DataTableHeader columns={columns} sort={sort} onSort={toggleSort} />
+        <tbody>
+          {rows.length === 0 ? (
+            <DataTableEmpty
+              icon={Megaphone}
+              description={releases.length === 0 ? "No press releases yet." : "No releases match your filters."}
+              colSpan={columns.length}
+              action={releases.length === 0 ? (
+                <Button variant="accent" size="sm" loading={generatingPlan} onClick={handleGeneratePlan}>
+                  {!generatingPlan && <Sparkles className="w-3.5 h-3.5" />}
+                  {generatingPlan ? "Generating..." : "Generate Press Plan from Fundraise Milestones"}
+                </Button>
+              ) : undefined}
+            />
+          ) : (
+            rows.map(release => (
+              <DataTableRow
+                key={release.id}
+                row={release}
+                columns={columns}
+                onClick={() => router.push(`/dashboard/admin/press/${release.id}`)}
+              />
+            ))
+          )}
+        </tbody>
+      </DataTable>
+
+      {rows.length > 0 && (
+        <DataTableFooter showing={rows.length} total={releases.length}>
+          {milestoneLinkedCount > 0 && (
+            <Link
+              href="/dashboard/admin/fundraise"
+              className="text-[10px] text-pink-500 hover:text-pink-600 font-medium transition-colors"
             >
-              <div className="flex items-center gap-3 px-4 py-3">
-                {/* Status badge */}
-                <Badge variant={STATUS_BADGE_VARIANT[release.status]} size="md">
-                  {STATUS_LABELS[release.status]}
-                </Badge>
-
-                {/* Milestone badge */}
-                {release.milestone_id && (
-                  <Badge variant="pink" size="sm">
-                    {release.milestone_id.toUpperCase()}
-                  </Badge>
-                )}
-
-                {/* Title */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-[13px] font-medium leading-tight truncate text-foreground">
-                    {release.title}
-                  </h3>
-                </div>
-
-                {/* Release type */}
-                <Badge variant="default" size="sm" className="hidden sm:inline-flex">
-                  {RELEASE_TYPE_LABELS[release.release_type] || release.release_type}
-                </Badge>
-
-                {/* Publish date */}
-                <span className="hidden sm:inline text-[11px] text-muted-foreground tabular-nums min-w-16 text-right">
-                  {release.publish_date
-                    ? new Date(release.publish_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-                    : "\u2014"}
-                </span>
-
-                {/* Word count */}
-                <span className="hidden sm:inline text-[10px] text-muted-foreground/60 tabular-nums min-w-12 text-right">
-                  {release.word_count > 0 ? `${release.word_count}w` : "\u2014"}
-                </span>
-
-                {/* Time ago */}
-                <span className="text-[11px] text-muted-foreground tabular-nums">
-                  {timeAgo(release.updated_at || release.created_at)}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+              View Fundraise Timeline
+            </Link>
+          )}
+        </DataTableFooter>
       )}
-
-      <div className="flex items-center justify-between pt-2">
-        <div className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
-          {filtered.length} of {releases.length} releases
-        </div>
-        {milestoneLinkedCount > 0 && (
-          <Link
-            href="/dashboard/admin/fundraise"
-            className="text-[10px] text-pink-500 hover:text-pink-600 font-medium transition-colors"
-          >
-            View Fundraise Timeline
-          </Link>
-        )}
-      </div>
     </div>
   )
 }
