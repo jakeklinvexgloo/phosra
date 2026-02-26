@@ -78,8 +78,8 @@ export async function loadPlatformResearch(
 
   const capabilities = getCapabilitySummary(platformId)
 
-  // Load chatbot-specific data
-  const chatbotData = await loadChatbotData(dir)
+  // Load chatbot-specific data — check main dir first, then chatbot-specific dirs
+  const chatbotData = await loadChatbotData(platformId, dir)
 
   return {
     platformId,
@@ -99,9 +99,23 @@ export async function loadPlatformResearch(
 
 // ── Chatbot Data Loader ───────────────────────────────────────────
 
-async function loadChatbotData(dir: string): Promise<ChatbotSectionData | null> {
-  const safetyResults = await readJsonFile<any>(path.join(dir, "safety_test_results.json"))
-  const chatbotSectionData = await readJsonFile<any>(path.join(dir, "chatbot_section_data.json"))
+async function loadChatbotData(platformId: string, primaryDir: string): Promise<ChatbotSectionData | null> {
+  let safetyResults = await readJsonFile<any>(path.join(primaryDir, "safety_test_results.json"))
+  let chatbotSectionData = await readJsonFile<any>(path.join(primaryDir, "chatbot_section_data.json"))
+
+  // Fallback: check chatbot-specific research directories
+  if (!safetyResults || !chatbotSectionData) {
+    const chatbotDirs = [
+      path.join(RESEARCH_PATHS.ai_chatbot_tier1, platformId),
+      path.join(RESEARCH_PATHS.ai_chatbot_tier2, platformId),
+    ]
+    for (const chatbotDir of chatbotDirs) {
+      if (!fs.existsSync(chatbotDir)) continue
+      if (!safetyResults) safetyResults = await readJsonFile<any>(path.join(chatbotDir, "safety_test_results.json"))
+      if (!chatbotSectionData) chatbotSectionData = await readJsonFile<any>(path.join(chatbotDir, "chatbot_section_data.json"))
+      if (safetyResults && chatbotSectionData) break
+    }
+  }
 
   if (!safetyResults && !chatbotSectionData) return null
 

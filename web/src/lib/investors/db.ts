@@ -15,7 +15,7 @@ export function getPool(): Pool {
   return pool
 }
 
-export async function query<T extends Record<string, unknown> = Record<string, unknown>>(
+export async function query<T = Record<string, unknown>>(
   text: string,
   params?: unknown[],
 ): Promise<T[]> {
@@ -23,7 +23,7 @@ export async function query<T extends Record<string, unknown> = Record<string, u
   return rows as T[]
 }
 
-export async function queryOne<T extends Record<string, unknown> = Record<string, unknown>>(
+export async function queryOne<T = Record<string, unknown>>(
   text: string,
   params?: unknown[],
 ): Promise<T | null> {
