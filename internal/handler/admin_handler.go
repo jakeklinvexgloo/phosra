@@ -702,7 +702,17 @@ func (h *AdminHandler) SearchGmail(w http.ResponseWriter, r *http.Request) {
 		maxResults = n
 	}
 
-	msgs, err := h.google.SearchMessages(r.Context(), query, maxResults)
+	// Support optional account_key to search a specific outreach account
+	client := h.google
+	if accountKey := r.URL.Query().Get("account_key"); accountKey != "" && h.googleManager != nil {
+		client = h.googleManager.GetClient(accountKey)
+		if client == nil {
+			httputil.Error(w, http.StatusBadRequest, "Google account not configured for key: "+accountKey)
+			return
+		}
+	}
+
+	msgs, err := client.SearchMessages(r.Context(), query, maxResults)
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "Google account disconnected — please reconnect")

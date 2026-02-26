@@ -225,9 +225,10 @@ class ApiClient {
   async sendGmailMessage(data: { to: string; subject: string; body: string; reply_to_message_id?: string; contact_id?: string }, token?: string) {
     return this.fetch("/admin/gmail/send", { method: "POST", body: JSON.stringify(data) }, token)
   }
-  async searchGmail(query: string, maxResults?: number, token?: string) {
+  async searchGmail(query: string, maxResults?: number, token?: string, accountKey?: string) {
     const params = new URLSearchParams({ q: query })
     if (maxResults) params.set("maxResults", String(maxResults))
+    if (accountKey) params.set("account_key", accountKey)
     return this.fetch(`/admin/gmail/search?${params.toString()}`, {}, token)
   }
 

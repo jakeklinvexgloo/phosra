@@ -5,8 +5,14 @@ import { Loader2, Sparkles } from "lucide-react"
 import { api } from "@/lib/api"
 import { useApi } from "@/lib/useApi"
 import type { OutreachPendingEmail } from "@/lib/admin/types"
+import { PersonaBadge, getPersonaBorderClass } from "./PersonaBadge"
 
 const STEP_LABELS = ["Initial", "Follow-up 1", "Follow-up 2", "Final"]
+
+function getEmailPersona(email: OutreachPendingEmail): "jake" | "alex" {
+  if (email.google_account_key === "jake") return "jake"
+  return "alex"
+}
 
 interface ReviewQueueProps {
   emails: OutreachPendingEmail[]
@@ -17,9 +23,10 @@ interface ReviewQueueProps {
   onDraftNext: () => void
   onQueue: (id: string) => void
   onSend: (id: string) => void
+  personaFilter?: "all" | "jake" | "alex"
 }
 
-export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh, onDraftNext, onQueue, onSend }: ReviewQueueProps) {
+export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh, onDraftNext, onQueue, onSend, personaFilter }: ReviewQueueProps) {
   const { getToken } = useApi()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editSubject, setEditSubject] = useState("")
@@ -81,17 +88,29 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
     finally { setActionLoading(null) }
   }, [getToken, editSubject, editBody, onRefresh])
 
-  const pendingReview = emails.filter((e) => e.status === "pending_review")
-  const queued = emails.filter((e) => e.status === "approved")
+  const filteredEmails = personaFilter && personaFilter !== "all"
+    ? emails.filter((e) => getEmailPersona(e) === personaFilter)
+    : emails
+
+  const pendingReview = filteredEmails.filter((e) => e.status === "pending_review").sort((a, b) => {
+    const aP = getEmailPersona(a) === "jake" ? 0 : 1
+    const bP = getEmailPersona(b) === "jake" ? 0 : 1
+    return aP - bP
+  })
+  const queued = filteredEmails.filter((e) => e.status === "approved").sort((a, b) => {
+    const aP = getEmailPersona(a) === "jake" ? 0 : 1
+    const bP = getEmailPersona(b) === "jake" ? 0 : 1
+    return aP - bP
+  })
 
   return (
     <div>
       {/* Section header */}
       <div className="flex items-center gap-2 mb-3">
         <h2 className="font-display text-lg font-semibold">Review</h2>
-        {emails.length > 0 && (
+        {filteredEmails.length > 0 && (
           <span className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 text-xs font-semibold px-2 py-0.5 rounded-full tabular-nums">
-            {emails.length}
+            {filteredEmails.length}
           </span>
         )}
       </div>
@@ -104,7 +123,7 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
       )}
 
       {/* Empty state — drafting in progress */}
-      {!loading && emails.length === 0 && drafting && (
+      {!loading && filteredEmails.length === 0 && drafting && (
         <div className="plaid-card text-center py-12">
           <div className="inline-flex items-center gap-2 text-muted-foreground">
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -114,7 +133,7 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
       )}
 
       {/* Empty state — ready to draft */}
-      {!loading && emails.length === 0 && !drafting && (
+      {!loading && filteredEmails.length === 0 && !drafting && (
         <div className="plaid-card text-center py-12 space-y-3">
           <p className="text-sm text-muted-foreground">No emails to review.</p>
           {hasContacts && (
@@ -131,25 +150,28 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
       )}
 
       {/* Email cards */}
-      {!loading && emails.length > 0 && (
+      {!loading && filteredEmails.length > 0 && (
         <div className="space-y-3">
           {/* Pending review emails */}
           {pendingReview.map((email) => (
-            <div key={email.id} className="plaid-card p-4 space-y-3">
+            <div key={email.id} className={`plaid-card p-4 space-y-3 border-l-4 ${getPersonaBorderClass(getEmailPersona(email))}`}>
               {/* Header: contact info + step badge */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
+                  <PersonaBadge persona={getEmailPersona(email)} />
                   <span className="text-sm font-medium truncate">{email.contact_name}</span>
                   {email.contact_org && (
                     <span className="text-sm text-muted-foreground truncate">&middot; {email.contact_org}</span>
                   )}
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                  {email.google_account_key && email.google_account_key !== "outreach" && (
-                    <span className="text-xs text-muted-foreground">
-                      via {email.google_account_key}
-                    </span>
-                  )}
+                  {(() => {
+                    const p = getEmailPersona(email)
+                    const label = p === "jake" ? "Jake" : "Alex"
+                    return (
+                      <span className="text-xs text-muted-foreground">via {label}</span>
+                    )
+                  })()}
                   <span className="text-xs bg-muted px-2 py-0.5 rounded font-medium">
                     {STEP_LABELS[email.step_number] ?? `Step ${email.step_number + 1}`}
                   </span>
@@ -234,16 +256,24 @@ export function ReviewQueue({ emails, loading, drafting, hasContacts, onRefresh,
 
           {/* Queued emails */}
           {queued.map((email) => (
-            <div key={email.id} className="plaid-card p-4 space-y-3 border-l-4 border-l-blue-400">
+            <div key={email.id} className={`plaid-card p-4 space-y-3 border-l-4 ${getPersonaBorderClass(getEmailPersona(email))}`}>
               {/* Header: contact info + step badge + queued badge */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 min-w-0">
+                  <PersonaBadge persona={getEmailPersona(email)} />
                   <span className="text-sm font-medium truncate">{email.contact_name}</span>
                   {email.contact_org && (
                     <span className="text-sm text-muted-foreground truncate">&middot; {email.contact_org}</span>
                   )}
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                  {(() => {
+                    const p = getEmailPersona(email)
+                    const label = p === "jake" ? "Jake" : "Alex"
+                    return (
+                      <span className="text-xs text-muted-foreground">via {label}</span>
+                    )
+                  })()}
                   <span className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-0.5 rounded font-medium">
                     Queued
                   </span>

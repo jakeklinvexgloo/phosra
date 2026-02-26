@@ -14,9 +14,12 @@ import type {
   GmailMessage,
   GmailListResponse,
   GoogleAccountInfo,
+  PersonaAccountMapping,
 } from "@/lib/admin/types"
 import { OutreachHeader } from "./_components/OutreachHeader"
 import { SinceLastVisit } from "./_components/SinceLastVisit"
+import { DisconnectionBanner } from "./_components/DisconnectionBanner"
+import { PersonaFilterBar } from "./_components/PersonaFilterBar"
 import { ReviewQueue } from "./_components/ReviewQueue"
 import { AlexActivityFeed } from "./_components/AlexActivityFeed"
 import { ActiveConversations } from "./_components/ActiveConversations"
@@ -38,6 +41,10 @@ export default function OutreachPage() {
   const [config, setConfig] = useState<OutreachConfig | null>(null)
   const [stats, setStats] = useState<AutopilotStats | null>(null)
   const [googleAccounts, setGoogleAccounts] = useState<GoogleAccountInfo[]>([])
+  const [personaAccounts, setPersonaAccounts] = useState<PersonaAccountMapping[]>([])
+
+  // ── Persona Filter ──────────────────────────────────────────
+  const [personaFilter, setPersonaFilter] = useState<"all" | "jake" | "alex">("all")
 
   // ── Activity Feed ───────────────────────────────────────────
   const [recentActivities, setRecentActivities] = useState<OutreachActivityWithContact[]>([])
@@ -90,6 +97,7 @@ export default function OutreachPage() {
         ),
         api.listSequences(token),
         api.listRecentActivities(50, token),
+        api.listPersonaAccounts(token),
       ]
       // Only fetch summary if we have a previous visit
       if (storedLastVisit) {
@@ -97,7 +105,7 @@ export default function OutreachPage() {
       }
 
       const results = await Promise.allSettled(promises)
-      const [contactsRes, configRes, statsRes, gmailRes, pendingRes, seqRes, activitiesRes, summaryRes] = results
+      const [contactsRes, configRes, statsRes, gmailRes, pendingRes, seqRes, activitiesRes, personaRes, summaryRes] = results
 
       if (contactsRes.status === "fulfilled") setContacts(contactsRes.value as OutreachContact[])
       if (configRes.status === "fulfilled") setConfig(configRes.value as OutreachConfig)
@@ -108,6 +116,7 @@ export default function OutreachPage() {
       if (pendingRes.status === "fulfilled") setPendingEmails(pendingRes.value as OutreachPendingEmail[])
       if (seqRes.status === "fulfilled") setSequences(seqRes.value as OutreachSequence[])
       if (activitiesRes.status === "fulfilled") setRecentActivities(activitiesRes.value as OutreachActivityWithContact[])
+      if (personaRes && personaRes.status === "fulfilled") setPersonaAccounts(personaRes.value as PersonaAccountMapping[])
       if (summaryRes && summaryRes.status === "fulfilled") setActivitySummary(summaryRes.value as OutreachActivitySummary)
 
       // Update last visit timestamp on server
@@ -147,6 +156,22 @@ export default function OutreachPage() {
         .sort((a, b) => a.priority_tier - b.priority_tier),
     [contacts]
   )
+
+  // ── Computed: persona counts for filter bar ─────────────────
+  const personaCounts = useMemo(() => {
+    const jake = pendingEmails.filter((e) => e.google_account_key === "jake").length
+    const alex = pendingEmails.length - jake
+    return { all: pendingEmails.length, jake, alex }
+  }, [pendingEmails])
+
+  // ── Reconnect handler for DisconnectionBanner ──────────────
+  const handleReconnect = useCallback(async (accountKey: string) => {
+    try {
+      const token = (await getToken()) ?? undefined
+      const result = await api.getGoogleAccountAuthURL(accountKey, token)
+      window.location.href = result.url
+    } catch { /* ignore */ }
+  }, [getToken])
 
   // ── Autopilot toggle ──────────────────────────────────────────
   const handleToggle = useCallback(async () => {
@@ -236,27 +261,29 @@ export default function OutreachPage() {
         setGmailLoading(true)
         try {
           const token = (await getToken()) ?? undefined
-          const [messagesResult, draftsResult] = await Promise.allSettled([
-            api.searchGmail(`to:${email} OR from:${email}`, 10, token),
-            api.searchGmail(`is:draft to:${email}`, 10, token),
+          // Search across ALL connected accounts
+          const connectedKeys = googleAccounts.filter((a) => a.connected).map((a) => a.account_key)
+          const searchPromises = connectedKeys.flatMap((accountKey) => [
+            api.searchGmail(`to:${email} OR from:${email}`, 10, token, accountKey),
+            api.searchGmail(`is:draft to:${email}`, 10, token, accountKey),
           ])
-          const messages: GmailMessage[] =
-            messagesResult.status === "fulfilled"
-              ? (messagesResult.value as GmailListResponse).messages || []
-              : []
-          const drafts: GmailMessage[] =
-            draftsResult.status === "fulfilled"
-              ? (draftsResult.value as GmailListResponse).messages || []
-              : []
-          // Merge and deduplicate
+          const results = await Promise.allSettled(searchPromises)
+          // Merge and deduplicate all results
           const seen = new Set<string>()
           const merged: GmailMessage[] = []
-          for (const msg of [...drafts, ...messages]) {
-            if (!seen.has(msg.id)) {
-              seen.add(msg.id)
-              merged.push(msg)
+          for (const result of results) {
+            if (result.status === "fulfilled") {
+              const msgs = (result.value as GmailListResponse).messages || []
+              for (const msg of msgs) {
+                if (!seen.has(msg.id)) {
+                  seen.add(msg.id)
+                  merged.push(msg)
+                }
+              }
             }
           }
+          // Sort by date descending
+          merged.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
           setGmailThreads(merged)
         } catch {
           setGmailThreads([])
@@ -271,6 +298,12 @@ export default function OutreachPage() {
   // ── Render ────────────────────────────────────────────────────
   return (
     <div className="space-y-6">
+      <DisconnectionBanner
+        googleAccounts={googleAccounts}
+        personaAccounts={personaAccounts}
+        onReconnect={handleReconnect}
+      />
+
       <SinceLastVisit summary={activitySummary} lastVisit={lastVisit} />
 
       <OutreachHeader
@@ -282,6 +315,12 @@ export default function OutreachPage() {
         onOpenSettings={() => setShowSettings(true)}
       />
 
+      <PersonaFilterBar
+        selected={personaFilter}
+        counts={personaCounts}
+        onSelect={setPersonaFilter}
+      />
+
       <ReviewQueue
         emails={pendingEmails}
         loading={loading}
@@ -291,6 +330,7 @@ export default function OutreachPage() {
         onDraftNext={handleDraftNext}
         onQueue={handleQueue}
         onSend={handleSend}
+        personaFilter={personaFilter}
       />
 
       <AlexActivityFeed
