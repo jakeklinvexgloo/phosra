@@ -335,7 +335,7 @@ export default function ComplianceCheckerPage() {
               </div>
               <div className="space-y-2">
                 {JURISDICTION_OPTIONS.map((j) => (
-                  <label key={j.id} className="flex items-center gap-2.5 cursor-pointer group">
+                  <label key={j.id} className="flex items-center gap-2.5 cursor-pointer group" onClick={() => toggleJurisdiction(j.id)}>
                     <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
                       selectedJurisdictions.has(j.id)
                         ? "bg-brand-green border-brand-green"
