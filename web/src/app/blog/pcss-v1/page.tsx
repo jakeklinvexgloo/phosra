@@ -161,7 +161,7 @@ export default function PCSSBlogPost() {
             <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">LawEntry</code> type:
           </p>
 
-          <pre className="bg-[#0a0f18] border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground/80 mb-6">
+          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
 {`{
   "id": "kosa",
   "shortName": "KOSA",
@@ -215,7 +215,7 @@ export default function PCSSBlogPost() {
             A taxonomy of rule categories is useful for reading comprehension, but it doesn&apos;t enforce anything by itself. To actually apply rules to a platform, we need an adapter layer. In Phosra&apos;s architecture, every platform implements a single Go interface:
           </p>
 
-          <pre className="bg-[#0a0f18] border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground/80 mb-6">
+          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
 {`// Adapter is the core interface all platforms implement.
 type Adapter interface {
     Info() PlatformInfo
@@ -240,7 +240,7 @@ type Adapter interface {
             Here is a concrete example. The NextDNS adapter declares four capabilities:
           </p>
 
-          <pre className="bg-[#0a0f18] border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground/80 mb-6">
+          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
 {`func (a *Adapter) Info() provider.PlatformInfo {
     return provider.PlatformInfo{
         ID:          "nextdns",
@@ -278,7 +278,7 @@ func (a *Adapter) Capabilities() []provider.Capability {
             The hardest problem in the system is what we call &ldquo;split-brain enforcement.&rdquo; When a parent sets a policy for their child, the rules need to be enforced across every connected platform. But not every platform can handle every rule. The CompositeEngine solves this by splitting each rule set into two buckets: rules the native platform adapter handles, and rules that Phosra&apos;s services handle.
           </p>
 
-          <pre className="bg-[#0a0f18] border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground/80 mb-6">
+          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
 {`// RouteRules splits rules between native provider and Phosra services.
 // For each enabled rule, it checks if the adapter's capabilities cover it.
 // If yes -> NativeRules. If no -> routes to the appropriate Phosra service.
@@ -489,7 +489,7 @@ func (e *CompositeEngine) RouteRules(
             PCSS defines a standard format for enforcement requests and responses. An enforcement request describes a set of rules to apply for a child, expressed using the 45-category taxonomy. Here is the request format:
           </p>
 
-          <pre className="bg-[#0a0f18] border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground/80 mb-6">
+          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
 {`// PCSS Enforcement Request
 {
   "rules": [
@@ -530,7 +530,7 @@ func (e *CompositeEngine) RouteRules(
             The response reports exactly what happened &mdash; which rules were applied, which were skipped (because the platform doesn&apos;t support them), and which failed:
           </p>
 
-          <pre className="bg-[#0a0f18] border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground/80 mb-6">
+          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
 {`// PCSS Enforcement Response
 {
   "rules_applied": 3,
