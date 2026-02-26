@@ -99,7 +99,7 @@ export default function NewsDetailPage() {
         <AnimatedSection className="mt-16 pt-10 border-t border-border">
           <h3 className="text-sm font-semibold text-foreground mb-3">About Phosra</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Phosra is an open child safety standard and API. Kids use 320+ apps and platforms {"\u2014"} each with different, fragmented parental controls. Phosra defines a universal spec so platforms can offer interoperable controls and parents can set rules once. We track 78 child safety laws across 25+ jurisdictions. Learn more at{" "}
+            Phosra is an open child safety spec and API. Kids use 320+ apps and platforms {"\u2014"} each with different, fragmented parental controls. Phosra defines a universal spec so platforms can offer interoperable controls and parents can set rules once. We track 78 child safety laws across 25+ jurisdictions. Learn more at{" "}
             <Link href="/" className="text-brand-green hover:underline">phosra.com</Link>.
           </p>
           <p className="text-sm text-muted-foreground mt-3">

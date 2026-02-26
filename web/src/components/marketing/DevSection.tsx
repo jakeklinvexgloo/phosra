@@ -409,7 +409,7 @@ export function DevSection() {
             <h2 className="font-display text-3xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-white leading-[1.15] mb-6">
               {PLATFORM_STATS.marketingTotal} platforms.{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
-                One open standard.
+                One open spec.
               </span>
             </h2>
 

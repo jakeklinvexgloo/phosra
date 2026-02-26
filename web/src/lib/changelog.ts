@@ -84,7 +84,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     version: "1.0.0",
     title: "Phosra v1.0 Launch",
     category: "feature",
-    description: "Initial public release of Phosra (formerly GuardianGate). Open child safety standard and API covering 320+ platforms in the kids' ecosystem, 45 policy categories, and 5 age-rating systems.",
+    description: "Initial public release of Phosra (formerly GuardianGate). Open child safety spec and API covering 320+ platforms in the kids' ecosystem, 45 policy categories, and 5 age-rating systems.",
     highlights: [
       "REST API with full CRUD for families, children, policies",
       "45 policy categories across content, time, web, social, and purchase",
@@ -99,7 +99,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     version: "0.9.0",
     title: "Breaking: Rebrand from GuardianGate to Phosra",
     category: "breaking",
-    description: "Full rebrand from GuardianGate to Phosra. GCSS renamed to PCSS (Phosra Child Safety Standard). All API endpoints remain the same.",
+    description: "Full rebrand from GuardianGate to Phosra. GCSS renamed to PCSS (Phosra Child Safety Spec). All API endpoints remain the same.",
     highlights: [
       "New Phosra branding, logos, and color palette",
       "GCSS \u2192 PCSS terminology throughout",

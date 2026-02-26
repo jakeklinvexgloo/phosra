@@ -621,7 +621,7 @@ function FinancialModelContent() {
                 <div className="space-y-3 text-white/50 leading-relaxed">
                   <p><span className="text-white/80 font-medium">80% gross margin</span> — Software-only delivery with no interchange or physical costs; comparable to Plaid (~80%) and superior to Stripe (~45%)</p>
                   <p><span className="text-white/80 font-medium">Eng-heavy early spend</span> — 45% of pre-seed funds to engineering; shifts to 35% by Year 3 as GTM scales</p>
-                  <p><span className="text-white/80 font-medium">Developer-led GTM</span> — Low initial CAC via compliance urgency, open-source PCSS standard, and developer community (similar to Plaid/Stripe early motion)</p>
+                  <p><span className="text-white/80 font-medium">Developer-led GTM</span> — Low initial CAC via compliance urgency, open-source PCSS spec, and developer community (similar to Plaid/Stripe early motion)</p>
                   <p><span className="text-white/80 font-medium">Path to profitability</span> — Moderate scenario reaches cash-flow positive in Year 3; conservative extends to early Year 4</p>
                 </div>
               </div>

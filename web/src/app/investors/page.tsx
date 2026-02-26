@@ -39,7 +39,7 @@ const MARKET_CARDS = [
     icon: Layers,
     title: "The Infrastructure Gap",
     description:
-      "No interoperability standard exists for parental controls. Parents configure each platform separately. Developers rebuild enforcement logic from scratch. Phosra is the missing infrastructure layer — the standard the ecosystem needs.",
+      "No interoperability spec exists for parental controls. Parents configure each platform separately. Developers rebuild enforcement logic from scratch. Phosra is the missing infrastructure layer — the spec the ecosystem needs.",
   },
   {
     icon: Globe,
@@ -120,7 +120,7 @@ export default function InvestorsPage() {
               Building the infrastructure for a safer internet
             </h1>
             <p className="text-base sm:text-lg text-white/50 mt-6 max-w-2xl leading-relaxed">
-              The universal standard for child safety enforcement across every digital platform.
+              The universal spec for child safety enforcement across every digital platform.
             </p>
           </AnimatedSection>
         </div>
@@ -154,14 +154,14 @@ export default function InvestorsPage() {
             <blockquote className="border-l-3 border-brand-green pl-6 py-3 my-10">
               <p className="text-xl sm:text-2xl font-display text-foreground italic leading-snug">
                 Just as open banking required banks to let consumers manage their financial data from one place,
-                child safety requires platforms to support standardized parental controls.
+                child safety requires platforms to support interoperable parental controls.
               </p>
             </blockquote>
 
             <p>
               The open banking movement proved a powerful principle: consumers shouldn&apos;t be locked into
               each institution&apos;s proprietary interface to manage their own data. Banks were required to
-              expose standardized APIs. Consumers got control. Innovation flourished. The same principle
+              expose open APIs. Consumers got control. Innovation flourished. The same principle
               applies to how parents protect their children online.
             </p>
 
@@ -169,7 +169,7 @@ export default function InvestorsPage() {
               Phosra is the infrastructure that makes this possible. We&apos;re not another parental control
               app — we&apos;re the layer underneath. Parents set rules once. Parental control apps
               plug in to extend their reach. Platforms connect to offer compliant, interoperable controls.
-              Our open standard covers 320+ platforms in the kids&apos; ecosystem — any platform that adopts the spec gets instant interoperability.
+              Our open spec covers 320+ platforms in the kids&apos; ecosystem — any platform that adopts it gets instant interoperability.
             </p>
 
             <p>
@@ -186,14 +186,14 @@ export default function InvestorsPage() {
               one to specific enforcement actions. Our rule engine maps to 31 community standards — from
               screen-free classrooms to delayed smartphone access — representing a growing movement of
               families and schools. We&apos;ve published PCSS v1.0, the open specification for how parental
-              controls should work across platforms. The technical standard exists. The infrastructure is live.
+              controls should work across platforms. The technical spec exists. The infrastructure is live.
             </p>
 
             <p>
               What we&apos;re building next is simple: we&apos;re making Phosra the default way parental
               controls work. Not by replacing the apps parents use, but by connecting all of them. Not
               by lobbying for specific laws, but by making every law enforceable. Not by building another
-              walled garden, but by building the open standard that makes walled gardens unnecessary.
+              walled garden, but by building the open spec that makes walled gardens unnecessary.
             </p>
 
             <p className="text-foreground font-medium">

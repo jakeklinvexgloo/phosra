@@ -40,10 +40,10 @@ export function SpecificationView() {
         {/* Preamble */}
         <section id="preamble">
           <div className="bg-accent/5 border border-accent/20 rounded p-4 sm:p-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4">Phosra Child Safety Standard (PCSS) v1.0</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-4">Phosra Child Safety Spec (PCSS) v1.0</h2>
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-              This document defines the <strong className="text-foreground">Phosra Child Safety Standard (PCSS)</strong>, an open technical framework
-              for technology platforms that serve minors. Platforms <Keyword>SHOULD</Keyword> implement this standard
+              This document defines the <strong className="text-foreground">Phosra Child Safety Spec (PCSS)</strong>, an open technical framework
+              for technology platforms that serve minors. Platforms <Keyword>SHOULD</Keyword> implement this spec
               to align with emerging child safety regulations and industry best practices.
             </p>
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
@@ -53,8 +53,8 @@ export function SpecificationView() {
               enforcement requests from the Phosra Enforcement Engine.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              This standard is published by Phosra and designed to align with current and emerging child safety regulations.
-              Platforms adopting this standard position themselves ahead of regulatory requirements.
+              This spec is published by Phosra and designed to align with current and emerging child safety regulations.
+              Platforms adopting this spec position themselves ahead of regulatory requirements.
             </p>
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="text-center">
@@ -897,7 +897,7 @@ signature = HMAC-SHA256(webhook_secret, request_body)
 
         {/* Page footer */}
         <div className="border-t border-border/50 mt-12 pt-8 pb-4 text-center text-xs text-muted-foreground">
-          Phosra Child Safety Standard (PCSS) v1.0
+          Phosra Child Safety Spec (PCSS) v1.0
         </div>
       </div>
 

@@ -1263,7 +1263,7 @@ const TS_LEADERS: WarmIntroTarget[] = [
         "Position as 'compliance infrastructure that reduces your team's burden' — she oversees Meta's COPPA compliance directly",
         "Offer advisory role: her State AG background + Meta operational view = invaluable product feedback",
       ],
-      openingAngle: "Meta's Teen Accounts rollout shows her team is building bespoke compliance tooling internally — Phosra can be the cross-platform standard that makes her job easier, not harder.",
+      openingAngle: "Meta's Teen Accounts rollout shows her team is building bespoke compliance tooling internally — Phosra can be the cross-platform spec that makes her job easier, not harder.",
     },
     status: "identified",
     notes: "Perfect domain fit. Met with Greece PM on child safety. Massive distribution potential if she champions Phosra.",
@@ -1296,7 +1296,7 @@ const TS_LEADERS: WarmIntroTarget[] = [
         "Highlight that Phosra automates what his team built manually at TikTok — screen time rules, parental controls, age gating — across 67+ laws",
         "Offer formal advisory seat with equity: his Dublin/EU perspective is critical for DSA and GDPR-K compliance",
       ],
-      openingAngle: "He built TikTok's teen safety features manually across jurisdictions — Phosra turns that operational pain into an API. As a strategic advisor with time, he is uniquely positioned to shape the compliance standard he wished existed.",
+      openingAngle: "He built TikTok's teen safety features manually across jurisdictions — Phosra turns that operational pain into an API. As a strategic advisor with time, he is uniquely positioned to shape the compliance spec he wished existed.",
     },
     status: "identified",
     notes: "Available, experienced, strategic. Deep understanding of cross-jurisdiction compliance challenges.",
@@ -2423,7 +2423,7 @@ const HNW_ANGELS: WarmIntroTarget[] = [
         "Emphasize Jake's 3 exits and Mastercard infrastructure background",
       ],
       openingAngle:
-        "Every platform serving users under 18 needs a compliance API. 67 child safety laws, 45 rule categories, zero unified standard — until now.",
+        "Every platform serving users under 18 needs a compliance API. 67 child safety laws, 45 rule categories, zero unified spec — until now.",
     },
     status: "identified",
     notes:
@@ -5137,10 +5137,10 @@ const POLICY_ANGELS: WarmIntroTarget[] = [
     tier: 1,
     approachStrategy: {
       recommended:
-        "Frame Phosra as 'open data standards for child safety compliance' — maps directly to his life's work",
+        "Frame Phosra as 'open data spec for child safety compliance' — maps directly to his life's work",
       steps: [
         "Connect through DGA-Albright Stonebridge Group advisory network",
-        "Frame Phosra's 45 rule categories mapped across 67+ laws as an interoperability standard — mirrors his healthcare data work at CareJourney/Arcadia",
+        "Frame Phosra's 45 rule categories mapped across 67+ laws as an interoperability spec — mirrors his healthcare data work at CareJourney/Arcadia",
         "Emphasize that COPPA 2.0 creates the same kind of regulatory mandate that drove healthcare data standards adoption",
         "Reference his open government data initiatives and how Phosra extends that mission to child safety",
       ],

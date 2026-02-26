@@ -64,7 +64,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Phosra's API was designed around the full landscape of child safety regulation, and the amended COPPA Rule's requirements map directly to existing enforcement capabilities. The parental_consent_gate rule category handles verifiable parental consent workflows, including the new requirement for separate consent on third-party disclosures. The privacy_data_sharing and commercial_data_ban rules enforce granular controls over how children's data flows to third parties, ensuring operators maintain compliant data-sharing practices. The data_deletion_request rule powers the eraser button functionality that the amended rule contemplates for data retention compliance. The targeted_ad_block rule disables advertising mechanisms that rely on children's personal information. Beyond individual rules, Phosra's compliance attestation system generates the audit trails that regulators expect — documented proof that consent was obtained, data policies were enforced, and third-party providers were vetted. All of this works across every platform that adopts the Phosra Child Safety Standard, which means organizations don't need to implement compliance logic separately for every service they operate.",
+        text: "Phosra's API was designed around the full landscape of child safety regulation, and the amended COPPA Rule's requirements map directly to existing enforcement capabilities. The parental_consent_gate rule category handles verifiable parental consent workflows, including the new requirement for separate consent on third-party disclosures. The privacy_data_sharing and commercial_data_ban rules enforce granular controls over how children's data flows to third parties, ensuring operators maintain compliant data-sharing practices. The data_deletion_request rule powers the eraser button functionality that the amended rule contemplates for data retention compliance. The targeted_ad_block rule disables advertising mechanisms that rely on children's personal information. Beyond individual rules, Phosra's compliance attestation system generates the audit trails that regulators expect — documented proof that consent was obtained, data policies were enforced, and third-party providers were vetted. All of this works across every platform that adopts the Phosra Child Safety Spec, which means organizations don't need to implement compliance logic separately for every service they operate.",
       },
       {
         type: "heading",
@@ -90,7 +90,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Today we're launching Phosra to fix this. Phosra is an open standard and API that covers 320+ platforms in the kids' ecosystem. When platforms adopt the spec, parents set rules once and enforcement works everywhere. Parental control providers can plug into Phosra to extend their reach across the entire ecosystem.",
+        text: "Today we're launching Phosra to fix this. Phosra is an open specification and API that covers 320+ platforms in the kids' ecosystem. When platforms adopt the spec, parents set rules once and enforcement works everywhere. Parental control providers can plug into Phosra to extend their reach across the entire ecosystem.",
       },
       {
         type: "quote",
@@ -99,7 +99,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Phosra ships with the Phosra Child Safety Standard (PCSS), an open specification that defines how parental control rules are structured, transmitted, and enforced across platforms. PCSS v1.0 covers 45 rule categories — from screen time limits and content filtering to age-gated social media access and algorithmic transparency controls.",
+        text: "Phosra ships with the Phosra Child Safety Spec (PCSS), an open specification that defines how parental control rules are structured, transmitted, and enforced across platforms. PCSS v1.0 covers 45 rule categories — from screen time limits and content filtering to age-gated social media access and algorithmic transparency controls.",
       },
       {
         type: "paragraph",
@@ -158,15 +158,15 @@ export const NEWSROOM: NewsEntry[] = [
   },
   {
     slug: "pcss-v1-specification",
-    title: "PCSS v1.0: An Open Standard for Parental Controls",
+    title: "PCSS v1.0: An Open Specification for Parental Controls",
     date: "2025-01-25",
     category: "product",
     excerpt:
-      "The Phosra Child Safety Standard v1.0 defines 45 rule categories for structuring, transmitting, and enforcing parental controls across platforms.",
+      "The Phosra Child Safety Spec v1.0 defines 45 rule categories for structuring, transmitting, and enforcing parental controls across platforms.",
     content: [
       {
         type: "paragraph",
-        text: "Today we're publishing the Phosra Child Safety Standard (PCSS) v1.0 — an open specification for how parental control rules should be structured, transmitted, and enforced across digital platforms.",
+        text: "Today we're publishing the Phosra Child Safety Spec (PCSS) v1.0 — an open specification for how parental control rules should be structured, transmitted, and enforced across digital platforms.",
       },
       {
         type: "paragraph",
@@ -174,7 +174,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "The standard draws from our analysis of 67 child safety laws worldwide, mapping each regulation's requirements to specific, enforceable rule types. Platform developers can implement PCSS support through Phosra's API, enabling their parental control features to interoperate with the broader ecosystem.",
+        text: "The spec draws from our analysis of 67 child safety laws worldwide, mapping each regulation's requirements to specific, enforceable rule types. Platform developers can implement PCSS support through Phosra's API, enabling their parental control features to interoperate with the broader ecosystem.",
       },
       {
         type: "paragraph",
@@ -188,7 +188,7 @@ export const NEWSROOM: NewsEntry[] = [
     date: "2025-02-10",
     category: "milestone",
     excerpt:
-      "Phosra's platform registry now maps 320+ services kids use daily — from streaming and social media to gaming and education — defining the standard each can adopt for interoperable parental controls.",
+      "Phosra's platform registry now maps 320+ services kids use daily — from streaming and social media to gaming and education — defining the spec each can adopt for interoperable parental controls.",
     content: [
       {
         type: "paragraph",
@@ -196,7 +196,7 @@ export const NEWSROOM: NewsEntry[] = [
       },
       {
         type: "paragraph",
-        text: "Phosra's registry now maps over 320 platforms spanning streaming, social media, gaming, education, communication, and web browsing — including YouTube, Netflix, TikTok, Instagram, Roblox, Minecraft, Discord, and Snapchat. Each platform that adopts the Phosra Child Safety Standard gets instant interoperability with parental control providers and compliance tooling.",
+        text: "Phosra's registry now maps over 320 platforms spanning streaming, social media, gaming, education, communication, and web browsing — including YouTube, Netflix, TikTok, Instagram, Roblox, Minecraft, Discord, and Snapchat. Each platform that adopts the Phosra Child Safety Spec gets instant interoperability with parental control providers and compliance tooling.",
       },
       {
         type: "paragraph",

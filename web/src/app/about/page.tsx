@@ -70,7 +70,7 @@ const FOUNDERS = {
   role: "CEO & Founders",
   image: "/logos/founders.jpg",
   linkedin: "https://www.linkedin.com/in/jakeklinvex/",
-  bio: "Founded three companies, all acquired — including Personation (acquired by eMoney Advisor) which was then acquired by Fidelity, and LoyalTree (acquired by SessionM) which was then acquired by Mastercard. Jake spent five years at Mastercard working on technology partnerships and blockchain/digital assets strategy, then co-founded withSoul, an AI platform acquired by Gloo which IPO'd at the end of 2025 (GLOO). At Phosra, they are applying the infrastructure playbook from fintech to child safety — building the open standard that connects every parental control to every platform. Jake and Susannah are parents of five children — they built Phosra because they needed it themselves.",
+  bio: "Founded three companies, all acquired — including Personation (acquired by eMoney Advisor) which was then acquired by Fidelity, and LoyalTree (acquired by SessionM) which was then acquired by Mastercard. Jake spent five years at Mastercard working on technology partnerships and blockchain/digital assets strategy, then co-founded withSoul, an AI platform acquired by Gloo which IPO'd at the end of 2025 (GLOO). At Phosra, they are applying the infrastructure playbook from fintech to child safety — building the open spec that connects every parental control to every platform. Jake and Susannah are parents of five children — they built Phosra because they needed it themselves.",
   highlights: [
     { metric: "3", label: "Companies Founded & Acquired" },
     { metric: "5 yrs", label: "At Mastercard (Fintech Infrastructure)" },
@@ -169,7 +169,7 @@ export default function AboutPage() {
                 Define once, protect everywhere
               </h2>
               <p className="text-muted-foreground leading-relaxed text-base sm:text-lg">
-                Phosra is an open standard and infrastructure API for child safety. Parent-facing apps integrate once with the Phosra API to extend enforcement everywhere. Phosra translates and enforces policies across every connected platform — from streaming parental locks to DNS-level web filters to mobile device restrictions. One set of rules. Every platform. Always in sync.
+                Phosra is an open specification and infrastructure API for child safety. Parent-facing apps integrate once with the Phosra API to extend enforcement everywhere. Phosra translates and enforces policies across every connected platform — from streaming parental locks to DNS-level web filters to mobile device restrictions. One set of rules. Every platform. Always in sync.
               </p>
             </div>
           </AnimatedSection>
@@ -315,7 +315,7 @@ export default function AboutPage() {
               Built by parents who build platforms
             </h2>
             <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
-              Three companies founded and acquired. Five years of platform infrastructure at Mastercard. Now building the open standard for child safety.
+              Three companies founded and acquired. Five years of platform infrastructure at Mastercard. Now building the open spec for child safety.
             </p>
           </div>
         </AnimatedSection>
@@ -527,7 +527,7 @@ export default function AboutPage() {
         <div className="relative max-w-3xl mx-auto px-4 sm:px-8 py-16 sm:py-20 text-center">
           <AnimatedSection>
             <h2 className="text-2xl sm:text-3xl font-display text-white mb-4">
-              Join us in building the child safety standard
+              Join us in building the child safety spec
             </h2>
             <p className="text-white/60 mb-8 max-w-lg mx-auto">
               Whether you&apos;re a parent, a developer, or an enterprise — Phosra gives you the tools to protect children everywhere they go online.

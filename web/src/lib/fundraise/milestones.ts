@@ -85,8 +85,8 @@ export const PHASES: Phase[] = [
         owner: "both", status: "upcoming", dueDate: "Mar 3", agentId: "pr-comms",
       },
       {
-        id: "m31", title: "Post Show HN technical deep-dive on PCSS standard",
-        description: "'Show HN: We mapped 78 child safety laws into a single compliance API.' Technical angle, not press release. HN audiences value open standards + infrastructure depth",
+        id: "m31", title: "Post Show HN technical deep-dive on PCSS spec",
+        description: "Show HN launch with blog post (/blog/pcss-v1: 'How We Normalized 67 Child Safety Laws into 45 API Rule Categories'), open PCSS spec on GitHub (github.com/jakeklinvexgloo/pcss-spec), and interactive compliance checker at /check. Technical angle — HN audiences value open specs + infrastructure depth",
         owner: "founder", status: "upcoming", dueDate: "Mar 5",
       },
     ],
@@ -140,7 +140,7 @@ export const PHASES: Phase[] = [
       },
       {
         id: "m32", title: "Publish '78 Laws' data report — citable industry resource",
-        description: "The Child Safety Compliance Landscape: 78 Laws, 45 States, One Deadline. Downloadable PDF + blog. Target: IAPP pickup + journalist citations",
+        description: "The Child Safety Compliance Landscape: 78 Laws, 45 States, One Deadline. Law registry now live as structured JSON on GitHub (pcss-spec repo) + compliance checker at /check. Target: IAPP pickup + journalist citations",
         owner: "both", status: "upcoming", dueDate: "Mar 10", agentId: "pr-comms",
       },
       {

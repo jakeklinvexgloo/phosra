@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og"
 
 export const runtime = "edge"
-export const alt = "Phosra - Child Safety Standard"
+export const alt = "Phosra - Child Safety Spec"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 

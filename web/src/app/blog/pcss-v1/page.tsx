@@ -5,11 +5,11 @@ import { BlogCodeBlock } from "../_components/BlogCodeBlock"
 export const metadata: Metadata = {
   title: "How We Normalized 67 Child Safety Laws into 45 API Rule Categories | Phosra",
   description:
-    "A technical deep-dive into the Phosra Child Safety Standard (PCSS): how we read every provision of 67 child safety laws across 7 jurisdictions and distilled them into a single enforceable taxonomy of 45 rule categories.",
+    "A technical deep-dive into the Phosra Child Safety Spec (PCSS): how we read every provision of 67 child safety laws across 7 jurisdictions and distilled them into a single enforceable taxonomy of 45 rule categories.",
   openGraph: {
     title: "How We Normalized 67 Child Safety Laws into 45 API Rule Categories",
     description:
-      "A technical deep-dive into the Phosra Child Safety Standard (PCSS): how we read every provision of 67 child safety laws across 7 jurisdictions and distilled them into a single enforceable taxonomy of 45 rule categories.",
+      "A technical deep-dive into the Phosra Child Safety Spec (PCSS): how we read every provision of 67 child safety laws across 7 jurisdictions and distilled them into a single enforceable taxonomy of 45 rule categories.",
     type: "article",
     publishedTime: "2026-02-25T00:00:00.000Z",
     authors: ["Phosra"],
@@ -33,7 +33,7 @@ export default function PCSSBlogPost() {
             How We Normalized 67 Child Safety Laws into 45 API Rule Categories
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
-            The Phosra Child Safety Standard (PCSS) is an open specification that maps every child safety law we could find to a single, machine-readable taxonomy. This is the technical story of how we built it.
+            The Phosra Child Safety Spec (PCSS) is an open specification that maps every child safety law we could find to a single, machine-readable taxonomy. This is the technical story of how we built it.
           </p>
         </header>
 
@@ -275,7 +275,7 @@ func (a *Adapter) Capabilities() []provider.Capability {
             NextDNS can filter web content, enforce safe search, and manage custom block and allow lists. It cannot set screen time limits, manage in-app purchases, or control social features &mdash; those capabilities don&apos;t exist at the DNS layer. When the engine encounters a rule like <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">time_daily_limit</code> targeting a child who has NextDNS connected, it knows immediately that NextDNS can&apos;t handle it and routes the rule elsewhere.
           </p>
           <p className="text-foreground/90 leading-relaxed">
-            This capability-based routing is what makes PCSS work as a universal standard. You don&apos;t need to know the specific API of every platform. You declare rules using the 45-category taxonomy, and the engine figures out which platform can enforce each rule. If no connected platform supports a given rule category natively, the engine routes it to one of Phosra&apos;s own services as a fallback.
+            This capability-based routing is what makes PCSS work as a universal spec. You don&apos;t need to know the specific API of every platform. You declare rules using the 45-category taxonomy, and the engine figures out which platform can enforce each rule. If no connected platform supports a given rule category natively, the engine routes it to one of Phosra&apos;s own services as a fallback.
           </p>
         </section>
 
@@ -499,7 +499,7 @@ func (e *CompositeEngine) RouteRules(
             The PCSS v1.0 Spec
           </h2>
           <p className="text-foreground/90 leading-relaxed mb-6">
-            PCSS defines a standard format for enforcement requests and responses. An enforcement request describes a set of rules to apply for a child, expressed using the 45-category taxonomy. Here is the request format:
+            PCSS defines a spec format for enforcement requests and responses. An enforcement request describes a set of rules to apply for a child, expressed using the 45-category taxonomy. Here is the request format:
           </p>
 
           <BlogCodeBlock
@@ -590,7 +590,7 @@ func (e *CompositeEngine) RouteRules(
             <li><strong>A reference adapter interface</strong> &mdash; The Go Adapter and Capability types for building compliant platform integrations</li>
           </ul>
           <p className="text-foreground/90 leading-relaxed mb-6">
-            What remains proprietary is the enforcement engine (the CompositeEngine, the 9 Phosra services, the actual platform adapters, and the production API). We think this is the right split: the data and the standard should be open; the infrastructure that makes it fast and reliable is the product.
+            What remains proprietary is the enforcement engine (the CompositeEngine, the 9 Phosra services, the actual platform adapters, and the production API). We think this is the right split: the data and the spec should be open; the infrastructure that makes it fast and reliable is the product.
           </p>
           <p className="text-foreground/90 leading-relaxed">
             The spec is versioned. PCSS v1.0 ships with 45 categories and 67 laws. When new legislation passes, we add categories and law entries and bump the version. Contributions to the law registry are welcome &mdash; we know there are child safety laws in jurisdictions we haven&apos;t covered yet.

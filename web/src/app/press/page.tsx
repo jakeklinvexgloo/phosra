@@ -25,7 +25,7 @@ const PRESS_RELEASES = [
     href: "/blog/introducing-phosra",
   },
   {
-    title: "PCSS v1.0: An Open Standard for Parental Controls",
+    title: "PCSS v1.0: An Open Specification for Parental Controls",
     date: "2025",
     href: "/blog/pcss-v1-specification",
   },
@@ -179,7 +179,7 @@ export default function PressPage() {
               About Phosra
             </h3>
             <p className="text-foreground leading-relaxed">
-              Phosra is the open standard and infrastructure API for child safety. Parents set rules once through any parent-facing app, and Phosra translates and enforces those rules across every connected platform &mdash; from streaming parental locks to DNS-level web filters to mobile device restrictions. One set of rules. Every platform. Always in sync.
+              Phosra is the open specification and infrastructure API for child safety. Parents set rules once through any parent-facing app, and Phosra translates and enforces those rules across every connected platform &mdash; from streaming parental locks to DNS-level web filters to mobile device restrictions. One set of rules. Every platform. Always in sync.
             </p>
             <p className="text-muted-foreground leading-relaxed mt-3 text-sm">
               Founded by parents who build platforms, Phosra applies the infrastructure playbook from fintech to the most fragmented market in consumer technology: child safety compliance.
