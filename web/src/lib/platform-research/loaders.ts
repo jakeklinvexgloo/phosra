@@ -6,6 +6,7 @@ import type {
   CapabilitySummary,
   PlatformResearchData,
   RatingMappingData,
+  ScreenshotAnalysisData,
   ScreenshotGroup,
   SectionData,
 } from "./research-data-types"
@@ -32,13 +33,14 @@ export async function loadPlatformResearch(
 
   const platformName = getPlatformName(platformId)
 
-  const [findings, adapterAssessment, integrationNotes, ratingMapping, sectionData] =
+  const [findings, adapterAssessment, integrationNotes, ratingMapping, sectionData, screenshotAnalysis] =
     await Promise.all([
       readMarkdownFile(path.join(dir, "findings.md")),
       readMarkdownFile(path.join(dir, "adapter_assessment.md")),
       readMarkdownFile(path.join(dir, "phosra_integration_notes.md")),
       readJsonFile<RawRatingMapping>(path.join(dir, "rating_mapping.json")),
       readJsonFile<SectionData>(path.join(dir, "section_data.json")),
+      readJsonFile<ScreenshotAnalysisData>(path.join(dir, "screenshot_analysis.json")),
     ])
 
   const screenshotDir = path.join(dir, "screenshots")
@@ -65,6 +67,7 @@ export async function loadPlatformResearch(
     screenshotCount,
     capabilities,
     sectionData,
+    screenshotAnalysis,
   }
 }
 

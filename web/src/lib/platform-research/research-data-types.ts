@@ -12,6 +12,7 @@ export interface PlatformResearchData {
   screenshotCount: number
   capabilities: CapabilitySummary
   sectionData: SectionData | null
+  screenshotAnalysis: ScreenshotAnalysisData | null
 }
 
 export interface ScreenshotGroup {
@@ -174,4 +175,74 @@ export interface AdapterRoadmapData {
   }[]
   totalEstimate: string
   maxTotal: number
+}
+
+// ── Screenshot Analysis Types ─────────────────────────────────────
+
+/** Severity of a finding */
+export type FindingSeverity = "critical" | "important" | "informational"
+
+/** Automation feasibility */
+export type AutomationFeasibility =
+  | "fully_automatable"
+  | "partially_automatable"
+  | "read_only"
+  | "not_automatable"
+
+/** UX quality rating */
+export type UxRating = "excellent" | "good" | "fair" | "poor"
+
+/** Relevance to Phosra */
+export type RelevanceLevel = "high" | "medium" | "low" | "none"
+
+/** A single tagged finding/observation */
+export interface ScreenshotFinding {
+  label: string
+  detail: string
+  severity: FindingSeverity
+  ruleCategory?: string
+}
+
+/** Per-screenshot analysis record */
+export interface ScreenshotAnalysis {
+  filename: string
+  description: string
+  phosraRelevance: string
+  relatedRuleCategories: string[]
+  automation: {
+    feasibility: AutomationFeasibility
+    method: string
+    notes: string
+    technicalDetails?: string
+  }
+  findings: ScreenshotFinding[]
+  ux: {
+    rating: UxRating
+    notes: string
+  }
+  securityNotes: string[]
+  apiIndicators: string[]
+  comparisonNotes?: string
+  gapsIdentified: string[]
+  relevance: RelevanceLevel
+  analyst?: string
+  analyzedAt?: string
+}
+
+/** Category-level summary */
+export interface CategoryAnalysisSummary {
+  categoryId: string
+  summary: string
+  automationFeasibility: AutomationFeasibility
+  keyTakeaways: string[]
+  relatedAdapterMethods: string[]
+  comparisonSummary?: string
+}
+
+/** Top-level structure of screenshot_analysis.json */
+export interface ScreenshotAnalysisData {
+  platformId: string
+  lastUpdated: string
+  categorySummaries: CategoryAnalysisSummary[]
+  screenshots: Record<string, ScreenshotAnalysis>
 }

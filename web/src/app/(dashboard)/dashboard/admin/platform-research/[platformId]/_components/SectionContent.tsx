@@ -73,6 +73,7 @@ export function SectionContent({ data }: SectionContentProps) {
           <ScreenshotEvidenceSection
             screenshots={data.screenshots}
             totalCount={data.screenshotCount}
+            screenshotAnalysis={data.screenshotAnalysis}
           />
         </SectionCard>
       )}
