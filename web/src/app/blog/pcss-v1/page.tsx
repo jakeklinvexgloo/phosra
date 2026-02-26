@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { BlogCodeBlock } from "../_components/BlogCodeBlock"
 
 export const metadata: Metadata = {
   title: "How We Normalized 67 Child Safety Laws into 45 API Rule Categories | Phosra",
@@ -161,8 +162,10 @@ export default function PCSSBlogPost() {
             <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">LawEntry</code> type:
           </p>
 
-          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
-{`{
+          <BlogCodeBlock
+            language="json"
+            filename="law-registry.ts — KOSA entry"
+            code={`{
   "id": "kosa",
   "shortName": "KOSA",
   "fullName": "Kids Online Safety Act",
@@ -196,7 +199,8 @@ export default function PCSSBlogPost() {
   "platforms": ["Netflix", "YouTube", "TikTok", "Instagram"],
   "ageThreshold": "All minors",
   "penaltyRange": "Up to $50,000 per violation"
-}`}</pre>
+}`}
+          />
 
           <p className="text-foreground/90 leading-relaxed mb-6">
             The <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">ruleCategories</code> field is the critical bridge. It tells any consuming system exactly which technical controls this law requires, using a vocabulary shared by every law in the registry. When KOSA says &ldquo;minors must be able to opt out of algorithmic recommendations,&rdquo; that maps to <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">algo_feed_control</code>. When it says &ldquo;disable addictive design features,&rdquo; that maps to <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">addictive_design_control</code>. A developer who implements support for these two rule categories is simultaneously compliant with the equivalent provisions in KOSA, the EU DSA, California SB 976, and every other law that mandates the same controls.
@@ -215,8 +219,10 @@ export default function PCSSBlogPost() {
             A taxonomy of rule categories is useful for reading comprehension, but it doesn&apos;t enforce anything by itself. To actually apply rules to a platform, we need an adapter layer. In Phosra&apos;s architecture, every platform implements a single Go interface:
           </p>
 
-          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
-{`// Adapter is the core interface all platforms implement.
+          <BlogCodeBlock
+            language="go"
+            filename="provider/adapter.go"
+            code={`// Adapter is the core interface all platforms implement.
 type Adapter interface {
     Info() PlatformInfo
     Capabilities() []Capability
@@ -231,7 +237,8 @@ type Adapter interface {
     SupportsWebhooks() bool
     RegisterWebhook(ctx context.Context, auth AuthConfig,
         callbackURL string) error
-}`}</pre>
+}`}
+          />
 
           <p className="text-foreground/90 leading-relaxed mb-6">
             The key method is <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">Capabilities()</code>. Each adapter declares what it can do &mdash; not which rule categories it supports, but which capabilities it has. This is an important distinction. A <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">Capability</code> is a cluster of related rule categories that a platform can handle natively. For example, the <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">web_filtering</code> capability covers five rule categories: <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">web_filter_level</code>, <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">web_category_block</code>, <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">web_custom_allowlist</code>, <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">web_custom_blocklist</code>, and <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">web_safesearch</code>.
@@ -240,8 +247,10 @@ type Adapter interface {
             Here is a concrete example. The NextDNS adapter declares four capabilities:
           </p>
 
-          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
-{`func (a *Adapter) Info() provider.PlatformInfo {
+          <BlogCodeBlock
+            language="go"
+            filename="adapters/nextdns/adapter.go"
+            code={`func (a *Adapter) Info() provider.PlatformInfo {
     return provider.PlatformInfo{
         ID:          "nextdns",
         Name:        "NextDNS",
@@ -259,7 +268,8 @@ func (a *Adapter) Capabilities() []provider.Capability {
         provider.CapCustomBlocklist,
         provider.CapCustomAllowlist,
     }
-}`}</pre>
+}`}
+          />
 
           <p className="text-foreground/90 leading-relaxed mb-6">
             NextDNS can filter web content, enforce safe search, and manage custom block and allow lists. It cannot set screen time limits, manage in-app purchases, or control social features &mdash; those capabilities don&apos;t exist at the DNS layer. When the engine encounters a rule like <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">time_daily_limit</code> targeting a child who has NextDNS connected, it knows immediately that NextDNS can&apos;t handle it and routes the rule elsewhere.
@@ -278,8 +288,10 @@ func (a *Adapter) Capabilities() []provider.Capability {
             The hardest problem in the system is what we call &ldquo;split-brain enforcement.&rdquo; When a parent sets a policy for their child, the rules need to be enforced across every connected platform. But not every platform can handle every rule. The CompositeEngine solves this by splitting each rule set into two buckets: rules the native platform adapter handles, and rules that Phosra&apos;s services handle.
           </p>
 
-          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
-{`// RouteRules splits rules between native provider and Phosra services.
+          <BlogCodeBlock
+            language="go"
+            filename="engine/composite.go"
+            code={`// RouteRules splits rules between native provider and Phosra services.
 // For each enabled rule, it checks if the adapter's capabilities cover it.
 // If yes -> NativeRules. If no -> routes to the appropriate Phosra service.
 func (e *CompositeEngine) RouteRules(
@@ -319,7 +331,8 @@ func (e *CompositeEngine) RouteRules(
     }
 
     return routing
-}`}</pre>
+}`}
+          />
 
           <p className="text-foreground/90 leading-relaxed mb-6">
             The engine is initialized with 9 Phosra services, each responsible for a subset of rule categories that platforms commonly lack native support for:
@@ -489,8 +502,10 @@ func (e *CompositeEngine) RouteRules(
             PCSS defines a standard format for enforcement requests and responses. An enforcement request describes a set of rules to apply for a child, expressed using the 45-category taxonomy. Here is the request format:
           </p>
 
-          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
-{`// PCSS Enforcement Request
+          <BlogCodeBlock
+            language="json"
+            filename="PCSS Enforcement Request"
+            code={`// PCSS Enforcement Request
 {
   "rules": [
     {
@@ -524,14 +539,17 @@ func (e *CompositeEngine) RouteRules(
   },
   "child_name": "Emma",
   "child_age": 10
-}`}</pre>
+}`}
+          />
 
           <p className="text-foreground/90 leading-relaxed mb-6">
             The response reports exactly what happened &mdash; which rules were applied, which were skipped (because the platform doesn&apos;t support them), and which failed:
           </p>
 
-          <pre className="bg-muted border border-border rounded-lg p-5 overflow-x-auto text-xs leading-relaxed font-[family-name:var(--font-mono)] text-foreground mb-6">
-{`// PCSS Enforcement Response
+          <BlogCodeBlock
+            language="json"
+            filename="PCSS Enforcement Response"
+            code={`// PCSS Enforcement Response
 {
   "rules_applied": 3,
   "rules_skipped": 1,
@@ -546,7 +564,8 @@ func (e *CompositeEngine) RouteRules(
     }
   },
   "message": "3 rules applied natively, 1 routed to Phosra services"
-}`}</pre>
+}`}
+          />
 
           <p className="text-foreground/90 leading-relaxed mb-6">
             The <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">EnforcementRequest</code> and <code className="text-sm bg-muted px-1.5 py-0.5 rounded font-[family-name:var(--font-mono)]">EnforcementResult</code> types are defined in our Go provider package. The request contains the rules (each with a category, enabled flag, and JSON config), authentication credentials, and optional child metadata. The response is a simple accounting of what happened, with per-rule details for debugging and audit trails.
