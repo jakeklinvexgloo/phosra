@@ -92,10 +92,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {sidebarOpen ? "Close" : "Dashboard Menu"}
             </button>
 
-            <div className="flex gap-6 xl:gap-8">
+            <div className="flex flex-col lg:flex-row gap-6 xl:gap-8">
               {/* Sidebar — hidden on mobile unless toggled */}
               <div className={`${sidebarOpen ? "block" : "hidden"} lg:block`}>
-                <DashboardSidebar isSandbox={isSandbox} isAdmin={isAdmin} />
+                <DashboardSidebar isSandbox={isSandbox} isAdmin={isAdmin} onNavigate={() => setSidebarOpen(false)} />
               </div>
 
               {/* Main content */}

@@ -8,9 +8,10 @@ import { EnvironmentBadge } from "./EnvironmentBadge"
 interface DashboardSidebarProps {
   isSandbox: boolean
   isAdmin?: boolean
+  onNavigate?: () => void
 }
 
-export function DashboardSidebar({ isSandbox, isAdmin }: DashboardSidebarProps) {
+export function DashboardSidebar({ isSandbox, isAdmin, onNavigate }: DashboardSidebarProps) {
   const pathname = usePathname()
 
   const isActive = (href: string, exact?: boolean) => {
@@ -21,7 +22,7 @@ export function DashboardSidebar({ isSandbox, isAdmin }: DashboardSidebarProps) 
   const allGroups = isAdmin ? [...navGroups, ...adminNavGroups] : navGroups
 
   return (
-    <aside className="hidden lg:block w-[200px] xl:w-[220px] flex-shrink-0">
+    <aside className="w-full pb-4 border-b border-border lg:pb-0 lg:border-b-0 lg:w-[200px] xl:w-[220px] flex-shrink-0">
       <nav className="lg:sticky lg:top-[88px] space-y-6">
         {/* Environment badge */}
         <div className="px-1">
@@ -45,6 +46,7 @@ export function DashboardSidebar({ isSandbox, isAdmin }: DashboardSidebarProps) 
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={onNavigate}
                     className={`flex items-center gap-2.5 px-3 py-2 min-h-[44px] rounded text-[13px] transition-colors ${
                       active
                         ? "text-foreground font-medium bg-muted"
