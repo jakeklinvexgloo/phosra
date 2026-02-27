@@ -58,19 +58,50 @@ export default function PlatformResearchPage() {
   // ── Data fetching ────────────────────────────────────────────────────────
 
   const fetchResults = useCallback(async () => {
+    const map = new Map<string, ResearchResult>()
+
+    // 1. Fetch DB-backed results
     try {
       const res = await fetch("/api/admin/research/results")
       if (res.ok) {
-        const data: ResearchResult[] = await res.json()
-        const map = new Map<string, ResearchResult>()
-        for (const r of data) {
+        const data = await res.json()
+        // Handle both array and { results: [] } formats
+        const items: ResearchResult[] = Array.isArray(data) ? data : (data.results ?? [])
+        for (const r of items) {
           map.set(r.platformId, r)
         }
-        setResults(map)
       }
     } catch {
       // API not available — gracefully degrade
     }
+
+    // 2. Merge filesystem-scanned platforms (completed research on disk)
+    try {
+      const res = await fetch("/api/admin/research/filesystem-scan")
+      if (res.ok) {
+        const fsResults: { platformId: string; hasFindings: boolean; hasSafety: boolean; hasChatbotData: boolean }[] = await res.json()
+        for (const fs of fsResults) {
+          if (!map.has(fs.platformId)) {
+            const platform = PLATFORM_REGISTRY.find((p) => p.id === fs.platformId)
+            map.set(fs.platformId, {
+              id: `fs-${fs.platformId}`,
+              platformId: fs.platformId,
+              platformName: platform?.name || fs.platformId,
+              status: "completed",
+              triggerType: "manual",
+              screenshots: [],
+              notes: null,
+              startedAt: new Date().toISOString(),
+              completedAt: new Date().toISOString(),
+            })
+          }
+        }
+      }
+    } catch {
+      // Filesystem scan not available — gracefully degrade
+    }
+
+    setResults(map)
   }, [])
 
   const fetchStats = useCallback(async () => {
