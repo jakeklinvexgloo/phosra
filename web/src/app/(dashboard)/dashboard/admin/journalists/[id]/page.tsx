@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import {
   ArrowLeft, Save, Check, ChevronDown, ChevronRight,
-  Plus, Trash2, ExternalLink, Clock,
+  Plus, Trash2, ExternalLink, Clock, Linkedin, Globe,
+  Mail, Copy, MapPin, Sparkles, Loader2, RefreshCw, ClipboardCopy,
 } from "lucide-react"
 import Link from "next/link"
 import { useApi } from "@/lib/useApi"
@@ -14,11 +15,11 @@ import { Badge } from "@/components/ui/badge"
 import type {
   Journalist, JournalistPitch, PressCoverage, JournalistActivity,
   JournalistBeat, JournalistRelationshipStatus, JournalistTier,
-  PitchAngle, RecentArticle, PitchStatus, CoverageTone,
+  PitchAngle, RecentArticle, PitchStatus, CoverageTone, EmailConfidence,
 } from "@/lib/journalists/types"
 import {
   BEAT_LABELS, RELATIONSHIP_STATUS_LABELS, PITCH_STATUS_LABELS,
-  TONE_LABELS, ACTIVITY_TYPE_LABELS,
+  TONE_LABELS, ACTIVITY_TYPE_LABELS, EMAIL_CONFIDENCE_LABELS,
 } from "@/lib/journalists/types"
 
 // ─── Pitch status → badge variant ──────────────────────────────────
@@ -91,6 +92,15 @@ export default function JournalistDetailPage() {
   const [relevanceScore, setRelevanceScore] = useState<number>(50)
   const [relationshipStatus, setRelationshipStatus] = useState<JournalistRelationshipStatus>("identified")
   const [notes, setNotes] = useState("")
+  const [blueskyHandle, setBlueskyHandle] = useState("")
+  const [mastodonHandle, setMastodonHandle] = useState("")
+  const [personalSiteUrl, setPersonalSiteUrl] = useState("")
+  const [newsletterUrl, setNewsletterUrl] = useState("")
+  const [podcastName, setPodcastName] = useState("")
+  const [location, setLocation] = useState("")
+  const [emailConfidence, setEmailConfidence] = useState<EmailConfidence>("unknown")
+  const [tags, setTags] = useState("")
+  const [emailCopied, setEmailCopied] = useState(false)
 
   // ─── JSONB array fields ────────────────────────────────────────
   const [pitchAngles, setPitchAngles] = useState<PitchAngle[]>([])
@@ -105,6 +115,19 @@ export default function JournalistDetailPage() {
   const [newAngle, setNewAngle] = useState({ angle: "", context: "", relevance: "" })
   const [addingArticle, setAddingArticle] = useState(false)
   const [newArticle, setNewArticle] = useState({ title: "", url: "", date: "", relevance_note: "" })
+
+  // ─── Pitch generator modal ──────────────────────────────────────
+  const [showPitchModal, setShowPitchModal] = useState(false)
+  const [pitchAngle, setPitchAngle] = useState("child_safety_regulation")
+  const [pitchExclusivity, setPitchExclusivity] = useState<"none" | "exclusive" | "embargoed">("none")
+  const [pitchAskType, setPitchAskType] = useState<"interview" | "briefing" | "embargo" | "contributed_article" | "expert_source">("interview")
+  const [pitchAdditionalContext, setPitchAdditionalContext] = useState("")
+  const [pitchGenerating, setPitchGenerating] = useState(false)
+  const [pitchResult, setPitchResult] = useState<{ subject_line: string; email_body: string; follow_up_angle: string } | null>(null)
+  const [pitchSubject, setPitchSubject] = useState("")
+  const [pitchBody, setPitchBody] = useState("")
+  const [pitchCopied, setPitchCopied] = useState(false)
+  const [pitchSaving, setPitchSaving] = useState(false)
 
   // ─── Auth headers ──────────────────────────────────────────────
   const getHeaders = useCallback(async (json = false) => {
@@ -142,6 +165,14 @@ export default function JournalistDetailPage() {
         setRelevanceScore(data.relevance_score ?? 50)
         setRelationshipStatus(data.relationship_status)
         setNotes(data.notes || "")
+        setBlueskyHandle(data.bluesky_handle || "")
+        setMastodonHandle(data.mastodon_handle || "")
+        setPersonalSiteUrl(data.personal_site_url || "")
+        setNewsletterUrl(data.newsletter_url || "")
+        setPodcastName(data.podcast_name || "")
+        setLocation(data.location || "")
+        setEmailConfidence(data.email_confidence || "unknown")
+        setTags((data.tags || []).join(", "))
         setPitchAngles(data.pitch_angles || [])
         setRecentArticles(data.recent_articles || [])
       }
@@ -174,6 +205,14 @@ export default function JournalistDetailPage() {
           relevance_score: relevanceScore,
           relationship_status: relationshipStatus,
           notes: notes || null,
+          bluesky_handle: blueskyHandle || null,
+          mastodon_handle: mastodonHandle || null,
+          personal_site_url: personalSiteUrl || null,
+          newsletter_url: newsletterUrl || null,
+          podcast_name: podcastName || null,
+          location: location || null,
+          email_confidence: emailConfidence,
+          tags: tags ? tags.split(",").map(s => s.trim()).filter(Boolean) : [],
           pitch_angles: pitchAngles,
           recent_articles: recentArticles,
         }),
@@ -221,6 +260,63 @@ export default function JournalistDetailPage() {
   }
   const removeArticle = (idx: number) => setRecentArticles(recentArticles.filter((_, i) => i !== idx))
 
+  // ─── Pitch generator ────────────────────────────────────────────
+  const handleGeneratePitch = async () => {
+    setPitchGenerating(true)
+    setPitchResult(null)
+    try {
+      const headers = await getHeaders(true)
+      const res = await fetch(`/api/journalists/${id}/generate-pitch`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          angle: pitchAngle,
+          exclusivity: pitchExclusivity,
+          ask_type: pitchAskType,
+          additional_context: pitchAdditionalContext || undefined,
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setPitchResult(data)
+        setPitchSubject(data.subject_line)
+        setPitchBody(data.email_body)
+      }
+    } catch {} finally {
+      setPitchGenerating(false)
+    }
+  }
+
+  const handleCopyPitch = async () => {
+    const text = `Subject: ${pitchSubject}\n\n${pitchBody}`
+    await navigator.clipboard.writeText(text)
+    setPitchCopied(true)
+    setTimeout(() => setPitchCopied(false), 2000)
+  }
+
+  const handleSavePitchDraft = async () => {
+    setPitchSaving(true)
+    try {
+      const headers = await getHeaders(true)
+      await fetch(`/api/journalists/${id}/pitches`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          press_release_id: null,
+          pitch_status: "draft",
+          pitch_subject: pitchSubject,
+          pitch_body: pitchBody,
+          pitch_angle: pitchAngle,
+        }),
+      })
+      setShowPitchModal(false)
+      setPitchResult(null)
+      fetchJournalist()
+    } catch {} finally {
+      setPitchSaving(false)
+    }
+  }
+
   // ─── Loading skeleton ─────────────────────────────────────────
   if (loading) {
     return (
@@ -265,6 +361,29 @@ export default function JournalistDetailPage() {
     return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
   }
 
+  // ─── Profile completeness ──────────────────────────────────────
+  const profileCompleteness = (() => {
+    let pct = 0
+    if (name) pct += 10
+    if (publication) pct += 10
+    if (email) pct += 15
+    if (twitterHandle || linkedinUrl || blueskyHandle) pct += 10
+    if (beat) pct += 10
+    if (pitchAngles.length > 0) pct += 15
+    if (recentArticles.length > 0) pct += 10
+    if (location) pct += 5
+    if (notes) pct += 5
+    if (personalSiteUrl || newsletterUrl) pct += 10
+    return pct
+  })()
+
+  const copyEmail = () => {
+    if (!email) return
+    navigator.clipboard.writeText(email)
+    setEmailCopied(true)
+    setTimeout(() => setEmailCopied(false), 1500)
+  }
+
   // ─── Render ────────────────────────────────────────────────────
   return (
     <div className="space-y-5">
@@ -283,6 +402,14 @@ export default function JournalistDetailPage() {
           description={[publication, beat ? BEAT_LABELS[beat as JournalistBeat] : null].filter(Boolean).join(" · ")}
           actions={
             <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="md"
+                onClick={() => setShowPitchModal(true)}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Generate Pitch
+              </Button>
               <Button
                 variant="primary"
                 size="md"
@@ -315,6 +442,79 @@ export default function JournalistDetailPage() {
             </div>
           }
         />
+
+        {/* Social Links + Profile Completeness */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            {twitterHandle && (
+              <a
+                href={`https://x.com/${twitterHandle.replace("@", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-md bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title={`X/Twitter: @${twitterHandle.replace("@", "")}`}
+              >
+                <span className="text-xs font-bold leading-none" style={{ fontFamily: "serif" }}>&#x1d54f;</span>
+              </a>
+            )}
+            {linkedinUrl && (
+              <a
+                href={linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-md bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title="LinkedIn"
+              >
+                <Linkedin className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {blueskyHandle && (
+              <a
+                href={`https://bsky.app/profile/${blueskyHandle.replace("@", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-md bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title={`Bluesky: @${blueskyHandle.replace("@", "")}`}
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {mastodonHandle && (
+              <a
+                href={`https://${mastodonHandle.replace("@", "").split("@")[1] || "mastodon.social"}/@${mastodonHandle.replace("@", "").split("@")[0]}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-md bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title={`Mastodon: ${mastodonHandle}`}
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {personalSiteUrl && (
+              <a
+                href={personalSiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-md bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title="Website"
+              >
+                <Globe className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {newsletterUrl && (
+              <a
+                href={newsletterUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-md bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title="Newsletter"
+              >
+                <Mail className="w-3.5 h-3.5" />
+              </a>
+            )}
+          </div>
+          <Badge variant="outline" size="sm">{profileCompleteness}% complete</Badge>
+        </div>
       </div>
 
       {/* Two-column layout */}
@@ -393,12 +593,24 @@ export default function JournalistDetailPage() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
-                />
+                <div className="mt-1 flex items-center gap-1.5">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="flex-1 h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                  />
+                  {email && (
+                    <button
+                      onClick={copyEmail}
+                      className="h-9 px-2 rounded-lg border border-border/50 bg-background hover:bg-muted text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                      title="Copy email"
+                    >
+                      {emailCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span className="text-[10px]">{emailCopied ? "Copied!" : ""}</span>
+                    </button>
+                  )}
+                </div>
               </div>
               <div>
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Phone</label>
@@ -430,6 +642,100 @@ export default function JournalistDetailPage() {
                   placeholder="https://linkedin.com/in/..."
                   className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
                 />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Bluesky</label>
+                <input
+                  type="text"
+                  value={blueskyHandle}
+                  onChange={e => setBlueskyHandle(e.target.value)}
+                  placeholder="@handle.bsky.social"
+                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Mastodon</label>
+                <input
+                  type="text"
+                  value={mastodonHandle}
+                  onChange={e => setMastodonHandle(e.target.value)}
+                  placeholder="@user@mastodon.social"
+                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Personal Website</label>
+                <input
+                  type="url"
+                  value={personalSiteUrl}
+                  onChange={e => setPersonalSiteUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Newsletter</label>
+                <input
+                  type="url"
+                  value={newsletterUrl}
+                  onChange={e => setNewsletterUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Podcast Name</label>
+                <input
+                  type="text"
+                  value={podcastName}
+                  onChange={e => setPodcastName(e.target.value)}
+                  placeholder="e.g., The Daily"
+                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Location</label>
+                <div className="mt-1 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-muted-foreground/50 flex-shrink-0" />
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={e => setLocation(e.target.value)}
+                    placeholder="e.g., New York, NY"
+                    className="flex-1 h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Email Confidence</label>
+                <select
+                  value={emailConfidence}
+                  onChange={e => setEmailConfidence(e.target.value as EmailConfidence)}
+                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none appearance-none"
+                >
+                  {Object.entries(EMAIL_CONFIDENCE_LABELS).map(([k, v]) => (
+                    <option key={k} value={k}>{v}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Tags</label>
+                <input
+                  type="text"
+                  value={tags}
+                  onChange={e => setTags(e.target.value)}
+                  placeholder="e.g., priority, child-safety-expert"
+                  className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                />
+                <p className="text-[10px] text-muted-foreground/50 mt-1">Comma-separated</p>
               </div>
             </div>
 
@@ -800,6 +1106,215 @@ export default function JournalistDetailPage() {
 
         </div>
       </div>
+
+      {/* ─── Generate Pitch Modal ─────────────────────────────── */}
+      {showPitchModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-card rounded-xl border border-border shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-foreground">Generate AI Pitch</h2>
+              <button
+                onClick={() => { setShowPitchModal(false); setPitchResult(null) }}
+                className="text-muted-foreground hover:text-foreground text-xs"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Journalist context */}
+            <div className="p-3 bg-background rounded-lg border border-border/30">
+              <div className="flex items-center gap-3">
+                <div>
+                  <p className="text-sm font-medium text-foreground">{name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {[publication, beat ? BEAT_LABELS[beat as JournalistBeat] : null].filter(Boolean).join(" · ")}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {!pitchResult ? (
+              <>
+                {/* Angle selector */}
+                <div>
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Angle</label>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    {[
+                      { value: "child_safety_regulation", label: "Child Safety Regulation" },
+                      { value: "privacy_data_protection", label: "Privacy & Data Protection" },
+                      { value: "edtech_compliance", label: "EdTech Compliance" },
+                      { value: "startup_infrastructure", label: "Startup Infrastructure" },
+                      { value: "platform_accountability", label: "Platform Accountability" },
+                      { value: "state_regulatory_patchwork", label: "State Regulatory Patchwork" },
+                      { value: "parent_founder_story", label: "Parent Founder Story" },
+                    ].map(opt => (
+                      <label key={opt.value} className="flex items-center gap-2 p-2 rounded-lg border border-border/30 cursor-pointer hover:bg-background/50">
+                        <input
+                          type="radio"
+                          name="pitchAngle"
+                          value={opt.value}
+                          checked={pitchAngle === opt.value}
+                          onChange={e => setPitchAngle(e.target.value)}
+                          className="accent-foreground"
+                        />
+                        <span className="text-xs text-foreground">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Exclusivity */}
+                <div>
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Exclusivity</label>
+                  <div className="mt-2 flex gap-3">
+                    {([
+                      { value: "none", label: "None" },
+                      { value: "exclusive", label: "Exclusive" },
+                      { value: "embargoed", label: "Embargoed" },
+                    ] as const).map(opt => (
+                      <label key={opt.value} className="flex items-center gap-2 p-2 rounded-lg border border-border/30 cursor-pointer hover:bg-background/50">
+                        <input
+                          type="radio"
+                          name="pitchExclusivity"
+                          value={opt.value}
+                          checked={pitchExclusivity === opt.value}
+                          onChange={() => setPitchExclusivity(opt.value)}
+                          className="accent-foreground"
+                        />
+                        <span className="text-xs text-foreground">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ask type */}
+                <div>
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Ask Type</label>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {([
+                      { value: "interview", label: "Interview" },
+                      { value: "briefing", label: "Briefing" },
+                      { value: "embargo", label: "Embargo" },
+                      { value: "contributed_article", label: "Contributed Article" },
+                      { value: "expert_source", label: "Expert Source" },
+                    ] as const).map(opt => (
+                      <label key={opt.value} className="flex items-center gap-2 p-2 rounded-lg border border-border/30 cursor-pointer hover:bg-background/50">
+                        <input
+                          type="radio"
+                          name="pitchAskType"
+                          value={opt.value}
+                          checked={pitchAskType === opt.value}
+                          onChange={() => setPitchAskType(opt.value)}
+                          className="accent-foreground"
+                        />
+                        <span className="text-xs text-foreground">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Additional context */}
+                <div>
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Additional Context</label>
+                  <textarea
+                    value={pitchAdditionalContext}
+                    onChange={e => setPitchAdditionalContext(e.target.value)}
+                    rows={3}
+                    placeholder="Any timely hooks, personal notes, or specific things to mention..."
+                    className="mt-1 w-full px-3 py-2.5 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
+                  />
+                </div>
+
+                {/* Generate button */}
+                <button
+                  onClick={handleGeneratePitch}
+                  disabled={pitchGenerating}
+                  className="w-full h-9 px-4 text-xs font-medium bg-foreground text-background rounded-lg hover:bg-foreground/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {pitchGenerating ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Generate Pitch
+                    </>
+                  )}
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Subject line (editable) */}
+                <div>
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Subject Line</label>
+                  <input
+                    type="text"
+                    value={pitchSubject}
+                    onChange={e => setPitchSubject(e.target.value)}
+                    className="mt-1 w-full h-9 px-3 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10"
+                  />
+                </div>
+
+                {/* Email body (editable) */}
+                <div>
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Email Body</label>
+                  <textarea
+                    value={pitchBody}
+                    onChange={e => setPitchBody(e.target.value)}
+                    rows={10}
+                    className="mt-1 w-full px-3 py-2.5 text-sm bg-background border border-border/50 rounded-lg focus:outline-none focus:border-foreground/30 focus:ring-1 focus:ring-foreground/10 resize-y"
+                  />
+                </div>
+
+                {/* Follow-up angle (read-only) */}
+                <div>
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70">Follow-up Angle</label>
+                  <p className="mt-1 text-xs text-muted-foreground p-3 bg-background rounded-lg border border-border/30">
+                    {pitchResult.follow_up_angle}
+                  </p>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleCopyPitch}
+                    className="flex-1 h-9 px-4 text-xs font-medium bg-foreground text-background rounded-lg hover:bg-foreground/90 transition-colors flex items-center justify-center gap-2"
+                  >
+                    {pitchCopied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <ClipboardCopy className="w-3.5 h-3.5" />
+                        Copy to Clipboard
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleSavePitchDraft}
+                    disabled={pitchSaving}
+                    className="flex-1 h-9 px-4 text-xs font-medium border border-border rounded-lg hover:bg-background/50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    {pitchSaving ? "Saving..." : "Save as Draft"}
+                  </button>
+                  <button
+                    onClick={() => { setPitchResult(null) }}
+                    className="h-9 px-4 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    Regenerate
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

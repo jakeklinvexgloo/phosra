@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   Users, Plus, Star, Send as SendIcon,
-  Newspaper, ChevronDown,
+  Newspaper, ChevronDown, AlertTriangle,
 } from "lucide-react"
 import { useApi } from "@/lib/useApi"
 import type {
@@ -95,6 +95,29 @@ function timeAgo(d: string) {
   return `${days}d`
 }
 
+// ─── Profile completeness helper ─────────────────────────────────────────────
+
+function getProfileCompleteness(j: Journalist): number {
+  let pct = 0
+  if (j.name) pct += 10
+  if (j.publication) pct += 10
+  if (j.email) pct += 15
+  if (j.twitter_handle || j.linkedin_url || j.bluesky_handle) pct += 10
+  if (j.beat) pct += 10
+  if ((j.pitch_angles || []).length > 0) pct += 15
+  if ((j.recent_articles || []).length > 0) pct += 10
+  if (j.location) pct += 5
+  if (j.notes) pct += 5
+  if (j.personal_site_url || j.newsletter_url) pct += 10
+  return pct
+}
+
+function completenessColor(pct: number): string {
+  if (pct < 40) return "bg-red-500"
+  if (pct <= 70) return "bg-amber-500"
+  return "bg-emerald-500"
+}
+
 // ─── Columns ─────────────────────────────────────────────────────────────────
 
 const columns: ColumnDef<Journalist>[] = [
@@ -114,18 +137,22 @@ const columns: ColumnDef<Journalist>[] = [
     accessor: "name",
     header: "Name",
     sortable: true,
-    cell: (_, row) => (
-      <div className="min-w-0">
-        <span className="text-[13px] font-medium leading-tight text-foreground">
-          {row.name}
-        </span>
-        {row.publication && (
-          <span className="text-[11px] text-muted-foreground ml-1.5">
-            {row.publication}
+    cell: (_, row) => {
+      const pct = getProfileCompleteness(row)
+      return (
+        <div className="min-w-0 flex items-center gap-1.5">
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${completenessColor(pct)}`} title={`${pct}% complete`} />
+          <span className="text-[13px] font-medium leading-tight text-foreground">
+            {row.name}
           </span>
-        )}
-      </div>
-    ),
+          {row.publication && (
+            <span className="text-[11px] text-muted-foreground ml-1.5">
+              {row.publication}
+            </span>
+          )}
+        </div>
+      )
+    },
   },
   {
     id: "beat",
@@ -297,6 +324,21 @@ export default function JournalistsPage() {
     searchKeys: ["name", "publication", "email", "notes"],
   })
 
+  // ── Follow-ups due ──────────────────────────────────────────────────────
+
+  const followUpsDue = useMemo(() => {
+    const now = new Date()
+    now.setHours(23, 59, 59, 999)
+    return journalists
+      .filter(j => j.next_followup_at && new Date(j.next_followup_at) <= now)
+      .map(j => {
+        const dueDate = new Date(j.next_followup_at!)
+        const diffDays = Math.floor((Date.now() - dueDate.getTime()) / (1000 * 60 * 60 * 24))
+        return { ...j, overdueDays: diffDays }
+      })
+      .sort((a, b) => b.overdueDays - a.overdueDays)
+  }, [journalists])
+
   // ── Counts ────────────────────────────────────────────────────────────────
 
   const statusCount = (key: StatusFilter) => {
@@ -373,6 +415,40 @@ export default function JournalistsPage() {
             <Button variant="ghost" size="lg" onClick={() => { setShowNewForm(false); setNewName(""); setNewPublication(""); setNewTier(2) }}>
               Cancel
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Follow-ups Due */}
+      {followUpsDue.length > 0 && (
+        <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 space-y-2.5">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-500" />
+            <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
+              {followUpsDue.length} Follow-up{followUpsDue.length !== 1 ? "s" : ""} Due
+            </span>
+          </div>
+          <div className="space-y-1.5">
+            {followUpsDue.slice(0, 5).map(j => (
+              <button
+                key={j.id}
+                onClick={() => router.push(`/dashboard/admin/journalists/${j.id}`)}
+                className="flex items-center justify-between w-full px-2.5 py-1.5 rounded-md hover:bg-amber-500/10 transition-colors text-left"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-xs font-medium text-foreground truncate">{j.name}</span>
+                  <span className="text-[10px] text-muted-foreground truncate">{j.publication}</span>
+                </div>
+                <span className="text-[10px] text-amber-600 dark:text-amber-400 flex-shrink-0 ml-2">
+                  {j.overdueDays === 0 ? "Today" : `${j.overdueDays}d overdue`}
+                </span>
+              </button>
+            ))}
+            {followUpsDue.length > 5 && (
+              <p className="text-[10px] text-muted-foreground pl-2.5">
+                +{followUpsDue.length - 5} more
+              </p>
+            )}
           </div>
         </div>
       )}

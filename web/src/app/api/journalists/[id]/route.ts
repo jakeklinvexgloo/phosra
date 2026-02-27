@@ -55,6 +55,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
     pitch_angles: parseJsonb(journalist.pitch_angles),
     recent_articles: parseJsonb(journalist.recent_articles),
     coverage_preferences: parseJsonb(journalist.coverage_preferences),
+    previous_publications: parseJsonb(journalist.previous_publications),
     pitches: pitches.map(p => ({
       ...p,
     })),
@@ -83,9 +84,14 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     "name", "publication", "title", "beat", "email", "twitter_handle",
     "linkedin_url", "signal_handle", "phone", "relevance_score", "tier",
     "relationship_status", "notes", "last_contact_at", "next_followup_at",
+    "bluesky_handle", "mastodon_handle", "personal_site_url", "newsletter_url",
+    "podcast_name", "photo_url", "location", "estimated_audience_size",
+    "publication_domain_authority", "email_confidence", "email_source",
+    "publication_verified_at", "publication_status", "ai_research_summary",
+    "last_researched_at", "warmup_stage",
   ]
-  const jsonbFields = ["pitch_angles", "recent_articles", "coverage_preferences"]
-  const textArrayFields = ["sub_beats"]
+  const jsonbFields = ["pitch_angles", "recent_articles", "coverage_preferences", "previous_publications"]
+  const textArrayFields = ["sub_beats", "tags"]
 
   const sets: string[] = []
   const values: unknown[] = []
@@ -135,6 +141,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     pitch_angles: parseJsonb(journalist.pitch_angles),
     recent_articles: parseJsonb(journalist.recent_articles),
     coverage_preferences: parseJsonb(journalist.coverage_preferences),
+    previous_publications: parseJsonb(journalist.previous_publications),
   })
 }
 

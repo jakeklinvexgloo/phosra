@@ -38,10 +38,6 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
   const body = await req.json()
   const { press_release_id, pitch_status, offered_exclusive, exclusive_deadline, embargo_agreed, embargo_date, pitch_subject, pitch_body, pitch_angle, notes } = body
 
-  if (!press_release_id) {
-    return NextResponse.json({ error: "press_release_id is required" }, { status: 400 })
-  }
-
   const pitch = await queryOne<JournalistPitch>(
     `INSERT INTO admin_journalist_pitches (journalist_id, press_release_id, pitch_status, offered_exclusive, exclusive_deadline, embargo_agreed, embargo_date, pitch_subject, pitch_body, pitch_angle, notes)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)

@@ -51,6 +51,18 @@ export type JournalistActivityType =
 
 export type JournalistTier = 1 | 2 | 3
 
+export type EmailConfidence = "verified" | "pattern_guess" | "unknown" | "bounced"
+
+export type PublicationStatus = "active" | "moved" | "unknown" | "freelance"
+
+export type WarmupStage = "none" | "following" | "engaging" | "dm_sent" | "ready_to_pitch"
+
+export type ArticleSource = "manual" | "rss" | "ai_research" | "web_search"
+
+export type SocialPlatform = "twitter" | "bluesky" | "mastodon" | "linkedin" | "threads"
+
+export type PitchEventType = "open" | "click" | "bounce" | "reply" | "forward"
+
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 
 export interface PitchAngle {
@@ -74,6 +86,50 @@ export interface CoveragePreferences {
   deadlines_note?: string
 }
 
+export interface PreviousPublication {
+  publication: string
+  title?: string
+  from?: string
+  to?: string
+}
+
+export interface JournalistArticle {
+  id: string
+  journalist_id: string
+  title: string
+  url: string
+  published_at: string | null
+  summary: string | null
+  is_relevant: boolean
+  relevance_score: number | null
+  relevance_reason: string | null
+  source: ArticleSource
+  created_at: string
+}
+
+export interface JournalistPitchEvent {
+  id: string
+  pitch_id: string
+  event_type: PitchEventType
+  event_timestamp: string
+  ip_address: string | null
+  user_agent: string | null
+  link_url: string | null
+  metadata: Record<string, unknown> | null
+}
+
+export interface JournalistSocialPost {
+  id: string
+  journalist_id: string
+  platform: SocialPlatform
+  post_url: string | null
+  content: string | null
+  posted_at: string | null
+  is_relevant: boolean
+  engagement_count: number
+  created_at: string
+}
+
 export interface Journalist {
   id: string
   name: string
@@ -95,6 +151,25 @@ export interface Journalist {
   notes: string | null
   last_contact_at: string | null
   next_followup_at: string | null
+  // New enrichment fields
+  bluesky_handle: string | null
+  mastodon_handle: string | null
+  personal_site_url: string | null
+  newsletter_url: string | null
+  podcast_name: string | null
+  photo_url: string | null
+  location: string | null
+  estimated_audience_size: number | null
+  publication_domain_authority: number | null
+  email_confidence: EmailConfidence
+  email_source: string | null
+  previous_publications: PreviousPublication[]
+  publication_verified_at: string | null
+  publication_status: PublicationStatus
+  tags: string[]
+  ai_research_summary: string | null
+  last_researched_at: string | null
+  warmup_stage: WarmupStage
   created_at: string
   updated_at: string
 }
@@ -241,4 +316,26 @@ export const ACTIVITY_TYPE_LABELS: Record<JournalistActivityType, string> = {
   coverage_published: "Coverage Published",
   note: "Note",
   status_change: "Status Change",
+}
+
+export const EMAIL_CONFIDENCE_LABELS: Record<EmailConfidence, string> = {
+  verified: "Verified",
+  pattern_guess: "Pattern Guess",
+  unknown: "Unknown",
+  bounced: "Bounced",
+}
+
+export const WARMUP_STAGE_LABELS: Record<WarmupStage, string> = {
+  none: "Not Started",
+  following: "Following",
+  engaging: "Engaging",
+  dm_sent: "DM Sent",
+  ready_to_pitch: "Ready to Pitch",
+}
+
+export const PUBLICATION_STATUS_LABELS: Record<PublicationStatus, string> = {
+  active: "Active",
+  moved: "Moved",
+  unknown: "Unknown",
+  freelance: "Freelance",
 }
