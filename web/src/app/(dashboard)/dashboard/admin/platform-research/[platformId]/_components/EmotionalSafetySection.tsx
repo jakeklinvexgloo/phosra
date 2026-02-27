@@ -39,29 +39,31 @@ export function EmotionalSafetySection({ data }: EmotionalSafetySectionProps) {
       </div>
 
       {/* Attachment Research */}
-      <div className="plaid-card space-y-4">
-        <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
-          <Heart className="w-4 h-4" />
-          Attachment Research
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {data.attachmentResearch.map((item) => (
-            <div
-              key={item.metric}
-              className="rounded-lg border border-border bg-muted/30 p-3"
-            >
-              <div className="text-lg font-bold text-foreground">{item.percentage}</div>
-              <div className="text-xs text-muted-foreground mt-1">{item.metric}</div>
-              <div className="mt-2 w-full h-1.5 rounded-full bg-muted overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-amber-500"
-                  style={{ width: item.percentage }}
-                />
+      {data.attachmentResearch && data.attachmentResearch.length > 0 && (
+        <div className="plaid-card space-y-4">
+          <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
+            <Heart className="w-4 h-4" />
+            Attachment Research
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {data.attachmentResearch.map((item) => (
+              <div
+                key={item.metric}
+                className="rounded-lg border border-border bg-muted/30 p-3"
+              >
+                <div className="text-lg font-bold text-foreground">{item.percentage}</div>
+                <div className="text-xs text-muted-foreground mt-1">{item.metric}</div>
+                <div className="mt-2 w-full h-1.5 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-amber-500"
+                    style={{ width: item.percentage }}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Romantic Roleplay Policy */}
       <div className="plaid-card !p-0 overflow-hidden">
@@ -222,6 +224,7 @@ export function EmotionalSafetySection({ data }: EmotionalSafetySectionProps) {
 }
 
 function PolicyBadge({ policy }: { policy: string }) {
+  if (!policy) return null
   const lower = policy.toLowerCase()
 
   if (lower.includes("block") || lower.includes("prohibited")) {

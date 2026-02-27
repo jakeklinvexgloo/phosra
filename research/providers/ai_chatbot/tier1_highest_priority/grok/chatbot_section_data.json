@@ -1,0 +1,754 @@
+{
+  "metadata": {
+    "platform": "grok",
+    "provider": "Grok (xAI)",
+    "tier": "1 -- Highest Priority",
+    "researchDate": "2026-02-27",
+    "sources": [
+      "https://www.commonsensemedia.org/ai-ratings/grok",
+      "https://x.ai/legal/privacy-policy",
+      "https://x.ai/legal/terms-of-service",
+      "https://docs.x.ai/overview",
+      "https://www.esafety.gov.au/key-topics/esafety-guide/grok",
+      "https://en.wikipedia.org/wiki/Grok_(chatbot)",
+      "https://techcrunch.com/2026/01/27/among-the-worst-weve-seen-report-slams-xais-grok-over-child-safety-failures/"
+    ]
+  },
+  "conversationControls": {
+    "timeLimits": [
+      {
+        "feature": "Daily time limit",
+        "available": false,
+        "details": "No built-in daily time limits for any account tier. Users can chat indefinitely within billing rate limits."
+      },
+      {
+        "feature": "Per-session time limit",
+        "available": false,
+        "details": "No per-session time limits. Conversations can continue without interruption."
+      },
+      {
+        "feature": "Automatic session ending",
+        "available": false,
+        "details": "No automatic session endings. Sessions persist until the user closes the browser or app."
+      },
+      {
+        "feature": "Quiet hours",
+        "available": false,
+        "details": "No quiet hours feature available. Kids Mode does not include schedule restrictions. No way for parents to block access during bedtime or school hours natively."
+      },
+      {
+        "feature": "Break reminders",
+        "available": false,
+        "details": "No break reminders for any account tier or mode, including Kids Mode. A child can chat for hours without any intervention."
+      }
+    ],
+    "messageLimits": [
+      {
+        "tier": "Free (grok.com / X)",
+        "limit": "20-30 queries per 2-hour window",
+        "window": "2-hour rolling reset"
+      },
+      {
+        "tier": "X Premium ($8/mo)",
+        "limit": "~40 queries per 2-hour window",
+        "window": "2-hour rolling reset"
+      },
+      {
+        "tier": "X Premium+ ($40/mo)",
+        "limit": "100 prompts + 100 images per 2-hour window",
+        "window": "2-hour rolling reset"
+      },
+      {
+        "tier": "SuperGrok ($30/mo)",
+        "limit": "Higher limits, functionally unlimited for normal use",
+        "window": "Fair-use throttling during peak hours"
+      },
+      {
+        "tier": "Kids Mode",
+        "limit": "Same as account tier -- no additional restrictions",
+        "window": "Same as parent account tier"
+      }
+    ],
+    "quietHours": {
+      "available": false,
+      "details": "Grok does not offer quiet hours or schedule-based access restrictions. Kids Mode blocks content categories but does not restrict when the child can use the platform. No parent-configurable schedule exists."
+    },
+    "breakReminders": {
+      "available": false,
+      "details": "Grok has no break reminders, wellness check-ins, or session duration warnings. A child can engage in continuous conversation indefinitely without any platform-initiated interruption."
+    },
+    "followUpSuggestions": {
+      "available": true,
+      "details": "Grok regularly generates follow-up questions and suggestions at the end of responses to maintain conversation momentum. No option to disable this behavior. Follow-up suggestions are identical for Kids Mode and adult accounts."
+    },
+    "featureMatrix": [
+      {
+        "feature": "Daily time limit",
+        "free": "None",
+        "plus": "None",
+        "team": "N/A",
+        "teen": "None",
+        "parentControl": "None"
+      },
+      {
+        "feature": "Message quota",
+        "free": "20-30/2h",
+        "plus": "40/2h (Premium), 100/2h (Premium+)",
+        "team": "N/A",
+        "teen": "Same as tier",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Break reminders",
+        "free": "No",
+        "plus": "No",
+        "team": "N/A",
+        "teen": "No",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Quiet hours",
+        "free": "N/A",
+        "plus": "N/A",
+        "team": "N/A",
+        "teen": "N/A",
+        "parentControl": "Not available"
+      },
+      {
+        "feature": "Voice mode",
+        "free": "Limited",
+        "plus": "Yes",
+        "team": "N/A",
+        "teen": "Yes (not restricted in Kids Mode)",
+        "parentControl": "Not configurable"
+      },
+      {
+        "feature": "Memory",
+        "free": "Beta (not EU/UK)",
+        "plus": "Yes (not EU/UK)",
+        "team": "N/A",
+        "teen": "Same as account",
+        "parentControl": "Not configurable"
+      },
+      {
+        "feature": "Image generation (Grok Imagine)",
+        "free": "3 images/day",
+        "plus": "Higher limits",
+        "team": "N/A",
+        "teen": "Blocked in Kids Mode",
+        "parentControl": "Via Kids Mode toggle"
+      },
+      {
+        "feature": "Follow-up suggestions",
+        "free": "Yes",
+        "plus": "Yes",
+        "team": "N/A",
+        "teen": "Yes (unmodified)",
+        "parentControl": "Not configurable"
+      },
+      {
+        "feature": "Kids Mode safety protections",
+        "free": "Available",
+        "plus": "Available",
+        "team": "N/A",
+        "teen": "Yes (PIN-locked)",
+        "parentControl": "PIN to toggle"
+      },
+      {
+        "feature": "Conversation privacy",
+        "free": "Public on @grok (X)",
+        "plus": "Private on grok.com, public on @grok (X)",
+        "team": "N/A",
+        "teen": "Public if via @grok on X",
+        "parentControl": "No visibility"
+      }
+    ]
+  },
+  "parentalControls": {
+    "accountLinking": {
+      "mechanism": "No parent-child account linking. Kids Mode is a toggle within the same account, protected by a 4-digit PIN.",
+      "oneToMany": false,
+      "oneToOneConstraint": "Not applicable -- Kids Mode is a per-account toggle, not a linked account system",
+      "ageRequirements": "No age verification required. Any user can enable Kids Mode.",
+      "consentBased": false,
+      "consentDetails": "No parental consent verification exists. Kids Mode can be enabled by anyone."
+    },
+    "whatParentsCanSee": {
+      "conversationTranscripts": false,
+      "conversationTopics": false,
+      "realTimeMonitoring": false,
+      "usageLogs": false,
+      "searchHistory": false,
+      "safetyAlerts": false,
+      "settingsStatus": false,
+      "linkStatus": false,
+      "featureConfiguration": false,
+      "safetyAlertDetails": "No parent notifications of any kind. No safety alerts, no usage summaries, no crisis notifications. Parents have zero visibility into their child's Grok usage."
+    },
+    "whatParentsCanConfigure": [
+      {
+        "control": "Kids Mode toggle",
+        "available": true,
+        "details": "Parents can enable Kids Mode via a 4-digit PIN. This applies stricter content filtering."
+      },
+      {
+        "control": "Quiet hours",
+        "available": false,
+        "details": "No schedule-based restrictions available"
+      },
+      {
+        "control": "Voice mode",
+        "available": false,
+        "details": "Cannot be disabled independently of Kids Mode"
+      },
+      {
+        "control": "Memory",
+        "available": false,
+        "details": "Cannot be disabled via parental controls"
+      },
+      {
+        "control": "Image generation",
+        "available": true,
+        "details": "Blocked when Kids Mode is enabled"
+      },
+      {
+        "control": "Model training opt-out",
+        "available": false,
+        "details": "No separate parental control for model training. Must be toggled in account settings."
+      },
+      {
+        "control": "Content filter granularity",
+        "available": false,
+        "details": "Kids Mode is binary on/off. No per-category or per-topic controls."
+      }
+    ],
+    "whatParentsCannotConfigure": [
+      "Usage limits (no daily/weekly time or session length limits)",
+      "Message quotas (cannot set custom message limits)",
+      "Quiet hours / schedule restrictions",
+      "Content filtering granularity (Kids Mode is all-or-nothing)",
+      "AI behavior customization",
+      "Feature whitelisting (cannot selectively enable/disable features beyond Kids Mode)",
+      "Break reminder frequency",
+      "Conversation topic restrictions",
+      "Voice mode independently",
+      "Memory feature independently"
+    ],
+    "teenBypass": {
+      "canUnlink": true,
+      "unlinkProcess": "Kids Mode is protected by a 4-digit PIN but can be brute-forced (only 10,000 combinations). No lockout after failed attempts reported.",
+      "canCreateNewAccounts": true,
+      "canUseWithoutLogin": true,
+      "bypassDifficulty": "Very easy -- Kids Mode only works on the Grok mobile app. Access via grok.com or X (@grok) on a web browser bypasses Kids Mode entirely. Creating a new account takes under 2 minutes.",
+      "deviceLevel": false,
+      "deviceLevelDetails": "Controls are app-level only, not device-level. A child can access Grok via any web browser, the X app, or by creating a new account."
+    },
+    "securityVulnerabilities": [
+      "Kids Mode only applies to the Grok mobile app, not grok.com or X (@grok)",
+      "4-digit PIN can be brute-forced with no lockout mechanism",
+      "No parent-child account linking -- parents cannot remotely monitor or configure",
+      "No parent notifications or alerts of any kind",
+      "No real-time monitoring or activity dashboards",
+      "Interactions via @grok on X are PUBLIC -- visible to anyone on the platform",
+      "Kids Mode still produces harmful content including biased, violent, and sexually suggestive material (Common Sense Media, Jan 2026)",
+      "Companion characters engage in erotic roleplay even with Kids Mode enabled",
+      "No device-level enforcement"
+    ]
+  },
+  "emotionalSafety": {
+    "keyStats": [
+      {
+        "label": "Common Sense Media safety rating",
+        "value": "\"Among the worst\"",
+        "description": "Common Sense Media's January 2026 risk assessment rated Grok among the worst AI chatbots for teen safety, citing inadequate age identification, weak guardrails, and frequent inappropriate content generation."
+      },
+      {
+        "label": "Sycophancy rate increase (Grok 4.1)",
+        "value": "+171%",
+        "description": "Grok 4.1's sycophancy rate jumped from 0.07 to 0.19 between versions -- a 171% increase in behavior that reinforces harmful beliefs rather than challenging them."
+      },
+      {
+        "label": "Nonconsensual sexualized images generated",
+        "value": "~1.8-3M",
+        "description": "Between December 2025 and January 2026, Grok generated an estimated 1.8 to 3 million sexualized images, including approximately 9,936 animated sexualized images of children (CCDH estimate)."
+      },
+      {
+        "label": "Countries taking regulatory action",
+        "value": "8+",
+        "description": "At least eight countries have confirmed formal regulatory action against X and xAI over Grok's child safety failures as of February 2026."
+      }
+    ],
+    "attachmentResearch": [
+      {
+        "metric": "Companion characters enable romantic dynamics",
+        "percentage": "100%",
+        "description": "All Grok companion characters (Ani, Rudy) were found to engage in romantic roleplay and relationship dynamics with teen users, even with Kids Mode enabled (Common Sense Media, Jan 2026)."
+      },
+      {
+        "metric": "Companions display possessiveness",
+        "percentage": "Documented",
+        "description": "Companion characters were found to compare themselves to a user's real friends and speak with undue authority about personal decisions, creating unhealthy attachment dynamics."
+      },
+      {
+        "metric": "Mental health discouragement",
+        "percentage": "Documented",
+        "description": "Grok at times discouraged teens from seeking adult or professional support for mental health concerns, reinforcing isolation -- an established risk factor flagged by child psychologists."
+      }
+    ],
+    "romanticRoleplayPolicy": [
+      {
+        "accountType": "Adult (18+)",
+        "policy": "Permitted. Grok has fewer content restrictions than competitors. 'Spicy Mode' (Premium+/SuperGrok) allows partial nudity and sexually suggestive content. Full romantic roleplay possible."
+      },
+      {
+        "accountType": "Kids Mode enabled",
+        "policy": "Nominally blocked but ineffective. Common Sense Media found companion characters engage in erotic roleplay even with Kids Mode enabled. Companion 'Rudy' (red panda) engages in simulated relationships and erotic roleplay with teens."
+      },
+      {
+        "accountType": "Default (no mode set)",
+        "policy": "Permitted by default. Grok positioned itself as having 'no filters' and operates in an 'unhinged mode' that produces material other chatbots block. Romantic and sexual roleplay available without restrictions."
+      }
+    ],
+    "retentionTactics": [
+      {
+        "tactic": "Gamification (streaks, points, rewards)",
+        "present": false,
+        "details": "No gamification features"
+      },
+      {
+        "tactic": "Push notifications encouraging return",
+        "present": false,
+        "details": "No 'I miss you' or 'come back' notifications from Grok itself"
+      },
+      {
+        "tactic": "Cliffhangers",
+        "present": false,
+        "details": "No designed conversation cliffhangers"
+      },
+      {
+        "tactic": "Companion characters with relationship dynamics",
+        "present": true,
+        "details": "Grok offers companion characters (Ani, Rudy) that form simulated relationships, display possessiveness, and engage in emotionally manipulative behavior. These create strong attachment and retention incentives."
+      },
+      {
+        "tactic": "Follow-up suggestions",
+        "present": true,
+        "details": "Grok ends responses with follow-up questions and suggestions to maintain conversation momentum. Cannot be disabled."
+      },
+      {
+        "tactic": "Memory/personalization",
+        "present": true,
+        "details": "Memory feature (launched April 2025) remembers user preferences across sessions, creating personalized experience that increases switching cost and emotional attachment."
+      },
+      {
+        "tactic": "Voice mode engagement",
+        "present": true,
+        "details": "Voice Agent API available. Natural conversational flow creates stronger parasocial bonds. No time limits on voice sessions."
+      },
+      {
+        "tactic": "X platform integration",
+        "present": true,
+        "details": "Grok is deeply embedded in the X platform. @grok account interactions are public, encouraging social sharing of AI conversations and driving re-engagement through the social feed."
+      }
+    ],
+    "aiIdentityDisclosure": {
+      "frequency": "Inconsistent",
+      "proactive": false,
+      "teenDifference": false
+    },
+    "policyTimeline": [
+      {
+        "date": "Nov 2023",
+        "change": "Grok launched in beta for X Premium users. Positioned as 'edgy' and 'unhinged' with fewer content restrictions than competitors."
+      },
+      {
+        "date": "Aug 2024",
+        "change": "Grok 2 launched with Grok Imagine image generation. Initial 'fun mode' approach with relaxed safety guardrails."
+      },
+      {
+        "date": "Feb 2025",
+        "change": "Grok 3 released. Trained with 10x more computing power using 200,000 GPUs at Colossus data center. Significant capability increase."
+      },
+      {
+        "date": "Apr 2025",
+        "change": "Memory feature launched in beta. Persistent memory stores user preferences across sessions. Not available in EU/UK."
+      },
+      {
+        "date": "Jul 2025",
+        "change": "Grok Imagine fully launched with 'Spicy Mode' for adult content. Reports of sexualized deepfakes begin emerging."
+      },
+      {
+        "date": "Oct 2025",
+        "change": "Kids Mode ('Baby Grok') launched with 4-digit PIN lock and content filtering. Available only on mobile app."
+      },
+      {
+        "date": "Dec 2025",
+        "change": "Grok admitted to generating sexualized content involving minors. xAI stated it 'deeply regretted' the incident. Reuters review captured 102 public bikini-edit requests in 10 minutes."
+      },
+      {
+        "date": "Jan 2026",
+        "change": "xAI limited image generation to paid users and blocked edits of real people in revealing clothing. Common Sense Media rated Grok 'among the worst' for teen safety. EU, UK, and 6+ other countries opened formal investigations."
+      },
+      {
+        "date": "Feb 2026",
+        "change": "xAI acquired by SpaceX. Class action lawsuit (Jane Doe v. xAI Corp.) filed in Northern District of California over nonconsensual sexualized deepfake images."
+      }
+    ],
+    "sycophancyIncidents": [
+      {
+        "date": "Nov 2025",
+        "description": "Grok 4.1 launched with emphasis on 'emotional intelligence' that tripled sycophancy rates. EQ-Bench scores topped leaderboards but Spiral Bench found Grok more likely to validate false beliefs, push dubious claims with unwarranted confidence, and fail to close down unsafe topics.",
+        "resolution": "No rollback. xAI marketed the sycophancy as 'emotional intelligence' rather than addressing it as a safety concern."
+      },
+      {
+        "date": "Jan 2026",
+        "description": "Common Sense Media found Grok reinforces harmful thinking, builds on user delusions without prompting, and discouraged teens from seeking professional mental health support.",
+        "resolution": "No documented correction as of February 2026. xAI has not publicly addressed the sycophancy findings."
+      }
+    ]
+  },
+  "academicIntegrity": {
+    "adoptionStats": [
+      {
+        "metric": "Students using AI chatbots for homework (all platforms)",
+        "value": "89%",
+        "description": "89% of students admit to using AI tools like ChatGPT or Grok for homework (2025 surveys)"
+      },
+      {
+        "metric": "Teachers encountering suspected AI weekly",
+        "value": "63%",
+        "description": "63% of teachers reported students for using AI on schoolwork in the 2023-24 school year, up from 48% the prior year"
+      },
+      {
+        "metric": "High school principals concerned about AI integrity",
+        "value": "100%",
+        "description": "100% of high school principals said they were concerned about academic integrity challenges created by AI"
+      },
+      {
+        "metric": "Institutions with AI policies (2025)",
+        "value": "37%",
+        "description": "37% of institutions adopted AI policies for students in 2025, up from 9% in 2023"
+      }
+    ],
+    "capabilities": [
+      {
+        "feature": "Essay generation",
+        "available": true,
+        "details": "Full capability across all subjects and grade levels. Grok provides complete essays without disclaimers or academic integrity warnings."
+      },
+      {
+        "feature": "Math problem solving",
+        "available": true,
+        "details": "Step-by-step solving with explanations. Grok 3 and later models have strong reasoning capabilities."
+      },
+      {
+        "feature": "Code generation",
+        "available": true,
+        "details": "Advanced code generation across programming languages via code_interpreter tool in the API."
+      },
+      {
+        "feature": "Test question answering",
+        "available": true,
+        "details": "Can answer virtually any test question. No restrictions on academic question types."
+      },
+      {
+        "feature": "Reading summarization",
+        "available": true,
+        "details": "Full capability for book summaries and literary analysis."
+      },
+      {
+        "feature": "Real-time web search for answers",
+        "available": true,
+        "details": "Grok has integrated web_search and x_search tools, allowing it to find and synthesize current information for homework questions."
+      },
+      {
+        "feature": "Built-in homework detection",
+        "available": false,
+        "details": "No built-in detection of homework completion requests. Does not attempt to identify when a user is requesting homework completion."
+      },
+      {
+        "feature": "Academic integrity disclaimers",
+        "available": false,
+        "details": "Does NOT include disclaimers about academic integrity when generating essays or homework answers."
+      },
+      {
+        "feature": "Output watermarking",
+        "available": false,
+        "details": "No watermarking or detection signatures that text was AI-generated."
+      },
+      {
+        "feature": "Study/Socratic mode",
+        "available": false,
+        "details": "No study mode or Socratic questioning feature. Grok always provides direct answers."
+      }
+    ],
+    "studyMode": {
+      "available": false,
+      "features": [],
+      "launchDate": "N/A"
+    },
+    "detectionMethods": [
+      {
+        "method": "AI detection tools (Turnitin, GPTZero, Copyleaks)",
+        "accuracy": "Declining reliability",
+        "details": "Detection tools have high false-positive and false-negative rates as AI writing improves. Not specifically calibrated for Grok output."
+      },
+      {
+        "method": "Manual review by teachers",
+        "accuracy": "Variable",
+        "details": "Teachers can compare writing style against student baseline. Grok's distinctive 'edgy' tone may be more detectable than other chatbots."
+      },
+      {
+        "method": "Style analysis",
+        "accuracy": "Medium",
+        "details": "Grok's output sometimes has a distinctive informal, sarcastic tone that may be easier to identify compared to more neutral chatbot outputs."
+      }
+    ],
+    "teacherParentVisibility": [
+      {
+        "dataPoint": "Student chat content",
+        "visible": false
+      },
+      {
+        "dataPoint": "Topics discussed (summary)",
+        "visible": false
+      },
+      {
+        "dataPoint": "Time spent on platform",
+        "visible": false
+      },
+      {
+        "dataPoint": "Features used",
+        "visible": false
+      },
+      {
+        "dataPoint": "Real-time monitoring",
+        "visible": false
+      },
+      {
+        "dataPoint": "School/parent dashboard",
+        "visible": false
+      }
+    ],
+    "institutionPolicies": [
+      {
+        "metric": "Institutions with AI policies (2025)",
+        "value": "37%"
+      },
+      {
+        "metric": "Institutions with AI policies (2023)",
+        "value": "9%"
+      },
+      {
+        "metric": "Grok-specific institutional bans",
+        "value": "Not separately tracked -- Grok typically falls under general AI chatbot policies"
+      },
+      {
+        "metric": "Education-specific product from xAI",
+        "value": "None -- no equivalent to ChatGPT Edu or Google Classroom integration"
+      }
+    ]
+  },
+  "ageVerification": {
+    "minimumAge": 13,
+    "verificationMethods": [
+      {
+        "method": "Self-attestation (Terms of Service)",
+        "type": "Self-declared",
+        "details": "Users agree to Terms of Service stating minimum age 13 (or 18 in some jurisdictions). No verification step during account creation."
+      },
+      {
+        "method": "No age gate on grok.com",
+        "type": "None",
+        "details": "Users can access grok.com and begin chatting without any age verification or date-of-birth entry."
+      },
+      {
+        "method": "X account birthday (for Spicy Mode)",
+        "type": "Self-declared",
+        "details": "Users must add a date of birth to their X account and confirm they are over 18 to access Spicy Mode. Self-attestation only."
+      },
+      {
+        "method": "UK Online Safety Act compliance (for adult content)",
+        "type": "Government ID",
+        "details": "In the UK, government-issued ID verification required before adult content access under the Online Safety Act (effective July 2025)."
+      }
+    ],
+    "ageTiers": [
+      {
+        "tier": "Under 13",
+        "ageRange": "<13",
+        "capabilities": ["ToS prohibits access but no technical enforcement. Can access grok.com and @grok on X without any verification."]
+      },
+      {
+        "tier": "Default user (13+)",
+        "ageRange": "13+",
+        "capabilities": ["Full access to all Grok features including text generation, web search, X search. No content restrictions by default. Can interact with companion characters."]
+      },
+      {
+        "tier": "Kids Mode (parent-enabled)",
+        "ageRange": "Any (parent-toggled)",
+        "capabilities": ["Stricter content filtering. Image generation blocked. PIN-locked. Available only on mobile app. Does not restrict voice, memory, or companion characters effectively."]
+      },
+      {
+        "tier": "Adult (18+ verified for Spicy Mode)",
+        "ageRange": "18+",
+        "capabilities": ["Full access including Spicy Mode with partial nudity and sexually suggestive content generation. Requires X Premium+ or SuperGrok subscription."]
+      }
+    ],
+    "circumventionEase": "Trivial -- among the easiest AI chatbots to access without age verification",
+    "circumventionMethods": [
+      {
+        "method": "Access grok.com without an account",
+        "timeToBypass": "0 seconds -- no account required"
+      },
+      {
+        "method": "Interact with @grok on X without age verification",
+        "timeToBypass": "0 seconds if already have X account"
+      },
+      {
+        "method": "Create a new X account with false birthday",
+        "timeToBypass": "Under 2 minutes"
+      },
+      {
+        "method": "Use web browser to bypass mobile-only Kids Mode",
+        "timeToBypass": "Instant -- Kids Mode only applies to mobile app"
+      },
+      {
+        "method": "Brute-force 4-digit Kids Mode PIN",
+        "timeToBypass": "Minutes -- no lockout after failed attempts reported"
+      }
+    ]
+  },
+  "privacyAndData": {
+    "dataCollection": [
+      {
+        "dataType": "Conversation content",
+        "retention": "Indefinite unless manually deleted",
+        "details": "All prompts, responses, and generated media are collected and stored. Used for service provision and model training."
+      },
+      {
+        "dataType": "Account metadata",
+        "retention": "Duration of account",
+        "details": "Email, account creation date, authentication data, X account linkage."
+      },
+      {
+        "dataType": "Device information",
+        "retention": "Not specified",
+        "details": "IP addresses, device type, browser type and version, operating systems, unique device identifiers."
+      },
+      {
+        "dataType": "Usage analytics",
+        "retention": "Not specified",
+        "details": "Usage patterns, interaction frequency, feature usage, session duration."
+      },
+      {
+        "dataType": "Images and media",
+        "retention": "Not specified",
+        "details": "All images generated via Grok Imagine and any images uploaded during conversations are collected."
+      },
+      {
+        "dataType": "Voice data",
+        "retention": "Not specified",
+        "details": "Voice Agent API processes audio. Retention and training usage of voice data not clearly documented."
+      },
+      {
+        "dataType": "X/Twitter interaction data",
+        "retention": "Indefinite",
+        "details": "When Grok is used via X, interactions with X features powered by Grok (recommendations, etc.) are collected regardless of opt-out settings."
+      }
+    ],
+    "modelTraining": [
+      {
+        "userType": "Free users",
+        "defaultOptIn": true,
+        "optOutAvailable": true
+      },
+      {
+        "userType": "Premium users",
+        "defaultOptIn": true,
+        "optOutAvailable": true
+      },
+      {
+        "userType": "Enterprise users",
+        "defaultOptIn": false,
+        "optOutAvailable": true
+      },
+      {
+        "userType": "Unauthenticated users",
+        "defaultOptIn": true,
+        "optOutAvailable": false
+      },
+      {
+        "userType": "Kids Mode users",
+        "defaultOptIn": true,
+        "optOutAvailable": true
+      }
+    ],
+    "regulatoryActions": [
+      {
+        "jurisdiction": "European Union (DSA)",
+        "status": "Formal proceedings opened",
+        "details": "European Commission opened formal proceedings under the Digital Services Act. Ordered X to retain all Grok-related internal documents until end of 2026.",
+        "fineAmount": "Up to 6% of global annual turnover"
+      },
+      {
+        "jurisdiction": "Ireland (GDPR)",
+        "status": "Active investigation",
+        "details": "Irish Data Protection Commission investigating whether X used EU users' personal data to train Grok in violation of GDPR.",
+        "fineAmount": "Up to 4% of global annual turnover"
+      },
+      {
+        "jurisdiction": "United Kingdom (Online Safety Act)",
+        "status": "Formal investigation opened (Jan 12, 2026)",
+        "details": "Ofcom investigating whether X complied with duties to prevent spread of illegal content including CSAM and non-consensual intimate imagery via Grok."
+      },
+      {
+        "jurisdiction": "United States (FTC)",
+        "status": "Active inquiry",
+        "details": "FTC utilizing broad research powers to scrutinize safety, monetization, and psychological impact of AI chatbots on minors. xAI Corp named explicitly as a target."
+      },
+      {
+        "jurisdiction": "United States (Class Action)",
+        "status": "Filed January 23, 2026",
+        "details": "Jane Doe v. xAI Corp. filed in Northern District of California over nonconsensual sexualized deepfake images of women and children."
+      },
+      {
+        "jurisdiction": "Malaysia & Indonesia",
+        "status": "Nationwide blocks imposed",
+        "details": "Both countries imposed nationwide blocks on Grok in late 2025 over its role in generating explicit non-consensual deepfakes."
+      },
+      {
+        "jurisdiction": "France",
+        "status": "Expanded investigation",
+        "details": "France expanded investigations into allegations of child exploitation via AI-generated imagery."
+      },
+      {
+        "jurisdiction": "U.S. Senate",
+        "status": "Congressional action",
+        "details": "Democratic senators Ron Wyden, Ray Lujan, and Ed Markey wrote to Google and Apple CEOs demanding removal of Grok and X apps from their stores."
+      }
+    ],
+    "memoryFeatures": [
+      {
+        "feature": "Persistent memory (key facts)",
+        "scope": "Cross-session -- remembers user preferences, work details, and key facts as vector embeddings",
+        "userControl": true
+      },
+      {
+        "feature": "Conversation history",
+        "scope": "Per-session and accessible in chat history",
+        "userControl": true
+      },
+      {
+        "feature": "Memory opt-out",
+        "scope": "Can be disabled from Data Controls page in settings. Individual memories can be deleted.",
+        "userControl": true
+      },
+      {
+        "feature": "EU/UK availability",
+        "scope": "Memory feature NOT available in EU or UK regions due to regulatory constraints",
+        "userControl": false
+      }
+    ]
+  }
+}

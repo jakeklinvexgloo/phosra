@@ -185,6 +185,7 @@ export function AcademicIntegritySection({ data }: AcademicIntegritySectionProps
 }
 
 function AccuracyBadge({ accuracy }: { accuracy: string }) {
+  if (!accuracy) return null
   const lower = accuracy.toLowerCase()
   let colorClasses: string
 

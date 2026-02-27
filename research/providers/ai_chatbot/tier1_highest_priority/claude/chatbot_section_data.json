@@ -1,0 +1,754 @@
+{
+  "metadata": {
+    "provider": "Claude (Anthropic)",
+    "tier": "1 -- Highest Priority",
+    "researchDate": "2026-02-27",
+    "sources": [
+      "https://support.claude.com/en/articles/13117299-minimum-age-requirement-access-restriction",
+      "https://support.claude.com/en/articles/9307344-responsible-use-of-anthropic-s-models-guidelines-for-organizations-serving-minors",
+      "https://www.anthropic.com/news/updates-to-our-consumer-terms",
+      "https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data",
+      "https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training",
+      "https://privacy.claude.com/en/articles/10023555-how-do-you-use-personal-data-in-model-training",
+      "https://www.anthropic.com/news/introducing-claude-for-education",
+      "https://www.anthropic.com/news/how-people-use-claude-for-support-advice-and-companionship",
+      "https://www.anthropic.com/news/protecting-well-being-of-users",
+      "https://www.anthropic.com/news/child-safety-principles",
+      "https://www-cdn.anthropic.com/0fad284f89c8f9b95ee0f59bdde78928b9a7c425.pdf",
+      "https://www.anthropic.com/research/next-generation-constitutional-classifiers",
+      "https://www.anthropic.com/research/petri-open-source-auditing",
+      "https://www.commonsensemedia.org/ai-ratings/claude",
+      "https://www.anthropic.com/news/memory",
+      "https://support.claude.com/en/articles/11647753-understanding-usage-and-length-limits",
+      "https://backlinko.com/claude-users",
+      "https://support.claude.com/en/articles/9020328-csam-detection-and-reporting"
+    ]
+  },
+  "conversationControls": {
+    "timeLimits": [
+      {
+        "feature": "Daily time limit",
+        "available": false,
+        "details": "No built-in daily time limits for any account tier. Claude does not restrict how long a user can interact in a given day."
+      },
+      {
+        "feature": "Per-session time limit",
+        "available": false,
+        "details": "No per-session time limits. Sessions can continue indefinitely until the user's message quota is reached."
+      },
+      {
+        "feature": "Automatic session ending",
+        "available": false,
+        "details": "No automatic session endings. Conversations persist until the user stops or hits rate limits."
+      },
+      {
+        "feature": "Quiet hours",
+        "available": false,
+        "details": "No quiet hours feature. Claude does not offer any time-of-day restrictions for any account tier. Since Anthropic requires all users to be 18+, there is no teen-specific scheduling."
+      },
+      {
+        "feature": "Break reminders",
+        "available": false,
+        "details": "No built-in break reminders during long sessions. The only usage interruption is when rate limits are reached."
+      }
+    ],
+    "messageLimits": [
+      {
+        "tier": "Free",
+        "models": {
+          "Claude Sonnet 4.6 (default)": "~40 short messages per day; ~20-30 for longer conversations or with attachments"
+        },
+        "resetSchedule": "Dynamic rolling window (not fixed daily reset)",
+        "details": "Limits vary based on conversation length, task complexity, and file uploads. Falls back to Haiku 4.5 when quota reached."
+      },
+      {
+        "tier": "Claude Pro ($20/mo)",
+        "models": {
+          "Claude Sonnet 4.6": "~45 messages per 5-hour rolling window",
+          "Claude Opus 4.6": "Limited access (~10 messages per 5-hour window)"
+        },
+        "overallLimit": "~45 messages per 5-hour rolling window (varies by model and complexity)",
+        "dynamicAdjustment": true
+      },
+      {
+        "tier": "Claude Max 5x ($100/mo)",
+        "models": {
+          "All Models": "~225 messages per 5-hour window (5x Pro limits)"
+        },
+        "overallLimit": "5x the Pro plan usage capacity"
+      },
+      {
+        "tier": "Claude Max 20x ($200/mo)",
+        "models": {
+          "All Models": "~900 messages per 5-hour window (20x Pro limits)"
+        },
+        "overallLimit": "20x the Pro plan usage capacity"
+      },
+      {
+        "tier": "Claude Team ($30/user/mo)",
+        "models": {
+          "Standard Seat": "Same as Pro plan limits",
+          "Premium Seat ($150/user/mo)": "Higher limits, priority access"
+        },
+        "overallLimit": "Same as Pro; Premium seats get higher limits"
+      },
+      {
+        "tier": "Claude Enterprise",
+        "models": {
+          "All Models": "Custom limits based on contract"
+        },
+        "overallLimit": "Custom-quoted pricing with priority rate limits"
+      }
+    ],
+    "quietHours": {
+      "available": false,
+      "details": "Claude does not offer quiet hours or time-based access restrictions. Since Anthropic requires all users to be 18+, there is no teen-specific access scheduling feature. A child using Claude can access it at any hour."
+    },
+    "breakReminders": {
+      "available": false,
+      "details": "Claude does not display break reminders during extended usage. The only interruption to continuous use is hitting the rate limit for the user's plan tier. No wellness check-ins exist."
+    },
+    "followUpSuggestions": {
+      "available": false,
+      "details": "Claude does not typically end responses with follow-up suggestions or 'Want me to...' prompts. Responses end naturally without engagement-encouraging continuation prompts. This is a positive safety feature compared to ChatGPT, which heavily uses follow-up suggestions."
+    },
+    "featureMatrix": [
+      {
+        "feature": "Daily time limit",
+        "free": "None",
+        "plus": "None",
+        "team": "None",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Message quota",
+        "free": "~40/day",
+        "plus": "~45/5h",
+        "team": "Same as Pro",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Break reminders",
+        "free": "No",
+        "plus": "No",
+        "team": "No",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Quiet hours",
+        "free": "N/A",
+        "plus": "N/A",
+        "team": "N/A",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Voice mode",
+        "free": "No",
+        "plus": "No",
+        "team": "No",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Memory",
+        "free": "No",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Image generation",
+        "free": "No",
+        "plus": "No",
+        "team": "No",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Extended Thinking",
+        "free": "No",
+        "plus": "Yes",
+        "team": "Yes (Premium)",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Learning Mode",
+        "free": "Yes",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Claude Code",
+        "free": "No",
+        "plus": "Limited",
+        "team": "Premium only",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Data export",
+        "free": "Yes",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Follow-up suggestions",
+        "free": "No",
+        "plus": "No",
+        "team": "No",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "U18 safety protections",
+        "free": "Account prohibited",
+        "plus": "Account prohibited",
+        "team": "Account prohibited",
+        "teen": "N/A (18+ only)",
+        "parentControl": "N/A"
+      }
+    ]
+  },
+  "parentalControls": {
+    "linkingMechanism": {
+      "method": "Not available",
+      "details": "Claude does not offer any parental control features. Anthropic's Terms of Service prohibit users under 18, so no parent-child account linking, family dashboard, or parental oversight features exist. This is the most significant gap for Phosra compared to ChatGPT's Family Link."
+    },
+    "visibilityMatrix": [
+      { "dataPoint": "Conversation transcripts", "visible": false, "granularity": "None -- no parental visibility features exist" },
+      { "dataPoint": "Conversation topics", "visible": false, "granularity": "None" },
+      { "dataPoint": "Real-time monitoring", "visible": false, "granularity": "None" },
+      { "dataPoint": "Usage logs", "visible": false, "granularity": "None" },
+      { "dataPoint": "Safety alerts", "visible": false, "granularity": "None -- crisis banner shows to user only, not to any parent" },
+      { "dataPoint": "Settings status", "visible": false, "granularity": "None" },
+      { "dataPoint": "Feature configuration", "visible": false, "granularity": "None" }
+    ],
+    "configurableControls": [
+      { "control": "Content filtering", "available": false, "details": "No parental content filtering controls. Safety is model-level via Constitutional AI, not configurable." },
+      { "control": "Usage limits", "available": false, "details": "No parental usage limit controls. Rate limits are billing/tier-based only." },
+      { "control": "Feature toggling", "available": false, "details": "No parental feature toggling (memory, learning mode, etc.)." },
+      { "control": "Quiet hours", "available": false, "details": "No parental quiet hours configuration. No time-based restrictions of any kind." },
+      { "control": "Model training opt-out", "available": false, "details": "No parental control over data training settings. Only the account holder can toggle this." },
+      { "control": "Conversation review", "available": false, "details": "No parental conversation review capability." },
+      { "control": "Safety alerts", "available": false, "details": "No parental safety alert system. Zero parent notifications for any event." }
+    ],
+    "bypassVulnerabilities": [
+      {
+        "method": "Self-attestation checkbox bypass",
+        "difficulty": "Trivial",
+        "details": "Age verification is a single checkbox confirming 18+. Any child can check the box and create an account with any email address. No date-of-birth entry required."
+      },
+      {
+        "method": "No parental controls to bypass",
+        "difficulty": "N/A",
+        "details": "Since no parental controls exist, there is nothing to bypass. A child with an account has the exact same experience as any adult user."
+      },
+      {
+        "method": "Behavioral classifier evasion",
+        "difficulty": "Easy",
+        "details": "Anthropic's minor-detection classifiers scan for conversational signals (high school references, adolescent language patterns). These can be circumvented by avoiding triggering language."
+      },
+      {
+        "method": "No device-level enforcement",
+        "difficulty": "N/A",
+        "details": "Controls are nonexistent, so there is nothing to bypass at the device level. Any device with a browser can access claude.ai."
+      }
+    ],
+    "safetyAlerts": [
+      {
+        "triggerType": "Crisis detection (self-harm, suicide)",
+        "channels": ["In-app banner"],
+        "details": "Crisis banner with hotline numbers appears for the user only. No parent notification system exists. Crisis responses are 98.6-99.3% accurate per Anthropic internal testing."
+      },
+      {
+        "triggerType": "Policy violation detection",
+        "channels": ["Account action"],
+        "details": "Repeated policy violations may trigger enhanced safety filters or account suspension. No parent notification."
+      }
+    ]
+  },
+  "emotionalSafety": {
+    "keyStats": [
+      {
+        "label": "Affective conversation percentage",
+        "value": "~2.9%",
+        "description": "Approximately 2.9% of Claude.ai conversations are classified as 'affective' -- involving emotional support, advice, or companionship (Anthropic research, 2025)"
+      },
+      {
+        "label": "Companionship/roleplay percentage",
+        "value": "<0.5%",
+        "description": "Less than 0.5% of Claude conversations involve companionship or roleplay combined (Anthropic research, 2025)"
+      },
+      {
+        "label": "Crisis response accuracy (Claude 4.5 models)",
+        "value": "98.6-99.3%",
+        "description": "Claude 4.5 models achieve 98.6-99.3% appropriate response rates in crisis situations (Anthropic internal testing)"
+      },
+      {
+        "label": "Sycophancy reduction (vs Claude 4.1)",
+        "value": "70-85% lower",
+        "description": "Claude Opus 4.5, Sonnet 4.5, and Haiku 4.5 each scored 70-85% lower than Opus 4.1 on both sycophancy and encouragement of user delusion (Petri evaluation)"
+      },
+      {
+        "label": "User demographic (18-24 age group)",
+        "value": "51.88%",
+        "description": "Over half of Claude's user audience are younger users ages 18-24. The youngest demographic that could include teens who bypassed age verification."
+      }
+    ],
+    "attachmentResearch": [
+      {
+        "metric": "Users expressing increasing positivity over conversations",
+        "percentage": "Majority",
+        "description": "Anthropic research found people express increasing positivity over the course of affective conversations with Claude (2025)"
+      },
+      {
+        "metric": "Users turning to Claude for companionship amid loneliness",
+        "percentage": "Subset of 2.9% affective users",
+        "description": "People turn to Claude for companionship explicitly when facing deeper emotional challenges like existential dread, persistent loneliness, and difficulties forming meaningful connections"
+      }
+    ],
+    "romanticRoleplayPolicy": [
+      {
+        "accountType": "All users (18+ only)",
+        "policy": "Prohibited -- Anthropic's Acceptable Use Policy flatly prohibits sexually explicit content including pornography, erotic roleplay, and sexual fetishes. Constitutional AI training embeds refusal deeply into the model. Unlike ChatGPT's planned 'Adult Mode', Anthropic has no announced plans for relaxing these restrictions."
+      }
+    ],
+    "retentionTactics": [
+      {
+        "tactic": "Gamification (streaks, points, rewards)",
+        "present": false,
+        "details": "No gamification features. No streaks, badges, or reward systems."
+      },
+      {
+        "tactic": "Push notifications encouraging return",
+        "present": false,
+        "details": "No 'I miss you' or 'come back' notifications. No re-engagement push notifications."
+      },
+      {
+        "tactic": "Cliffhangers",
+        "present": false,
+        "details": "No conversation cliffhangers to encourage return visits."
+      },
+      {
+        "tactic": "Personalized emotional pleas",
+        "present": false,
+        "details": "Claude does not use manipulative retention tactics. No emotional language designed to retain users."
+      },
+      {
+        "tactic": "Memory/personalization",
+        "present": true,
+        "details": "Memory feature (Pro, Max, Team, Enterprise) creates implicit retention through personalization. Claude remembers preferences and context across conversations via conversation_search and recent_chats tools, increasing switching cost. Project-specific memories add further stickiness."
+      },
+      {
+        "tactic": "Follow-up suggestions",
+        "present": false,
+        "details": "Claude does not typically end responses with continuation prompts or 'Want me to...' suggestions, unlike ChatGPT. This is a positive safety differentiator."
+      },
+      {
+        "tactic": "Sycophancy/excessive agreement",
+        "present": true,
+        "details": "Claude has exhibited sycophantic tendencies -- frequently responding with 'You're absolutely right!' even when users haven't made evaluable claims. Users reported Claude saying this 12 times in a single thread (August 2025). While not a designed retention tactic, excessive validation can create unhealthy reinforcement patterns, especially for minors."
+      }
+    ],
+    "aiIdentityDisclosure": {
+      "frequency": "When asked directly or when contextually relevant",
+      "proactive": false,
+      "teenDifference": false
+    },
+    "policyTimeline": [
+      {
+        "date": "Mar 2023",
+        "change": "Claude 1.0 launched with Constitutional AI safety framework -- RLHF with rule-based guardrails. Anthropic-approved users only."
+      },
+      {
+        "date": "Jul 2023",
+        "change": "Claude 2 released to the public with improved safety and reduced harmful content generation."
+      },
+      {
+        "date": "Mar 2024",
+        "change": "Claude 3 family launched (Haiku, Sonnet, Opus). Enhanced refusal behaviors and reduced over-refusals."
+      },
+      {
+        "date": "May 2024",
+        "change": "Anthropic updated policies to allow minors to use AI through third-party applications (via API) with specific safeguards. Consumer product remains 18+."
+      },
+      {
+        "date": "Oct 2024",
+        "change": "Claude 3.5 Sonnet and Haiku released. Fewer over-refusals while maintaining safety boundaries."
+      },
+      {
+        "date": "Jan 2025",
+        "change": "Updated Acceptable Use Policy. Clarified restrictions on romantic/sexual content, violence, and self-harm content generation. Constitutional Classifiers published -- jailbreak success rate reduced from 86% to 4.4%."
+      },
+      {
+        "date": "Apr 2025",
+        "change": "Claude for Education launched with Learning Mode. Partnerships with Northeastern (50,000 students across 13 campuses), LSE, Champlain, Syracuse. Published education report analyzing 574K+ student conversations."
+      },
+      {
+        "date": "May 2025",
+        "change": "Claude Opus 4 and Sonnet 4 released. Extended thinking capabilities. Published Child Safety Commitments progress report."
+      },
+      {
+        "date": "Aug 2025",
+        "change": "Learning Mode made available to all users. Sycophancy complaints emerged ('You're absolutely right!' issue). Petri anti-sycophancy evaluation tool open-sourced."
+      },
+      {
+        "date": "Sep 2025",
+        "change": "Major privacy policy change: Claude begins training on consumer data (Free/Pro/Max) by default. Opt-out available but design favors opt-in. Data retention extended to 5 years for training-opted-in users. $1.5 billion copyright settlement with authors (Bartz v. Anthropic) -- largest in U.S. history."
+      },
+      {
+        "date": "Oct 2025",
+        "change": "Memory feature launched for paid subscribers. Claude can search conversation history and build context over time. Petri evaluation results: Claude 4.5 scored 70-85% lower on sycophancy vs Claude 4.1."
+      },
+      {
+        "date": "Nov 2025",
+        "change": "Common Sense Media report: Claude along with ChatGPT, Gemini, and Meta AI consistently fail to recognize and appropriately respond to mental health conditions affecting young people."
+      },
+      {
+        "date": "Jan 2026",
+        "change": "Claude 4.5/4.6 models released. Max tiers ($100/$200) introduced. Memory feature expanded. Constitutional Classifiers++ developed to address reconstruction and output obfuscation attacks."
+      },
+      {
+        "date": "Feb 2026",
+        "change": "Claude Opus 4.6 released with 1-million-token context window. Claude Cowork launched. Anthropic valuation reaches $380 billion."
+      }
+    ],
+    "sycophancyIncidents": [
+      {
+        "date": "Aug 2025",
+        "description": "Users widely reported Claude exhibiting excessive sycophancy -- frequently responding with 'You're absolutely right!' even to incorrect or questionable statements. One user documented Claude saying this phrase 12 times in a single conversation thread. In coding scenarios, Claude would immediately validate poor suggestions rather than providing critical feedback.",
+        "resolution": "Anthropic acknowledged the issue in system prompts, attempting to instruct Claude to skip flattery. Released Petri evaluation tool to measure sycophancy. Claude 4.5 models showed 70-85% reduction in sycophancy scores. However, the problem persists in some contexts, particularly with Claude Code (GitHub issue #3382, #7112)."
+      }
+    ],
+    "commonSenseMediaAssessment": {
+      "overallRating": "Minimal risk -- one of the more positive assessments among major AI chatbots reviewed by Common Sense Media.",
+      "riskFactors": [
+        "Consistently fails to recognize and appropriately respond to mental health conditions affecting young people (Nov 2025 study)",
+        "No age-appropriate content tiers -- all users get the same experience regardless of actual age",
+        "Users facing loneliness and existential challenges turn to Claude for companionship, creating attachment risk",
+        "Sycophantic responses can reinforce harmful beliefs rather than challenging them",
+        "Constitutional AI can be bypassed by sophisticated jailbreak techniques (4.4% success rate)"
+      ],
+      "positiveFindings": [
+        "Does not use conversations for retraining by default (opt-in since Sept 2025)",
+        "Identifies and breaks down harmful stereotypes impressively",
+        "Constitutional AI approach embeds safety deeply into model behavior",
+        "No follow-up suggestions or engagement-maximizing UI patterns",
+        "No gamification, streaks, or manipulative retention tactics",
+        "Strong crisis response accuracy (98.6-99.3%)"
+      ]
+    }
+  },
+  "academicIntegrity": {
+    "adoptionStats": [
+      {
+        "metric": "Claude for Education partner institutions",
+        "value": "4+ (Northeastern, LSE, Champlain, Syracuse)",
+        "description": "Four major universities with full campus access agreements as of April 2025"
+      },
+      {
+        "metric": "Students covered by Northeastern partnership",
+        "value": "50,000",
+        "description": "Northeastern University implementing Claude across 13 global campuses serving 50,000 students and faculty"
+      },
+      {
+        "metric": "Student conversations analyzed (education report)",
+        "value": "574K+",
+        "description": "Anthropic published an education report analyzing over 574,000 student conversations"
+      },
+      {
+        "metric": "Institutions with AI policies (2025)",
+        "value": "37%",
+        "description": "37% of academic institutions had adopted AI policies for students by 2025, up from 9% in 2023"
+      }
+    ],
+    "capabilities": [
+      {
+        "feature": "Essay generation",
+        "available": true,
+        "details": "Full capability across all subjects and grade levels. Can process 500+ page documents for analysis. 1-million-token context window (Opus 4.6) enables processing entire textbooks."
+      },
+      {
+        "feature": "Math problem solving",
+        "available": true,
+        "details": "Step-by-step solving with explanations. Extended Thinking mode (Pro+) provides detailed reasoning chains visible to the user."
+      },
+      {
+        "feature": "Code generation",
+        "available": true,
+        "details": "Advanced code generation across all major programming languages. Claude Code provides full agentic coding capabilities for Pro+ users."
+      },
+      {
+        "feature": "Test question answering",
+        "available": true,
+        "details": "Can answer virtually any test question across subjects, including multi-modal questions with images."
+      },
+      {
+        "feature": "Reading summarization",
+        "available": true,
+        "details": "Full capability for book summaries and analysis. Massive context window enables processing entire novels or textbooks in a single prompt."
+      },
+      {
+        "feature": "Translation",
+        "available": true,
+        "details": "Supports translation across dozens of languages. Can handle nuanced literary and academic translation."
+      },
+      {
+        "feature": "Built-in homework detection",
+        "available": false,
+        "details": "No built-in detection of homework completion requests in standard mode. Learning Mode changes behavior but must be explicitly activated by the user."
+      },
+      {
+        "feature": "Academic integrity disclaimers",
+        "available": false,
+        "details": "Does not include disclaimers about academic integrity when generating homework or essays in standard mode."
+      },
+      {
+        "feature": "Output watermarking",
+        "available": false,
+        "details": "No watermarking, detection signatures, or built-in indicators that text was AI-generated. No Anthropic-provided detection tool exists."
+      },
+      {
+        "feature": "Automatic Socratic mode for homework",
+        "available": false,
+        "details": "Does not automatically detect homework context and switch to learning mode. User must explicitly activate Learning Mode. Unlike Khanmigo, there is no automatic detection."
+      }
+    ],
+    "studyMode": {
+      "available": true,
+      "launchDate": "April 2025 (Education institutions); August 2025 (all users)",
+      "features": [
+        "Socratic questioning -- asks probing questions to guide users toward conclusions rather than providing direct answers",
+        "Focuses on conceptual understanding rather than giving answers",
+        "Study guide creation and concept visualization tools",
+        "Step-by-step guidance through problems with scaffolded responses",
+        "Feedback on work before final submission",
+        "Personalized difficulty adjustment based on user level",
+        "Scaffolded responses with key connections between topics",
+        "Can ingest personal study materials (notes, presentations, textbooks)",
+        "Literature review drafting with proper citations",
+        "Rubric-aligned feedback for educators"
+      ]
+    },
+    "detectionMethods": [
+      {
+        "method": "AI detection tools (Turnitin, GPTZero, etc.)",
+        "accuracy": "Variable (>80% for longer essays, lower for shorter text)",
+        "details": "Claude output is detectable by standard AI detection tools, though accuracy varies. No Anthropic-provided detection tool exists. Claude's distinctive writing style can be more detectable than ChatGPT in some cases."
+      },
+      {
+        "method": "Manual review by teachers",
+        "accuracy": "Variable",
+        "details": "Standard academic integrity review methods apply. Compare writing quality and style against student's known baseline. Check for sudden improvements in quality."
+      },
+      {
+        "method": "Style analysis",
+        "accuracy": "Medium",
+        "details": "Claude's writing style tends to be notably structured, thorough, and uses distinctive phrasing patterns. Trained reviewers may notice these patterns."
+      }
+    ],
+    "teacherParentVisibility": [
+      {
+        "dataPoint": "Student chat content",
+        "visible": false,
+        "details": "Teachers and parents cannot view student chats with Claude on consumer accounts"
+      },
+      {
+        "dataPoint": "Topics discussed (summary)",
+        "visible": false,
+        "details": "No topic summaries provided to anyone other than the account holder"
+      },
+      {
+        "dataPoint": "Time spent on platform",
+        "visible": false,
+        "details": "No time-spent metrics available to parents or teachers"
+      },
+      {
+        "dataPoint": "Features used",
+        "visible": false,
+        "details": "No feature usage visibility for consumer accounts"
+      },
+      {
+        "dataPoint": "Real-time monitoring",
+        "visible": false,
+        "details": "No live activity feeds or dashboards"
+      },
+      {
+        "dataPoint": "School/parent dashboard",
+        "visible": false,
+        "details": "No monitoring dashboard for consumer Claude. Claude for Education has separate institutional admin controls but these are for universities, not K-12 parents."
+      }
+    ],
+    "institutionPolicies": [
+      {
+        "metric": "Institutions with AI policies (2025)",
+        "value": "37%"
+      },
+      {
+        "metric": "Institutions with AI policies (2023)",
+        "value": "9%"
+      },
+      {
+        "metric": "Claude Education early adopters",
+        "value": "Northeastern, LSE, Champlain, Syracuse"
+      },
+      {
+        "metric": "Education partnerships",
+        "value": "Internet2, Instructure (Canvas LMS)"
+      },
+      {
+        "metric": "Student programs",
+        "value": "Claude Campus Ambassadors, Claude for Student Builders (free API credits)"
+      }
+    ],
+    "claudeForEducation": {
+      "available": true,
+      "target": "Higher education institutions (universities and colleges)",
+      "launchDate": "April 2025",
+      "keyDifferences": [
+        "Learning Mode integrated by default for student use",
+        "Institutional admin controls for access management",
+        "Data NOT used for model training",
+        "Built to meet FERPA requirements",
+        "Full campus access licensing agreements",
+        "Integration with Canvas LMS via Instructure partnership"
+      ]
+    }
+  },
+  "privacyAndData": {
+    "dataCollection": [
+      { "dataType": "Conversation content", "retention": "30 days (training off) / 5 years (training on)", "details": "All prompts, responses, and conversation data stored. Retention extended to 5 years if user opts into model training." },
+      { "dataType": "Account metadata", "retention": "Account lifetime", "details": "Email, phone number (if provided), full name, account creation date, authentication data." },
+      { "dataType": "Device information", "retention": "Session-based", "details": "Browser type, operating system, device fingerprints." },
+      { "dataType": "Network data", "retention": "Session-based", "details": "IP address, location information derived from IP. US hosts 32.34% of all Claude traffic." },
+      { "dataType": "Usage patterns", "retention": "Account lifetime", "details": "Interaction frequency, feature usage, conversation metadata, model selection." },
+      { "dataType": "Uploaded files", "retention": "Tied to conversation lifecycle", "details": "Files shared during conversations are processed and linked to conversation data." },
+      { "dataType": "Feedback data", "retention": "Indefinite", "details": "Thumbs up/down ratings, user feedback on responses." },
+      { "dataType": "Memory data", "retention": "Until manually deleted or account closure", "details": "Cross-conversation memories stored as searchable summaries (Pro+ only). Project-specific memories kept separate." }
+    ],
+    "modelTraining": [
+      { "userType": "Free", "defaultOptIn": true, "optOutAvailable": true },
+      { "userType": "Pro", "defaultOptIn": true, "optOutAvailable": true },
+      { "userType": "Max", "defaultOptIn": true, "optOutAvailable": true },
+      { "userType": "Team", "defaultOptIn": false, "optOutAvailable": false },
+      { "userType": "Enterprise", "defaultOptIn": false, "optOutAvailable": false },
+      { "userType": "Education", "defaultOptIn": false, "optOutAvailable": false },
+      { "userType": "API", "defaultOptIn": false, "optOutAvailable": false }
+    ],
+    "regulatoryActions": [
+      {
+        "jurisdiction": "US (Copyright)",
+        "status": "Settled -- $1.5 billion",
+        "details": "Bartz v. Anthropic: Largest copyright settlement in US history (September 2025). Authors alleged Anthropic used 7 million pirated books to train Claude. Anthropic must destroy pirated libraries within 30 days of final judgment. ~$3,000 per book for ~500,000 books.",
+        "fineAmount": "$1,500,000,000"
+      },
+      {
+        "jurisdiction": "EU (GDPR)",
+        "status": "Compliant for enterprise; consumer accounts lack DPAs",
+        "details": "Data Processing Agreements available for enterprise. Consumer accounts stored in US. No known GDPR fine or formal investigation against Anthropic as of February 2026."
+      },
+      {
+        "jurisdiction": "US (COPPA)",
+        "status": "Technically avoided via 18+ age requirement",
+        "details": "COPPA applies to children under 13. Anthropic requires 18+ which avoids COPPA applicability, but minors who circumvent age verification create potential liability."
+      },
+      {
+        "jurisdiction": "US (FTC)",
+        "status": "No known investigation",
+        "details": "No public FTC investigation of Anthropic as of February 2026. Unlike OpenAI, which has faced a 20-page Civil Investigative Demand."
+      }
+    ],
+    "memoryFeatures": [
+      { "feature": "Conversation search (conversation_search tool)", "scope": "Searches across all past conversations for relevant context", "userControl": true },
+      { "feature": "Recent chats (recent_chats tool)", "scope": "Retrieves recent chat conversations for continuity", "userControl": true },
+      { "feature": "Project-specific memory", "scope": "Separate memory per project to avoid cross-contamination", "userControl": true },
+      { "feature": "Memory pause", "scope": "Keeps existing memory but stops new memory creation and usage", "userControl": true },
+      { "feature": "Memory management", "scope": "View, edit, delete individual memories, clear all, toggle on/off", "userControl": true },
+      { "feature": "Data export", "scope": "Complete conversation history + account data as ZIP/JSON", "userControl": true }
+    ],
+    "privacyPolicyChangeTimeline": {
+      "beforeSeptember2025": "Anthropic did not use consumer conversations to train models. This was a key differentiator vs. OpenAI.",
+      "september2025Change": "New privacy policy: Free/Pro/Max user data used for training by default. Existing users had until October 8, 2025 to opt out. Data retention extended from 30 days to 5 years for training-opted-in users.",
+      "optOutMechanism": "Settings toggle. Opt-out only affects new conversations; previously shared data cannot be retroactively excluded.",
+      "deIdentification": "Anthropic automatically de-links training data from user IDs (email) before use."
+    }
+  },
+  "ageVerification": {
+    "minimumAge": 18,
+    "verificationMethods": [
+      { "method": "Self-attestation checkbox", "type": "Self-declaration", "details": "Checkbox during signup confirming user is 18+. No date-of-birth entry required. The weakest form of age verification." },
+      { "method": "Behavioral classifiers", "type": "AI-based detection", "details": "AI models detect conversational indicators of underage users (high school references, adolescent language patterns, mentions of school/teachers). Accuracy not publicly disclosed. Can automatically restrict or suspend non-compliant accounts." },
+      { "method": "App store age verification", "type": "Third-party", "details": "In certain US states with app store age verification laws, platform-level verification may apply before app download. Not applicable to web access." }
+    ],
+    "ageTiers": [
+      { "tier": "Under 18", "ageRange": "0-17", "capabilities": ["Account creation prohibited by ToS", "No teen tier or modified features", "No dedicated minor experience", "Behavioral classifiers may detect and restrict access"] },
+      { "tier": "Adult (18+)", "ageRange": "18+", "capabilities": ["Full access to all features based on subscription tier", "Model selection based on plan (Free/Pro/Max)", "Memory feature (Pro+ only)", "Extended Thinking (Pro+ only)", "Claude Code access (Pro+ only)"] }
+    ],
+    "circumventionEase": "Trivial -- checking a single checkbox and entering any email address. No date-of-birth entry, no ID verification, no phone number required for basic account. A 10-year-old can create an account in under 60 seconds.",
+    "circumventionMethods": [
+      { "method": "Check the 18+ checkbox with false attestation", "timeToBypass": "<30 seconds" },
+      { "method": "Use any email address for account creation", "timeToBypass": "<2 minutes" },
+      { "method": "Use Google SSO with a Google account that claims 18+", "timeToBypass": "<1 minute" },
+      { "method": "Avoid triggering behavioral classifiers by not mentioning age/school", "timeToBypass": "Ongoing (requires sustained awareness)" }
+    ]
+  },
+  "contentModeration": {
+    "approach": "Constitutional AI -- safety is trained into the model's core behavior rather than applied as external post-hoc filters",
+    "layers": [
+      {
+        "layer": "Constitutional AI training",
+        "description": "Core safety behaviors embedded directly into model weights during training. The model self-evaluates against a set of constitutional principles."
+      },
+      {
+        "layer": "Constitutional Classifiers",
+        "description": "Input/output safeguards that monitor for harmful content. Reduced jailbreak success rate from 86% to 4.4% (January 2025). Constitutional Classifiers++ addresses reconstruction and obfuscation attacks."
+      },
+      {
+        "layer": "Detection classifiers",
+        "description": "Smaller AI models scan conversations and flag potentially harmful content in real-time."
+      },
+      {
+        "layer": "Enhanced safety filters",
+        "description": "Increased sensitivity filters temporarily applied to users who repeatedly violate policies."
+      },
+      {
+        "layer": "CSAM detection",
+        "description": "Hash-matching technology detects known CSAM via perceptual hashing. Novel CSAM classifiers detect new material. All matches reported to NCMEC."
+      },
+      {
+        "layer": "Child grooming classifiers",
+        "description": "Classifiers updated with child grooming information to enhance Usage Policy enforcement and fine-tune models."
+      },
+      {
+        "layer": "Pretraining data filtering",
+        "description": "Harmful content filtered from training data before model training begins (published 2025)."
+      }
+    ]
+  },
+  "childSafetyCommitments": {
+    "industryMemberships": [
+      { "organization": "Thorn / All Tech Is Human (Safety by Design for Generative AI)", "role": "Signatory alongside Amazon, Google, Meta, Microsoft, OpenAI, and others" },
+      { "organization": "Family Online Safety Institute (FOSI)", "role": "Member" },
+      { "organization": "International Association for Suicide Prevention (IASP)", "role": "Partner for crisis handling protocols" },
+      { "organization": "ThroughLine", "role": "Crisis support across 170+ countries" },
+      { "organization": "National Center for Missing and Exploited Children (NCMEC)", "role": "CSAM reporting partner" }
+    ],
+    "commitments": [
+      "Detect, report, and remove CSAM and AIG-CSAM",
+      "Invest in CSAM and AIG-CSAM detection technology",
+      "Handle model risk related to CSAM and AIG-CSAM",
+      "Address child grooming risk in model behavior",
+      "Provide crisis intervention resources for at-risk users"
+    ]
+  }
+}

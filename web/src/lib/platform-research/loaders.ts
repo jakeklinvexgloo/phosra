@@ -512,6 +512,9 @@ function getPlatformName(platformId: string): string {
     prime_video: "Prime Video",
     youtube: "YouTube",
     chatgpt: "ChatGPT",
+    claude: "Claude",
+    gemini: "Gemini",
+    grok: "Grok",
   }
   return names[platformId] ?? platformId.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 }
@@ -530,6 +533,12 @@ function getCapabilitySummary(platformId: string): CapabilitySummary {
   }
   if (platformId === "claude") {
     return getClaudeCapabilities()
+  }
+  if (platformId === "gemini") {
+    return getGeminiCapabilities()
+  }
+  if (platformId === "grok") {
+    return getGrokCapabilities()
   }
   return { fullyEnforceable: [], partiallyEnforceable: [], notApplicable: [] }
 }
@@ -880,6 +889,216 @@ function getClaudeCapabilities(): CapabilitySummary {
       ruleCategory: "location_tracking",
       label: "Location Tracking",
       platformFeature: "No location features in Claude",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "autoplay_control",
+      label: "Autoplay Control",
+      platformFeature: "Text-based interaction — no autoplay content",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "title_restriction",
+      label: "Title Restriction",
+      platformFeature: "No content library — generative AI, not curated content",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+  ]
+
+  return { fullyEnforceable, partiallyEnforceable, notApplicable }
+}
+
+function getGeminiCapabilities(): CapabilitySummary {
+  const fullyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "screen_time_limit",
+      label: "Daily Time Limit",
+      platformFeature: "No native time limits",
+      enforcementMethod: "Browser extension tracks session duration + DNS blocking when limit reached",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "message_rate_limit",
+      label: "Message Limit",
+      platformFeature: "Only technical rate limits (billing), not safety controls",
+      enforcementMethod: "Browser extension counts messages and blocks input when limit reached",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "bedtime_schedule",
+      label: "Schedule / Quiet Hours",
+      platformFeature: "No native quiet hours or scheduling",
+      enforcementMethod: "DNS-level domain blocking during restricted hours",
+      confidence: 0.9,
+    },
+    {
+      ruleCategory: "engagement_check",
+      label: "Break Reminders",
+      platformFeature: "No native break reminders",
+      enforcementMethod: "Browser extension injects break prompts at configured intervals",
+      confidence: 0.9,
+    },
+  ]
+
+  const partiallyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "content_rating_filter",
+      label: "Content Safety Filter",
+      platformFeature: "Built-in safety filters with adjustable thresholds via API",
+      enforcementMethod: "Gemini API safety settings can be configured per-request; web UI filters are non-configurable",
+      confidence: 0.6,
+      gap: "Web UI safety settings cannot be modified by parents — only API-level control available",
+      workaround: "Use third-party moderation API for content classification + parent alerts",
+    },
+    {
+      ruleCategory: "parental_event_notification",
+      label: "Safety Alerts",
+      platformFeature: "No parent notifications — integrated with Google account but no family-specific features",
+      enforcementMethod: "Extension detects blocked responses + third-party moderation flags → parent notification",
+      confidence: 0.55,
+      gap: "No webhook/API for safety events — requires client-side detection",
+      workaround: "Extension monitors DOM for safety-blocked responses and classifies messages",
+    },
+    {
+      ruleCategory: "screen_time_report",
+      label: "Usage Analytics",
+      platformFeature: "Google Activity controls track Gemini usage within Google account",
+      enforcementMethod: "Extension tracks detailed usage metrics; Google Activity data not parent-accessible",
+      confidence: 0.6,
+      gap: "Google Activity data is account-holder-only — no parent-facing dashboard",
+      workaround: "Extension-only tracking supplemented by Google Family Link app usage data",
+    },
+    {
+      ruleCategory: "age_gate",
+      label: "Age Verification",
+      platformFeature: "Google account age verification — under-13 blocked, teens allowed with Google account",
+      enforcementMethod: "Google account DOB enforcement; supervised accounts have additional restrictions",
+      confidence: 0.5,
+      gap: "Teens 13+ can access freely with a standard Google account",
+      workaround: "Google Family Link can manage teen accounts; DNS blocking for additional control",
+    },
+  ]
+
+  const notApplicable: CapabilityEntry[] = [
+    {
+      ruleCategory: "purchase_control",
+      label: "Purchase Control",
+      platformFeature: "Subscription via Google One — no in-conversation purchases",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "location_tracking",
+      label: "Location Tracking",
+      platformFeature: "No location features in Gemini",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "autoplay_control",
+      label: "Autoplay Control",
+      platformFeature: "Text-based interaction — no autoplay content",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "title_restriction",
+      label: "Title Restriction",
+      platformFeature: "No content library — generative AI, not curated content",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+  ]
+
+  return { fullyEnforceable, partiallyEnforceable, notApplicable }
+}
+
+function getGrokCapabilities(): CapabilitySummary {
+  const fullyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "screen_time_limit",
+      label: "Daily Time Limit",
+      platformFeature: "No native time limits",
+      enforcementMethod: "Browser extension tracks session duration + DNS blocking when limit reached",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "message_rate_limit",
+      label: "Message Limit",
+      platformFeature: "Free tier has natural rate limits (~10 msgs/2hrs), no parental controls",
+      enforcementMethod: "Browser extension counts messages and blocks input when limit reached",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "bedtime_schedule",
+      label: "Schedule / Quiet Hours",
+      platformFeature: "No native quiet hours or scheduling",
+      enforcementMethod: "DNS-level domain blocking during restricted hours",
+      confidence: 0.9,
+    },
+    {
+      ruleCategory: "engagement_check",
+      label: "Break Reminders",
+      platformFeature: "No native break reminders",
+      enforcementMethod: "Browser extension injects break prompts at configured intervals",
+      confidence: 0.9,
+    },
+  ]
+
+  const partiallyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "content_rating_filter",
+      label: "Content Safety Filter",
+      platformFeature: "Minimal built-in content safety — 'Fun Mode' explicitly less restrictive",
+      enforcementMethod: "Third-party moderation API classifies captured text; extension alerts on violations",
+      confidence: 0.5,
+      gap: "Grok's design philosophy prioritizes minimal censorship — very weak built-in safety",
+      workaround: "Use third-party moderation API for independent content classification + parent alerts",
+    },
+    {
+      ruleCategory: "parental_event_notification",
+      label: "Safety Alerts",
+      platformFeature: "Zero parent notifications — no parent-facing features at all",
+      enforcementMethod: "Extension detects unsafe content + third-party moderation flags → parent notification",
+      confidence: 0.5,
+      gap: "No webhook/API for safety events — requires client-side detection",
+      workaround: "Extension monitors DOM and classifies messages via third-party moderation API",
+    },
+    {
+      ruleCategory: "screen_time_report",
+      label: "Usage Analytics",
+      platformFeature: "No usage stats visible to anyone",
+      enforcementMethod: "Extension tracks usage metrics (messages, duration)",
+      confidence: 0.6,
+      gap: "No API to retrieve usage stats — extension tracking is desktop-only",
+      workaround: "Extension-only tracking; no server-side data available",
+    },
+    {
+      ruleCategory: "age_gate",
+      label: "Age Verification",
+      platformFeature: "No age verification — accessible via X account or standalone, no DOB check",
+      enforcementMethod: "Cannot strengthen age verification; extension detects account status",
+      confidence: 0.15,
+      gap: "Zero age verification is the biggest risk — any X account or email grants access",
+      workaround: "DNS blocking prevents access on controlled devices; extension monitors usage",
+    },
+  ]
+
+  const notApplicable: CapabilityEntry[] = [
+    {
+      ruleCategory: "purchase_control",
+      label: "Purchase Control",
+      platformFeature: "Free tier + X Premium — no in-conversation purchases",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "location_tracking",
+      label: "Location Tracking",
+      platformFeature: "No location features in Grok",
       enforcementMethod: "N/A",
       confidence: 1.0,
     },

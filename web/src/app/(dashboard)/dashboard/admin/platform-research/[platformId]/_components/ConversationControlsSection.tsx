@@ -188,6 +188,7 @@ function FeatureCard({
 }
 
 function MatrixCell({ value }: { value: string }) {
+  if (!value) return <XCircle className="w-4 h-4 text-red-400/40 mx-auto" />
   const lower = value.toLowerCase()
 
   // Check mark for yes/true/available

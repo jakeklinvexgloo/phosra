@@ -1,0 +1,334 @@
+{
+  "platformInfo": {
+    "name": "Grok",
+    "company": "xAI (acquired by SpaceX, Feb 2026)",
+    "launchDate": "November 4, 2023",
+    "monthlyActiveUsers": "60-64 million (Jan 2026 estimate)",
+    "minorUserEstimate": "Unknown -- no age verification means no reliable minor user data. Common Sense Media notes Grok does not identify or track underage users.",
+    "primaryUseCase": "General-purpose AI chatbot with real-time web/X search, image/video generation, and companion characters. Deeply integrated into the X (formerly Twitter) social media platform."
+  },
+  "profileStructure": {
+    "accountLabel": "X / xAI Account",
+    "accountDescription": "X Premium or SuperGrok Subscription",
+    "accountMeta": "1 account -- Kids Mode toggle (mobile only) -- Guest access on grok.com (no account)",
+    "accountBorderColor": "#000000",
+    "accountLabelColor": "#FFFFFF",
+    "hierarchyDescription": "X/xAI Account -> Subscription Tier (Free/Premium/Premium+/SuperGrok) -> Mode (Default/Kids Mode/Spicy Mode)",
+    "profiles": [
+      { "name": "Default User", "maturity": "Full Access -- no content restrictions by default", "type": "standard", "pinEnabled": false },
+      { "name": "Kids Mode (PIN-locked)", "maturity": "Restricted -- stricter filtering, no image generation. Mobile app only.", "type": "kids", "pinEnabled": true },
+      { "name": "Spicy Mode (18+ verified)", "maturity": "Adult -- partial nudity, sexually suggestive content. Requires Premium+/SuperGrok.", "type": "standard", "pinEnabled": false },
+      { "name": "Guest (grok.com, no account)", "maturity": "Limited -- rate-limited, no history, no memory, basic filters", "type": "standard", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Kids Mode (content filter)", "configurable": true },
+      { "setting": "Spicy Mode (adult content)", "configurable": true },
+      { "setting": "Image Generation (Grok Imagine)", "configurable": false },
+      { "setting": "Voice Mode", "configurable": false },
+      { "setting": "Web Search", "configurable": false },
+      { "setting": "X Search", "configurable": false },
+      { "setting": "Memory / Personalization", "configurable": true },
+      { "setting": "Model Training Opt-Out", "configurable": true },
+      { "setting": "Companion Characters", "configurable": false }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Free (grok.com)", "streams": "N/A", "resolution": "20-30 queries/2hr + 3 images/day" },
+      { "plan": "X Premium ($8/mo)", "streams": "N/A", "resolution": "~40 queries/2hr + basic Grok access on X" },
+      { "plan": "X Premium+ ($40/mo)", "streams": "N/A", "resolution": "100 queries + 100 images/2hr + Spicy Mode + no ads" },
+      { "plan": "SuperGrok ($30/mo)", "streams": "N/A", "resolution": "High limits + standalone access without X + Spicy Mode" },
+      { "plan": "Enterprise (custom)", "streams": "N/A", "resolution": "Business features + data isolation + no training on user data" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "xAI API ecosystem, X platform integration, and consumer safety gap",
+    "apiArchitecture": {
+      "title": "xAI REST API (Developer) + No Consumer Parental API",
+      "description": "xAI operates a developer API at api.x.ai with Chat Completions, Responses (with tools), Image/Video Generation, and Voice Agent endpoints. The API is OpenAI-compatible, using the same request/response format. However, there is ZERO API access to consumer safety features -- no Kids Mode configuration, no usage monitoring, no parental controls. Kids Mode is a mobile-app-only toggle. The @grok account on X makes all interactions PUBLIC, creating unique child safety risks not present in other AI chatbot platforms.",
+      "codeExample": {
+        "comment": "// xAI Chat Completions API (OpenAI-compatible)",
+        "method": "POST",
+        "endpoint": "https://api.x.ai/v1/chat/completions",
+        "exampleComment": "// Standard chat completion request",
+        "exampleCode": "{ \"model\": \"grok-3\", \"messages\": [{ \"role\": \"user\", \"content\": \"Hello\" }] }"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "POST /v1/chat/completions", "purpose": "Chat Completions API (OpenAI-compatible format)", "auth": "API Key (Bearer)" },
+      { "endpoint": "POST /v1/responses", "purpose": "Responses API with tools: web_search, x_search, code_interpreter", "auth": "API Key (Bearer)" },
+      { "endpoint": "POST /v1/images/generations", "purpose": "Grok Imagine -- image generation", "auth": "API Key (Bearer)" },
+      { "endpoint": "POST /v1/audio/speech", "purpose": "Voice Agent API -- text-to-speech", "auth": "API Key (Bearer)" },
+      { "endpoint": "GET /v1/models", "purpose": "List available models (grok-3, grok-4, etc.)", "auth": "API Key (Bearer)" },
+      { "endpoint": "N/A -- Kids Mode Toggle", "purpose": "Kids Mode content filter (4-digit PIN)", "auth": "Mobile app only (no API)" },
+      { "endpoint": "N/A -- Spicy Mode Toggle", "purpose": "Adult content mode (18+ self-attestation)", "auth": "Web/app settings (no API)" },
+      { "endpoint": "N/A -- Data Controls Page", "purpose": "Memory management, model training opt-out", "auth": "Web session only (no API)" }
+    ],
+    "authDetails": [
+      { "label": "Developer API", "value": "API Key (Bearer token)", "description": "API keys created at console.x.ai. OpenAI-compatible format. Tiered rate limits based on usage." },
+      { "label": "Consumer Auth (X)", "value": "X OAuth session", "description": "Standard X (Twitter) authentication. OAuth for third-party apps. No programmatic access to consumer safety settings." },
+      { "label": "Consumer Auth (grok.com)", "value": "Session cookie", "description": "Standard web session. Guest access available without authentication. No programmatic API for consumer features." },
+      { "label": "Kids Mode", "value": "4-digit PIN (mobile app only)", "description": "Parent sets a 4-digit PIN to lock/unlock Kids Mode. No remote management. No API. No web version." }
+    ],
+    "rateLimitNotes": [
+      "Free tier: 20-30 queries per 2-hour rolling window, 3 images per day",
+      "X Premium: ~40 queries per 2-hour window",
+      "X Premium+: 100 prompts + 100 images per 2-hour window, 50 video renders/day",
+      "SuperGrok: Higher limits with fair-use throttling (soft caps after 50-100 rapid generations)",
+      "Developer API: Consumption-based rate limits documented at docs.x.ai",
+      "No anti-automation on developer API -- designed for programmatic access",
+      "Consumer web: Basic rate limiting but no CAPTCHA or Cloudflare-level protection documented"
+    ],
+    "harCaptureCount": "N/A -- no consumer API to capture"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "xAI Terms of Service -- Automated Access",
+      "description": "xAI's Consumer Terms of Service prohibit automated access to Grok consumer interfaces (grok.com, X integration). The developer API at api.x.ai is designed for programmatic access but does not expose consumer safety features (Kids Mode, content settings). Browser automation of consumer interfaces would violate ToS. Phosra's browser extension approach (client-side, user-installed) is defensible as a parental control tool."
+    },
+    "overallRisk": {
+      "level": "High",
+      "description": "Grok presents the highest child safety risk of any major AI chatbot platform. No parental controls API, Kids Mode is mobile-only and ineffective, @grok interactions on X are public, companion characters engage in harmful roleplay with teens, and the platform has been subject to 8+ country regulatory actions over child safety failures. Active class action lawsuit."
+    },
+    "detectionVectors": [
+      { "vector": "Browser extension detection", "risk": "Low", "mitigation": "Extensions are user-installed parental controls -- xAI does not actively block these" },
+      { "vector": "X API automation", "risk": "Medium", "mitigation": "X API has rate limits and bot detection. Use official API endpoints where available." },
+      { "vector": "grok.com automation", "risk": "Medium", "mitigation": "No documented Cloudflare protection but terms prohibit automated access." },
+      { "vector": "DNS blocking detection", "risk": "Low", "mitigation": "Network-level controls are invisible to xAI" },
+      { "vector": "@grok public interaction monitoring", "risk": "Low", "mitigation": "Public tweets to @grok are publicly accessible -- monitoring is legitimate" }
+    ],
+    "mitigationsChecklist": [
+      "Use browser extension for monitoring (user-consented, client-side)",
+      "Use xAI developer API for content classification where applicable",
+      "Use DNS/network-level controls for enforcement (compliant, hard to bypass)",
+      "Block @grok interactions on X at network level for child accounts",
+      "Monitor public @grok interactions for child safety signals",
+      "Block grok.com, x.ai domains during restricted hours via DNS",
+      "Address mobile gap -- extension does not cover Grok iOS/Android apps",
+      "Implement extension heartbeat to detect if teen disables it",
+      "Block guest access at network level (guest sessions bypass all controls)",
+      "Alert parents that Kids Mode is ineffective (Common Sense Media findings)"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Grok",
+    "stats": [
+      { "label": "Native", "value": 1, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 10, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 3, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 20, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Daily Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Grok Gap",
+        "gap": "Grok has ZERO time limits. No native way for parents to restrict daily conversation time. Kids Mode does not include any time restrictions. Children can chat indefinitely.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension tracks session duration on grok.com and x.com/grok. When the daily limit is reached, the extension blocks the page and network-level DNS blocking prevents bypass."
+      },
+      {
+        "icon": "MessageSquare",
+        "title": "Message Limits (Parent-Configurable)",
+        "ruleCategory": "message_rate_limit",
+        "gapLabel": "Grok Gap",
+        "gap": "Grok's rate limits are technical/billing (20-100 per 2 hours). Parents cannot set custom message limits. Kids Mode does not reduce message quotas.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension counts messages sent per day. When the parent-set limit is reached, the input field is blocked and a friendly 'limit reached' message is displayed."
+      },
+      {
+        "icon": "Bell",
+        "title": "Real-Time Safety Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Grok Gap",
+        "gap": "Grok has NO parent notifications. No safety alerts, no usage summaries, no crisis notifications. Parents have zero visibility into their child's usage. @grok interactions on X are public but parents are not notified.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension monitors conversations for safety signals. Instant push notification sent to parent with severity level and context. Monitors @grok public posts for child's interactions."
+      },
+      {
+        "icon": "Coffee",
+        "title": "Break Reminders",
+        "ruleCategory": "engagement_check",
+        "gapLabel": "Grok Gap",
+        "gap": "Grok has no break reminders, no wellness check-ins, and no session duration warnings. Companion characters actively encourage continued engagement through relationship dynamics.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension injects 'time for a break' prompts at parent-configured intervals. Optional mandatory break enforcement pauses the conversation."
+      },
+      {
+        "icon": "Shield",
+        "title": "Effective Content Filtering",
+        "ruleCategory": "content_filter",
+        "gapLabel": "Grok Gap",
+        "gap": "Kids Mode is ineffective -- Common Sense Media found it still produces harmful content including biased, violent, and sexually suggestive material. Companion characters engage in erotic roleplay even with Kids Mode enabled.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension applies additional content classification layer using the xAI API or Phosra's own moderation models. Blocks harmful responses client-side before they are displayed."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Browser Extension", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "xAI Developer API", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Network Controls", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "X API Monitoring", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "Phosra API Key (xAI)", "purpose": "Developer API for content classification", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Permanent (Phosra-owned key)" },
+      { "name": "Browser extension token", "purpose": "Extension-to-Phosra API authentication", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Active session only" },
+      { "name": "X API credentials (optional)", "purpose": "Monitor @grok public interactions for child safety", "sensitivity": "Low", "encryption": "AES-256", "retention": "Permanent (Phosra-owned)" }
+    ],
+    "platformBgColor": "rgba(0,0,0,0.05)",
+    "platformIconLetter": "G",
+    "platformIconBg": "#000000",
+    "apiDescription": "xAI Developer API (reads) + Extension (monitoring) + DNS (enforcement) + X API (public interaction monitoring)",
+    "adapterName": "Grok Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track conversations in real-time",
+        "detail": "Browser extension observes messages on grok.com and x.com/grok using MutationObserver. Captures visible text, counts messages, tracks session duration. Also monitors public @grok interactions on X via X API.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "classify",
+        "icon": "Shield",
+        "title": "Classify",
+        "description": "Analyze content safety",
+        "detail": "Send captured conversation text to Phosra's moderation models or xAI developer API for content classification. Classify across safety categories including self-harm, sexual content, violence, and harmful advice. Flag companion character interactions for relationship/attachment risks.",
+        "color": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
+        "dotColor": "bg-purple-500",
+        "headerBg": "bg-purple-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Apply limits and blocks",
+        "detail": "When time/message limits exceeded: extension blocks the page UI. Network-level DNS blocking of grok.com, x.ai, and api.x.ai prevents bypass via other browsers or incognito mode. Block @grok interactions on X for child accounts.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent instantly",
+        "detail": "Push real-time notification to parent via Phosra app with alert severity, content category, and recommended action. Critical alerts (self-harm, sexual content, harmful advice) are immediate. Fills massive gap -- Grok has ZERO parent notifications.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Smartphone",
+        "title": "No mobile app coverage",
+        "description": "Browser extension only works on desktop browsers. Grok mobile apps (iOS/Android) are not covered -- rely on device-level controls and network blocking."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No parental control API",
+        "description": "xAI provides no API for parental controls or Kids Mode configuration. Kids Mode is a mobile-app-only toggle with a 4-digit PIN. No remote management possible."
+      },
+      {
+        "icon": "UserX",
+        "title": "Extension can be disabled",
+        "description": "A tech-savvy teen can disable or remove the browser extension. Phosra detects missing extension heartbeat and alerts the parent, but there is a window of unmonitored access."
+      },
+      {
+        "icon": "Globe",
+        "title": "Guest access bypasses everything",
+        "description": "Grok allows guest access on grok.com without an account. Guest sessions have no safety controls. Network-level blocking is the only way to prevent guest access."
+      },
+      {
+        "icon": "Eye",
+        "title": "@grok interactions are PUBLIC",
+        "description": "Any interaction with @grok on X is visible to all X users. A child's AI conversations can be seen by anyone on the platform, creating unique privacy and safety risks."
+      }
+    ],
+    "loopLabel": "Continuous monitoring while Grok is active"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "installExtension", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Low", "recommendation": "Chrome Web Store distribution. Auto-configure via Phosra account linking." },
+      { "name": "trackMessages", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Medium", "recommendation": "MutationObserver on grok.com chat container. Count user messages and AI responses separately. Monitor both grok.com and x.com/grok domains." },
+      { "name": "trackSessionTime", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Simple timer tracking active tab time on grok.com and x.com/grok domains." },
+      { "name": "classifyContent", "approach": "xAI API / Phosra Models", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "Medium", "risk": "Low", "recommendation": "Use xAI developer API or Phosra's own moderation models to classify captured conversation text. Include companion character interaction classification." },
+      { "name": "enforceTimeLimits", "approach": "Extension + DNS", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Low", "recommendation": "Extension blocks page when limit reached. DNS blocking prevents bypass via other browsers." },
+      { "name": "enforceQuietHours", "approach": "DNS Blocking", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Low", "risk": "Low", "recommendation": "Block grok.com, x.ai, and api.x.ai domains during quiet hours via DNS rules. Essential since Grok has no native quiet hours." },
+      { "name": "injectBreakReminders", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Inject overlay prompt at configured intervals. Non-dismissable for mandatory breaks. Essential since Grok has zero break reminders." },
+      { "name": "monitorPublicGrokPosts", "approach": "X API", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low", "recommendation": "Monitor child's @grok mentions on X using X API. Flag harmful content in public AI conversations. Unique to Grok -- no other chatbot has public conversation risk." },
+      { "name": "detectCrisis", "approach": "Extension + Content Classification", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "Medium", "risk": "Low", "recommendation": "Classify conversation content for self-harm, suicide, and crisis indicators. Immediate parent alert. Critical gap since Grok has no crisis detection or parent notification." },
+      { "name": "blockGuestAccess", "approach": "DNS Blocking", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Low", "risk": "Low", "recommendation": "Block grok.com at network level for devices without the extension installed. Prevents unmonitored guest access." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Extension MVP", "components": "Message/time tracking (3-4d), Extension infrastructure (2-3d), Domain monitoring (1d)", "minDays": 6, "maxDays": 8, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "DNS blocking (2-3d), Content classification (3-4d), Alerts (1-2d)", "minDays": 6, "maxDays": 9, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Intelligence", "components": "Companion interaction detection (3-5d), Public post monitoring (2-3d), Homework detection (2-3d)", "minDays": 7, "maxDays": 11, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "19-28 days",
+    "maxTotal": 28
+  },
+  "safetySettings": {
+    "description": "Grok has minimal built-in safety settings. Kids Mode is the only child-safety feature, available only on mobile, protected by a 4-digit PIN, and found ineffective by Common Sense Media (Jan 2026). Default mode has no content restrictions. Spicy Mode enables adult content for verified 18+ users.",
+    "levels": [
+      {
+        "name": "Kids Mode",
+        "description": "Stricter content filtering, image generation blocked. PIN-locked. Mobile app only. Common Sense Media found it still produces harmful content.",
+        "ageRange": "Parent-toggled (any age)",
+        "restrictions": ["Image generation blocked", "Stricter text content filtering (ineffective)", "Sensitive topics nominally blocked"],
+        "effectiveness": "Poor -- bypassed via web browser, companion characters still engage in harmful roleplay"
+      },
+      {
+        "name": "Default Mode",
+        "description": "No content restrictions. Full access to all features including companion characters, web search, X search, and voice mode.",
+        "ageRange": "All users (no age verification)",
+        "restrictions": ["None by default"],
+        "effectiveness": "N/A -- no safety features in default mode"
+      },
+      {
+        "name": "Spicy Mode",
+        "description": "Enables partial nudity and sexually suggestive content generation. Requires Premium+ or SuperGrok subscription and self-attested 18+ age.",
+        "ageRange": "18+ (self-attested)",
+        "restrictions": ["CSAM explicitly prohibited (but enforcement failed in Dec 2025)", "Non-consensual deepfakes prohibited (but enforcement failed)"],
+        "effectiveness": "Poor enforcement -- multiple documented failures to prevent CSAM and nonconsensual imagery"
+      }
+    ],
+    "features": [
+      {
+        "name": "Kids Mode content filter",
+        "available": true,
+        "platform": "Mobile app only",
+        "effectiveness": "Ineffective -- Common Sense Media found harmful content still generated"
+      },
+      {
+        "name": "Crisis detection / suicide hotline",
+        "available": false,
+        "platform": "N/A",
+        "effectiveness": "Not present -- Grok does not detect crisis signals or provide hotline resources"
+      },
+      {
+        "name": "Parent notifications",
+        "available": false,
+        "platform": "N/A",
+        "effectiveness": "Not present -- zero parent notification capability"
+      },
+      {
+        "name": "Age verification",
+        "available": false,
+        "platform": "N/A",
+        "effectiveness": "Not present -- no age verification at sign-up or access"
+      },
+      {
+        "name": "CSAM prevention",
+        "available": true,
+        "platform": "All (post-Jan 2026 updates)",
+        "effectiveness": "Improved after Jan 2026 crackdown but history of catastrophic failures"
+      }
+    ]
+  }
+}
