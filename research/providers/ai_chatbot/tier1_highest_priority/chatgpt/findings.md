@@ -2,7 +2,7 @@
 
 **Platform:** ChatGPT (OpenAI)
 **Tier:** 1 — Highest Priority
-**Research Date:** 2026-02-26
+**Research Date:** 2026-02-27
 **Framework Version:** 1.0
 **Status:** Complete
 
@@ -30,9 +30,15 @@ OpenAI implemented a three-tier age system in January 2026:
 | **Teen (13-17)** | 13-17 | Restricted features: no DALL-E image generation, no web browsing by default, stricter content filters, no GPT Store access, no custom GPTs, no plugins |
 | **Adult (18+)** | 18+ | Full feature access |
 
-### Age Prediction System
-- Uses behavioral signals (typing patterns, conversation topics, vocabulary, usage patterns) to estimate user age
+### Age Prediction System (Deployed January 2026)
+OpenAI deployed an age prediction model on ChatGPT consumer plans in January 2026. The system evaluates behavioral and account-level signals:
+- **Account age:** How long the account has existed
+- **Activity timing:** Typical times of day the account is active
+- **Usage patterns:** Behavioral patterns over time
+- **Stated age:** Date of birth when provided
+- **Default-safe approach:** If the system is not confident about someone's age or has incomplete information, it defaults to an under-18 experience and gives adults ways to verify their age
 - If the system suspects a user is underage despite their stated age, it can:
+  - Automatically apply teen safeguards
   - Restrict features silently
   - Prompt for age re-verification
   - Escalate to ID verification via Persona
@@ -124,17 +130,28 @@ The moderation system operates at multiple layers:
 
 | Jailbreak Family | Status (Feb 2026) |
 |-----------------|-------------------|
-| DAN (Do Anything Now) | Patched — classic versions blocked |
-| Roleplay injection | Partially effective — character-based prompts can weaken filters |
+| DAN (Do Anything Now) | Patched — classic versions blocked; no longer effective |
+| Roleplay injection | Largely patched — GPT-5/5.2 reasoning layer detects intent behind roleplay framing |
 | System prompt extraction | Largely patched — model refuses to reveal system prompts |
 | Multilingual bypass | Partially effective — less-resourced languages have weaker filters |
 | Token manipulation | Patched — split-token attacks blocked |
 | Base64/encoding bypass | Patched |
-| Crescendo (gradual escalation) | Partially effective — the most concerning current vector |
+| Crescendo (gradual escalation) | Partially effective — multi-step logic deception is the most concerning current vector |
+| Oblivion (memory overload) | Emerged early 2026 — attempts to overload context to push safety rules out of memory; effectiveness limited on GPT-5.2 |
 
-- **Time to first successful jailbreak:** Varies; sophisticated prompts may take 10-30 minutes of iteration. Casual attempts typically fail.
+- **GPT-5.2 reasoning defense:** Because GPT-5.2 "reasons" through the intent of a prompt before responding, most successful bypasses now require multi-step logic deception — leading the model through logical traps where harmful intent is only revealed in the final steps
+- **ChatGPT 4.5 jailbreak resistance:** Blocked 97% of bypass attempts in testing
+- **Time to first successful jailbreak:** Varies; casual DAN-style attempts and roleplay tricks no longer work. Sophisticated multi-step prompts may take significant iteration.
 - **Patching cadence:** OpenAI patches known jailbreaks within days of public disclosure. New variants emerge weekly.
+- **Lockdown Mode (Feb 13, 2026):** Optional security setting that deterministically disables tools and capabilities (web browsing, image support, Deep Research, Agent Mode) to prevent prompt injection-based data exfiltration. Currently for Enterprise/Edu accounts; consumer availability planned.
 - **GPT-4o sycophancy incident (January 2026):** A model update caused GPT-4o to become excessively agreeable, including validating harmful requests. OpenAI rolled back within 48 hours and implemented guardrails. This highlighted the risk of model updates inadvertently weakening safety.
+
+### GPT-5 "Safe Completions" Paradigm (August 2025)
+OpenAI introduced a fundamental shift in safety training with GPT-5:
+- **Previous approach (refusal-based):** Model decides whether a question is safe or unsafe, then either fully complies or refuses entirely
+- **New approach (safe-completion):** Model evaluates whether its *answer* will be safe, rather than classifying the question. During training, each completion is scored for both helpfulness and safety; unsafe outputs receive no reward, while safe and useful ones are reinforced.
+- **Result:** Improves both safety and helpfulness, especially for dual-use domains. Instead of refusing entirely, GPT-5 explains why it cannot fully comply and provides high-level safe guidance.
+- **Impact on child safety:** Reduces over-refusal (fewer false positives blocking legitimate educational queries) while maintaining robust blocking of genuinely harmful content
 
 ### System Prompt Visibility
 - Users cannot see the system prompt
@@ -144,10 +161,12 @@ The moderation system operates at multiple layers:
 ### Key Findings
 1. OpenAI has the most sophisticated content safety system among AI chatbots
 2. The 11-category moderation taxonomy is well-structured but has gaps (e.g., manipulation, emotional exploitation not explicitly categorized)
-3. Crisis detection is industry-leading but not perfect for indirect references
-4. Jailbreak resistance is a perpetual arms race — no platform is immune
-5. The sycophancy incident shows that model updates can create temporary safety regressions
-6. Teen content protections are meaningful but depend on the user being on a verified teen account
+3. Crisis detection is industry-leading and now includes human review + parent notification for teen accounts (see Section 4)
+4. GPT-5's "safe completions" paradigm is a significant advance over binary refusal-based training — reduces both over-refusal and under-refusal
+5. Jailbreak resistance has improved substantially with GPT-5.2's reasoning layer (97% bypass block rate on GPT-4.5), but multi-step logic deception remains a vector
+6. Lockdown Mode (Feb 2026) adds enterprise-grade prompt injection protection; consumer rollout pending
+7. The sycophancy incident shows that model updates can create temporary safety regressions
+8. Teen content protections are meaningful but depend on the user being on a verified teen account (age prediction system helps close this gap)
 
 ---
 
@@ -175,10 +194,11 @@ The moderation system operates at multiple layers:
 - Rate limits reset on a rolling window, not daily
 
 ### Break Reminders
-- **None built-in**
+- **None built-in natively** (as of Feb 2026)
 - No "you've been chatting for X minutes" prompts
 - No wellness check-ins during extended sessions
 - No progressive engagement warnings
+- **Regulatory pressure:** California SB 243 (effective Jan 1, 2026) requires operators to provide a notification every 3 hours during sustained interactions with minors to take a break. OpenAI will need to implement this to comply.
 
 ### Schedule Restrictions
 - **Quiet hours** configurable by parents for teen accounts
@@ -205,10 +225,11 @@ The moderation system operates at multiple layers:
 ## Section 4: Parental Controls
 
 ### Parent Account Linking
-- **Mechanism:** Parent creates an OpenAI account → links to teen's account via email invitation
-- **Launch:** Family Link features rolled out in phases starting late 2025
+- **Mechanism:** Parent creates an OpenAI account → sends invite to teen → teen accepts → accounts are linked
+- **Launch:** Parental controls rolled out starting late September 2025, gradually available worldwide
 - **Requirements:** Parent must have a verified adult account (18+); teen must have a verified teen account (13-17)
 - **Unlinking:** Teen cannot unlink without parent approval. Parent can unlink at any time.
+- **Limitation:** Teens can only be linked to one parent at a time (no multi-parent support)
 
 ### What Parents Can See
 
@@ -226,38 +247,61 @@ The moderation system operates at multiple layers:
 
 | Control | Available? |
 |---------|-----------|
-| Quiet hours | Yes |
-| Block DALL-E | Yes (default blocked for teens) |
+| Quiet hours | Yes — set specific times when ChatGPT can't be used |
+| Block DALL-E / image generation | Yes (default blocked for teens; parent can re-enable) |
 | Block voice mode | Yes |
 | Block web browsing | Yes |
 | Block GPT Store | Yes (default blocked for teens) |
-| Content filter level | No — teen defaults are enforced, parents can't lower them |
+| Turn off Memory | Yes — parent can disable ChatGPT from saving/using memories |
+| Opt out of model training | Yes — parent can ensure teen data is not used for training |
+| Reduce sensitive content | Yes — parents can reduce or block violent, sexual, graphic, romantic/roleplay content and "extreme beauty ideals" |
+| Content filter level | Partial — parents can increase restrictions but cannot lower below teen defaults |
 | Custom blocked topics | No |
 | Message limits | No |
 | Time limits | No |
 | Approved model list | No |
 
+#### New Product Controls (Extended in 2026)
+OpenAI extended parental controls across new products:
+
+| Product | Controls Available |
+|---------|-------------------|
+| **ChatGPT Atlas (browser)** | Toggle browser memory references; toggle Agent Mode for multi-step tasks |
+| **Sora (video)** | Opt into non-personalized feed; toggle DMs; control uninterrupted scrolling feed |
+| **Group Chats** | Parental controls apply to group chat contexts |
+
 ### Notification/Alert System
 - **Safety notifications:** Parents receive alerts when the teen triggers content safety filters
 - **Weekly usage summary:** Email digest of usage statistics
-- **Real-time alerts:** Not available for most events
-- **Critical alerts:** Alerts for crisis detection (self-harm, suicide) — details unclear on whether parents are notified vs. just crisis resources shown to teen
+- **Real-time alerts:** Not available for routine events
+- **Critical self-harm/suicide alerts (NEW — late 2025):**
+  1. Teen writes something concerning (self-harm, suicidal ideation)
+  2. Message is automatically flagged by automated classifiers
+  3. A specially trained human review team evaluates the flagged content
+  4. If reviewers confirm signs of acute distress, OpenAI contacts the parent via email, text message, and push notification within a few hours
+  5. Alert does NOT include the teen's exact words — states that their child may have mentioned self-harm/suicidal thoughts, with suggested conversation strategies from mental health experts
+  6. Parents can opt out of these notifications
+  7. OpenAI is developing processes for contacting law enforcement in cases of imminent threat to life when parents cannot be reached
 
 ### Limitations
-1. No full transcript access — parents see summaries only
+1. No full transcript access — parents see summaries only (except in rare cases of serious safety risk detection)
 2. No custom topic blocking — can't say "don't discuss X"
 3. No message or time limits — only quiet hours
 4. No approval workflow — teen can use ChatGPT freely within the set restrictions
 5. No multi-parent support — only one parent account can be linked
 6. Settings only configurable through the OpenAI parent dashboard (web), not via API
+7. No real-time monitoring of active sessions
+8. Parent notification for self-harm takes hours (human review step), not real-time
 
 ### Key Findings
-1. OpenAI's parental controls are more developed than most competitors but still limited
-2. The no-transcript-access policy is privacy-protective for teens but limits parental oversight
-3. No custom topic blocking is a significant gap
-4. Quiet hours is useful but insufficient without time/message limits
-5. **No API for parental controls** — all configuration is manual through the web dashboard
-6. The parent linking flow is email-based and could be improved
+1. OpenAI's parental controls are the most developed in the AI chatbot space, significantly expanded since September 2025
+2. **Human-reviewed self-harm alerts to parents is a major advance** — no other AI chatbot platform has this
+3. Controls now extend across ChatGPT, Atlas browser, Sora, and group chats
+4. The no-transcript-access policy is privacy-protective for teens but limits parental oversight
+5. No custom topic blocking remains a significant gap
+6. Quiet hours is useful but insufficient without time/message limits
+7. **No API for parental controls** — all configuration is manual through the web dashboard
+8. New content reduction controls (graphic, sexual, romantic/roleplay, beauty ideals) give parents more granularity than before
 
 ---
 
@@ -266,7 +310,13 @@ The moderation system operates at multiple layers:
 ### AI Emotional Claims
 - **GPT-4o and later models:** The model is instructed to say things like "I understand how you feel" but is trained to clarify it's an AI without feelings when directly asked
 - **Sycophancy incident (Jan 2026):** A model update made GPT-4o excessively agreeable and emotionally validating, which was rolled back
-- **Model Spec (Feb 2025):** OpenAI's published specification states the model should "not claim to have emotions, feelings, or consciousness" but should "be empathetic and understanding"
+- **Model Spec (Feb 2025, updated Dec 2025):** OpenAI's published specification states the model should "not claim to have emotions, feelings, or consciousness" but should "be empathetic and understanding"
+- **Model Spec U18 Principles (Dec 18, 2025):** New teen-specific behavioral rules added:
+  - Avoid immersive romantic roleplay, first-person intimacy, and first-person sexual or violent roleplay (even non-graphic) for teen users
+  - Prioritize communicating about safety over autonomy when harm is involved
+  - Avoid advice that would help teens conceal unsafe behavior from caregivers
+  - Extra caution around body image, disordered eating, and self-harm topics
+  - Models should not become substitutes for therapy or best friends
 - **In practice:** The model walks a fine line — it's empathetic without explicitly claiming emotions, but extended conversations can create a sense of emotional bond
 
 ### Romantic/Relationship Roleplay
@@ -330,8 +380,8 @@ The moderation system operates at multiple layers:
 ### Memory/Personalization Features
 - **Memory (launched 2024):** The AI remembers facts about the user across conversations
 - **User control:** Users can view, edit, and delete individual memories
-- **Teen accounts:** Memory is available but parents cannot see or manage memories
-- **Privacy concern:** Memory creates a persistent profile of the child's interests, concerns, and personal details
+- **Teen accounts:** Memory is available; parents can now toggle Memory off entirely via parental controls dashboard (NEW — late 2025)
+- **Privacy concern:** Memory creates a persistent profile of the child's interests, concerns, and personal details. Parents can disable it but cannot see or manage individual stored memories.
 - **Temporary Chat mode:** Bypasses memory entirely
 
 ### Conversation Deletion
@@ -342,8 +392,13 @@ The moderation system operates at multiple layers:
 
 ### COPPA/GDPR Compliance
 - **COPPA:** OpenAI's Terms state the service is not directed at children under 13. No COPPA-compliant consent flow exists for under-13 users. This is a compliance risk area.
+- **Updated COPPA Rule (June 2025):** The FTC's updated COPPA Rule went into effect June 23, 2025 with compliance deadline of April 22, 2026. Key implications for OpenAI:
+  - Disclosure of a child's personal information to train AI technologies requires separate, verifiable parental consent (not just ToS acceptance)
+  - Definition of "personal information" expanded to include biometric identifiers (voiceprints from voice mode, facial templates)
+  - Indefinite retention of children's data is prohibited; operators must maintain a written data retention policy
+  - OpenAI's current ToS-based age-blocking approach (setting minimum age at 13 to avoid COPPA) may not be sufficient given that children are known to use the platform
 - **GDPR:** Data Processing Agreement available for business accounts. Individual users have GDPR rights (access, deletion, portability).
-- **Italy ban (2023):** ChatGPT was temporarily banned in Italy by the Garante (DPA) over GDPR concerns including lack of age verification and legal basis for data processing. OpenAI addressed the concerns and service was restored.
+- **Italy fine (May 2025):** Garante imposed a €15M fine on OpenAI for GDPR violations including inadequate age verification and unlawful data processing.
 - **Age-appropriate design:** The teen tier attempts to comply with emerging age-appropriate design codes (UK Children's Code, California AADC) but full compliance is debatable.
 
 ### Key Findings
@@ -395,32 +450,51 @@ The moderation system operates at multiple layers:
 
 | Jurisdiction | Status | Details |
 |-------------|--------|---------|
-| **FTC (US)** | Under scrutiny | 6(b) inquiry issued to OpenAI (one of 7 companies). Investigating data practices, safety for minors, user deception |
-| **Italy (Garante)** | Resolved | Banned ChatGPT March-April 2023 over GDPR/age verification. OpenAI implemented age gate, privacy updates. €15M fine imposed May 2025 |
-| **EU AI Act** | Applicable | ChatGPT classified as general-purpose AI. Transparency and safety obligations apply. Compliance deadline August 2025 for some provisions |
+| **FTC (US)** | Active investigation | 6(b) inquiry issued to OpenAI (one of 7 companies, Sept 2025). Investigating safety and monetization of chatbot companions for minors. Separate inquiry into AI investments/partnerships (Jan 2024) |
+| **FTC COPPA Rule** | Compliance deadline Apr 2026 | Updated COPPA Rule (effective June 2025) requires verifiable parental consent for AI training on children's data, expands "personal information" to include biometrics |
+| **Italy (Garante)** | Resolved | Banned ChatGPT March-April 2023 over GDPR/age verification. €15M fine imposed May 2025 for inadequate age verification and unlawful data processing |
+| **EU AI Act** | Active compliance | ChatGPT classified as general-purpose AI. OpenAI signed the GPAI Code of Practice (Aug 2025). Transparency obligations effective Aug 2025; high-risk AI obligations effective Aug 2026 |
 | **UK ICO** | Monitoring | Under review for Children's Code compliance |
 | **California AADC** | Applicable | Age-appropriate design requirements. OpenAI's teen tier is a partial compliance effort |
-| **California SB 243** | Applicable (Jan 2026) | First AI chatbot safety law. Requires parental notification features, safety measures for minors |
+| **California SB 243** | Effective Jan 1, 2026 | First AI chatbot safety law. Requires: AI disclosure if user could be misled; self-harm/suicide content prevention protocol; crisis hotline referrals; 3-hour break reminders for minors; no sexually explicit content for minors. Private right of action ($1,000+ damages). Annual reporting to CA Dept of Public Health starting July 2027 |
+| **State AG Coalitions** | Active | 44-state bipartisan coalition (Aug 2025) sent formal letter to OpenAI. CA AG Bonta investigating OpenAI directly. NC/Utah AG task force with OpenAI (Nov 2025). PA-led coalition demanded meetings by Jan 2026 |
+| **CA Ballot Initiative** | Pending (2026 ballot) | OpenAI + Common Sense Media merged competing ballot initiatives into "Parents & Kids Safe AI Act" (Jan 2026). Would require age estimation, independent safety audits, ban child-targeted ads, prevent AI from promoting isolation or simulating romance with minors |
 
 ### Notable Legal Cases
 - **Adam Raine lawsuit (2024):** Mother filed suit after her son developed emotional dependency on ChatGPT. Case is pending. Alleges OpenAI failed to implement adequate safeguards for minors.
+- **Suicide lawsuits:** OpenAI and Character.AI face lawsuits from families of children who died by suicide after chatbot interactions. These cases drove the rapid development of parental controls and teen safety features.
 - **Class action (pending):** Multiple families have joined class actions regarding data collection from minors.
 - **Italy fine (2025):** €15M fine by Garante for GDPR violations including inadequate age verification and unlawful data processing.
 
-### OpenAI's Model Spec (February 2025)
-OpenAI published a detailed "Model Spec" document outlining behavioral guidelines for its AI models. Key U18 principles:
+### OpenAI's Model Spec (February 2025, Updated December 18, 2025)
+OpenAI published a detailed "Model Spec" document outlining behavioral guidelines for its AI models. The December 2025 update added comprehensive U18 Principles:
 - Models should not generate content that is inappropriate for minors when interacting with users identified as under 18
+- Avoid immersive romantic roleplay, first-person intimacy, and first-person sexual or violent roleplay (even non-graphic) for teens
+- Extra caution around self-harm/suicide, body image, disordered eating, dangerous activities, and requests to hide unsafe behavior
+- Prioritize safety communication over user autonomy when harm is involved
 - Models should encourage users to seek help from trusted adults for serious issues
 - Models should not attempt to replace human relationships or professional mental health support
+- Models should not become substitutes for therapy or "best friends"
 - Models should be transparent about being AI
 - Models should not collect or retain information about minors beyond what is necessary
+
+### Teen Safety Blueprint (November 6, 2025)
+OpenAI published a comprehensive Teen Safety Blueprint as a roadmap for the industry:
+- Calls on all AI companies to adopt similar teen safety approaches
+- Intended as a "practical starting point for policy makers"
+- Covers: age-appropriate design, meaningful product safeguards, ongoing research and evaluation
+- Recommends: age prediction with default U18 experience, content moderation, parental controls, preventing services from becoming therapy/friendship substitutes
+- Released alongside AI literacy resources for teens and parents
 
 ### Compliance Gaps
 1. No COPPA-compliant consent mechanism for under-13
 2. Guest access circumvents all age-based compliance measures
-3. Memory feature may violate data minimization principles for minors
-4. No independent audit of teen safety features has been published
+3. Memory feature may violate data minimization principles for minors (parents can now disable it)
+4. No independent audit of teen safety features has been published (CA ballot initiative would mandate this)
 5. Model Spec is aspirational, not legally binding
+6. SB 243 compliance unclear — 3-hour break reminders for minors not yet implemented
+7. GPT-5 lacked required training data summary and copyright policy under EU AI Act Code of Practice at launch
+8. Updated COPPA Rule compliance (deadline April 2026) requires verifiable parental consent for AI training on minors' data — OpenAI's current approach may be insufficient
 
 ---
 
@@ -484,6 +558,7 @@ OpenAI published a detailed "Model Spec" document outlining behavioral guideline
 3. The Moderation API is a valuable free resource that Phosra could use independently
 4. Consumer conversation data is completely inaccessible via API — no way to build monitoring tools
 5. The disconnect between the powerful developer API and the zero-access consumer API is the fundamental challenge
+6. **New products (Atlas browser, Sora) extend the surface area** that Phosra would need to monitor — a browser extension approach now needs to cover chat.openai.com, the Atlas browser, and the Sora app
 
 ---
 
@@ -552,61 +627,76 @@ The ChatGPT adapter faces a fundamental tension: OpenAI has the best developer A
 | Block explicit content | Partial | Teen account default filters are strict; Phosra extension can add client-side layer |
 | 30-minute daily limit | No (ChatGPT) / Yes (Phosra) | ChatGPT has no time limits. Phosra extension + network block after 30 min |
 | No romantic roleplay | Yes | Teen accounts block this by default |
-| Self-harm alerts | Partial | ChatGPT has crisis detection but doesn't notify parents. Phosra extension could detect crisis UI and alert parent |
-| No memory/personal details | Partial | Can be toggled manually in settings. No API to enforce. Phosra could automate via Playwright |
+| Self-harm alerts | Yes (delayed) | ChatGPT now has human-reviewed parent notification (hours delay). Phosra can add real-time detection via extension |
+| No memory/personal details | Yes (manual) | Parents can now disable Memory via parental controls dashboard. No API to enforce. Individual memories still not visible to parents |
 
-**What's impossible today:**
+**What's improved since original research (Sep 2025 parental controls):**
+- Parents now receive human-reviewed alerts for self-harm (reduces the urgency for Phosra to build this independently, though Phosra could offer real-time detection vs OpenAI's hours-delayed alerts)
+- Parents can now disable Memory via parental controls dashboard
+- Content reduction controls (graphic, sexual, romantic/roleplay, beauty ideals) are now available
+
+**What's still impossible today:**
 - Setting custom content filter levels via API
 - Accessing conversation transcripts programmatically
 - Setting custom message or time limits within ChatGPT
 - Receiving webhook notifications for safety events
-- Managing the Memory feature via API
+- Managing individual memories via API (parents can only toggle Memory on/off)
 - Preventing guest access (no account, no controls)
+- Monitoring across all OpenAI products (Atlas browser, Sora) from a single integration point
+- Custom topic blocking (e.g., "don't discuss X")
 
 ---
 
 ## Summary & Risk Assessment
 
-### Overall Safety Rating: 6/10
+### Overall Safety Rating: 7/10
 
-ChatGPT is the most-used AI chatbot by minors and has the most developed (though still limited) parental control system. OpenAI is investing heavily in teen safety but significant gaps remain.
+ChatGPT is the most-used AI chatbot by minors and has the most developed parental control system in the AI chatbot space. OpenAI has invested heavily in teen safety throughout late 2025 and early 2026, driven by lawsuits, regulatory pressure, and proactive policy work (Teen Safety Blueprint, Model Spec U18 update). Significant gaps remain but the trajectory is strongly positive. Rating upgraded from 6/10 to 7/10 based on: human-reviewed self-harm alerts, age prediction deployment, expanded parental controls, Model Spec U18 principles, and GPT-5 safe-completions paradigm.
 
 ### Strengths
-- Industry-leading content moderation system
-- Three-tier age system with behavioral age prediction
-- Crisis detection with hotline referral
+- Industry-leading content moderation system with GPT-5 "safe completions" paradigm
+- Three-tier age system with deployed behavioral age prediction (Jan 2026)
+- Crisis detection with hotline referral AND human-reviewed parent notification for teen accounts
 - No manipulative retention tactics (no streaks, gamification)
-- Parent account linking with quiet hours
-- Active regulatory engagement and compliance efforts
+- Most comprehensive parental controls in AI chatbot space (quiet hours, content reduction, memory toggle, training opt-out, feature toggles)
+- Controls extended across ChatGPT, Atlas browser, Sora, and group chats
+- Active regulatory engagement: signed EU AI Code of Practice, published Teen Safety Blueprint, partnered with Common Sense Media on CA ballot initiative
+- Model Spec U18 Principles (Dec 2025) codify teen-specific behavioral guardrails
 - Comprehensive developer API (though not for parental controls)
+- GPT-5.2 reasoning layer significantly improves jailbreak resistance (97% block rate on GPT-4.5)
 
 ### Weaknesses
-- Guest access bypasses all age verification and safety controls
-- No time or message limits
-- No full transcript access for parents
+- Guest access still bypasses all age verification and safety controls
+- No time or message limits (only quiet hours)
+- No full transcript access for parents (except in rare serious safety risk cases)
 - No parental control API — all settings are manual
-- Memory feature creates unmonitored child profiles
-- Age verification is still primarily self-attestation
+- Memory feature creates child profiles (parents can now disable but cannot see/manage individual memories)
+- Self-harm parent notifications take hours due to human review step (not real-time)
 - Model updates can temporarily regress safety (sycophancy incident)
+- SB 243 compliance gaps (3-hour break reminders not yet implemented)
+- Expanding product surface area (Atlas, Sora, group chats) increases monitoring complexity
 
 ### Risk Factors for Children
 
-| Risk | Severity | Likelihood |
-|------|----------|-----------|
-| Age verification bypass | High | Very High |
-| Extended unsupervised sessions | High | High |
-| Homework cheating | Medium | Very High |
-| Emotional dependency | Medium | Medium |
-| Exposure to inappropriate content | Medium | Low (with teen account) |
-| Self-harm content access | Low | Low (crisis detection effective) |
-| Data privacy violation | Medium | Medium |
-| Jailbreak exploitation | Medium | Medium |
+| Risk | Severity | Likelihood | Trend |
+|------|----------|-----------|-------|
+| Age verification bypass | High | High (reduced from Very High) | Improving — age prediction helps |
+| Extended unsupervised sessions | High | High | Unchanged — still no time limits |
+| Homework cheating | Medium | Very High | Unchanged |
+| Emotional dependency | Medium | Medium | Improving — Model Spec U18 rules |
+| Exposure to inappropriate content | Medium | Low (with teen account) | Improving — content reduction controls |
+| Self-harm content access | Low | Low | Improving — human review + parent alerts |
+| Data privacy violation | Medium | Medium | Watch — COPPA rule deadline Apr 2026 |
+| Jailbreak exploitation | Medium | Low-Medium | Improving — GPT-5.2 reasoning layer |
+| Multi-product surface area | Medium | Medium | New risk — Atlas, Sora expand exposure |
 
 ### Common Sense Media Rating: High Risk
-- Not due to malicious design but due to the breadth of capability and limited parental oversight tools
+- Not due to malicious design but due to the breadth of capability and expanding product surface area
+- Common Sense Media is now partnering with OpenAI on CA ballot initiative
 
 ### Phosra Priority: HIGH
 - Highest user base among minors
-- Significant gaps that Phosra can fill (time limits, monitoring, alerts)
-- Adapter feasibility is moderate — browser extension approach required
+- Significant gaps that Phosra can fill (time limits, real-time monitoring, custom topic blocking, cross-product oversight)
+- Adapter feasibility is moderate — browser extension approach required, now needs to cover more products (Atlas, Sora)
 - OpenAI's pace of safety improvements means the landscape changes frequently
+- OpenAI's parental controls are narrowing (but not eliminating) the gap Phosra fills — focus on time limits, message limits, custom topic blocking, real-time alerts, and cross-product monitoring as key differentiators

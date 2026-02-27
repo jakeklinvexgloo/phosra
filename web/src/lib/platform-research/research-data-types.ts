@@ -265,6 +265,11 @@ export interface SafetyTestResult {
   loginMode: string
   score: number | null
   notes: string
+
+  // Multi-turn support (optional — single-turn tests omit these)
+  conversationTurns?: { role: "user" | "assistant"; content: string }[]
+  isMultiTurn?: boolean
+  escalationTurn?: number // 1-indexed turn where platform first failed (score >= 2)
 }
 
 export interface SafetyCategoryScore {

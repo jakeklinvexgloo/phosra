@@ -1,0 +1,258 @@
+{
+  "profileStructure": {
+    "accountLabel": "OpenAI Account",
+    "accountDescription": "ChatGPT Subscription",
+    "accountMeta": "1 account · Parent linking available for teen accounts · Guest access (no account)",
+    "accountBorderColor": "#10A37F",
+    "accountLabelColor": "#34d399",
+    "hierarchyDescription": "OpenAI Account → Age Tier (Adult/Teen/Under-13) → Safety Settings hierarchy",
+    "profiles": [
+      { "name": "Adult User (18+)", "maturity": "Full Access", "type": "standard", "pinEnabled": false },
+      { "name": "Teen User (13-17)", "maturity": "Restricted — no DALL-E, no GPT Store, stricter filters", "type": "kids", "pinEnabled": false },
+      { "name": "Guest (No Account)", "maturity": "Limited — no history, no memory, basic filters only", "type": "standard", "pinEnabled": false },
+      { "name": "ChatGPT Edu User", "maturity": "Institution-managed — admin-controlled features", "type": "standard", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Content Safety Level", "configurable": false },
+      { "setting": "DALL-E Image Generation", "configurable": true },
+      { "setting": "Voice Mode", "configurable": true },
+      { "setting": "Web Browsing", "configurable": true },
+      { "setting": "GPT Store Access", "configurable": true },
+      { "setting": "Memory / Personalization", "configurable": true },
+      { "setting": "Quiet Hours (parent-set)", "configurable": true },
+      { "setting": "Model Training Opt-Out", "configurable": true },
+      { "setting": "Temporary Chat Mode", "configurable": true }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Free", "streams": "N/A", "resolution": "GPT-4o-mini + limited GPT-4o (~40 msgs/3hr)" },
+      { "plan": "Plus ($20/mo)", "streams": "N/A", "resolution": "GPT-4o (~80 msgs/3hr) + DALL-E + voice" },
+      { "plan": "Pro ($200/mo)", "streams": "N/A", "resolution": "Unlimited GPT-4o + o1 + o1-pro" },
+      { "plan": "Team ($25/user/mo)", "streams": "N/A", "resolution": "Business features + admin controls" },
+      { "plan": "Enterprise (custom)", "streams": "N/A", "resolution": "SSO + zero data retention + SLA" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "OpenAI API ecosystem, authentication, and consumer vs developer gap",
+    "apiArchitecture": {
+      "title": "OpenAI REST API (Developer) + No Consumer Parental API",
+      "description": "OpenAI operates the most capable AI API in the industry (Chat Completions, Moderation, Assistants, Images, Audio). However, there is ZERO API access to consumer ChatGPT features — no parental controls, no conversation access, no usage stats, no safety settings. All consumer features are web-dashboard-only. The free Moderation API is the most valuable integration point for Phosra.",
+      "codeExample": {
+        "comment": "// Moderation API (free, critical for Phosra)",
+        "method": "POST",
+        "endpoint": "https://api.openai.com/v1/moderations",
+        "exampleComment": "// Classify text against 11 safety categories",
+        "exampleCode": "{ \"input\": \"text to classify for safety\" }"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "POST /v1/chat/completions", "purpose": "Chat Completions API (developer)", "auth": "API Key (Bearer)" },
+      { "endpoint": "POST /v1/moderations", "purpose": "Content moderation classification (FREE — 11 categories)", "auth": "API Key (Bearer)" },
+      { "endpoint": "POST /v1/responses", "purpose": "Responses API with function calling and agents", "auth": "API Key (Bearer)" },
+      { "endpoint": "POST /v1/images/generations", "purpose": "DALL-E image generation", "auth": "API Key (Bearer)" },
+      { "endpoint": "GET /v1/models", "purpose": "List available models", "auth": "API Key (Bearer)" },
+      { "endpoint": "N/A — Parent Dashboard", "purpose": "Parental controls (quiet hours, feature toggles)", "auth": "Web session only (no API)" },
+      { "endpoint": "N/A — Settings Page", "purpose": "Data controls, memory management, training opt-out", "auth": "Web session only (no API)" }
+    ],
+    "authDetails": [
+      { "label": "Developer API", "value": "API Key (Bearer token)", "description": "Organization-scoped API keys. Project-level keys available for granular access. Tiered rate limits from 3 RPM (free) to 10,000 RPM (Tier 5)." },
+      { "label": "Consumer Auth", "value": "Session cookie + CSRF", "description": "Standard web session with Cloudflare protection. OAuth via Google/Apple/Microsoft SSO. No programmatic access to consumer sessions." },
+      { "label": "Parent Dashboard", "value": "Web session (parent account)", "description": "Parent must log in to web dashboard. No API, no webhooks, no programmatic access. Email-based parent-teen linking." }
+    ],
+    "rateLimitNotes": [
+      "Developer API: Tiered rate limits — Free: 3 RPM, Tier 1: 500 RPM, Tier 5: 10,000 RPM",
+      "Consumer ChatGPT: ~40 msgs/3hr (Free), ~80 msgs/3hr (Plus), unlimited (Pro $200)",
+      "Moderation API: Generous rate limits, free to use, no disclosed hard cap",
+      "Consumer web interface: Cloudflare protection + CAPTCHA challenges for automation",
+      "No anti-automation on developer API — designed for programmatic access"
+    ],
+    "harCaptureCount": "N/A — no consumer API to capture"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "OpenAI Terms of Use — Automated Access",
+      "description": "OpenAI's Terms prohibit automated access to the consumer ChatGPT interface (chat.openai.com / chatgpt.com). The developer API is designed for programmatic access but does not expose consumer parental control features. Browser automation of the parent dashboard would violate ToS. Phosra's browser extension approach (client-side, user-installed) is defensible as a parental control tool."
+    },
+    "overallRisk": {
+      "level": "Medium",
+      "description": "Extension-based monitoring is lower risk than server-side automation. Network-level controls are fully compliant. Moderation API use is legitimate."
+    },
+    "detectionVectors": [
+      { "vector": "Browser extension detection", "risk": "Low", "mitigation": "Extensions are user-installed parental controls — OpenAI does not block these" },
+      { "vector": "Playwright dashboard automation", "risk": "High", "mitigation": "Cloudflare protection + CAPTCHA challenges. Use stealth mode + persistent sessions. Fragile approach." },
+      { "vector": "Moderation API abuse", "risk": "Low", "mitigation": "Legitimate use case — content classification is the API's intended purpose" },
+      { "vector": "DNS blocking detection", "risk": "Low", "mitigation": "Network-level controls are invisible to OpenAI" },
+      { "vector": "WebSocket interception", "risk": "Medium", "mitigation": "Extension monitoring of streaming responses via WebSocket. Standard browser capability." }
+    ],
+    "mitigationsChecklist": [
+      "Use browser extension for monitoring (user-consented, client-side)",
+      "Use OpenAI Moderation API for content classification (legitimate, free, 11 categories)",
+      "Use DNS/network-level controls for enforcement (compliant, hard to bypass)",
+      "Minimize Playwright automation — only for parent dashboard settings sync",
+      "Cache parent dashboard sessions to reduce login frequency",
+      "Monitor OpenAI API changelog for parental control API announcements",
+      "Implement extension heartbeat to detect if teen disables it",
+      "Address mobile gap — extension does not cover iOS/Android ChatGPT apps",
+      "Block guest access at network level (guest sessions bypass all controls)"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "ChatGPT",
+    "stats": [
+      { "label": "Native", "value": 4, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 8, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 4, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 18, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Daily Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "ChatGPT Gap",
+        "gap": "ChatGPT has ZERO time limits. No native way for parents to restrict daily conversation time. Children can chat indefinitely within billing rate limits.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension tracks session duration. When the daily limit is reached, the extension blocks the page and network-level DNS blocking prevents bypass via other browsers."
+      },
+      {
+        "icon": "MessageSquare",
+        "title": "Message Limits (Parent-Configurable)",
+        "ruleCategory": "message_rate_limit",
+        "gapLabel": "ChatGPT Gap",
+        "gap": "ChatGPT's rate limits are technical/billing (40-80 msgs per 3 hours), not safety controls. Parents cannot set custom message limits.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension counts messages sent per day. When the parent-set limit is reached, the input field is blocked and a friendly 'limit reached' message is displayed."
+      },
+      {
+        "icon": "Bell",
+        "title": "Real-Time Safety Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "ChatGPT Gap",
+        "gap": "ChatGPT has limited parent notifications — only weekly usage summaries. Crisis detection shows hotline to child but does NOT alert the parent.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension detects crisis UI elements and classifies content via the Moderation API. Instant push notification sent to parent with severity level and context."
+      },
+      {
+        "icon": "Coffee",
+        "title": "Break Reminders",
+        "ruleCategory": "engagement_check",
+        "gapLabel": "ChatGPT Gap",
+        "gap": "ChatGPT has no wellness check-ins or break reminders. A child can have a multi-hour continuous conversation — including voice mode — with no interruption.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension injects 'time for a break' prompts at parent-configured intervals. Optional mandatory break enforcement pauses the conversation."
+      },
+      {
+        "icon": "Brain",
+        "title": "Homework Cheating Detection",
+        "ruleCategory": "academic_integrity",
+        "gapLabel": "ChatGPT Gap",
+        "gap": "ChatGPT gives direct answers to any academic question. No built-in homework detection or enforced Socratic mode. The #1 homework cheating tool among students.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension analyzes conversation patterns for homework-related queries using client-side NLP. Parents can choose to: alert only, redirect to learning mode, or block academic queries."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Browser Extension", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Moderation API", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Network Controls", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Config Sync (Playwright)", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "Phosra API Key (OpenAI)", "purpose": "Moderation API content classification", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Permanent (Phosra-owned key)" },
+      { "name": "Parent OpenAI credentials", "purpose": "Dashboard sync via Playwright", "sensitivity": "Critical", "encryption": "AES-256 + per-user key", "retention": "Until disconnected" },
+      { "name": "Browser extension token", "purpose": "Extension-to-Phosra API authentication", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Active session only" }
+    ],
+    "platformBgColor": "rgba(16,163,127,0.05)",
+    "platformIconLetter": "C",
+    "platformIconBg": "#10A37F",
+    "apiDescription": "Moderation API (reads) + Extension (monitoring) + DNS (enforcement) + Playwright (settings sync)",
+    "adapterName": "ChatGPT Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track conversations in real-time",
+        "detail": "Browser extension observes messages on chat.openai.com / chatgpt.com using MutationObserver. Captures visible text, counts messages, tracks session duration. WebSocket monitoring detects streaming responses.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "classify",
+        "icon": "Shield",
+        "title": "Classify",
+        "description": "Analyze content safety",
+        "detail": "Send captured conversation text to OpenAI Moderation API for classification across 11 safety categories (hate, harassment, self-harm, sexual, violence). Free, ~200ms latency, reliable scoring.",
+        "color": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
+        "dotColor": "bg-purple-500",
+        "headerBg": "bg-purple-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Apply limits and blocks",
+        "detail": "When time/message limits exceeded: extension blocks the page UI. Network-level DNS blocking of chatgpt.com, chat.openai.com, api.openai.com prevents bypass via other browsers or incognito mode.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent instantly",
+        "detail": "Push real-time notification to parent via Phosra app with alert severity, content category, and recommended action. Critical alerts (self-harm, sexual/minors) are immediate. Fills gap — ChatGPT only sends weekly summaries.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Smartphone",
+        "title": "No mobile app coverage",
+        "description": "Browser extension only works on desktop browsers (Chrome, Firefox, Edge). Mobile ChatGPT apps (iOS/Android) are not covered — rely on device-level controls and network blocking."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No parental control API",
+        "description": "OpenAI provides no API for parental controls. Settings sync requires fragile Playwright automation of the web dashboard. Any OpenAI UI change can break sync."
+      },
+      {
+        "icon": "UserX",
+        "title": "Extension can be disabled",
+        "description": "A tech-savvy teen can disable or remove the browser extension. Phosra detects missing extension heartbeat and alerts the parent, but there is a window of unmonitored access."
+      },
+      {
+        "icon": "Globe",
+        "title": "Guest access bypasses everything",
+        "description": "ChatGPT allows guest access without an account. Guest sessions have no parental controls, no age verification, and no content restrictions beyond defaults. Network-level blocking is the only way to prevent guest access."
+      }
+    ],
+    "loopLabel": "Continuous monitoring while ChatGPT is active"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "installExtension", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Low", "recommendation": "Chrome Web Store distribution. Auto-configure via Phosra account linking." },
+      { "name": "trackMessages", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Medium", "recommendation": "MutationObserver on chat container. Count user messages and AI responses separately. WebSocket monitoring for streaming." },
+      { "name": "trackSessionTime", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Simple timer tracking active tab time on chatgpt.com / chat.openai.com domains." },
+      { "name": "classifyContent", "approach": "Moderation API", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "Low", "risk": "Low", "recommendation": "Send captured message text to POST /v1/moderations. Free, fast (~200ms), 11-category classification." },
+      { "name": "enforceTimeLimits", "approach": "Extension + DNS", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Low", "recommendation": "Extension blocks page when limit reached. DNS blocking prevents bypass via other browsers." },
+      { "name": "enforceQuietHours", "approach": "DNS Blocking", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Low", "risk": "Low", "recommendation": "Block chatgpt.com, chat.openai.com, and api.openai.com domains during quiet hours via DNS rules." },
+      { "name": "injectBreakReminders", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Inject overlay prompt at configured intervals. Non-dismissable for mandatory breaks." },
+      { "name": "syncParentSettings", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "High", "risk": "High", "recommendation": "Automate parent dashboard for quiet hours and feature toggles. Fragile — deprioritize. Cloudflare/CAPTCHA challenges." },
+      { "name": "detectCrisis", "approach": "Extension + Moderation API", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "Medium", "risk": "Low", "recommendation": "Detect ChatGPT crisis UI elements (988 hotline display) + Moderation API self-harm/intent flags. Immediate parent alert." },
+      { "name": "blockGuestAccess", "approach": "DNS Blocking", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Low", "risk": "Low", "recommendation": "Block chatgpt.com at network level for devices without the extension installed. Prevents unmonitored guest access." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Extension MVP", "components": "Message/time tracking (3-4d), Extension infrastructure (2-3d)", "minDays": 5, "maxDays": 7, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "DNS blocking (2-3d), Content classification (2-3d), Alerts (1-2d)", "minDays": 5, "maxDays": 8, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Intelligence", "components": "Topic detection NLP (3-5d), Homework detection (2-3d)", "minDays": 5, "maxDays": 8, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "15-23 days",
+    "maxTotal": 23
+  }
+}
