@@ -528,6 +528,9 @@ function getCapabilitySummary(platformId: string): CapabilitySummary {
   if (platformId === "chatgpt") {
     return getChatGPTCapabilities()
   }
+  if (platformId === "claude") {
+    return getClaudeCapabilities()
+  }
   return { fullyEnforceable: [], partiallyEnforceable: [], notApplicable: [] }
 }
 
@@ -771,6 +774,120 @@ function getChatGPTCapabilities(): CapabilitySummary {
       label: "Autoplay Control",
       platformFeature: "Text-based interaction — no autoplay content",
       enforcementMethod: "N/A — voice mode continues until user stops but has no autoplay",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "title_restriction",
+      label: "Title Restriction",
+      platformFeature: "No content library — generative AI, not curated content",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+  ]
+
+  return { fullyEnforceable, partiallyEnforceable, notApplicable }
+}
+
+function getClaudeCapabilities(): CapabilitySummary {
+  const fullyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "screen_time_limit",
+      label: "Daily Time Limit",
+      platformFeature: "No native time limits",
+      enforcementMethod: "Browser extension tracks session duration + DNS blocking when limit reached",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "message_rate_limit",
+      label: "Message Limit",
+      platformFeature: "Only technical rate limits (billing), not safety controls",
+      enforcementMethod: "Browser extension counts messages and blocks input when limit reached",
+      confidence: 0.85,
+    },
+    {
+      ruleCategory: "bedtime_schedule",
+      label: "Schedule / Quiet Hours",
+      platformFeature: "No native quiet hours or scheduling",
+      enforcementMethod: "DNS-level domain blocking during restricted hours",
+      confidence: 0.9,
+    },
+    {
+      ruleCategory: "engagement_check",
+      label: "Break Reminders",
+      platformFeature: "No native break reminders or wellness check-ins",
+      enforcementMethod: "Browser extension injects break prompts at configured intervals",
+      confidence: 0.9,
+    },
+  ]
+
+  const partiallyEnforceable: CapabilityEntry[] = [
+    {
+      ruleCategory: "content_rating_filter",
+      label: "Content Safety Filter",
+      platformFeature: "Strong built-in content safety (Constitutional AI), but not parent-configurable",
+      enforcementMethod: "Third-party moderation API classifies captured text; extension alerts on violations",
+      confidence: 0.55,
+      gap: "No Anthropic moderation API — must use third-party content classification",
+      workaround: "Use OpenAI Moderation API or Google Perspective API for content classification",
+    },
+    {
+      ruleCategory: "parental_event_notification",
+      label: "Safety Alerts",
+      platformFeature: "Zero parent notifications — no parent-facing features at all",
+      enforcementMethod: "Extension detects crisis responses + third-party moderation flags → instant parent push notification",
+      confidence: 0.55,
+      gap: "No webhook/API for safety events — requires client-side detection. No Anthropic moderation API.",
+      workaround: "Extension monitors DOM for crisis elements and classifies messages via third-party API",
+    },
+    {
+      ruleCategory: "screen_time_report",
+      label: "Usage Analytics",
+      platformFeature: "No usage stats visible to anyone other than account holder",
+      enforcementMethod: "Extension tracks detailed usage metrics (messages, duration, models used)",
+      confidence: 0.65,
+      gap: "No API to retrieve usage stats — extension tracking is desktop-only",
+      workaround: "Extension-only tracking; no server-side data available",
+    },
+    {
+      ruleCategory: "academic_integrity",
+      label: "Homework Detection",
+      platformFeature: "No homework detection, no Study Mode, no Socratic mode",
+      enforcementMethod: "Client-side NLP on captured messages to detect academic queries",
+      confidence: 0.4,
+      gap: "NLP detection has limited accuracy — false positives/negatives expected",
+      workaround: "Use heuristic patterns (math equations, essay prompts, citation requests) + parent review",
+    },
+    {
+      ruleCategory: "age_gate",
+      label: "Age Verification",
+      platformFeature: "Self-attestation only — must agree to ToS claiming 18+. No DOB entry.",
+      enforcementMethod: "Cannot strengthen age verification; extension detects account status",
+      confidence: 0.2,
+      gap: "No guest access (requires account), but account creation trivially easy with any email",
+      workaround: "DNS blocking prevents access on controlled devices; extension monitors usage",
+    },
+  ]
+
+  const notApplicable: CapabilityEntry[] = [
+    {
+      ruleCategory: "purchase_control",
+      label: "Purchase Control",
+      platformFeature: "Subscription-only — no in-conversation purchases",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "location_tracking",
+      label: "Location Tracking",
+      platformFeature: "No location features in Claude",
+      enforcementMethod: "N/A",
+      confidence: 1.0,
+    },
+    {
+      ruleCategory: "autoplay_control",
+      label: "Autoplay Control",
+      platformFeature: "Text-based interaction — no autoplay content",
+      enforcementMethod: "N/A",
       confidence: 1.0,
     },
     {

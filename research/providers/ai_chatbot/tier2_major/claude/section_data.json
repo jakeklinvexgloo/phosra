@@ -1,0 +1,249 @@
+{
+  "profileStructure": {
+    "accountLabel": "Anthropic Account",
+    "accountDescription": "Claude Subscription",
+    "accountMeta": "1 account · No parental controls or family features",
+    "accountBorderColor": "#D97706",
+    "accountLabelColor": "#f59e0b",
+    "hierarchyDescription": "Anthropic Account → Subscription Tier → Settings hierarchy",
+    "profiles": [
+      { "name": "Free User", "maturity": "Full Access", "type": "standard", "pinEnabled": false },
+      { "name": "Pro User ($20/mo)", "maturity": "Full Access + Priority", "type": "standard", "pinEnabled": false },
+      { "name": "Max User ($100-$200/mo)", "maturity": "Full Access + Unlimited", "type": "standard", "pinEnabled": false },
+      { "name": "Team User ($30/user/mo)", "maturity": "Full Access + Admin", "type": "standard", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Content Safety Level", "configurable": false },
+      { "setting": "Memory", "configurable": true },
+      { "setting": "Data Export", "configurable": true },
+      { "setting": "Model Training Opt-Out", "configurable": true },
+      { "setting": "Theme (Light/Dark)", "configurable": true },
+      { "setting": "Language", "configurable": true }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Free", "streams": "N/A", "resolution": "Sonnet 4.6 (limited) + Haiku 4.5 fallback" },
+      { "plan": "Pro ($20/mo)", "streams": "N/A", "resolution": "Sonnet 4.6 + Opus 4.6 (limited) + Haiku 4.5" },
+      { "plan": "Max ($100/mo)", "streams": "N/A", "resolution": "All models, 20x usage" },
+      { "plan": "Max ($200/mo)", "streams": "N/A", "resolution": "All models, unlimited usage" },
+      { "plan": "Team ($30/user/mo)", "streams": "N/A", "resolution": "All models + admin controls" },
+      { "plan": "Enterprise (custom)", "streams": "N/A", "resolution": "All models + SSO + zero retention + SLA" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Anthropic API ecosystem, authentication, and consumer vs developer gap",
+    "apiArchitecture": {
+      "title": "Anthropic Messages API (Developer) + No Consumer Parental API",
+      "description": "Anthropic operates the Messages API for developers (chat completions, tool use, vision, extended thinking). However, there is ZERO API access to consumer Claude features — no parental controls exist at all, no conversation access for third parties, no usage stats API. All consumer features are web/app-only.",
+      "codeExample": {
+        "comment": "// Messages API (developer, paid)",
+        "method": "POST",
+        "endpoint": "https://api.anthropic.com/v1/messages",
+        "exampleComment": "// Send messages to Claude models",
+        "exampleCode": "{ \"model\": \"claude-sonnet-4-6\", \"max_tokens\": 1024, \"messages\": [{\"role\": \"user\", \"content\": \"Hello\"}] }"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "POST /v1/messages", "purpose": "Messages API (developer)", "auth": "API Key (x-api-key header)" },
+      { "endpoint": "POST /v1/messages (streaming)", "purpose": "Streaming Messages API", "auth": "API Key (x-api-key header)" },
+      { "endpoint": "GET /v1/models", "purpose": "List available models", "auth": "API Key (x-api-key header)" },
+      { "endpoint": "POST /v1/messages/batches", "purpose": "Batch processing API", "auth": "API Key (x-api-key header)" },
+      { "endpoint": "N/A — No Consumer API", "purpose": "No consumer-facing API for parental controls, usage, or settings", "auth": "N/A" }
+    ],
+    "authDetails": [
+      { "label": "Developer API", "value": "API Key (x-api-key header)", "description": "Organization-scoped API keys. Workspace-level keys for access control. Not tied to consumer accounts." },
+      { "label": "Consumer Auth", "value": "Session cookie + OAuth", "description": "Web session. OAuth via Google SSO. No programmatic access to consumer sessions." },
+      { "label": "No Parent Dashboard", "value": "N/A", "description": "Anthropic does not offer any parent dashboard, family controls, or third-party monitoring APIs." }
+    ],
+    "rateLimitNotes": [
+      "Developer API: Tiered rate limits — Free tier: 5 RPM, 25,000 tokens/min. Scales to Tier 4: 4,000 RPM, 400,000 tokens/min",
+      "Consumer claude.ai: ~30 messages/day (Free), 5x (Pro), 20x (Max $100), unlimited (Max $200). Dynamic adjustment based on load.",
+      "No content moderation API — unlike OpenAI, Anthropic does not offer a free moderation endpoint",
+      "Consumer web interface: Standard bot detection, no CAPTCHA observed but Cloudflare-protected",
+      "No anti-automation stated in ToS for consumer interface, but web scraping is generally prohibited"
+    ],
+    "harCaptureCount": "N/A — no consumer API to capture"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Anthropic Terms of Use — Automated Access",
+      "description": "Anthropic's Terms prohibit automated access to the consumer Claude interface (claude.ai). The developer API is designed for programmatic access but does not expose consumer features. Browser automation of settings would likely violate ToS. Phosra's browser extension approach (client-side, user-installed) is a gray area but more defensible than server-side automation."
+    },
+    "overallRisk": {
+      "level": "Medium",
+      "description": "Extension-based monitoring is lower risk than server-side automation. Network-level controls are fully compliant. No moderation API available unlike ChatGPT."
+    },
+    "detectionVectors": [
+      { "vector": "Browser extension detection", "risk": "Low", "mitigation": "Extensions are user-installed — Anthropic does not block parental control extensions" },
+      { "vector": "Playwright automation", "risk": "High", "mitigation": "Cloudflare protection. Use stealth mode + persistent sessions. Fragile approach." },
+      { "vector": "No moderation API available", "risk": "N/A", "mitigation": "Unlike OpenAI, Anthropic does not offer a moderation API. Phosra must use its own content classification or a third-party moderation service." },
+      { "vector": "DNS blocking detection", "risk": "None", "mitigation": "Network-level controls are invisible to Anthropic" }
+    ],
+    "mitigationsChecklist": [
+      "Use browser extension for monitoring (user-consented, client-side)",
+      "Use third-party content classification (no Anthropic moderation API available)",
+      "Use DNS/network-level controls for enforcement (compliant, hard to bypass)",
+      "No Playwright automation needed — Anthropic has no parent dashboard to sync",
+      "Implement extension heartbeat to detect if teen disables it",
+      "Consider mobile gap — extension doesn't cover iOS/Android Claude apps",
+      "Monitor Anthropic for any future parental control announcements",
+      "Consider using OpenAI Moderation API as content classifier for Claude conversations"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Claude",
+    "stats": [
+      { "label": "Native", "value": 1, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 9, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 5, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 19, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Shield",
+        "title": "Parental Controls (Any)",
+        "ruleCategory": "parental_consent_gate",
+        "gapLabel": "Claude Gap",
+        "gap": "Claude has ZERO parental controls. No parent dashboard, no account linking, no visibility, no configuration. Complete blind spot for parents.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension provides comprehensive parental oversight: conversation monitoring, content classification, usage tracking, and configurable safety alerts — all without requiring any cooperation from Anthropic."
+      },
+      {
+        "icon": "Clock",
+        "title": "Daily Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Claude Gap",
+        "gap": "Claude has ZERO time limits. No native way for anyone to restrict daily conversation time. Children can chat indefinitely within message quotas.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension tracks session duration. When the daily limit is reached, the extension blocks the page and network-level DNS blocking prevents bypass via other browsers."
+      },
+      {
+        "icon": "MessageSquare",
+        "title": "Message Limits (Parent-Configurable)",
+        "ruleCategory": "message_rate_limit",
+        "gapLabel": "Claude Gap",
+        "gap": "Claude's rate limits are technical/billing only (~30/day free, more for Pro). Parents cannot set custom message limits.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension counts messages sent per day. When the parent-set limit is reached, the input field is blocked and a friendly 'limit reached' message is displayed."
+      },
+      {
+        "icon": "Bell",
+        "title": "Real-Time Safety Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Claude Gap",
+        "gap": "Claude has NO parent notifications whatsoever. No safety alerts, no usage summaries, no crisis notifications. Parents are completely blind.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension detects concerning content via third-party content classification. Instant push notification sent to parent with severity level and context."
+      },
+      {
+        "icon": "Coffee",
+        "title": "Break Reminders",
+        "ruleCategory": "engagement_check",
+        "gapLabel": "Claude Gap",
+        "gap": "Claude has no break reminders or wellness check-ins. A child can have multi-hour continuous conversations with no interruption.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension injects 'time for a break' prompts at parent-configured intervals. Optional mandatory break enforcement pauses the conversation."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Browser Extension", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Third-Party Moderation", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Network Controls", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" }
+    ],
+    "credentials": [
+      { "name": "Third-party moderation API key", "purpose": "Content classification (no Anthropic moderation API)", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Permanent (Phosra-owned key)" },
+      { "name": "Browser extension token", "purpose": "Extension ↔ Phosra API auth", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Active session only" }
+    ],
+    "platformBgColor": "rgba(217,119,6,0.05)",
+    "platformIconLetter": "C",
+    "platformIconBg": "#D97706",
+    "apiDescription": "Extension (monitoring) + Third-party moderation (classification) + DNS (enforcement)",
+    "adapterName": "Claude Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track conversations in real-time",
+        "detail": "Browser extension observes messages on claude.ai using MutationObserver. Captures visible text from .font-claude-response elements, counts messages, tracks session duration.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "classify",
+        "icon": "Shield",
+        "title": "Classify",
+        "description": "Analyze content safety",
+        "detail": "Send captured conversation text to a third-party content moderation API (e.g., OpenAI Moderation API or Perspective API) for safety classification. No Anthropic moderation API exists.",
+        "color": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
+        "dotColor": "bg-purple-500",
+        "headerBg": "bg-purple-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Apply limits and blocks",
+        "detail": "When time/message limits exceeded: extension blocks the page UI. Network-level DNS blocking prevents bypass via other browsers or incognito mode. No Anthropic settings to sync — all enforcement is Phosra-side.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent instantly",
+        "detail": "Push real-time notification to parent via Phosra app with alert severity, content category, and recommended action. Critical alerts (self-harm) are immediate. This fills the complete gap — Anthropic sends zero parent notifications.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Smartphone",
+        "title": "No mobile app coverage",
+        "description": "Browser extension only works on desktop browsers (Chrome, Firefox, Edge). Mobile Claude apps (iOS/Android) are not covered — rely on device-level controls and network blocking."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No moderation API from Anthropic",
+        "description": "Unlike OpenAI, Anthropic does not offer a free content moderation API. Phosra must use third-party moderation (OpenAI Moderation API, Google Perspective API) to classify Claude conversation content."
+      },
+      {
+        "icon": "UserX",
+        "title": "Extension can be disabled",
+        "description": "A tech-savvy teen can disable or remove the browser extension. Phosra detects missing extension heartbeat and alerts the parent, but there is a window of unmonitored access."
+      },
+      {
+        "icon": "Lock",
+        "title": "Account required — no guest bypass",
+        "description": "Unlike ChatGPT, Claude requires an account to use. This means there's no guest access bypass risk. However, account creation is trivially easy with any email address."
+      }
+    ],
+    "loopLabel": "Continuous monitoring while Claude is active"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "installExtension", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Low", "recommendation": "Chrome Web Store distribution. Auto-configure via Phosra account linking." },
+      { "name": "trackMessages", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Medium", "recommendation": "MutationObserver on chat container. Target .font-claude-response for AI messages. Count user messages via input monitoring." },
+      { "name": "trackSessionTime", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Simple timer tracking active tab time on claude.ai domain." },
+      { "name": "classifyContent", "approach": "Third-Party API", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "Low", "risk": "Low", "recommendation": "Send captured message text to OpenAI Moderation API or Google Perspective API. No Anthropic moderation endpoint available." },
+      { "name": "enforceTimeLimits", "approach": "Extension + DNS", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Low", "recommendation": "Extension blocks page when limit reached. DNS blocking prevents bypass via other browsers." },
+      { "name": "enforceQuietHours", "approach": "DNS Blocking", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Low", "risk": "Low", "recommendation": "Block claude.ai and api.anthropic.com domains during quiet hours via DNS rules." },
+      { "name": "injectBreakReminders", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Inject overlay prompt at configured intervals. Non-dismissable for mandatory breaks." },
+      { "name": "detectCrisis", "approach": "Extension + Third-Party API", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "Medium", "risk": "Low", "recommendation": "Detect Claude crisis response elements (988 hotline display) + third-party moderation API self-harm flags. Immediate parent alert." },
+      { "name": "monitorMemory", "approach": "Browser Extension", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Monitor Memory settings page for concerning saved memories. Alert parent if sensitive topics detected in memory entries." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Extension MVP", "components": "Message/time tracking (3-4d), Extension infrastructure (2-3d)", "minDays": 5, "maxDays": 7, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "DNS blocking (2-3d), Third-party content classification (3-4d), Alerts (1-2d)", "minDays": 6, "maxDays": 9, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Intelligence", "components": "Topic detection NLP (3-5d), Homework detection (2-3d), Memory monitoring (2-3d)", "minDays": 7, "maxDays": 11, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "18-27 days",
+    "maxTotal": 27
+  }
+}
