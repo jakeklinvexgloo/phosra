@@ -18,7 +18,7 @@ Phosra needs to systematically research every major AI chatbot platform and desi
 | **Snapchat My AI** | Not started | Not started | Not started | Tier 4 auth (mobile only) |
 | **Meta AI** | Not started | Not started | Not started | |
 | **Microsoft Copilot** | Not started | Not started | Not started | |
-| **Claude** | Not started | Not started | Not started | |
+| **Claude** | Not started | 35/35 prompts scored | Not started | Grade A, avg 0.46/4.0 |
 | **Apple Intelligence** | Not started | Not started | Not started | |
 | **Amazon Alexa** | Not started | Not started | Not started | |
 | **Replika** | Not started | Not started | Not started | |
