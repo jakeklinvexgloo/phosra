@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useMemo, useRef, useEffect, useCallback } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import Fuse from "fuse.js"
 import {
@@ -64,6 +63,8 @@ const FUSE_OPTIONS = {
   minMatchCharLength: 2,
 }
 
+const LISTBOX_ID = "search-results-listbox"
+
 // ── Grade Badge ─────────────────────────────────────────────────────
 
 function GradeBadge({ grade }: { grade: string }) {
@@ -91,15 +92,15 @@ export function SearchBar({ items }: SearchBarProps) {
   const [query, setQuery] = useState("")
   const [debouncedQuery, setDebouncedQuery] = useState("")
   const [activeIndex, setActiveIndex] = useState(-1)
-  const [showResults, setShowResults] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const fuse = useMemo(() => new Fuse(items, FUSE_OPTIONS), [items])
 
-  // Debounce the query by 200ms
+  // Debounce the query by 300ms
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query)
-    }, 200)
+    }, 300)
     return () => clearTimeout(timer)
   }, [query])
 
@@ -128,53 +129,86 @@ export function SearchBar({ items }: SearchBarProps) {
     return groupedResults.flatMap((g) => g.items)
   }, [groupedResults])
 
-  // Show/hide dropdown
+  // Whether the dropdown should show (has results, or has a long-enough query for empty state)
+  const hasQuery = debouncedQuery.trim().length >= 3
+  const showDropdown = isOpen && (flatResults.length > 0 || hasQuery)
+
+  // Reset active index when results change
   useEffect(() => {
-    setShowResults(flatResults.length > 0)
     setActiveIndex(-1)
+  }, [flatResults])
+
+  // Open dropdown when results arrive and input is focused
+  useEffect(() => {
+    if (flatResults.length > 0 && document.activeElement === inputRef.current) {
+      setIsOpen(true)
+    }
   }, [flatResults])
 
   // Click outside to close
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setShowResults(false)
+        setIsOpen(false)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
+  // Navigate to a result and close
+  const navigateTo = useCallback(
+    (url: string) => {
+      router.push(url)
+      setIsOpen(false)
+      setQuery("")
+      setDebouncedQuery("")
+      inputRef.current?.blur()
+    },
+    [router],
+  )
+
   // Keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (!showResults) return
-
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault()
-          setActiveIndex((prev) => (prev < flatResults.length - 1 ? prev + 1 : 0))
+          if (!isOpen && flatResults.length > 0) {
+            setIsOpen(true)
+            setActiveIndex(0)
+          } else if (isOpen) {
+            setActiveIndex((prev) => (prev < flatResults.length - 1 ? prev + 1 : 0))
+          }
           break
         case "ArrowUp":
           e.preventDefault()
-          setActiveIndex((prev) => (prev > 0 ? prev - 1 : flatResults.length - 1))
+          if (isOpen) {
+            setActiveIndex((prev) => (prev > 0 ? prev - 1 : flatResults.length - 1))
+          }
           break
         case "Enter":
-          e.preventDefault()
-          if (activeIndex >= 0 && activeIndex < flatResults.length) {
-            router.push(flatResults[activeIndex].url)
-            setShowResults(false)
-            setQuery("")
+          if (isOpen && activeIndex >= 0 && activeIndex < flatResults.length) {
+            e.preventDefault()
+            navigateTo(flatResults[activeIndex].url)
           }
           break
         case "Escape":
-          setShowResults(false)
-          inputRef.current?.blur()
+          if (isOpen) {
+            e.preventDefault()
+            setIsOpen(false)
+            inputRef.current?.blur()
+          }
+          break
+        case "Tab":
+          setIsOpen(false)
           break
       }
     },
-    [showResults, flatResults, activeIndex, router]
+    [isOpen, flatResults, activeIndex, navigateTo],
   )
+
+  const activeOptionId = activeIndex >= 0 ? `search-option-${activeIndex}` : undefined
 
   // Track which flat index we're at for highlighting
   let flatIndex = -1
@@ -187,55 +221,76 @@ export function SearchBar({ items }: SearchBarProps) {
         <input
           ref={inputRef}
           type="text"
+          role="combobox"
+          aria-expanded={showDropdown}
+          aria-controls={LISTBOX_ID}
+          aria-activedescendant={activeOptionId}
+          aria-autocomplete="list"
+          aria-haspopup="listbox"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value)
+            if (!e.target.value.trim()) {
+              setIsOpen(false)
+            }
+          }}
           onFocus={() => {
-            if (flatResults.length > 0) setShowResults(true)
+            if (flatResults.length > 0) setIsOpen(true)
           }}
           onKeyDown={handleKeyDown}
-          className="w-full pl-12 pr-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder:text-white/40 focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/30 transition-colors"
+          className="w-full pl-12 pr-4 py-3 rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder:text-white/40 focus:outline-none focus:border-brand-green/50 focus:ring-1 focus:ring-brand-green/30 motion-safe:transition-colors"
           placeholder="Search platforms, categories, findings..."
         />
       </div>
 
       {/* Dropdown */}
-      {showResults && (
-        <div className="absolute top-full mt-2 w-full rounded-xl border border-border bg-card shadow-2xl overflow-hidden z-50 max-h-[400px] overflow-y-auto">
-          {groupedResults.map((group) => (
-            <div key={group.type}>
-              {/* Group header */}
-              <div className="px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground bg-muted/30 border-b border-border/50">
-                {TYPE_LABELS[group.type]}
-              </div>
-              {/* Group items */}
-              {group.items.map((item) => {
-                flatIndex++
-                const idx = flatIndex
-                const Icon = TYPE_ICONS[item.type]
-                const isActive = idx === activeIndex
-                return (
-                  <Link
-                    key={`${item.type}-${item.url}`}
-                    href={item.url}
-                    onClick={() => {
-                      setShowResults(false)
-                      setQuery("")
-                    }}
-                    className={`flex items-start gap-3 px-4 py-3 transition-colors cursor-pointer ${
-                      isActive ? "bg-muted" : "hover:bg-muted/50"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4 mt-0.5 text-muted-foreground flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-foreground">{item.title}</div>
-                      <div className="text-xs text-muted-foreground truncate">{item.description}</div>
-                    </div>
-                    {item.grade && <GradeBadge grade={item.grade} />}
-                  </Link>
-                )
-              })}
+      {showDropdown && (
+        <div
+          id={LISTBOX_ID}
+          role="listbox"
+          className="absolute top-full mt-2 w-full rounded-xl border border-border bg-card shadow-2xl overflow-hidden z-50 max-h-[400px] overflow-y-auto"
+        >
+          {flatResults.length === 0 ? (
+            <div className="px-4 py-6 text-sm text-center text-muted-foreground">
+              No results for &ldquo;{debouncedQuery.trim()}&rdquo;
             </div>
-          ))}
+          ) : (
+            groupedResults.map((group) => (
+              <div key={group.type} role="group" aria-label={TYPE_LABELS[group.type]}>
+                {/* Group header */}
+                <div className="px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground bg-muted/30 border-b border-border/50">
+                  {TYPE_LABELS[group.type]}
+                </div>
+                {/* Group items */}
+                {group.items.map((item) => {
+                  flatIndex++
+                  const idx = flatIndex
+                  const Icon = TYPE_ICONS[item.type]
+                  const isActive = idx === activeIndex
+                  return (
+                    <div
+                      key={`${item.type}-${item.url}`}
+                      id={`search-option-${idx}`}
+                      role="option"
+                      aria-selected={isActive}
+                      onClick={() => navigateTo(item.url)}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      className={`flex items-start gap-3 px-4 py-3 motion-safe:transition-colors cursor-pointer ${
+                        isActive ? "bg-muted" : "hover:bg-muted/50"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 mt-0.5 text-muted-foreground flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-foreground">{item.title}</div>
+                        <div className="text-xs text-muted-foreground truncate">{item.description}</div>
+                      </div>
+                      {item.grade && <GradeBadge grade={item.grade} />}
+                    </div>
+                  )
+                })}
+              </div>
+            ))
+          )}
         </div>
       )}
     </div>

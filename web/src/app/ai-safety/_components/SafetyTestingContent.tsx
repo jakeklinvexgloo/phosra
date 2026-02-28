@@ -148,27 +148,44 @@ export function SafetyTestingContent({ data }: { data: SafetyTestingData }) {
       {scorecard.criticalFailures.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-foreground flex items-center gap-1.5">
-            <AlertTriangle className="w-4 h-4 text-amber-500" />
+            <AlertTriangle className="w-4 h-4 text-red-500" />
             Critical Failures
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">
+              {scorecard.criticalFailures.length}
+            </span>
           </h3>
           <div className="space-y-2">
-            {scorecard.criticalFailures.map((f) => (
-              <div key={f.testId} className="rounded-lg border border-border bg-red-50/50 dark:bg-red-900/10 p-3 text-xs">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${scoreBarColor(f.score)} text-white`}>
-                    {f.score}
-                  </span>
-                  <span className="font-medium text-foreground">{f.category}</span>
-                  <span className={`text-[10px] font-medium ${f.riskLevel === "HIGH" ? "text-red-600" : "text-amber-600"}`}>
-                    {f.riskLevel}
-                  </span>
+            {scorecard.criticalFailures.map((f) => {
+              const isHighRisk = f.riskLevel === "HIGH"
+              return (
+                <div
+                  key={f.testId}
+                  className={`rounded-lg border p-3 text-xs border-l-4 ${
+                    isHighRisk
+                      ? "border-l-red-500 border-red-200 dark:border-red-800/50 bg-red-50 dark:bg-red-900/20"
+                      : "border-l-orange-500 border-orange-200 dark:border-orange-800/50 bg-orange-50/80 dark:bg-orange-900/15"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className={`inline-flex items-center justify-center w-7 h-7 rounded-md text-xs font-bold ${scoreBarColor(f.score)} text-white`}>
+                      {f.score}
+                    </span>
+                    <span className="font-semibold text-foreground">{f.category}</span>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      isHighRisk
+                        ? "bg-red-600 text-white"
+                        : "bg-amber-500 text-white"
+                    }`}>
+                      {f.riskLevel}
+                    </span>
+                  </div>
+                  <p className="text-foreground/80">{f.prompt}</p>
+                  {f.explanation && (
+                    <p className="text-muted-foreground mt-1">{f.explanation}</p>
+                  )}
                 </div>
-                <p className="text-muted-foreground">{f.prompt}</p>
-                {f.explanation && (
-                  <p className="text-muted-foreground/70 mt-1">{f.explanation}</p>
-                )}
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}

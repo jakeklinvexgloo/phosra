@@ -1,8 +1,8 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
 import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
+import { Breadcrumbs } from "../../_components/Breadcrumbs"
 
 // Get all unique categories from the data at build time
 export async function generateStaticParams() {
@@ -80,13 +80,13 @@ export default async function CategoryPage({
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
-          <Link
-            href="/ai-safety"
-            className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to AI Safety Portal
-          </Link>
+          <Breadcrumbs
+            items={[
+              { label: "AI Safety", href: "/ai-safety" },
+              { label: "Categories" },
+              { label },
+            ]}
+          />
           <h1 className="text-3xl font-display font-bold">{label}</h1>
           <p className="text-white/50 mt-2 text-sm">
             How all {categoryData.length} platforms scored on {label.toLowerCase()} safety tests
@@ -99,12 +99,12 @@ export default async function CategoryPage({
         <h2 className="text-lg font-semibold text-foreground">Platform Rankings</h2>
         <p className="text-xs text-muted-foreground mb-4">Lower average score = safer (0 = full block, 4 = enthusiastic)</p>
 
-        <div className="space-y-2">
+        <div className="space-y-3 sm:space-y-2">
           {categoryData.map((pd) => (
-            <div key={pd.platformId} className="flex items-center gap-3">
+            <div key={pd.platformId} className="flex items-center gap-2 sm:gap-3">
               <Link
                 href={`/ai-safety/${pd.platformId}`}
-                className="text-sm font-medium text-foreground hover:text-brand-green transition-colors min-w-[100px]"
+                className="text-xs sm:text-sm font-medium text-foreground hover:text-brand-green transition-colors min-w-[80px] sm:min-w-[100px]"
               >
                 {pd.platformName}
               </Link>
@@ -116,11 +116,11 @@ export default async function CategoryPage({
                   <span className="text-[10px] font-bold">{pd.avg.toFixed(2)}</span>
                 </div>
               </div>
-              <div className="flex gap-0.5 flex-shrink-0">
+              <div className="flex gap-1 sm:gap-0.5 flex-shrink-0 overflow-x-auto">
                 {pd.results.map((r) => (
                   <span
                     key={r.id}
-                    className={`inline-block w-5 h-5 rounded text-[9px] font-bold text-center leading-5 ${scoreBg(r.score!)}`}
+                    className={`inline-block w-7 h-7 sm:w-5 sm:h-5 rounded text-[10px] sm:text-[9px] font-bold text-center leading-7 sm:leading-5 ${scoreBg(r.score!)}`}
                     title={r.prompt}
                   >
                     {r.score}
@@ -138,17 +138,19 @@ export default async function CategoryPage({
           {categoryData[0].results.map((r) => (
             <div key={r.id} className="rounded-lg border border-border bg-card p-4">
               <p className="text-sm text-foreground mb-3">{r.prompt}</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3 sm:gap-2">
                 {categoryData.map((pd) => {
                   const match = pd.results.find((pr) => pr.id === r.id)
                   return match ? (
                     <div key={pd.platformId} className="text-center">
                       <span
-                        className={`inline-block w-7 h-7 rounded text-xs font-bold text-center leading-7 ${scoreBg(match.score!)}`}
+                        className={`inline-block w-9 h-9 sm:w-7 sm:h-7 rounded text-sm sm:text-xs font-bold text-center leading-9 sm:leading-7 ${scoreBg(match.score!)}`}
+                        title={`${pd.platformName}: ${match.score}`}
+                        aria-label={`${pd.platformName}: score ${match.score}`}
                       >
                         {match.score}
                       </span>
-                      <div className="text-[8px] text-muted-foreground mt-0.5 max-w-[60px] truncate">
+                      <div className="text-[9px] sm:text-[8px] text-muted-foreground mt-0.5 max-w-[70px] sm:max-w-[60px] truncate">
                         {pd.platformName}
                       </div>
                     </div>

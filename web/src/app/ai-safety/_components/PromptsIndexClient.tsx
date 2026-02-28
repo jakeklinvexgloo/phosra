@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
-import { ArrowLeft, ChevronDown, ChevronRight, Filter, Download } from "lucide-react"
+import { ChevronDown, ChevronRight, Filter, Download } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
+import { SubNav } from "./SubNav"
 
 function toCSV(headers: string[], rows: string[][]): string {
   const escape = (v: string) => v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
@@ -77,16 +78,11 @@ export function PromptsIndexClient({
 
   return (
     <div>
+      <SubNav />
+
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
-          <Link
-            href="/ai-safety"
-            className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to AI Safety Portal
-          </Link>
           <h1 className="text-3xl font-display font-bold">Test Prompt Index</h1>
           <p className="text-white/50 mt-2 text-sm">
             All {prompts.length} safety test prompts with per-platform scores
@@ -95,7 +91,7 @@ export function PromptsIndexClient({
       </section>
 
       {/* Filter Bar */}
-      <div className="sticky top-14 z-30 bg-background border-b border-border">
+      <div className="sticky top-[calc(3.5rem+37px)] z-30 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-2 flex items-center gap-3">
           <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           <select
@@ -125,12 +121,14 @@ export function PromptsIndexClient({
 
       {/* Prompts List */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
-        <div className="overflow-x-auto rounded-lg border border-border">
+        <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+          {/* Scroll hint shadow */}
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
           <table className="w-full text-xs">
             <thead>
               <tr className="bg-muted/30">
-                <th className="px-3 py-2.5 text-left font-medium text-foreground min-w-[250px]">Prompt</th>
-                <th className="px-2 py-2.5 text-left font-medium text-foreground min-w-[100px]">Category</th>
+                <th className="sticky left-0 z-10 bg-muted/30 px-3 py-2.5 text-left font-medium text-foreground min-w-[200px] sm:min-w-[250px]">Prompt</th>
+                <th className="px-2 py-2.5 text-left font-medium text-foreground min-w-[100px] hidden sm:table-cell">Category</th>
                 {platformNames.map((pn) => (
                   <th key={pn.id} className="px-2 py-2.5 text-center font-medium text-foreground min-w-[70px]">
                     <Link href={`/ai-safety/${pn.id}`} className="hover:text-brand-green transition-colors">
@@ -143,7 +141,7 @@ export function PromptsIndexClient({
             <tbody className="divide-y divide-border/50">
               {filtered.map((prompt) => (
                 <tr key={prompt.id} className="hover:bg-muted/20 transition-colors group">
-                  <td className="px-3 py-2.5">
+                  <td className="sticky left-0 z-10 bg-background px-3 py-2.5">
                     <button
                       onClick={() => setExpandedPrompt(expandedPrompt === prompt.id ? null : prompt.id)}
                       className="text-left text-foreground flex items-start gap-1.5"
@@ -163,12 +161,13 @@ export function PromptsIndexClient({
                           <div className="mt-2 pl-5 text-[10px] text-muted-foreground space-y-1">
                             <p><strong>Expected:</strong> {prompt.expected}</p>
                             <p><strong>Severity:</strong> {prompt.severity}</p>
+                            <p className="sm:hidden"><strong>Category:</strong> {prompt.categoryLabel}</p>
                           </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </td>
-                  <td className="px-2 py-2.5">
+                  <td className="px-2 py-2.5 hidden sm:table-cell">
                     <span className="inline-block text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground whitespace-nowrap">
                       {prompt.categoryLabel}
                     </span>
@@ -181,7 +180,8 @@ export function PromptsIndexClient({
                         {score !== null ? (
                           <span
                             className={`inline-block w-6 h-6 rounded text-[10px] font-bold leading-6 ${scoreBg(score)}`}
-                            title={scoreEntry?.notes || `Score: ${score}`}
+                            title={`${pn.name}: ${score}${scoreEntry?.notes ? ` — ${scoreEntry.notes}` : ""}`}
+                            aria-label={`${pn.name}: score ${score}`}
                           >
                             {score}
                           </span>

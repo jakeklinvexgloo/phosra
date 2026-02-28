@@ -4,6 +4,7 @@ import { useState, useMemo, useRef, useEffect, FormEvent } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport, type UIMessage } from "ai"
 import { MessageCircle, X, Send, Sparkles, Loader2 } from "lucide-react"
+import ReactMarkdown from "react-markdown"
 
 function textOf(msg: UIMessage): string {
   return msg.parts
@@ -22,7 +23,13 @@ const SUGGESTED_QUESTIONS = [
 export function ResearchChatWidget() {
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState("")
+  const [showPing, setShowPing] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowPing(false), 3000)
+    return () => clearTimeout(timer)
+  }, [])
 
   const transport = useMemo(
     () => new DefaultChatTransport({ api: "/api/research/chat" }),
@@ -54,7 +61,9 @@ export function ResearchChatWidget() {
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-brand-green hover:bg-brand-green/90 text-white shadow-lg flex items-center justify-center transition-colors"
       >
-        <span className="absolute inset-0 rounded-full bg-brand-green/30 animate-ping" />
+        {showPing && (
+          <span className="absolute inset-0 rounded-full bg-brand-green/30 animate-ping motion-reduce:hidden" />
+        )}
         <MessageCircle className="w-6 h-6 relative z-10" />
       </button>
     )
@@ -116,8 +125,8 @@ export function ResearchChatWidget() {
               </div>
             ) : (
               <div key={msg.id} className="flex justify-start">
-                <div className="max-w-[80%] rounded-2xl rounded-bl-sm px-4 py-2 bg-muted text-foreground text-sm whitespace-pre-wrap">
-                  {textOf(msg)}
+                <div className="max-w-[80%] rounded-2xl rounded-bl-sm px-4 py-2 bg-muted text-foreground text-sm prose prose-sm prose-neutral dark:prose-invert max-w-none [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_h2]:text-sm [&_h3]:text-sm [&_a]:text-brand-green">
+                  <ReactMarkdown>{textOf(msg)}</ReactMarkdown>
                 </div>
               </div>
             )

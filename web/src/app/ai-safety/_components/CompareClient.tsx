@@ -3,10 +3,10 @@
 import { useState } from "react"
 import Link from "next/link"
 import {
-  ArrowLeft,
   CheckCircle2,
   XCircle,
 } from "lucide-react"
+import { SubNav } from "./SubNav"
 import type {
   SafetyScorecard,
   AgeVerificationDetail,
@@ -54,23 +54,18 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
 
   return (
     <div>
+      <SubNav />
+
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
-          <Link
-            href="/ai-safety"
-            className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to AI Safety Portal
-          </Link>
           <h1 className="text-3xl font-display font-bold">Compare Platforms</h1>
           <p className="text-white/50 mt-2 text-sm">Select 2–4 platforms for side-by-side comparison</p>
         </div>
       </section>
 
       {/* Platform Selector */}
-      <div className="sticky top-14 z-30 bg-background border-b border-border">
+      <div className="sticky top-[calc(3.5rem+37px)] z-30 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-3">
           <div className="flex flex-wrap gap-2">
             {platforms.map((p) => (
@@ -92,11 +87,13 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
 
       {/* Comparison Table */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10">
-        <div className="overflow-x-auto rounded-lg border border-border">
+        <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+          {/* Scroll hint shadow on the right */}
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-muted/30 border-b border-border">
-                <th className="px-4 py-3 text-left font-medium text-foreground min-w-[180px]">Dimension</th>
+                <th className="sticky left-0 z-10 bg-muted/30 px-4 py-3 text-left font-medium text-foreground min-w-[140px] sm:min-w-[180px] after:absolute after:right-0 after:top-0 after:bottom-0 after:w-px after:bg-border">Dimension</th>
                 {compared.map((p) => (
                   <th key={p.platformId} className="px-4 py-3 text-center font-medium text-foreground min-w-[120px]">
                     <Link href={`/ai-safety/${p.platformId}`} className="hover:text-brand-green transition-colors">
@@ -109,7 +106,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
             <tbody className="divide-y divide-border/50">
               {/* Safety Grade */}
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Safety Grade</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Safety Grade</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center">
                     {p.scorecard ? (
@@ -121,7 +118,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 ))}
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Numerical Score</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Numerical Score</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center text-muted-foreground">
                     {p.scorecard?.numericalScore ?? "—"}/100
@@ -129,7 +126,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 ))}
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Full Blocks</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Full Blocks</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center text-emerald-600 font-medium">
                     {p.scorecard?.scoreDistribution.fullBlock ?? "—"}
@@ -143,7 +140,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 </td>
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Minimum Age</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Minimum Age</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center font-bold text-foreground">
                     {p.ageVerification ? `${p.ageVerification.minimumAge}+` : "—"}
@@ -151,7 +148,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 ))}
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Circumvention Ease</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Circumvention Ease</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center text-xs text-muted-foreground">
                     {p.ageVerification?.circumventionEase ?? "—"}
@@ -165,7 +162,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 </td>
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Parent Linking</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Parent Linking</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center text-xs text-muted-foreground">
                     {p.parentalControls?.linkingMechanism?.method ?? "—"}
@@ -173,7 +170,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 ))}
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Controls Available</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Controls Available</td>
                 {compared.map((p) => {
                   const cc = p.parentalControls?.configurableControls ?? []
                   return (
@@ -190,7 +187,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 </td>
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Time Limits</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Time Limits</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center">
                     <BoolIcon value={(p.conversationControls?.timeLimits ?? []).some((t) => t.available)} />
@@ -198,7 +195,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 ))}
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Quiet Hours</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Quiet Hours</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center">
                     <BoolIcon value={p.conversationControls?.quietHours?.available ?? false} />
@@ -206,7 +203,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 ))}
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Break Reminders</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Break Reminders</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center">
                     <BoolIcon value={p.conversationControls?.breakReminders?.available ?? false} />
@@ -220,7 +217,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 </td>
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Regulatory Actions</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Regulatory Actions</td>
                 {compared.map((p) => {
                   const raLen = (p.privacyData?.regulatoryActions ?? []).length
                   return (
@@ -233,7 +230,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
                 })}
               </tr>
               <tr className="hover:bg-muted/20">
-                <td className="px-4 py-3 font-medium text-foreground">Study Mode</td>
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">Study Mode</td>
                 {compared.map((p) => (
                   <td key={p.platformId} className="px-4 py-3 text-center">
                     <BoolIcon value={p.academicIntegrity?.studyMode?.available ?? false} />

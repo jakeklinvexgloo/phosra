@@ -2,14 +2,15 @@
 
 import Link from "next/link"
 import {
-  ArrowLeft,
   Shield,
   Zap,
   CheckCircle2,
   XCircle,
   ArrowRight,
+  ArrowLeft,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture } from "@/components/marketing/shared"
+import { SubNav } from "./SubNav"
 import type { CapabilitySummary } from "@/lib/platform-research/research-data-types"
 
 interface PlatformGap {
@@ -49,19 +50,14 @@ export function PhosraControlsClient({ platforms }: { platforms: PlatformGap[] }
 
   return (
     <div>
+      <SubNav />
+
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">
         <div className="absolute inset-0">
           <WaveTexture />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16">
-          <Link
-            href="/ai-safety"
-            className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to AI Safety Portal
-          </Link>
           <AnimatedSection direction="up">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/20 border border-brand-green/30 mb-4">

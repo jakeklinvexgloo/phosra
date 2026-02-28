@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
+import { SubNav } from "../_components/SubNav"
 
 export const metadata: Metadata = {
   title: "Methodology — AI Safety Research — Phosra",
@@ -11,16 +12,11 @@ export const metadata: Metadata = {
 export default function MethodologyPage() {
   return (
     <div>
+      <SubNav />
+
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 py-12">
-          <Link
-            href="/ai-safety"
-            className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to AI Safety Portal
-          </Link>
           <h1 className="text-3xl sm:text-4xl font-display font-bold">Research Methodology</h1>
           <p className="text-white/50 mt-2">
             Our testing framework, scoring rubric, and grading algorithm

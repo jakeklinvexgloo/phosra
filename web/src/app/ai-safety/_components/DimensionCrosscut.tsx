@@ -3,10 +3,22 @@
 import Link from "next/link"
 import {
   ArrowLeft,
+  ArrowRight,
   CheckCircle2,
   XCircle,
 } from "lucide-react"
 import type { PlatformResearchData } from "@/lib/platform-research/research-data-types"
+import { Breadcrumbs } from "./Breadcrumbs"
+
+const DIMENSION_ORDER = [
+  { id: "safety-testing", title: "Safety Testing" },
+  { id: "age-verification", title: "Age Verification" },
+  { id: "parental-controls", title: "Parental Controls" },
+  { id: "conversation-controls", title: "Conversation Controls" },
+  { id: "emotional-safety", title: "Emotional Safety" },
+  { id: "academic-integrity", title: "Academic Integrity" },
+  { id: "privacy-data", title: "Privacy & Data" },
+] as const
 
 interface DimensionCrosscutProps {
   dimensionId: string
@@ -24,18 +36,22 @@ function scoreBg(score: number): string {
 }
 
 export function DimensionCrosscut({ dimensionId, title, description, platforms }: DimensionCrosscutProps) {
+  const currentIndex = DIMENSION_ORDER.findIndex((d) => d.id === dimensionId)
+  const prev = currentIndex > 0 ? DIMENSION_ORDER[currentIndex - 1] : null
+  const next = currentIndex < DIMENSION_ORDER.length - 1 ? DIMENSION_ORDER[currentIndex + 1] : null
+
   return (
     <div>
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
-          <Link
-            href="/ai-safety"
-            className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to AI Safety Portal
-          </Link>
+          <Breadcrumbs
+            items={[
+              { label: "AI Safety", href: "/ai-safety" },
+              { label: "Dimensions" },
+              { label: title },
+            ]}
+          />
           <h1 className="text-3xl font-display font-bold">{title}</h1>
           <p className="text-white/50 mt-2 text-sm">{description}</p>
         </div>
@@ -50,6 +66,32 @@ export function DimensionCrosscut({ dimensionId, title, description, platforms }
         {dimensionId === "emotional-safety" && <EmotionalSafetyCrosscut platforms={platforms} />}
         {dimensionId === "academic-integrity" && <AcademicIntegrityCrosscut platforms={platforms} />}
         {dimensionId === "privacy-data" && <PrivacyDataCrosscut platforms={platforms} />}
+
+        {/* Prev / Next Navigation */}
+        <div className="flex items-center justify-between mt-12 pt-6 border-t border-border">
+          {prev ? (
+            <Link
+              href={`/ai-safety/dimensions/${prev.id}`}
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Previous: {prev.title}
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next ? (
+            <Link
+              href={`/ai-safety/dimensions/${next.id}`}
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Next: {next.title}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          ) : (
+            <span />
+          )}
+        </div>
       </div>
     </div>
   )
@@ -60,11 +102,12 @@ export function DimensionCrosscut({ dimensionId, title, description, platforms }
 function SafetyTestingCrosscut({ platforms }: { platforms: PlatformResearchData[] }) {
   const withScores = platforms.filter((p) => p.chatbotData?.safetyTesting?.scorecard)
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-muted/30 border-b border-border">
-            <th className="px-4 py-3 text-left font-medium text-foreground">Platform</th>
+            <th className="sticky left-0 z-10 bg-muted/30 px-4 py-3 text-left font-medium text-foreground min-w-[120px]">Platform</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Grade</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Score</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Full Blocks</th>
@@ -81,7 +124,7 @@ function SafetyTestingCrosscut({ platforms }: { platforms: PlatformResearchData[
             const failures = sc.scoreDistribution.softWarning + sc.scoreDistribution.compliant + sc.scoreDistribution.enthusiastic
             return (
               <tr key={p.platformId} className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">
                   <Link href={`/ai-safety/${p.platformId}`} className="hover:text-brand-green transition-colors">
                     {p.platformName}
                   </Link>
@@ -107,11 +150,12 @@ function SafetyTestingCrosscut({ platforms }: { platforms: PlatformResearchData[
 function AgeVerificationCrosscut({ platforms }: { platforms: PlatformResearchData[] }) {
   const withData = platforms.filter((p) => p.chatbotData?.ageVerificationDetail)
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-muted/30 border-b border-border">
-            <th className="px-4 py-3 text-left font-medium text-foreground">Platform</th>
+            <th className="sticky left-0 z-10 bg-muted/30 px-4 py-3 text-left font-medium text-foreground min-w-[120px]">Platform</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Min Age</th>
             <th className="px-4 py-3 text-left font-medium text-foreground">Methods</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Circumvention</th>
@@ -123,7 +167,7 @@ function AgeVerificationCrosscut({ platforms }: { platforms: PlatformResearchDat
             const av = p.chatbotData!.ageVerificationDetail!
             return (
               <tr key={p.platformId} className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">
                   <Link href={`/ai-safety/${p.platformId}`} className="hover:text-brand-green transition-colors">
                     {p.platformName}
                   </Link>
@@ -154,11 +198,12 @@ function AgeVerificationCrosscut({ platforms }: { platforms: PlatformResearchDat
 function ParentalControlsCrosscut({ platforms }: { platforms: PlatformResearchData[] }) {
   const withData = platforms.filter((p) => p.chatbotData?.parentalControlsDetail)
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-muted/30 border-b border-border">
-            <th className="px-4 py-3 text-left font-medium text-foreground">Platform</th>
+            <th className="sticky left-0 z-10 bg-muted/30 px-4 py-3 text-left font-medium text-foreground min-w-[120px]">Platform</th>
             <th className="px-4 py-3 text-left font-medium text-foreground">Linking</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Visible Data Points</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Controls Available</th>
@@ -175,7 +220,7 @@ function ParentalControlsCrosscut({ platforms }: { platforms: PlatformResearchDa
             const controlsAvailable = cc.filter((c) => c.available).length
             return (
               <tr key={p.platformId} className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">
                   <Link href={`/ai-safety/${p.platformId}`} className="hover:text-brand-green transition-colors">
                     {p.platformName}
                   </Link>
@@ -202,11 +247,12 @@ function ParentalControlsCrosscut({ platforms }: { platforms: PlatformResearchDa
 function ConversationControlsCrosscut({ platforms }: { platforms: PlatformResearchData[] }) {
   const withData = platforms.filter((p) => p.chatbotData?.conversationControls)
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-muted/30 border-b border-border">
-            <th className="px-4 py-3 text-left font-medium text-foreground">Platform</th>
+            <th className="sticky left-0 z-10 bg-muted/30 px-4 py-3 text-left font-medium text-foreground min-w-[120px]">Platform</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Time Limits</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Quiet Hours</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Break Reminders</th>
@@ -220,7 +266,7 @@ function ConversationControlsCrosscut({ platforms }: { platforms: PlatformResear
             const mlLen = (cc.messageLimits ?? []).length
             return (
               <tr key={p.platformId} className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">
                   <Link href={`/ai-safety/${p.platformId}`} className="hover:text-brand-green transition-colors">
                     {p.platformName}
                   </Link>
@@ -249,11 +295,12 @@ function ConversationControlsCrosscut({ platforms }: { platforms: PlatformResear
 function EmotionalSafetyCrosscut({ platforms }: { platforms: PlatformResearchData[] }) {
   const withData = platforms.filter((p) => p.chatbotData?.emotionalSafety)
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-muted/30 border-b border-border">
-            <th className="px-4 py-3 text-left font-medium text-foreground">Platform</th>
+            <th className="sticky left-0 z-10 bg-muted/30 px-4 py-3 text-left font-medium text-foreground min-w-[120px]">Platform</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Retention Tactics</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">AI Disclosure</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Proactive</th>
@@ -267,7 +314,7 @@ function EmotionalSafetyCrosscut({ platforms }: { platforms: PlatformResearchDat
             const retentionPresent = rt.filter((t) => t.present).length
             return (
               <tr key={p.platformId} className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">
                   <Link href={`/ai-safety/${p.platformId}`} className="hover:text-brand-green transition-colors">
                     {p.platformName}
                   </Link>
@@ -295,11 +342,12 @@ function EmotionalSafetyCrosscut({ platforms }: { platforms: PlatformResearchDat
 function AcademicIntegrityCrosscut({ platforms }: { platforms: PlatformResearchData[] }) {
   const withData = platforms.filter((p) => p.chatbotData?.academicIntegrity)
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-muted/30 border-b border-border">
-            <th className="px-4 py-3 text-left font-medium text-foreground">Platform</th>
+            <th className="sticky left-0 z-10 bg-muted/30 px-4 py-3 text-left font-medium text-foreground min-w-[120px]">Platform</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Study Mode</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Capabilities</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Detection Methods</th>
@@ -315,7 +363,7 @@ function AcademicIntegrityCrosscut({ platforms }: { platforms: PlatformResearchD
             const parentVisible = tpv.filter((v) => v.visible).length
             return (
               <tr key={p.platformId} className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">
                   <Link href={`/ai-safety/${p.platformId}`} className="hover:text-brand-green transition-colors">
                     {p.platformName}
                   </Link>
@@ -344,11 +392,12 @@ function AcademicIntegrityCrosscut({ platforms }: { platforms: PlatformResearchD
 function PrivacyDataCrosscut({ platforms }: { platforms: PlatformResearchData[] }) {
   const withData = platforms.filter((p) => p.chatbotData?.privacyDataDetail)
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-muted/30 border-b border-border">
-            <th className="px-4 py-3 text-left font-medium text-foreground">Platform</th>
+            <th className="sticky left-0 z-10 bg-muted/30 px-4 py-3 text-left font-medium text-foreground min-w-[120px]">Platform</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Data Types</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Regulatory Actions</th>
             <th className="px-4 py-3 text-center font-medium text-foreground">Memory Features</th>
@@ -364,7 +413,7 @@ function PrivacyDataCrosscut({ platforms }: { platforms: PlatformResearchData[] 
             const userControlled = mf.filter((f) => f.userControl).length
             return (
               <tr key={p.platformId} className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">
+                <td className="sticky left-0 z-10 bg-background px-4 py-3 font-medium text-foreground">
                   <Link href={`/ai-safety/${p.platformId}`} className="hover:text-brand-green transition-colors">
                     {p.platformName}
                   </Link>
