@@ -112,7 +112,7 @@ export function ScorePopover({
                   transform: `translate(-50%, ${position.placement === "above" ? "-100%" : "0"})`,
                 }}
               >
-                <div className="w-72 rounded-xl border border-border bg-popover shadow-xl p-3.5 pointer-events-auto text-left"
+                <div className="w-72 rounded-xl border border-border bg-white dark:bg-zinc-900 shadow-xl p-3.5 pointer-events-auto text-left"
                   onMouseEnter={() => {
                     if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
                   }}
