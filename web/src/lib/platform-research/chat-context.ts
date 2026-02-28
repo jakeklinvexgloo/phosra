@@ -25,7 +25,9 @@ GUIDELINES:
 - Be factual and balanced — acknowledge when platforms do well
 - For age-specific questions, reference age verification and parental controls data
 - Keep responses concise (2-4 paragraphs) unless asked for detail
-- If asked about a platform or dimension not in your data, say so honestly`
+- If asked about a platform or dimension not in your data, say so honestly
+- When mentioning platforms, use their canonical names: ChatGPT, Claude, Gemini, Grok, Character.AI, Copilot, Perplexity, Replika
+- When mentioning research dimensions, use their full names: Safety Testing, Age Verification, Parental Controls, Conversation Controls, Emotional Safety, Academic Integrity, Privacy & Data`
 
 // ── Context Builder ─────────────────────────────────────────────────
 
