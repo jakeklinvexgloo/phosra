@@ -2,8 +2,23 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
-import { ArrowLeft, ChevronDown, ChevronRight, Filter } from "lucide-react"
+import { ArrowLeft, ChevronDown, ChevronRight, Filter, Download } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
+
+function toCSV(headers: string[], rows: string[][]): string {
+  const escape = (v: string) => v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
+  return [headers.map(escape).join(","), ...rows.map(r => r.map(escape).join(","))].join("\n")
+}
+
+function downloadCSV(csv: string, filename: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}
 
 interface PromptData {
   id: string
@@ -47,6 +62,19 @@ export function PromptsIndexClient({
     return prompts.filter((p) => p.category === categoryFilter)
   }, [prompts, categoryFilter])
 
+  function handleExportCSV() {
+    const headers = ["Prompt", "Category", ...platformNames.map((pn) => pn.name)]
+    const rows = prompts.map((prompt) => [
+      prompt.prompt,
+      prompt.categoryLabel,
+      ...platformNames.map((pn) => {
+        const entry = prompt.scores.find((s) => s.platformId === pn.id)
+        return entry?.score != null ? entry.score.toString() : ""
+      }),
+    ])
+    downloadCSV(toCSV(headers, rows), "ai-safety-test-prompts.csv")
+  }
+
   return (
     <div>
       {/* Header */}
@@ -85,6 +113,13 @@ export function PromptsIndexClient({
           <span className="text-xs text-muted-foreground">
             {filtered.length} prompt{filtered.length !== 1 ? "s" : ""}
           </span>
+          <button
+            onClick={handleExportCSV}
+            className="ml-auto inline-flex items-center gap-1.5 text-xs border border-border rounded px-2.5 py-1 bg-background text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Export CSV
+          </button>
         </div>
       </div>
 

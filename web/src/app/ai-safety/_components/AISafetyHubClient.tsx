@@ -15,6 +15,7 @@ import {
   ChevronUp,
   Zap,
   AlertTriangle,
+  Download,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import { SearchBar } from "./SearchBar"
@@ -98,6 +99,23 @@ function scoreBgLight(score: number): string {
   return "bg-red-200 dark:bg-red-900/60 text-red-900 dark:text-red-100"
 }
 
+// ── CSV helpers ─────────────────────────────────────────────────────
+
+function toCSV(headers: string[], rows: string[][]): string {
+  const escape = (v: string) => v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
+  return [headers.map(escape).join(","), ...rows.map(r => r.map(escape).join(","))].join("\n")
+}
+
+function downloadCSV(csv: string, filename: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 // ── Sort Options ────────────────────────────────────────────────────
 
 type SortOption = "grade" | "name" | "score"
@@ -139,6 +157,23 @@ export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
 
   // Search items
   const searchItems = useMemo(() => buildSearchItems(platforms), [platforms])
+
+  function handleExportCSV() {
+    const headers = ["Platform", "Overall Grade", "Score", ...allCategories.map((c) => c.label)]
+    const rows = platforms.map((p) => {
+      const catScoreMap = new Map(p.categoryScores.map((cs) => [cs.category, cs]))
+      return [
+        p.platformName,
+        p.overallGrade,
+        p.numericalScore.toString(),
+        ...allCategories.map((c) => {
+          const cs = catScoreMap.get(c.id)
+          return cs ? cs.avgScore.toFixed(2) : ""
+        }),
+      ]
+    })
+    downloadCSV(toCSV(headers, rows), "ai-safety-platform-scores.csv")
+  }
 
   // Stats
   const totalTests = platforms.length > 0 ? platforms[0].totalTests : 40
@@ -378,16 +413,25 @@ export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
               Click any platform for the full 7-dimension research report
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">Sort:</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="text-xs border border-border rounded px-2 py-1 bg-background text-foreground"
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Sort:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="text-xs border border-border rounded px-2 py-1 bg-background text-foreground"
+              >
+                <option value="score">Safety Score</option>
+                <option value="name">Name</option>
+              </select>
+            </div>
+            <button
+              onClick={handleExportCSV}
+              className="inline-flex items-center gap-1.5 text-xs border border-border rounded px-2.5 py-1 bg-background text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
             >
-              <option value="score">Safety Score</option>
-              <option value="name">Name</option>
-            </select>
+              <Download className="w-3.5 h-3.5" />
+              Export CSV
+            </button>
           </div>
         </div>
 
