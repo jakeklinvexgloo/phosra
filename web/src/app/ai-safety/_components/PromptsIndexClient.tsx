@@ -210,15 +210,15 @@ export function PromptsIndexClient({
 
       {/* Prompts Table */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
-        <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
+        <div className="relative overflow-auto max-h-[calc(100vh-180px)] -webkit-overflow-scrolling-touch rounded-lg border border-border">
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
           <table className="w-full text-xs">
-            <thead>
-              <tr className="bg-muted/30">
-                <th className="sticky left-0 z-10 bg-muted/30 px-3 py-2.5 text-left font-medium text-foreground min-w-[200px] sm:min-w-[250px]">Prompt</th>
-                <th className="px-2 py-2.5 text-left font-medium text-foreground min-w-[100px] hidden sm:table-cell">Category</th>
+            <thead className="sticky top-0 z-20">
+              <tr className="bg-background border-b border-border shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+                <th className="sticky left-0 z-30 bg-background px-3 py-2.5 text-left font-medium text-foreground min-w-[200px] sm:min-w-[250px]">Prompt</th>
+                <th className="px-2 py-2.5 text-left font-medium text-foreground min-w-[100px] hidden sm:table-cell bg-background">Category</th>
                 {platformNames.map((pn) => (
-                  <th key={pn.id} className="px-2 py-2.5 text-center font-medium text-foreground min-w-[70px]">
+                  <th key={pn.id} className="px-2 py-2.5 text-center font-medium text-foreground min-w-[70px] bg-background">
                     <Link href={`/ai-safety/${pn.id}`} className="hover:text-brand-green transition-colors">
                       {pn.name.length > 10 ? pn.name.substring(0, 10) + "..." : pn.name}
                     </Link>
