@@ -5,8 +5,9 @@ import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport, type UIMessage } from "ai"
 import { MessageCircle, X, Send, Sparkles, Loader2 } from "lucide-react"
 import ReactMarkdown from "react-markdown"
-import Link from "next/link"
+import remarkGfm from "remark-gfm"
 import { linkifyResearchText } from "@/lib/platform-research/entity-linker"
+import { chatMdComponents, preprocessResearchText } from "./chat"
 
 function textOf(msg: UIMessage): string {
   return msg.parts
@@ -21,15 +22,6 @@ const SUGGESTED_QUESTIONS = [
   "How does Phosra fill safety gaps?",
   "Compare Claude vs ChatGPT safety",
 ]
-
-const mdComponents = {
-  a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { children?: React.ReactNode }) => {
-    if (href?.startsWith("/ai-safety")) {
-      return <Link href={href} className="text-brand-green hover:underline">{children}</Link>
-    }
-    return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>
-  },
-}
 
 export function ResearchChatWidget() {
   const [open, setOpen] = useState(false)
@@ -137,7 +129,7 @@ export function ResearchChatWidget() {
             ) : (
               <div key={msg.id} className="flex justify-start">
                 <div className="max-w-[80%] rounded-2xl rounded-bl-sm px-4 py-2 bg-muted text-foreground text-sm prose prose-sm prose-neutral dark:prose-invert max-w-none [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_h2]:text-sm [&_h3]:text-sm [&_a]:text-brand-green">
-                  <ReactMarkdown components={mdComponents}>{linkifyResearchText(textOf(msg))}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={chatMdComponents}>{linkifyResearchText(preprocessResearchText(textOf(msg)))}</ReactMarkdown>
                 </div>
               </div>
             )

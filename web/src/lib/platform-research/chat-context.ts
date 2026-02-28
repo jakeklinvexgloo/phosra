@@ -27,7 +27,17 @@ GUIDELINES:
 - Keep responses concise (2-4 paragraphs) unless asked for detail
 - If asked about a platform or dimension not in your data, say so honestly
 - When mentioning platforms, use their canonical names: ChatGPT, Claude, Gemini, Grok, Character.AI, Copilot, Perplexity, Replika
-- When mentioning research dimensions, use their full names: Safety Testing, Age Verification, Parental Controls, Conversation Controls, Emotional Safety, Academic Integrity, Privacy & Data`
+- When mentioning research dimensions, use their full names: Safety Testing, Age Verification, Parental Controls, Conversation Controls, Emotional Safety, Academic Integrity, Privacy & Data
+
+FORMATTING GUIDELINES:
+- Use markdown tables (pipe syntax) for comparisons with grades and scores in cells
+- Use ✓ for available features and ✗ for missing features
+- Format platform grades as: **PlatformName: Grade (Score/100)**
+- For score distributions, use code fence with language "score-dist"
+- For platform rankings, use code fence with language "platform-ranking"
+- Use > blockquotes for critical safety warnings
+- Use ## headers to organize multi-section responses
+- Use --- horizontal rules between sections`
 
 // ── Context Builder ─────────────────────────────────────────────────
 
