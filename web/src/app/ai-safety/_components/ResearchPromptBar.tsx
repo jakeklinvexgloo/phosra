@@ -283,7 +283,7 @@ export function ResearchPromptBar({ items }: ResearchPromptBarProps) {
 
   return (
     <>
-      <div ref={containerRef} className="relative max-w-xl w-full mx-auto">
+      <div ref={containerRef} className="relative w-full">
         {/* Glow wrapper — animated gradient border */}
         <div className="relative rounded-2xl p-[1px] group">
           {/* Animated gradient border layer */}
@@ -452,7 +452,7 @@ export function ResearchPromptBar({ items }: ResearchPromptBarProps) {
         </AnimatePresence>
 
         {/* Example chips */}
-        <div className="flex flex-wrap gap-2 mt-3 justify-center">
+        <div className="flex flex-wrap gap-2 mt-3">
           {EXAMPLE_CHIPS.map((chip) => (
             <button
               key={chip.label}
@@ -465,7 +465,7 @@ export function ResearchPromptBar({ items }: ResearchPromptBarProps) {
         </div>
 
         {/* Helper text */}
-        <p className="mt-2 text-[11px] text-white/25 text-center">
+        <p className="mt-2 text-[11px] text-white/25">
           Search research data or ask a question — powered by AI
         </p>
 

@@ -235,26 +235,9 @@ export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
               <p className="text-lg text-white/60 leading-relaxed max-w-2xl mb-8">
                 Independent safety scores for every major AI chatbot — from content filtering to parental controls.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="#platforms"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-green text-white font-medium text-sm hover:bg-brand-green/90 transition-colors"
-                >
-                  View Platform Reports
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/ai-safety/methodology"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/[0.08] text-white/80 font-medium text-sm hover:bg-white/[0.12] transition-colors border border-white/[0.12]"
-                >
-                  Methodology
-                </Link>
-              </div>
 
               {/* Smart Search + AI Chat Bar */}
-              <div className="mt-8">
-                <ResearchPromptBar items={searchItems} />
-              </div>
+              <ResearchPromptBar items={searchItems} />
             </div>
           </AnimatedSection>
 
