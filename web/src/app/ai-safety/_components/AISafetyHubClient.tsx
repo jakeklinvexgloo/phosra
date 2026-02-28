@@ -203,7 +203,7 @@ export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
   // Stats — computed findings from actual data
   const totalTests = platforms.length > 0 ? platforms[0].totalTests : 40
   const totalCategories = allCategories.length
-  const failingCount = platforms.filter((p) => p.overallGrade.startsWith("D") || p.overallGrade === "F").length
+  const gradeCappedCount = platforms.filter((p) => p.gradeCap).length
   const parentalDashboardCount = platforms.filter((p) => p.hasParentalDashboard).length
   const allowUnder14Count = platforms.filter((p) => p.minimumAge === null || p.minimumAge < 14).length
   const timeLimitsCount = platforms.filter((p) => p.hasTimeLimits).length
@@ -244,7 +244,7 @@ export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
           {/* Findings Row */}
           <AnimatedSection direction="up" className="mt-14">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <StatCard value={`${failingCount}/${platforms.length}`} label="Received Failing Grades" warn={failingCount > 0} />
+              <StatCard value={`${gradeCappedCount}/${platforms.length}`} label="Had Grades Capped for Safety Failures" warn={gradeCappedCount > 0} />
               <StatCard value={`${parentalDashboardCount}/${platforms.length}`} label="Offer Parental Controls" warn={parentalDashboardCount < platforms.length / 2} />
               <StatCard value={`${allowUnder14Count}/${platforms.length}`} label="Allow Users Under 14" warn={allowUnder14Count > 0} />
               <StatCard value={`${timeLimitsCount}/${platforms.length}`} label="Offer Parent-Set Time Limits" warn={timeLimitsCount < platforms.length / 2} />
