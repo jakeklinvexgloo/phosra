@@ -124,10 +124,8 @@ export function ResearchChatWidget() {
                 </div>
               </div>
             ) : (
-              <div key={msg.id} className="flex justify-start">
-                <div className="max-w-[80%] rounded-2xl rounded-bl-sm px-4 py-2 bg-muted text-foreground text-sm prose prose-sm prose-neutral dark:prose-invert max-w-none [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_h2]:text-sm [&_h3]:text-sm [&_a]:text-brand-green">
-                  <ChatMessageContent text={textOf(msg)} />
-                </div>
+              <div key={msg.id} className="w-full text-foreground text-sm prose prose-sm prose-neutral dark:prose-invert max-w-none [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_h2]:text-sm [&_h3]:text-sm [&_a]:text-brand-green">
+                <ChatMessageContent text={textOf(msg)} />
               </div>
             )
           )

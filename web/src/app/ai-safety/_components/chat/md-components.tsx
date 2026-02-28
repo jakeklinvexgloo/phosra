@@ -162,6 +162,13 @@ export const chatMdComponents: Components = {
     return <strong className="text-white/90 font-semibold">{children}</strong>
   },
 
+  // H1: large heading with green underline accent
+  h1: ({ children }) => (
+    <h1 className="text-lg font-bold text-white/95 mt-1 mb-3 pb-2 border-b border-brand-green/30">
+      {children}
+    </h1>
+  ),
+
   // H2: green left accent bar
   h2: ({ children }) => (
     <h2 className="relative text-sm font-semibold text-white/90 uppercase tracking-wider mt-4 mb-2 pl-2.5 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-brand-green before:rounded-full">
@@ -278,7 +285,7 @@ export const chatMdComponents: Components = {
     if (className) {
       return (
         <code
-          className="block text-xs font-mono bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 overflow-x-auto text-white/70"
+          className="block text-xs font-mono bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 overflow-x-auto text-white/70 whitespace-pre-wrap"
           {...props}
         >
           {children}

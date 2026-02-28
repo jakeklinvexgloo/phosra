@@ -51,24 +51,30 @@ export function ParentDetailToggle({ markdown, threshold = 3000, children }: Par
 
   return (
     <div>
-      {/* Toggle pills */}
-      <div className="flex items-center gap-1 mb-3 p-0.5 rounded-full bg-white/[0.06] border border-white/[0.08] w-fit">
+      {/* Segmented toggle */}
+      <div className="relative flex items-center mb-3 p-0.5 rounded-lg bg-white/[0.04] border border-white/[0.08] w-fit overflow-hidden">
+        {/* Sliding indicator */}
+        <div
+          className={`absolute top-0.5 bottom-0.5 w-[calc(50%-2px)] rounded-md bg-brand-green/15 border border-brand-green/25 transition-transform duration-200 ease-out ${
+            showFull ? "translate-x-[calc(100%+4px)]" : "translate-x-0"
+          }`}
+        />
         <button
           onClick={() => setShowFull(false)}
-          className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+          className={`relative z-10 px-3.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider transition-colors ${
             !showFull
-              ? "bg-brand-green/20 text-brand-green"
-              : "text-white/40 hover:text-white/60"
+              ? "text-brand-green"
+              : "text-white/35 hover:text-white/50"
           }`}
         >
           Summary
         </button>
         <button
           onClick={() => setShowFull(true)}
-          className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+          className={`relative z-10 px-3.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider transition-colors ${
             showFull
-              ? "bg-brand-green/20 text-brand-green"
-              : "text-white/40 hover:text-white/60"
+              ? "text-brand-green"
+              : "text-white/35 hover:text-white/50"
           }`}
         >
           Full Details

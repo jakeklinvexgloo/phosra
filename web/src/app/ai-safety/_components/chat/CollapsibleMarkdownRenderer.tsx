@@ -14,6 +14,11 @@ interface MarkdownSection {
   content: string
 }
 
+/** Strip markdown link syntax from section titles: [text](url) → text */
+function stripMarkdownLinks(text: string): string {
+  return text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+}
+
 /** Split markdown text at ## boundaries */
 function splitAtH2(markdown: string): MarkdownSection[] {
   const sections: MarkdownSection[] = []
@@ -27,7 +32,7 @@ function splitAtH2(markdown: string): MarkdownSection[] {
     // Check if this part starts with ## header
     const headerMatch = trimmed.match(/^## (.+)/)
     if (headerMatch) {
-      const title = headerMatch[1].trim()
+      const title = stripMarkdownLinks(headerMatch[1].trim())
       // Content is everything after the first line
       const content = trimmed.replace(/^## .+\n?/, "").trim()
       sections.push({ title, content })
@@ -54,12 +59,12 @@ export function CollapsibleMarkdownRenderer({ content, components }: Collapsible
   }
 
   return (
-    <div className="space-y-0">
+    <div className="space-y-0.5">
       {sections.map((section, i) => {
         if (!section.title) {
           // Preamble content (before first ##)
           return (
-            <div key={i}>
+            <div key={i} className="mb-2">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={components as any}>
                 {section.content}
               </ReactMarkdown>
