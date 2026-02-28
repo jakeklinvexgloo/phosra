@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
-import { ChevronDown, ChevronRight, Filter, Download } from "lucide-react"
+import { ChevronDown, ChevronRight, Filter, Download, AlertTriangle, ArrowRight } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
+import { ScorePopover } from "./ScorePopover"
 
 function toCSV(headers: string[], rows: string[][]): string {
   const escape = (v: string) => v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
@@ -20,6 +21,17 @@ function downloadCSV(csv: string, filename: string) {
   URL.revokeObjectURL(url)
 }
 
+interface ScoreEntry {
+  platformId: string
+  platformName: string
+  score: number | null
+  notes: string
+  response: string
+  redFlags: string[]
+  isMultiTurn: boolean
+  escalationTurn?: number
+}
+
 interface PromptData {
   id: string
   category: string
@@ -27,7 +39,15 @@ interface PromptData {
   severity: string
   prompt: string
   expected: string
-  scores: { platformId: string; platformName: string; score: number | null; notes: string }[]
+  scores: ScoreEntry[]
+}
+
+const SCORE_LABELS: Record<number, { label: string; color: string }> = {
+  0: { label: "Full Block", color: "bg-emerald-500" },
+  1: { label: "Partial Block", color: "bg-blue-500" },
+  2: { label: "Soft Warning", color: "bg-amber-500" },
+  3: { label: "Compliant", color: "bg-orange-500" },
+  4: { label: "Enthusiastic", color: "bg-red-500" },
 }
 
 function scoreBg(score: number | null): string {
@@ -37,6 +57,16 @@ function scoreBg(score: number | null): string {
   if (score === 2) return "bg-amber-500 text-white"
   if (score === 3) return "bg-orange-500 text-white"
   return "bg-red-500 text-white"
+}
+
+function severityColor(severity: string): string {
+  switch (severity) {
+    case "critical": return "bg-red-500/10 text-red-400 border-red-500/20"
+    case "high": return "bg-orange-500/10 text-orange-400 border-orange-500/20"
+    case "medium": return "bg-amber-500/10 text-amber-400 border-amber-500/20"
+    case "low": return "bg-blue-500/10 text-blue-400 border-blue-500/20"
+    default: return "bg-muted text-muted-foreground border-border"
+  }
 }
 
 export function PromptsIndexClient({
@@ -62,6 +92,33 @@ export function PromptsIndexClient({
     return prompts.filter((p) => p.category === categoryFilter)
   }, [prompts, categoryFilter])
 
+  // Top failures: worst prompt×platform combos (score 3-4)
+  const topFailures = useMemo(() => {
+    const failures: { promptId: string; promptText: string; platformName: string; score: number; severity: string; categoryLabel: string; redFlags: string[] }[] = []
+    for (const p of prompts) {
+      for (const s of p.scores) {
+        if (s.score !== null && s.score >= 3) {
+          failures.push({
+            promptId: p.id,
+            promptText: p.prompt,
+            platformName: s.platformName,
+            score: s.score,
+            severity: p.severity,
+            categoryLabel: p.categoryLabel,
+            redFlags: s.redFlags,
+          })
+        }
+      }
+    }
+    // Sort by score desc, then by severity
+    const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 }
+    failures.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score
+      return (severityOrder[a.severity] ?? 4) - (severityOrder[b.severity] ?? 4)
+    })
+    return failures.slice(0, 8)
+  }, [prompts])
+
   function handleExportCSV() {
     const headers = ["Prompt", "Category", ...platformNames.map((pn) => pn.name)]
     const rows = prompts.map((prompt) => [
@@ -82,14 +139,58 @@ export function PromptsIndexClient({
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
           <h1 className="text-3xl font-display font-bold">Test Prompt Index</h1>
           <p className="text-white/50 mt-2 text-sm">
-            All {prompts.length} safety test prompts with per-platform scores
+            All {prompts.length} safety test prompts with per-platform scores — hover for preview, click for full analysis
           </p>
         </div>
       </section>
 
-      {/* Filter Bar */}
+      {/* Top Failures Section */}
+      {topFailures.length > 0 && (
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8 border-b border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <AlertTriangle className="w-4 h-4 text-red-400" />
+            <h2 className="text-sm font-semibold text-foreground">Top Safety Failures</h2>
+            <span className="text-[10px] text-muted-foreground">
+              Worst prompt × platform combinations
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {topFailures.map((f, i) => (
+              <Link
+                key={`${f.promptId}-${f.platformName}-${i}`}
+                href={`/ai-safety/prompts/${f.promptId}`}
+                className="group rounded-lg border border-border bg-card p-3 hover:border-red-500/30 hover:bg-red-500/5 transition-all"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`inline-flex items-center justify-center w-6 h-6 rounded text-[10px] font-bold ${scoreBg(f.score)}`}>
+                    {f.score}
+                  </span>
+                  <span className="text-xs font-medium text-foreground">{f.platformName}</span>
+                  <span className={`ml-auto text-[9px] font-medium px-1.5 py-0.5 rounded-full border ${severityColor(f.severity)}`}>
+                    {f.severity}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed group-hover:text-foreground/70 transition-colors">
+                  {f.promptText}
+                </p>
+                {f.redFlags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {f.redFlags.slice(0, 2).map((flag, fi) => (
+                      <span key={fi} className="text-[8px] px-1 py-0.5 rounded bg-red-500/10 text-red-400">
+                        {flag.length > 25 ? flag.substring(0, 25) + "..." : flag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Score Legend */}
       <div className="sticky top-[calc(3.5rem+37px)] z-30 bg-background border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-2 flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-2 flex items-center gap-3 overflow-x-auto">
           <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           <select
             value={categoryFilter}
@@ -103,12 +204,25 @@ export function PromptsIndexClient({
               </option>
             ))}
           </select>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-muted-foreground flex-shrink-0">
             {filtered.length} prompt{filtered.length !== 1 ? "s" : ""}
           </span>
+
+          {/* Score legend strip */}
+          <div className="hidden sm:flex items-center gap-1.5 ml-auto mr-2 flex-shrink-0">
+            {Object.entries(SCORE_LABELS).map(([score, { label, color }]) => (
+              <div key={score} className="flex items-center gap-1">
+                <span className={`w-3 h-3 rounded-sm ${color}`} />
+                <span className="text-[9px] text-muted-foreground whitespace-nowrap">
+                  {score}={label}
+                </span>
+              </div>
+            ))}
+          </div>
+
           <button
             onClick={handleExportCSV}
-            className="ml-auto inline-flex items-center gap-1.5 text-xs border border-border rounded px-2.5 py-1 bg-background text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs border border-border rounded px-2.5 py-1 bg-background text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors flex-shrink-0"
           >
             <Download className="w-3.5 h-3.5" />
             Export CSV
@@ -116,10 +230,9 @@ export function PromptsIndexClient({
         </div>
       </div>
 
-      {/* Prompts List */}
+      {/* Prompts Table */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
         <div className="relative overflow-x-auto -webkit-overflow-scrolling-touch rounded-lg border border-border">
-          {/* Scroll hint shadow */}
           <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
           <table className="w-full text-xs">
             <thead>
@@ -155,10 +268,59 @@ export function PromptsIndexClient({
                           transition={{ duration: 0.2 }}
                           className="overflow-hidden"
                         >
-                          <div className="mt-2 pl-5 text-[10px] text-muted-foreground space-y-1">
+                          <div className="mt-2 pl-5 text-[10px] text-muted-foreground space-y-1.5">
                             <p><strong>Expected:</strong> {prompt.expected}</p>
-                            <p><strong>Severity:</strong> {prompt.severity}</p>
+                            <p>
+                              <strong>Severity:</strong>{" "}
+                              <span className={`inline-block text-[9px] font-medium px-1.5 py-0.5 rounded-full border ${severityColor(prompt.severity)}`}>
+                                {prompt.severity}
+                              </span>
+                            </p>
                             <p className="sm:hidden"><strong>Category:</strong> {prompt.categoryLabel}</p>
+
+                            {/* Show red flags from all platforms that have them */}
+                            {(() => {
+                              const allFlags = prompt.scores.flatMap((s) =>
+                                s.redFlags.map((f) => ({ flag: f, platform: s.platformName }))
+                              )
+                              if (allFlags.length === 0) return null
+                              const uniqueFlags = Array.from(new Set(allFlags.map((f) => f.flag))).slice(0, 5)
+                              return (
+                                <div>
+                                  <strong>Red Flags:</strong>
+                                  <div className="flex flex-wrap gap-1 mt-1">
+                                    {uniqueFlags.map((flag, i) => (
+                                      <span key={i} className="inline-flex items-center gap-0.5 text-[9px] px-1.5 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
+                                        <AlertTriangle className="w-2 h-2" />
+                                        {flag.length > 35 ? flag.substring(0, 35) + "..." : flag}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )
+                            })()}
+
+                            {/* Response preview from first platform that has one */}
+                            {(() => {
+                              const firstResponse = prompt.scores.find((s) => s.response)
+                              if (!firstResponse) return null
+                              return (
+                                <div className="mt-1.5">
+                                  <strong>Sample response ({firstResponse.platformName}):</strong>
+                                  <p className="mt-0.5 text-[10px] text-muted-foreground/80 line-clamp-2 italic">
+                                    &ldquo;{firstResponse.response.substring(0, 150)}{firstResponse.response.length > 150 ? "..." : ""}&rdquo;
+                                  </p>
+                                </div>
+                              )
+                            })()}
+
+                            <Link
+                              href={`/ai-safety/prompts/${prompt.id}`}
+                              className="inline-flex items-center gap-1 text-[10px] font-medium text-brand-green hover:underline mt-1"
+                            >
+                              View Full Analysis
+                              <ArrowRight className="w-2.5 h-2.5" />
+                            </Link>
                           </div>
                         </motion.div>
                       )}
@@ -174,14 +336,29 @@ export function PromptsIndexClient({
                     const score = scoreEntry?.score ?? null
                     return (
                       <td key={pn.id} className="px-2 py-2.5 text-center">
-                        {score !== null ? (
-                          <span
-                            className={`inline-block w-6 h-6 rounded text-[10px] font-bold leading-6 ${scoreBg(score)}`}
-                            title={`${pn.name}: ${score}${scoreEntry?.notes ? ` — ${scoreEntry.notes}` : ""}`}
-                            aria-label={`${pn.name}: score ${score}`}
+                        {score !== null && scoreEntry ? (
+                          <ScorePopover
+                            score={score}
+                            platformName={pn.name}
+                            promptId={prompt.id}
+                            platformId={pn.id}
+                            response={scoreEntry.response}
+                            notes={scoreEntry.notes}
+                            redFlags={scoreEntry.redFlags}
+                            isMultiTurn={scoreEntry.isMultiTurn}
                           >
-                            {score}
-                          </span>
+                            <Link
+                              href={`/ai-safety/prompts/${prompt.id}?platform=${pn.id}`}
+                              className="inline-block w-6 h-6 rounded text-[10px] font-bold leading-6 transition-transform hover:scale-125"
+                            >
+                              <span
+                                className={`inline-block w-6 h-6 rounded text-[10px] font-bold leading-6 ${scoreBg(score)}`}
+                                aria-label={`${pn.name}: score ${score}`}
+                              >
+                                {score}
+                              </span>
+                            </Link>
+                          </ScorePopover>
                         ) : (
                           <span className="text-muted-foreground/40">&mdash;</span>
                         )}

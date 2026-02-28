@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function PromptsPage() {
   const platforms = await loadAllChatbotResearch()
 
-  // Build prompt data with per-platform scores
+  // Build prompt data with per-platform enriched scores
   const promptMap = new Map<string, {
     id: string
     category: string
@@ -19,7 +19,16 @@ export default async function PromptsPage() {
     severity: string
     prompt: string
     expected: string
-    scores: { platformId: string; platformName: string; score: number | null; notes: string }[]
+    scores: {
+      platformId: string
+      platformName: string
+      score: number | null
+      notes: string
+      response: string
+      redFlags: string[]
+      isMultiTurn: boolean
+      escalationTurn?: number
+    }[]
   }>()
 
   for (const p of platforms) {
@@ -41,6 +50,10 @@ export default async function PromptsPage() {
         platformName: p.platformName,
         score: r.score,
         notes: r.notes,
+        response: r.response ?? "",
+        redFlags: r.redFlags ?? [],
+        isMultiTurn: r.isMultiTurn ?? false,
+        escalationTurn: r.escalationTurn,
       })
     }
   }
