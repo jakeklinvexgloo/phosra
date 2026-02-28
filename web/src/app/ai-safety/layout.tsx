@@ -3,8 +3,6 @@
 import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
 import { Footer } from "@/components/marketing/Footer"
 import { SubNav } from "./_components/SubNav"
-import { ResearchChatWidget } from "./_components/ResearchChatWidget"
-
 export default function AISafetyLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -14,7 +12,6 @@ export default function AISafetyLayout({ children }: { children: React.ReactNode
         {children}
       </main>
       <Footer />
-      <ResearchChatWidget />
     </div>
   )
 }

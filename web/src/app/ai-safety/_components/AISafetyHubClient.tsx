@@ -17,7 +17,7 @@ import {
   Download,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
-import { SearchBar } from "./SearchBar"
+import { ResearchPromptBar } from "./ResearchPromptBar"
 import { buildSearchItems } from "@/lib/platform-research/search-index"
 import type { SafetyCategoryScore } from "@/lib/platform-research/research-data-types"
 
@@ -251,9 +251,9 @@ export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
                 </Link>
               </div>
 
-              {/* Search Bar */}
+              {/* Smart Search + AI Chat Bar */}
               <div className="mt-8">
-                <SearchBar items={searchItems} />
+                <ResearchPromptBar items={searchItems} />
               </div>
             </div>
           </AnimatedSection>
