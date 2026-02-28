@@ -7,6 +7,17 @@ import { AnimatePresence, motion } from "framer-motion"
 import { ScorePopover } from "./ScorePopover"
 import { SCORE_LEGEND, scoreBg, severityBadge } from "./score-utils"
 
+const PLATFORM_ABBREVS: Record<string, string> = {
+  chatgpt: "GPT",
+  claude: "Cld",
+  gemini: "Gem",
+  grok: "Grk",
+  character_ai: "Chr",
+  copilot: "Cop",
+  perplexity: "Pxp",
+  replika: "Rep",
+}
+
 function toCSV(headers: string[], rows: string[][]): string {
   const escape = (v: string) => v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
   return [headers.map(escape).join(","), ...rows.map(r => r.map(escape).join(","))].join("\n")
@@ -140,7 +151,8 @@ export function PromptsIndexClient({
               Worst prompt × platform combinations
             </span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {/* Desktop: grid layout */}
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-3">
             {topFailures.map((f, i) => (
               <Link
                 key={`${f.promptId}-${f.platformName}-${i}`}
@@ -172,6 +184,43 @@ export function PromptsIndexClient({
                 )}
               </Link>
             ))}
+          </div>
+
+          {/* Mobile: horizontal scroll carousel */}
+          <div className="md:hidden -mx-6 px-6">
+            <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-3 [scrollbar-width:none] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden">
+              {topFailures.map((f, i) => (
+                <Link
+                  key={`m-${f.promptId}-${f.platformName}-${i}`}
+                  href={`/ai-safety/prompts/${f.promptId}?platform=${f.platformId}`}
+                  className={`snap-start shrink-0 w-[70vw] max-w-[280px] rounded-lg border bg-card p-3 border-l-4 ${
+                    f.score >= 4 ? "border-l-red-500 border-red-500/30" : "border-l-orange-500 border-border"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`inline-flex items-center justify-center w-7 h-7 rounded text-xs font-bold ${scoreBg(f.score)}`}>
+                      {f.score}
+                    </span>
+                    <span className="text-xs font-medium text-foreground truncate">{f.platformName}</span>
+                    <span className={`ml-auto shrink-0 text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${severityBadge(f.severity)}`}>
+                      {f.severity}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                    {f.promptText}
+                  </p>
+                  {f.redFlags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {f.redFlags.slice(0, 2).map((flag, fi) => (
+                        <span key={fi} className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/10 text-red-400">
+                          {flag.length > 25 ? flag.substring(0, 25) + "..." : flag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -208,15 +257,137 @@ export function PromptsIndexClient({
         </div>
       </div>
 
-      {/* Prompts Table */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+      {/* Mobile: Card layout with inline score strips */}
+      <div className="md:hidden px-4 py-6 space-y-3">
+        {filtered.map((prompt) => (
+          <div
+            key={`m-${prompt.id}`}
+            className="rounded-xl border border-border bg-card overflow-hidden"
+          >
+            {/* Card header — tap to expand */}
+            <button
+              onClick={() => setExpandedPrompt(expandedPrompt === prompt.id ? null : prompt.id)}
+              className="w-full text-left px-4 pt-3 pb-2"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-[13px] text-foreground font-medium line-clamp-2 flex-1 leading-snug">
+                  {prompt.prompt}
+                </p>
+                <ChevronDown className={`w-4 h-4 text-muted-foreground shrink-0 mt-0.5 transition-transform ${expandedPrompt === prompt.id ? "rotate-180" : ""}`} />
+              </div>
+              <div className="flex items-center gap-2 mt-1.5">
+                <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${severityBadge(prompt.severity)}`}>
+                  {prompt.severity}
+                </span>
+                <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground">
+                  {prompt.categoryLabel}
+                </span>
+              </div>
+            </button>
+
+            {/* Score strip — always visible */}
+            <div className="px-4 pb-3 pt-1">
+              <div className="flex items-center justify-between">
+                {platformNames.map((pn) => {
+                  const entry = prompt.scores.find((s) => s.platformId === pn.id)
+                  const score = entry?.score ?? null
+                  return (
+                    <Link
+                      key={pn.id}
+                      href={`/ai-safety/prompts/${prompt.id}?platform=${pn.id}`}
+                      className="flex flex-col items-center gap-0.5 min-w-0"
+                      aria-label={`${pn.name}: score ${score}`}
+                    >
+                      <span className="text-[8px] text-muted-foreground font-medium leading-none">
+                        {PLATFORM_ABBREVS[pn.id] ?? pn.name.substring(0, 3)}
+                      </span>
+                      <span
+                        className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold transition-transform active:scale-110 ${
+                          score !== null ? scoreBg(score) : "bg-muted text-muted-foreground/40"
+                        }`}
+                      >
+                        {score !== null ? score : "—"}
+                      </span>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Expandable detail section */}
+            <AnimatePresence>
+              {expandedPrompt === prompt.id && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-4 py-3 space-y-2 bg-muted/20 border-t border-border">
+                    <p className="text-[11px] text-muted-foreground">
+                      <strong>Expected:</strong> {prompt.expected}
+                    </p>
+
+                    {/* Red flags */}
+                    {(() => {
+                      const allFlags = prompt.scores.flatMap((s) =>
+                        s.redFlags.map((f) => ({ flag: f, platform: s.platformName }))
+                      )
+                      if (allFlags.length === 0) return null
+                      const uniqueFlags = Array.from(new Set(allFlags.map((f) => f.flag))).slice(0, 4)
+                      return (
+                        <div>
+                          <strong className="text-[11px] text-muted-foreground">Red Flags:</strong>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {uniqueFlags.map((flag, i) => (
+                              <span key={i} className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
+                                <AlertTriangle className="w-2 h-2" />
+                                {flag.length > 30 ? flag.substring(0, 30) + "..." : flag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })()}
+
+                    {/* Sample response */}
+                    {(() => {
+                      const firstResponse = prompt.scores.find((s) => s.response)
+                      if (!firstResponse) return null
+                      return (
+                        <div>
+                          <strong className="text-[11px] text-muted-foreground">Sample ({firstResponse.platformName}):</strong>
+                          <p className="mt-0.5 text-[11px] text-muted-foreground/80 line-clamp-2 italic">
+                            &ldquo;{firstResponse.response.substring(0, 120)}{firstResponse.response.length > 120 ? "..." : ""}&rdquo;
+                          </p>
+                        </div>
+                      )
+                    })()}
+
+                    <Link
+                      href={`/ai-safety/prompts/${prompt.id}`}
+                      className="inline-flex items-center gap-1 text-[11px] font-medium text-brand-green"
+                    >
+                      View Full Analysis
+                      <ArrowRight className="w-2.5 h-2.5" />
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop: Prompts Table */}
+      <div className="hidden md:block max-w-7xl mx-auto px-6 lg:px-8 py-8">
         <div className="relative overflow-auto max-h-[calc(100vh-180px)] -webkit-overflow-scrolling-touch rounded-lg border border-border">
-          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background/80 to-transparent z-20 sm:hidden" />
           <table className="w-full text-xs">
             <thead className="sticky top-0 z-20">
               <tr className="bg-background border-b border-border shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-                <th className="sticky left-0 z-30 bg-background px-3 py-2.5 text-left font-medium text-foreground min-w-[200px] sm:min-w-[250px]">Prompt</th>
-                <th className="px-2 py-2.5 text-left font-medium text-foreground min-w-[100px] hidden sm:table-cell bg-background">Category</th>
+                <th className="sticky left-0 z-30 bg-background px-3 py-2.5 text-left font-medium text-foreground min-w-[250px]">Prompt</th>
+                <th className="px-2 py-2.5 text-left font-medium text-foreground min-w-[100px] bg-background">Category</th>
                 {platformNames.map((pn) => (
                   <th key={pn.id} className="px-2 py-2.5 text-center font-medium text-foreground min-w-[70px] bg-background">
                     <Link href={`/ai-safety/${pn.id}`} className="hover:text-brand-green transition-colors">
@@ -254,7 +425,6 @@ export function PromptsIndexClient({
                                 {prompt.severity}
                               </span>
                             </p>
-                            <p className="sm:hidden"><strong>Category:</strong> {prompt.categoryLabel}</p>
 
                             {/* Show red flags from all platforms that have them */}
                             {(() => {
@@ -304,7 +474,7 @@ export function PromptsIndexClient({
                       )}
                     </AnimatePresence>
                   </td>
-                  <td className="px-2 py-2.5 hidden sm:table-cell">
+                  <td className="px-2 py-2.5">
                     <span className="inline-block text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground whitespace-nowrap">
                       {prompt.categoryLabel}
                     </span>
