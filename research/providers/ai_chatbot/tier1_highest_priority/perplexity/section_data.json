@@ -1,0 +1,389 @@
+{
+  "profileStructure": {
+    "accountLabel": "Perplexity AI Account",
+    "accountDescription": "AI-Powered Answer Engine",
+    "accountMeta": "Guest access (no account required) · Single account type · No age tiers · No parental controls",
+    "accountBorderColor": "#20808D",
+    "accountLabelColor": "#2dd4bf",
+    "hierarchyDescription": "Guest (no account) → Standard Account → Pro/Max Subscription. No age tiers, no parental controls, no family accounts.",
+    "profiles": [
+      {
+        "name": "Guest (No Account)",
+        "maturity": "Unrestricted — no age gate, ~5 Pro searches/day, full Quick Searches",
+        "type": "standard",
+        "pinEnabled": false
+      },
+      {
+        "name": "Standard Account (Free)",
+        "maturity": "3 Pro searches/day, unlimited Quick Searches, model training opt-out available",
+        "type": "standard",
+        "pinEnabled": false
+      },
+      {
+        "name": "Pro Account ($20/month)",
+        "maturity": "300+ Pro searches/day, top-tier models (GPT-4, Claude 3.5, Sonar Pro), image generation",
+        "type": "standard",
+        "pinEnabled": false
+      },
+      {
+        "name": "Max Account ($200/month)",
+        "maturity": "Unlimited — no usage restrictions on any model or feature",
+        "type": "standard",
+        "pinEnabled": false
+      }
+    ],
+    "settings": [
+      { "setting": "AI Data Retention (model training opt-out)", "configurable": true },
+      { "setting": "Memory / AI Assistants", "configurable": true },
+      { "setting": "Incognito Mode", "configurable": true },
+      { "setting": "Search History", "configurable": true },
+      { "setting": "Content Safety Level", "configurable": false },
+      { "setting": "Age-Based Restrictions", "configurable": false },
+      { "setting": "Parental Controls", "configurable": false },
+      { "setting": "Quiet Hours", "configurable": false },
+      { "setting": "Related Questions (follow-up suggestions)", "configurable": false }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Free (Guest)", "streams": "N/A", "resolution": "~5 Pro searches/day (unauthenticated) + unlimited Quick Searches" },
+      { "plan": "Free (Account)", "streams": "N/A", "resolution": "3 Pro searches/day + unlimited Quick Searches" },
+      { "plan": "Pro ($20/month or $200/year)", "streams": "N/A", "resolution": "300+ Pro searches/day + top models + image generation + file uploads" },
+      { "plan": "Max ($200/month)", "streams": "N/A", "resolution": "Unlimited Pro searches + all models + early feature access + priority support" },
+      { "plan": "Education Pro ($10/month — SheerID verified)", "streams": "N/A", "resolution": "Same as Pro tier at discounted price for students and educators" },
+      { "plan": "Enterprise Pro ($40/user/month)", "streams": "N/A", "resolution": "Pro features + team workspace + admin controls + zero training on data + SOC 2" },
+      { "plan": "Enterprise Max ($325/user/month)", "streams": "N/A", "resolution": "Unlimited access + enterprise security + custom data retention + priority support" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Sonar API (public, OpenAI-compatible) + no consumer parental API",
+    "apiArchitecture": {
+      "title": "Perplexity Sonar API — Search-Grounded REST API",
+      "description": "Perplexity operates the Sonar API, a publicly accessible REST API that provides real-time web-search-grounded AI responses. It is OpenAI Chat Completions API compatible — existing OpenAI client libraries work by pointing to the Perplexity endpoint. The Sonar API enforces a strict Zero Data Retention policy: no query data is retained or used for model training. There is NO consumer parental control API, no account management API, and no safety event webhook system. All consumer account settings (model training opt-out, memory, incognito) are web-dashboard-only.",
+      "codeExample": {
+        "comment": "// Sonar API — OpenAI-compatible (web-grounded search)",
+        "method": "POST",
+        "endpoint": "https://api.perplexity.ai/chat/completions",
+        "exampleComment": "// Returns AI response with real-time citations",
+        "exampleCode": "{ \"model\": \"sonar-pro\", \"messages\": [{ \"role\": \"user\", \"content\": \"query\" }], \"search_domain_filter\": [], \"return_citations\": true }"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "POST https://api.perplexity.ai/chat/completions", "purpose": "Sonar chat completions with web grounding and citations", "auth": "Bearer API Key (Authorization header)" },
+      { "endpoint": "GET https://api.perplexity.ai/models", "purpose": "List available Sonar models", "auth": "Bearer API Key" },
+      { "endpoint": "N/A — Consumer Dashboard", "purpose": "AI Data Retention opt-out, memory management, incognito mode", "auth": "Web session only (no API)" },
+      { "endpoint": "N/A — Parental Controls", "purpose": "No parental control API exists — feature is entirely absent", "auth": "N/A — feature does not exist" }
+    ],
+    "authDetails": [
+      {
+        "label": "Sonar API",
+        "value": "Bearer API Key",
+        "description": "API keys generated from the Perplexity API Portal (perplexity.ai/settings/api). Key passed as Authorization: Bearer <key> header. OpenAI SDK compatible — set base_url to https://api.perplexity.ai."
+      },
+      {
+        "label": "Consumer Auth",
+        "value": "Email / Google / Apple SSO",
+        "description": "Standard OAuth-based account creation. No programmatic access to consumer account settings. Web session cookie auth for dashboard."
+      },
+      {
+        "label": "Guest Access",
+        "value": "None — no auth required",
+        "description": "Full search functionality available without any authentication. No API key, no account, no age verification. Queries attributed to anonymous session."
+      }
+    ],
+    "rateLimitNotes": [
+      "Sonar API (Free tier): 50 requests/minute, Tier 2 cap",
+      "Sonar API (Pro API): Up to 2,000 requests/minute depending on account tier",
+      "Consumer Free: 3 Pro Searches/day; unlimited Quick Searches",
+      "Consumer Pro: 300+ Pro Searches/day; unlimited Quick Searches",
+      "Consumer Max: Unlimited searches; no rate limits on web interface",
+      "API Zero Data Retention policy: no query data stored server-side after response delivery",
+      "Sonar API is OpenAI Chat Completions compatible — supports streaming via SSE"
+    ],
+    "harCaptureCount": "N/A — no consumer parental control API to capture"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Perplexity Terms of Service — Automated Access and Data Rights",
+      "description": "Perplexity's ToS grants the company a broad, irrevocable, worldwide license to use, reproduce, and modify any content users upload or submit. The Sonar API ToS prohibits using the API to provide competing search or AI services. Consumer web interface automation (Playwright/Selenium) would violate ToS. The Sonar API is explicitly designed for programmatic access. Critical child safety gap: Perplexity's ToS states children under 13 may not use the service, but there is zero enforcement mechanism — no age gate, no parental consent verification."
+    },
+    "overallRisk": {
+      "level": "High",
+      "description": "Perplexity poses the highest child-safety risk of any major AI search platform. Zero parental controls, zero age verification for guest access, no content filtering controls, no monitoring capability, and explicit marketing of its Comet browser for student assignment completion. Common Sense Media rated it 'high risk' for teens. Multiple active lawsuits raise reputational and data integrity concerns."
+    },
+    "detectionVectors": [
+      {
+        "vector": "DNS blocking",
+        "risk": "Low",
+        "mitigation": "Block perplexity.ai at network level. Most effective enforcement tool available since no native controls exist."
+      },
+      {
+        "vector": "Browser extension monitoring",
+        "risk": "Medium",
+        "mitigation": "MutationObserver on perplexity.ai can capture query text and AI responses in real-time. Incognito mode in Perplexity uses same browser — extension still active."
+      },
+      {
+        "vector": "Sonar API automation",
+        "risk": "Low",
+        "mitigation": "Sonar API is publicly designed for programmatic access. Legitimate use case for content classification workflows."
+      },
+      {
+        "vector": "Consumer web interface automation (Playwright)",
+        "risk": "Medium",
+        "mitigation": "No meaningful parental controls to automate. No benefit to automating consumer dashboard — feature-poor."
+      },
+      {
+        "vector": "Mobile app coverage gap",
+        "risk": "High",
+        "mitigation": "Browser extension does not cover Perplexity iOS/Android apps. Require device-level MDM or network-level DNS blocking for mobile coverage."
+      }
+    ],
+    "mitigationsChecklist": [
+      "Use DNS blocking as primary enforcement — block perplexity.ai and all subdomains",
+      "Deploy browser extension to monitor and count queries on perplexity.ai",
+      "Use Sonar API zero-data-retention policy for any Phosra content classification (no child data stored)",
+      "Address mobile gap — Perplexity mobile apps bypass browser extension; use MDM or network DNS",
+      "Inform parents that Perplexity incognito mode (24-hour sessions) is accessible to children",
+      "Flag Perplexity as 'no native controls available' in Phosra onboarding UI",
+      "Monitor for Comet browser installation — Comet is agentic and can autonomously complete assignments",
+      "Recommend total DNS block for younger children (under 13) since zero controls exist natively"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Perplexity",
+    "stats": [
+      { "label": "Native", "value": 0, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 7, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 2, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 20, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Shield",
+        "title": "Zero Native Parental Controls — Entire Gap",
+        "ruleCategory": "parental_consent_gate",
+        "gapLabel": "Perplexity Gap",
+        "gap": "Perplexity has NO parental controls of any kind. No account linking, no monitoring, no content filters, no quiet hours, no safety alerts. This is the most complete parental control gap of any major AI platform.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension provides the entire parental control layer: query monitoring, time tracking, content classification, DNS blocking enforcement, and parent alerts — all features Perplexity natively refuses to build."
+      },
+      {
+        "icon": "Clock",
+        "title": "Daily Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Perplexity Gap",
+        "gap": "No usage time limits of any kind. Children can use Perplexity for unlimited hours without interruption.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension tracks active session time on perplexity.ai. When the parent-configured daily limit is reached, the extension blocks the page. DNS blocking prevents bypass via other browsers or mobile."
+      },
+      {
+        "icon": "Eye",
+        "title": "No Content Monitoring or Visibility",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Perplexity Gap",
+        "gap": "Parents have zero visibility into what their child searches or reads on Perplexity. No usage summaries, no topic reports, no safety alerts of any kind. Incognito mode eliminates even post-hoc review.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension captures query text and response content in real-time via MutationObserver on perplexity.ai. Sends weekly digests and instant alerts for flagged content to parents."
+      },
+      {
+        "icon": "Brain",
+        "title": "Homework Cheating Facilitation (Perplexity + Comet)",
+        "ruleCategory": "academic_integrity",
+        "gapLabel": "Perplexity Gap",
+        "gap": "Perplexity is one of the most-used homework cheating tools among students. Its Comet browser can autonomously complete entire online assignments. The company ran ads explicitly promoting academic cheating ('Shh... we're giving you our 4.0 GPA secret').",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension detects academic query patterns using client-side NLP. Parents can set policy: alert only, restrict to Socratic hints, or block academic queries entirely. Comet browser detection triggers immediate parent alert."
+      },
+      {
+        "icon": "UserX",
+        "title": "Guest Access — Zero Age Gate",
+        "ruleCategory": "parental_consent_gate",
+        "gapLabel": "Perplexity Gap",
+        "gap": "Perplexity allows full use without any account — no sign-up, no age check, no verification. A child of any age can access Perplexity instantly. Guest data is used for model training with no opt-out available.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Network-level DNS blocking of perplexity.ai is the only reliable control. Phosra's DNS enforcement blocks all Perplexity access (including guest mode) for devices without Phosra extension or on managed networks."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Browser Extension", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "DNS / Network Blocking", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Sonar API (content classification)", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" }
+    ],
+    "credentials": [
+      { "name": "Phosra Sonar API Key", "purpose": "Content classification via Sonar Pro (zero data retention guaranteed)", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Permanent (Phosra-owned key)" },
+      { "name": "Browser extension token", "purpose": "Extension-to-Phosra API authentication for real-time monitoring", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Active session only" }
+    ],
+    "platformBgColor": "rgba(32,128,141,0.05)",
+    "platformIconLetter": "P",
+    "platformIconBg": "#20808D",
+    "apiDescription": "Sonar API (zero data retention — content classification) + Extension (monitoring + enforcement) + DNS (network blocking)",
+    "adapterName": "Perplexity Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Capture queries and responses in real-time",
+        "detail": "Browser extension observes search queries and AI responses on perplexity.ai using MutationObserver. Captures query text, response text, and Related Questions chips. Tracks session duration and query count. Incognito mode still covered — extension active in all browser contexts.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "classify",
+        "icon": "Shield",
+        "title": "Classify",
+        "description": "Analyze content safety and academic intent",
+        "detail": "Send captured query and response text to Sonar API or a content classification model. Perplexity's Sonar API has a strict zero data retention policy — no child data stored. Classify against safety categories (self-harm, sexual, violence) and academic integrity patterns (homework, essay, assignment, quiz).",
+        "color": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
+        "dotColor": "bg-purple-500",
+        "headerBg": "bg-purple-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Apply limits, blocks, and Comet detection",
+        "detail": "When time limits exceeded: extension overlays block page. When academic query detected: redirect to parent-configured response (alert / hint mode / full block). When Comet browser detected: immediate parent alert. DNS blocking prevents all bypass attempts including guest access, incognito, and mobile web.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent with zero native alternative",
+        "detail": "Real-time push notification to parent via Phosra app. Because Perplexity has zero native safety alerts, Phosra is the only notification mechanism parents have. Critical alerts (self-harm content, explicit content, academic cheating attempts) are immediate. Weekly digest summarizes query topics and time spent.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Smartphone",
+        "title": "No mobile app coverage",
+        "description": "Browser extension covers desktop only. Perplexity iOS and Android apps are not covered. Require device-level MDM or network-level DNS blocking for mobile coverage. Critical gap given Perplexity's mobile-first student usage."
+      },
+      {
+        "icon": "Globe",
+        "title": "Guest access is the hardest gap to close",
+        "description": "Perplexity allows full search without an account. DNS blocking is the only reliable way to prevent guest access — browser extension alone is insufficient if the child simply uses Perplexity without logging in."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "Comet browser is fully agentic — extension cannot intercept",
+        "description": "Perplexity's Comet AI browser operates autonomously and can complete entire online assignments. Comet actions occur in a managed browser context that standard extensions may not penetrate. DNS blocking of perplexity.ai is the most reliable Comet countermeasure."
+      },
+      {
+        "icon": "Eye",
+        "title": "Zero platform cooperation",
+        "description": "Perplexity has no parental API, no webhooks, no safety event system, and has shown active hostility to academic integrity (marketing Comet for cheating). No partnership or data-sharing pathway exists. All monitoring is Phosra-side only."
+      }
+    ],
+    "loopLabel": "Continuous monitoring while Perplexity is active — no platform assistance available"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      {
+        "name": "installExtension",
+        "approach": "Browser Extension",
+        "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Chrome Web Store distribution. Target perplexity.ai domain. MutationObserver on search input and response containers."
+      },
+      {
+        "name": "trackQueries",
+        "approach": "Browser Extension",
+        "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Capture query text on submit events. Capture response text from answer containers. No WebSocket needed — Perplexity uses standard HTTP streaming."
+      },
+      {
+        "name": "trackSessionTime",
+        "approach": "Browser Extension",
+        "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Timer on active tab tracking time spent on perplexity.ai. Report to Phosra backend on configurable intervals."
+      },
+      {
+        "name": "classifyContent",
+        "approach": "Sonar API / External Classifier",
+        "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Use Sonar API with zero data retention policy for content classification. Or use OpenAI Moderation API. Sonar API guarantees no child query data is retained server-side."
+      },
+      {
+        "name": "detectHomework",
+        "approach": "Client-Side NLP + Extension",
+        "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Pattern-match query text against homework indicators: 'write essay', 'solve this problem', 'complete assignment', subject+grade-level keywords. Flag and alert parent or redirect to hint-only mode."
+      },
+      {
+        "name": "detectComet",
+        "approach": "Browser Extension + DNS",
+        "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Detect Comet browser installation via browser user-agent strings and known Comet extension IDs. Block comet.perplexity.ai at DNS level. Alert parent immediately on detection."
+      },
+      {
+        "name": "enforceTimeLimits",
+        "approach": "Extension + DNS",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Extension blocks page UI when daily limit reached. DNS blocking of perplexity.ai prevents bypass via other browsers, incognito, or mobile web browsers."
+      },
+      {
+        "name": "blockGuestAccess",
+        "approach": "DNS Blocking",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Block perplexity.ai, *.perplexity.ai, and api.perplexity.ai at network/DNS level. This is the most reliable control available — Perplexity's guest access makes account-level controls insufficient."
+      }
+    ],
+    "timelinePhases": [
+      {
+        "priority": "P0",
+        "label": "Extension MVP + DNS Block",
+        "components": "Query tracking (2-3d), Time tracking (1-2d), DNS enforcement (1d)",
+        "minDays": 4,
+        "maxDays": 6,
+        "color": "text-red-700 dark:text-red-300",
+        "barColor": "bg-red-500",
+        "hatchColor": "bg-red-300 dark:bg-red-700"
+      },
+      {
+        "priority": "P1",
+        "label": "Content Classification + Alerts",
+        "components": "Sonar API content classification (2-3d), Parent alerts (1-2d), Comet detection (1-2d)",
+        "minDays": 4,
+        "maxDays": 7,
+        "color": "text-amber-700 dark:text-amber-300",
+        "barColor": "bg-amber-500",
+        "hatchColor": "bg-amber-300 dark:bg-amber-700"
+      },
+      {
+        "priority": "P2",
+        "label": "Academic Integrity Detection",
+        "components": "Homework pattern NLP (3-5d), Hint-redirect mode (2-3d), Weekly digest reports (1-2d)",
+        "minDays": 6,
+        "maxDays": 10,
+        "color": "text-emerald-700 dark:text-emerald-300",
+        "barColor": "bg-emerald-500",
+        "hatchColor": "bg-emerald-300 dark:bg-emerald-700"
+      }
+    ],
+    "totalEstimate": "14-23 days",
+    "maxTotal": 23
+  }
+}

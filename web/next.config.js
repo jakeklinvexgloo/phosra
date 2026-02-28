@@ -5,6 +5,7 @@ const nextConfig = {
   output: 'standalone',
   outputFileTracingIncludes: {
     '/dashboard/admin/platform-research/\\[platformId\\]': ['../research/**/*'],
+    '/api/admin/research/filesystem-scan': ['../research/**/*'],
   },
   experimental: {
     instrumentationHook: true,

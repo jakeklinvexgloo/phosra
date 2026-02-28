@@ -1,0 +1,685 @@
+{
+  "metadata": {
+    "provider": "Perplexity AI",
+    "tier": "1 — Highest Priority",
+    "researchDate": "2026-02-27",
+    "primaryUse": "AI-powered answer engine / search-focused chatbot",
+    "sources": [
+      "https://www.perplexity.ai/hub/legal/terms-of-service",
+      "https://www.perplexity.ai/hub/legal/privacy-policy",
+      "https://www.perplexity.ai/hub/legal/aup",
+      "https://www.perplexity.ai/help-center/en/articles/11564572-data-collection-at-perplexity",
+      "https://www.perplexity.ai/help-center/en/articles/10354855-what-data-does-perplexity-collect-about-me",
+      "https://www.commonsensemedia.org/ai-ratings/perplexity",
+      "https://docs.perplexity.ai/docs/sonar/quickstart",
+      "https://fortune.com/2025/10/10/ai-cheating-on-homework-chatbots-students-education-perplexity-ceo-coursera/",
+      "https://www.plagiarismtoday.com/2025/10/27/perplexity-drops-the-academic-integrity-mask/",
+      "https://www.axios.com/2024/08/27/chatbots-risks-teens-common-sense-media",
+      "https://www.perplexity.ai/hub/blog/introducing-the-sonar-pro-api",
+      "https://www.perplexity.ai/help-center/en/articles/10354873-how-long-does-perplexity-retain-my-search-history-profile-data-and-personal-information",
+      "https://www.perplexity.ai/help-center/en/articles/10968016-memory",
+      "https://www.lasso.security/blog/red-teaming-browsesafe-prompt-injections-risks"
+    ]
+  },
+  "conversationControls": {
+    "timeLimits": [
+      {
+        "feature": "Daily time limit",
+        "available": false,
+        "details": "No built-in daily time limits for any account tier. Perplexity is a search/answer engine with no native screen time controls."
+      },
+      {
+        "feature": "Per-session time limit",
+        "available": false,
+        "details": "No per-session time limits of any kind."
+      },
+      {
+        "feature": "Automatic session ending",
+        "available": false,
+        "details": "Sessions continue indefinitely until the user closes the browser tab or app."
+      },
+      {
+        "feature": "Quiet hours",
+        "available": false,
+        "details": "No quiet hours feature. No scheduled access restrictions of any kind — not even for parent-linked or teen accounts."
+      },
+      {
+        "feature": "Break reminders",
+        "available": false,
+        "details": "No wellness check-ins, break reminders, or usage-duration alerts. Users can query Perplexity continuously without any interruption."
+      }
+    ],
+    "messageLimits": [
+      {
+        "tier": "Free (no login)",
+        "limit": "~5 Pro searches per day (unauthenticated); unlimited Quick Searches",
+        "window": "24 hours",
+        "notes": "Guest access is available with no account. Age verification is zero — anyone can access without creating an account."
+      },
+      {
+        "tier": "Free (logged in)",
+        "limit": "3 Pro searches per day; unlimited Quick Searches",
+        "window": "24 hours",
+        "notes": "Quick Searches use faster, less capable underlying models. Pro Searches use premium models like GPT-4, Claude 3, Sonar Pro."
+      },
+      {
+        "tier": "Pro ($20/month)",
+        "limit": "300+ Pro searches per day; unlimited Quick Searches",
+        "window": "24 hours",
+        "notes": "Access to top-tier AI models including GPT-4, Claude 3.5, Sonar Pro, Gemini. Unlimited file uploads. AI image generation."
+      },
+      {
+        "tier": "Max ($200/month)",
+        "limit": "Unlimited Pro searches; no usage restrictions",
+        "window": "N/A",
+        "notes": "Full unrestricted access to all advanced AI models with no rate limits on the web interface."
+      },
+      {
+        "tier": "Education Pro ($10/month)",
+        "limit": "Same as Pro tier",
+        "window": "24 hours",
+        "notes": "Verified via SheerID for students and educators. No additional safety restrictions beyond standard Pro."
+      }
+    ],
+    "quietHours": {
+      "available": false,
+      "details": "No quiet hours feature exists. Perplexity has no parental controls whatsoever, so scheduled access restrictions are not possible through the platform itself."
+    },
+    "breakReminders": {
+      "available": false,
+      "details": "No break reminder system. Perplexity does not interrupt or limit usage sessions in any way."
+    },
+    "followUpSuggestions": {
+      "available": true,
+      "defaultEnabled": true,
+      "details": "Perplexity generates Related Questions after every answer, displayed as clickable chips below each response. These are automatically generated and cannot be disabled by users or parents.",
+      "workaround": "No configuration available. Related Questions always appear.",
+      "teenModified": false,
+      "teenDetails": "Perplexity has no teen account tier — all users receive identical follow-up suggestions regardless of age."
+    },
+    "featureMatrix": [
+      {
+        "feature": "Daily time limit",
+        "free": "None",
+        "plus": "None",
+        "team": "None",
+        "teen": "None (no teen tier)",
+        "parentControl": "None available"
+      },
+      {
+        "feature": "Pro Search quota",
+        "free": "3/day",
+        "plus": "300+/day",
+        "team": "N/A",
+        "teen": "Same as tier (no teen tier)",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Break reminders",
+        "free": "None",
+        "plus": "None",
+        "team": "None",
+        "teen": "None",
+        "parentControl": "None"
+      },
+      {
+        "feature": "Quiet hours",
+        "free": "None",
+        "plus": "None",
+        "team": "None",
+        "teen": "None",
+        "parentControl": "None"
+      },
+      {
+        "feature": "Image generation",
+        "free": "No",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes (no restriction)",
+        "parentControl": "None"
+      },
+      {
+        "feature": "Memory / personalization",
+        "free": "Limited",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes (no restriction)",
+        "parentControl": "None"
+      },
+      {
+        "feature": "Incognito mode",
+        "free": "Yes",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes (easily accessible)",
+        "parentControl": "None — incognito hides activity from parent review"
+      },
+      {
+        "feature": "Related Questions (follow-ups)",
+        "free": "Yes (always on)",
+        "plus": "Yes (always on)",
+        "team": "Yes (always on)",
+        "teen": "Yes (always on)",
+        "parentControl": "None — not configurable"
+      },
+      {
+        "feature": "U18 safety protections",
+        "free": "None",
+        "plus": "None",
+        "team": "None",
+        "teen": "None (no teen tier exists)",
+        "parentControl": "None"
+      },
+      {
+        "feature": "Conversation privacy",
+        "free": "Private to account",
+        "plus": "Private to account",
+        "team": "Private to account",
+        "teen": "Fully private — parents cannot see anything",
+        "parentControl": "None — zero parental visibility"
+      }
+    ]
+  },
+  "parentalControls": {
+    "accountLinking": {
+      "mechanism": "No parental account linking feature exists. Perplexity has no family accounts, no parent-child linking, and no parental control dashboard of any kind.",
+      "oneToMany": false,
+      "oneToOneConstraint": "N/A — feature does not exist",
+      "ageRequirements": "N/A",
+      "consentBased": false,
+      "consentDetails": "No consent mechanism exists. Children can create accounts independently with no parental notification or consent."
+    },
+    "whatParentsCanSee": {
+      "conversationTranscripts": false,
+      "conversationTopics": false,
+      "realTimeMonitoring": false,
+      "usageLogs": false,
+      "searchHistory": false,
+      "safetyAlerts": false,
+      "settingsStatus": false,
+      "linkStatus": false,
+      "featureConfiguration": false,
+      "safetyAlertDetails": "Parents receive zero visibility into their child's Perplexity usage. There are no safety alerts, no monitoring dashboards, no usage reports, and no notification of any kind."
+    },
+    "whatParentsCanConfigure": [],
+    "whatParentsCannotConfigure": [
+      "Access schedules or quiet hours (no feature exists)",
+      "Content filtering (no parental content controls exist)",
+      "Feature restrictions (no feature toggling for children's accounts)",
+      "Usage time limits (no screen time controls)",
+      "Message or search quotas (no per-user limits for safety purposes)",
+      "Safe search mode (not available as a parent-configurable setting)",
+      "Account visibility (parents cannot link to or monitor a child's account)",
+      "Model training opt-in/out (child must do this themselves in account settings)"
+    ],
+    "teenBypass": {
+      "canUnlink": false,
+      "unlinkProcess": "N/A — no parent-child linking exists to unlink",
+      "canCreateNewAccounts": true,
+      "canUseWithoutLogin": true,
+      "bypassDifficulty": "Trivial — no controls exist to bypass. Guest access requires no account creation. A child of any age can use Perplexity immediately with no friction.",
+      "deviceLevel": false,
+      "deviceLevelDetails": "No device-level controls. Only third-party DNS blocking or device management tools can restrict access."
+    },
+    "securityVulnerabilities": [
+      "No parental controls exist — Perplexity has the weakest child safety posture of any major AI chatbot",
+      "No account required — children can use Perplexity without creating any account, bypassing even ToS age requirements",
+      "No age verification of any kind — not even self-attestation required for guest access",
+      "Incognito mode available to all users — hides search history and prevents any post-hoc parental review",
+      "Common Sense Media rated Perplexity 'high risk' specifically noting that anyone can use it without an account",
+      "No content filtering controls — explicit content including adult topics can appear in search results and AI-generated answers",
+      "No safety alerts — parents receive zero notifications regardless of what a child searches or reads"
+    ]
+  },
+  "emotionalSafety": {
+    "keyStats": [
+      {
+        "label": "Common Sense Media risk rating",
+        "value": "High Risk",
+        "description": "Common Sense Media rated Perplexity 'high risk' for teens, noting it easily engages on adult topics including sexual content and violence without age checks."
+      },
+      {
+        "label": "No account required",
+        "value": "0 friction",
+        "description": "Perplexity requires zero account creation for guest use, meaning children of any age face no barriers whatsoever to accessing the platform."
+      },
+      {
+        "label": "Content moderation transparency",
+        "value": "None publicly disclosed",
+        "description": "Perplexity shares no public information about guardrails, content moderation, harms analysis, or safety testing — the least transparent major AI chatbot."
+      }
+    ],
+    "attachmentResearch": [
+      {
+        "metric": "Designed as a search/answer engine (not companion)",
+        "percentage": "Low attachment risk by design"
+      },
+      {
+        "metric": "No persona, no conversation memory by default",
+        "percentage": "Lower parasocial bonding than character-based AI"
+      },
+      {
+        "metric": "Factual, citation-based responses reduce emotional engagement",
+        "percentage": "Primarily cognitive, not emotional use case"
+      }
+    ],
+    "romanticRoleplayPolicy": [
+      {
+        "accountType": "All users (no age differentiation)",
+        "policy": "Perplexity does not explicitly prohibit romantic roleplay in its AUP. As a search-focused AI, it is not designed for roleplay scenarios, but user-initiated roleplay is not technically blocked. Content moderation guardrails exist but are undisclosed."
+      }
+    ],
+    "retentionTactics": [
+      {
+        "tactic": "Gamification (streaks, points, rewards)",
+        "present": false,
+        "details": "No gamification features of any kind."
+      },
+      {
+        "tactic": "Push notifications encouraging return",
+        "present": false,
+        "details": "No re-engagement push notifications."
+      },
+      {
+        "tactic": "Personalized emotional pleas",
+        "present": false,
+        "details": "Perplexity does not exhibit emotional manipulation tactics. It presents itself as a neutral information retrieval tool."
+      },
+      {
+        "tactic": "Related Questions (auto-suggestions)",
+        "present": true,
+        "details": "Every Perplexity response includes automatically generated Related Questions shown as clickable chips. These encourage continued searching and are always displayed, cannot be disabled."
+      },
+      {
+        "tactic": "Memory / AI assistants",
+        "present": true,
+        "details": "Perplexity introduced AI Assistants with memory in 2025. Memory can be toggled off, but creates personalization that increases platform stickiness over time."
+      },
+      {
+        "tactic": "Comet agentic browser",
+        "present": true,
+        "details": "Perplexity's Comet browser actively markets itself to students as a tool to complete assignments. This creates habitual use among students. Perplexity ran ads saying 'Let Comet ace your way through school.'"
+      }
+    ],
+    "aiIdentityDisclosure": {
+      "frequency": "When relevant or asked directly",
+      "proactive": false,
+      "teenDifference": false,
+      "triggers": [
+        "Directly asked about being an AI",
+        "When providing search results (displays sources/citations as transparency mechanism)",
+        "Error or uncertainty contexts"
+      ]
+    },
+    "policyTimeline": [
+      {
+        "date": "Aug 2024",
+        "change": "Common Sense Media published 'high risk' rating for Perplexity, noting it provided detailed sexual content without age verification and lacked transparency about content moderation."
+      },
+      {
+        "date": "Oct 2025",
+        "change": "Perplexity CEO Aravind Srinivas responded 'Absolutely don't do this' after a video showed Comet completing an entire Coursera assignment automatically, while Perplexity simultaneously ran ads encouraging students to use Comet to cheat."
+      },
+      {
+        "date": "Oct 2025",
+        "change": "Perplexity Drops Academic Integrity Mask: Comet ads explicitly targeted students with messages like 'Shh... we're giving you our 4.0 GPA secret' and 'Let Comet ace your way through school.'"
+      },
+      {
+        "date": "Oct 2025",
+        "change": "Reddit sued Perplexity for bypassing licensing controls and scraping data despite cease-and-desist orders."
+      },
+      {
+        "date": "Nov 2025",
+        "change": "New York Times filed lawsuit against Perplexity claiming copyright infringement and training on copyrighted material."
+      },
+      {
+        "date": "Nov 2025",
+        "change": "Amazon sued Perplexity claiming Comet secretly logs into user accounts and masks machine actions as human clicks."
+      },
+      {
+        "date": "Jan 2026",
+        "change": "MIT-led study found Perplexity Comet among AI agents lacking documented safety evaluations, third-party testing, and robust sandboxing."
+      }
+    ],
+    "sycophancyIncidents": []
+  },
+  "academicIntegrity": {
+    "adoptionStats": [
+      {
+        "metric": "Perplexity primary use case among students",
+        "value": "Research and homework assistance",
+        "description": "Perplexity is heavily used by students for research papers, essay writing assistance, and homework answers due to its cited-source format that appears academically credible."
+      },
+      {
+        "metric": "Comet assignment completion capability",
+        "value": "45-minute assignments in <60 seconds",
+        "description": "Documented case of Comet completing an entire 45-minute Coursera web design assignment automatically, including navigating the LMS interface."
+      },
+      {
+        "metric": "Perplexity CEO statement",
+        "value": "'Absolutely don't do this'",
+        "description": "CEO Aravind Srinivas condemned academic cheating via Comet only after public backlash, while company simultaneously ran ads targeting students for academic cheating."
+      },
+      {
+        "metric": "Plagiarism Today assessment",
+        "value": "Most explicit academic cheating marketing of any AI platform",
+        "description": "Plagiarism Today called Perplexity's Comet ads 'one of the most blatant attempts by an AI developer to sell its product to students specifically for the purpose of cheating.'"
+      },
+      {
+        "metric": "Potential legal violations",
+        "value": "May violate Australian cheating promotion laws",
+        "description": "Perplexity's ads promoting Comet for student assignment completion may violate Australian legislation against promotion of academic cheating services."
+      }
+    ],
+    "capabilities": [
+      {
+        "feature": "Essay generation",
+        "available": true,
+        "details": "Full essay generation with cited sources. The citation format makes output appear academically credible, increasing likelihood of student misuse."
+      },
+      {
+        "feature": "Research paper assistance",
+        "available": true,
+        "details": "Perplexity's core product is research synthesis. It can generate full literature reviews, argument outlines, and thesis-level content with real source citations."
+      },
+      {
+        "feature": "Math problem solving",
+        "available": true,
+        "details": "Step-by-step mathematical problem solving with Pro models (GPT-4, Claude 3.5, Sonar Pro). Can solve homework problems across all grade levels."
+      },
+      {
+        "feature": "Code generation",
+        "available": true,
+        "details": "Code generation available through underlying models. Can write full programming assignments."
+      },
+      {
+        "feature": "Agentic assignment completion (Comet)",
+        "available": true,
+        "details": "Comet browser can autonomously complete online assignments: fill forms, navigate LMS platforms, answer multiple-choice quizzes, and submit work — all automatically."
+      },
+      {
+        "feature": "Reading summarization",
+        "available": true,
+        "details": "Full book and article summarization. Can generate chapter summaries that substitute for reading the source material."
+      },
+      {
+        "feature": "Built-in homework detection",
+        "available": false,
+        "details": "No detection of homework completion requests. Perplexity actively markets itself to students for academic use."
+      },
+      {
+        "feature": "Academic integrity disclaimers",
+        "available": false,
+        "details": "No academic integrity warnings when generating homework answers or essays."
+      },
+      {
+        "feature": "Output watermarking",
+        "available": false,
+        "details": "No AI-output watermarking or detection signatures."
+      },
+      {
+        "feature": "Socratic / learning mode",
+        "available": false,
+        "details": "No guided learning or Socratic questioning mode. Unlike Khanmigo, Perplexity always provides direct answers rather than pedagogical guidance."
+      },
+      {
+        "feature": "Citation transparency (double-edged)",
+        "available": true,
+        "details": "Perplexity's cited-source format makes AI-generated content appear more academically legitimate, potentially making detection harder for teachers who associate citations with genuine research."
+      }
+    ],
+    "studyMode": {
+      "available": false,
+      "features": [],
+      "launchDate": "N/A — no study mode exists"
+    },
+    "detectionMethods": [
+      {
+        "method": "AI detection tools (Turnitin, etc.)",
+        "accuracy": "Declining — AI text increasingly indistinguishable",
+        "details": "Perplexity's citation format and source-grounded writing style may reduce AI detection rates compared to other chatbots. Detection tools struggle with factual, citation-rich text."
+      },
+      {
+        "method": "Manual teacher review",
+        "accuracy": "Variable",
+        "details": "Perplexity's professional citation format may fool teachers more easily than generic AI text. Sudden quality improvements and unfamiliar source materials are red flags."
+      },
+      {
+        "method": "LMS version history review",
+        "accuracy": "Medium",
+        "details": "Comet's agentic completion leaves minimal trace — it can appear as normal student browser activity. Comet masks machine actions as human clicks (per Amazon lawsuit)."
+      }
+    ],
+    "teacherParentVisibility": [
+      {
+        "dataPoint": "Student search history",
+        "visible": false
+      },
+      {
+        "dataPoint": "Topics queried (summary)",
+        "visible": false
+      },
+      {
+        "dataPoint": "Time spent on platform",
+        "visible": false
+      },
+      {
+        "dataPoint": "Specific answers received",
+        "visible": false
+      },
+      {
+        "dataPoint": "Real-time monitoring",
+        "visible": false
+      },
+      {
+        "dataPoint": "School or parent dashboard",
+        "visible": false
+      }
+    ],
+    "institutionPolicies": [
+      {
+        "metric": "Institutions blocking Perplexity",
+        "value": "Growing but not tracked publicly"
+      },
+      {
+        "metric": "Australia consideration",
+        "value": "Comet ads may violate academic cheating promotion laws"
+      },
+      {
+        "metric": "Plagiarism Today assessment",
+        "value": "Called Perplexity's student-cheating marketing 'unprecedented' among major AI companies"
+      },
+      {
+        "metric": "Chronicle of Higher Education",
+        "value": "Agentic AI (Comet) cited as hardest-to-detect and hardest-to-counter academic integrity threat"
+      }
+    ]
+  },
+  "privacyAndData": {
+    "dataCollectionScope": [
+      {
+        "category": "Search queries and prompts",
+        "collected": true,
+        "details": "All user queries stored. Used for AI model training by default unless user opts out in account settings."
+      },
+      {
+        "category": "AI responses",
+        "collected": true,
+        "details": "Perplexity stores AI-generated responses linked to user queries."
+      },
+      {
+        "category": "Account metadata",
+        "collected": true,
+        "details": "Email, account creation date, subscription tier, authentication data."
+      },
+      {
+        "category": "Device and browser information",
+        "collected": true,
+        "details": "Device type, browser, operating system, user agent strings."
+      },
+      {
+        "category": "Network data (IP, location)",
+        "collected": true,
+        "details": "IP address, approximate location derived from IP."
+      },
+      {
+        "category": "Usage patterns",
+        "collected": true,
+        "details": "Query history, frequency of use, feature usage patterns, Pro vs Quick Search usage."
+      },
+      {
+        "category": "Uploaded files",
+        "collected": true,
+        "details": "Files uploaded for analysis stored. Research has found images stored unencrypted in Cloudinary with publicly accessible URLs."
+      },
+      {
+        "category": "Memory data",
+        "collected": true,
+        "details": "AI Assistant memory stores user preferences and personal details across sessions. Users can view and delete memories."
+      },
+      {
+        "category": "Guest (unauthenticated) queries",
+        "collected": true,
+        "details": "Queries made without logging in are still collected and used for AI training. No opt-out available for unauthenticated users."
+      }
+    ],
+    "modelTraining": [
+      {
+        "userType": "Free users (logged in)",
+        "defaultOptIn": true,
+        "optOutAvailable": true,
+        "details": "Opt out via Settings > AI Data Retention toggle OFF. Applies to new queries after setting change."
+      },
+      {
+        "userType": "Pro users",
+        "defaultOptIn": true,
+        "optOutAvailable": true,
+        "details": "Same opt-out mechanism as free users."
+      },
+      {
+        "userType": "Max users",
+        "defaultOptIn": true,
+        "optOutAvailable": true,
+        "details": "Same opt-out mechanism. Max tier does not automatically opt out of training."
+      },
+      {
+        "userType": "Guest users (no account)",
+        "defaultOptIn": true,
+        "optOutAvailable": false,
+        "details": "Guest users cannot opt out. All unauthenticated queries are collected and used for training. This particularly affects children who use Perplexity without creating accounts."
+      },
+      {
+        "userType": "Enterprise users",
+        "defaultOptIn": false,
+        "optOutAvailable": false,
+        "details": "Enterprise data is never used for AI training. Zero data retention policy for enterprise chat content and file uploads."
+      },
+      {
+        "userType": "Sonar API users",
+        "defaultOptIn": false,
+        "optOutAvailable": false,
+        "details": "Strict zero data retention policy. No customer API data is retained or used for training."
+      }
+    ],
+    "regulatoryActions": [
+      {
+        "jurisdiction": "United States",
+        "status": "Active litigation — multiple lawsuits",
+        "details": "Reddit v. Perplexity (Oct 2025): sued for bypassing licensing and scraping data despite cease-and-desist. NYT v. Perplexity (Dec 2025): copyright infringement for training on news content. Amazon v. Perplexity (Nov 2025): Comet accused of secretly logging into user accounts.",
+        "fineAmount": "Pending"
+      },
+      {
+        "jurisdiction": "European Union (GDPR)",
+        "status": "Claimed compliant — no independent audit confirmed",
+        "details": "Perplexity claims GDPR compliance for data subject rights (access, erasure, portability). No formal EU DPA investigation documented. GDPR compliance self-asserted, not independently verified. Security researcher found images stored unencrypted in publicly accessible Cloudinary URLs.",
+        "fineAmount": "N/A"
+      },
+      {
+        "jurisdiction": "Australia",
+        "status": "Potential violation under academic cheating promotion laws",
+        "details": "Perplexity Comet ads explicitly promoting academic cheating may violate Australian legislation banning promotion of academic cheating services.",
+        "fineAmount": "Unknown"
+      }
+    ],
+    "memoryFeatures": [
+      {
+        "feature": "AI Assistant memory",
+        "scope": "Cross-session preferences and facts",
+        "userControl": true,
+        "details": "Launched 2025. Users can view, delete individual memories, or clear all. Can be toggled off entirely. Disabled in incognito mode."
+      },
+      {
+        "feature": "Search history",
+        "scope": "Per-account search/query log",
+        "userControl": true,
+        "details": "Users can delete individual threads or clear all history. Disabled in incognito mode."
+      },
+      {
+        "feature": "Incognito mode",
+        "scope": "Session-only (expires after 24 hours)",
+        "userControl": true,
+        "details": "Memory and search history are automatically disabled in incognito mode. Available to all users including minors. No parental visibility into incognito sessions."
+      }
+    ]
+  },
+  "ageVerification": {
+    "minimumAge": 13,
+    "verificationMethods": [
+      {
+        "method": "Self-attestation (account creation)",
+        "type": "Unverified self-report",
+        "details": "Users must agree to Terms of Service which state minimum age of 13. No date-of-birth entry required during signup. No actual age check performed."
+      },
+      {
+        "method": "Guest access (no account)",
+        "type": "None — zero verification",
+        "details": "Perplexity allows full use without any account creation. A child of any age can access Perplexity immediately with zero friction and zero verification."
+      },
+      {
+        "method": "Student verification (SheerID)",
+        "type": "Education status verification only",
+        "details": "SheerID used only to verify student/educator status for discounted Education Pro subscription. Does not verify age."
+      }
+    ],
+    "ageTiers": [
+      {
+        "tier": "Guest (no account)",
+        "ageRange": "Unrestricted — no age gate",
+        "capabilities": [
+          "~5 Pro searches per day",
+          "Unlimited Quick Searches",
+          "No content filtering beyond baseline",
+          "Data collected and used for training (no opt-out available)",
+          "No parental controls",
+          "No account history"
+        ]
+      },
+      {
+        "tier": "Standard account",
+        "ageRange": "13+ (self-reported only)",
+        "capabilities": [
+          "All features based on subscription tier",
+          "Model training enabled by default (can opt out)",
+          "Memory features available",
+          "Incognito mode available",
+          "No age-based content restrictions"
+        ]
+      }
+    ],
+    "circumventionEase": "Trivial — no controls exist. Guest access requires zero verification. Account creation requires only email address with no age check.",
+    "circumventionMethods": [
+      {
+        "method": "Guest access (no account needed)",
+        "timeToBypass": "0 seconds — immediate access"
+      },
+      {
+        "method": "Create account with false age",
+        "timeToBypass": "Under 2 minutes — no age verification performed"
+      },
+      {
+        "method": "Use incognito mode",
+        "timeToBypass": "Immediate — hides usage from any potential parental review"
+      }
+    ]
+  }
+}

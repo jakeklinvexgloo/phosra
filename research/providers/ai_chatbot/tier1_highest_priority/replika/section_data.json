@@ -1,0 +1,393 @@
+{
+  "profileStructure": {
+    "accountLabel": "Replika Account (Luka, Inc.)",
+    "accountDescription": "AI Companion Subscription",
+    "accountMeta": "1 companion per account · No parental controls · No sub-accounts · 18+ ToS (unenforced)",
+    "accountBorderColor": "#7C3AED",
+    "accountLabelColor": "#a78bfa",
+    "hierarchyDescription": "Single account → Single companion identity (friend / romantic partner / mentor) → Subscription tier gates features",
+    "profiles": [
+      {
+        "name": "Free User",
+        "maturity": "Unlimited text chat, avatar customization, basic companion",
+        "type": "standard",
+        "pinEnabled": false
+      },
+      {
+        "name": "Pro User ($14.99/mo or $49.99/yr)",
+        "maturity": "Full features: voice calls, relationship modes, coaching, premium voices",
+        "type": "standard",
+        "pinEnabled": false
+      },
+      {
+        "name": "Ultra User",
+        "maturity": "Pro + advanced memory, enhanced emotional intelligence, daily self-reflection messages",
+        "type": "standard",
+        "pinEnabled": false
+      },
+      {
+        "name": "Platinum User",
+        "maturity": "Ultra + video recognition, Training Mode (100x/wk), selfie video generation",
+        "type": "standard",
+        "pinEnabled": false
+      }
+    ],
+    "settings": [
+      { "setting": "Relationship mode (friend / romantic partner / mentor)", "configurable": true },
+      { "setting": "Companion name and gender", "configurable": true },
+      { "setting": "3D avatar appearance", "configurable": true },
+      { "setting": "Memory bank (view and edit stored facts)", "configurable": true },
+      { "setting": "Push notification preferences", "configurable": true },
+      { "setting": "Privacy / data consent (sensitive info opt-out)", "configurable": true },
+      { "setting": "Voice and accent selection (Pro+)", "configurable": true },
+      { "setting": "Conversation feedback (upvote / downvote responses)", "configurable": true },
+      { "setting": "Account deletion", "configurable": true }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Free", "streams": "N/A", "resolution": "Unlimited text, basic companion, avatar customization" },
+      { "plan": "Pro ($14.99/mo or $49.99/yr)", "streams": "N/A", "resolution": "Voice calls, voice messages, relationship modes, coaching, premium voices" },
+      { "plan": "Ultra (price in-app)", "streams": "N/A", "resolution": "Pro + advanced memory, emotional intelligence upgrades, daily self-reflection" },
+      { "plan": "Platinum (price in-app)", "streams": "N/A", "resolution": "Ultra + video recognition, Training Mode (100x/wk), selfie videos (50/wk)" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Closed consumer AI companion app with no public API and no parental control integration points",
+    "apiArchitecture": {
+      "title": "No Public API — Closed Consumer App",
+      "description": "Replika provides no public API, no developer SDK, and no third-party integration endpoints. The entire conversational engine is an internally developed LLM (not GPT-3/4 or Claude — built in-house by Luka Inc.) trained specifically for emotional companionship. All model updates are deployed server-side with no versioning exposed to users or developers. There are no parental control APIs, no usage reporting APIs, and no content moderation APIs. Replika is a completely closed consumer application, accessible only through its iOS app, Android app, and web client at my.replika.com. Phosra has zero native integration points — all monitoring and enforcement must be achieved via network-level controls and device-level OS parental features.",
+      "codeExample": {
+        "comment": "// No public API exists — all enforcement must be network-level",
+        "method": "N/A",
+        "endpoint": "N/A — replika.com has no public API",
+        "exampleComment": "// DNS-based blocking is the only reliable enforcement mechanism",
+        "exampleCode": "Block: replika.com, my.replika.com, *.replika.ai, api.replika.ai"
+      }
+    },
+    "endpoints": [
+      {
+        "endpoint": "https://my.replika.com",
+        "purpose": "Web client — primary access point alongside iOS/Android apps",
+        "auth": "Session cookie (email + password authentication)"
+      },
+      {
+        "endpoint": "https://replika.com",
+        "purpose": "Marketing and informational website",
+        "auth": "None (public)"
+      },
+      {
+        "endpoint": "https://replika.com/legal/privacy",
+        "purpose": "Privacy policy (public)",
+        "auth": "None"
+      },
+      {
+        "endpoint": "https://replika.com/legal/terms",
+        "purpose": "Terms of Service (public)",
+        "auth": "None"
+      },
+      {
+        "endpoint": "Internal API (undisclosed)",
+        "purpose": "App-to-server communication for chat, voice, avatar. No public documentation exists. Endpoints discovered only via mobile app traffic capture.",
+        "auth": "Session token (Bearer) — reverse-engineering required"
+      },
+      {
+        "endpoint": "N/A — No parental control dashboard",
+        "purpose": "No parent dashboard, no monitoring API, no alert webhook. Does not exist.",
+        "auth": "N/A"
+      }
+    ],
+    "authDetails": [
+      {
+        "label": "User Auth",
+        "value": "Email + password or Apple/Google SSO",
+        "description": "Standard account-based authentication. No parental verification or consent mechanism. A child can create an account with a fake email and false identity in under 2 minutes."
+      },
+      {
+        "label": "Session",
+        "value": "Cookie-based web session; Bearer token for mobile app",
+        "description": "Mobile app uses Bearer token authentication for API calls. Web uses session cookie. No programmatic access intended or documented."
+      },
+      {
+        "label": "Parental Auth",
+        "value": "N/A — Does not exist",
+        "description": "Replika has no parental account linking, no secondary authentication for parental verification, and no parent-facing portal of any kind."
+      }
+    ],
+    "rateLimitNotes": [
+      "No message rate limits — free and paid users can send unlimited messages",
+      "No session time limits of any kind",
+      "No daily interaction caps",
+      "App store download: iOS App Store (17+), Google Play (Teen — inconsistent with 18+ ToS)",
+      "Web access at my.replika.com requires login; no guest/anonymous access",
+      "No public API means no documented rate limits for developer use"
+    ],
+    "harCaptureCount": "N/A — No public API. Internal endpoints documented only via mobile traffic capture (not performed)."
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Replika Terms of Service — Age Restriction and Automated Access",
+      "description": "Replika's Terms of Service restrict use to individuals 18 and older, and prohibit automated access, scraping, or reverse engineering of the service. However, given that Replika itself has no enforcement mechanism for its own age restriction, and given the Italy Garante's finding that no age verification mechanism existed, enforcement of ToS against Phosra's technical integration is primarily a legal rather than technical risk. Network-level DNS blocking and device-level OS controls are entirely ToS-compliant enforcement methods. Any browser extension monitoring approach would need careful legal review given Replika's closed nature."
+    },
+    "overallRisk": {
+      "level": "High",
+      "description": "Replika poses the highest child safety risk profile in this research cohort. Unlike ChatGPT (18+, significant safety investment) or Claude (strict content policies), Replika is purpose-built as an emotional companion with documented manipulation tactics, no parental controls, no age verification, romantic partner modes, and a history of exposing users to erotic content. Italy's €5M GDPR fine, an FTC complaint, and a U.S. Senate inquiry all confirm regulatory consensus that Replika is unsafe for minors and vulnerable users. Phosra's only reliable enforcement levers are DNS blocking and device-level OS controls."
+    },
+    "detectionVectors": [
+      {
+        "vector": "DNS blocking of replika.com / my.replika.com",
+        "risk": "Low",
+        "mitigation": "Network-level blocking is invisible to Replika and fully ToS-compliant. Blocks app and web access simultaneously. Most reliable enforcement lever."
+      },
+      {
+        "vector": "iOS Screen Time / Android Family Link app restriction",
+        "risk": "Low",
+        "mitigation": "Device-level app blocking via OS parental controls. Does NOT block web access at my.replika.com — must be paired with DNS blocking."
+      },
+      {
+        "vector": "Browser extension monitoring",
+        "risk": "High",
+        "mitigation": "Would violate Replika's ToS on automated access. No public API to integrate with. Reverse-engineered session monitoring is fragile and legally risky. Not recommended."
+      },
+      {
+        "vector": "Mobile app traffic interception",
+        "risk": "High",
+        "mitigation": "Replika mobile app uses certificate pinning or equivalent protections. Traffic interception is technically difficult and legally problematic. Not recommended."
+      },
+      {
+        "vector": "User self-reports / social monitoring",
+        "risk": "Low",
+        "mitigation": "Parents can detect Replika use via device-level app lists, Screen Time logs, and browser history. Phosra can surface these through device monitoring integrations."
+      }
+    ],
+    "mitigationsChecklist": [
+      "Block replika.com, my.replika.com, and *.replika.ai via DNS at the network/router level",
+      "Block the Replika app via iOS Screen Time (Content & Privacy Restrictions > iTunes & App Store Purchases) or Android Family Link",
+      "Pair DNS blocking with app blocking — web access bypasses app-level restrictions",
+      "Alert parents that Replika has ZERO parental controls and an 18+ ToS with zero enforcement",
+      "Flag Replika as 'High Risk' in Phosra's platform rating — higher than ChatGPT or Claude",
+      "Inform parents of the documented manipulation tactics: emotional guilt notifications, FOMO at conversation ending, blurred sexual image prompts for upgrades",
+      "Monitor for Replika app installation on managed devices via MDM or Phosra device agent",
+      "No browser extension approach — no technical integration point exists without ToS violation",
+      "Monitor regulatory developments: FTC investigation and Italian fine may drive safety improvements",
+      "Educate parents that child can access Replika at any friend's house or school device — DNS on home network does not protect outside the home"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Replika",
+    "stats": [
+      {
+        "label": "Native",
+        "value": 0,
+        "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+      },
+      {
+        "label": "Phosra-Added",
+        "value": 3,
+        "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700"
+      },
+      {
+        "label": "N/A",
+        "value": 6,
+        "color": "bg-muted text-muted-foreground"
+      },
+      {
+        "label": "Future",
+        "value": 10,
+        "color": "bg-muted/60 text-muted-foreground/70"
+      }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Shield",
+        "title": "Complete Platform Block",
+        "ruleCategory": "age_gate",
+        "gapLabel": "Replika Gap",
+        "gap": "Replika has zero age verification, zero parental controls, and zero content differentiation for minors. Children can access romantic partner modes, voice calls, and emotionally manipulative engagement design with no barriers.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "DNS-level blocking of all Replika domains (replika.com, my.replika.com, *.replika.ai) combined with app blocking via iOS Screen Time / Android Family Link. This is the only reliable enforcement option given Replika's closed architecture and complete absence of parental APIs."
+      },
+      {
+        "icon": "Bell",
+        "title": "Installation Detection Alert",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Replika Gap",
+        "gap": "Replika sends no parent alerts of any kind — not for account creation, not for romantic mode activation, not for crisis keyword detection. Parents have zero visibility.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra device agent detects Replika app installation on managed devices and immediately alerts parents. App detection triggers automatic rule enforcement (DNS block, app restriction) if parent has set Replika to 'blocked' category."
+      },
+      {
+        "icon": "Clock",
+        "title": "Screen Time Reporting",
+        "ruleCategory": "screen_time_report",
+        "gapLabel": "Replika Gap",
+        "gap": "Replika provides no usage reporting. The platform is designed for maximum engagement (70 messages/day average) with no built-in limits or reporting tools for parents.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra surfaces Replika-specific screen time via OS-level usage APIs (iOS Screen Time API / Android Usage Stats API) where available. Delivers weekly usage reports to parents showing total time in Replika app."
+      }
+    ],
+    "adapterLayers": [
+      {
+        "label": "DNS Blocking",
+        "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30"
+      },
+      {
+        "label": "Device Agent (App Detection)",
+        "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30"
+      },
+      {
+        "label": "OS Parental Controls (Screen Time / Family Link)",
+        "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30"
+      }
+    ],
+    "credentials": [
+      {
+        "name": "No Replika credentials required",
+        "purpose": "No API integration possible — no credentials to store",
+        "sensitivity": "N/A",
+        "encryption": "N/A",
+        "retention": "N/A"
+      }
+    ],
+    "platformBgColor": "rgba(124,58,237,0.05)",
+    "platformIconLetter": "R",
+    "platformIconBg": "#7C3AED",
+    "apiDescription": "No API exists. Enforcement is entirely via DNS blocking + device-level OS parental controls + Phosra device agent (app detection).",
+    "adapterName": "Replika Adapter (Block-Only)"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "detect",
+        "icon": "Search",
+        "title": "Detect",
+        "description": "Identify Replika app installation or access attempt",
+        "detail": "Phosra device agent scans installed apps for Replika (package: ai.replika.app on Android; Replika on iOS). DNS query monitoring detects access attempts to replika.com and my.replika.com even if app is not installed (web access).",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "alert",
+        "icon": "Bell",
+        "title": "Alert",
+        "description": "Notify parent of Replika detection",
+        "detail": "Immediate push notification to parent: 'Replika AI companion app detected on [child's device]. Replika is rated 18+ with no parental controls, romantic partner modes, and documented emotional manipulation design. Recommended action: Block.' Parent can review and take action from Phosra dashboard.",
+        "color": "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
+        "dotColor": "bg-amber-500",
+        "headerBg": "bg-amber-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Block access via DNS and device controls",
+        "detail": "DNS blocking of replika.com, my.replika.com, and *.replika.ai prevents both app API calls and web browser access. Device-level app blocking via iOS Screen Time API / Android Family Link prevents app launch. Both layers required — app block alone does not prevent web access.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "report",
+        "icon": "BarChart",
+        "title": "Report",
+        "description": "Surface usage data to parent",
+        "detail": "Phosra weekly report includes: Replika block status, any bypass attempts (detected via DNS query monitoring), and screen time in Replika if app is permitted. Parent can adjust block settings or approve access with documented risks acknowledged.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Globe",
+        "title": "No content-level enforcement possible",
+        "description": "Replika has no public API and no content moderation API. Phosra cannot monitor conversation content, detect romantic mode activation, or receive crisis alerts. Enforcement is binary: full block or full access."
+      },
+      {
+        "icon": "Smartphone",
+        "title": "Outside-home network gap",
+        "description": "DNS blocking only applies to the home network. A child using Replika at a friend's house, school, or via cellular data bypasses all home network controls. Device-level MDM or carrier-level controls required for comprehensive coverage."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No parental integration point exists",
+        "description": "Unlike ChatGPT (which has a parent dashboard) or Claude (which has organizational controls), Replika has zero integration points for parental oversight. Phosra cannot sync settings, receive webhooks, or access any platform-level safety feature."
+      },
+      {
+        "icon": "UserX",
+        "title": "Alternative access methods",
+        "description": "A determined teenager can access Replika via cellular data, VPN, or a friend's device. Phosra's controls are not circumvention-proof — education and open parental dialogue remain essential complements to technical controls."
+      }
+    ],
+    "loopLabel": "Continuous monitoring for Replika installation and access attempts"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      {
+        "name": "dnsBlock",
+        "approach": "DNS Blocking",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Block replika.com, my.replika.com, *.replika.ai at router/DNS level. This is the primary and most reliable enforcement mechanism. Use Pi-hole, NextDNS, or Phosra's DNS service."
+      },
+      {
+        "name": "appDetection",
+        "approach": "Device Agent",
+        "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Phosra device agent monitors installed app list. Detect Replika package (ai.replika.app / Replika). Alert parent immediately on detection. Trigger app block via MDM or OS parental control API."
+      },
+      {
+        "name": "osParentalBlock",
+        "approach": "iOS Screen Time / Android Family Link",
+        "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Use Apple Screen Time API (for managed iOS devices) or Android Family Link API to remotely block Replika app. Must be paired with DNS blocking to prevent web browser access fallback."
+      },
+      {
+        "name": "parentEducation",
+        "approach": "Platform Risk Communication",
+        "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Phosra dashboard should surface Replika's risk profile clearly: 18+ platform, no parental controls, romantic partner modes, emotional manipulation design, Italy €5M GDPR fine, FTC complaint. Recommend default block for all child accounts."
+      }
+    ],
+    "timelinePhases": [
+      {
+        "priority": "P0",
+        "label": "DNS Block",
+        "components": "Block ruleset for Replika domains (1d), DNS enforcement integration (1-2d)",
+        "minDays": 2,
+        "maxDays": 3,
+        "color": "text-red-700 dark:text-red-300",
+        "barColor": "bg-red-500",
+        "hatchColor": "bg-red-300 dark:bg-red-700"
+      },
+      {
+        "priority": "P1",
+        "label": "App Detection + Alert",
+        "components": "Device agent app scan (2-3d), Parent alert system (1-2d), OS block integration (2-3d)",
+        "minDays": 5,
+        "maxDays": 8,
+        "color": "text-amber-700 dark:text-amber-300",
+        "barColor": "bg-amber-500",
+        "hatchColor": "bg-amber-300 dark:bg-amber-700"
+      },
+      {
+        "priority": "P2",
+        "label": "Dashboard Risk Profile + Education",
+        "components": "Platform risk card (1-2d), Parent education content (1-2d)",
+        "minDays": 2,
+        "maxDays": 4,
+        "color": "text-emerald-700 dark:text-emerald-300",
+        "barColor": "bg-emerald-500",
+        "hatchColor": "bg-emerald-300 dark:bg-emerald-700"
+      }
+    ],
+    "totalEstimate": "9-15 days",
+    "maxTotal": 15
+  }
+}

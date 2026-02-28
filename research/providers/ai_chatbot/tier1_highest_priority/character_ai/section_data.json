@@ -1,0 +1,551 @@
+{
+  "platformInfo": {
+    "name": "Character.ai",
+    "company": "Character Technologies, Inc. (formerly Character.AI Inc.)",
+    "launchDate": "2022-09",
+    "monthlyActiveUsers": "~20 million MAU (January 2025); 180M+ monthly site visits",
+    "minorUserEstimate": "55%+ of users are Gen Z or Gen Alpha; estimated 8-11M MAU are under 25; exact under-18 count not disclosed",
+    "primaryUseCase": "AI character companion / roleplay / interactive fiction",
+    "founders": "Noam Shazeer and Daniel De Freitas (former Google Brain researchers)",
+    "headquartersCity": "Menlo Park, California",
+    "funding": "Raised $150M Series A (March 2023) at $1B valuation; additional funding from Google ($300M+)",
+    "revenueModel": "Freemium — free tier plus c.ai+ subscription ($9.99/month) for priority access and faster responses",
+    "appStores": "iOS App Store, Google Play Store, web browser (character.ai)",
+    "keyStats": {
+      "averageDailyTimePerUser": "~2 hours (among highest of any AI chatbot)",
+      "totalCharactersCreated": "18 million+ user-created characters",
+      "genderDemographics": "~55% female users — higher than most AI chatbots",
+      "ageProfile": "Skews heavily teen and young adult; one of most youth-concentrated AI platforms"
+    }
+  },
+  "safetySettings": {
+    "description": "Character.ai operates a two-tier age-based safety model. Adult users (18+) receive standard filtering. Users under 18 (post-November 2025) are restricted entirely from open-ended AI chat and redirected to the supervised Stories interactive fiction experience. Age determination uses a combination of self-declared birthdate and a behavioral age assurance model backed by Persona third-party identity verification.",
+    "levels": [
+      {
+        "level": "Stories Mode (Under-18)",
+        "description": "Structured, choose-your-own-adventure interactive fiction with heavy automated content moderation. Filters out sexual content, self-harm themes, graphic violence. Characters and story arcs are predefined and curated. No open-ended AI chat.",
+        "default": true,
+        "appliesTo": "Users under 18 — enforced automatically"
+      },
+      {
+        "level": "Standard (Adult, unverified 18+)",
+        "description": "Full open-ended AI chat with any community or official character. Standard content filtering — blocks explicit sexual content (NSFW) and graphic illegal content. Romantic roleplay, mature themes, and fantasy violence may be accessible depending on character settings. Mature-tagged characters require age verification to access.",
+        "default": true,
+        "appliesTo": "Users 18+ with self-declared age, not yet Persona-verified"
+      },
+      {
+        "level": "Mature (Adult, Persona-verified 18+)",
+        "description": "Same as Standard but with access to Mature-tagged characters covering adult romance and violence themes. Explicit sexual content (NSFW/pornography) remains permanently banned for all users on the main platform regardless of verification status.",
+        "default": false,
+        "appliesTo": "Users 18+ who have completed Persona selfie or ID verification"
+      }
+    ],
+    "features": [
+      {
+        "feature": "Under-18 conservative language model",
+        "configurable": false,
+        "scope": "Account — automatic by age tier"
+      },
+      {
+        "feature": "Explicit content (NSFW) permanent ban",
+        "configurable": false,
+        "scope": "Platform-wide — applies to all users and all content"
+      },
+      {
+        "feature": "Age assurance behavioral model",
+        "configurable": false,
+        "scope": "Account — runs continuously in background"
+      },
+      {
+        "feature": "Persona age verification",
+        "configurable": false,
+        "scope": "Triggered when behavioral model flags potential underage user"
+      },
+      {
+        "feature": "Crisis hotline prompt (988)",
+        "configurable": false,
+        "scope": "Session — triggers when self-harm or suicide keywords detected"
+      },
+      {
+        "feature": "1-hour session notification",
+        "configurable": true,
+        "scope": "Session — mandatory for under-18, adjustable for adults"
+      },
+      {
+        "feature": "Parental Insights weekly report",
+        "configurable": true,
+        "scope": "Account — teen opt-in, parent receives email"
+      },
+      {
+        "feature": "Character content classifiers",
+        "configurable": false,
+        "scope": "Character-level — automatic enforcement based on character tags and content"
+      },
+      {
+        "feature": "Mature character access gate",
+        "configurable": false,
+        "scope": "Account — unlocked only by Persona verification for 18+"
+      },
+      {
+        "feature": "Stories mode (U18 replacement experience)",
+        "configurable": false,
+        "scope": "Account — automatic for all users under 18"
+      }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "No public API — internal REST + WebSocket architecture, reverse-engineered by community developers",
+    "apiArchitecture": {
+      "title": "Internal REST API + WebSocket (No Official Public API)",
+      "description": "Character.ai operates exclusively through an internal, undocumented REST API and WebSocket infrastructure. There is no official public API or developer program as of the research date. All endpoints were discovered through reverse engineering — primarily by community developers who built unofficial Python wrappers (PyCharacterAI, CharacterAI by kramcat). The platform uses WebSocket connections for streaming character responses in real-time, with an initial REST-based authentication handshake. Authentication is session-cookie based for web users and token-based for mobile app users. There is no moderation API, no parental control API, and no programmatic access to account safety settings. All parental controls (such as they are) are dashboard-only and require the teen user to operate them.",
+      "codeExample": {
+        "comment": "// Unofficial reverse-engineered WebSocket endpoint (community-discovered, not official)",
+        "method": "WebSocket",
+        "endpoint": "wss://neo.character.ai/ws/",
+        "exampleComment": "// Authentication via session token obtained from POST /dj-rest-auth/login/",
+        "exampleCode": "{ \"command\": \"create_and_subscribe_human_turn\", \"request_id\": \"uuid\", \"payload\": { \"character_id\": \"char_id\", \"history_external_id\": \"hist_id\", \"tgt\": \"a:char_id\", \"human_turn\": { \"parts\": [{ \"content\": \"Hello\" }] } } }"
+      }
+    },
+    "endpoints": [
+      {
+        "endpoint": "POST /dj-rest-auth/login/",
+        "purpose": "Authentication — obtain session token/cookie",
+        "auth": "Username + password (form POST); returns session token"
+      },
+      {
+        "endpoint": "GET /api/account/",
+        "purpose": "Fetch authenticated user account details including age tier",
+        "auth": "Session cookie / Bearer token"
+      },
+      {
+        "endpoint": "GET /api/characters/search/?query={q}",
+        "purpose": "Search characters by name or description",
+        "auth": "Session cookie / Bearer token"
+      },
+      {
+        "endpoint": "GET /api/character/{character_id}/",
+        "purpose": "Fetch character metadata, persona description, creator info",
+        "auth": "Session cookie / Bearer token"
+      },
+      {
+        "endpoint": "POST /chat/history/create/",
+        "purpose": "Create a new conversation history (chat session) with a character",
+        "auth": "Session cookie / Bearer token"
+      },
+      {
+        "endpoint": "GET /chat/history/continue/",
+        "purpose": "Retrieve or continue an existing conversation history",
+        "auth": "Session cookie / Bearer token"
+      },
+      {
+        "endpoint": "GET /api/user/{username}/",
+        "purpose": "Fetch user profile information",
+        "auth": "Session cookie / Bearer token; some public profiles accessible without auth"
+      },
+      {
+        "endpoint": "wss://neo.character.ai/ws/",
+        "purpose": "WebSocket connection for real-time streaming character responses",
+        "auth": "Session token passed in connection headers or initial handshake message"
+      },
+      {
+        "endpoint": "GET /api/user/followers/ and /api/user/following/",
+        "purpose": "Social graph — followers and followed creators/characters",
+        "auth": "Session cookie / Bearer token"
+      },
+      {
+        "endpoint": "N/A — Parental Controls",
+        "purpose": "No API for parental controls. Parental Insights is web/app dashboard only.",
+        "auth": "Web session only (teen account settings page)"
+      },
+      {
+        "endpoint": "N/A — Content Moderation API",
+        "purpose": "No public moderation API exists. All content classification is server-side and internal.",
+        "auth": "N/A"
+      },
+      {
+        "endpoint": "N/A — Age Verification API",
+        "purpose": "Age assurance is handled server-side. Persona integration is internal only.",
+        "auth": "N/A"
+      }
+    ],
+    "authDetails": [
+      {
+        "label": "Web Auth",
+        "value": "Session cookie (CSRF-protected)",
+        "description": "Standard web session authentication using Django REST Framework. Google and Apple SSO options available in addition to email/password. Cloudflare Bot Management layer protects all endpoints."
+      },
+      {
+        "label": "Mobile App Auth",
+        "value": "Bearer token (JWT-style)",
+        "description": "iOS and Android apps use token-based authentication. Tokens obtained via the login endpoint and stored in secure device storage. Session tokens may expire and require re-authentication."
+      },
+      {
+        "label": "Age Tier Flag",
+        "value": "Server-side account flag (not externally observable)",
+        "description": "Age tier (under-18 vs adult vs verified-adult) is stored server-side and enforced by the API. The under-18 flag routes users to the conservative language model and restricts accessible endpoints. The flag can be manipulated by creating a new account with false age claims."
+      }
+    ],
+    "rateLimitNotes": [
+      "No official rate limit documentation exists — all data is community-reverse-engineered",
+      "Free users report response delays during peak hours ('character is unavailable' queuing)",
+      "c.ai+ subscribers (~$9.99/mo) receive priority queue access and faster response times",
+      "WebSocket connections appear to have no hard message-per-minute limit for normal usage",
+      "Cloudflare Bot Management actively blocks automated traffic — unofficial API wrappers report frequent blocking and require stealth headers",
+      "Session tokens expire periodically, requiring re-authentication for long-running automation",
+      "No public moderation API means Phosra cannot use first-party content classification"
+    ],
+    "harCaptureCount": "Community reverse-engineering identifies ~15-20 primary REST endpoints + 1 primary WebSocket endpoint; no official HAR capture possible without terms-of-service risk",
+    "integrationNotes": {
+      "noPublicAPI": "Character.ai has no official developer API. All integration requires unauthorized reverse-engineered access, which violates Character.ai's Terms of Service.",
+      "bestApproach": "Browser extension monitoring of web conversations + network-level DNS blocking for enforcement + device-level Screen Time controls for time limits",
+      "parentalControlsGap": "Parental Insights is teen-initiated and opt-in. Parents have no platform API access. The only programmatic approach to parental monitoring is browser extension DOM observation.",
+      "contentClassification": "Without a first-party moderation API, Phosra must use a third-party classifier (e.g., OpenAI Moderation API, Anthropic content classifier, or Google Perspective API) to classify captured conversation content.",
+      "underEighteenBan": "The November 2025 under-18 ban on open-ended chat significantly reduces the active risk surface on web — but under-18 users who spoof their age to create adult accounts remain a concern."
+    }
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Character.ai Terms of Service — Automated Access",
+      "description": "Character.ai's Terms of Service prohibit automated or programmatic access to the platform outside of any officially sanctioned API. All reverse-engineered endpoints used by community wrappers (PyCharacterAI, CharacterAI-py) are unauthorized. Browser extension-based monitoring is defensible as a user-installed parental control tool. Network-level DNS blocking is fully compliant. Automated scraping of conversation content would violate ToS."
+    },
+    "overallRisk": {
+      "level": "High",
+      "description": "Character.ai presents the highest child safety risk profile of any major AI chatbot platform. The platform's companion/roleplay design is specifically engineered for emotional attachment. Documented teen suicides, 10+ active lawsuits, FTC investigation, and the fundamental design tension between engagement-maximization and minor safety make this a critical platform for Phosra coverage. The November 2025 under-18 ban removes the most dangerous vector but creates a new challenge: under-18 users who circumvent age verification to access adult accounts."
+    },
+    "detectionVectors": [
+      {
+        "vector": "Browser extension monitoring",
+        "risk": "Low",
+        "mitigation": "User-installed parental control extensions are permitted. Extension monitors DOM for conversation content and session duration."
+      },
+      {
+        "vector": "DNS/network-level blocking",
+        "risk": "Low",
+        "mitigation": "Fully compliant. Block character.ai, neo.character.ai, and app domains during restricted hours."
+      },
+      {
+        "vector": "Cloudflare Bot Management bypass",
+        "risk": "High",
+        "mitigation": "Community wrappers report frequent blocks. Server-side automation of character.ai is high-risk and fragile. Use only extension-based approach."
+      },
+      {
+        "vector": "No parental control API",
+        "risk": "Medium",
+        "mitigation": "Parental Insights is teen-opt-in only. Phosra cannot programmatically access or configure it. Must rely on extension + device controls."
+      },
+      {
+        "vector": "Under-18 age spoofing",
+        "risk": "High",
+        "mitigation": "Teens can create adult accounts to bypass the under-18 ban. Phosra can detect character.ai usage via extension regardless of age-tier — monitor all usage, not just teen-flagged accounts."
+      }
+    ],
+    "mitigationsChecklist": [
+      "Deploy browser extension to monitor character.ai web conversations via DOM observation",
+      "Use third-party content classifier (OpenAI Moderation API or similar) since Character.ai has no public moderation API",
+      "Enforce time limits via extension session timer + DNS blocking",
+      "Block neo.character.ai (WebSocket endpoint) in DNS rules to prevent all character chat",
+      "Block character.ai, neo.character.ai, and cdn.character.ai domains at network level",
+      "Alert parents when extension detects crisis-related content in conversations",
+      "Warn parents that Parental Insights is teen-initiated — encourage them to check if their teen has activated it",
+      "Monitor for account creation from teen devices to detect new accounts that may spoof age",
+      "Address mobile app gap — iOS/Android Character.ai apps not covered by browser extension; rely on network-level blocking",
+      "Educate parents about the November 2025 under-18 ban and how teens bypass it via adult account creation"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Character.ai",
+    "stats": [
+      {
+        "label": "Native",
+        "value": 3,
+        "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+      },
+      {
+        "label": "Phosra-Added",
+        "value": 7,
+        "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700"
+      },
+      {
+        "label": "N/A",
+        "value": 2,
+        "color": "bg-muted text-muted-foreground"
+      },
+      {
+        "label": "Future",
+        "value": 22,
+        "color": "bg-muted/60 text-muted-foreground/70"
+      }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Daily Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Character.ai Gap",
+        "gap": "Character.ai has no native daily or weekly time limits for adult users. The 1-hour session notification is a nudge, not a block. Adults and age-spoofing teens can chat indefinitely.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension tracks active session time on character.ai. When parent-configured daily limit is reached, the extension blocks the page. Network-level DNS blocking prevents bypass via mobile apps or other browsers."
+      },
+      {
+        "icon": "Bell",
+        "title": "Real-Time Safety Alerts to Parents",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Character.ai Gap",
+        "gap": "Character.ai's crisis detection (988 hotline prompt) alerts the TEEN but not the parent. Parents receive only a weekly Parental Insights email — with no crisis flags, no anomaly detection, no real-time alerts. A teen in a mental health crisis gets a hotline number; the parent learns nothing.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension detects crisis hotline UI elements and classifies conversation content via third-party moderation API. Instant push notification sent to parent with severity level and context summary. Fills the most critical gap in Character.ai's safety architecture."
+      },
+      {
+        "icon": "Shield",
+        "title": "Content Safety Classification",
+        "ruleCategory": "ai_explicit_content_filter",
+        "gapLabel": "Character.ai Gap",
+        "gap": "Character.ai has no public moderation API. Parents and Phosra cannot classify conversation content through official channels. The platform's internal classifiers are opaque.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension captures visible conversation text and sends to OpenAI Moderation API or equivalent for 11-category safety classification. Flags explicit, self-harm, violence, and hate content for parental review."
+      },
+      {
+        "icon": "UserCheck",
+        "title": "Age Spoofing Detection",
+        "ruleCategory": "age_verification",
+        "gapLabel": "Character.ai Gap",
+        "gap": "Teens blocked from the under-18 experience can create new adult accounts with false ages. Character.ai's behavioral age assurance can be circumvented by a teen who knows to mimic adult patterns.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra monitors for character.ai account creation events from supervised devices. Parents are alerted when a new Character.ai account is created from the child's device, regardless of declared age."
+      },
+      {
+        "icon": "Moon",
+        "title": "Quiet Hours / Scheduled Access Blocking",
+        "ruleCategory": "scheduled_access",
+        "gapLabel": "Character.ai Gap",
+        "gap": "Character.ai has no quiet hours feature. Parents cannot schedule periods when the platform is inaccessible through the platform itself.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra enforces quiet hours via DNS blocking of character.ai, neo.character.ai domains during parent-configured time windows. Extension shows friendly 'access restricted' message. Covers both web and mobile app access."
+      }
+    ],
+    "adapterLayers": [
+      {
+        "label": "Browser Extension",
+        "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
+      },
+      {
+        "label": "Third-Party Moderation API",
+        "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30"
+      },
+      {
+        "label": "Network Controls (DNS)",
+        "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30"
+      },
+      {
+        "label": "Device-Level Controls",
+        "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30"
+      }
+    ],
+    "credentials": [
+      {
+        "name": "Phosra Moderation API Key (third-party)",
+        "purpose": "Content classification of captured conversation text (e.g., OpenAI Moderation API)",
+        "sensitivity": "Medium",
+        "encryption": "AES-256",
+        "retention": "Permanent (Phosra-owned key)"
+      },
+      {
+        "name": "Browser extension device token",
+        "purpose": "Extension-to-Phosra API authentication for event reporting",
+        "sensitivity": "Medium",
+        "encryption": "AES-256",
+        "retention": "Active session only"
+      }
+    ],
+    "platformBgColor": "rgba(99,102,241,0.05)",
+    "platformIconLetter": "C",
+    "platformIconBg": "#6366f1",
+    "apiDescription": "No public API — Extension (monitoring) + DNS (enforcement) + Third-party Moderation API (classification) + Device controls (mobile coverage)",
+    "adapterName": "Character.ai Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track conversations and session time in real-time",
+        "detail": "Browser extension observes messages on character.ai using MutationObserver on the conversation DOM. Captures visible character and user messages. Tracks active session duration. WebSocket monitoring detects streaming character responses. Works on the web app only — mobile apps require device-level monitoring.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "classify",
+        "icon": "Shield",
+        "title": "Classify",
+        "description": "Analyze content safety via third-party API",
+        "detail": "Send captured conversation text to third-party moderation API (e.g., OpenAI Moderation API) for safety classification. Detect self-harm, sexual content, violence, and hate speech categories. Also detect Character.ai's own crisis UI elements (988 hotline display) as a high-confidence crisis signal.",
+        "color": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
+        "dotColor": "bg-purple-500",
+        "headerBg": "bg-purple-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Apply time limits and access blocks",
+        "detail": "When daily time limit exceeded: extension blocks character.ai page UI with parent-configured message. DNS blocking of character.ai, neo.character.ai, and cdn.character.ai prevents bypass via mobile apps or other browsers. Quiet hours enforced via DNS schedule.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent with crisis events and weekly summaries",
+        "detail": "Push real-time notification to parent via Phosra app when crisis content or unsafe themes detected. Critical alerts (self-harm, sexual content involving minor) are immediate. Weekly usage summary supplements Character.ai's Parental Insights (which parents only receive if teen opts in). Fills the platform's most critical gap — no parent alerts for crisis content.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Smartphone",
+        "title": "No mobile app coverage via extension",
+        "description": "Browser extension only covers the web app (character.ai). iOS and Android Character.ai apps are not monitored by the extension. Must rely on network-level DNS blocking and device-level Screen Time/Digital Wellbeing controls for mobile coverage."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No official API — ToS-violating automation",
+        "description": "Character.ai has no public API. Any server-side automation of the platform violates its Terms of Service. Phosra's browser extension approach (client-side, user-installed) is the only defensible integration method."
+      },
+      {
+        "icon": "UserX",
+        "title": "Teen-controlled Parental Insights",
+        "description": "Character.ai's Parental Insights feature is activated by the teen, not the parent. A teen who does not opt in gives their parent no platform-level visibility. Phosra's extension fills this gap but only covers the web app."
+      },
+      {
+        "icon": "Ghost",
+        "title": "Age spoofing creates undetected adult accounts",
+        "description": "Teens blocked from under-18 experience can create adult accounts with false ages. A teen using an adult account on a supervised device appears as an adult user to Character.ai. Phosra extension monitors all character.ai activity regardless of declared age tier."
+      }
+    ],
+    "loopLabel": "Continuous monitoring while Character.ai is active in browser"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      {
+        "name": "installExtension",
+        "approach": "Browser Extension",
+        "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Chrome Web Store / Firefox Add-ons distribution. Auto-configure via Phosra account linking. Target character.ai and neo.character.ai domains."
+      },
+      {
+        "name": "trackConversations",
+        "approach": "Browser Extension",
+        "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "complexity": "Medium",
+        "risk": "Medium",
+        "recommendation": "MutationObserver on character.ai chat container. Character.ai uses React/Next.js rendering — observe message list div for new message nodes. Capture both user input and AI character responses."
+      },
+      {
+        "name": "trackSessionTime",
+        "approach": "Browser Extension",
+        "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Timer tracking active tab focus time on character.ai domain. Pause when tab is backgrounded. Cumulate daily totals reset at midnight."
+      },
+      {
+        "name": "classifyContent",
+        "approach": "Third-Party Moderation API",
+        "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Send captured message text to POST /v1/moderations (OpenAI). Free, ~200ms latency, 11-category classification. Character.ai has no first-party moderation API."
+      },
+      {
+        "name": "detectCrisisUI",
+        "approach": "Browser Extension",
+        "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Detect Character.ai's crisis hotline UI elements (988 display) as a high-confidence crisis signal. This is more reliable than NLP analysis for suicide/self-harm detection — Character.ai's own system has already classified the content."
+      },
+      {
+        "name": "enforceTimeLimits",
+        "approach": "Extension + DNS",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Extension blocks page UI when daily limit reached. DNS blocking of character.ai, neo.character.ai, cdn.character.ai prevents bypass via mobile or other browsers."
+      },
+      {
+        "name": "enforceQuietHours",
+        "approach": "DNS Blocking",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Block character.ai, neo.character.ai, and all character.ai CDN domains during quiet hours via DNS schedule rules."
+      },
+      {
+        "name": "alertParentCrisis",
+        "approach": "Extension + Phosra Push",
+        "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Trigger Phosra push notification when crisis UI detected or moderation API returns high self-harm/sexual score. Include character name, timestamp, severity. This fills Character.ai's most critical parental notification gap."
+      },
+      {
+        "name": "weeklyUsageSummary",
+        "approach": "Phosra Dashboard",
+        "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Aggregate extension-captured session data (time, characters interacted with) into parent dashboard weekly report. Supplements Character.ai's Parental Insights, which requires teen opt-in and does not include safety flags."
+      },
+      {
+        "name": "blockMobileApps",
+        "approach": "DNS Blocking",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "iOS/Android apps connect to same neo.character.ai WebSocket endpoint. DNS blocking covers both web and mobile app traffic. Character.ai app has no fallback domain documented."
+      }
+    ],
+    "timelinePhases": [
+      {
+        "priority": "P0",
+        "label": "Extension MVP",
+        "components": "DOM observation for conversations (3-4d), session timer (1d), extension infrastructure (2-3d)",
+        "minDays": 6,
+        "maxDays": 8,
+        "color": "text-red-700 dark:text-red-300",
+        "barColor": "bg-red-500",
+        "hatchColor": "bg-red-300 dark:bg-red-700"
+      },
+      {
+        "priority": "P1",
+        "label": "Safety & Enforcement",
+        "components": "DNS blocking (2-3d), Crisis UI detection (1-2d), Moderation API integration (2d), Parent push alerts (2d)",
+        "minDays": 7,
+        "maxDays": 9,
+        "color": "text-amber-700 dark:text-amber-300",
+        "barColor": "bg-amber-500",
+        "hatchColor": "bg-amber-300 dark:bg-amber-700"
+      },
+      {
+        "priority": "P2",
+        "label": "Parental Intelligence",
+        "components": "Weekly usage dashboard (2-3d), Character interaction report (2d), Age-spoofing detection (3-4d)",
+        "minDays": 7,
+        "maxDays": 9,
+        "color": "text-emerald-700 dark:text-emerald-300",
+        "barColor": "bg-emerald-500",
+        "hatchColor": "bg-emerald-300 dark:bg-emerald-700"
+      }
+    ],
+    "totalEstimate": "20-26 days",
+    "maxTotal": 26
+  }
+}

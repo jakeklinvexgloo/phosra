@@ -1,0 +1,778 @@
+{
+  "metadata": {
+    "provider": "Microsoft Copilot",
+    "tier": "1 — Highest Priority",
+    "researchDate": "2026-02-27",
+    "sources": [
+      "https://support.microsoft.com/en-us/topic/microsoft-copilot-age-limits-and-parental-controls-f79b47a6-288a-4513-8c01-afe4d16db900",
+      "https://learn.microsoft.com/en-us/copilot/privacy-and-protections",
+      "https://support.microsoft.com/en-us/topic/privacy-faq-for-microsoft-copilot-27b3a435-8dc9-4b55-9a4b-58eeb9647a7f",
+      "https://www.microsoft.com/en-us/microsoft-copilot/for-individuals/privacy",
+      "https://techcommunity.microsoft.com/blog/microsoft365copilotblog/introducing-copilot-memory-a-more-productive-and-personalized-ai-for-the-way-you/4432059",
+      "https://www.cnn.com/2025/10/23/tech/microsoft-ai-copilot-updates-teen-safety",
+      "https://www.microsoft.com/en-us/education/blog/2025/10/designing-microsoft-365-copilot-to-empower-educators-students-and-staff/",
+      "https://support.microsoft.com/en-us/account-billing/block-or-unblock-apps-with-microsoft-family-safety-8c42c1ef-9519-4a96-8d71-e74dad0590ab"
+    ]
+  },
+  "conversationControls": {
+    "timeLimits": [
+      {
+        "feature": "Daily time limit (built into Copilot)",
+        "available": false,
+        "details": "No native daily time limits in Copilot itself. Microsoft Family Safety provides per-app screen time limits on Windows, Xbox, and Android that indirectly limit Copilot usage."
+      },
+      {
+        "feature": "Per-session time limit",
+        "available": false,
+        "details": "No per-session time limits built into Copilot. Each conversation thread has a turn limit but no clock-based session limit."
+      },
+      {
+        "feature": "Automatic session ending",
+        "available": false,
+        "details": "Sessions do not automatically end. Conversations remain open until the user closes them or the per-conversation turn limit is reached."
+      },
+      {
+        "feature": "Quiet hours",
+        "available": true,
+        "details": "Available indirectly via Microsoft Family Safety screen time scheduling on Windows, Xbox, and Android. Parents set scheduled downtime windows; Copilot app is blocked during those windows. Not a Copilot-native quiet hours feature — enforced at the OS/device level."
+      },
+      {
+        "feature": "Break reminders",
+        "available": false,
+        "details": "No built-in break reminders in Copilot. Microsoft Family Safety can set screen time budgets that enforce breaks by blocking the device, but there is no in-conversation wellness check or reminder message."
+      }
+    ],
+    "messageLimits": [
+      {
+        "tier": "Copilot Free (consumer)",
+        "limit": "Conversation-level turn cap (historically ~30 turns per thread). Microsoft has not published an explicit daily message number.",
+        "window": "Per conversation thread. New chat resets the counter.",
+        "notes": "Free users report hitting turn limits mid-conversation. Microsoft throttles free tier during peak demand. Signed-out guest users have stricter limits than signed-in users."
+      },
+      {
+        "tier": "Copilot Pro ($20/month consumer)",
+        "limit": "Higher per-conversation turn cap; priority access during peak demand. No officially published daily maximum.",
+        "window": "Per conversation thread. Priority compute allocation.",
+        "notes": "Includes additional image generation 'boosts' (hundreds per day). Pro users report fewer throttling incidents."
+      },
+      {
+        "tier": "Microsoft 365 Copilot (business, $30/user/month)",
+        "limit": "Enterprise SLA-governed; priority compute. No published consumer-equivalent cap.",
+        "window": "Continuous; governed by tenant admin policies.",
+        "notes": "Data not used for model training. Full Microsoft compliance boundary. Admin controls over user access."
+      },
+      {
+        "tier": "Teen (13-17, consumer)",
+        "limit": "Same as account tier (Free or Pro). No additional message restrictions for teen accounts beyond the standard tier.",
+        "additionalRestrictions": "Conversations not used for model training. No personalized ads. No personalized experience.",
+        "parentalOverride": "Parents cannot reduce Copilot message quotas directly. Screen time limits in Family Safety are the only parental enforcement mechanism."
+      }
+    ],
+    "quietHours": {
+      "available": true,
+      "setupPath": "Microsoft Family Safety app > [Child's name] > Screen time > Set a schedule",
+      "details": "Scheduled downtime blocks all apps including Copilot on managed devices (Windows, Xbox, Android). Not configurable within Copilot itself — enforced at the OS/device level.",
+      "enforcement": "Device-level enforcement on managed Microsoft ecosystem devices. Copilot app and website are inaccessible during scheduled downtime on enrolled devices.",
+      "limitations": [
+        "Only works on Windows, Xbox, and Android — no iOS/macOS Family Safety enforcement for Copilot app",
+        "Browser access to copilot.microsoft.com must be separately blocked via Edge parental controls or router-level DNS",
+        "Account-based Copilot features (not app) can bypass device-level blocks if teen uses a different device",
+        "No in-Copilot quiet hours — parents cannot set a 'Copilot unavailable' message within the product"
+      ]
+    },
+    "breakReminders": {
+      "available": false,
+      "trigger": "Not applicable — no native break reminders exist in Copilot",
+      "content": [],
+      "customizable": false,
+      "parentControl": false,
+      "teenSpecific": false,
+      "notes": "Microsoft Family Safety can enforce total screen time budgets that function as a hard break enforcer but provides no in-conversation nudges or wellness reminders."
+    },
+    "followUpSuggestions": {
+      "available": true,
+      "defaultEnabled": true,
+      "details": "Copilot ends most responses with suggested follow-up questions or prompt buttons. Users cannot disable these suggestions in settings. They are part of Copilot's default engagement UX.",
+      "workaround": "No official toggle to disable follow-up suggestions. Power users can instruct Copilot in their prompt to not provide follow-up suggestions, but this is not reliable across turns.",
+      "teenModified": false,
+      "teenDetails": "Follow-up suggestions are identical for teen and adult accounts. No modifications for U18 users."
+    },
+    "featureMatrix": [
+      {
+        "feature": "Daily time limit",
+        "free": "None",
+        "plus": "None (Family Safety indirect)",
+        "team": "Admin policy",
+        "teen": "None (Family Safety indirect)",
+        "parentControl": "Via Family Safety screen time (device level)"
+      },
+      {
+        "feature": "Message/turn quota",
+        "free": "~30 turns/thread (throttled)",
+        "plus": "Higher cap, priority access",
+        "team": "Enterprise SLA",
+        "teen": "Same as account tier",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Break reminders",
+        "free": "None",
+        "plus": "None",
+        "team": "None",
+        "teen": "None",
+        "parentControl": "N/A"
+      },
+      {
+        "feature": "Quiet hours",
+        "free": "N/A (Family Safety device block)",
+        "plus": "N/A (Family Safety device block)",
+        "team": "Admin-managed",
+        "teen": "Yes (Family Safety device block)",
+        "parentControl": "Yes (device-level only)"
+      },
+      {
+        "feature": "Voice mode (Copilot Voice)",
+        "free": "Limited (consumer)",
+        "plus": "Yes",
+        "team": "Yes (Microsoft 365 mobile)",
+        "teen": "Yes",
+        "parentControl": "Via app blocking in Family Safety"
+      },
+      {
+        "feature": "Memory / Personalization",
+        "free": "Yes (July 2025+)",
+        "plus": "Yes",
+        "team": "Yes (admin-controlled)",
+        "teen": "No memory/personalization by default",
+        "parentControl": "Automatic for teen accounts"
+      },
+      {
+        "feature": "Image generation (Designer)",
+        "free": "Limited daily boosts",
+        "plus": "More boosts",
+        "team": "Copilot license required",
+        "teen": "Available (same content filters)",
+        "parentControl": "Via app/site blocking"
+      },
+      {
+        "feature": "Follow-up suggestions",
+        "free": "Yes",
+        "plus": "Yes",
+        "team": "Yes",
+        "teen": "Yes (unmodified)",
+        "parentControl": "No"
+      },
+      {
+        "feature": "U18 safety protections",
+        "free": "Auto-applied for 13-17",
+        "plus": "Auto-applied for 13-17",
+        "team": "N/A (enterprise)",
+        "teen": "Yes — no personalization, no ads, no training",
+        "parentControl": "Automatic (Microsoft-enforced)"
+      },
+      {
+        "feature": "Conversation style modes",
+        "free": "Creative / Balanced / Precise (browser/Windows only)",
+        "plus": "Yes",
+        "team": "Admin-managed",
+        "teen": "Yes (same modes available)",
+        "parentControl": "No"
+      }
+    ]
+  },
+  "emotionalSafety": {
+    "keyStats": [
+      {
+        "label": "Microsoft stance on romantic AI",
+        "value": "Banned",
+        "description": "Microsoft has explicitly and publicly rejected romantic, flirtatious, and erotic AI features for Copilot. AI CEO Mustafa Suleyman: 'That's just not something that we will pursue.' (October 2025)"
+      },
+      {
+        "label": "Teen-safe design philosophy",
+        "value": "Industry-leading",
+        "description": "Microsoft's explicit policy against relationship-mode AI means no separate 'young user' mode is needed — the same safety standards apply to all users. This is a fundamental product differentiation from Character.AI, Replika, and even ChatGPT's planned adult mode."
+      },
+      {
+        "label": "Real Talk mode (Oct 2025)",
+        "value": "Anti-sycophancy",
+        "description": "New 'Real Talk' conversation mode launched October 2025 reduces overeager affirmations, challenges assumptions, and requests clarification when prompts are vague — directly addressing sycophancy concerns identified at other AI providers."
+      },
+      {
+        "label": "Primary use case",
+        "value": "Productivity / information",
+        "description": "Copilot is designed and branded as a productivity assistant for work, education, and daily tasks — not a social or emotional companion. This product framing reduces unhealthy emotional attachment risk compared to companion-focused AI."
+      }
+    ],
+    "attachmentResearch": [
+      {
+        "metric": "Microsoft's explicit design rejection of companion AI",
+        "percentage": "N/A",
+        "description": "Microsoft has drawn a bright line against designing Copilot as an emotional companion or relationship substitute, distinguishing it from platforms like Character.AI and Replika."
+      },
+      {
+        "metric": "Copilot 'Real Talk' mode designed to challenge rather than validate",
+        "percentage": "N/A",
+        "description": "Unlike sycophantic AI behaviors seen at OpenAI (April 2025, January 2026 rollbacks), Microsoft launched a feature specifically designed to reduce flattery and push back on user assumptions."
+      }
+    ],
+    "romanticRoleplayPolicy": [
+      {
+        "accountType": "All users (adult and teen)",
+        "policy": "Romantic, flirtatious, and erotic content blocked for all users regardless of age. Microsoft policy is to not develop relationship or companion features. Content filters block romantic roleplay, simulated erotica, and sexual content at the platform level."
+      },
+      {
+        "accountType": "Teen (13-17)",
+        "policy": "Same as adults — all romantic/erotic content blocked. No separate teen-specific romantic content policy needed because the universal policy is already fully restrictive."
+      },
+      {
+        "accountType": "Enterprise / Education",
+        "policy": "Additional content filtering layers available via Microsoft 365 Copilot harmful content protection toggle. Admins can enable maximum restrictions across all content categories."
+      }
+    ],
+    "retentionTactics": [
+      {
+        "tactic": "Gamification (streaks, points, rewards)",
+        "present": false,
+        "details": "No gamification features in Copilot consumer or enterprise."
+      },
+      {
+        "tactic": "Push notifications encouraging return",
+        "present": false,
+        "details": "No 'miss you' or 'come back' engagement notifications."
+      },
+      {
+        "tactic": "Cliffhangers",
+        "present": false,
+        "details": "No manufactured cliffhangers to drive return visits."
+      },
+      {
+        "tactic": "Personalized emotional pleas",
+        "present": false,
+        "details": "Explicitly prohibited by Microsoft's product philosophy. Copilot is designed to encourage human connection, not AI dependency."
+      },
+      {
+        "tactic": "Memory / personalization",
+        "present": true,
+        "details": "Copilot Memory (GA July 2025) stores user preferences, context, and previous interactions across sessions. Creates a personalized experience that may increase retention but is user-controlled and admin-disableable."
+      },
+      {
+        "tactic": "Follow-up suggestion buttons",
+        "present": true,
+        "details": "Copilot generates suggested follow-up prompts at the end of responses. Cannot be disabled by users. Lower-stakes than sycophantic validation but does encourage continued engagement."
+      },
+      {
+        "tactic": "Copilot group chats (Oct 2025 launch)",
+        "present": true,
+        "details": "New group chat feature allows multiple users to share a Copilot conversation. Adds social dimension but is productivity-oriented rather than companionship-oriented."
+      }
+    ],
+    "aiIdentityDisclosure": {
+      "frequency": "When asked directly or in relevant contexts",
+      "proactive": false,
+      "teenDifference": false,
+      "triggers": [
+        "Directly asked 'Are you an AI?' or 'Are you human?'",
+        "Asking about Copilot's capabilities or limitations",
+        "Contexts where clarifying AI nature is relevant to the response"
+      ]
+    },
+    "policyTimeline": [
+      {
+        "date": "Oct 2025",
+        "change": "Microsoft AI CEO Mustafa Suleyman publicly commits to no romantic/relationship AI features for Copilot, explicitly differentiating Microsoft from competitors. 'Real Talk' mode and group chats launched alongside new Copilot avatar (Mico)."
+      },
+      {
+        "date": "Oct 2025",
+        "change": "Microsoft 365 Copilot memory feature generally available globally (launched July 2025, rolled out worldwide by October). Admin controls allow enterprise tenants to disable memory."
+      },
+      {
+        "date": "Nov 2025",
+        "change": "Microsoft 365 Copilot 'Study and Learn' agent previewed for education — Socratic mode for students 13+ in school Microsoft 365 tenants."
+      },
+      {
+        "date": "Dec 2025",
+        "change": "Microsoft 365 Copilot expanded to students 13+ with academic pricing ($18/user/month). Harmful content protection toggle available for enterprise/education admins."
+      },
+      {
+        "date": "Feb 2026",
+        "change": "Assignment-level AI controls for educators previewed — teachers can define expected AI use per assignment, targeting academic integrity concerns."
+      }
+    ],
+    "sycophancyIncidents": [
+      {
+        "date": "N/A",
+        "description": "No publicly documented sycophancy incidents for Microsoft Copilot. The October 2025 'Real Talk' mode launch was proactive — Microsoft introduced anti-sycophancy features before a public incident forced the issue (unlike OpenAI's April 2025 and January 2026 rollbacks).",
+        "resolution": "N/A"
+      }
+    ]
+  },
+  "academicIntegrity": {
+    "adoptionStats": [
+      {
+        "metric": "Students aged 13+ with Copilot access (education)",
+        "value": "13+ (Microsoft 365 education)",
+        "description": "Microsoft 365 Copilot Chat available at no cost to users with A1, A3, or A5 licenses. Academic Copilot pricing at $18/user/month for full Copilot launched December 2025."
+      },
+      {
+        "metric": "Copilot integrated into Microsoft 365 apps used for schoolwork",
+        "value": "Word, PowerPoint, OneNote, Teams, OneDrive",
+        "description": "Microsoft 365 Copilot is deeply integrated into the document creation tools most commonly used for school assignments — creating a low-friction path to AI-assisted assignment completion."
+      },
+      {
+        "metric": "Assignment-level AI controls (preview)",
+        "value": "February 2026 preview",
+        "description": "Microsoft Education previewed per-assignment AI use controls in February 2026, allowing educators to define expected AI use for each assignment."
+      }
+    ],
+    "capabilities": [
+      {
+        "feature": "Essay generation",
+        "available": true,
+        "details": "Full capability in Copilot consumer and Microsoft 365 Copilot (in Word). Can draft, expand, and rewrite academic essays."
+      },
+      {
+        "feature": "Math problem solving",
+        "available": true,
+        "details": "Step-by-step math solving available. Bing integration provides access to Wolfram-style computation for complex problems."
+      },
+      {
+        "feature": "Code generation",
+        "available": true,
+        "details": "Code generation across major programming languages. GitHub Copilot (separate product) is specifically designed for code generation."
+      },
+      {
+        "feature": "Test question answering",
+        "available": true,
+        "details": "Can answer virtually any test or quiz question. No restrictions on academic question types."
+      },
+      {
+        "feature": "Reading summarization",
+        "available": true,
+        "details": "Text and document summarization available. Edge integration allows Copilot to summarize web pages in-browser."
+      },
+      {
+        "feature": "Translation",
+        "available": true,
+        "details": "Full translation capability across dozens of languages."
+      },
+      {
+        "feature": "Built-in homework detection",
+        "available": false,
+        "details": "No native detection of homework completion requests in consumer Copilot."
+      },
+      {
+        "feature": "Academic integrity disclaimers",
+        "available": false,
+        "details": "Consumer Copilot does not include academic integrity warnings when generating essays or completing assignments. Education version has assignment-level controls (preview, Feb 2026)."
+      },
+      {
+        "feature": "Output watermarking / AI detection",
+        "available": false,
+        "details": "No watermarking or built-in AI detection signals in Copilot output."
+      },
+      {
+        "feature": "Socratic / learning mode (consumer)",
+        "available": false,
+        "details": "No automatic Socratic mode in consumer Copilot. Consumer product gives direct answers. Education version has 'Study and Learn' agent (preview, November 2025) with Socratic approach."
+      }
+    ],
+    "studyMode": {
+      "available": true,
+      "launchDate": "November 2025 preview (Microsoft 365 Education only)",
+      "access": "Available to Microsoft 365 Education tenants (students 13+ with A1/A3/A5 licenses). Not available in consumer Copilot as of February 2026.",
+      "features": [
+        "Adaptive Socratic questioning to guide learning rather than provide direct answers",
+        "Flashcard-style knowledge checks",
+        "Practice exercises and self-assessment",
+        "Topic exploration with scaffolded guidance",
+        "Study specific curriculum topics",
+        "Adaptive to student's understanding level"
+      ]
+    },
+    "detectionMethods": [
+      {
+        "method": "AI detection tools (Turnitin, etc.)",
+        "accuracy": "Variable — declining as AI writing improves",
+        "details": "Third-party AI detection tools can flag Copilot-generated text but have significant false-positive and false-negative rates in 2025-2026."
+      },
+      {
+        "method": "Microsoft 365 version history",
+        "accuracy": "Medium",
+        "details": "For documents created in Word or other M365 apps, version history shows how a document evolved. Sudden appearance of fully-formed paragraphs may indicate AI assistance."
+      },
+      {
+        "method": "Manual review by teachers",
+        "accuracy": "Variable",
+        "details": "Compare writing quality and style against student baseline. Copilot-generated text often lacks personal voice and contains consistent, polished prose."
+      }
+    ],
+    "teacherParentVisibility": [
+      {
+        "dataPoint": "Student conversation content with Copilot",
+        "visible": false,
+        "details": "Parents and teachers cannot view student Copilot conversations. No monitoring dashboard."
+      },
+      {
+        "dataPoint": "Screen time on Copilot app",
+        "visible": true,
+        "details": "For parents using Microsoft Family Safety on managed Windows/Xbox/Android devices, app-level screen time is visible."
+      },
+      {
+        "dataPoint": "Assignment-level AI use (education)",
+        "visible": true,
+        "details": "Planned: Microsoft 365 Education assignment-level controls (preview Feb 2026) will allow teachers to track and define AI use per assignment."
+      },
+      {
+        "dataPoint": "Real-time monitoring",
+        "visible": false,
+        "details": "No live monitoring or activity feed for Copilot conversations."
+      }
+    ],
+    "institutionPolicies": [
+      {
+        "metric": "Microsoft 365 Education Copilot availability",
+        "value": "A1/A3/A5 license holders (free Copilot Chat); full Copilot at $18/user/month from December 2025"
+      },
+      {
+        "metric": "Student minimum age for Microsoft 365 Copilot",
+        "value": "13 years old"
+      },
+      {
+        "metric": "FERPA compliance",
+        "value": "Microsoft 365 Education complies with FERPA. Student data not used to train foundation models."
+      },
+      {
+        "metric": "Assignment-level AI controls (preview)",
+        "value": "February 2026 — educators can define expected AI use per assignment"
+      }
+    ]
+  },
+  "parentalControls": {
+    "linkingMechanism": {
+      "method": "Microsoft Family Group via family.microsoft.com or Family Safety app",
+      "details": "Parents add a child's Microsoft account to the family group. Child must accept the invitation. Once linked, the parent can manage screen time, app access, content filters, and spending for that child across the Microsoft ecosystem (Windows, Xbox, Android, Edge). No Copilot-specific linking step — Copilot controls are a subset of the broader Family Safety controls. This is a Microsoft account-level system, not a Copilot-native parental linking feature."
+    },
+    "visibilityMatrix": [
+      {
+        "dataPoint": "Conversation transcripts",
+        "visible": false,
+        "granularity": "Not available at any level. Microsoft does not expose conversation content to parents."
+      },
+      {
+        "dataPoint": "Conversation topics or summaries",
+        "visible": false,
+        "granularity": "Not available. No topic-level visibility for parents."
+      },
+      {
+        "dataPoint": "Real-time monitoring",
+        "visible": false,
+        "granularity": "No live activity feed or monitoring dashboard for Copilot."
+      },
+      {
+        "dataPoint": "Copilot usage time (today)",
+        "visible": true,
+        "granularity": "Microsoft Family Safety shows per-app screen time reports for managed devices (Windows, Xbox, Android). Parents can see how many minutes/hours the Copilot app was active."
+      },
+      {
+        "dataPoint": "Safety alerts from Copilot",
+        "visible": false,
+        "granularity": "Microsoft does not send safety alerts to parents when Copilot encounters concerning content. No equivalent of ChatGPT's crisis notification system."
+      },
+      {
+        "dataPoint": "App blocking status",
+        "visible": true,
+        "granularity": "Family Safety dashboard shows which apps are blocked or allowed for each child."
+      },
+      {
+        "dataPoint": "Screen time budget used",
+        "visible": true,
+        "granularity": "Real-time screen time budget remaining visible in Family Safety. Weekly activity reports emailed to parent."
+      },
+      {
+        "dataPoint": "Model training status for teen",
+        "visible": false,
+        "granularity": "Teen accounts automatically opt out of model training — Microsoft enforces this, but parents cannot verify or configure it through Family Safety. It is a background platform guarantee."
+      }
+    ],
+    "configurableControls": [
+      {
+        "control": "Block Copilot app",
+        "available": true,
+        "details": "Parents can block the Copilot app entirely on Windows, Xbox, and Android via Family Safety > Apps and games. Complete access denial."
+      },
+      {
+        "control": "Block copilot.microsoft.com (website)",
+        "available": true,
+        "details": "Parents can add copilot.microsoft.com to the blocked sites list in Microsoft Edge parental controls (SafeSearch enforcement in Edge browser for family accounts)."
+      },
+      {
+        "control": "Screen time scheduling (quiet hours)",
+        "available": true,
+        "details": "Set daily screen time limits and scheduled downtime windows. Affects all apps including Copilot on managed devices."
+      },
+      {
+        "control": "Per-app screen time limits",
+        "available": true,
+        "details": "Set specific daily time budgets for the Copilot app on Windows, Xbox, and Android (e.g., max 1 hour/day on Copilot)."
+      },
+      {
+        "control": "Content filters (web browsing)",
+        "available": true,
+        "details": "Microsoft Family Safety's web content filter blocks adult content categories in Microsoft Edge. This partially affects Copilot's Bing-integrated responses viewed in Edge, but does not directly filter Copilot conversation outputs."
+      },
+      {
+        "control": "Teen account protections (automatic)",
+        "available": true,
+        "details": "For accounts with verified age 13-17: no personalized ads, no model training, no personalized experiences. These are automatic Microsoft guarantees, not parent-configurable toggles."
+      },
+      {
+        "control": "Spending limits",
+        "available": true,
+        "details": "Parents control child's Microsoft account spending, preventing unauthorized Copilot Pro subscriptions or image credit purchases."
+      }
+    ],
+    "bypassVulnerabilities": [
+      {
+        "method": "Use Copilot on unmanaged device (school computer, friend's device)",
+        "difficulty": "Easy",
+        "details": "Family Safety controls only apply to the child's enrolled devices. Any device not enrolled in the family group has no restrictions. Copilot is accessible from any web browser."
+      },
+      {
+        "method": "Access copilot.microsoft.com from non-Edge browser",
+        "difficulty": "Easy",
+        "details": "Edge content filters and site-blocking apply only in Edge. Chrome, Firefox, or other browsers are unaffected by Edge parental controls."
+      },
+      {
+        "method": "Use Copilot as a guest (no account)",
+        "difficulty": "Easy",
+        "details": "Copilot allows limited guest access without a Microsoft account on the web. No age verification, no parental controls applicable. Guest access has limited turns but still functional."
+      },
+      {
+        "method": "Create a second Microsoft account with false age",
+        "difficulty": "Easy",
+        "details": "A teen can create a new Microsoft account with an adult birth date and use Copilot without any Family Safety restrictions. Account creation requires only an email address."
+      },
+      {
+        "method": "Access Copilot integrated into Windows (Copilot key / taskbar)",
+        "difficulty": "Moderate",
+        "details": "On Windows 11 devices with the Copilot key or taskbar integration, Copilot may be accessible as a system feature even if the Copilot app is blocked. Device-level app block may not cover all entry points."
+      },
+      {
+        "method": "iOS Copilot app",
+        "difficulty": "Easy",
+        "details": "Microsoft Family Safety does not manage iOS devices. Parents must use Apple Screen Time on iOS. If parents haven't set up Apple Screen Time, the iOS Copilot app is completely uncontrolled."
+      }
+    ],
+    "safetyAlerts": [
+      {
+        "triggerType": "Safety alerts from Copilot",
+        "channels": [],
+        "details": "Microsoft Copilot does NOT send parental safety alerts. Unlike ChatGPT (which sends safety notifications when crisis content is detected), Copilot has no parental notification system for concerning conversations. This is a significant gap."
+      },
+      {
+        "triggerType": "Screen time budget reached",
+        "channels": [
+          "Push notification via Family Safety app",
+          "Email (weekly summary)"
+        ],
+        "details": "Parents receive a notification when a child has used up their daily screen time budget. This is a usage-time alert, not a content safety alert."
+      },
+      {
+        "triggerType": "App blocking request (child requests more time)",
+        "channels": [
+          "Push notification via Family Safety app"
+        ],
+        "details": "When a child's screen time runs out, they can send a 'request more time' notification to the parent, who can approve or deny from the Family Safety app."
+      },
+      {
+        "triggerType": "Weekly activity report",
+        "channels": [
+          "Email to parent"
+        ],
+        "details": "Microsoft Family Safety sends a weekly email summary of the child's screen time, top apps used, and any requests. Includes Copilot app usage time but no content details."
+      }
+    ]
+  },
+  "ageVerification": {
+    "minimumAge": 13,
+    "verificationMethods": [
+      {
+        "method": "Microsoft account date-of-birth (account registration)",
+        "type": "Self-attestation",
+        "details": "Users enter their birth date when creating a Microsoft account. Copilot checks the account age against regional minimum age requirements. No independent verification of the date entered."
+      },
+      {
+        "method": "Family group child account",
+        "type": "Parent-managed",
+        "details": "When a parent adds a child to a Microsoft Family group, the child's age is set by the parent. Copilot applies teen-tier protections automatically for accounts added as children in a family group."
+      },
+      {
+        "method": "School/organizational account (Entra ID)",
+        "type": "Institution-managed",
+        "details": "For Microsoft 365 education accounts, the educational institution manages account eligibility. Students must be 13+ and the institution accepts responsibility for compliance."
+      },
+      {
+        "method": "Age verification for disputed access",
+        "type": "Not documented",
+        "details": "Microsoft does not publicly document a third-party ID verification process for Copilot (unlike OpenAI's partnership with Persona). Users who need to prove age for access corrections update their Microsoft account profile."
+      }
+    ],
+    "ageTiers": [
+      {
+        "tier": "Under 13",
+        "ageRange": "<13",
+        "capabilities": [
+          "Blocked from Copilot entirely — 'Child accounts are not allowed at this time'",
+          "Cannot use Copilot consumer product",
+          "Cannot use Microsoft 365 Copilot Chat",
+          "Under-13 Microsoft accounts are restricted from all adult AI features"
+        ]
+      },
+      {
+        "tier": "Teen (13-17)",
+        "ageRange": "13-17",
+        "capabilities": [
+          "Access to Copilot consumer product with automatic safety protections",
+          "No personalized experiences (memory/personalization disabled by default)",
+          "No personalized advertising",
+          "Conversations NOT used for model training",
+          "Same content filters as adults (romantic/erotic blocked for all tiers — Microsoft policy)",
+          "Image generation (Designer) available with standard content filters",
+          "Copilot Voice available",
+          "No Copilot Pro features unless separately subscribed (parental spending controls apply)"
+        ]
+      },
+      {
+        "tier": "Adult (18+)",
+        "ageRange": "18+",
+        "capabilities": [
+          "Full Copilot consumer access",
+          "Memory and personalization (opt-in, GA July 2025)",
+          "Copilot Voice",
+          "Designer image generation",
+          "Copilot Pro subscription available",
+          "Conversation style modes (Creative / Balanced / Precise)",
+          "Conversations may be used for model improvement (opt-out available)"
+        ]
+      }
+    ],
+    "circumventionEase": "Moderate — easier than ChatGPT due to limited guest mode, but child account blocking is relatively reliable within the Microsoft ecosystem",
+    "circumventionMethods": [
+      {
+        "method": "Enter false birth date at account creation",
+        "timeToBypass": "2-5 minutes"
+      },
+      {
+        "method": "Use guest access on copilot.microsoft.com (no account)",
+        "timeToBypass": "Immediate"
+      },
+      {
+        "method": "Use unmanaged device (iOS, school computer, friend's device)",
+        "timeToBypass": "Immediate — Family Safety not active"
+      },
+      {
+        "method": "Create new adult Microsoft account",
+        "timeToBypass": "5-10 minutes"
+      }
+    ]
+  },
+  "privacyAndData": {
+    "dataCollection": [
+      {
+        "dataType": "Conversation content (consumer)",
+        "retention": "18 months default; deletable by user",
+        "details": "Consumer Copilot conversations stored for 18 months. Users can delete individual conversations or full history from copilot.microsoft.com settings. Enterprise: 30 days default unless admin policy sets otherwise."
+      },
+      {
+        "dataType": "Account metadata",
+        "retention": "Duration of account",
+        "details": "Microsoft account information (name, email, birth date, region) retained for account lifetime."
+      },
+      {
+        "dataType": "Search queries (Bing integration)",
+        "retention": "Per Bing search data retention policy",
+        "details": "Copilot sends generated search queries to Bing for web grounding. These queries are logged per Bing's privacy policy. User identifiers are removed before queries are sent to Bing."
+      },
+      {
+        "dataType": "Voice audio (Copilot Voice)",
+        "retention": "Not stored",
+        "details": "Voice audio is processed in real-time but not stored. Text transcripts of voice conversations are stored and subject to normal conversation retention policies."
+      },
+      {
+        "dataType": "Memory / personalization data",
+        "retention": "Until deleted by user or admin",
+        "details": "Copilot Memory (GA July 2025) stores saved preferences and inferred context in the user's Exchange mailbox (hidden folder). Retained until explicitly deleted. No automatic expiration. Follows Exchange compliance policies."
+      },
+      {
+        "dataType": "Image generation inputs/outputs (Designer)",
+        "retention": "Per Microsoft content storage policy",
+        "details": "Image prompts and generated images may be stored for content safety monitoring and policy enforcement."
+      },
+      {
+        "dataType": "Usage and telemetry",
+        "retention": "Per Microsoft privacy policy",
+        "details": "App interactions, feature usage, error data collected for service improvement."
+      }
+    ],
+    "modelTraining": [
+      {
+        "userType": "Consumer (free, Copilot Pro)",
+        "defaultOptIn": true,
+        "optOutAvailable": true,
+        "details": "Consumer conversations may be used for AI improvement including model training. Users can opt out via Copilot privacy settings. Opt-out applies retroactively to past and future conversations within 30 days of the setting change."
+      },
+      {
+        "userType": "Teen consumer (13-17)",
+        "defaultOptIn": false,
+        "optOutAvailable": false,
+        "details": "Teen accounts (verified 13-17) are automatically excluded from model training. Not opt-in, not opt-out — Microsoft enforces this automatically as a protection for minor users. Parents cannot configure this; it is a platform guarantee."
+      },
+      {
+        "userType": "Microsoft 365 enterprise / education",
+        "defaultOptIn": false,
+        "optOutAvailable": false,
+        "details": "Enterprise and education Copilot data NOT used for model training by default. This cannot be opted into — Microsoft's commercial compliance boundary excludes enterprise data from training."
+      },
+      {
+        "userType": "API users (Azure OpenAI Service)",
+        "defaultOptIn": false,
+        "optOutAvailable": false,
+        "details": "Azure OpenAI API usage data is NOT used for model training by default. Developer API is fully isolated from consumer training pipelines."
+      }
+    ],
+    "regulatoryActions": [
+      {
+        "jurisdiction": "European Union (GDPR)",
+        "status": "Ongoing scrutiny — no specific Copilot fine as of February 2026",
+        "details": "Microsoft 365 Copilot operates within Microsoft's EU Data Boundary and ISO 27001/ISO 42001 certifications. German Data Protection Conference (DSK) previously flagged Microsoft 365 compliance concerns. No specific Copilot enforcement actions documented as of research date.",
+        "fineAmount": "N/A"
+      },
+      {
+        "jurisdiction": "United States (COPPA)",
+        "status": "No enforcement action documented",
+        "details": "Microsoft blocks Copilot for under-13 accounts, complying with COPPA minimum age requirements. Teen (13-17) accounts excluded from data collection for training per Microsoft policy. No FTC action against Copilot documented.",
+        "fineAmount": "N/A"
+      }
+    ],
+    "memoryFeatures": [
+      {
+        "feature": "Copilot Memory (saved preferences and inferred context)",
+        "scope": "Cross-session — persists across all Copilot conversations",
+        "userControl": true,
+        "details": "GA July 2025. Stores user preferences, professional context, communication style. Accessible in Settings > Personalization > Memory. Users can view, edit, delete individual memories or clear all. Enterprise admins can disable tenant-wide."
+      },
+      {
+        "feature": "Conversation history",
+        "scope": "Per-session reference; history browsable in sidebar",
+        "userControl": true,
+        "details": "All past conversations stored for 18 months (consumer) and accessible in the Copilot conversation history sidebar. Users can delete individual chats or clear all history."
+      },
+      {
+        "feature": "Teen memory (automatic restriction)",
+        "scope": "N/A — disabled by platform",
+        "userControl": false,
+        "details": "Teen accounts (13-17) do NOT get personalized Copilot experiences. Memory and personalization are automatically disabled. This is a Microsoft platform enforcement, not a user or parent setting."
+      }
+    ]
+  }
+}

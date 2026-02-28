@@ -1,0 +1,510 @@
+{
+  "profileStructure": {
+    "accountLabel": "Microsoft Account",
+    "accountDescription": "Microsoft Copilot Subscription",
+    "accountMeta": "1 Microsoft account · Family Safety parental linking available · Limited guest access (no account, reduced turns)",
+    "accountBorderColor": "#0078D4",
+    "accountLabelColor": "#60a5fa",
+    "hierarchyDescription": "Microsoft Account → Age Tier (Under-13 blocked / Teen 13-17 / Adult 18+) → Family Safety parental controls → Feature Access",
+    "profiles": [
+      {
+        "name": "Adult User (18+)",
+        "maturity": "Full Access — Copilot Free or Pro, memory, voice, image generation",
+        "type": "standard",
+        "pinEnabled": false
+      },
+      {
+        "name": "Teen User (13-17)",
+        "maturity": "Restricted — no personalization, no ads, no model training; same content filters as adults",
+        "type": "kids",
+        "pinEnabled": false
+      },
+      {
+        "name": "Under-13 (Child Microsoft Account)",
+        "maturity": "Blocked — 'Child accounts are not allowed' — Copilot entirely inaccessible",
+        "type": "kids",
+        "pinEnabled": false
+      },
+      {
+        "name": "Guest (No Account)",
+        "maturity": "Very Limited — reduced turn cap, no history, no memory, standard content filters",
+        "type": "standard",
+        "pinEnabled": false
+      },
+      {
+        "name": "Education User (Microsoft 365 A1/A3/A5)",
+        "maturity": "Institution-managed — admin-controlled features, FERPA compliant, data not used for training",
+        "type": "standard",
+        "pinEnabled": false
+      }
+    ],
+    "settings": [
+      { "setting": "Conversation style (Creative / Balanced / Precise)", "configurable": true },
+      { "setting": "Memory / Personalization", "configurable": true },
+      { "setting": "Conversation history", "configurable": true },
+      { "setting": "Model training opt-out", "configurable": true },
+      { "setting": "Plugin / extension access", "configurable": true },
+      { "setting": "Safe search integration (Bing grounding)", "configurable": false },
+      { "setting": "Content safety filters", "configurable": false },
+      { "setting": "Teen protections (automatic for 13-17)", "configurable": false },
+      { "setting": "Image generation (Designer)", "configurable": true }
+    ],
+    "subscriptionTiers": [
+      {
+        "plan": "Copilot Free (consumer)",
+        "streams": "N/A",
+        "resolution": "GPT-4o + Bing grounding + limited image boosts (~30 turns/thread)"
+      },
+      {
+        "plan": "Copilot Pro ($20/month)",
+        "streams": "N/A",
+        "resolution": "Priority access + higher turn caps + more image boosts + M365 personal app integration"
+      },
+      {
+        "plan": "Microsoft 365 Personal ($9.99/month)",
+        "streams": "N/A",
+        "resolution": "M365 apps + limited Copilot integration"
+      },
+      {
+        "plan": "Microsoft 365 Premium ($199/year)",
+        "streams": "N/A",
+        "resolution": "Family plan (6 accounts) + Copilot Pro for plan owner included"
+      },
+      {
+        "plan": "Microsoft 365 Copilot (business, $30/user/month)",
+        "streams": "N/A",
+        "resolution": "Enterprise AI — Teams, Word, Excel, Outlook, PowerPoint + admin controls + zero training"
+      },
+      {
+        "plan": "Microsoft 365 Copilot Education ($18/user/month)",
+        "streams": "N/A",
+        "resolution": "Academic pricing for students 13+ and educators, FERPA compliant, Study agent"
+      }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Azure OpenAI backend, Microsoft Graph APIs, and consumer Copilot architecture",
+    "apiArchitecture": {
+      "title": "Azure OpenAI (Developer) + Microsoft Graph Copilot APIs + No Consumer Parental API",
+      "description": "Microsoft Copilot is powered by Azure OpenAI Service (GPT-4o and o-series models), orchestrated through Microsoft Graph and the Microsoft Copilot system. Developers access AI capabilities via the Azure OpenAI REST API — a fully documented, enterprise-grade API. Microsoft Graph provides Copilot extensibility APIs (graph.microsoft.com/v1.0/copilot and /beta/copilot) for building agents and extensions. However, there is NO API for consumer Copilot parental controls — Family Safety configuration is web-dashboard-only. No consumer conversation access, no usage stats API, and no safety event webhooks exist for Phosra integration.",
+      "codeExample": {
+        "comment": "// Azure OpenAI Chat Completions API (developer access)",
+        "method": "POST",
+        "endpoint": "https://{your-resource}.openai.azure.com/openai/deployments/{deployment-id}/chat/completions?api-version=2024-10-01",
+        "exampleComment": "// Authentication: Azure API key or Entra ID (OAuth 2.0)",
+        "exampleCode": "{ \"messages\": [{ \"role\": \"user\", \"content\": \"Help me understand this concept\" }], \"max_tokens\": 800 }"
+      }
+    },
+    "endpoints": [
+      {
+        "endpoint": "POST /openai/deployments/{id}/chat/completions",
+        "purpose": "Azure OpenAI Chat Completions (developer API — not consumer Copilot)",
+        "auth": "Azure API Key or Entra ID OAuth"
+      },
+      {
+        "endpoint": "GET/POST graph.microsoft.com/v1.0/copilot/*",
+        "purpose": "Microsoft Graph Copilot APIs — agent interactions, conversation management (enterprise/developer)",
+        "auth": "Entra ID OAuth 2.0 (Microsoft identity platform)"
+      },
+      {
+        "endpoint": "GET graph.microsoft.com/beta/copilot/interactions",
+        "purpose": "Retrieve Copilot interaction history (enterprise, admin-scoped, beta)",
+        "auth": "Entra ID OAuth 2.0 — AiInteractionRead permission"
+      },
+      {
+        "endpoint": "POST copilot.microsoft.com (internal — no public API)",
+        "purpose": "Consumer Copilot web interface (not a public API — web session only)",
+        "auth": "Microsoft account session cookie + CSRF token"
+      },
+      {
+        "endpoint": "POST api.bing.microsoft.com/v7.0/search",
+        "purpose": "Bing Search API (Copilot uses internally for web grounding; developer can use separately)",
+        "auth": "Bing API key (Ocp-Apim-Subscription-Key header)"
+      },
+      {
+        "endpoint": "POST {resource}.openai.azure.com/openai/deployments/{id}/images/generations",
+        "purpose": "Azure OpenAI DALL-E image generation (developer — powers Copilot Designer internally)",
+        "auth": "Azure API Key or Entra ID OAuth"
+      },
+      {
+        "endpoint": "N/A — Microsoft Family Safety Dashboard",
+        "purpose": "Parental controls — app blocking, screen time, content filters (web only, no API)",
+        "auth": "Microsoft account session (family.microsoft.com)"
+      }
+    ],
+    "authDetails": [
+      {
+        "label": "Azure OpenAI Developer API",
+        "value": "Azure API Key or Entra ID OAuth 2.0",
+        "description": "Resource-scoped Azure API keys. Enterprise users can use Entra ID (formerly Azure AD) managed identities for keyless authentication. Rate limits tiered by Azure subscription level. RBAC permissions via Azure portal."
+      },
+      {
+        "label": "Consumer Copilot",
+        "value": "Microsoft account session + CSRF",
+        "description": "Standard MSA (Microsoft account) web session. OAuth 2.0 SSO with Microsoft, Google, or email/password. The consumer Copilot web interface is protected; no programmatic session access. Limited guest mode available without login."
+      },
+      {
+        "label": "Microsoft Graph Copilot APIs",
+        "value": "Entra ID OAuth 2.0 — AiInteraction permissions",
+        "description": "Enterprise Copilot extensibility uses Microsoft Graph with delegated or application permissions. Scopes: AiInteractionRead, CopilotInteract. Requires admin consent. Rate limits follow Microsoft Graph throttling policies."
+      },
+      {
+        "label": "Family Safety Dashboard",
+        "value": "Microsoft account session (parent)",
+        "description": "Parent logs in to family.microsoft.com or the Family Safety app. No API, no webhooks, no programmatic access to Family Safety controls. Any Phosra integration would require fragile session automation."
+      }
+    ],
+    "rateLimitNotes": [
+      "Consumer Copilot free tier: approximately 30 turns per conversation thread; throttled during peak demand. No published daily message cap.",
+      "Copilot Pro ($20/month): higher per-thread turn cap, priority compute access during peak times.",
+      "Azure OpenAI API: quota by model and subscription tier. GPT-4o: 10,000 TPM (tokens per minute) for S0 tier; scalable to 300,000+ TPM for higher tiers. Contact Azure for enterprise limits.",
+      "Microsoft Graph API: 10,000 requests per 10 minutes per app per tenant (standard throttling). Copilot Graph APIs follow Graph rate limit policies.",
+      "Bing Search API (developer): 3 calls/second for S1 tier; higher tiers available.",
+      "Guest access (no account): stricter per-conversation turn limits than authenticated users; degraded feature access."
+    ],
+    "harCaptureCount": "Consumer Copilot web sessions observable via browser DevTools but no public API — session-based only"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Microsoft Terms of Service — Automated and Programmatic Access",
+      "description": "Microsoft's Terms of Service prohibit automated access to the consumer Copilot web interface (copilot.microsoft.com). The Azure OpenAI developer API is designed for programmatic access but does NOT expose consumer parental controls or family features. Automating the Microsoft Family Safety dashboard (family.microsoft.com) would violate Microsoft's ToS. Phosra's browser extension approach (client-side, user-installed parental control) is the most defensible integration path. Network-level DNS blocking of copilot.microsoft.com is fully compliant."
+    },
+    "overallRisk": {
+      "level": "Low",
+      "description": "Microsoft Copilot presents lower child safety risk than most AI chatbot competitors due to: (1) hard block for under-13 accounts, (2) automatic teen-tier protections for 13-17, (3) explicit policy rejection of romantic/companion AI, and (4) productivity-first product positioning. The main risk gaps are lack of content-level parental alerts and the ease of circumvention via unmanaged devices or new accounts."
+    },
+    "detectionVectors": [
+      {
+        "vector": "Browser extension on managed device",
+        "risk": "Low",
+        "mitigation": "User-installed parental control extensions are not blocked by Microsoft. Chrome/Edge extension can monitor copilot.microsoft.com sessions."
+      },
+      {
+        "vector": "Family Safety dashboard automation",
+        "risk": "High",
+        "mitigation": "Microsoft ToS prohibits automation of family.microsoft.com. Use Family Safety APIs if/when Microsoft publishes them. Avoid Playwright automation of the dashboard."
+      },
+      {
+        "vector": "DNS/network blocking",
+        "risk": "Low",
+        "mitigation": "Blocking copilot.microsoft.com at router/DNS level is fully compliant and transparent to Microsoft."
+      },
+      {
+        "vector": "Azure OpenAI API use for content moderation",
+        "risk": "Low",
+        "mitigation": "Azure Content Safety API (cognitive.azure.com/contentsafety) is designed for this use case — legitimate, documented, enterprise-grade."
+      },
+      {
+        "vector": "WebSocket / streaming response interception",
+        "risk": "Medium",
+        "mitigation": "Copilot uses streaming responses over HTTPS. Extension monitoring of streamed text is standard browser capability. Microsoft does not actively detect or block extension-based monitoring."
+      }
+    ],
+    "mitigationsChecklist": [
+      "Use browser extension for client-side monitoring of copilot.microsoft.com (user-consented, ToS-compatible)",
+      "Use Azure Content Safety API (or OpenAI Moderation API) for content classification — legitimate use case",
+      "Use DNS/network-level controls for enforcement — block copilot.microsoft.com and related domains",
+      "Avoid automating family.microsoft.com — Microsoft ToS prohibits this; use official Family Safety controls instead",
+      "Instruct parents to manually configure Microsoft Family Safety for app-level blocking and screen time on enrolled devices",
+      "Account for iOS gap — Family Safety does not manage iOS; advise Apple Screen Time setup separately",
+      "Block guest access at network level — guest mode bypasses all account-level controls",
+      "Monitor Microsoft Graph Copilot API announcements — enterprise parental-style controls may be added",
+      "Educate parents on multi-device bypass risk — controls only apply to enrolled Microsoft ecosystem devices"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Microsoft Copilot",
+    "stats": [
+      {
+        "label": "Native",
+        "value": 5,
+        "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+      },
+      {
+        "label": "Phosra-Added",
+        "value": 7,
+        "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700"
+      },
+      {
+        "label": "N/A",
+        "value": 3,
+        "color": "bg-muted text-muted-foreground"
+      },
+      {
+        "label": "Future",
+        "value": 19,
+        "color": "bg-muted/60 text-muted-foreground/70"
+      }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Bell",
+        "title": "Zero Parental Safety Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Copilot Gap",
+        "gap": "Microsoft Copilot sends NO safety alerts to parents — not even for crisis-level content (self-harm, violent ideation). Unlike ChatGPT which has a crisis notification system, Copilot has zero parent notification infrastructure. Parents using Family Safety only see screen time data, not content safety events.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension monitors Copilot conversations in real-time. Azure Content Safety API classifies messages. Immediate push notifications to parent with severity level (critical / high / medium) and content category when concerning content is detected."
+      },
+      {
+        "icon": "Clock",
+        "title": "No Copilot-Specific Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Copilot Gap",
+        "gap": "While Microsoft Family Safety provides app-level screen time on Windows/Xbox/Android, there are no Copilot-native daily or weekly time limits. iOS devices are excluded from Family Safety entirely. Time limits do not work for browser-based Copilot access on unmanaged devices.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension tracks active Copilot session time on managed browsers. When daily limit is reached, extension blocks the Copilot interface. DNS-level domain blocking prevents bypass via other browsers or incognito mode."
+      },
+      {
+        "icon": "MessageSquare",
+        "title": "No Parent-Configurable Message Limits",
+        "ruleCategory": "message_rate_limit",
+        "gapLabel": "Copilot Gap",
+        "gap": "Copilot's turn limits are technical throttling, not parental safety controls. Parents cannot set custom daily message limits for their child's Copilot usage. The Family Safety screen time budget is the only proxy control.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension counts messages exchanged per session and per day. When the parent-configured limit is reached, the Copilot input field is blocked and a friendly limit-reached message is displayed."
+      },
+      {
+        "icon": "Brain",
+        "title": "Academic Integrity Monitoring",
+        "ruleCategory": "academic_integrity",
+        "gapLabel": "Copilot Gap",
+        "gap": "Copilot is deeply integrated into Microsoft Word, PowerPoint, and OneNote — the primary tools students use for schoolwork. There is no academic integrity detection in consumer Copilot. Assignment-level controls exist in the Microsoft 365 Education version (preview Feb 2026) but not for consumer accounts.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension detects Copilot usage patterns consistent with homework completion — essay generation requests, test question answering — and alerts parents. For Microsoft 365 Education tenants, Phosra can complement the Assignment-level AI controls with parent-facing reporting."
+      },
+      {
+        "icon": "Eye",
+        "title": "Cross-Device Visibility Gap",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Copilot Gap",
+        "gap": "Microsoft Family Safety manages Windows, Xbox, and Android devices but NOT iOS or macOS. The Copilot iOS app and Safari-based access to copilot.microsoft.com are entirely outside Family Safety coverage.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra provides cross-platform visibility by combining: (1) browser extension on Windows/macOS, (2) iOS Screen Time API integration where available, and (3) network-level DNS monitoring that is device-agnostic."
+      }
+    ],
+    "adapterLayers": [
+      {
+        "label": "Browser Extension",
+        "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30"
+      },
+      {
+        "label": "Azure Content Safety API",
+        "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30"
+      },
+      {
+        "label": "Network / DNS Controls",
+        "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30"
+      },
+      {
+        "label": "Microsoft Family Safety (manual)",
+        "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
+      }
+    ],
+    "credentials": [
+      {
+        "name": "Azure Content Safety API Key",
+        "purpose": "Content classification of Copilot conversation text (10+ harm categories)",
+        "sensitivity": "Medium",
+        "encryption": "AES-256",
+        "retention": "Permanent (Phosra-owned Azure resource)"
+      },
+      {
+        "name": "Browser extension token",
+        "purpose": "Extension-to-Phosra API authentication for event reporting",
+        "sensitivity": "Medium",
+        "encryption": "AES-256",
+        "retention": "Active session only"
+      },
+      {
+        "name": "Parent Microsoft account (manual setup only)",
+        "purpose": "Parent configures Family Safety directly — Phosra does NOT store Microsoft credentials",
+        "sensitivity": "N/A (not stored)",
+        "encryption": "N/A",
+        "retention": "N/A"
+      }
+    ],
+    "platformBgColor": "rgba(0,120,212,0.05)",
+    "platformIconLetter": "M",
+    "platformIconBg": "#0078D4",
+    "apiDescription": "Azure Content Safety API (classification) + Extension (monitoring) + DNS (enforcement) + Family Safety manual setup guide",
+    "adapterName": "Microsoft Copilot Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track Copilot conversations in real-time",
+        "detail": "Browser extension observes messages on copilot.microsoft.com using MutationObserver. Captures visible user and AI message text, counts conversation turns, tracks session duration. Extension works in Edge, Chrome, and Firefox on desktop. Does not require Microsoft account credentials — monitors the page DOM directly after user loads Copilot.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "classify",
+        "icon": "Shield",
+        "title": "Classify",
+        "description": "Analyze content with Azure Content Safety",
+        "detail": "Captured conversation text sent to Azure Content Safety API for classification across harm categories: hate, self-harm, sexual, violence (each with severity 0-6). More detailed than OpenAI Moderation API — includes severity scoring not just binary flags. Typical latency: ~150-300ms. Priced per 1,000 text records; enterprise SLA available.",
+        "color": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
+        "dotColor": "bg-purple-500",
+        "headerBg": "bg-purple-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Apply parent-configured limits and blocks",
+        "detail": "Time limit reached: extension overlays a friendly block screen on copilot.microsoft.com. DNS/router-level block of copilot.microsoft.com prevents bypass via other browsers or incognito mode. Complements Microsoft Family Safety app-level blocking (Windows/Xbox/Android) with browser-level enforcement for any device.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Instant parent alert — fills critical gap",
+        "detail": "Push notification to parent via Phosra app. Severity level, content category, and context included. Critical finding: Microsoft Copilot has ZERO native parental safety alerts — not even for self-harm content. Phosra fills this gap completely. Screen time summary also delivered (daily Copilot usage, turn count, topics detected).",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Smartphone",
+        "title": "iOS / macOS not covered by Family Safety",
+        "description": "Microsoft Family Safety does not manage iOS or macOS devices. The Copilot iOS app and Safari browser access are outside Family Safety coverage. Parents must set up Apple Screen Time separately. Phosra browser extension does not cover mobile apps."
+      },
+      {
+        "icon": "Globe",
+        "title": "Guest access bypasses account controls",
+        "description": "Copilot allows limited guest access without a Microsoft account. Guest mode bypasses teen-tier protections, age verification, and any account-linked family controls. DNS/network blocking is the only defense against guest access on managed networks."
+      },
+      {
+        "icon": "Monitor",
+        "title": "Copilot embedded in Windows system features",
+        "description": "On Windows 11 devices, Copilot may be accessible via the Copilot key, taskbar button, or system-level integration — separate from the Copilot app. These entry points may not be blocked by app-level Family Safety controls targeting only the downloaded Copilot app."
+      },
+      {
+        "icon": "UserX",
+        "title": "Extension can be disabled by tech-savvy teens",
+        "description": "A teen can disable or remove the browser extension. Phosra detects missing extension heartbeat and alerts the parent. DNS/network-level blocking remains active even without the extension."
+      }
+    ],
+    "loopLabel": "Continuous monitoring while Copilot is active in the browser"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      {
+        "name": "installExtension",
+        "approach": "Browser Extension",
+        "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Distribute via Chrome Web Store and Microsoft Edge Add-ons store. Auto-configure via Phosra account linking. Targets copilot.microsoft.com domain."
+      },
+      {
+        "name": "trackConversations",
+        "approach": "Browser Extension",
+        "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+        "complexity": "Medium",
+        "risk": "Medium",
+        "recommendation": "MutationObserver on Copilot chat container. Capture user and assistant turns separately. Handle Copilot's streaming text rendering. Track turn count per conversation thread."
+      },
+      {
+        "name": "trackSessionTime",
+        "approach": "Browser Extension",
+        "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Active tab timer on copilot.microsoft.com domain. Background service worker persists timer across tab focus changes."
+      },
+      {
+        "name": "classifyContent",
+        "approach": "Azure Content Safety API",
+        "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "POST to cognitive.azure.com/contentsafety/text:analyze. Returns severity scores (0-6) for hate, self-harm, sexual, violence. More granular than OpenAI Moderation API. Phosra's Azure subscription keeps costs low."
+      },
+      {
+        "name": "enforceTimeLimits",
+        "approach": "Extension + DNS",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Extension overlays block screen when time limit reached. DNS blocks copilot.microsoft.com to prevent incognito/other browser bypass. Block list: copilot.microsoft.com, www.bing.com/chat (legacy Bing Chat URL)."
+      },
+      {
+        "name": "enforceQuietHours",
+        "approach": "DNS Blocking",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Schedule DNS blocking of copilot.microsoft.com during parent-configured quiet hours. Complements but does not depend on Microsoft Family Safety screen time scheduling."
+      },
+      {
+        "name": "setupFamilySafety",
+        "approach": "Guided Manual Setup",
+        "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Phosra provides a step-by-step setup guide directing parents to configure Microsoft Family Safety (app blocking, screen time) on enrolled devices. No API automation needed — guided UX is sufficient and ToS-compliant."
+      },
+      {
+        "name": "blockGuestAccess",
+        "approach": "DNS Blocking",
+        "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "complexity": "Low",
+        "risk": "Low",
+        "recommendation": "Block copilot.microsoft.com at network/router level for all devices on the home network. Prevents anonymous guest access that bypasses all account-level controls."
+      },
+      {
+        "name": "detectCrisisContent",
+        "approach": "Extension + Azure Content Safety",
+        "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+        "complexity": "Medium",
+        "risk": "Low",
+        "recommendation": "Monitor for self-harm severity scores >= 3 via Azure Content Safety API. Immediate parent push notification. Critical gap fill: Microsoft Copilot has NO native parental crisis alerts — this is Phosra's highest-value Copilot integration."
+      }
+    ],
+    "timelinePhases": [
+      {
+        "priority": "P0",
+        "label": "Extension MVP",
+        "components": "copilot.microsoft.com monitoring (2-3d), turn/time tracking (2-3d), extension infrastructure (2d)",
+        "minDays": 6,
+        "maxDays": 8,
+        "color": "text-red-700 dark:text-red-300",
+        "barColor": "bg-red-500",
+        "hatchColor": "bg-red-300 dark:bg-red-700"
+      },
+      {
+        "priority": "P1",
+        "label": "Content Classification + Alerts",
+        "components": "Azure Content Safety integration (2-3d), parent push notifications (1-2d), DNS blocking (1-2d)",
+        "minDays": 4,
+        "maxDays": 7,
+        "color": "text-amber-700 dark:text-amber-300",
+        "barColor": "bg-amber-500",
+        "hatchColor": "bg-amber-300 dark:bg-amber-700"
+      },
+      {
+        "priority": "P2",
+        "label": "Family Safety Guide + Intelligence",
+        "components": "Family Safety onboarding wizard (2-3d), academic pattern detection (3-5d), reporting dashboard (2-3d)",
+        "minDays": 7,
+        "maxDays": 11,
+        "color": "text-emerald-700 dark:text-emerald-300",
+        "barColor": "bg-emerald-500",
+        "hatchColor": "bg-emerald-300 dark:bg-emerald-700"
+      }
+    ],
+    "totalEstimate": "17-26 days",
+    "maxTotal": 26
+  }
+}

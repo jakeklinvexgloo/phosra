@@ -1,0 +1,271 @@
+{
+  "profileStructure": {
+    "accountLabel": "Google Account",
+    "accountDescription": "Google AI Subscription (Gemini Apps)",
+    "accountMeta": "1 Google Account · Family Link supervision for under-18 · Gemini in Workspace for education/enterprise",
+    "accountBorderColor": "#4285F4",
+    "accountLabelColor": "#60a5fa",
+    "hierarchyDescription": "Google Account → Age Tier (Under-13/Teen/Adult) → Family Link Supervision → Gemini Apps Access",
+    "profiles": [
+      { "name": "Adult User (18+)", "maturity": "Full Access — all features, Extensions, Gems, Deep Research", "type": "standard", "pinEnabled": false },
+      { "name": "Teen User (13-17)", "maturity": "Restricted — additional content filters, limited image generation, no Deep Research", "type": "kids", "pinEnabled": false },
+      { "name": "Child User (under 13, Family Link)", "maturity": "Heavily Restricted — parent-enabled, extra filters, no AI training, limited features", "type": "kids", "pinEnabled": false },
+      { "name": "Workspace Education User", "maturity": "Institution-managed — admin-controlled features, FERPA-aligned", "type": "standard", "pinEnabled": false },
+      { "name": "Workspace Enterprise User", "maturity": "Admin-managed — zero data retention option, SSO, DLP", "type": "standard", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Gemini Apps Activity (conversation history)", "configurable": true },
+      { "setting": "Auto-delete period (3/18/36 months)", "configurable": true },
+      { "setting": "Memory / Personalization", "configurable": true },
+      { "setting": "Extensions (Maps, YouTube, Hotels, Flights, etc.)", "configurable": true },
+      { "setting": "Image Generation (Imagen)", "configurable": false },
+      { "setting": "Content Safety Level", "configurable": false },
+      { "setting": "Gemini in Gmail/Docs/Slides", "configurable": true },
+      { "setting": "Temporary Chat mode", "configurable": true },
+      { "setting": "Model Training Opt-Out", "configurable": true },
+      { "setting": "Family Link Gemini On/Off", "configurable": true }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Free", "streams": "N/A", "resolution": "Gemini 3 Flash — limited daily prompts, basic features" },
+      { "plan": "Google AI Pro ($19.99/mo)", "streams": "N/A", "resolution": "Gemini 3 Pro + Deep Research + Gems + 2TB storage + Workspace AI" },
+      { "plan": "Google AI Ultra ($249.99/mo)", "streams": "N/A", "resolution": "Gemini 3 Deep Think + Veo 3 video + highest limits + YouTube Premium + experimental features" },
+      { "plan": "Workspace Education (per institution)", "streams": "N/A", "resolution": "Gemini in Classroom + Docs + Slides + Forms — admin-managed, FERPA-aligned" },
+      { "plan": "Workspace Enterprise (per user)", "streams": "N/A", "resolution": "Full Workspace AI + zero data retention option + SSO + DLP + admin controls" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Gemini API ecosystem, Google AI Studio, and consumer parental control gap",
+    "apiArchitecture": {
+      "title": "Gemini REST API (Developer) + Google Family Link (Parent) + No Consumer Parental API",
+      "description": "Google operates two separate API ecosystems: the Gemini Developer API (via Google AI Studio / Vertex AI) and the Gemini consumer app. The Developer API provides generateContent, streamGenerateContent, embedContent, and the new Interactions API for agents. However, there is ZERO API access to consumer Gemini parental controls — Family Link settings, conversation history, or safety configuration are all web/app-dashboard-only. Google's Safety Settings API (harm category thresholds) is developer-only and does not map to consumer parental controls.",
+      "codeExample": {
+        "comment": "// Gemini Developer API — Content Generation",
+        "method": "POST",
+        "endpoint": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro:generateContent",
+        "exampleComment": "// Generate content with safety settings",
+        "exampleCode": "{ \"contents\": [{ \"parts\": [{ \"text\": \"Explain photosynthesis\" }] }], \"safetySettings\": [{ \"category\": \"HARM_CATEGORY_DANGEROUS_CONTENT\", \"threshold\": \"BLOCK_MEDIUM_AND_ABOVE\" }] }"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "POST /v1beta/models/{model}:generateContent", "purpose": "Generate text/multimodal content (synchronous)", "auth": "API Key (x-goog-api-key)" },
+      { "endpoint": "POST /v1beta/models/{model}:streamGenerateContent", "purpose": "Streaming content generation via SSE", "auth": "API Key (x-goog-api-key)" },
+      { "endpoint": "POST /v1beta/models/{model}:embedContent", "purpose": "Generate text embeddings", "auth": "API Key (x-goog-api-key)" },
+      { "endpoint": "POST /v1beta/interactions", "purpose": "Interactions API for agents and multi-turn (Beta)", "auth": "API Key (x-goog-api-key)" },
+      { "endpoint": "GET /v1beta/models", "purpose": "List available Gemini models", "auth": "API Key (x-goog-api-key)" },
+      { "endpoint": "N/A — Family Link App", "purpose": "Parental controls (Gemini on/off, device time limits)", "auth": "Google Account (Family Link parent)" },
+      { "endpoint": "N/A — Gemini Settings Page", "purpose": "Activity controls, memory, auto-delete, Extensions", "auth": "Google Account session" },
+      { "endpoint": "N/A — Workspace Admin Console", "purpose": "Gemini feature controls for Education/Enterprise", "auth": "Google Workspace admin" }
+    ],
+    "authDetails": [
+      { "label": "Developer API (AI Studio)", "value": "API Key (x-goog-api-key header)", "description": "Free tier: 5 RPM (Pro), 15 RPM (Flash). Paid Tier 1: up to 1,000 RPM. Keys created in Google AI Studio. No OAuth required." },
+      { "label": "Developer API (Vertex AI)", "value": "OAuth 2.0 / Service Account", "description": "Enterprise-grade access via Google Cloud. IAM-based permissions. Zero data retention option. Higher rate limits." },
+      { "label": "Consumer App Auth", "value": "Google Account session", "description": "Standard Google Account login. OAuth via Google SSO. No programmatic access to consumer Gemini features." },
+      { "label": "Family Link Parent", "value": "Google Account (parent)", "description": "Parent logs into Family Link app/web to manage child's Gemini access. No API, no webhooks. Email notification on first child use only." }
+    ],
+    "rateLimitNotes": [
+      "Developer API Free Tier: 5 RPM for Gemini Pro, 15 RPM for Gemini Flash, 100 RPD for Pro (as of Dec 2025)",
+      "Developer API Paid Tier 1: Up to 1,000 RPM depending on model. Auto-upgrade upon billing enablement.",
+      "Consumer Gemini App: Daily usage caps vary by model — 'Thinking' and 'Pro' share a combined daily count. Exact limits not disclosed.",
+      "Google AI Pro subscribers: Higher daily limits for Pro models, Deep Research, and image generation.",
+      "Google AI Ultra subscribers: Highest daily limits across all features.",
+      "Rate limits reduced 50-80% for free tier in December 2025 update — caught many developers off-guard.",
+      "Safety Settings API: Configurable harm thresholds (BLOCK_NONE to BLOCK_LOW_AND_ABOVE) for developer API only."
+    ],
+    "harCaptureCount": "N/A — no consumer parental control API to capture"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Google Terms of Service — Automated Access and Scraping",
+      "description": "Google's Terms of Service prohibit automated access to consumer products including gemini.google.com. The Gemini Developer API is designed for programmatic access but does not expose consumer parental control features or conversation data. Browser automation of Family Link or the Gemini web app would violate ToS. Phosra's browser extension approach (client-side, user-installed) is defensible as a parental control tool, similar to other Family Link-compatible extensions."
+    },
+    "overallRisk": {
+      "level": "Medium",
+      "description": "Extension-based monitoring on gemini.google.com is lower risk than server-side automation. Network-level controls are fully compliant. The Gemini API Safety Settings provide legitimate content classification. Google's deep device integration (Android, ChromeOS) creates both opportunities and challenges for enforcement."
+    },
+    "detectionVectors": [
+      { "vector": "Browser extension detection", "risk": "Low", "mitigation": "Extensions are user-installed parental controls — Google does not block parental control extensions on Chrome." },
+      { "vector": "Family Link app automation", "risk": "High", "mitigation": "Family Link is a mobile app with no web API. Automation would require mobile app instrumentation — extremely fragile and likely ToS-violating." },
+      { "vector": "Gemini API Safety Settings abuse", "risk": "Low", "mitigation": "Legitimate use case — content safety classification is the API's intended purpose. Configurable thresholds for harm categories." },
+      { "vector": "DNS blocking detection", "risk": "Low", "mitigation": "Network-level controls are invisible to Google. Can block gemini.google.com and related domains." },
+      { "vector": "Chrome Extension Store review", "risk": "Medium", "mitigation": "Google reviews Chrome Web Store extensions. Parental control extensions are an established category with clear precedent." },
+      { "vector": "Android device-level enforcement", "risk": "Low", "mitigation": "Phosra can leverage Android's accessibility services and MDM capabilities for device-level monitoring. Well-established parental control pattern." }
+    ],
+    "mitigationsChecklist": [
+      "Use browser extension for monitoring Gemini web conversations (user-consented, client-side)",
+      "Use Gemini API Safety Settings for content classification (legitimate, configurable thresholds)",
+      "Use DNS/network-level controls for enforcement (compliant, blocks gemini.google.com)",
+      "Leverage Android accessibility services for mobile monitoring (established parental control pattern)",
+      "Monitor Google Family Link API announcements for potential integration points",
+      "Implement extension heartbeat to detect if teen disables/removes it",
+      "Address Gemini-in-Workspace gap — school-issued Chromebooks may use Gemini in Classroom",
+      "Block Extensions access at network level to prevent Gemini-via-YouTube/Maps bypass",
+      "Account for Gemini replacing Google Assistant — voice interactions bypass browser monitoring",
+      "Monitor for guest access scenarios — ensure network-level blocking covers all Gemini endpoints"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Google Gemini",
+    "stats": [
+      { "label": "Native", "value": 3, "color": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" },
+      { "label": "Phosra-Added", "value": 9, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 4, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 18, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Gemini-Specific Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Gemini Gap",
+        "gap": "Gemini has ZERO in-app time limits. Family Link provides device-level screen time but this is blunt — it limits ALL apps, not just Gemini. Parents cannot set a specific daily Gemini conversation time limit.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra browser extension tracks Gemini-specific session duration on gemini.google.com. When the daily limit is reached, the extension blocks the page. Network-level DNS blocking prevents bypass via other browsers."
+      },
+      {
+        "icon": "Eye",
+        "title": "Conversation Visibility for Parents",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Gemini Gap",
+        "gap": "Parents can see Family Link screen time for the Gemini app, but CANNOT view any conversation content, topics, or activity summaries. The only notification is a one-time email on first use. No ongoing safety alerts.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension monitors conversation content on gemini.google.com. Topic summaries and safety classifications sent to parent dashboard. Real-time alerts for concerning content categories."
+      },
+      {
+        "icon": "Shield",
+        "title": "Content Filter Bypass Protection",
+        "ruleCategory": "content_filter",
+        "gapLabel": "Gemini Gap",
+        "gap": "Common Sense Media rated Gemini 'High Risk' for kids and teens. Journalist testing bypassed teen safety filters to generate sexual roleplay on a 13-year-old account via prompt manipulation. Filters are not robust.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension adds a second layer of content classification using the Gemini API Safety Settings and custom NLP models. Detects filter bypass attempts and blocks or alerts parents in real-time."
+      },
+      {
+        "icon": "Bell",
+        "title": "Real-Time Safety Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Gemini Gap",
+        "gap": "Gemini has NO parent notification system for concerning conversations. Unlike ChatGPT's safety alert system, parents are never notified about self-harm discussions, inappropriate content requests, or crisis situations.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension classifies content via Gemini Safety API and custom models. Instant push notification to parent with severity level and context. Crisis alerts (self-harm, violence) are immediate."
+      },
+      {
+        "icon": "Brain",
+        "title": "Homework Cheating Detection",
+        "ruleCategory": "academic_integrity",
+        "gapLabel": "Gemini Gap",
+        "gap": "Gemini gives direct answers to any academic question with no Study Mode or Socratic questioning feature. Google Lens integration makes cheating even easier — students photograph questions for instant answers. No homework detection or academic integrity features.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra extension analyzes conversation patterns for homework-related queries using client-side NLP. Parents can choose: alert only, redirect to learning mode, or block academic queries during school hours."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Browser Extension", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Gemini Safety API", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Network Controls", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Android MDM / Accessibility", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "Phosra API Key (Gemini)", "purpose": "Gemini API Safety Settings content classification", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Permanent (Phosra-owned key)" },
+      { "name": "Parent Google Account session", "purpose": "Family Link integration (if available)", "sensitivity": "Critical", "encryption": "AES-256 + per-user key", "retention": "Until disconnected" },
+      { "name": "Browser extension token", "purpose": "Extension-to-Phosra API authentication", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Active session only" }
+    ],
+    "platformBgColor": "rgba(66,133,244,0.05)",
+    "platformIconLetter": "G",
+    "platformIconBg": "#4285F4",
+    "apiDescription": "Gemini Safety API (classification) + Extension (monitoring) + DNS (enforcement) + Android MDM (mobile)",
+    "adapterName": "Google Gemini Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track conversations in real-time",
+        "detail": "Browser extension observes messages on gemini.google.com using MutationObserver. Captures visible text, counts messages, tracks session duration. Monitors Gemini Extensions activity (Maps, YouTube queries). On Android, accessibility services can monitor the Gemini app.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "classify",
+        "icon": "Shield",
+        "title": "Classify",
+        "description": "Analyze content safety",
+        "detail": "Send captured conversation text to Gemini API Safety Settings for classification across harm categories: HARM_CATEGORY_HARASSMENT, HARM_CATEGORY_HATE_SPEECH, HARM_CATEGORY_SEXUALLY_EXPLICIT, HARM_CATEGORY_DANGEROUS_CONTENT. Configurable thresholds from BLOCK_NONE to BLOCK_LOW_AND_ABOVE. Supplement with custom NLP models for homework detection and emotional attachment patterns.",
+        "color": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
+        "dotColor": "bg-purple-500",
+        "headerBg": "bg-purple-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Apply limits and blocks",
+        "detail": "When time/message limits exceeded: extension blocks the page UI on gemini.google.com. Network-level DNS blocking of gemini.google.com, generativelanguage.googleapis.com, and related subdomains prevents bypass via other browsers or incognito mode. On Android, MDM policies or accessibility services can block the Gemini app.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent instantly",
+        "detail": "Push real-time notification to parent via Phosra app with alert severity, content category, and recommended action. Critical alerts (self-harm, sexual content, death threats) are immediate. Fills a massive gap — Gemini provides ZERO parent notifications for concerning conversations. Only a one-time 'first use' email exists natively.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Smartphone",
+        "title": "Android/iOS Gemini app gap",
+        "description": "Browser extension only works on desktop. The Gemini mobile app (Android/iOS) and voice interactions (Gemini replacing Google Assistant) are not covered by browser extension monitoring. Android MDM or accessibility services can partially address this."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No Family Link API",
+        "description": "Google Family Link has no public API. Gemini parental settings cannot be programmatically managed. Any integration with Family Link would require mobile app automation — extremely fragile."
+      },
+      {
+        "icon": "Globe",
+        "title": "Deep ecosystem integration bypass",
+        "description": "Gemini is integrated into Gmail, Docs, Chrome, Maps, YouTube, and Android. A child can interact with Gemini through these services without ever visiting gemini.google.com, making extension-based monitoring incomplete."
+      },
+      {
+        "icon": "UserX",
+        "title": "Extension can be disabled",
+        "description": "A tech-savvy teen can disable the browser extension. Phosra detects missing extension heartbeat and alerts the parent, but there is a monitoring gap. On managed Chromebooks, extensions can be force-installed."
+      },
+      {
+        "icon": "Shield",
+        "title": "Content filter bypasses documented",
+        "description": "Common Sense Media and journalists documented bypasses of Gemini's teen safety filters. Phosra's second-layer classification helps but cannot guarantee catching all jailbreak attempts."
+      }
+    ],
+    "loopLabel": "Continuous monitoring while Gemini is active across all surfaces"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "installExtension", "approach": "Browser Extension", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "Medium", "risk": "Low", "recommendation": "Chrome Web Store distribution. Auto-configure via Phosra account linking. Force-install on managed Chromebooks." },
+      { "name": "trackMessages", "approach": "Browser Extension", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "Medium", "risk": "Medium", "recommendation": "MutationObserver on Gemini chat container. Count user messages and AI responses separately. Monitor suggestion chip clicks." },
+      { "name": "trackSessionTime", "approach": "Browser Extension", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "Low", "risk": "Low", "recommendation": "Timer tracking active tab time on gemini.google.com domain and related subdomains." },
+      { "name": "classifyContent", "approach": "Gemini Safety API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Send captured text to Gemini API with safety settings. Four harm categories with configurable thresholds. Free tier available." },
+      { "name": "enforceTimeLimits", "approach": "Extension + DNS", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Low", "recommendation": "Extension blocks page when limit reached. DNS blocking prevents bypass. Coordinate with Family Link device-level controls." },
+      { "name": "enforceQuietHours", "approach": "DNS Blocking", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Low", "risk": "Low", "recommendation": "Block gemini.google.com and generativelanguage.googleapis.com during quiet hours. Supplement Family Link Downtime." },
+      { "name": "injectBreakReminders", "approach": "Browser Extension", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "Low", "risk": "Low", "recommendation": "Inject overlay prompt at configured intervals on gemini.google.com. Non-dismissable for mandatory breaks." },
+      { "name": "monitorWorkspaceGemini", "approach": "Workspace API", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "High", "risk": "Medium", "recommendation": "For school-managed Chromebooks, integrate with Google Workspace Admin SDK to enforce Gemini policies. Requires school IT partnership." },
+      { "name": "detectCrisis", "approach": "Extension + Safety API", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "Medium", "risk": "Low", "recommendation": "Classify content via Gemini Safety API harm categories (DANGEROUS_CONTENT, etc.). Detect crisis UI elements. Immediate parent alert. Critical given Gemini death-threat incident history." },
+      { "name": "monitorMobileApp", "approach": "Android MDM / Accessibility", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "High", "risk": "Medium", "recommendation": "Android accessibility services for Gemini app monitoring. MDM profile for managed devices. iOS monitoring limited to Screen Time API." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Extension MVP", "components": "Message/time tracking (3-4d), Extension infrastructure (2-3d), Gemini DOM selectors (1-2d)", "minDays": 6, "maxDays": 9, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "DNS blocking (2-3d), Safety API classification (2-3d), Parent alerts (1-2d)", "minDays": 5, "maxDays": 8, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Intelligence", "components": "Homework detection NLP (3-5d), Workspace integration (3-4d), Mobile monitoring (4-6d)", "minDays": 10, "maxDays": 15, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "21-32 days",
+    "maxTotal": 32
+  }
+}
