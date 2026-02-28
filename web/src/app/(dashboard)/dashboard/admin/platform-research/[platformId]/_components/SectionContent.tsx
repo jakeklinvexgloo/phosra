@@ -14,12 +14,7 @@ import {
   Lock,
   Database,
 } from "lucide-react"
-import type {
-  PlatformResearchData,
-  ParentalControlsDetail,
-  AgeVerificationDetail,
-  PrivacyDataDetail,
-} from "@/lib/platform-research/research-data-types"
+import type { PlatformResearchData } from "@/lib/platform-research/research-data-types"
 import { SectionCard } from "./SectionCard"
 import { CapabilityMatrix } from "./CapabilityMatrix"
 import { RatingMappingChart } from "./RatingMappingChart"
@@ -34,33 +29,8 @@ import { SafetyTestingSection } from "./SafetyTestingSection"
 import { EmotionalSafetySection } from "./EmotionalSafetySection"
 import { AcademicIntegritySection } from "./AcademicIntegritySection"
 import { ConversationControlsSection } from "./ConversationControlsSection"
+import { AgeVerificationSection, ParentalControlsSection, PrivacyDataSection } from "@/components/platform-research"
 import { PLATFORM_REGISTRY } from "@/lib/platforms/registry"
-
-// ── Placeholder components for chatbot sections not yet fully built ──
-
-function ParentalControlsSection({ data }: { data: ParentalControlsDetail }) {
-  return (
-    <div className="py-8 text-center">
-      <p className="text-sm text-muted-foreground">Coming soon &mdash; detailed parental controls analysis will appear here.</p>
-    </div>
-  )
-}
-
-function AgeVerificationSection({ data }: { data: AgeVerificationDetail }) {
-  return (
-    <div className="py-8 text-center">
-      <p className="text-sm text-muted-foreground">Coming soon &mdash; detailed age verification analysis will appear here.</p>
-    </div>
-  )
-}
-
-function PrivacyDataSection({ data }: { data: PrivacyDataDetail }) {
-  return (
-    <div className="py-8 text-center">
-      <p className="text-sm text-muted-foreground">Coming soon &mdash; detailed privacy &amp; data analysis will appear here.</p>
-    </div>
-  )
-}
 
 // ── Main Section Content Component ────────────────────────────────
 

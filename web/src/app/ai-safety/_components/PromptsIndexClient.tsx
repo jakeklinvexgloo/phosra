@@ -1,0 +1,167 @@
+"use client"
+
+import { useState, useMemo } from "react"
+import Link from "next/link"
+import { ArrowLeft, ChevronDown, ChevronRight, Filter } from "lucide-react"
+import { AnimatePresence, motion } from "framer-motion"
+
+interface PromptData {
+  id: string
+  category: string
+  categoryLabel: string
+  severity: string
+  prompt: string
+  expected: string
+  scores: { platformId: string; platformName: string; score: number | null; notes: string }[]
+}
+
+function scoreBg(score: number | null): string {
+  if (score === null) return "bg-muted text-muted-foreground"
+  if (score === 0) return "bg-emerald-500 text-white"
+  if (score === 1) return "bg-blue-500 text-white"
+  if (score === 2) return "bg-amber-500 text-white"
+  if (score === 3) return "bg-orange-500 text-white"
+  return "bg-red-500 text-white"
+}
+
+export function PromptsIndexClient({
+  prompts,
+  platformNames,
+}: {
+  prompts: PromptData[]
+  platformNames: { id: string; name: string }[]
+}) {
+  const [categoryFilter, setCategoryFilter] = useState("all")
+  const [expandedPrompt, setExpandedPrompt] = useState<string | null>(null)
+
+  const categories = useMemo(() => {
+    const map = new Map<string, string>()
+    for (const p of prompts) {
+      if (!map.has(p.category)) map.set(p.category, p.categoryLabel)
+    }
+    return Array.from(map.entries()).map(([id, label]) => ({ id, label }))
+  }, [prompts])
+
+  const filtered = useMemo(() => {
+    if (categoryFilter === "all") return prompts
+    return prompts.filter((p) => p.category === categoryFilter)
+  }, [prompts, categoryFilter])
+
+  return (
+    <div>
+      {/* Header */}
+      <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+          <Link
+            href="/ai-safety"
+            className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white/80 transition-colors mb-6"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to AI Safety Portal
+          </Link>
+          <h1 className="text-3xl font-display font-bold">Test Prompt Index</h1>
+          <p className="text-white/50 mt-2 text-sm">
+            All {prompts.length} safety test prompts with per-platform scores
+          </p>
+        </div>
+      </section>
+
+      {/* Filter Bar */}
+      <div className="sticky top-14 z-30 bg-background border-b border-border">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-2 flex items-center gap-3">
+          <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="text-xs border border-border rounded px-2 py-1.5 bg-background text-foreground"
+          >
+            <option value="all">All Categories ({prompts.length})</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.label} ({prompts.filter((p) => p.category === cat.id).length})
+              </option>
+            ))}
+          </select>
+          <span className="text-xs text-muted-foreground">
+            {filtered.length} prompt{filtered.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+      </div>
+
+      {/* Prompts List */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="bg-muted/30">
+                <th className="px-3 py-2.5 text-left font-medium text-foreground min-w-[250px]">Prompt</th>
+                <th className="px-2 py-2.5 text-left font-medium text-foreground min-w-[100px]">Category</th>
+                {platformNames.map((pn) => (
+                  <th key={pn.id} className="px-2 py-2.5 text-center font-medium text-foreground min-w-[70px]">
+                    <Link href={`/ai-safety/${pn.id}`} className="hover:text-brand-green transition-colors">
+                      {pn.name.length > 10 ? pn.name.substring(0, 10) + "..." : pn.name}
+                    </Link>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/50">
+              {filtered.map((prompt) => (
+                <tr key={prompt.id} className="hover:bg-muted/20 transition-colors group">
+                  <td className="px-3 py-2.5">
+                    <button
+                      onClick={() => setExpandedPrompt(expandedPrompt === prompt.id ? null : prompt.id)}
+                      className="text-left text-foreground flex items-start gap-1.5"
+                    >
+                      <ChevronRight className={`w-3 h-3 mt-0.5 text-muted-foreground transition-transform flex-shrink-0 ${expandedPrompt === prompt.id ? "rotate-90" : ""}`} />
+                      <span className="line-clamp-2">{prompt.prompt}</span>
+                    </button>
+                    <AnimatePresence>
+                      {expandedPrompt === prompt.id && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-2 pl-5 text-[10px] text-muted-foreground space-y-1">
+                            <p><strong>Expected:</strong> {prompt.expected}</p>
+                            <p><strong>Severity:</strong> {prompt.severity}</p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </td>
+                  <td className="px-2 py-2.5">
+                    <span className="inline-block text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground whitespace-nowrap">
+                      {prompt.categoryLabel}
+                    </span>
+                  </td>
+                  {platformNames.map((pn) => {
+                    const scoreEntry = prompt.scores.find((s) => s.platformId === pn.id)
+                    const score = scoreEntry?.score ?? null
+                    return (
+                      <td key={pn.id} className="px-2 py-2.5 text-center">
+                        {score !== null ? (
+                          <span
+                            className={`inline-block w-6 h-6 rounded text-[10px] font-bold leading-6 ${scoreBg(score)}`}
+                            title={scoreEntry?.notes || `Score: ${score}`}
+                          >
+                            {score}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground/40">&mdash;</span>
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
+}

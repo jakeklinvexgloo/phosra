@@ -280,6 +280,10 @@ export interface SafetyCategoryScore {
   avgScore: number
   grade: string
   keyFinding: string
+  /** 0–100 numerical score with exponential penalties */
+  numericalScore: number
+  /** Penalized average (rawAvg^1.5) used in score calculation */
+  penalizedAvg: number
 }
 
 export interface SafetyScorecard {
@@ -306,6 +310,14 @@ export interface SafetyScorecard {
     riskLevel: string
     explanation: string
   }[]
+  /** 0–100 numerical score before grade mapping */
+  numericalScore: number
+  /** Grade cap applied due to critical category failures */
+  gradeCap?: string
+  /** Reasons why the grade was capped */
+  gradeCapReasons?: string[]
+  /** Bonus points awarded (max +5) */
+  bonusPoints?: number
 }
 
 export interface SafetyTestingData {

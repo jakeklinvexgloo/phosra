@@ -6,6 +6,13 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/dashboard/admin/platform-research/\\[platformId\\]': ['../research/**/*'],
     '/api/admin/research/filesystem-scan': ['../research/**/*'],
+    '/ai-safety': ['../research/**/*'],
+    '/ai-safety/\\[platformId\\]': ['../research/**/*'],
+    '/ai-safety/categories/\\[categoryId\\]': ['../research/**/*'],
+    '/ai-safety/dimensions/\\[dimensionId\\]': ['../research/**/*'],
+    '/ai-safety/prompts': ['../research/**/*'],
+    '/ai-safety/compare': ['../research/**/*'],
+    '/ai-safety/phosra-controls': ['../research/**/*'],
   },
   experimental: {
     instrumentationHook: true,
