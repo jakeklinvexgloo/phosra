@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useRef, useEffect, FormEvent } from "react"
+import { useState, useMemo, useRef, useEffect, useCallback, FormEvent } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport, type UIMessage } from "ai"
 import { Sparkles, Send, Loader2, X } from "lucide-react"
@@ -56,12 +56,35 @@ export function ResearchChatModal({ open, onClose, initialPrompt }: ResearchChat
     }
   }, [open])
 
-  // Auto-scroll to bottom
-  useEffect(() => {
+  // Scroll helper
+  const scrollToBottom = useCallback(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages])
+  }, [])
+
+  // Auto-scroll on new messages and during streaming
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, status, scrollToBottom])
+
+  // ResizeObserver: scroll when content height changes (collapsible toggles, detail expand, etc.)
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    const observer = new ResizeObserver(() => {
+      // Only auto-scroll if user is near the bottom (within 100px)
+      const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100
+      if (isNearBottom) {
+        el.scrollTop = el.scrollHeight
+      }
+    })
+    // Observe the scroll container's first child (content wrapper)
+    Array.from(el.children).forEach(child => {
+      observer.observe(child)
+    })
+    return () => observer.disconnect()
+  }, [messages.length])
 
   // Focus input when AI finishes responding
   useEffect(() => {
@@ -150,7 +173,7 @@ export function ResearchChatModal({ open, onClose, initialPrompt }: ResearchChat
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-4 min-h-[200px]">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-y-contain px-5 py-4 space-y-4 min-h-0">
               {messages.length === 0 && !isLoading ? (
                 <div className="flex flex-col items-center justify-center h-full gap-4 py-8">
                   <Sparkles className="w-8 h-8 text-brand-green" />

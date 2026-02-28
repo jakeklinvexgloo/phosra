@@ -31,7 +31,7 @@ export function CollapsibleSection({ title, defaultOpen = false, children }: Col
           {title}
         </span>
         {!open && (
-          <span className="text-[9px] text-white/25 uppercase tracking-wide">expand</span>
+          <span className="text-[10px] text-white/40 uppercase tracking-wide">expand</span>
         )}
       </button>
       <AnimatePresence initial={false}>

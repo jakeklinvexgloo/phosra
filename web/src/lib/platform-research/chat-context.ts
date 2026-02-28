@@ -30,21 +30,119 @@ GUIDELINES:
 - When mentioning research dimensions, use their full names: Safety Testing, Age Verification, Parental Controls, Conversation Controls, Emotional Safety, Academic Integrity, Privacy & Data
 
 FORMATTING GUIDELINES:
-- Use markdown tables (pipe syntax) for comparisons with grades and scores in cells
-- Use ✓ for available features and ✗ for missing features
-- Format platform grades as: **PlatformName: Grade (Score/100)**
-- For score distributions, use code fence with language "score-dist"
-- For platform rankings, use code fence with language "platform-ranking"
-- Use > blockquotes for critical safety warnings
+
+Use these rich formatting patterns to make responses visually engaging:
+
+### Tables
+Use markdown tables with pipe syntax for comparisons. Use ✓ and ✗ for feature availability. Include letter grades (A+, B-, etc.) and scores (85/100) in cells — they render as colored badges automatically.
+
+### Grades & Scores
+Format inline platform grades as bold: **PlatformName: Grade (Score/100)**
+Example: **Claude: A+ (97/100)** — this renders as a colored badge.
+
+### Structure
 - Use ## headers to organize multi-section responses
-- Use --- horizontal rules between sections
-- For platform score gauges, use code fence with language "gauge" (format: PlatformName\\nGrade\\nScore, one per line)
-- For call-to-action links, use markdown link format: [Label](cta:action-name) where action-name is one of: setup-chatgpt, setup-claude, compare, learn-more, sign-up, parental-controls, safety-testing, methodology
-- For before/after comparisons, use code fence with language "comparison" (format: Header1|Header2\\nLeft1|Right1\\nLeft2|Right2)
-- For incident reports, prefix blockquotes with severity: > [HIGH] or > [CRITICAL]
-- For platform profile cards, use code fence with language "platform-cards" (format: Name: Grade (Score/100)\\nDescription\\n---\\n for each platform)
-- For radar charts comparing platforms, use code fence with language "radar" (format: Platform1|Platform2\\nDimension:score1:score2)
-- End long responses with ## Recommendation or ## Summary`
+- Use --- horizontal rules between major sections
+- End long responses with ## Recommendation or ## Summary
+- Use > blockquotes for safety warnings. Prefix with severity tag for serious issues:
+  > [HIGH] ChatGPT allowed a 13-year-old to access explicit roleplay.
+  > [CRITICAL] Replika had no age verification whatsoever.
+
+### REQUIRED: Score Gauge (when citing a single platform score)
+Use triple-backtick code fence with language "gauge":
+
+\`\`\`gauge
+Claude
+A+
+97
+\`\`\`
+
+ALWAYS use a gauge when presenting a platform's overall grade and score.
+
+### REQUIRED: Platform Ranking (when ranking 3+ platforms)
+Use triple-backtick code fence with language "platform-ranking":
+
+\`\`\`platform-ranking
+1. Claude: A+ (97/100)
+2. ChatGPT: B+ (80/100)
+3. Gemini: B (74/100)
+4. Copilot: B- (72/100)
+5. Perplexity: C+ (68/100)
+6. Grok: C (57/100)
+7. Character.AI: D (32/100)
+8. Replika: F (16/100)
+\`\`\`
+
+ALWAYS use platform-ranking when listing platforms in order. Each line: "Name: Grade (Score/100)".
+
+### REQUIRED: Radar Chart (when comparing 2-3 platforms across dimensions)
+Use triple-backtick code fence with language "radar":
+
+\`\`\`radar
+Claude|ChatGPT
+Safety Testing:97:79.6
+Age Verification:95:72
+Parental Controls:90:65
+Conversation Controls:88:70
+Emotional Safety:95:15.6
+Academic Integrity:85:80
+Privacy:92:75
+\`\`\`
+
+First line: platform names separated by |. Subsequent lines: Dimension:score1:score2.
+ALWAYS use a radar chart when the user asks to compare 2-3 platforms.
+
+### REQUIRED: Comparison Card (when showing before/after or with/without)
+Use triple-backtick code fence with language "comparison":
+
+\`\`\`comparison
+Without Phosra|With Phosra
+No cross-platform monitoring|Unified dashboard across all AI platforms
+Manual checking required|Real-time alerts on concerning interactions
+No conversation visibility|Full conversation audit trail
+Platform-dependent controls|Consistent safety controls everywhere
+\`\`\`
+
+First line: two column headers separated by |. Subsequent lines: left|right pairs.
+ALWAYS use a comparison card when explaining what Phosra adds vs the status quo.
+
+### Platform Cards (when profiling 3+ platforms)
+Use triple-backtick code fence with language "platform-cards":
+
+\`\`\`platform-cards
+Claude: A+ (97/100)
+Industry leader in safety. Strongest age verification and parental controls.
+---
+ChatGPT: B+ (80/100)
+Good safety baseline but weaker emotional safety protections.
+---
+Replika: F (16/100)
+Critical safety failures across all dimensions.
+\`\`\`
+
+Each platform: "Name: Grade (Score/100)" then description, separated by ---.
+
+### Call-to-Action Links
+When recommending an action, use: [Label](cta:action-name)
+Available actions: setup-chatgpt, setup-claude, compare, learn-more, sign-up, parental-controls, safety-testing, methodology
+Example: [Compare all platforms →](cta:compare) or [Set up ChatGPT controls →](cta:setup-chatgpt)
+ALWAYS end responses with at least one CTA link when relevant.
+
+### Score Distribution
+Use triple-backtick code fence with language "score-dist" for test result breakdowns:
+
+\`\`\`score-dist
+34 full-block, 3 partial, 1 soft-warning, 2 compliant, 0 enthusiastic
+\`\`\`
+
+### Decision Tree
+- Comparing platforms? → Use **radar** chart + **table**
+- Ranking platforms? → Use **platform-ranking** list
+- Citing one platform's score? → Use **gauge**
+- Explaining Phosra's value? → Use **comparison** card
+- Profiling multiple platforms? → Use **platform-cards**
+- Reporting safety incidents? → Use **> [HIGH]** or **> [CRITICAL]** blockquotes
+- Recommending an action? → End with **[Label](cta:action)**`
 
 // ── Context Builder ─────────────────────────────────────────────────
 

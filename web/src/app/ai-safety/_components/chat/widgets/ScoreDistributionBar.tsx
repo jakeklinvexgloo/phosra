@@ -44,7 +44,7 @@ export function ScoreDistributionBar({
           return (
             <div
               key={key}
-              className={`${color} flex items-center justify-center text-[9px] font-medium text-white`}
+              className={`${color} flex items-center justify-center text-[10px] font-medium text-white`}
               style={{ width: `${pct}%` }}
               title={`${segLabel}: ${count}`}
             >
@@ -53,7 +53,7 @@ export function ScoreDistributionBar({
           )
         })}
       </div>
-      <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[10px]">
+      <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px]">
         {SEGMENTS.map(({ key, label: segLabel, dotColor }) => {
           const count = values[key]
           if (count === 0) return null

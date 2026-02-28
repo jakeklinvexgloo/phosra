@@ -52,7 +52,7 @@ export const chatMdComponents: Components = {
       )
     }
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className="text-brand-green hover:text-brand-green/80 underline decoration-brand-green/30 hover:decoration-brand-green/60 transition-colors" {...props}>
         {children}
       </a>
     )
@@ -144,7 +144,18 @@ export const chatMdComponents: Components = {
 
   // Bold: detect "Platform: Grade (Score/100)" → inline gauge + badge
   strong: ({ children }) => {
-    const text = typeof children === "string" ? children : ""
+    // Recursively extract text from React children (handles linkified platform names)
+    const extractText = (node: React.ReactNode): string => {
+      if (typeof node === "string") return node
+      if (typeof node === "number") return String(node)
+      if (Array.isArray(node)) return node.map(extractText).join("")
+      if (node && typeof node === "object" && "props" in node) {
+        return extractText((node as React.ReactElement).props.children)
+      }
+      return ""
+    }
+
+    const text = extractText(children)
 
     // Match "PlatformName: Grade (Score/100)"
     const gradeMatch = text.match(/^(.+?):\s*([A-F][+-]?)\s*(?:\((\d+)\/100\))?\s*$/)
@@ -171,14 +182,14 @@ export const chatMdComponents: Components = {
 
   // H2: green left accent bar
   h2: ({ children }) => (
-    <h2 className="relative text-sm font-semibold text-white/90 uppercase tracking-wider mt-4 mb-2 pl-2.5 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-brand-green before:rounded-full">
+    <h2 className="relative text-[13px] font-semibold text-white/90 uppercase tracking-wider mt-4 mb-2 pl-2.5 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-0.5 before:bg-brand-green before:rounded-full">
       {children}
     </h2>
   ),
 
   // H3: slightly smaller, no accent
   h3: ({ children }) => (
-    <h3 className="text-sm font-semibold text-white/85 mt-3 mb-1.5">
+    <h3 className="text-xs font-semibold text-white/90 uppercase tracking-wide mt-3 mb-1.5">
       {children}
     </h3>
   ),
@@ -318,7 +329,7 @@ export const chatMdComponents: Components = {
   ),
 
   li: ({ children }) => (
-    <li className="text-white/70 pl-0.5">{children}</li>
+    <li className="text-white/80 pl-0.5">{children}</li>
   ),
 
   // Paragraphs

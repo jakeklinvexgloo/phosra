@@ -71,8 +71,8 @@ export function parseRankingList(text: string): RankedPlatform[] {
     const trimmed = line.replace(/^\d+\.\s*/, "").trim()
     if (!trimmed) continue
 
-    // Match "PlatformName: Grade (Score/100)" or "PlatformName: Grade"
-    const match = trimmed.match(/^(.+?):\s*([A-F][+-]?)\s*(?:\((\d+)\/100\))?$/i)
+    // Match "PlatformName: Grade (Score/100)" or "PlatformName — Grade (Score/100)" or just "PlatformName: Grade"
+    const match = trimmed.match(/^(.+?)(?::|—|–|-)\s*([A-F][+-]?)\s*(?:\((\d+)\/100\))?$/i)
     if (match) {
       platforms.push({
         name: match[1].trim(),

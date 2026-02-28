@@ -42,7 +42,7 @@ export function ResearchChatWidget() {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages])
+  }, [messages, status])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()

@@ -31,11 +31,50 @@ function normalizeSeverityTags(text: string): string {
   )
 }
 
+/** Convert inline ranking lists to platform-ranking code fences */
+function convertRankingLists(text: string): string {
+  // Match a numbered list of 3+ platforms with grades: "1. Platform: Grade (Score/100)"
+  const rankingPattern = /(?:^|\n)((?:\d+\.\s+[A-Z][a-zA-Z.]+(?:\s+[A-Z][a-zA-Z.]*)*\s*(?::|—|–|-)\s*[A-F][+-]?\s*(?:\(\d+\/100\))\s*\n?){3,})/gm
+  return text.replace(rankingPattern, (match, list) => {
+    // Only convert if it's not already inside a code fence
+    return `\n\`\`\`platform-ranking\n${list.trim()}\n\`\`\`\n`
+  })
+}
+
+/** Auto-append CTA links when response mentions Phosra's features */
+function appendCTAs(text: string): string {
+  // Don't add if CTAs already exist
+  if (/\]\(cta:/.test(text)) return text
+
+  const lower = text.toLowerCase()
+  const ctas: string[] = []
+
+  if (lower.includes("compare") && lower.includes("platform")) {
+    ctas.push("[Compare all platforms →](cta:compare)")
+  }
+  if (lower.includes("parental control")) {
+    ctas.push("[Explore parental controls →](cta:parental-controls)")
+  }
+  if (lower.includes("phosra") && (lower.includes("sign up") || lower.includes("get started") || lower.includes("try"))) {
+    ctas.push("[Get started with Phosra →](cta:sign-up)")
+  }
+  if (lower.includes("methodology") || lower.includes("how we test")) {
+    ctas.push("[View our methodology →](cta:methodology)")
+  }
+
+  if (ctas.length > 0) {
+    return text + "\n\n" + ctas.join("  ")
+  }
+  return text
+}
+
 /** Main preprocessing pipeline */
 export function preprocessResearchText(text: string): string {
   let result = text
   result = normalizeChecks(result)
   result = convertScoreDistributions(result)
   result = normalizeSeverityTags(result)
+  result = convertRankingLists(result)
+  result = appendCTAs(result)
   return result
 }
