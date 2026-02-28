@@ -2,6 +2,7 @@
 
 import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
 import { Footer } from "@/components/marketing/Footer"
+import { ResearchChatWidget } from "./_components/ResearchChatWidget"
 
 export default function AISafetyLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export default function AISafetyLayout({ children }: { children: React.ReactNode
         {children}
       </main>
       <Footer />
+      <ResearchChatWidget />
     </div>
   )
 }
