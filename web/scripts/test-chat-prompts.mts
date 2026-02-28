@@ -105,11 +105,19 @@ const PROMPTS: PromptEntry[] = [
 ]
 
 async function sendPrompt(baseUrl: string, prompt: string): Promise<string> {
+  // UIMessage format expected by the Vercel AI SDK
+  const uiMessage = {
+    id: crypto.randomUUID(),
+    role: "user",
+    parts: [{ type: "text", text: prompt }],
+    createdAt: new Date().toISOString(),
+  }
+
   const res = await fetch(`${baseUrl}/api/research/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      messages: [{ role: "user", content: prompt }],
+      messages: [uiMessage],
     }),
   })
 
@@ -119,20 +127,18 @@ async function sendPrompt(baseUrl: string, prompt: string): Promise<string> {
 
   const text = await res.text()
 
-  // Parse Vercel AI SDK streaming protocol
-  // Lines starting with 0: contain JSON-encoded text chunks
+  // Parse SSE data stream format: "data: {json}\n\n"
+  // Text deltas have type "text-delta" with a "delta" field
   const chunks: string[] = []
   for (const line of text.split("\n")) {
-    if (line.startsWith("0:")) {
-      try {
-        const jsonStr = line.slice(2)
-        const parsed = JSON.parse(jsonStr)
-        if (typeof parsed === "string") {
-          chunks.push(parsed)
-        }
-      } catch {
-        // skip unparseable lines
+    if (!line.startsWith("data: ")) continue
+    try {
+      const payload = JSON.parse(line.slice(6))
+      if (payload.type === "text-delta" && typeof payload.delta === "string") {
+        chunks.push(payload.delta)
       }
+    } catch {
+      // skip unparseable lines
     }
   }
 
