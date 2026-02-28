@@ -70,7 +70,8 @@ function appendCTAs(text: string): string {
 
 /** Extract follow-up questions from the delimiter block and return cleaned text + questions */
 export function extractFollowUps(text: string): { text: string; followUps: string[] } {
-  const pattern = /\n?---follow-ups---\n([\s\S]*?)\n---end-follow-ups---\s*$/
+  // Flexible pattern: allow whitespace (not just newlines) around delimiters
+  const pattern = /\s*---follow-ups---\s*([\s\S]*?)\s*---end-follow-ups---\s*$/
   const match = text.match(pattern)
 
   if (!match) {
@@ -78,13 +79,24 @@ export function extractFollowUps(text: string): { text: string; followUps: strin
   }
 
   const cleaned = text.replace(pattern, "").trimEnd()
-  const questions = match[1]
+  const content = match[1].trim()
+
+  // Split by newline first; if that yields only 1 item, try splitting by "?" boundaries
+  let questions = content
     .split("\n")
     .map((q) => q.trim())
     .filter((q) => q.length > 0)
-    .slice(0, 3)
 
-  return { text: cleaned, followUps: questions }
+  if (questions.length <= 1 && content.includes("?")) {
+    // Questions on a single line separated by "? " — split on "?" and re-add it
+    questions = content
+      .split("?")
+      .map((q) => q.trim())
+      .filter((q) => q.length > 0)
+      .map((q) => q + "?")
+  }
+
+  return { text: cleaned, followUps: questions.slice(0, 3) }
 }
 
 /** Main preprocessing pipeline */

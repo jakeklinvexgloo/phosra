@@ -92,6 +92,7 @@ export function ResearchChatModal({ open, onClose, initialPrompt }: ResearchChat
               key={sessionKey}
               initialPrompt={initialPrompt}
               onClose={handleClose}
+              sessionId={`modal-${sessionKey}`}
             />
           </motion.div>
         </motion.div>
@@ -106,9 +107,10 @@ export function ResearchChatModal({ open, onClose, initialPrompt }: ResearchChat
 interface InnerProps {
   initialPrompt?: string
   onClose: () => void
+  sessionId: string
 }
 
-function ResearchChatModalInner({ initialPrompt, onClose }: InnerProps) {
+function ResearchChatModalInner({ initialPrompt, onClose, sessionId }: InnerProps) {
   const [input, setInput] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
   const hasSentRef = useRef(false)
@@ -118,7 +120,7 @@ function ResearchChatModalInner({ initialPrompt, onClose }: InnerProps) {
     () => new DefaultChatTransport({ api: "/api/research/chat" }),
     []
   )
-  const { messages, sendMessage, status } = useChat({ transport })
+  const { messages, sendMessage, status } = useChat({ transport, id: sessionId })
   const isLoading = status === "streaming" || status === "submitted"
 
   // Auto-send initial prompt on mount

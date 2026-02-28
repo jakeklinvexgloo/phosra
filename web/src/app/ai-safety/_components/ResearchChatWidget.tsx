@@ -51,7 +51,7 @@ export function ResearchChatWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 sm:w-[400px] w-[calc(100vw-2rem)] h-[540px] rounded-2xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden">
-      <ResearchChatWidgetPanel key={sessionKey} onClose={handleClose} />
+      <ResearchChatWidgetPanel key={sessionKey} onClose={handleClose} sessionId={`widget-${sessionKey}`} />
     </div>
   )
 }
@@ -60,9 +60,10 @@ export function ResearchChatWidget() {
 
 interface PanelProps {
   onClose: () => void
+  sessionId: string
 }
 
-function ResearchChatWidgetPanel({ onClose }: PanelProps) {
+function ResearchChatWidgetPanel({ onClose, sessionId }: PanelProps) {
   const [input, setInput] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -70,7 +71,7 @@ function ResearchChatWidgetPanel({ onClose }: PanelProps) {
     () => new DefaultChatTransport({ api: "/api/research/chat" }),
     []
   )
-  const { messages, sendMessage, status } = useChat({ transport })
+  const { messages, sendMessage, status } = useChat({ transport, id: sessionId })
   const isLoading = status === "streaming" || status === "submitted"
 
   useEffect(() => {
