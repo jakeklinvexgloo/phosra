@@ -68,6 +68,25 @@ function appendCTAs(text: string): string {
   return text
 }
 
+/** Extract follow-up questions from the delimiter block and return cleaned text + questions */
+export function extractFollowUps(text: string): { text: string; followUps: string[] } {
+  const pattern = /\n?---follow-ups---\n([\s\S]*?)\n---end-follow-ups---\s*$/
+  const match = text.match(pattern)
+
+  if (!match) {
+    return { text, followUps: [] }
+  }
+
+  const cleaned = text.replace(pattern, "").trimEnd()
+  const questions = match[1]
+    .split("\n")
+    .map((q) => q.trim())
+    .filter((q) => q.length > 0)
+    .slice(0, 3)
+
+  return { text: cleaned, followUps: questions }
+}
+
 /** Main preprocessing pipeline */
 export function preprocessResearchText(text: string): string {
   let result = text

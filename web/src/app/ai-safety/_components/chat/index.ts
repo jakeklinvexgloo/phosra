@@ -1,5 +1,5 @@
 export { chatMdComponents } from "./md-components"
-export { preprocessResearchText } from "./text-preprocessor"
+export { preprocessResearchText, extractFollowUps } from "./text-preprocessor"
 export { ChatMessageContent } from "./ChatMessageContent"
 export { SafetyGradeBadge } from "./widgets/SafetyGradeBadge"
 export { ScoreDistributionBar } from "./widgets/ScoreDistributionBar"

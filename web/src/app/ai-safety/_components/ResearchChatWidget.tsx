@@ -4,7 +4,7 @@ import { useState, useMemo, useRef, useEffect, FormEvent } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport, type UIMessage } from "ai"
 import { MessageCircle, X, Send, Sparkles, Loader2 } from "lucide-react"
-import { ChatMessageContent } from "./chat"
+import { ChatMessageContent, extractFollowUps } from "./chat"
 
 function textOf(msg: UIMessage): string {
   return msg.parts
@@ -22,14 +22,49 @@ const SUGGESTED_QUESTIONS = [
 
 export function ResearchChatWidget() {
   const [open, setOpen] = useState(false)
-  const [input, setInput] = useState("")
   const [showPing, setShowPing] = useState(true)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const [sessionKey, setSessionKey] = useState(0)
 
   useEffect(() => {
     const timer = setTimeout(() => setShowPing(false), 3000)
     return () => clearTimeout(timer)
   }, [])
+
+  const handleClose = () => {
+    setOpen(false)
+    setSessionKey((k) => k + 1)
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-brand-green hover:bg-brand-green/90 text-white shadow-lg flex items-center justify-center transition-colors"
+      >
+        {showPing && (
+          <span className="absolute inset-0 rounded-full bg-brand-green/30 animate-ping motion-reduce:hidden" />
+        )}
+        <MessageCircle className="w-6 h-6 relative z-10" />
+      </button>
+    )
+  }
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50 sm:w-[400px] w-[calc(100vw-2rem)] h-[540px] rounded-2xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden">
+      <ResearchChatWidgetPanel key={sessionKey} onClose={handleClose} />
+    </div>
+  )
+}
+
+// ── Inner panel: remounts on each session for clean state ────────
+
+interface PanelProps {
+  onClose: () => void
+}
+
+function ResearchChatWidgetPanel({ onClose }: PanelProps) {
+  const [input, setInput] = useState("")
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const transport = useMemo(
     () => new DefaultChatTransport({ api: "/api/research/chat" }),
@@ -55,22 +90,14 @@ export function ResearchChatWidget() {
     sendMessage({ text: q })
   }
 
-  if (!open) {
-    return (
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-brand-green hover:bg-brand-green/90 text-white shadow-lg flex items-center justify-center transition-colors"
-      >
-        {showPing && (
-          <span className="absolute inset-0 rounded-full bg-brand-green/30 animate-ping motion-reduce:hidden" />
-        )}
-        <MessageCircle className="w-6 h-6 relative z-10" />
-      </button>
-    )
-  }
+  // Extract follow-ups from the last assistant message
+  const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant")
+  const lastAssistantText = lastAssistant ? textOf(lastAssistant) : ""
+  const { followUps } = lastAssistantText ? extractFollowUps(lastAssistantText) : { followUps: [] }
+  const showFollowUps = followUps.length > 0 && !isLoading
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 sm:w-[400px] w-[calc(100vw-2rem)] h-[540px] rounded-2xl border border-border bg-card shadow-2xl flex flex-col overflow-hidden">
+    <>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-gradient-to-r from-brand-green/10 to-transparent">
         <div>
@@ -83,7 +110,7 @@ export function ResearchChatWidget() {
           </p>
         </div>
         <button
-          onClick={() => setOpen(false)}
+          onClick={onClose}
           className="p-1 rounded-lg hover:bg-muted transition-colors"
         >
           <X className="w-4 h-4 text-muted-foreground" />
@@ -116,19 +143,26 @@ export function ResearchChatWidget() {
             </div>
           </div>
         ) : (
-          messages.map((msg) =>
-            msg.role === "user" ? (
-              <div key={msg.id} className="flex justify-end">
-                <div className="max-w-[80%] rounded-2xl rounded-br-sm px-4 py-2 bg-brand-green text-white text-sm">
-                  {textOf(msg)}
+          messages.map((msg) => {
+            if (msg.role === "user") {
+              return (
+                <div key={msg.id} className="flex justify-end">
+                  <div className="max-w-[80%] rounded-2xl rounded-br-sm px-4 py-2 bg-brand-green text-white text-sm">
+                    {textOf(msg)}
+                  </div>
                 </div>
-              </div>
-            ) : (
+              )
+            }
+
+            const rawText = textOf(msg)
+            const { text: cleanText } = extractFollowUps(rawText)
+
+            return (
               <div key={msg.id} className="w-full text-foreground text-sm prose prose-sm prose-neutral dark:prose-invert max-w-none [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 [&_h2]:text-sm [&_h3]:text-sm [&_a]:text-brand-green">
-                <ChatMessageContent text={textOf(msg)} />
+                <ChatMessageContent text={cleanText} />
               </div>
             )
-          )
+          })
         )}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex justify-start">
@@ -136,6 +170,21 @@ export function ResearchChatWidget() {
               <Loader2 className="w-3 h-3 animate-spin" />
               <span className="text-xs">Thinking...</span>
             </div>
+          </div>
+        )}
+
+        {/* Follow-up question pills */}
+        {showFollowUps && (
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {followUps.map((q) => (
+              <button
+                key={q}
+                onClick={() => handleSuggestion(q)}
+                className="text-xs px-2.5 py-1 rounded-full border border-brand-green/20 bg-brand-green/[0.06] hover:bg-brand-green/[0.12] text-brand-green/80 hover:text-brand-green transition-colors"
+              >
+                {q}
+              </button>
+            ))}
           </div>
         )}
       </div>
@@ -159,6 +208,6 @@ export function ResearchChatWidget() {
           </button>
         </form>
       </div>
-    </div>
+    </>
   )
 }

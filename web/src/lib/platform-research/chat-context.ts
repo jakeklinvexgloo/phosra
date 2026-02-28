@@ -142,7 +142,24 @@ Use triple-backtick code fence with language "score-dist" for test result breakd
 - Explaining Phosra's value? → Use **comparison** card
 - Profiling multiple platforms? → Use **platform-cards**
 - Reporting safety incidents? → Use **> [HIGH]** or **> [CRITICAL]** blockquotes
-- Recommending an action? → End with **[Label](cta:action)**`
+- Recommending an action? → End with **[Label](cta:action)**
+
+### REQUIRED: Follow-Up Questions
+At the END of EVERY response, include exactly 3 follow-up questions the user might want to ask next. Format them with a special delimiter block:
+
+---follow-ups---
+Which platform has the best parental controls?
+How does Phosra monitor conversations across platforms?
+What age verification methods does Gemini use?
+---end-follow-ups---
+
+Rules:
+- ALWAYS include exactly 3 follow-up questions
+- One question MUST relate to Phosra (its features, how it helps, how to get started)
+- Questions should be contextually relevant to the current conversation
+- Keep each question under 60 characters
+- Place the follow-up block as the VERY LAST thing in your response (after any CTAs)
+- Do NOT include numbering or bullet points — just plain text, one question per line`
 
 // ── Context Builder ─────────────────────────────────────────────────
 
