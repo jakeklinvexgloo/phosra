@@ -17,6 +17,8 @@ import {
   AlertTriangle,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
+import { SearchBar } from "./SearchBar"
+import { buildSearchItems } from "@/lib/platform-research/search-index"
 import type { SafetyCategoryScore } from "@/lib/platform-research/research-data-types"
 
 // ── Types ───────────────────────────────────────────────────────────
@@ -135,6 +137,9 @@ export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
     return Array.from(catMap.entries()).map(([id, label]) => ({ id, label }))
   }, [platforms])
 
+  // Search items
+  const searchItems = useMemo(() => buildSearchItems(platforms), [platforms])
+
   // Stats
   const totalTests = platforms.length > 0 ? platforms[0].totalTests : 40
   const totalCategories = allCategories.length
@@ -182,6 +187,11 @@ export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
                 >
                   Methodology
                 </Link>
+              </div>
+
+              {/* Search Bar */}
+              <div className="mt-8">
+                <SearchBar items={searchItems} />
               </div>
             </div>
           </AnimatedSection>
