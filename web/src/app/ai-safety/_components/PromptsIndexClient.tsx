@@ -4,7 +4,6 @@ import { useState, useMemo } from "react"
 import Link from "next/link"
 import { ChevronDown, ChevronRight, Filter, Download } from "lucide-react"
 import { AnimatePresence, motion } from "framer-motion"
-import { SubNav } from "./SubNav"
 
 function toCSV(headers: string[], rows: string[][]): string {
   const escape = (v: string) => v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
@@ -78,8 +77,6 @@ export function PromptsIndexClient({
 
   return (
     <div>
-      <SubNav />
-
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">

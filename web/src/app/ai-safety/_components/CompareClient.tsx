@@ -6,7 +6,7 @@ import {
   CheckCircle2,
   XCircle,
 } from "lucide-react"
-import { SubNav } from "./SubNav"
+
 import type {
   SafetyScorecard,
   AgeVerificationDetail,
@@ -54,8 +54,6 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
 
   return (
     <div>
-      <SubNav />
-
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">

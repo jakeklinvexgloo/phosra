@@ -10,7 +10,7 @@ import {
   ArrowLeft,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture } from "@/components/marketing/shared"
-import { SubNav } from "./SubNav"
+
 import type { CapabilitySummary } from "@/lib/platform-research/research-data-types"
 
 interface PlatformGap {
@@ -50,8 +50,6 @@ export function PhosraControlsClient({ platforms }: { platforms: PlatformGap[] }
 
   return (
     <div>
-      <SubNav />
-
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">
         <div className="absolute inset-0">

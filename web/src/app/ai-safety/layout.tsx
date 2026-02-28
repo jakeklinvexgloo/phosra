@@ -2,6 +2,7 @@
 
 import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
 import { Footer } from "@/components/marketing/Footer"
+import { SubNav } from "./_components/SubNav"
 import { ResearchChatWidget } from "./_components/ResearchChatWidget"
 
 export default function AISafetyLayout({ children }: { children: React.ReactNode }) {
@@ -9,6 +10,7 @@ export default function AISafetyLayout({ children }: { children: React.ReactNode
     <div className="min-h-screen bg-background flex flex-col">
       <PublicPageHeader />
       <main className="flex-1 pt-14">
+        <SubNav />
         {children}
       </main>
       <Footer />
