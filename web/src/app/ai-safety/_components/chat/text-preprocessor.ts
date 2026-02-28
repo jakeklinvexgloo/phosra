@@ -22,10 +22,20 @@ function convertScoreDistributions(text: string): string {
   })
 }
 
+/** Normalize severity tags in blockquotes: "> [HIGH]" / "> [CRITICAL]" */
+function normalizeSeverityTags(text: string): string {
+  // Normalize various severity tag formats to consistent [TAG] prefix
+  return text.replace(
+    /^(>\s*)\[?\s*(CRITICAL|HIGH)\s*\]?[:\s-]*/gim,
+    (_, prefix, severity) => `${prefix}[${severity.toUpperCase()}] `
+  )
+}
+
 /** Main preprocessing pipeline */
 export function preprocessResearchText(text: string): string {
   let result = text
   result = normalizeChecks(result)
   result = convertScoreDistributions(result)
+  result = normalizeSeverityTags(result)
   return result
 }

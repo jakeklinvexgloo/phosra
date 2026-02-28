@@ -1,37 +1,12 @@
 "use client"
 
+import { gradeTextColor, gradeBgColor, gradeBorderColor } from "../grade-colors"
+
 interface SafetyGradeBadgeProps {
   grade: string
   score?: number
   label?: string
   size?: "inline" | "block"
-}
-
-function gradeTextColor(grade: string): string {
-  if (grade.startsWith("A")) return "text-emerald-400"
-  if (grade.startsWith("B")) return "text-blue-400"
-  if (grade.startsWith("C")) return "text-amber-400"
-  if (grade.startsWith("D")) return "text-orange-400"
-  if (grade === "F") return "text-red-400"
-  return "text-white/60"
-}
-
-function gradeBgColor(grade: string): string {
-  if (grade.startsWith("A")) return "bg-emerald-500/20"
-  if (grade.startsWith("B")) return "bg-blue-500/20"
-  if (grade.startsWith("C")) return "bg-amber-500/20"
-  if (grade.startsWith("D")) return "bg-orange-500/20"
-  if (grade === "F") return "bg-red-500/20"
-  return "bg-white/10"
-}
-
-function gradeBorderColor(grade: string): string {
-  if (grade.startsWith("A")) return "border-emerald-500/30"
-  if (grade.startsWith("B")) return "border-blue-500/30"
-  if (grade.startsWith("C")) return "border-amber-500/30"
-  if (grade.startsWith("D")) return "border-orange-500/30"
-  if (grade === "F") return "border-red-500/30"
-  return "border-white/10"
 }
 
 export function SafetyGradeBadge({ grade, score, label, size = "inline" }: SafetyGradeBadgeProps) {

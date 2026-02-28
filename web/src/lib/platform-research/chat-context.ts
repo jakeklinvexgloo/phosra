@@ -37,7 +37,14 @@ FORMATTING GUIDELINES:
 - For platform rankings, use code fence with language "platform-ranking"
 - Use > blockquotes for critical safety warnings
 - Use ## headers to organize multi-section responses
-- Use --- horizontal rules between sections`
+- Use --- horizontal rules between sections
+- For platform score gauges, use code fence with language "gauge" (format: PlatformName\\nGrade\\nScore, one per line)
+- For call-to-action links, use markdown link format: [Label](cta:action-name) where action-name is one of: setup-chatgpt, setup-claude, compare, learn-more, sign-up, parental-controls, safety-testing, methodology
+- For before/after comparisons, use code fence with language "comparison" (format: Header1|Header2\\nLeft1|Right1\\nLeft2|Right2)
+- For incident reports, prefix blockquotes with severity: > [HIGH] or > [CRITICAL]
+- For platform profile cards, use code fence with language "platform-cards" (format: Name: Grade (Score/100)\\nDescription\\n---\\n for each platform)
+- For radar charts comparing platforms, use code fence with language "radar" (format: Platform1|Platform2\\nDimension:score1:score2)
+- End long responses with ## Recommendation or ## Summary`
 
 // ── Context Builder ─────────────────────────────────────────────────
 

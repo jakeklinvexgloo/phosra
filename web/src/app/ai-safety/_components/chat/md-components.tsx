@@ -8,6 +8,13 @@ import { ScoreDistributionBar, parseScoreDistribution } from "./widgets/ScoreDis
 import { PlatformRankingList, parseRankingList } from "./widgets/PlatformRankingList"
 import { StatCallout, parseStat } from "./widgets/StatCallout"
 import { isCriticalContent } from "./widgets/CriticalFailureAlert"
+import { ScoreGauge, parseGauge } from "./widgets/ScoreGauge"
+import { ActionButton, isCTALink } from "./widgets/ActionButton"
+import { IncidentCard, detectSeverity } from "./widgets/IncidentCard"
+import { ComparisonCard, parseComparison } from "./widgets/ComparisonCard"
+import { RadarChartWidget, parseRadar } from "./widgets/RadarChartWidget"
+import { PlatformCards, parsePlatformCards } from "./widgets/PlatformCard"
+import { InteractiveTable } from "./widgets/InteractiveTable"
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -26,8 +33,17 @@ function isScoreValue(text: string): boolean {
 // ── Chat Markdown Components ─────────────────────────────────────────
 
 export const chatMdComponents: Components = {
-  // Links: internal → Next.js Link, external → new tab
+  // Links: CTA buttons, internal → Next.js Link, external → new tab
   a: ({ href, children, ...props }) => {
+    // CTA action buttons
+    if (href) {
+      const cta = isCTALink(href)
+      if (cta) {
+        const label = typeof children === "string" ? children : String(children ?? "")
+        return <ActionButton label={label} action={cta.action} />
+      }
+    }
+
     if (href?.startsWith("/ai-safety")) {
       return (
         <Link href={href} className="text-brand-green hover:underline">
@@ -42,10 +58,12 @@ export const chatMdComponents: Components = {
     )
   },
 
-  // Tables: glass-styled with horizontal scroll
+  // Tables: glass-styled with horizontal scroll + interactive sorting
   table: ({ children }) => (
     <div className="my-2 overflow-x-auto rounded-lg border border-white/[0.08]">
-      <table className="w-full text-sm bg-white/[0.03]">{children}</table>
+      <table className="w-full text-sm bg-white/[0.03]">
+        <InteractiveTable>{children}</InteractiveTable>
+      </table>
     </div>
   ),
 
@@ -124,21 +142,19 @@ export const chatMdComponents: Components = {
     <tr className="hover:bg-white/[0.02] transition-colors">{children}</tr>
   ),
 
-  // Bold: detect "Platform: Grade (Score/100)" pattern
+  // Bold: detect "Platform: Grade (Score/100)" → inline gauge + badge
   strong: ({ children }) => {
     const text = typeof children === "string" ? children : ""
 
     // Match "PlatformName: Grade (Score/100)"
     const gradeMatch = text.match(/^(.+?):\s*([A-F][+-]?)\s*(?:\((\d+)\/100\))?\s*$/)
     if (gradeMatch) {
-      const [, platform, grade, score] = gradeMatch
+      const [, platform, grade, scoreStr] = gradeMatch
+      const score = scoreStr ? parseInt(scoreStr) : undefined
       return (
         <span className="inline-flex items-center gap-1.5 font-semibold text-white/90">
           {platform}:
-          <SafetyGradeBadge
-            grade={grade}
-            score={score ? parseInt(score) : undefined}
-          />
+          <SafetyGradeBadge grade={grade} score={score} />
         </span>
       )
     }
@@ -165,7 +181,7 @@ export const chatMdComponents: Components = {
     <hr className="my-3 border-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
   ),
 
-  // Blockquote: amber by default, red for critical content
+  // Blockquote: incident cards for [HIGH]/[CRITICAL], red for critical, amber default
   blockquote: ({ children }) => {
     const extractText = (node: React.ReactNode): string => {
       if (typeof node === "string") return node
@@ -178,6 +194,13 @@ export const chatMdComponents: Components = {
     }
 
     const text = extractText(children)
+
+    // Detect severity tags: [HIGH] or [CRITICAL]
+    const severity = detectSeverity(text)
+    if (severity) {
+      return <IncidentCard severity={severity}>{children}</IncidentCard>
+    }
+
     const critical = isCriticalContent(text)
 
     if (critical) {
@@ -225,6 +248,30 @@ export const chatMdComponents: Components = {
     if (language === "stat") {
       const stat = parseStat(text)
       if (stat) return <StatCallout {...stat} />
+    }
+
+    // Score gauge widget
+    if (language === "gauge") {
+      const gauge = parseGauge(text)
+      if (gauge) return <ScoreGauge {...gauge} />
+    }
+
+    // Comparison card widget
+    if (language === "comparison") {
+      const comparison = parseComparison(text)
+      if (comparison) return <ComparisonCard {...comparison} />
+    }
+
+    // Radar chart widget
+    if (language === "radar") {
+      const radar = parseRadar(text)
+      if (radar) return <RadarChartWidget {...radar} />
+    }
+
+    // Platform cards widget
+    if (language === "platform-cards") {
+      const cards = parsePlatformCards(text)
+      if (cards) return <PlatformCards platforms={cards} />
     }
 
     // Regular code block (has language class = block)

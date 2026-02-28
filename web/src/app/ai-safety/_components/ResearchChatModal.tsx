@@ -6,10 +6,7 @@ import { DefaultChatTransport, type UIMessage } from "ai"
 import { Sparkles, Send, Loader2, X } from "lucide-react"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
-import { linkifyResearchText } from "@/lib/platform-research/entity-linker"
-import { chatMdComponents, preprocessResearchText } from "./chat"
+import { ChatMessageContent } from "./chat"
 
 function textOf(msg: UIMessage): string {
   return msg.parts
@@ -181,7 +178,7 @@ export function ResearchChatModal({ open, onClose, initialPrompt }: ResearchChat
                   ) : (
                     <div key={msg.id} className="flex justify-start">
                       <div className="max-w-[85%] rounded-2xl rounded-bl-sm px-4 py-2.5 bg-white/[0.06] border border-white/[0.08] text-white/80 text-sm prose prose-sm prose-invert max-w-none [&_p]:my-1.5 [&_ul]:my-1.5 [&_ol]:my-1.5 [&_li]:my-0.5 [&_h2]:text-sm [&_h2]:text-white/90 [&_h3]:text-sm [&_h3]:text-white/90 [&_a]:text-brand-green [&_strong]:text-white/90 [&_code]:text-brand-green/80 [&_code]:bg-white/[0.06] [&_code]:px-1 [&_code]:rounded">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={chatMdComponents}>{linkifyResearchText(preprocessResearchText(textOf(msg)))}</ReactMarkdown>
+                        <ChatMessageContent text={textOf(msg)} />
                       </div>
                     </div>
                   )
