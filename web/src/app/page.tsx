@@ -10,8 +10,18 @@ import { PlatformIntegration } from "@/components/marketing/PlatformIntegration"
 import { Movements } from "@/components/marketing/Movements"
 import { CTASection } from "@/components/marketing/CTASection"
 import { Footer } from "@/components/marketing/Footer"
+import { AISafetyCallout } from "@/components/marketing/AISafetyCallout"
+import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
 
-export default function MarketingPage() {
+export default async function MarketingPage() {
+  const allResearch = await loadAllChatbotResearch()
+
+  const platforms = allResearch.map((r) => ({
+    id: r.platformId,
+    name: r.platformName,
+    grade: r.chatbotData?.safetyTesting?.scorecard?.overallGrade ?? "—",
+  }))
+
   return (
     <div className="min-h-screen scroll-smooth overflow-x-hidden">
       <Navbar />
@@ -20,6 +30,7 @@ export default function MarketingPage() {
       <Features />
       <Ecosystem />
       <Stats />
+      <AISafetyCallout platforms={platforms} />
       <HowItWorks />
       <PlatformIntegration />
       <Movements />

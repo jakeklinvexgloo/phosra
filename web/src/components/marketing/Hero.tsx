@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import { WaveTexture } from "./shared/WaveTexture"
 import { GradientMesh } from "./shared/GradientMesh"
 import { PhosraBurst } from "./shared/PhosraBurst"
@@ -46,10 +47,14 @@ export function Hero() {
           <div>
             {/* Announcement badge */}
             <AnimatedSection delay={0}>
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.06] border border-white/[0.08] mb-8">
+              <Link
+                href="/ai-safety"
+                className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.06] border border-white/[0.08] mb-8 group hover:bg-white/[0.1] hover:border-white/[0.15] transition-all"
+              >
                 <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
-                <span className="text-xs text-white/60 font-medium">The API behind parental controls</span>
-              </div>
+                <span className="text-xs text-white/60 font-medium group-hover:text-white/80 transition-colors">New: AI Safety Research — 8 chatbots tested</span>
+                <ArrowRight className="w-3 h-3 text-white/40 group-hover:text-white/70 group-hover:translate-x-0.5 transition-all" />
+              </Link>
             </AnimatedSection>
 
             {/* Headline with serif display + gradient */}

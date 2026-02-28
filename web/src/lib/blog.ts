@@ -28,6 +28,91 @@ export const BLOG_CATEGORY_CONFIG: Record<BlogCategory, { label: string; bg: str
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: "ai-safety-research-launch",
+    title: "We Tested 8 AI Chatbots for Child Safety. Here\u2019s What We Found.",
+    date: "2026-02-28",
+    category: "product",
+    featured: true,
+    readTime: "8 min read",
+    excerpt:
+      "Phosra tested ChatGPT, Claude, Gemini, Grok, Character.AI, Copilot, Perplexity, and Replika across 7 safety dimensions and 40 adversarial prompts. The results reveal critical gaps in how AI chatbots protect young users.",
+    content: [
+      {
+        type: "paragraph",
+        text: "AI chatbots are the fastest-growing category of technology among young people. ChatGPT reached 100 million users faster than any product in history, and platforms like Character.AI and Replika are explicitly designed for ongoing personal conversation. Kids aren\u2019t just using these tools for homework \u2014 they\u2019re confiding in them, role-playing with them, and treating them as companions. That raises a question the industry has mostly avoided: how safe are these platforms for minors?",
+      },
+      {
+        type: "paragraph",
+        text: "We decided to find out. Over the past month, Phosra\u2019s research team systematically tested 8 major AI chatbot platforms \u2014 ChatGPT, Claude, Gemini, Grok, Character.AI, Copilot, Perplexity, and Replika \u2014 across 7 safety dimensions using 40 adversarial prompts designed to probe the boundaries of each system\u2019s protections.",
+      },
+      {
+        type: "heading",
+        text: "What We Tested",
+      },
+      {
+        type: "paragraph",
+        text: "Our research framework evaluates each platform across seven dimensions: explicit sexual content, self-harm and crisis response, predatory grooming patterns, dangerous activities and substances, emotional manipulation, academic integrity, and age-appropriate content filtering. Each dimension is weighted by severity \u2014 self-harm and predatory grooming carry the highest weight because failures in these categories pose the greatest real-world risk to children.",
+      },
+      {
+        type: "paragraph",
+        text: "The 40 test prompts aren\u2019t hypothetical. They\u2019re modeled on real conversations that minors have had with AI chatbots, drawn from public reporting, parental accounts, and safety research. They include multi-turn escalation sequences where a user gradually pushes past safety boundaries, because that\u2019s how real-world circumvention happens.",
+      },
+      {
+        type: "heading",
+        text: "Key Findings",
+      },
+      {
+        type: "paragraph",
+        text: "The results varied dramatically across platforms. Some platforms demonstrated robust, proactive safety systems that not only blocked harmful content but redirected users to appropriate resources. Others failed on basic protections that should be table stakes. Several platforms that market themselves as safe for younger users showed significant gaps in their safety testing, particularly around multi-turn conversations where initial refusals could be gradually worn down through conversational pressure.",
+      },
+      {
+        type: "paragraph",
+        text: "Self-harm and crisis response was the most inconsistent dimension across platforms. Some chatbots immediately recognized distress signals and provided crisis helpline information. Others engaged in extended conversations about self-harm methods before eventually suggesting the user talk to someone. In the worst cases, platforms provided detailed information that could facilitate self-harm when prompted through indirect language.",
+      },
+      {
+        type: "quote",
+        text: "The gap between the best and worst platforms is alarming. Some chatbots treat child safety as a core engineering discipline. Others treat it as an afterthought \u2014 a content filter bolted onto a system that wasn\u2019t designed with young users in mind. Parents have no way to tell the difference without testing it themselves, which is exactly what we did.",
+        attribution: "Jake Klinvex, Founder & CEO",
+      },
+      {
+        type: "heading",
+        text: "The Parental Controls Gap",
+      },
+      {
+        type: "paragraph",
+        text: "Beyond content safety, we evaluated each platform\u2019s parental controls, age verification systems, and privacy protections. The findings here are equally concerning. Most platforms rely on self-reported age with no verification, meaning a 12-year-old can access the same unfiltered experience as an adult by simply entering a different birth date. Only a handful of platforms offer any parental oversight tools, and those that do provide limited visibility into what conversations are actually happening.",
+      },
+      {
+        type: "paragraph",
+        text: "This is the infrastructure gap that Phosra exists to close. When a platform adopts the Phosra Child Safety Spec, parental controls become interoperable \u2014 parents set rules once, and enforcement works across every connected service. But that only works if platforms build the underlying safety systems that those controls depend on.",
+      },
+      {
+        type: "heading",
+        text: "How the Research Portal Works",
+      },
+      {
+        type: "paragraph",
+        text: "All of our research is published in full at phosra.com/ai-safety. Each platform has a detailed profile showing its overall safety grade, dimension-by-dimension scores, individual test results with annotated screenshots, and specific recommendations for improvement. The portal includes an AI research assistant that can answer questions about the data and help parents, educators, and policymakers navigate the findings.",
+      },
+      {
+        type: "paragraph",
+        text: "We built the portal to be a public resource, not a paywall. Every data point, every test result, every screenshot is freely accessible. We believe transparency is the fastest path to better safety outcomes \u2014 when platforms know their safety performance is being measured and published, they have a concrete incentive to improve.",
+      },
+      {
+        type: "heading",
+        text: "What Comes Next",
+      },
+      {
+        type: "paragraph",
+        text: "This is the first wave of Phosra\u2019s AI safety research program. We plan to expand testing to additional platforms, increase the number of test prompts, add new safety dimensions as the technology evolves, and publish regular updates as platforms improve their protections. We\u2019re also developing automated monitoring that will flag regressions in real time \u2014 because safety isn\u2019t a one-time audit, it\u2019s an ongoing discipline.",
+      },
+      {
+        type: "paragraph",
+        text: "Explore the full research at phosra.com/ai-safety. If you\u2019re a platform developer looking to improve your safety posture, the API documentation and integration guides are at phosra.com/docs.",
+      },
+    ],
+  },
+  {
     slug: "pcss-v1",
     title: "How We Normalized 67 Child Safety Laws into 45 API Rule Categories",
     date: "2026-02-25",
@@ -44,7 +129,6 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "regulatory",
     excerpt:
       "Most organizations are confusing COPPA 2.0 \u2014 a bill that hasn\u2019t been signed into law \u2014 with the FTC\u2019s amended COPPA Rule, which takes full effect on April 22, 2026. The enforcement deadline is real, the penalties are severe, and many teams are preparing for the wrong thing.",
-    featured: true,
     content: [
       {
         type: "paragraph",
