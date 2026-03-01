@@ -48,7 +48,7 @@ export function Hero() {
             {/* Announcement badge */}
             <AnimatedSection delay={0}>
               <Link
-                href="/ai-safety"
+                href="/research/ai-chatbots"
                 className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.06] border border-white/[0.08] mb-8 group hover:bg-white/[0.1] hover:border-white/[0.15] transition-all"
               >
                 <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />

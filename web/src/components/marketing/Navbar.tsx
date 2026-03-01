@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { href: "/parental-controls", label: "Parental Controls" },
   { href: "/technology-services", label: "Services" },
   { href: "/compliance", label: "Compliance" },
-  { href: "/ai-safety", label: "AI Safety" },
+  { href: "/research/ai-chatbots", label: "AI Safety" },
   { href: "/movements", label: "Movements" },
   { href: "/about", label: "About" },
 ]

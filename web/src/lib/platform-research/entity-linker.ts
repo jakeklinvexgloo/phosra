@@ -10,28 +10,28 @@ interface EntityRule {
 
 const ENTITY_RULES: EntityRule[] = [
   // Platforms
-  { pattern: /\bCharacter\.AI\b/i, url: "/ai-safety/character_ai" },
-  { pattern: /\bChatGPT\b/i, url: "/ai-safety/chatgpt" },
-  { pattern: /\bClaude\b/i, url: "/ai-safety/claude" },
-  { pattern: /\bGemini\b/i, url: "/ai-safety/gemini" },
-  { pattern: /\bGrok\b/i, url: "/ai-safety/grok" },
-  { pattern: /\bCopilot\b/i, url: "/ai-safety/copilot" },
-  { pattern: /\bPerplexity\b/i, url: "/ai-safety/perplexity" },
-  { pattern: /\bReplika\b/i, url: "/ai-safety/replika" },
+  { pattern: /\bCharacter\.AI\b/i, url: "/research/ai-chatbots/character_ai" },
+  { pattern: /\bChatGPT\b/i, url: "/research/ai-chatbots/chatgpt" },
+  { pattern: /\bClaude\b/i, url: "/research/ai-chatbots/claude" },
+  { pattern: /\bGemini\b/i, url: "/research/ai-chatbots/gemini" },
+  { pattern: /\bGrok\b/i, url: "/research/ai-chatbots/grok" },
+  { pattern: /\bCopilot\b/i, url: "/research/ai-chatbots/copilot" },
+  { pattern: /\bPerplexity\b/i, url: "/research/ai-chatbots/perplexity" },
+  { pattern: /\bReplika\b/i, url: "/research/ai-chatbots/replika" },
 
   // Dimensions
-  { pattern: /\bage verification\b/i, url: "/ai-safety/dimensions/age-verification" },
-  { pattern: /\bparental controls?\b/i, url: "/ai-safety/dimensions/parental-controls" },
-  { pattern: /\bconversation controls?\b/i, url: "/ai-safety/dimensions/conversation-controls" },
-  { pattern: /\bemotional safety\b/i, url: "/ai-safety/dimensions/emotional-safety" },
-  { pattern: /\bacademic integrity\b/i, url: "/ai-safety/dimensions/academic-integrity" },
-  { pattern: /\bprivacy (?:&|and) data\b/i, url: "/ai-safety/dimensions/privacy-data" },
-  { pattern: /\bsafety testing\b/i, url: "/ai-safety/dimensions/safety-testing" },
+  { pattern: /\bage verification\b/i, url: "/research/ai-chatbots/dimensions/age-verification" },
+  { pattern: /\bparental controls?\b/i, url: "/research/ai-chatbots/dimensions/parental-controls" },
+  { pattern: /\bconversation controls?\b/i, url: "/research/ai-chatbots/dimensions/conversation-controls" },
+  { pattern: /\bemotional safety\b/i, url: "/research/ai-chatbots/dimensions/emotional-safety" },
+  { pattern: /\bacademic integrity\b/i, url: "/research/ai-chatbots/dimensions/academic-integrity" },
+  { pattern: /\bprivacy (?:&|and) data\b/i, url: "/research/ai-chatbots/dimensions/privacy-data" },
+  { pattern: /\bsafety testing\b/i, url: "/research/ai-chatbots/dimensions/safety-testing" },
 
   // Other pages
-  { pattern: /\btest prompts?\b/i, url: "/ai-safety/prompts" },
-  { pattern: /\bmethodology\b/i, url: "/ai-safety/methodology" },
-  { pattern: /\bcompar(?:e|ison)\b/i, url: "/ai-safety/compare" },
+  { pattern: /\btest prompts?\b/i, url: "/research/ai-chatbots/prompts" },
+  { pattern: /\bmethodology\b/i, url: "/research/ai-chatbots/methodology" },
+  { pattern: /\bcompar(?:e|ison)\b/i, url: "/research/ai-chatbots/compare" },
 ]
 
 /**

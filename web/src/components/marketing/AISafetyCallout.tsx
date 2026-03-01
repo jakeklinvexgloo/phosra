@@ -76,7 +76,7 @@ export function AISafetyCallout({ platforms }: { platforms: PlatformSummary[] })
             {platforms.map((platform) => (
               <Link
                 key={platform.id}
-                href={`/ai-safety/${platform.id}`}
+                href={`/research/ai-chatbots/${platform.id}`}
                 className="group flex flex-col items-center gap-2 p-4 sm:p-5 rounded-lg bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.08] hover:border-white/[0.12] transition-all"
               >
                 <span
@@ -110,14 +110,14 @@ export function AISafetyCallout({ platforms }: { platforms: PlatformSummary[] })
         <AnimatedSection delay={0.35}>
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             <Link
-              href="/ai-safety"
+              href="/research/ai-chatbots"
               className="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 bg-brand-green text-foreground text-sm font-semibold rounded-sm hover:opacity-90 transition hover:shadow-[0_0_30px_-6px_rgba(0,212,126,0.4)]"
             >
               Explore the Research
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href="/ai-safety#compare"
+              href="/research/ai-chatbots#compare"
               className="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 border border-white/20 text-white text-sm font-semibold rounded-sm hover:bg-white/5 hover:border-white/30 transition"
             >
               Compare Platforms

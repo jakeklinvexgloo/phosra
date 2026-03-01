@@ -8,7 +8,7 @@ const FOOTER_SECTIONS = [
     links: [
       { label: "Platforms", href: "/platforms" },
       { label: "Playground", href: "/playground" },
-      { label: "AI Safety Research", href: "/ai-safety" },
+      { label: "AI Safety Research", href: "/research/ai-chatbots" },
       { label: "Pricing", href: "/pricing" },
       { label: "Demo", href: "/demo" },
       { label: "Changelog", href: "/changelog" },

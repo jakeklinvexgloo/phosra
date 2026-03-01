@@ -1,0 +1,681 @@
+"use client"
+
+import { useState, useMemo } from "react"
+import Link from "next/link"
+import {
+  Shield,
+  UserCheck,
+  Lock,
+  MessageSquare,
+  Heart,
+  BookOpen,
+  Database,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  AlertTriangle,
+  Download,
+} from "lucide-react"
+import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
+import { ResearchPromptBar } from "./ResearchPromptBar"
+import { buildSearchItems } from "@/lib/platform-research/search-index"
+import type { SafetyCategoryScore } from "@/lib/platform-research/research-data-types"
+
+// ── Types ───────────────────────────────────────────────────────────
+
+interface PlatformSummary {
+  platformId: string
+  platformName: string
+  overallGrade: string
+  numericalScore: number
+  gradeCap?: string
+  gradeCapReasons?: string[]
+  totalTests: number
+  completedTests: number
+  categoryScores: SafetyCategoryScore[]
+  scoreDistribution: {
+    fullBlock: number
+    partialBlock: number
+    softWarning: number
+    compliant: number
+    enthusiastic: number
+  }
+  hasAgeVerification: boolean
+  hasParentalControls: boolean
+  hasConversationControls: boolean
+  hasEmotionalSafety: boolean
+  hasAcademicIntegrity: boolean
+  hasPrivacyData: boolean
+  minimumAge: number | null
+  circumventionEase: string | null
+  hasParentalDashboard: boolean
+  hasTimeLimits: boolean
+  hasQuietHours: boolean
+  gapStats: { label: string; value: number; color: string }[]
+}
+
+interface AISafetyHubClientProps {
+  platforms: PlatformSummary[]
+}
+
+// ── Grade Colors ────────────────────────────────────────────────────
+
+function gradeColor(grade: string): string {
+  if (grade.startsWith("A")) return "text-emerald-500"
+  if (grade.startsWith("B")) return "text-blue-500"
+  if (grade.startsWith("C")) return "text-amber-500"
+  if (grade.startsWith("D")) return "text-orange-500"
+  if (grade === "F") return "text-red-500"
+  return "text-muted-foreground"
+}
+
+function gradeBg(grade: string): string {
+  if (grade.startsWith("A")) return "bg-emerald-100 dark:bg-emerald-900/30"
+  if (grade.startsWith("B")) return "bg-blue-100 dark:bg-blue-900/30"
+  if (grade.startsWith("C")) return "bg-amber-100 dark:bg-amber-900/30"
+  if (grade.startsWith("D")) return "bg-orange-100 dark:bg-orange-900/30"
+  if (grade === "F") return "bg-red-100 dark:bg-red-900/30"
+  return "bg-muted"
+}
+
+function scoreColor(score: number): string {
+  if (score === 0) return "bg-emerald-500"
+  if (score === 1) return "bg-blue-500"
+  if (score === 2) return "bg-amber-500"
+  if (score === 3) return "bg-orange-500"
+  if (score === 4) return "bg-red-500"
+  return "bg-muted"
+}
+
+function scoreBgLight(score: number): string {
+  const s = Math.max(0, score)
+  if (s < 0.5) return "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200"
+  if (s < 1.0) return "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300"
+  if (s < 1.5) return "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+  if (s < 2.0) return "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300"
+  if (s < 2.5) return "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200"
+  if (s < 3.0) return "bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-200"
+  if (s < 3.5) return "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-200"
+  return "bg-red-200 dark:bg-red-900/60 text-red-900 dark:text-red-100"
+}
+
+function shortLabel(label: string): string {
+  const map: Record<string, string> = {
+    "Self-Harm & Suicide": "Self-Harm",
+    "Predatory & Grooming Patterns": "Grooming",
+    "Predatory & Grooming": "Grooming",
+    "Predatory Grooming & Child Safety": "Grooming",
+    "Sexual & Explicit Content": "Sexual",
+    "Radicalization & Extremism": "Radical.",
+    "Radicalization": "Radical.",
+    "Violence & Weapons": "Violence",
+    "Jailbreak & Safety Bypass": "Jailbreak",
+    "Jailbreak Resistance": "Jailbreak",
+    "Eating Disorders & Body Image": "Eating Dis.",
+    "Eating Disorders": "Eating Dis.",
+    "Drugs & Substance Use": "Drugs",
+    "Emotional Manipulation & Parasocial": "Emotional",
+    "Personal Info Extraction": "PII",
+    "Personal Information Extraction": "PII",
+    "Cyberbullying & Harassment": "Cyberbully",
+    "Cyberbullying": "Cyberbully",
+    "Academic Integrity": "Academic",
+  }
+  return map[label] ?? (label.length > 12 ? label.substring(0, 11) + "." : label)
+}
+
+// ── CSV helpers ─────────────────────────────────────────────────────
+
+function toCSV(headers: string[], rows: string[][]): string {
+  const escape = (v: string) => v.includes(",") || v.includes('"') ? `"${v.replace(/"/g, '""')}"` : v
+  return [headers.map(escape).join(","), ...rows.map(r => r.map(escape).join(","))].join("\n")
+}
+
+function downloadCSV(csv: string, filename: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+// ── Sort Options ────────────────────────────────────────────────────
+
+type SortOption = "grade" | "name" | "score"
+
+// ── Main Component ──────────────────────────────────────────────────
+
+export function AISafetyHubClient({ platforms }: AISafetyHubClientProps) {
+  const [sortBy, setSortBy] = useState<SortOption>("score")
+  const [showHeatmap, setShowHeatmap] = useState(true)
+
+  const sortedPlatforms = useMemo(() => {
+    const sorted = [...platforms]
+    switch (sortBy) {
+      case "grade":
+        sorted.sort((a, b) => b.numericalScore - a.numericalScore)
+        break
+      case "name":
+        sorted.sort((a, b) => a.platformName.localeCompare(b.platformName))
+        break
+      case "score":
+        sorted.sort((a, b) => b.numericalScore - a.numericalScore)
+        break
+    }
+    return sorted
+  }, [platforms, sortBy])
+
+  // Get all unique categories across all platforms
+  const allCategories = useMemo(() => {
+    const catMap = new Map<string, string>()
+    for (const p of platforms) {
+      for (const cs of p.categoryScores) {
+        if (!catMap.has(cs.category)) {
+          catMap.set(cs.category, cs.label)
+        }
+      }
+    }
+    return Array.from(catMap.entries()).map(([id, label]) => ({ id, label }))
+  }, [platforms])
+
+  // Search items
+  const searchItems = useMemo(() => buildSearchItems(platforms), [platforms])
+
+  function handleExportCSV() {
+    const headers = ["Platform", "Overall Grade", "Score", ...allCategories.map((c) => c.label)]
+    const rows = platforms.map((p) => {
+      const catScoreMap = new Map(p.categoryScores.map((cs) => [cs.category, cs]))
+      return [
+        p.platformName,
+        p.overallGrade,
+        p.numericalScore.toString(),
+        ...allCategories.map((c) => {
+          const cs = catScoreMap.get(c.id)
+          return cs ? cs.avgScore.toFixed(2) : ""
+        }),
+      ]
+    })
+    downloadCSV(toCSV(headers, rows), "ai-safety-platform-scores.csv")
+  }
+
+  // Stats — computed findings from actual data
+  const totalTests = platforms.length > 0 ? platforms[0].totalTests : 40
+  const totalCategories = allCategories.length
+  const gradeCappedCount = platforms.filter((p) => p.gradeCap).length
+  const parentalDashboardCount = platforms.filter((p) => p.hasParentalDashboard).length
+  const allowUnder14Count = platforms.filter((p) => p.minimumAge === null || p.minimumAge < 14).length
+  const timeLimitsCount = platforms.filter((p) => p.hasTimeLimits).length
+
+  return (
+    <div>
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">
+        <div className="absolute inset-0">
+          <WaveTexture />
+        </div>
+        <div className="absolute top-10 right-10 opacity-5">
+          <PhosraBurst size={400} color="#ffffff" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-28">
+          <AnimatedSection direction="up">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.08] border border-white/[0.12] mb-6">
+                <Shield className="w-3.5 h-3.5 text-brand-green" />
+                <span className="text-xs text-white/60">Independent Research</span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] mb-6">
+                We Tested {platforms.length} AI Chatbots for{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-300">
+                  Child Safety
+                </span>
+              </h1>
+              <p className="text-lg text-white/60 leading-relaxed max-w-2xl mb-8">
+                Independent safety scores for every major AI chatbot — from content filtering to parental controls.
+              </p>
+
+              {/* Smart Search + AI Chat Bar */}
+              <ResearchPromptBar items={searchItems} />
+            </div>
+          </AnimatedSection>
+
+          {/* Findings Row */}
+          <AnimatedSection direction="up" className="mt-14">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <StatCard value={`${gradeCappedCount}/${platforms.length}`} label="Had Grades Capped for Safety Failures" warn={gradeCappedCount > 0} />
+              <StatCard value={`${parentalDashboardCount}/${platforms.length}`} label="Offer Parental Controls" warn={parentalDashboardCount < platforms.length / 2} />
+              <StatCard value={`${allowUnder14Count}/${platforms.length}`} label="Allow Users Under 14" warn={allowUnder14Count > 0} />
+              <StatCard value={`${timeLimitsCount}/${platforms.length}`} label="Offer Parent-Set Time Limits" warn={timeLimitsCount < platforms.length / 2} />
+            </div>
+            <p className="text-[11px] text-white/40 mt-4 text-center">Research conducted: February 2026</p>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Safety Heatmap */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-2xl font-display font-bold text-foreground">Safety Heatmap</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Average scores across {totalCategories} harm categories (lower is safer)
+            </p>
+          </div>
+          <button
+            onClick={() => setShowHeatmap(!showHeatmap)}
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {showHeatmap ? "Collapse" : "Expand"}
+            {showHeatmap ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {showHeatmap && (
+          <>
+            {/* Color Legend */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-4 text-[11px] text-muted-foreground">
+              <span className="font-medium text-foreground">Score Key:</span>
+              <span className="inline-flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-300 dark:border-emerald-700" />0.0 Full Block</span>
+              <span className="inline-flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700" />1.0 Partial</span>
+              <span className="inline-flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-amber-100 dark:bg-amber-900/40 border border-amber-300 dark:border-amber-700" />2.0 Soft Warning</span>
+              <span className="inline-flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-orange-100 dark:bg-orange-900/40 border border-orange-300 dark:border-orange-700" />3.0 Compliant</span>
+              <span className="inline-flex items-center gap-1"><span className="inline-block w-3 h-3 rounded bg-red-200 dark:bg-red-900/60 border border-red-300 dark:border-red-700" />4.0 Enthusiastic</span>
+            </div>
+
+            {/* Desktop Heatmap Table */}
+            <div className="hidden md:block relative">
+              <div className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="bg-muted/30">
+                      <th className="px-3 py-2.5 text-left font-medium text-foreground sticky left-0 bg-muted/30 z-10 min-w-[120px]">
+                        Platform
+                      </th>
+                      {allCategories.map((cat) => (
+                        <th key={cat.id} className="px-2 py-2.5 text-center font-medium text-foreground min-w-[72px]">
+                          <Link
+                            href={`/research/ai-chatbots/categories/${cat.id}`}
+                            className="hover:text-brand-green hover:underline underline-offset-2 transition-colors cursor-pointer"
+                            title={cat.label}
+                          >
+                            {shortLabel(cat.label)}
+                          </Link>
+                        </th>
+                      ))}
+                      <th className="px-3 py-2.5 text-center font-bold text-foreground min-w-[70px]">Grade</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50">
+                    {sortedPlatforms.map((platform) => {
+                      const catScoreMap = new Map(
+                        platform.categoryScores.map((cs) => [cs.category, cs])
+                      )
+                      return (
+                        <tr key={platform.platformId} className="hover:bg-muted/20 transition-colors">
+                          <td className="px-3 py-2 font-medium text-foreground sticky left-0 bg-background z-10">
+                            <Link
+                              href={`/research/ai-chatbots/${platform.platformId}`}
+                              className="hover:text-brand-green transition-colors"
+                            >
+                              {platform.platformName}
+                            </Link>
+                          </td>
+                          {allCategories.map((cat) => {
+                            const cs = catScoreMap.get(cat.id)
+                            if (!cs) {
+                              return (
+                                <td key={cat.id} className="px-2 py-2 text-center">
+                                  <span className="text-muted-foreground">—</span>
+                                </td>
+                              )
+                            }
+                            const displayScore = Math.max(0, cs.avgScore)
+                            return (
+                              <td key={cat.id} className="px-2 py-2 text-center">
+                                <span
+                                  className={`inline-block px-2 py-0.5 rounded text-[10px] font-medium ${scoreBgLight(cs.avgScore)} cursor-default`}
+                                  title={`${cs.label}: avg ${displayScore.toFixed(2)} / 4.0`}
+                                >
+                                  {displayScore.toFixed(1)}
+                                </span>
+                              </td>
+                            )
+                          })}
+                          <td className="px-3 py-2 text-center">
+                            <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${gradeBg(platform.overallGrade)} ${gradeColor(platform.overallGrade)}`}>
+                              {platform.overallGrade}
+                            </span>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Mobile Simplified View */}
+            <div className="md:hidden rounded-lg border border-border divide-y divide-border/50">
+              {sortedPlatforms.map((platform) => {
+                const avgScore = platform.categoryScores.length > 0
+                  ? platform.categoryScores.reduce((sum, cs) => sum + Math.max(0, cs.avgScore), 0) / platform.categoryScores.length
+                  : 0
+                return (
+                  <Link
+                    key={platform.platformId}
+                    href={`/research/ai-chatbots/${platform.platformId}`}
+                    className="flex items-center justify-between px-4 py-3 hover:bg-muted/20 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className={`flex-shrink-0 inline-block px-2 py-0.5 rounded-full text-xs font-bold ${gradeBg(platform.overallGrade)} ${gradeColor(platform.overallGrade)}`}>
+                        {platform.overallGrade}
+                      </span>
+                      <span className="text-sm font-medium text-foreground truncate">
+                        {platform.platformName}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded ${scoreBgLight(avgScore)}`}>
+                        {avgScore.toFixed(1)}
+                      </span>
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </>
+        )}
+      </section>
+
+      {/* Research Dimensions Overview */}
+      <section className="bg-muted/30 border-y border-border">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+          <AnimatedSection direction="up">
+            <h2 className="text-2xl font-display font-bold text-foreground mb-2">Research Dimensions</h2>
+            <p className="text-sm text-muted-foreground mb-8">
+              Our research goes beyond safety testing — each platform is evaluated across 7 critical dimensions.
+            </p>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <DimensionCard
+              icon={Shield}
+              title="Safety Testing"
+              description={`${totalTests} prompts across ${totalCategories} harm categories with scores 0–4`}
+              stat={`${platforms.filter((p) => p.completedTests > 0).length}/${platforms.length} platforms tested`}
+              href="/research/ai-chatbots/dimensions/safety-testing"
+              color="text-red-500"
+            />
+            <DimensionCard
+              icon={UserCheck}
+              title="Age Verification"
+              description="Minimum age requirements, verification methods, circumvention ease"
+              stat={`${platforms.filter((p) => p.minimumAge && p.minimumAge <= 13).length}/${platforms.length} allow users under 14`}
+              href="/research/ai-chatbots/dimensions/age-verification"
+              color="text-blue-500"
+            />
+            <DimensionCard
+              icon={Lock}
+              title="Parental Controls"
+              description="Parent linking, visibility matrix, configurable controls, bypass risks"
+              stat={`${platforms.filter((p) => p.hasParentalDashboard).length}/${platforms.length} have any parent dashboard`}
+              href="/research/ai-chatbots/dimensions/parental-controls"
+              color="text-purple-500"
+            />
+            <DimensionCard
+              icon={MessageSquare}
+              title="Conversation Controls"
+              description="Time limits, message caps, quiet hours, break reminders"
+              stat={`${platforms.filter((p) => p.hasTimeLimits).length}/${platforms.length} offer any time limits`}
+              href="/research/ai-chatbots/dimensions/conversation-controls"
+              color="text-teal-500"
+            />
+            <DimensionCard
+              icon={Heart}
+              title="Emotional Safety"
+              description="Attachment research, retention tactics, sycophancy, AI identity disclosure"
+              stat={`${platforms.filter((p) => p.hasEmotionalSafety).length}/${platforms.length} platforms analyzed`}
+              href="/research/ai-chatbots/dimensions/emotional-safety"
+              color="text-pink-500"
+            />
+            <DimensionCard
+              icon={BookOpen}
+              title="Academic Integrity"
+              description="Homework generation, study mode, detection methods, teacher visibility"
+              stat={`${platforms.filter((p) => p.hasAcademicIntegrity).length}/${platforms.length} platforms analyzed`}
+              href="/research/ai-chatbots/dimensions/academic-integrity"
+              color="text-indigo-500"
+            />
+            <DimensionCard
+              icon={Database}
+              title="Privacy & Data"
+              description="Data collection scope, model training policies, regulatory actions, memory"
+              stat={`${platforms.filter((p) => p.hasPrivacyData).length}/${platforms.length} platforms analyzed`}
+              href="/research/ai-chatbots/dimensions/privacy-data"
+              color="text-amber-500"
+              className="sm:col-span-2 lg:col-span-1"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Cards */}
+      <section id="platforms" className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl font-display font-bold text-foreground">Platform Reports</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Click any platform for the full 7-dimension research report
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Sort:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="text-xs border border-border rounded px-2 py-1 bg-background text-foreground"
+              >
+                <option value="score">Safety Score</option>
+                <option value="name">Name</option>
+              </select>
+            </div>
+            <button
+              onClick={handleExportCSV}
+              className="inline-flex items-center gap-1.5 text-xs border border-border rounded px-2.5 py-1 bg-background text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Export CSV
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {sortedPlatforms.map((platform) => (
+            <PlatformCard key={platform.platformId} platform={platform} />
+          ))}
+        </div>
+      </section>
+
+      {/* What Parents Can Do */}
+      <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+          <AnimatedSection direction="up">
+            <div className="text-center max-w-2xl mx-auto">
+              <Shield className="w-8 h-8 text-brand-green mx-auto mb-4" />
+              <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
+                Based on Our Findings,{" "}
+                <span className="text-brand-green">Here&apos;s What Parents Can Do</span>
+              </h2>
+              <p className="text-white/60 mb-6">
+                See what controls each platform lacks natively — and what tools exist to fill the gaps,
+                including platform settings, browser extensions, and dedicated safety layers like Phosra.
+              </p>
+              <Link
+                href="/research/ai-chatbots/phosra-controls"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-green text-white font-medium hover:bg-brand-green/90 transition-colors"
+              >
+                View Safety Controls Comparison
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+// ── Sub-components ──────────────────────────────────────────────────
+
+function StatCard({ value, label, warn }: { value: string; label: string; warn?: boolean }) {
+  return (
+    <div className={`rounded-lg px-4 py-3 text-center ${warn ? "bg-red-500/10 border border-red-500/20" : "bg-white/[0.05] border border-white/[0.08]"}`}>
+      <div className={`text-2xl sm:text-3xl font-display font-bold ${warn ? "text-red-400" : "text-white"}`}>{value}</div>
+      <div className="text-xs text-white/50 mt-0.5">{label}</div>
+    </div>
+  )
+}
+
+function DimensionCard({
+  icon: Icon,
+  title,
+  description,
+  stat,
+  href,
+  color,
+  className = "",
+}: {
+  icon: typeof Shield
+  title: string
+  description: string
+  stat: string
+  href: string
+  color: string
+  className?: string
+}) {
+  return (
+    <Link href={href} className={`group ${className}`}>
+      <div className="rounded-lg border border-border bg-card p-5 h-full hover:border-brand-green/30 hover:shadow-sm transition-all">
+        <div className="flex items-center gap-2.5 mb-3">
+          <Icon className={`w-5 h-5 ${color}`} />
+          <h3 className="text-sm font-semibold text-foreground group-hover:text-brand-green transition-colors">
+            {title}
+          </h3>
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed mb-3">{description}</p>
+        <div className="text-[11px] font-medium text-foreground/70 bg-muted/50 rounded px-2 py-1 inline-block">
+          {stat}
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+function PlatformCard({ platform }: { platform: PlatformSummary }) {
+  const dimensions = [
+    { key: "safety", has: platform.completedTests > 0, label: "Safety" },
+    { key: "age", has: platform.hasAgeVerification, label: "Age" },
+    { key: "parental", has: platform.hasParentalControls, label: "Parental" },
+    { key: "conversation", has: platform.hasConversationControls, label: "Conv." },
+    { key: "emotional", has: platform.hasEmotionalSafety, label: "Emotional" },
+    { key: "academic", has: platform.hasAcademicIntegrity, label: "Academic" },
+    { key: "privacy", has: platform.hasPrivacyData, label: "Privacy" },
+  ]
+  const coveredDimensions = dimensions.filter((d) => d.has).length
+
+  return (
+    <Link href={`/research/ai-chatbots/${platform.platformId}`} className="group">
+      <div className="rounded-lg border border-border bg-card p-5 h-full hover:border-brand-green/30 hover:shadow-sm transition-all">
+        {/* Header: Name + Grade */}
+        <div className="flex items-start justify-between mb-3">
+          <h3 className="text-base font-semibold text-foreground group-hover:text-brand-green transition-colors">
+            {platform.platformName}
+          </h3>
+          <div className={`flex flex-col items-center px-3 py-1.5 rounded-lg ${gradeBg(platform.overallGrade)}`}>
+            <span className={`text-xl font-bold ${gradeColor(platform.overallGrade)}`}>
+              {platform.overallGrade}
+            </span>
+            <span className={`text-[10px] font-semibold ${gradeColor(platform.overallGrade)}`}>{platform.numericalScore}/100</span>
+          </div>
+        </div>
+
+        {/* Grade cap warning */}
+        {platform.gradeCap && (
+          <div className="flex items-center gap-1.5 text-[10px] text-amber-600 dark:text-amber-400 mb-3">
+            <AlertTriangle className="w-3 h-3 flex-shrink-0" />
+            <span>Grade capped at {platform.gradeCap}</span>
+          </div>
+        )}
+
+        {/* Score Distribution Mini Bar */}
+        <div className="flex h-2 rounded-full overflow-hidden mb-3">
+          {platform.scoreDistribution.fullBlock > 0 && (
+            <div
+              className="bg-emerald-500"
+              style={{ width: `${(platform.scoreDistribution.fullBlock / platform.completedTests) * 100}%` }}
+              title={`${platform.scoreDistribution.fullBlock} full ${platform.scoreDistribution.fullBlock === 1 ? "block" : "blocks"}`}
+            />
+          )}
+          {platform.scoreDistribution.partialBlock > 0 && (
+            <div
+              className="bg-blue-500"
+              style={{ width: `${(platform.scoreDistribution.partialBlock / platform.completedTests) * 100}%` }}
+              title={`${platform.scoreDistribution.partialBlock} partial ${platform.scoreDistribution.partialBlock === 1 ? "block" : "blocks"}`}
+            />
+          )}
+          {platform.scoreDistribution.softWarning > 0 && (
+            <div
+              className="bg-amber-500"
+              style={{ width: `${(platform.scoreDistribution.softWarning / platform.completedTests) * 100}%` }}
+              title={`${platform.scoreDistribution.softWarning} soft ${platform.scoreDistribution.softWarning === 1 ? "warning" : "warnings"}`}
+            />
+          )}
+          {platform.scoreDistribution.compliant > 0 && (
+            <div
+              className="bg-orange-500"
+              style={{ width: `${(platform.scoreDistribution.compliant / platform.completedTests) * 100}%` }}
+              title={`${platform.scoreDistribution.compliant} compliant`}
+            />
+          )}
+          {platform.scoreDistribution.enthusiastic > 0 && (
+            <div
+              className="bg-red-500"
+              style={{ width: `${(platform.scoreDistribution.enthusiastic / platform.completedTests) * 100}%` }}
+              title={`${platform.scoreDistribution.enthusiastic} enthusiastic`}
+            />
+          )}
+        </div>
+
+        {/* Dimension badges */}
+        <div className="flex flex-wrap gap-1 mb-3">
+          {dimensions.map((dim) => (
+            <span
+              key={dim.key}
+              className={`inline-block text-[9px] px-1.5 py-0.5 rounded ${
+                dim.has
+                  ? "bg-brand-green/10 text-brand-green font-medium"
+                  : "bg-muted text-muted-foreground/50"
+              }`}
+            >
+              {dim.label}
+            </span>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-2 border-t border-border/50">
+          <span className="text-[10px] text-muted-foreground">
+            {coveredDimensions}/7 dimensions
+          </span>
+          <span className="text-[10px] text-brand-green font-medium group-hover:underline flex items-center gap-1">
+            Full Report <ArrowRight className="w-3 h-3" />
+          </span>
+        </div>
+      </div>
+    </Link>
+  )
+}

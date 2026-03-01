@@ -10,6 +10,10 @@ let cachedContext: string | null = null
 
 async function getContext(): Promise<string> {
   if (!cachedContext) {
+    let chatbotContext = ""
+    let streamingContext = ""
+
+    // Load chatbot research context
     try {
       const { buildResearchContext } = await import(
         "@/lib/platform-research/chat-context"
@@ -17,19 +21,47 @@ async function getContext(): Promise<string> {
       const ctx = await buildResearchContext()
       // If the dynamic build returned only the intro (no data loaded), fall back to static
       if (ctx.length > RESEARCH_SYSTEM_PROMPT_INTRO.length + 100) {
-        cachedContext = ctx
+        chatbotContext = ctx
       } else {
         console.warn(
           "[research/chat] Dynamic context empty, using static fallback"
         )
-        cachedContext = STATIC_RESEARCH_CONTEXT
+        chatbotContext = STATIC_RESEARCH_CONTEXT
       }
     } catch (err) {
       console.warn(
         "[research/chat] Failed to build dynamic context, using static fallback:",
         err
       )
-      cachedContext = STATIC_RESEARCH_CONTEXT
+      chatbotContext = STATIC_RESEARCH_CONTEXT
+    }
+
+    // Load streaming platform safety context
+    try {
+      const { buildStreamingResearchContext } = await import(
+        "@/lib/streaming-research/chat-context"
+      )
+      streamingContext = await buildStreamingResearchContext()
+    } catch (err) {
+      console.warn(
+        "[research/chat] Failed to build streaming context, skipping:",
+        err
+      )
+    }
+
+    // Combine both contexts
+    if (streamingContext) {
+      cachedContext =
+        chatbotContext +
+        "\n\n## STREAMING PLATFORM SAFETY DATA\n" +
+        "You also have access to comprehensive safety research on streaming video platforms (Netflix, Peacock, Prime Video). " +
+        "These platforms were tested across 9 categories including Profile Escape, Search & Discovery, Direct URL/Deep Link, " +
+        "Kids Mode Escape, Recommendation Leakage, Cross-Profile Bleed, Content Rating Gaps, PIN/Lock Bypass, and Maturity Filter Effectiveness. " +
+        "Each platform was tested with three age profiles: TestChild7 (kids), TestChild12 (kids/teen), and TestTeen16 (teen). " +
+        "When asked about streaming safety, use this data to provide informed answers.\n\n" +
+        streamingContext
+    } else {
+      cachedContext = chatbotContext
     }
   }
   return cachedContext

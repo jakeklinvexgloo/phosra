@@ -7,11 +7,24 @@ import { Menu, X, Search, LogOut, ChevronDown, LayoutDashboard } from "lucide-re
 import { useStytchUser, useStytch } from "@stytch/nextjs"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 
-const NAV_LINKS = [
+interface NavLink {
+  href: string
+  label: string
+  children?: { href: string; label: string; description?: string }[]
+}
+
+const NAV_LINKS: NavLink[] = [
   { href: "/developers", label: "Developers" },
   { href: "/parental-controls", label: "Parental Controls" },
   { href: "/technology-services", label: "Services" },
-  { href: "/ai-safety", label: "AI Safety" },
+  {
+    href: "/research",
+    label: "Research",
+    children: [
+      { href: "/research/ai-chatbots", label: "AI Chatbot Safety", description: "Safety testing across 8 AI chatbot platforms" },
+      { href: "/research/streaming", label: "Streaming Safety", description: "Parental controls on 3 streaming platforms" },
+    ],
+  },
   { href: "/compliance", label: "Compliance" },
   { href: "/movements", label: "Movements" },
   { href: "/blog", label: "Blog" },
@@ -29,7 +42,9 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [researchOpen, setResearchOpen] = useState(false)
   const userMenuRef = useRef<HTMLDivElement>(null)
+  const researchRef = useRef<HTMLDivElement>(null)
   const { user, isInitialized } = useStytchUser()
   const stytchClient = useStytch()
 
@@ -42,11 +57,14 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
   const isAuthenticated = isInitialized && (!!user || isSandbox)
   const displayName = isSandbox ? "Dev User" : (user?.name?.first_name || user?.emails?.[0]?.email || "User")
 
-  // Close user menu on outside click
+  // Close menus on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
         setUserMenuOpen(false)
+      }
+      if (researchRef.current && !researchRef.current.contains(e.target as Node)) {
+        setResearchOpen(false)
       }
     }
     document.addEventListener("mousedown", handleClick)
@@ -54,9 +72,12 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
   }, [])
 
   // Determine active link — dashboard pages highlight nothing in the top nav
-  const isNavActive = (href: string) => {
+  const isNavActive = (link: NavLink) => {
     if (pathname.startsWith("/dashboard")) return false
-    return pathname.startsWith(href)
+    if (link.children) {
+      return link.children.some((child) => pathname.startsWith(child.href))
+    }
+    return pathname.startsWith(link.href)
   }
 
   return (
@@ -78,7 +99,57 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
           {/* Desktop nav */}
           <nav className="hidden sm:flex items-center gap-1">
             {NAV_LINKS.map((link) => {
-              const isActive = isNavActive(link.href)
+              const isActive = isNavActive(link)
+
+              // Dropdown item (Research)
+              if (link.children) {
+                return (
+                  <div
+                    key={link.label}
+                    ref={researchRef}
+                    className="relative"
+                    onMouseEnter={() => setResearchOpen(true)}
+                    onMouseLeave={() => setResearchOpen(false)}
+                  >
+                    <button
+                      className={`flex items-center gap-1 px-3 py-1.5 text-sm rounded transition-colors ${
+                        isActive
+                          ? "font-medium text-foreground bg-muted"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      }`}
+                    >
+                      {link.label}
+                      <ChevronDown className="w-3 h-3" />
+                    </button>
+
+                    {researchOpen && (
+                      <div className="absolute left-0 top-full pt-1 z-50">
+                        <div className="w-64 bg-background border border-border rounded-lg shadow-lg py-1">
+                          {link.children.map((child) => (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={() => setResearchOpen(false)}
+                              className="block px-4 py-2.5 hover:bg-muted transition-colors"
+                            >
+                              <div className="text-sm font-medium text-foreground">
+                                {child.label}
+                              </div>
+                              {child.description && (
+                                <div className="text-xs text-muted-foreground mt-0.5">
+                                  {child.description}
+                                </div>
+                              )}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              }
+
+              // Regular link
               return (
                 <Link
                   key={link.href}
@@ -181,7 +252,36 @@ export function PublicPageHeader({ onSearchClick }: PublicPageHeaderProps) {
       {mobileOpen && (
         <div className="sm:hidden border-b border-border bg-background px-4 py-3 space-y-1">
           {NAV_LINKS.map((link) => {
-            const isActive = isNavActive(link.href)
+            const isActive = isNavActive(link)
+
+            // Dropdown items render as a group in mobile
+            if (link.children) {
+              return (
+                <div key={link.label}>
+                  <div className="px-3 py-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    {link.label}
+                  </div>
+                  {link.children.map((child) => {
+                    const childActive = pathname.startsWith(child.href)
+                    return (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`block pl-6 pr-3 py-2.5 rounded text-sm transition-colors ${
+                          childActive
+                            ? "font-medium text-foreground bg-muted"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        }`}
+                      >
+                        {child.label}
+                      </Link>
+                    )
+                  })}
+                </div>
+              )
+            }
+
             return (
               <Link
                 key={link.href}

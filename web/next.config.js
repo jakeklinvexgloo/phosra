@@ -6,13 +6,19 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/dashboard/admin/platform-research/\\[platformId\\]': ['../research/**/*'],
     '/api/admin/research/filesystem-scan': ['../research/**/*'],
-    '/ai-safety': ['../research/**/*'],
-    '/ai-safety/\\[platformId\\]': ['../research/**/*'],
-    '/ai-safety/categories/\\[categoryId\\]': ['../research/**/*'],
-    '/ai-safety/dimensions/\\[dimensionId\\]': ['../research/**/*'],
-    '/ai-safety/prompts': ['../research/**/*'],
-    '/ai-safety/compare': ['../research/**/*'],
-    '/ai-safety/phosra-controls': ['../research/**/*'],
+    '/research/ai-chatbots': ['../research/**/*'],
+    '/research/ai-chatbots/\\[platformId\\]': ['../research/**/*'],
+    '/research/ai-chatbots/categories/\\[categoryId\\]': ['../research/**/*'],
+    '/research/ai-chatbots/dimensions/\\[dimensionId\\]': ['../research/**/*'],
+    '/research/ai-chatbots/prompts': ['../research/**/*'],
+    '/research/ai-chatbots/compare': ['../research/**/*'],
+    '/research/ai-chatbots/phosra-controls': ['../research/**/*'],
+    '/research/streaming': ['../research/**/*'],
+    '/research/streaming/\\[platformId\\]': ['../research/**/*'],
+    '/research/streaming/compare': ['../research/**/*'],
+    '/research/streaming/categories': ['../research/**/*'],
+    '/research/streaming/categories/\\[categoryId\\]': ['../research/**/*'],
+    '/research/compare': ['../research/**/*'],
   },
   experimental: {
     instrumentationHook: true,
@@ -63,6 +69,28 @@ const nextConfig = {
       {
         source: '/developers/dashboard/usage',
         destination: '/dashboard/developers/usage',
+        permanent: true,
+      },
+      // AI Safety → Research/AI Chatbots redirects
+      {
+        source: '/ai-safety',
+        destination: '/research/ai-chatbots',
+        permanent: true,
+      },
+      {
+        source: '/ai-safety/:path*',
+        destination: '/research/ai-chatbots/:path*',
+        permanent: true,
+      },
+      // Streaming Safety → Research/Streaming redirects
+      {
+        source: '/streaming-safety',
+        destination: '/research/streaming',
+        permanent: true,
+      },
+      {
+        source: '/streaming-safety/:path*',
+        destination: '/research/streaming/:path*',
         permanent: true,
       },
       // Newsroom → Blog redirects

@@ -54,7 +54,7 @@ const DIMENSION_ITEMS: SearchResultItem[] = [
     title: "Safety Testing",
     description:
       "Safety test results across 12 harm categories and 35+ test prompts",
-    url: "/ai-safety/dimensions/safety-testing",
+    url: "/research/ai-chatbots/dimensions/safety-testing",
     tags: ["safety", "testing", "scores", "grades"],
   },
   {
@@ -62,7 +62,7 @@ const DIMENSION_ITEMS: SearchResultItem[] = [
     title: "Age Verification",
     description:
       "How platforms verify user age and prevent underage access",
-    url: "/ai-safety/dimensions/age-verification",
+    url: "/research/ai-chatbots/dimensions/age-verification",
     tags: ["age", "verification", "underage", "minors"],
   },
   {
@@ -70,7 +70,7 @@ const DIMENSION_ITEMS: SearchResultItem[] = [
     title: "Parental Controls",
     description:
       "Parent dashboards, visibility, configurable controls, and bypass vulnerabilities",
-    url: "/ai-safety/dimensions/parental-controls",
+    url: "/research/ai-chatbots/dimensions/parental-controls",
     tags: ["parental", "controls", "dashboard", "family"],
   },
   {
@@ -78,7 +78,7 @@ const DIMENSION_ITEMS: SearchResultItem[] = [
     title: "Conversation Controls",
     description:
       "Time limits, message limits, quiet hours, and break reminders",
-    url: "/ai-safety/dimensions/conversation-controls",
+    url: "/research/ai-chatbots/dimensions/conversation-controls",
     tags: ["conversation", "time", "limits", "breaks"],
   },
   {
@@ -86,7 +86,7 @@ const DIMENSION_ITEMS: SearchResultItem[] = [
     title: "Emotional Safety",
     description:
       "Attachment research, retention tactics, AI identity disclosure, sycophancy",
-    url: "/ai-safety/dimensions/emotional-safety",
+    url: "/research/ai-chatbots/dimensions/emotional-safety",
     tags: ["emotional", "attachment", "sycophancy", "identity"],
   },
   {
@@ -94,7 +94,7 @@ const DIMENSION_ITEMS: SearchResultItem[] = [
     title: "Academic Integrity",
     description:
       "Homework capabilities, study mode, detection methods, teacher visibility",
-    url: "/ai-safety/dimensions/academic-integrity",
+    url: "/research/ai-chatbots/dimensions/academic-integrity",
     tags: ["academic", "homework", "cheating", "school"],
   },
   {
@@ -102,7 +102,7 @@ const DIMENSION_ITEMS: SearchResultItem[] = [
     title: "Privacy & Data",
     description:
       "Data collection, model training policies, regulatory actions, memory features",
-    url: "/ai-safety/dimensions/privacy-data",
+    url: "/research/ai-chatbots/dimensions/privacy-data",
     tags: ["privacy", "data", "GDPR", "training"],
   },
 ]
@@ -114,21 +114,21 @@ const SPECIAL_PAGE_ITEMS: SearchResultItem[] = [
     type: "dimension",
     title: "Compare Platforms",
     description: "Side-by-side comparison of 2-4 AI chatbot platforms",
-    url: "/ai-safety/compare",
+    url: "/research/ai-chatbots/compare",
     tags: ["compare", "versus", "side-by-side"],
   },
   {
     type: "prompt",
     title: "Test Prompt Index",
     description: "All safety test prompts with per-platform scores",
-    url: "/ai-safety/prompts",
+    url: "/research/ai-chatbots/prompts",
     tags: ["prompts", "tests", "questions"],
   },
   {
     type: "dimension",
     title: "Methodology",
     description: "Testing framework, scoring rubric, and grading algorithm",
-    url: "/ai-safety/methodology",
+    url: "/research/ai-chatbots/methodology",
     tags: ["methodology", "scoring", "algorithm", "rubric"],
   },
   {
@@ -136,7 +136,7 @@ const SPECIAL_PAGE_ITEMS: SearchResultItem[] = [
     title: "Phosra Controls Overview",
     description:
       "What controls each platform lacks and what Phosra enforces",
-    url: "/ai-safety/phosra-controls",
+    url: "/research/ai-chatbots/phosra-controls",
     tags: ["phosra", "controls", "enforcement", "gaps"],
   },
 ]
@@ -148,7 +148,7 @@ function buildPlatformItems(platforms: PlatformInput[]): SearchResultItem[] {
     type: "platform" as const,
     title: p.platformName,
     description: `Safety grade: ${p.overallGrade} (${p.numericalScore}/100) \u2014 ${p.completedTests} tests scored`,
-    url: `/ai-safety/${p.platformId}`,
+    url: `/research/ai-chatbots/${p.platformId}`,
     tags: [p.overallGrade, p.platformId],
     grade: p.overallGrade,
     score: p.numericalScore,
@@ -174,7 +174,7 @@ function buildCategoryItems(platforms: PlatformInput[]): SearchResultItem[] {
     type: "category" as const,
     title: label,
     description: `Safety testing category \u2014 scores across ${count} platform${count === 1 ? "" : "s"}`,
-    url: `/ai-safety/categories/${slug}`,
+    url: `/research/ai-chatbots/categories/${slug}`,
     tags: slug.split("_"),
     category: slug,
   }))
@@ -190,7 +190,7 @@ function buildFindingItems(platforms: PlatformInput[]): SearchResultItem[] {
     title: `Only ${dashboardCount}/${total} platforms have parental dashboards`,
     description:
       "Most AI chatbots lack a dedicated parent dashboard for monitoring and controls",
-    url: "/ai-safety/dimensions/parental-controls",
+    url: "/research/ai-chatbots/dimensions/parental-controls",
     tags: ["parental", "dashboard", "monitoring"],
   })
 
@@ -200,7 +200,7 @@ function buildFindingItems(platforms: PlatformInput[]): SearchResultItem[] {
     title: `Only ${timeLimitCount}/${total} platforms offer time limits`,
     description:
       "Few AI chatbots provide built-in time or usage limits for minors",
-    url: "/ai-safety/dimensions/conversation-controls",
+    url: "/research/ai-chatbots/dimensions/conversation-controls",
     tags: ["time", "limits", "usage", "screen time"],
   })
 
@@ -210,7 +210,7 @@ function buildFindingItems(platforms: PlatformInput[]): SearchResultItem[] {
     title: `${quietHoursCount}/${total} platforms offer quiet hours`,
     description:
       "Quiet hours restrict chatbot access during nighttime or school hours",
-    url: "/ai-safety/dimensions/conversation-controls",
+    url: "/research/ai-chatbots/dimensions/conversation-controls",
     tags: ["quiet hours", "nighttime", "scheduling"],
   })
 
@@ -224,7 +224,7 @@ function buildFindingItems(platforms: PlatformInput[]): SearchResultItem[] {
       type: "finding",
       title: `Minimum age ranges from ${minAge} to ${maxAge}`,
       description: `Platform-stated minimum ages vary from ${minAge} to ${maxAge} years old`,
-      url: "/ai-safety/dimensions/age-verification",
+      url: "/research/ai-chatbots/dimensions/age-verification",
       tags: ["age", "minimum", "requirement", "verification"],
     })
   }
@@ -241,7 +241,7 @@ function buildFindingItems(platforms: PlatformInput[]): SearchResultItem[] {
       type: "finding",
       title: `${names.length} platform${names.length === 1 ? "" : "s"} received ${letter}-range grades`,
       description: names.join(", "),
-      url: "/ai-safety",
+      url: "/research/ai-chatbots",
       tags: ["grade", letter, "safety", "score"],
     })
   }
@@ -275,7 +275,7 @@ function buildControlItems(platforms: PlatformInput[]): SearchResultItem[] {
     type: "control" as const,
     title: label,
     description: `Control gap identified across ${count} platform${count === 1 ? "" : "s"} \u2014 Phosra provides enforcement`,
-    url: "/ai-safety/phosra-controls",
+    url: "/research/ai-chatbots/phosra-controls",
     tags: label
       .toLowerCase()
       .split(/[\s/]+/)

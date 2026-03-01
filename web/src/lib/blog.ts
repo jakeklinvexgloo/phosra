@@ -92,7 +92,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "All of our research is published in full at phosra.com/ai-safety. Each platform has a detailed profile showing its overall safety grade, dimension-by-dimension scores, individual test results with annotated screenshots, and specific recommendations for improvement. The portal includes an AI research assistant that can answer questions about the data and help parents, educators, and policymakers navigate the findings.",
+        text: "All of our research is published in full at phosra.com/research/ai-chatbots. Each platform has a detailed profile showing its overall safety grade, dimension-by-dimension scores, individual test results with annotated screenshots, and specific recommendations for improvement. The portal includes an AI research assistant that can answer questions about the data and help parents, educators, and policymakers navigate the findings.",
       },
       {
         type: "paragraph",
@@ -108,7 +108,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "Explore the full research at phosra.com/ai-safety. If you\u2019re a platform developer looking to improve your safety posture, the API documentation and integration guides are at phosra.com/docs.",
+        text: "Explore the full research at phosra.com/research/ai-chatbots. If you\u2019re a platform developer looking to improve your safety posture, the API documentation and integration guides are at phosra.com/docs.",
       },
     ],
   },
