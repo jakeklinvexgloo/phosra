@@ -1,0 +1,243 @@
+{
+  "platform": "peacock",
+  "testDate": "2026-02-28",
+  "tester": "claude-opus-4-6",
+  "frameworkVersion": "1.0",
+  "profiles": {
+    "TestChild7": {
+      "profileType": "kids",
+      "maturitySetting": "Family (TVPG, PG)",
+      "results": {
+        "PE-01": {
+          "category": "Profile Escape",
+          "weight": 5,
+          "score": 3,
+          "label": "Unprotected",
+          "description": "Child can switch to any profile (including Adult) from the profile picker with ZERO authentication. No PIN, no password, no confirmation dialog. All profiles visible including TestAdult. Clicked TestAdult and immediately landed on full Adult home with TV-MA content (Surface, Afterparty, Dynasty, Platonic).",
+          "evidence": [
+            "screenshots/pe-01_child7_profile_picker.png",
+            "screenshots/pe-01_child7_switched_to_adult.png"
+          ],
+          "cfoTriggered": "CFO-2",
+          "cfoEffect": "Grade capped at D (Critical failure on Child-7 profile)"
+        },
+        "SD-01": {
+          "category": "Search & Discovery",
+          "weight": 5,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Searching for 'Yellowstone' (TV-MA) on Kids profile returns 'No results were found.' Search is scoped to 'Search Kids' — completely isolated from adult catalog.",
+          "evidence": [
+            "screenshots/sd-01_child7_yellowstone_search.png"
+          ]
+        },
+        "DU-01": {
+          "category": "Direct URL / Deep Link",
+          "weight": 3,
+          "score": 1,
+          "label": "Partial Block",
+          "description": "Direct URL to Yellowstone (TV-MA) on Kids profile shows 'Please switch to a non-kids profile to view this content' with profile picker showing all profiles including Adult. Content existence is revealed and zero-auth profile switching is available directly from the block page.",
+          "evidence": [
+            "screenshots/du-01_child7_yellowstone_direct.png"
+          ]
+        },
+        "KM-01": {
+          "category": "Kids Mode Escape",
+          "weight": 3,
+          "score": 1,
+          "label": "Partial Block",
+          "description": "Kids profile has dedicated 'Peacock Kids' walled garden at /watch/kids/highlights with only Home and My Stuff navigation. /watch/home redirects to Kids home. However, adult-only pages (/watch/movies/highlights) show 'Please switch to a non-kids profile' with profile picker — revealing adult content sections exist and providing zero-auth profile switcher.",
+          "evidence": [
+            "screenshots/km-01_child7_home_redirect.png",
+            "screenshots/km-01_child7_movies_page.png"
+          ]
+        },
+        "RL-01": {
+          "category": "Recommendation Leakage",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Kids home page exclusively shows kid-appropriate content: 'For You' (Blippi TVY, Curious George TVY, Ninjago TVY7-FV), 'Just Added' (Trolls TVY7, Boss Baby PG), 'Featured Movies' (Monster Family PG, Labyrinth PG), 'For Younger Kids', 'For Older Kids', etc. Zero mature content leakage. All ratings TVY/TVY7/TVY7-FV/TVPG/PG/G.",
+          "evidence": [
+            "screenshots/rl-01_child7_home.png"
+          ]
+        },
+        "CB-01": {
+          "category": "Cross-Profile Bleed",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "My Stuff page empty — no cross-profile data visible. Fresh account with properly isolated profile data.",
+          "evidence": [
+            "screenshots/cb-01_child7_mystuff.png"
+          ]
+        },
+        "CG-01": {
+          "category": "Content Rating Gaps",
+          "weight": 2,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Content ratings displayed correctly and consistently. Curious George shows 'Kids' badge with 'TVY' rating. All episodes individually show TVY. 'You May Also Like' recommendations also exclusively Kids content.",
+          "evidence": [
+            "screenshots/cg-01_child7_curious_george.png"
+          ]
+        },
+        "PL-01": {
+          "category": "PIN/Lock Bypass",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block / N/A",
+          "description": "No PIN gate needed on Kids profile — content is blocked at the profile level. Mature content completely inaccessible within the Kids walled garden. Direct URLs show profile switch prompt rather than content.",
+          "evidence": []
+        },
+        "MF-01": {
+          "category": "Maturity Filter Effectiveness",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Maturity filter comprehensively blocks all mature content across search and recommendations. Only TV-Y/TV-Y7/TV-PG/PG/G content visible. Direct URL is the only vector that reveals content existence, and even then only shows a 'switch profile' prompt.",
+          "evidence": []
+        }
+      }
+    },
+    "TestChild12": {
+      "profileType": "kids",
+      "maturitySetting": "Family (TVPG, PG)",
+      "notes": "Identical to TestChild7 — Peacock Kids profiles have no age granularity below 13. Both profiles show identical Peacock Kids experience with same maturity tier.",
+      "results": {
+        "PE-01": { "score": 3, "label": "Unprotected", "description": "Same as TestChild7 — zero-auth profile switching", "cfoTriggered": "CFO-2" },
+        "SD-01": { "score": 0, "label": "Full Block", "description": "Same as TestChild7 — search scoped to Kids" },
+        "DU-01": { "score": 1, "label": "Partial Block", "description": "Same 'Please switch to non-kids profile' block with profile picker", "evidence": ["screenshots/du-01_child12_yellowstone_direct.png"] },
+        "KM-01": { "score": 1, "label": "Partial Block", "description": "Same as TestChild7 — Kids walled garden with profile switch prompts on adult pages" },
+        "RL-01": { "score": 0, "label": "Full Block", "description": "Same as TestChild7 — kids-only recommendations" },
+        "CB-01": { "score": 0, "label": "Full Block", "description": "No cross-profile bleed" },
+        "CG-01": { "score": 0, "label": "Full Block", "description": "Ratings consistent" },
+        "PL-01": { "score": 0, "label": "Full Block / N/A", "description": "Content blocked at profile level" },
+        "MF-01": { "score": 0, "label": "Full Block", "description": "Comprehensive maturity filtering" }
+      }
+    },
+    "TestTeen16": {
+      "profileType": "teen",
+      "maturitySetting": "Teen (13-17, TV-MA filtered)",
+      "results": {
+        "PE-01": {
+          "category": "Profile Escape",
+          "weight": 5,
+          "score": 3,
+          "label": "Unprotected",
+          "description": "Teen can switch to any profile (Adult, Kids, account holder) with zero authentication from profile picker. All profiles visible including 'Mom and Dad' (Locked) with 'You must be 18+ years old to edit' warning on edit button — but switching is unrestricted.",
+          "evidence": [
+            "screenshots/pe-01_teen16_profile_picker.png"
+          ]
+        },
+        "SD-01": {
+          "category": "Search & Discovery",
+          "weight": 5,
+          "score": 2,
+          "label": "Soft Barrier",
+          "description": "TV-MA content (Yellowstone) fully discoverable via search. Detail page shows full metadata: title, artwork, RT score (83%), audience rating (76%), description, full cast (Kevin Costner, Wes Bentley, Kelly Reilly, Luke Grimes, Cole Hauser, Kelsey Asbille), TVMA rating with content descriptors (S, V, L), full episode list with descriptions. Playback blocked but metadata exposure is extensive.",
+          "evidence": [
+            "screenshots/sd-01_teen16_yellowstone_search.png",
+            "screenshots/sd-01_teen16_yellowstone_detail.png"
+          ]
+        },
+        "DU-01": {
+          "category": "Direct URL / Deep Link",
+          "weight": 3,
+          "score": 2,
+          "label": "Soft Barrier",
+          "description": "Direct URL to Yellowstone (TV-MA) shows full detail page with all metadata. Same as search discovery — full access to everything except playback.",
+          "evidence": [
+            "screenshots/sd-01_teen16_yellowstone_detail.png"
+          ]
+        },
+        "KM-01": {
+          "category": "Kids Mode Escape",
+          "weight": 3,
+          "score": 0,
+          "label": "N/A",
+          "description": "Teen profile is not in 'Kids Mode' — it uses the full adult browsing UI with Home, Movies, TV Shows, Sports, My Stuff, Channels navigation. No walled garden to escape from. This is by design for Teen profiles.",
+          "evidence": [
+            "screenshots/teen16_home.png"
+          ]
+        },
+        "RL-01": {
+          "category": "Recommendation Leakage",
+          "weight": 4,
+          "score": 2,
+          "label": "Soft Barrier",
+          "description": "Teen profile homepage shows full adult-style browsing with TV-MA content in recommendations. 'A Taste of Apple TV' row includes Surface (TVMA), The Afterparty (TVMA), The Dynasty: New England Patriots (TVMA), Platonic (TVMA). Playback is blocked but titles, artwork, and TVMA badges are fully visible in the recommendation rows.",
+          "evidence": [
+            "screenshots/teen16_home.png"
+          ]
+        },
+        "CB-01": {
+          "category": "Cross-Profile Bleed",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "No cross-profile bleed observed. Fresh account.",
+          "evidence": []
+        },
+        "CG-01": {
+          "category": "Content Rating Gaps",
+          "weight": 2,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Ratings displayed correctly. TVMA badge clearly visible on mature content. Content descriptors (S, V, L) shown on episode level.",
+          "evidence": []
+        },
+        "PL-01": {
+          "category": "PIN/Lock Bypass",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Playback of TV-MA content is hard blocked on Teen profile with alert: 'This content exceeds the maturity ratings limit set for this profile.' Only a 'BACK' button — NO PIN bypass, NO password override, NO workaround. This is a hard content block, not a PIN gate. Superior to PV's PIN-based approach.",
+          "evidence": [
+            "screenshots/pl-01_teen16_yellowstone_blocked.png"
+          ]
+        },
+        "MF-01": {
+          "category": "Maturity Filter Effectiveness",
+          "weight": 4,
+          "score": 2,
+          "label": "Soft Barrier",
+          "description": "Maturity filter blocks playback but not discovery. Teen profile can browse, search, and view full metadata for all TV-MA content including detailed episode descriptions and content descriptors. Only the play action is hard-blocked (no PIN override available). TV-MA content appears in recommendation rows on the home page.",
+          "evidence": [
+            "screenshots/sd-01_teen16_yellowstone_detail.png",
+            "screenshots/pl-01_teen16_yellowstone_blocked.png"
+          ]
+        }
+      }
+    }
+  },
+  "criticalFailures": [
+    {
+      "cfoId": "CFO-2",
+      "description": "Critical failure on Child-7 profile: Profile Escape allows switching to Adult profile with zero authentication",
+      "affectedProfiles": ["TestChild7", "TestChild12"],
+      "gradeCap": "D",
+      "testId": "PE-01",
+      "score": 3,
+      "evidence": "screenshots/pe-01_child7_switched_to_adult.png"
+    }
+  ],
+  "platformNotes": {
+    "kidsProfileStrength": "Excellent walled garden — dedicated 'Peacock Kids' branded UI at /watch/kids/highlights with search scoped to 'Search Kids', only Home and My Stuff navigation",
+    "kidsProfileWeakness": "Zero-auth profile switching is a critical vulnerability. Direct URLs to adult content show 'switch profile' prompt with all profiles visible including Adult",
+    "teenProfileDesign": "Teen profile uses full adult browsing UI. TV-MA content fully discoverable with complete metadata. Playback is HARD BLOCKED (no PIN option) — better than PV's PIN-gated approach",
+    "teenPlaybackBlock": "Alert: 'This content exceeds the maturity ratings limit set for this profile' with only BACK button. No PIN bypass possible. No content frames or ads loaded before block.",
+    "teenMetadataExposure": "Full detail pages accessible: title, description, cast, RT ratings, content descriptors (S, V, L), episode lists, trailers. Only play button triggers the maturity block.",
+    "profileSystem": "3 types (Adult/Teen/Kids), immutable after creation. Kids profiles have 3 maturity tiers: Little Kids (TVY), Older Kids (TVY7/TVG/G), Family (TVPG/PG). Account holder profile locked with '18+ to edit' warning.",
+    "noAgeGranularity": "Kids profiles have no age granularity below 13 — TestChild7 and TestChild12 have identical experiences",
+    "passwordProtection": "Changing maturity ratings or autoplay settings requires account password re-entry. Profile PINs available per-profile but not enabled on test profiles.",
+    "tvmaInRecommendations": "Surface, The Afterparty, The Dynasty, Platonic (all TVMA) visible in Teen home page 'A Taste of Apple TV' row"
+  },
+  "crossPlatformComparison": {
+    "vs_prime_video": {
+      "kidsProfile": "Both platforms have excellent content filtering within Kids profiles. Both have the same critical PE-01 vulnerability (zero-auth profile switching). Peacock's DU-01 is slightly worse (shows profile picker vs PV's clean 'Age restricted' message).",
+      "teenProfile": "Peacock is BETTER for playback blocking (hard block, no bypass) but WORSE for metadata exposure (full detail pages accessible). PV gates playback with PIN (weaker but bypassable) while exposing same metadata level.",
+      "overallDesign": "Peacock uses profile-type-based immutable restrictions (Kids/Teen/Adult). PV uses account-wide PIN for all viewing restrictions. Peacock's approach is more robust for playback blocking but both fail on profile switching."
+    }
+  }
+}

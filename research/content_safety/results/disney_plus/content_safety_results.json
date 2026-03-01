@@ -1,0 +1,252 @@
+{
+  "platform": "disney_plus",
+  "testDate": "2026-03-01",
+  "tester": "claude-opus-4-6",
+  "frameworkVersion": "1.0",
+  "profiles": {
+    "TestChild7": {
+      "profileType": "kids_junior",
+      "maturitySetting": "Junior Mode (curated kids UI, TV-Y walled garden)",
+      "results": {
+        "PE-01": {
+          "category": "Profile Escape",
+          "weight": 5,
+          "score": 3,
+          "label": "Unprotected",
+          "description": "Child can exit Junior Mode via profile dropdown 'Exit Junior Mode' button — goes directly to full profile picker with ALL profiles visible (Profile/Adult, TestChild12, TestChild7, TestTeen16) and ZERO authentication. Clicked adult 'Profile' and immediately landed on full adult home with TV-MA content (Family Guy TV-MA, Love Story TV-MA, Beatles: Get Back TV-MA visible in recommendations). No PIN, no password, no confirmation dialog.",
+          "evidence": [
+            "screenshots/07_pe01_child7_exit_junior_mode_option.png",
+            "screenshots/08_pe01_child7_escaped_to_profile_picker.png"
+          ],
+          "cfoTriggered": "CFO-2",
+          "cfoEffect": "Grade capped at D (Critical failure on Child-7 Junior Mode profile)"
+        },
+        "SD-01": {
+          "category": "Search & Discovery",
+          "weight": 5,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Searching for 'Deadpool' (R) returns 'No results found for Deadpool'. Searching for 'Family Guy' (TV-MA) also returns no results. Search is fully scoped to Junior Mode content. Explore section shows only kids categories (Muppets, Disney Junior, Cars, Mickey Mouse, Princesses). Footer notice: 'Some content may be hidden due to parental controls.'",
+          "evidence": [
+            "screenshots/09_sd01_child7_deadpool_search.png"
+          ]
+        },
+        "DU-01": {
+          "category": "Direct URL / Deep Link",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Direct URL to mature content entity redirects to Junior Mode home page with modal dialog: 'Content for the request could not be found.' with OK button. Content existence is NOT revealed — no title, no 'switch profile' prompt, no metadata exposed. Superior to Peacock's 'switch profile' prompt approach.",
+          "evidence": [
+            "screenshots/10_du01_child7_direct_url_blocked.png"
+          ]
+        },
+        "KM-01": {
+          "category": "Kids Mode Escape",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Junior Mode provides a curated walled garden with simplified navigation (HOME, WATCHLIST, MOVIES, SERIES, ORIGINALS, SEARCH — no LIVE, no Hulu/ESPN tabs). Movies page accessible but only shows kids content (Princess and the Frog, Lion King, Tinker Bell, Cars, Finding Nemo, Toy Story, Ratatouille). Categories limited to Featured, Action/Adventure, Animation, Comedy, Shorts. Zero mature content accessible through any navigation path within Junior Mode.",
+          "evidence": [
+            "screenshots/06_testchild7_junior_home.png"
+          ]
+        },
+        "RL-01": {
+          "category": "Recommendation Leakage",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Junior Mode home page exclusively shows kid-appropriate content. All titles TV-Y rated: Sofia the First (TV-Y), Spidey and his Amazing Friends (TV-Y), RoboGobo (TV-Y), Hey AJ! (TV-Y), Firebuds (TV-Y), Bluey Minisodes (TV-Y), SuperKitties (TV-Y), CoComelon (TV-Y), Mickey Mouse Clubhouse+ (TV-Y). Content rows: Featured, Disney Junior, Princesses and Fairy Tales. Zero mature content leakage.",
+          "evidence": [
+            "screenshots/06_testchild7_junior_home.png"
+          ]
+        },
+        "CB-01": {
+          "category": "Cross-Profile Bleed",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Watchlist page empty — 'You haven't added anything yet.' No cross-profile data visible. Fresh account with properly isolated profile data.",
+          "evidence": []
+        },
+        "CG-01": {
+          "category": "Content Rating Gaps",
+          "weight": 2,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Ratings displayed correctly and consistently. Spidey and his Amazing Friends shows TV-Y rating badge. Each episode individually marked 'Rated TV-Y'. 4 Seasons metadata visible. Content descriptors shown appropriately.",
+          "evidence": []
+        },
+        "PL-01": {
+          "category": "PIN/Lock Bypass",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block / N/A",
+          "description": "No PIN gate needed on Junior Mode profile — content is blocked at the profile level. Mature content completely inaccessible within the Junior Mode walled garden. Direct URLs show 'Content not found' rather than content or profile switch prompt.",
+          "evidence": []
+        },
+        "MF-01": {
+          "category": "Maturity Filter Effectiveness",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Maturity filter comprehensively blocks all mature content across search, recommendations, browse, and direct URLs. Only TV-Y content visible in Junior Mode. Footer transparency notice on search: 'Some content may be hidden due to parental controls.' Direct URL is cleanly blocked with no metadata exposure.",
+          "evidence": []
+        }
+      }
+    },
+    "TestChild12": {
+      "profileType": "child_restricted",
+      "maturitySetting": "TV-14 (selected 'NOT NOW' during profile creation)",
+      "notes": "Non-Junior Mode child profile (DOB age 12). Uses full adult browsing UI with Hulu/ESPN/LIVE tabs but content filtered to TV-14 and below. Created with COPPA consent and password confirmation (under 13).",
+      "results": {
+        "PE-01": {
+          "category": "Profile Escape",
+          "weight": 5,
+          "score": 3,
+          "label": "Unprotected",
+          "description": "Child can navigate to /select-profile and switch to any profile (including Adult) with zero authentication. All profiles visible. No PIN, no password, no confirmation. Same critical vulnerability as Junior Mode.",
+          "evidence": [
+            "screenshots/12_pe01_child12_profile_picker.png"
+          ],
+          "cfoTriggered": "CFO-2",
+          "cfoEffect": "Grade capped at D (Critical failure on Child-12 profile)"
+        },
+        "SD-01": {
+          "category": "Search & Discovery",
+          "weight": 5,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Searching for 'Deadpool' (R) returns 'No results found for Deadpool'. Searching for 'Family Guy' (TV-MA) returns only 'Family by the Ton' (TV-14) — the actual Family Guy show is completely hidden. Search page footer: 'Your profile is set to TV-14. Titles above this rating will not appear. To update your content rating, go to profile settings.'",
+          "evidence": [
+            "screenshots/13_sd01_child12_deadpool_search.png"
+          ]
+        },
+        "DU-01": {
+          "category": "Direct URL / Deep Link",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Direct URL to Family Guy (TV-MA) via /series/family-guy/5H2bPEHtK7Wi silently redirects to home page. No error dialog, no content revealed, no 'switch profile' prompt. Content completely invisible. Even cleaner than Junior Mode's 'content not found' dialog.",
+          "evidence": []
+        },
+        "KM-01": {
+          "category": "Kids Mode Escape",
+          "weight": 3,
+          "score": 0,
+          "label": "N/A",
+          "description": "TestChild12 is NOT in Kids/Junior Mode — uses full adult browsing UI with HOME, LIVE, WATCHLIST, MOVIES, SERIES, ORIGINALS, SEARCH navigation plus Hulu/ESPN/Disney+ tabs. Content filtering is applied at the content-rating level rather than through a walled garden. All browsable content is TV-14 or below.",
+          "evidence": [
+            "screenshots/11_child12_home_tv14_notice.png"
+          ]
+        },
+        "RL-01": {
+          "category": "Recommendation Leakage",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Home page recommendations all TV-14 or below: Scrubs (TV-14), The Rookie (TV-14), Wonder Man (TV-14), Grey's Anatomy (TV-14), Dancing with the Stars (TV-PG), Percy Jackson (TV-PG), Avatar: The Way of Water (PG-13). Bingeable Series: The Simpsons, 9-1-1, Futurama, Bob's Burgers, Gravity Falls, The Mandalorian. Zero TV-MA content visible.",
+          "evidence": [
+            "screenshots/11_child12_home_tv14_notice.png"
+          ]
+        },
+        "CB-01": { "score": 0, "label": "Full Block", "description": "No cross-profile bleed. Fresh account." },
+        "CG-01": { "score": 0, "label": "Full Block", "description": "Ratings displayed correctly. TV-14 badge clearly visible on all content. Content rating notice shown on profile entry and search page." },
+        "PL-01": { "score": 0, "label": "Full Block / N/A", "description": "Content blocked at the content-rating filter level. TV-MA content completely hidden — cannot even be found to attempt playback. No PIN gate needed." },
+        "MF-01": {
+          "category": "Maturity Filter Effectiveness",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Maturity filter comprehensively blocks all TV-MA content across search, recommendations, browse, and direct URLs. TV-14 ceiling strictly enforced. Transparent notices on search page and profile entry: 'Your profile is set to TV-14. Titles above this rating will not appear.' Content-rating-based approach means no metadata exposure at all for blocked content. Superior to Peacock's teen profile which shows full TV-MA metadata."
+        }
+      }
+    },
+    "TestTeen16": {
+      "profileType": "teen_restricted",
+      "maturitySetting": "TV-14 (selected 'NOT NOW' during profile creation)",
+      "notes": "Teen profile (DOB age 16). No COPPA consent or password required during creation (over 13). Uses identical full adult browsing UI and TV-14 content filtering as TestChild12. Disney+ does not differentiate between 12-year-old and 16-year-old at the TV-14 content rating level.",
+      "results": {
+        "PE-01": {
+          "category": "Profile Escape",
+          "weight": 5,
+          "score": 3,
+          "label": "Unprotected",
+          "description": "Teen can switch to any profile (including Adult) from profile picker with zero authentication. All profiles visible. Same critical vulnerability as all other profiles.",
+          "evidence": []
+        },
+        "SD-01": {
+          "category": "Search & Discovery",
+          "weight": 5,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Searching for 'Deadpool' (R) returns 'No results found for Deadpool'. TV-MA content completely hidden from search. Same behavior as TestChild12 since both are set to TV-14.",
+          "evidence": [
+            "screenshots/15_sd01_teen16_deadpool_search.png"
+          ]
+        },
+        "DU-01": { "score": 0, "label": "Full Block", "description": "Same as TestChild12 — direct URLs to TV-MA content silently redirect to home page. No content revealed." },
+        "KM-01": { "score": 0, "label": "N/A", "description": "Not in Kids/Junior Mode. Uses full adult browsing UI with content-rating-based filtering." },
+        "RL-01": {
+          "category": "Recommendation Leakage",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Home page recommendations all TV-14 or below: Star Wars: Attack of the Clones (PG), Ahsoka (TV-14), Blippi (TV-G), Thunderbolts* (PG-13), BUNK'D (TV-G), My Hero Academia (TV-14), Pirates of the Caribbean (PG-13), Captain America: Brave New World (PG-13), Bob's Burgers (TV-14). Zero TV-MA content visible.",
+          "evidence": [
+            "screenshots/14_teen16_home_tv14.png"
+          ]
+        },
+        "CB-01": { "score": 0, "label": "Full Block", "description": "No cross-profile bleed. Fresh account." },
+        "CG-01": { "score": 0, "label": "Full Block", "description": "Ratings displayed correctly and consistently." },
+        "PL-01": { "score": 0, "label": "Full Block / N/A", "description": "Content blocked at content-rating filter level. TV-MA content completely hidden." },
+        "MF-01": {
+          "category": "Maturity Filter Effectiveness",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Identical to TestChild12. TV-14 ceiling strictly enforced. All TV-MA content hidden from search, browse, recommendations, and direct URLs. No metadata exposure. Disney+ content-rating-based approach is significantly better than Peacock's teen profile which exposes full TV-MA metadata while only blocking playback."
+        }
+      }
+    }
+  },
+  "criticalFailures": [
+    {
+      "cfoId": "CFO-2",
+      "description": "Critical failure on all profiles: Profile Escape allows switching to Adult profile with zero authentication",
+      "affectedProfiles": ["TestChild7", "TestChild12", "TestTeen16"],
+      "gradeCap": "D",
+      "testId": "PE-01",
+      "score": 3,
+      "evidence": "screenshots/08_pe01_child7_escaped_to_profile_picker.png"
+    }
+  ],
+  "platformNotes": {
+    "juniorModeStrength": "Excellent curated walled garden — dedicated 'Junior Mode' with simplified navigation (no LIVE/Hulu/ESPN tabs), search scoped to kids content, 'Some content may be hidden due to parental controls' transparency notice. Only TV-Y content visible. Direct URLs show 'Content not found' dialog with no metadata exposure.",
+    "juniorModeWeakness": "Zero-auth profile switching via 'Exit Junior Mode' dropdown option is a critical vulnerability. One click exits to full profile picker with all profiles visible including Adult.",
+    "contentRatingApproach": "Disney+ uses content-rating-based filtering (TV-Y, TV-G, TV-PG, TV-14, TV-MA) rather than age-based tiers. Non-Junior profiles with TV-14 setting use the full adult browsing UI but TV-MA content is completely hidden — not just playback-blocked, but invisible from search, browse, recommendations, and direct URLs.",
+    "tv14vsTvma": "Critical design difference vs Peacock: Disney+ hides TV-MA content entirely from TV-14 profiles (no metadata exposure). Peacock's teen profile shows full TV-MA detail pages with cast, descriptions, episode lists, and content descriptors — only blocking playback. Disney+'s approach is significantly more protective.",
+    "profileCreation": "3-step creation: avatar selection → name/DOB/Junior Mode toggle → content rating prompt. Under-13 profiles require account password re-entry and COPPA consent. 13+ profiles require neither. Content rating prompt offers 'FULL CATALOG' (TV-MA) or 'NOT NOW' (TV-14) — we selected 'NOT NOW' for all test profiles.",
+    "noAgeGranularity": "TestChild12 (age 12) and TestTeen16 (age 16) have identical experiences when both set to TV-14. Disney+ does not differentiate based on actual age — only the content rating setting matters. The only age-based differentiation is Junior Mode availability and COPPA consent requirements.",
+    "profileTypes": "Junior Mode (curated kids UI with TV-Y content), Non-Junior with TV-14 (full adult UI with content filtering), Non-Junior with TV-MA (unrestricted adult access). Junior Mode can only be enabled at profile creation time.",
+    "passwordProtection": "Account password required to create under-13 profiles and to enable Junior Mode. COPPA consent dialog shown for under-13. However, NO password/PIN required to switch between profiles or exit Junior Mode.",
+    "transparencyNotices": "Disney+ shows clear notices: 'Your content rating is set to TV-14' on profile entry, 'Some content may be hidden due to parental controls' on Junior Mode search, 'Titles above this rating will not appear' on non-Junior search pages."
+  },
+  "crossPlatformComparison": {
+    "vs_peacock": {
+      "kidsProfile": "Disney+ Junior Mode is superior to Peacock Kids — both block search and recommendations, but Disney+ returns 'Content not found' on direct URLs vs Peacock's 'switch to non-kids profile' prompt (which reveals content existence and provides zero-auth profile picker). Both share the same critical PE-01 vulnerability.",
+      "teenProfile": "Disney+ is SIGNIFICANTLY better — TV-MA content is completely invisible (search, browse, recommendations, direct URLs all return nothing). Peacock's teen profile shows full TV-MA detail pages with title, cast, RT scores, content descriptors, episode lists — only blocking playback. Disney+ blocks at the discovery layer, Peacock blocks at the playback layer.",
+      "overallDesign": "Disney+ uses content-rating-based filtering that hides content entirely. Peacock uses profile-type restrictions with playback blocking but metadata exposure. Disney+'s approach is more protective but both fail on profile switching authentication."
+    },
+    "vs_prime_video": {
+      "kidsProfile": "Disney+ Junior Mode comparable to Prime Video Kids profile. Both block search and recommendations. Disney+'s DU-01 handling is better ('content not found' vs PV's 'Age restricted' message). Both share PE-01 critical failure.",
+      "teenProfile": "Disney+ TV-14 filtering is superior to all tested platforms for teen profiles — no metadata exposure at all. PV gates playback with PIN (weak) while exposing metadata.",
+      "overallDesign": "Disney+ has the strongest content filtering of platforms tested so far. The only critical weakness is the universal zero-auth profile switching vulnerability shared by all platforms."
+    },
+    "vs_netflix": {
+      "kidsProfile": "Similar overall protection level in walled gardens. Both block search and recommendations for kids profiles.",
+      "teenProfile": "Disney+ TV-14 profiles have zero metadata exposure for TV-MA content — superior to Netflix teen profiles.",
+      "profileSwitching": "All platforms share the same critical zero-auth profile switching vulnerability."
+    }
+  }
+}

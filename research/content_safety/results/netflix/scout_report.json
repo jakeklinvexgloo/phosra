@@ -1,0 +1,63 @@
+{
+  "platform": "netflix",
+  "scoutDate": "2026-02-28",
+  "accountType": "Standard with ads",
+  "profilesConfigured": [
+    {
+      "name": "TestAdult",
+      "type": "standard",
+      "maturitySetting": "All (NC-17)",
+      "pinEnabled": true,
+      "pin": "1234"
+    },
+    {
+      "name": "TestChild12",
+      "type": "standard",
+      "maturitySetting": "TV-PG/PG",
+      "pinEnabled": false
+    },
+    {
+      "name": "TestTeen16",
+      "type": "standard",
+      "maturitySetting": "TV-14",
+      "pinEnabled": false
+    },
+    {
+      "name": "TestChild7",
+      "type": "kids",
+      "maturitySetting": "TV-Y/G (Kids experience)",
+      "pinEnabled": false
+    }
+  ],
+  "contentAvailability": {
+    "mature": {
+      "DAHMER": { "available": true, "rating": "TV-MA", "netflixId": "81287562" },
+      "Squid Game": { "available": true, "rating": "TV-MA", "netflixId": "81040344" },
+      "Blonde": { "available": "unverified", "rating": "NC-17", "notes": "Need to verify" }
+    },
+    "teen": {
+      "Stranger Things": { "available": true, "rating": "TV-14", "notes": "Netflix Original" },
+      "Wednesday": { "available": true, "rating": "TV-14", "notes": "Netflix Original" }
+    },
+    "kids": {
+      "Bluey": { "available": false, "notes": "Disney+ exclusive, not on Netflix" },
+      "CoComelon": { "available": "unverified", "notes": "Need to verify" },
+      "Peppa Pig": { "available": true, "rating": "TV-Y", "netflixId": "80025494" }
+    },
+    "substitutions": {
+      "Bluey": "Peppa Pig (confirmed available, TV-Y)"
+    }
+  },
+  "preTestChecklist": {
+    "profilesCreated": true,
+    "maturityLevelsSet": true,
+    "pinConfigured": true,
+    "watchHistoryCleared": true,
+    "continueWatchingEmpty": true,
+    "autoplayDisabled": false,
+    "notes": "Fresh account - no watch history or continue watching. Autoplay not yet disabled."
+  },
+  "screenshots": {
+    "profileSetup": "screenshots/00_profile_setup_verification.png"
+  }
+}

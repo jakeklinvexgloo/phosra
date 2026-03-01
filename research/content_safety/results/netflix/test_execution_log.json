@@ -1,0 +1,97 @@
+{
+  "platform": "netflix",
+  "executionDate": "2026-02-28",
+  "sessions": [
+    {
+      "sessionId": 1,
+      "startTime": "2026-02-28T20:00:00Z",
+      "description": "Phase 0-1: Framework review, browser setup, account login",
+      "actions": [
+        "Read STREAMING_CONTENT_SAFETY_FRAMEWORK.md (2800+ lines)",
+        "Opened Netflix in Playwright browser",
+        "Logged into Netflix account (jake.k.klinvex@phosra.com)",
+        "Created 4 test profiles: TestAdult (NC-17, PIN:1234), TestChild12 (TV-PG), TestTeen16 (TV-14), TestChild7 (Kids)",
+        "Captured profile setup verification screenshot"
+      ]
+    },
+    {
+      "sessionId": 2,
+      "startTime": "2026-02-28T21:00:00Z",
+      "description": "Phase 2: Content scouting - verified test content availability",
+      "actions": [
+        "Verified DAHMER (TV-MA, netflixId: 81287562) available",
+        "Verified Squid Game (TV-MA, netflixId: 81040344) available",
+        "Verified Stranger Things (TV-14) and Wednesday (TV-14) available",
+        "Confirmed Bluey NOT on Netflix (Disney+ exclusive), substituted Peppa Pig (TV-Y)",
+        "Wrote scout_report.json"
+      ],
+      "output": "scout_report.json"
+    },
+    {
+      "sessionId": 3,
+      "startTime": "2026-02-28T21:30:00Z",
+      "description": "Phase 3: Live testing - Profile Escape and Search tests",
+      "testsExecuted": ["PE-01", "SD-01", "SD-02", "SD-03"],
+      "actions": [
+        "PE-01: Tested Kids profile escape via Exit Kids button → Score 3 (Critical)",
+        "SD-01: Searched DAHMER and Squid Game from Kids profile → Score 0",
+        "SD-02: Searched DAHMER from TestChild12 (TV-PG) → Score 0",
+        "SD-03: Searched DAHMER from TestTeen16 (TV-14) → Score 0"
+      ],
+      "issues": [
+        "Onboarding tooltip overlay blocked clicks on new profiles - resolved by clicking through Next/Done",
+        "Language setup page appeared on every switch to TestTeen16 - resolved by clicking Next"
+      ]
+    },
+    {
+      "sessionId": 4,
+      "startTime": "2026-02-28T22:00:00Z",
+      "description": "Phase 3 continued: Direct URL, PIN, Maturity Filter, Kids Mode tests",
+      "testsExecuted": ["DU-01", "DU-02", "PL-01", "MF-01", "KM-01", "RL-01", "CB-01"],
+      "actions": [
+        "DU-01: Direct /title/ URL from all profiles → Score 3 (Critical - standard profiles bypassed, Kids blocked)",
+        "DU-02: Direct /watch/ URL from all profiles → Score 3 (Critical - ALL profiles bypassed including Kids)",
+        "PL-01: Profile Lock PIN test → Score 0 (PIN works correctly)",
+        "MF-01: Maturity boundary test (Stranger Things TV-14 vs TV-PG profiles) → Score 0",
+        "KM-01: Kids mode URL escape attempts (/browse, /browse/genre) → Score 0 (Kids mode maintained)",
+        "RL-01: Browse recommendation appropriateness → Score 0 (properly filtered)",
+        "CB-01: Cross-profile bleed → Not testable (DRM limitation)"
+      ],
+      "criticalDiscoveries": [
+        "DU-02 /watch/ endpoint has NO maturity enforcement on ANY profile type including Kids - worse than DU-01",
+        "Netflix two-tier protection model: Kids profiles use server-side filtering for /title/ and browse, but NOT for /watch/"
+      ],
+      "issues": [
+        "DRM error M7701-1003 prevents actual playback testing (Playwright lacks Widevine)",
+        "CB-01 inconclusive due to inability to generate watch history"
+      ]
+    }
+  ],
+  "screenshotsCollected": [
+    "00_profile_setup_verification.png",
+    "PE01_01_kids_profile_baseline.png",
+    "PE01_02_exit_kids_profile_picker.png",
+    "PE01_03_escaped_to_teen_profile.png",
+    "SD01_01_dahmer_search_kids_profile.png",
+    "SD01_02_squidgame_search_kids_profile.png",
+    "SD02_01_dahmer_search_child12_profile.png",
+    "SD03_01_dahmer_search_teen16_profile.png",
+    "DU01_01_dahmer_direct_url_teen16.png",
+    "DU01_02_dahmer_playback_attempt_teen16.png",
+    "DU01_03_dahmer_direct_url_kids_blocked.png",
+    "DU01_04_dahmer_direct_url_child12.png",
+    "DU02_01_dahmer_watch_url_teen16.png",
+    "DU02_02_dahmer_watch_url_kids.png",
+    "DU02_03_dahmer_watch_url_child12.png",
+    "MF01_01_stranger_things_search_child12.png",
+    "MF01_02_stranger_things_browse_teen16.png",
+    "PL01_01_pin_gate_testadult.png"
+  ],
+  "totalScreenshots": 18,
+  "filesGenerated": [
+    "scout_report.json",
+    "content_safety_results.json",
+    "platform_scorecard.json",
+    "test_execution_log.json"
+  ]
+}

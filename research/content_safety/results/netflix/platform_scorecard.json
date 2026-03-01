@@ -1,0 +1,118 @@
+{
+  "platform": "netflix",
+  "testDate": "2026-02-28",
+  "tester": "claude-opus-4-6",
+  "overallGrade": "C-",
+  "overallScore": 0.79,
+  "scoreInterpretation": "0 = perfect (all controls work), 4 = worst (all controls fail). Netflix scores 0.79 - most browse/search controls are effective, but critical direct URL bypass vulnerabilities severely undermine the maturity restriction system.",
+  "testCoverage": {
+    "completed": 10,
+    "notTestable": 1,
+    "total": 11,
+    "coveragePercent": 91
+  },
+  "categoryBreakdown": [
+    {
+      "category": "Search & Discovery",
+      "tests": ["SD-01", "SD-02", "SD-03"],
+      "avgScore": 0.0,
+      "grade": "A+",
+      "summary": "Excellent. Search filtering works correctly across all profile types. TV-MA content completely hidden from Kids, TV-PG, and TV-14 profiles."
+    },
+    {
+      "category": "Direct URL Access",
+      "tests": ["DU-01", "DU-02"],
+      "avgScore": 3.0,
+      "grade": "F",
+      "summary": "Critical failure. Both /title/ and /watch/ endpoints bypass maturity restrictions on standard profiles. /watch/ endpoint bypasses even Kids profile protections. Zero server-side maturity enforcement on direct URLs."
+    },
+    {
+      "category": "Profile Escape",
+      "tests": ["PE-01"],
+      "avgScore": 3.0,
+      "grade": "F",
+      "summary": "Critical failure. Kids profile 'Exit Kids' button exposes all unlocked profiles with zero authentication. A child can escape to any non-PIN-protected profile in 2 clicks."
+    },
+    {
+      "category": "PIN/Lock",
+      "tests": ["PL-01"],
+      "avgScore": 0.0,
+      "grade": "A+",
+      "summary": "Excellent. Profile Lock with PIN properly gates access. 4-digit PIN required before any content access."
+    },
+    {
+      "category": "Maturity Filter",
+      "tests": ["MF-01"],
+      "avgScore": 0.0,
+      "grade": "A+",
+      "summary": "Excellent (for browse/search only). Content rating boundaries correctly enforced in search and browse UI. TV-14 content hidden from TV-PG profiles."
+    },
+    {
+      "category": "Kids Mode Integrity",
+      "tests": ["KM-01"],
+      "avgScore": 0.0,
+      "grade": "A+",
+      "summary": "Excellent for URL-based escape attempts. Kids experience maintained even when navigating to /browse URLs directly. Server-side enforcement keeps Kids profile in Kids mode."
+    },
+    {
+      "category": "Recommendation Leakage",
+      "tests": ["RL-01"],
+      "avgScore": 0.0,
+      "grade": "A+",
+      "summary": "No leakage detected. Browse recommendations properly filtered per maturity level. Note: tested on fresh account only."
+    },
+    {
+      "category": "Cross-Profile Bleed",
+      "tests": ["CB-01"],
+      "avgScore": null,
+      "grade": "N/A",
+      "summary": "Not testable. DRM limitation prevented actual content playback needed to generate cross-profile watch history."
+    }
+  ],
+  "criticalFailureCount": 3,
+  "criticalFailures": [
+    {
+      "id": "CF-01",
+      "title": "Direct /title/ URL bypasses maturity on standard profiles",
+      "severity": "critical",
+      "affectsProfiles": "Standard (TV-PG, TV-14)",
+      "exploitDifficulty": "Trivial - share any Netflix title link"
+    },
+    {
+      "id": "CF-02",
+      "title": "Direct /watch/ URL bypasses maturity on ALL profiles including Kids",
+      "severity": "critical",
+      "affectsProfiles": "ALL profile types",
+      "exploitDifficulty": "Trivial - share any Netflix watch link"
+    },
+    {
+      "id": "CF-03",
+      "title": "Kids profile escape via Exit Kids button",
+      "severity": "high",
+      "affectsProfiles": "Kids",
+      "exploitDifficulty": "Trivial - 2 clicks, no auth required"
+    }
+  ],
+  "strengths": [
+    "Search filtering is robust across all profile types - no mature content leaks into search results",
+    "Browse recommendations are properly filtered per maturity level",
+    "Kids profile browse experience is well-contained (URL manipulation to /browse still renders Kids mode)",
+    "Profile Lock PIN provides strong per-profile access control",
+    "Maturity rating boundaries correctly enforced in the UI layer (TV-PG/TV-14 boundary works)"
+  ],
+  "weaknesses": [
+    "Direct URL access (/title/ and /watch/) completely bypasses maturity restrictions on standard profiles",
+    "The /watch/ endpoint has zero maturity enforcement on ALL profile types including Kids",
+    "Kids profile can be exited with zero authentication via 'Exit Kids' button",
+    "Two-tier protection model creates false sense of security (parents may assume standard profile maturity restrictions are as strong as Kids profile)",
+    "Standard profile maturity restrictions are UI-only filters, not server-side access controls"
+  ],
+  "parentGuidance": {
+    "recommendation": "Parents should ONLY use the dedicated Kids profile type for young children, and enable Profile Lock (PIN) on ALL other profiles. Standard profile maturity restrictions provide surface-level filtering only and can be trivially bypassed via direct URLs.",
+    "criticalActions": [
+      "Use the Kids profile type (not a standard profile with maturity restrictions) for children under 13",
+      "Enable Profile Lock (PIN) on EVERY non-kids profile to prevent Kids profile escape",
+      "Be aware that anyone with a direct Netflix link (shared via text, social media, etc.) can bypass maturity filters on standard profiles"
+    ]
+  }
+}

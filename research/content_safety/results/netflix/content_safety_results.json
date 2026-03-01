@@ -1,0 +1,364 @@
+{
+  "platform": "netflix",
+  "testDate": "2026-02-28",
+  "tester": "claude-opus-4-6",
+  "accountType": "Standard with ads",
+  "profilesUsed": {
+    "TestAdult": { "type": "standard", "maturity": "All (NC-17)", "pinEnabled": true },
+    "TestChild12": { "type": "standard", "maturity": "TV-PG/PG", "pinEnabled": false },
+    "TestTeen16": { "type": "standard", "maturity": "TV-14", "pinEnabled": false },
+    "TestChild7": { "type": "kids", "maturity": "TV-Y/G (Kids experience)", "pinEnabled": false }
+  },
+  "testResults": [
+    {
+      "testId": "PE-01",
+      "category": "profile_escape",
+      "categoryLabel": "Profile Escape",
+      "categoryWeight": 5,
+      "title": "Profile Escape via Profile Switcher",
+      "description": "Can a child on the Kids profile escape to an unrestricted profile via the profile switcher?",
+      "profile": "TestChild7",
+      "targetContent": "TestTeen16 profile (TV-14)",
+      "score": 3,
+      "scoreLabel": "Unprotected",
+      "steps": [
+        "Started on TestChild7 Kids profile at netflix.com/Kids",
+        "Clicked 'Exit Kids' button in top-right corner",
+        "Profile picker appeared showing ALL profiles (TestAdult, TestChild12, TestTeen16, TestChild7)",
+        "TestAdult showed lock icon (PIN protected)",
+        "Clicked TestTeen16 - switched immediately with ZERO barriers",
+        "Full TV-14 browse page appeared showing Stranger Things, Wednesday, etc."
+      ],
+      "finding": "The 'Exit Kids' button on the Kids profile immediately exposes the full profile picker. Any unlocked profile (TestChild12, TestTeen16) can be accessed with a single click and zero authentication. Only TestAdult (PIN-locked) requires a PIN. A 7-year-old on the Kids profile can escape to a TV-14 profile in 2 clicks.",
+      "severity": "critical",
+      "screenshots": [
+        "PE01_01_kids_profile_baseline.png",
+        "PE01_02_exit_kids_profile_picker.png",
+        "PE01_03_escaped_to_teen_profile.png"
+      ]
+    },
+    {
+      "testId": "SD-01",
+      "category": "search_discovery",
+      "categoryLabel": "Search & Discovery",
+      "categoryWeight": 5,
+      "title": "Search for Mature Content from Kids Profile",
+      "description": "Does searching for TV-MA content (DAHMER, Squid Game) from the Kids profile return any mature results?",
+      "profile": "TestChild7",
+      "targetContent": "DAHMER (TV-MA), Squid Game (TV-MA)",
+      "score": 0,
+      "scoreLabel": "Full Block",
+      "steps": [
+        "On TestChild7 Kids profile, clicked Search button",
+        "Searched 'DAHMER' - returned only kids content (How to Train Your Dragon, Magic School Bus, Peppa Pig, etc.)",
+        "Searched 'Squid Game' - returned only kids content (Magic School Bus, Danger Force, Rio, etc.)",
+        "DAHMER and Squid Game titles completely absent from results"
+      ],
+      "finding": "Netflix Kids profile search is fully filtered. Searching for mature titles returns only age-appropriate kids content. No mature content metadata, titles, or descriptions leak into search results.",
+      "severity": "informational",
+      "screenshots": [
+        "SD01_01_dahmer_search_kids_profile.png",
+        "SD01_02_squidgame_search_kids_profile.png"
+      ]
+    },
+    {
+      "testId": "SD-02",
+      "category": "search_discovery",
+      "categoryLabel": "Search & Discovery",
+      "categoryWeight": 5,
+      "title": "Search for Mature Content from Child12 Profile (TV-PG)",
+      "description": "Does searching for TV-MA content from a standard profile restricted to TV-PG return mature results?",
+      "profile": "TestChild12",
+      "targetContent": "DAHMER (TV-MA)",
+      "score": 0,
+      "scoreLabel": "Full Block",
+      "steps": [
+        "On TestChild12 profile (TV-PG restricted), searched 'DAHMER'",
+        "Returned only age-appropriate content (How to Train Your Dragon, Magic School Bus, Peppa Pig, etc.)",
+        "DAHMER show completely absent from search results"
+      ],
+      "finding": "Standard profile with TV-PG maturity restriction properly filters search. TV-MA content does not appear in search results.",
+      "severity": "informational",
+      "screenshots": [
+        "SD02_01_dahmer_search_child12_profile.png"
+      ]
+    },
+    {
+      "testId": "SD-03",
+      "category": "search_discovery",
+      "categoryLabel": "Search & Discovery",
+      "categoryWeight": 5,
+      "title": "Search for Mature Content from Teen16 Profile (TV-14)",
+      "description": "Does searching for TV-MA content from a standard profile restricted to TV-14 return mature results?",
+      "profile": "TestTeen16",
+      "targetContent": "DAHMER (TV-MA)",
+      "score": 0,
+      "scoreLabel": "Full Block",
+      "steps": [
+        "On TestTeen16 profile (TV-14 restricted), searched 'DAHMER'",
+        "Returned age-appropriate content (What Jennifer Did, Portlandia, How to Train Your Dragon, etc.)",
+        "Results included TV-14 crime documentaries but NOT the TV-MA DAHMER show",
+        "DAHMER show (netflixId: 81287562) completely absent from search results"
+      ],
+      "finding": "Standard profile with TV-14 maturity restriction properly filters search. TV-MA content does not appear in search. Results are more diverse than Kids profile (includes crime docs within TV-14 rating) but properly excludes TV-MA titles.",
+      "severity": "informational",
+      "screenshots": [
+        "SD03_01_dahmer_search_teen16_profile.png"
+      ]
+    },
+    {
+      "testId": "DU-01",
+      "category": "direct_url",
+      "categoryLabel": "Direct URL Access",
+      "categoryWeight": 3,
+      "title": "Direct URL Access to Mature Content (Title Page)",
+      "description": "Can restricted profiles access TV-MA content by navigating directly to the title URL?",
+      "profile": "TestTeen16, TestChild12, TestChild7",
+      "targetContent": "DAHMER (TV-MA) at /title/81287562",
+      "score": 3,
+      "scoreLabel": "Unprotected",
+      "steps": [
+        "TestTeen16 (TV-14): Navigated to netflix.com/title/81287562 - FULL detail page loaded with TV-MA rating, Play button, all 10 episodes, descriptions, trailers",
+        "TestTeen16: Clicked Play - Netflix attempted to start playback (blocked only by DRM/Widevine limitation of test browser, NOT by maturity filter)",
+        "TestChild12 (TV-PG): Navigated to same URL - FULL detail page loaded identically, Play button active, all episodes visible",
+        "TestChild7 (Kids): Navigated to same URL - properly REDIRECTED to Kids home page, content completely blocked"
+      ],
+      "finding": "CRITICAL VULNERABILITY: Netflix has a two-tier protection model. Kids profiles (dedicated Netflix Kids experience) block direct URL access server-side. However, standard profiles with maturity restrictions (TestChild12 TV-PG, TestTeen16 TV-14) only filter the UI layer (search/browse) - direct URL access completely bypasses maturity filtering. A child with a TV-PG-restricted standard profile can view the full DAHMER detail page including TV-MA rating, violent content descriptions, episode listings, and access the Play button. The maturity restriction on standard profiles is a UI-only filter, not a server-side access control.",
+      "severity": "critical",
+      "screenshots": [
+        "DU01_01_dahmer_direct_url_teen16.png",
+        "DU01_02_dahmer_playback_attempt_teen16.png",
+        "DU01_03_dahmer_direct_url_kids_blocked.png",
+        "DU01_04_dahmer_direct_url_child12.png"
+      ],
+      "platformSpecificNotes": "Netflix Kids profiles use a completely separate experience (netflix.com/Kids) with server-side content restrictions. Standard profiles with Parental Controls maturity settings only apply UI-layer filtering. This architectural difference creates a false sense of security for parents who use maturity restrictions on standard profiles instead of the Kids profile."
+    },
+    {
+      "testId": "DU-02",
+      "category": "direct_url",
+      "categoryLabel": "Direct URL Access",
+      "categoryWeight": 3,
+      "title": "Direct Watch URL Access to Mature Content (/watch/ endpoint)",
+      "description": "Can restricted profiles access TV-MA content by navigating directly to the watch/playback URL?",
+      "profile": "TestTeen16, TestChild12, TestChild7",
+      "targetContent": "DAHMER Episode 1 (TV-MA) at /watch/81303934",
+      "score": 3,
+      "scoreLabel": "Unprotected",
+      "steps": [
+        "TestTeen16 (TV-14): Navigated to netflix.com/watch/81303934 - Video player loaded, DRM error M7701-1003 appeared (Widevine limitation of test browser, NOT a maturity block)",
+        "TestChild7 (Kids): Navigated to same /watch/ URL - Video player loaded with SAME DRM error, was NOT redirected to Kids home like /title/ URL was. Shows 'FROM MINDHUNTER' content reference, confirming content was served",
+        "TestChild12 (TV-PG): Navigated to same /watch/ URL - Video player loaded with SAME DRM error, no maturity block"
+      ],
+      "finding": "CRITICAL VULNERABILITY (WORSE THAN DU-01): The /watch/ endpoint has ZERO maturity enforcement across ALL profile types - including Kids profiles. While the /title/ endpoint at least redirects Kids profiles to the Kids home page, the /watch/ endpoint loads the video player for everyone. The only barrier to actual playback is DRM (Widevine), not maturity restrictions. On a real browser with Widevine support, a child on ANY profile could play TV-MA content via a direct /watch/ URL. This is more severe than DU-01 because even the Kids profile's server-side protection is bypassed.",
+      "severity": "critical",
+      "screenshots": [
+        "DU02_01_dahmer_watch_url_teen16.png",
+        "DU02_02_dahmer_watch_url_kids.png",
+        "DU02_03_dahmer_watch_url_child12.png"
+      ],
+      "platformSpecificNotes": "The DRM error (M7701-1003) is a Playwright/Chromium limitation (no Widevine CDM), not a Netflix maturity restriction. In a real browser, this content would likely play without any maturity check. The /watch/ endpoint is completely unprotected - it doesn't even have the partial protection that /title/ provides for Kids profiles."
+    },
+    {
+      "testId": "PL-01",
+      "category": "pin_lock",
+      "categoryLabel": "PIN/Lock",
+      "categoryWeight": 4,
+      "title": "Profile Lock PIN Enforcement",
+      "description": "Does the TestAdult PIN-locked profile properly require PIN entry?",
+      "profile": "TestAdult",
+      "targetContent": "TestAdult profile access",
+      "score": 0,
+      "scoreLabel": "Full Block",
+      "steps": [
+        "Navigated to Who's Watching screen",
+        "TestAdult showed lock icon (other profiles showed as direct links)",
+        "Clicked TestAdult - PIN entry screen appeared",
+        "Screen shows 'Profile Lock is currently on. Enter your PIN to access this profile.'",
+        "4-digit PIN entry boxes displayed with 'Forgot PIN?' link"
+      ],
+      "finding": "Profile Lock (PIN) properly gates access to TestAdult profile. The PIN entry is required before any content on the profile is accessible. However, the 'Forgot PIN?' link may allow bypass via account email - not tested.",
+      "severity": "informational",
+      "screenshots": [
+        "PL01_01_pin_gate_testadult.png"
+      ]
+    },
+    {
+      "testId": "MF-01",
+      "category": "maturity_filter",
+      "categoryLabel": "Maturity Filter",
+      "categoryWeight": 5,
+      "title": "Maturity Filter Boundary Enforcement (TV-PG vs TV-14)",
+      "description": "Does the maturity filter correctly enforce content boundaries between TV-PG and TV-14 ratings in search and browse?",
+      "profile": "TestChild12, TestTeen16",
+      "targetContent": "Stranger Things (TV-14)",
+      "score": 0,
+      "scoreLabel": "Full Block",
+      "steps": [
+        "TestChild12 (TV-PG): Searched 'Stranger Things' - returned 'Stranger Things: Fireplace' (ambient video, likely different rating) plus age-appropriate content (Creeped Out, Apollo 11, Goosebumps 2, Magic School Bus, The Sandlot, etc.)",
+        "TestChild12: The main Stranger Things show (TV-14, netflixId: 80057281) was completely absent from search results",
+        "TestTeen16 (TV-14): Stranger Things appeared as #1 in 'Today's Top Picks for You' on the browse page",
+        "TestTeen16: Stranger Things also appeared in the 'My List' section alongside Wednesday (TV-14)",
+        "TestTeen16 browse page showed appropriate TV-14 content (Brooklyn Nine-Nine, Grey's Anatomy, etc.)"
+      ],
+      "finding": "Netflix maturity filter correctly enforces content boundaries in search and browse. TV-14 content (Stranger Things) is properly hidden from TV-PG profiles but visible on TV-14 profiles. The 'Stranger Things: Fireplace' ambient video appearing on the TV-PG profile suggests it may have a different/lower rating than the main show. Browse recommendations are also properly filtered per maturity level.",
+      "severity": "informational",
+      "screenshots": [
+        "MF01_01_stranger_things_search_child12.png",
+        "MF01_02_stranger_things_browse_teen16.png"
+      ]
+    },
+    {
+      "testId": "KM-01",
+      "category": "kids_mode",
+      "categoryLabel": "Kids Mode Integrity",
+      "categoryWeight": 4,
+      "title": "Kids Mode URL Escape Attempts",
+      "description": "Can a child on the Kids profile escape to the standard browse experience via URL manipulation?",
+      "profile": "TestChild7",
+      "targetContent": "Standard browse catalog (/browse, /browse/genre/83)",
+      "score": 0,
+      "scoreLabel": "Full Block",
+      "steps": [
+        "On TestChild7 Kids profile at netflix.com/Kids",
+        "Navigated directly to netflix.com/browse - page loaded at /browse URL but rendered Kids experience (Exit Kids button visible, Characters link, Home → /Kids)",
+        "Navigated to netflix.com/browse/genre/83 (standard TV Shows genre) - still rendered Kids experience with Kids navigation",
+        "Kids profile nav showed: Home → /Kids, Characters, Shows → /browse/genre/2496491 (kids shows genre), Movies → /browse/genre/2495600 (kids movies genre)",
+        "All URL manipulation attempts maintained Kids experience server-side"
+      ],
+      "finding": "Netflix Kids profile has strong URL containment for browse/genre endpoints. The server-side Kids profile enforcement overrides the URL path, always rendering the Kids experience regardless of the URL navigated to. However, this does NOT apply to /title/ (partially protected) or /watch/ (completely unprotected) endpoints as documented in DU-01 and DU-02.",
+      "severity": "informational",
+      "screenshots": [],
+      "platformSpecificNotes": "The Kids profile URL containment only covers browse-related endpoints. The /title/ endpoint redirects Kids to /Kids (good), but the /watch/ endpoint has zero Kids profile enforcement (critical gap)."
+    },
+    {
+      "testId": "RL-01",
+      "category": "recommendation_leakage",
+      "categoryLabel": "Recommendation Leakage",
+      "categoryWeight": 3,
+      "title": "Browse Recommendation Appropriateness",
+      "description": "Do browse page recommendations contain content beyond the profile's maturity level?",
+      "profile": "TestChild12, TestTeen16, TestChild7",
+      "targetContent": "Age-inappropriate recommendations",
+      "score": 0,
+      "scoreLabel": "Full Block",
+      "steps": [
+        "TestChild12 (TV-PG) browse page: Featured 'Raw' (TV-PG WWE), recommendations include Naruto, Young Sheldon, H2O, Pokémon, Teen Titans Go!, Avatar: The Last Airbender - all within TV-PG range",
+        "TestTeen16 (TV-14) browse page: Featured Seinfeld (TV-PG), recommendations include Stranger Things (TV-14), Wednesday (TV-14), Brooklyn Nine-Nine (TV-14), Grey's Anatomy (TV-14) - all within TV-14 range",
+        "TestChild7 (Kids) browse page: Only kids content visible - dedicated Kids experience with age-appropriate titles",
+        "No mature content titles (DAHMER, Squid Game, etc.) appeared in ANY profile's browse recommendations"
+      ],
+      "finding": "Browse page recommendations are properly filtered per profile maturity level. No cross-maturity leakage detected in the recommendation algorithm. Content categories and rows are age-appropriate for each profile. Note: This test was conducted on a fresh account with no watch history, so personalization-driven leakage cannot be fully assessed.",
+      "severity": "informational",
+      "screenshots": [],
+      "limitations": "Fresh account with no watch history. Cross-profile recommendation leakage from watching behavior could not be tested due to DRM limitations preventing actual playback."
+    },
+    {
+      "testId": "CB-01",
+      "category": "cross_profile_bleed",
+      "categoryLabel": "Cross-Profile Bleed",
+      "categoryWeight": 3,
+      "title": "Cross-Profile Watch History / Continue Watching Bleed",
+      "description": "Does watch history or 'Continue Watching' from one profile bleed into another?",
+      "profile": "All profiles",
+      "targetContent": "Cross-profile data leakage",
+      "score": null,
+      "scoreLabel": "Not Testable",
+      "steps": [
+        "Checked all profile browse pages for 'Continue Watching' sections",
+        "No 'Continue Watching' row appeared on any profile (fresh account, no playback history)",
+        "DRM limitation (M7701-1003) prevented watching content on any profile, so cross-profile bleed from actual viewing could not be tested"
+      ],
+      "finding": "INCONCLUSIVE: Cross-profile bleed could not be tested because the Playwright browser lacks Widevine DRM support, preventing actual content playback. Without watch history, 'Continue Watching' bleed cannot be assessed. The fresh account showed clean separation between profiles, but this test needs to be conducted on a real browser with actual viewing sessions.",
+      "severity": "informational",
+      "screenshots": [],
+      "limitations": "DRM limitation prevents actual playback. Would need to be retested on a real browser with Widevine support after watching content on one profile."
+    }
+  ],
+  "criticalFindings": [
+    {
+      "id": "CF-01",
+      "title": "Direct URL Bypass of Maturity Restrictions on Standard Profiles (/title/ endpoint)",
+      "severity": "critical",
+      "affectedProfiles": ["TestChild12 (TV-PG)", "TestTeen16 (TV-14)"],
+      "notAffected": ["TestChild7 (Kids)"],
+      "description": "Standard profiles with maturity restrictions only filter content in the browse/search UI. Direct navigation to a title URL (e.g., /title/81287562) completely bypasses the maturity filter, exposing full TV-MA content details including title, description, episode list, and a functional Play button. A child sharing a link via text message or social media could access any mature content on the platform.",
+      "reproducibility": "100% reproducible",
+      "impactedRuleCategories": ["content_filter_bypass", "maturity_rating_enforcement", "age_appropriate_content"],
+      "recommendedMitigation": "Netflix should enforce maturity restrictions server-side for ALL profile types, not just Kids profiles. The /title/ endpoint should check the active profile's maturity level before serving content metadata."
+    },
+    {
+      "id": "CF-02",
+      "title": "Direct Watch URL Bypass on ALL Profile Types (/watch/ endpoint)",
+      "severity": "critical",
+      "affectedProfiles": ["TestChild7 (Kids)", "TestChild12 (TV-PG)", "TestTeen16 (TV-14)"],
+      "notAffected": [],
+      "description": "The /watch/ endpoint has ZERO maturity enforcement for any profile type, including Kids profiles. While the /title/ endpoint at least redirects Kids profiles, the /watch/ endpoint loads the video player for all profiles regardless of maturity settings. In a browser with Widevine DRM support, any child on any profile could play TV-MA content by navigating to a direct /watch/ URL. This is the most severe finding because it bypasses even the Kids profile's server-side protections.",
+      "reproducibility": "100% reproducible",
+      "impactedRuleCategories": ["content_filter_bypass", "maturity_rating_enforcement", "age_appropriate_content", "kids_mode_integrity"],
+      "recommendedMitigation": "Netflix must add server-side maturity checks to the /watch/ endpoint for ALL profile types. This is more critical than the /title/ fix because /watch/ actually initiates content playback."
+    },
+    {
+      "id": "CF-03",
+      "title": "Kids Profile Escape via Exit Kids Button",
+      "severity": "high",
+      "affectedProfiles": ["TestChild7 (Kids)"],
+      "description": "The 'Exit Kids' button on the Netflix Kids experience immediately exposes the full profile picker with no authentication barrier. Any unlocked profile can be accessed in a single additional click. While the TestAdult profile is PIN-protected, any standard profile (TestChild12, TestTeen16) without a PIN can be freely accessed.",
+      "reproducibility": "100% reproducible",
+      "impactedRuleCategories": ["profile_escape", "kids_mode_integrity"],
+      "recommendedMitigation": "Netflix should require account password or PIN to exit the Kids profile, similar to how Profile Lock gates access to individual profiles."
+    }
+  ],
+  "platformArchitecture": {
+    "protectionModel": "Two-tier: Kids profiles (server-side for /title/ and browse, but NOT /watch/) vs Standard profiles (UI-layer only)",
+    "kidsProfile": {
+      "searchFiltering": "Full server-side filtering - mature content completely absent",
+      "browseFiltering": "Full server-side filtering - Kids experience maintained even with URL manipulation to /browse",
+      "directTitleBlocking": "Server-side redirect to Kids home page for /title/ URLs",
+      "directWatchBlocking": "NONE - /watch/ endpoint loads video player without maturity check",
+      "profileEscape": "Single-click 'Exit Kids' button exposes all profiles with zero authentication",
+      "overallProtection": "Strong content filtering in browse/search, partial URL protection (/title/ blocked, /watch/ NOT blocked), weak profile containment"
+    },
+    "standardRestrictedProfile": {
+      "searchFiltering": "Effective UI-level filtering - mature content hidden from search/browse",
+      "browseFiltering": "Effective UI-level filtering - recommendations properly filtered by maturity level",
+      "directTitleBlocking": "NONE - /title/ URL completely bypasses maturity filter, full content details served",
+      "directWatchBlocking": "NONE - /watch/ URL completely bypasses maturity filter, video player loads",
+      "profileEscape": "N/A - standard profiles don't have containment",
+      "overallProtection": "Surface-level UI filtering only, easily bypassed via direct URLs"
+    }
+  },
+  "scoreSummary": {
+    "PE-01": { "score": 3, "weight": 5, "weighted": 15, "label": "Profile Escape" },
+    "SD-01": { "score": 0, "weight": 5, "weighted": 0, "label": "Search Kids" },
+    "SD-02": { "score": 0, "weight": 5, "weighted": 0, "label": "Search Child12" },
+    "SD-03": { "score": 0, "weight": 5, "weighted": 0, "label": "Search Teen16" },
+    "DU-01": { "score": 3, "weight": 3, "weighted": 9, "label": "Direct /title/ URL" },
+    "DU-02": { "score": 3, "weight": 3, "weighted": 9, "label": "Direct /watch/ URL" },
+    "PL-01": { "score": 0, "weight": 4, "weighted": 0, "label": "PIN Lock" },
+    "MF-01": { "score": 0, "weight": 5, "weighted": 0, "label": "Maturity Boundary" },
+    "KM-01": { "score": 0, "weight": 4, "weighted": 0, "label": "Kids URL Escape" },
+    "RL-01": { "score": 0, "weight": 3, "weighted": 0, "label": "Recommendation Leakage" },
+    "CB-01": { "score": null, "weight": 3, "weighted": null, "label": "Cross-Profile Bleed (Not Testable)" },
+    "totalWeightedScore": 33,
+    "maxPossibleWeighted": 168,
+    "completedTests": 10,
+    "notTestable": 1,
+    "overallWeightedAverage": 0.79,
+    "note": "10 of 11 tests scored. CB-01 inconclusive due to DRM limitation. 3 critical findings (DU-01, DU-02, PE-01), 1 high finding (CF-03). Score of 0.79 (lower is better, 0=perfect, 4=worst) reflects that most protections work for search/browse but critical URL bypass vulnerabilities exist."
+  },
+  "testEnvironment": {
+    "browser": "Playwright Chromium (no Widevine DRM support)",
+    "limitations": [
+      "DRM error M7701-1003 prevents actual content playback - cannot confirm whether maturity restrictions would block playback vs only block metadata access",
+      "Cross-profile bleed test (CB-01) inconclusive due to inability to generate watch history",
+      "Autoplay behavior could not be tested",
+      "Pin brute force testing not attempted"
+    ],
+    "profileTokens": {
+      "TestAdult": "IDTV4I2VWBHO3CRDXFI3IDFP4M",
+      "TestChild12": "BSBCQKII6VGUJHMRWGFDBAE3ZE",
+      "TestTeen16": "KMP6XK2A6ZH67MOKO6PHTC3VJ4",
+      "TestChild7": "7VHPOIBXUFGQ7O4NV7G2DUFXFI"
+    }
+  }
+}

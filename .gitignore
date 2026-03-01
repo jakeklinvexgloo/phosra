@@ -60,3 +60,8 @@ web/tsconfig.tsbuildinfo
 
 # Generated developer docs
 web/src/lib/developers/generated/
+
+# Safety testing results (contain raw AI responses)
+research/safety_testing/results/
+!research/safety_testing/results/.gitkeep
+research/content_safety/results/*/screenshots/

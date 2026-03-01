@@ -1,0 +1,151 @@
+{
+  "platform": "peacock",
+  "scoutDate": "2026-02-28",
+  "accountType": "Peacock Premium Plus (ad-free)",
+  "accountEmail": "jake.k.klinvex@gmail.com",
+  "profilesConfigured": [
+    {
+      "name": "Mom and Dad",
+      "type": "adult",
+      "maturitySetting": "Adult (account holder, locked profile)",
+      "pinEnabled": true,
+      "notes": "Primary account holder profile — locked, requires 18+ to edit. Cannot be deleted or renamed from kids profile view."
+    },
+    {
+      "name": "TestChild7",
+      "type": "kids",
+      "maturitySetting": "Family (TVPG, PG)",
+      "pinEnabled": false,
+      "autoplayNextVideo": false,
+      "autoplayTrailers": false,
+      "notes": "Kids profile. Peacock Kids profiles have 3 maturity tiers: Little Kids (TVY), Older Kids (TVY7/TVG/G), Family (TVPG/PG). No sub-7 age granularity — 'Little Kids' is the lowest."
+    },
+    {
+      "name": "TestChild12",
+      "type": "kids",
+      "maturitySetting": "Family (TVPG, PG)",
+      "pinEnabled": false,
+      "autoplayNextVideo": false,
+      "autoplayTrailers": false,
+      "notes": "Kids profile — same maturity as TestChild7. Peacock has no granular age-based kids profiles below 13."
+    },
+    {
+      "name": "TestTeen16",
+      "type": "teen",
+      "maturitySetting": "Teen",
+      "pinEnabled": false,
+      "autoplayNextVideo": false,
+      "autoplayTrailers": false,
+      "notes": "Teen profile (ages 13-17). Created as new profile — Peacock Kids profiles cannot be converted to Teen/Adult. Teen profiles filter mature (TV-MA) content."
+    },
+    {
+      "name": "TestAdult",
+      "type": "adult",
+      "maturitySetting": "Adult",
+      "pinEnabled": false,
+      "autoplayNextVideo": false,
+      "autoplayTrailers": false,
+      "notes": "Adult profile (18+). Full content access including TV-MA rated content. Created as new profile after deleting a Kids profile."
+    }
+  ],
+  "pinConfiguration": {
+    "accountPin": "Not separately configured",
+    "profilePins": "Per-profile PIN toggle available (not enabled on test profiles)",
+    "purchaseRestrictions": "Not observed in profile settings",
+    "viewingRestrictions": "Controlled via profile type (Kids/Teen/Adult) and maturity rating tiers",
+    "notes": "Peacock uses per-profile PINs (not account-wide). The 'Mom and Dad' account holder profile is locked by default. Changing maturity ratings and autoplay settings on non-Kids profiles requires account password confirmation."
+  },
+  "platformProfileSystem": {
+    "profileTypes": ["Adult", "Teen", "Kids"],
+    "maxProfiles": 6,
+    "adultDescription": "Adult profiles are for everyone 18+. Full content access.",
+    "teenDescription": "Teen profiles are for ages 13 to 17. Mature content (TV-MA) is filtered.",
+    "kidsDescription": "Kids profiles are for ages under 13. Content limited to Family-rated and below.",
+    "kidsMaturityTiers": [
+      {
+        "tier": "Little Kids",
+        "ratings": "TVY",
+        "description": "Programming is designed to be appropriate for all children."
+      },
+      {
+        "tier": "Older Kids",
+        "ratings": "TVY7, TVY7-FV, TVG, G",
+        "description": "Programming is designed for children ages 7+. May contain some fantasy violence."
+      },
+      {
+        "tier": "Family",
+        "ratings": "TVPG, PG",
+        "description": "Programming may contain material that parents find unsuitable for younger children."
+      }
+    ],
+    "profileCreationFlow": "Avatar selection → Profile type (Adult/Teen/Kids) → Name → Content preferences (skippable)",
+    "notes": "Profile types are immutable after creation — cannot convert Kids to Teen/Adult or vice versa. Kids profiles cannot access Teen/Adult maturity tiers. Account holder profile ('Mom and Dad') is always locked and requires 18+ to edit. Password confirmation required to change maturity ratings or autoplay on Adult profiles."
+  },
+  "contentAvailability": {
+    "mature": {
+      "status": "verified",
+      "titles": {
+        "Yellowstone": { "available": true, "rating": "TV-MA", "type": "series", "slug": "/tv/yellowstone/7034893369976297112", "id": "7034893369976297112", "seasons": 5 },
+        "Chucky": { "available": true, "rating": "TV-MA", "type": "series", "slug": "/tv/chucky/7737673447939104112", "id": "7737673447939104112" },
+        "Poker Face": { "available": true, "rating": "TV-MA", "type": "series", "slug": "/tv/poker-face/9091855651030489112", "id": "9091855651030489112" },
+        "Bel-Air": { "available": true, "rating": "TV-MA", "type": "series", "slug": "/tv/bel-air/5827147521039228112", "id": "5827147521039228112" },
+        "ted": { "available": true, "rating": "TV-MA", "type": "series", "slug": "/tv/ted/9037041665927255112", "id": "9037041665927255112" },
+        "Brave New World": { "available": true, "rating": "TV-MA", "type": "series", "slug": "/tv/brave-new-world/8207689649148835112", "id": "8207689649148835112" },
+        "Dr. Death": { "available": true, "rating": "TV-MA", "type": "series", "slug": "/tv/dr.-death/6764740672923876112", "id": "6764740672923876112" },
+        "The Continental": { "available": true, "rating": "TV-MA", "type": "series", "slug": "/tv/the-continental/6864891780056401112", "id": "6864891780056401112" }
+      }
+    },
+    "teen": {
+      "status": "verified",
+      "titles": {
+        "The Office": { "available": true, "rating": "TV-14", "type": "series", "slug": "/tv/the-office/4902514835143843112", "id": "4902514835143843112", "seasons": 9 },
+        "Law & Order: SVU": { "available": true, "rating": "TV-14", "type": "series", "slug": "/tv/law-and-order-special-victims-unit/7323295882704556112", "id": "7323295882704556112" },
+        "Chicago P.D.": { "available": true, "rating": "TV-14", "type": "series", "slug": "/tv/chicago-p.d./5236203115116490112", "id": "5236203115116490112" },
+        "Chicago Fire": { "available": true, "rating": "TV-14", "type": "series", "slug": "/tv/chicago-fire/5531888790362115112", "id": "5531888790362115112" },
+        "Suits": { "available": true, "rating": "TV-14", "type": "series", "slug": "/tv/suits/8003089882869075112", "id": "8003089882869075112" },
+        "Saved by the Bell": { "available": true, "rating": "TV-14", "type": "series", "slug": "/tv/saved-by-the-bell/5421925520922111112", "id": "5421925520922111112" }
+      }
+    },
+    "moderate": {
+      "status": "verified",
+      "titles": {
+        "Downton Abbey": { "available": true, "rating": "TV-PG", "type": "series", "slug": "/tv/downton-abbey/7560296579355862112", "id": "7560296579355862112", "seasons": 6 },
+        "Trolls": { "available": true, "rating": "PG", "type": "movie", "slug": "/movies/trolls/e23f225b-aabe-3b0c-a7e2-f6096563b0b2" },
+        "Shrek": { "available": true, "rating": "PG", "type": "movie", "slug": "/movies/kids/shrek/b6303073-41bf-3644-8e71-0e8278c33678" },
+        "The Boss Baby": { "available": true, "rating": "PG", "type": "movie", "slug": "/movies/the-boss-baby/3d9e1e12-f5f0-3775-8913-49291e542c54" }
+      }
+    },
+    "kids": {
+      "status": "verified",
+      "titles": {
+        "Curious George": { "available": true, "rating": "TV-Y", "type": "series", "slug": "/tv/curious-george/8456220604370545112", "id": "8456220604370545112" },
+        "Madagascar: A Little Wild": { "available": true, "rating": "TV-Y", "type": "series", "slug": "/tv/madagascar-a-little-wild/6494384629026654112", "id": "6494384629026654112" },
+        "Cleopatra in Space": { "available": true, "rating": "TV-Y7-FV", "type": "series", "slug": "/tv/cleopatra-in-space/8372790178399687112", "id": "8372790178399687112" },
+        "Dragons: The Nine Realms": { "available": true, "rating": "TV-Y7-FV", "type": "series", "slug": "/tv/dragons-the-nine-realms/6852599636100403112", "id": "6852599636100403112" },
+        "Megamind vs. the Doom Syndicate": { "available": true, "rating": "TV-G", "type": "movie", "slug": "/movies/megamind-vs.-the-doom-syndicate/c0fa16a2-7152-3dd6-90ce-598c51a38da8" },
+        "Gabby's Dollhouse: The Movie": { "available": true, "rating": "G", "type": "movie", "slug": "/movies/gabbys-dollhouse-the-movie/28c095f9-a2da-336a-9b3e-d34586f437ae" }
+      }
+    },
+    "notAvailable": ["Peppa Pig", "PAW Patrol", "Jurassic World Camp Cretaceous", "Spirit Riding Free"]
+  },
+  "preTestChecklist": {
+    "profilesCreated": true,
+    "maturityLevelsSet": true,
+    "pinConfigured": false,
+    "watchHistoryCleared": true,
+    "continueWatchingEmpty": true,
+    "autoplayDisabled": true,
+    "notes": "Fresh profiles — no watch history. Autoplay disabled on all test profiles. Profile PINs not enabled on test profiles (available per-profile). Content availability needs verification."
+  },
+  "screenshots": {
+    "existingProfiles": "screenshots/01_existing_profiles.png",
+    "profilesComplete": "screenshots/02_profiles_complete.png"
+  },
+  "platformDiscoveries": {
+    "passwordRequiredForChanges": "Changing maturity rating or autoplay settings on Adult/Teen profiles requires account password entry",
+    "profileTypeImmutable": "Profile types (Adult/Teen/Kids) cannot be changed after creation — must delete and recreate",
+    "kidsMaturityLimited": "Kids profiles only have 3 maturity tiers (Little Kids/Older Kids/Family) — no Teen/Adult content access",
+    "lockedAccountProfile": "Account holder profile ('Mom and Dad') is locked and shows 'You must be 18+ years old to edit' on the profiles page",
+    "reactControlledInputs": "Profile name inputs are React-controlled — requires double-click + Cmd+A + type_text pattern for replacement (fill() appends instead of replacing)"
+  }
+}

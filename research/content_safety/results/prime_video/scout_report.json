@@ -1,0 +1,101 @@
+{
+  "platform": "prime_video",
+  "scoutDate": "2026-02-28",
+  "accountType": "Prime (with ads)",
+  "accountEmail": "jake.k.klinvex@phosra.com",
+  "profilesConfigured": [
+    {
+      "name": "Jake Klinvex",
+      "type": "adult",
+      "maturitySetting": "Full access (account holder)",
+      "pinEnabled": false,
+      "notes": "Primary account holder profile - cannot be deleted"
+    },
+    {
+      "name": "TestChild7",
+      "type": "kids",
+      "maturitySetting": "Family-friendly content for ages 12 and younger",
+      "pinEnabled": false
+    },
+    {
+      "name": "TestChild12",
+      "type": "kids",
+      "maturitySetting": "Family-friendly content for ages 12 and younger",
+      "pinEnabled": false,
+      "notes": "Same maturity as TestChild7 - PV Kids profile has no age granularity below 12"
+    },
+    {
+      "name": "TestTeen16",
+      "type": "teen",
+      "maturitySetting": "Mature content requires Account PIN",
+      "pinEnabled": true,
+      "notes": "Teen profile - watching mature content requires Account PIN"
+    },
+    {
+      "name": "TestAdult",
+      "type": "adult",
+      "maturitySetting": "Browse and watch all available content",
+      "pinEnabled": false
+    }
+  ],
+  "pinConfiguration": {
+    "accountPin": "55000",
+    "pinDigits": 5,
+    "purchaseRestrictions": "Off",
+    "viewingRestrictions": "None (all videos watchable without PIN)",
+    "notes": "PV uses 5-digit PINs (framework specified 4-digit). Account PIN bypasses all profile locks and viewing restrictions."
+  },
+  "platformProfileSystem": {
+    "profileTypes": ["Adult", "Teen", "Kid"],
+    "maxProfiles": "6 (including account holder)",
+    "adultDescription": "Browse and watch all available content",
+    "teenDescription": "Watching movies and shows with mature content requires an Account PIN",
+    "kidDescription": "Family-friendly content for ages 12 and younger",
+    "viewingRestrictionTiers": ["all", "7+", "13+", "16+", "18+"],
+    "notes": "No granular age-based kids profiles (no separate 7-and-under). Teen profiles require Account PIN for mature content. Account-level PIN overrides all profile locks."
+  },
+  "contentAvailability": {
+    "mature": {
+      "status": "verified",
+      "titles": {
+        "The Boys": { "available": true, "rating": "TV-MA", "type": "series", "asin": "B0FGF8BGLR", "url": "/gp/video/detail/B0FGF8BGLR", "notes": "Verified via browser - TV-MA confirmed, included with Prime" },
+        "Reacher": { "available": true, "rating": "TV-MA", "type": "series", "asin": "B09ML1GHXS", "url": "/gp/video/detail/B09ML1GHXS", "notes": "Verified via browser - TV-MA confirmed" },
+        "Gen V": { "available": true, "rating": "TV-MA", "type": "series", "asin": "B0CBKNL1GB", "url": "/gp/video/detail/B0CBKNL1GB" },
+        "Invincible": { "available": true, "rating": "TV-MA", "type": "series", "asin": "B08WJQ3XP5", "url": "/gp/video/detail/B08WJQ3XP5" },
+        "Terminal List": { "available": true, "rating": "TV-MA", "type": "series", "asin": "B09K9M94L7", "url": "/gp/video/detail/B09K9M94L7" },
+        "Citadel": { "available": true, "rating": "TV-MA", "type": "series", "asin": "B0B6LRG1TN", "url": "/gp/video/detail/B0B6LRG1TN" },
+        "Deadpool & Wolverine": { "available": true, "rating": "R", "type": "movie", "asin": "B0D61V2X9S", "url": "/gp/video/detail/B0D61V2X9S" }
+      }
+    },
+    "teen": {
+      "status": "verified",
+      "titles": {
+        "Jack Ryan": { "available": true, "type": "series", "asin": "B0CKHMWT13", "url": "/gp/video/detail/B0CKHMWT13", "notes": "Rating needs browser verification" },
+        "Upload": { "available": true, "type": "series", "asin": "B08BYYVJJF", "url": "/gp/video/detail/B08BYYVJJF" },
+        "Wheel of Time": { "available": true, "type": "series", "asin": "B09F5LVKD5", "url": "/gp/video/detail/B09F5LVKD5" }
+      }
+    },
+    "kids": {
+      "status": "verified",
+      "titles": {
+        "Peppa Pig": { "available": true, "type": "series", "asin": "B0CHQ1D79H", "url": "/gp/video/detail/B0CHQ1D79H" },
+        "PAW Patrol": { "available": true, "type": "series", "asin": "B00EIA7TTI", "url": "/gp/video/detail/B00EIA7TTI" },
+        "Pete the Cat": { "available": true, "type": "series", "asin": "B086VYJ9NV", "url": "/gp/video/detail/B086VYJ9NV" }
+      }
+    },
+    "notAvailable": ["Squid Game (Netflix exclusive)"]
+  },
+  "preTestChecklist": {
+    "profilesCreated": true,
+    "maturityLevelsSet": true,
+    "pinConfigured": true,
+    "watchHistoryCleared": false,
+    "continueWatchingEmpty": true,
+    "autoplayDisabled": false,
+    "notes": "Fresh Prime subscription - no watch history. Autoplay and watch history clearing not yet addressed. Content availability needs verification."
+  },
+  "screenshots": {
+    "profileSetup": "screenshots/01_profiles_complete.png",
+    "parentalControls": "screenshots/02_parental_controls_pin.png"
+  }
+}

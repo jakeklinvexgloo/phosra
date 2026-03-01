@@ -1,0 +1,230 @@
+{
+  "platform": "prime_video",
+  "testDate": "2026-02-28",
+  "tester": "claude-opus-4-6",
+  "frameworkVersion": "1.0",
+  "profiles": {
+    "TestChild7": {
+      "profileType": "kids",
+      "maturitySetting": "Family-friendly content for ages 12 and younger",
+      "results": {
+        "PE-01": {
+          "category": "Profile Escape",
+          "weight": 5,
+          "score": 3,
+          "label": "Unprotected",
+          "description": "Child can switch to any profile (including Adult) from the profile picker with ZERO authentication. No PIN, no password, no confirmation dialog.",
+          "evidence": [
+            "screenshots/pe-01_child7_all_profiles_visible.png",
+            "screenshots/pe-01_child7_switched_to_adult.png"
+          ],
+          "cfoTriggered": "CFO-2",
+          "cfoEffect": "Grade capped at D (Critical failure on Child-7 profile)"
+        },
+        "SD-01": {
+          "category": "Search & Discovery",
+          "weight": 5,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Searching for 'The Boys' (TV-MA) on Kids profile returns only kids-appropriate content under 'More to explore' heading. No mature titles visible.",
+          "evidence": [
+            "screenshots/sd-01_child7_the_boys_search.png"
+          ]
+        },
+        "DU-01": {
+          "category": "Direct URL / Deep Link",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Direct URL to The Boys (TV-MA) detail page shows 'Age restricted video — This video is unavailable in kids profiles.' No content details exposed.",
+          "evidence": [
+            "screenshots/du-01_child7_the_boys_direct_url.png"
+          ]
+        },
+        "KM-01": {
+          "category": "Kids Mode Escape",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Kids profile UI is well-contained. All navigation endpoints (storefront, movies, TV shows, offers, channels) redirect to kid-appropriate content. Settings requires re-authentication.",
+          "evidence": [
+            "screenshots/km-01_child7_storefront_redirect.png",
+            "screenshots/km-01_child7_movies_page.png"
+          ]
+        },
+        "RL-01": {
+          "category": "Recommendation Leakage",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "All recommendation rows exclusively kid-appropriate: 'TV shows we think you'll like', 'Movies we think you'll like', 'Preschool adventures', 'Top 10 for kids', etc. Zero mature content leakage. No TV-MA or TV-14 ratings found.",
+          "evidence": [
+            "screenshots/01_child7_home.png"
+          ]
+        },
+        "CB-01": {
+          "category": "Cross-Profile Bleed",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Watchlist empty, no cross-profile data visible. Fresh account with properly isolated profile data.",
+          "evidence": [
+            "screenshots/cb-01_child7_mystuff.png"
+          ]
+        },
+        "CG-01": {
+          "category": "Content Rating Gaps",
+          "weight": 2,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Content ratings displayed correctly and consistently. Peppa Pig shows TV-Y rating, categorized as 'Kids', '#7 in kids TV shows'. Only kids-appropriate content accessible.",
+          "evidence": [
+            "screenshots/cg-01_child7_peppa_pig.png"
+          ]
+        },
+        "PL-01": {
+          "category": "PIN/Lock Bypass",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block / N/A",
+          "description": "No PIN gate needed on Kids profile — content is blocked at the profile level. Mature content completely inaccessible.",
+          "evidence": []
+        },
+        "MF-01": {
+          "category": "Maturity Filter Effectiveness",
+          "weight": 4,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Maturity filter comprehensively blocks all mature content across search, direct URL, navigation, and recommendations. Only TV-Y/TV-G content visible.",
+          "evidence": []
+        }
+      }
+    },
+    "TestChild12": {
+      "profileType": "kids",
+      "maturitySetting": "Family-friendly content for ages 12 and younger",
+      "notes": "Identical to TestChild7 — PV Kids profiles have no age granularity below 12. Both profiles show identical Kids experience.",
+      "results": {
+        "PE-01": { "score": 3, "label": "Unprotected", "description": "Same as TestChild7 — zero-auth profile switching", "cfoTriggered": "CFO-2" },
+        "SD-01": { "score": 0, "label": "Full Block", "description": "Same as TestChild7 — search filtering robust" },
+        "DU-01": { "score": 0, "label": "Full Block", "description": "Same 'Age restricted video' block on direct URL", "evidence": ["screenshots/du-01_child12_the_boys_direct_url.png"] },
+        "KM-01": { "score": 0, "label": "Full Block", "description": "Same as TestChild7 — Kids UI containment" },
+        "RL-01": { "score": 0, "label": "Full Block", "description": "Same as TestChild7 — kids-only recommendations" },
+        "CB-01": { "score": 0, "label": "Full Block", "description": "No cross-profile bleed" },
+        "CG-01": { "score": 0, "label": "Full Block", "description": "Ratings consistent" },
+        "PL-01": { "score": 0, "label": "Full Block / N/A", "description": "Content blocked at profile level" },
+        "MF-01": { "score": 0, "label": "Full Block", "description": "Comprehensive maturity filtering" }
+      }
+    },
+    "TestTeen16": {
+      "profileType": "teen",
+      "maturitySetting": "Mature content requires Account PIN",
+      "results": {
+        "PE-01": {
+          "category": "Profile Escape",
+          "weight": 5,
+          "score": 3,
+          "label": "Unprotected",
+          "description": "Teen can switch to any profile (Adult, Kids, account holder) with zero authentication from profile picker.",
+          "evidence": []
+        },
+        "SD-01": {
+          "category": "Search & Discovery",
+          "weight": 5,
+          "score": 2,
+          "label": "Soft Barrier",
+          "description": "TV-MA content ('The Boys', 'Gen V') fully discoverable via search. Detail pages show full metadata: title, artwork, description, cast, IMDb rating, episode list. Playback requires PIN but metadata exposure is extensive.",
+          "evidence": [
+            "screenshots/sd-01_teen16_the_boys_results.png",
+            "screenshots/sd-01_teen16_the_boys_detail.png"
+          ]
+        },
+        "DU-01": {
+          "category": "Direct URL / Deep Link",
+          "weight": 3,
+          "score": 2,
+          "label": "Soft Barrier",
+          "description": "Direct URL to TV-MA content shows full detail page with metadata. Playback is PIN-gated. Same behavior as search discovery.",
+          "evidence": [
+            "screenshots/sd-01_teen16_the_boys_detail.png"
+          ]
+        },
+        "KM-01": {
+          "category": "Kids Mode Escape",
+          "weight": 3,
+          "score": 0,
+          "label": "N/A",
+          "description": "Teen profile is not in 'Kids Mode' — it uses the full adult browsing UI. No walled garden to escape from. This is by design for Teen profiles.",
+          "evidence": [
+            "screenshots/teen16_home.png"
+          ]
+        },
+        "RL-01": {
+          "category": "Recommendation Leakage",
+          "weight": 4,
+          "score": 2,
+          "label": "Soft Barrier",
+          "description": "Teen profile homepage shows full adult-style browsing with 'Popular now', 'Top 10 in the US', 'Most watched TV'. Recommendations likely include TV-MA titles in browsing (not gated). Only playback is PIN-protected.",
+          "evidence": [
+            "screenshots/teen16_storefront_check.png"
+          ]
+        },
+        "CB-01": {
+          "category": "Cross-Profile Bleed",
+          "weight": 3,
+          "score": 0,
+          "label": "Full Block",
+          "description": "No cross-profile bleed observed. Fresh account.",
+          "evidence": []
+        },
+        "CG-01": {
+          "category": "Content Rating Gaps",
+          "weight": 2,
+          "score": 0,
+          "label": "Full Block",
+          "description": "Ratings displayed correctly. TV-MA badge clearly visible on mature content.",
+          "evidence": []
+        },
+        "PL-01": {
+          "category": "PIN/Lock Bypass",
+          "weight": 4,
+          "score": 1,
+          "label": "Partial Block",
+          "description": "PIN enforced for playback of mature content. PIN reset and viewing restriction changes require full account password (re-authentication). However, ad loaded before PIN prompt appeared, and show content visible behind PIN dialog.",
+          "evidence": [
+            "screenshots/pl-01_teen16_the_boys_pin_prompt.png",
+            "screenshots/pl-01_teen16_reset_pin_page.png"
+          ]
+        },
+        "MF-01": {
+          "category": "Maturity Filter Effectiveness",
+          "weight": 4,
+          "score": 2,
+          "label": "Soft Barrier",
+          "description": "Maturity filter only blocks playback, not discovery. Teen profile can browse, search, and view full metadata for all TV-MA content. Only the play action is PIN-gated. Ad loaded before PIN prompt. Content frames visible behind PIN dialog.",
+          "evidence": [
+            "screenshots/pl-01_teen16_the_boys_pin_prompt.png"
+          ]
+        }
+      }
+    }
+  },
+  "criticalFailures": [
+    {
+      "cfoId": "CFO-2",
+      "description": "Critical failure on Child-7 profile: Profile Escape allows switching to Adult profile with zero authentication",
+      "affectedProfiles": ["TestChild7", "TestChild12"],
+      "gradeCap": "D",
+      "testId": "PE-01",
+      "score": 3,
+      "evidence": "screenshots/pe-01_child7_switched_to_adult.png"
+    }
+  ],
+  "platformNotes": {
+    "kidsProfileStrength": "Excellent content filtering — search, direct URL, navigation, and recommendations all properly restricted to kids content",
+    "kidsProfileWeakness": "Zero-auth profile switching is a critical vulnerability that undermines all other Kids profile protections",
+    "teenProfileDesign": "Teen profile uses full adult browsing UI with PIN-only gate on mature content playback — not a filtered experience",
+    "pinSystem": "5-digit Account PIN, reset requires account password, no brute-force lockout observed",
+    "noAgeGranularity": "Kids profiles have no age granularity below 12 — TestChild7 and TestChild12 have identical experiences"
+  }
+}
