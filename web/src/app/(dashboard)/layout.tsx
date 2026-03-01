@@ -7,7 +7,7 @@ import { useStytchUser } from "@stytch/nextjs"
 import { DashboardSkeleton } from "@/components/ui/skeleton"
 import { CommandPalette } from "@/components/ui/command-palette"
 import { Breadcrumbs } from "@/components/ui/breadcrumbs"
-import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
+import { SiteHeader } from "@/components/layout/SiteHeader"
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar"
 import { SentryUserIdentify } from "@/components/SentryUserIdentify"
 
@@ -71,13 +71,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className={isPlayground ? "h-dvh flex flex-col bg-background overflow-hidden" : "min-h-screen bg-background"}>
       <SentryUserIdentify />
       {/* Shared header — same as docs/compliance pages */}
-      <PublicPageHeader onSearchClick={() => setCmdkOpen(true)} />
+      <SiteHeader onSearchClick={() => setCmdkOpen(true)} />
 
       {/* Command Palette */}
       <CommandPalette open={cmdkOpen} onOpenChange={setCmdkOpen} />
 
       {/* Content area below fixed header */}
-      <div className={isPlayground ? "flex-1 pt-14 overflow-hidden" : "pt-14"}>
+      <div className={isPlayground ? "flex-1 pt-20 overflow-hidden" : "pt-20"}>
         {isPlayground ? (
           /* Playground: full-width, no sidebar, fills available height */
           children

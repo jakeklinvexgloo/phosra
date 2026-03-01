@@ -1,54 +1,7 @@
 import Link from "next/link"
 import { PhosraBurst } from "./shared"
 import { PLATFORM_STATS } from "@/lib/platforms"
-
-const FOOTER_SECTIONS = [
-  {
-    title: "Product",
-    links: [
-      { label: "Platforms", href: "/platforms" },
-      { label: "Playground", href: "/playground" },
-      { label: "AI Safety Research", href: "/research/ai-chatbots" },
-      { label: "Pricing", href: "/pricing" },
-      { label: "Demo", href: "/demo" },
-      { label: "Changelog", href: "/changelog" },
-    ],
-  },
-  {
-    title: "Developers",
-    links: [
-      { label: "API Docs", href: "/docs" },
-      { label: "API Reference", href: "/docs" },
-      { label: "Playground", href: "/playground" },
-      { label: "GitHub", href: "https://github.com/phosra" },
-    ],
-  },
-  {
-    title: "Compliance",
-    links: [
-      { label: "Compliance Hub", href: "/compliance" },
-      { label: "KOSA", href: "/compliance/kosa" },
-      { label: "COPPA 2.0", href: "/compliance/coppa-2" },
-      { label: "EU DSA", href: "/compliance/eu-dsa" },
-      { label: "UK Online Safety", href: "/compliance/uk-osa" },
-      { label: "All 50+ Laws \u2192", href: "/compliance" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Blog", href: "/blog" },
-      { label: "Press", href: "/press" },
-      { label: "Brand", href: "/brand" },
-      { label: "Investors", href: "/investors" },
-      { label: "Pricing", href: "/pricing" },
-      { label: "Contact", href: "/contact" },
-      { label: "Privacy", href: "/privacy" },
-      { label: "Terms", href: "/terms" },
-    ],
-  },
-]
+import { FOOTER_SECTIONS } from "@/lib/nav-config"
 
 const SOCIAL_LINKS = [
   { label: "GitHub", href: "https://github.com/phosra", icon: GitHubIcon },

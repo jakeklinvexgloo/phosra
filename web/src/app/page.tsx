@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/marketing/Navbar"
+import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Hero } from "@/components/marketing/Hero"
 import { Features } from "@/components/marketing/Features"
 import { Ecosystem } from "@/components/marketing/Ecosystem"
@@ -24,7 +24,7 @@ export default async function MarketingPage() {
 
   return (
     <div className="min-h-screen scroll-smooth overflow-x-hidden">
-      <Navbar />
+      <SiteHeader variant="transparent" />
       <Hero />
       <Compliance />
       <Features />

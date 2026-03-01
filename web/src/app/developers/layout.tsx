@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { usePathname } from "next/navigation"
 import { List, X } from "lucide-react"
-import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
+import { SiteHeader } from "@/components/layout/SiteHeader"
 import { DevDocsSidebar } from "@/components/developers/DevDocsSidebar"
 import { DevDocsSearch } from "@/components/developers/DevDocsSearch"
 
@@ -23,8 +23,8 @@ export default function DeveloperDocsLayout({ children }: { children: React.Reac
 
   return (
     <div className="min-h-screen bg-background">
-      <PublicPageHeader />
-      <div className="pt-14">
+      <SiteHeader />
+      <div className="pt-20">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
           {/* Mobile sidebar toggle */}
           <button

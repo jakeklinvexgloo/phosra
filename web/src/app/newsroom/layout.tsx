@@ -1,13 +1,13 @@
 "use client"
 
-import { PublicPageHeader } from "@/components/layout/PublicPageHeader"
+import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Footer } from "@/components/marketing/Footer"
 
 export default function NewsroomLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <PublicPageHeader />
-      <main className="flex-1 pt-14">
+      <SiteHeader />
+      <main className="flex-1 pt-20">
         {children}
       </main>
       <Footer />

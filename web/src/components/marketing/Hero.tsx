@@ -31,7 +31,7 @@ export function Hero() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A]">
+    <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A] min-h-dvh flex flex-col">
       {/* Layered background textures */}
       <WaveTexture colorStart="#00D47E" colorEnd="#26A8C9" opacity={0.12} />
       <GradientMesh colors={["#00D47E", "#26A8C9", "#7B5CB8"]} />
@@ -41,7 +41,7 @@ export function Hero() {
         <PhosraBurst size={700} color="#00D47E" opacity={0.06} animate />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-28 pb-16 sm:pt-36 sm:pb-24 lg:pt-36 lg:pb-24 xl:pt-48 xl:pb-32">
+      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-28 lg:pb-16 xl:pt-32 xl:pb-20 flex-1 flex flex-col justify-center">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-20 items-center">
           {/* Left — text */}
           <div>
