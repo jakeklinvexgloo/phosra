@@ -55,6 +55,8 @@ export interface FeaturedCard {
 
 export interface NavDropdown {
   label: string
+  /** Hub page URL — clicking the dropdown label navigates here */
+  href: string
   sections: NavSection[]
   featured?: FeaturedCard
   /** Number of columns for sections (featured card is always an extra column) */
@@ -72,6 +74,7 @@ export type NavEntry = { type: "dropdown"; data: NavDropdown } | { type: "link";
 
 export const PRODUCTS_DROPDOWN: NavDropdown = {
   label: "Products",
+  href: "/products",
   columns: 2,
   sections: [
     {
@@ -103,6 +106,7 @@ export const PRODUCTS_DROPDOWN: NavDropdown = {
 
 export const RESEARCH_DROPDOWN: NavDropdown = {
   label: "Research",
+  href: "/research",
   columns: 2,
   sections: [
     {
@@ -134,6 +138,7 @@ export const RESEARCH_DROPDOWN: NavDropdown = {
 
 export const COMPLIANCE_DROPDOWN: NavDropdown = {
   label: "Compliance",
+  href: "/compliance",
   columns: 3,
   sections: [
     {
@@ -166,6 +171,7 @@ export const COMPLIANCE_DROPDOWN: NavDropdown = {
 
 export const RESOURCES_DROPDOWN: NavDropdown = {
   label: "Resources",
+  href: "/resources",
   columns: 3,
   sections: [
     {

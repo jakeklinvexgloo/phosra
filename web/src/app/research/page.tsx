@@ -1,5 +1,7 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import { ArrowRight, Bot, Tv, BarChart3 } from "lucide-react"
+import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
 import { loadAllStreamingPlatforms } from "@/lib/streaming-research/loaders"
 
@@ -15,21 +17,21 @@ export const metadata: Metadata = {
 }
 
 function gradeColor(grade: string): string {
-  if (grade.startsWith("A")) return "text-emerald-500"
-  if (grade.startsWith("B")) return "text-blue-500"
-  if (grade.startsWith("C")) return "text-amber-500"
-  if (grade.startsWith("D")) return "text-orange-500"
-  if (grade === "F") return "text-red-500"
-  return "text-muted-foreground"
+  if (grade.startsWith("A")) return "text-emerald-400"
+  if (grade.startsWith("B")) return "text-blue-400"
+  if (grade.startsWith("C")) return "text-amber-400"
+  if (grade.startsWith("D")) return "text-orange-400"
+  if (grade === "F") return "text-red-400"
+  return "text-white/50"
 }
 
 function gradeBg(grade: string): string {
-  if (grade.startsWith("A")) return "bg-emerald-100 dark:bg-emerald-900/30"
-  if (grade.startsWith("B")) return "bg-blue-100 dark:bg-blue-900/30"
-  if (grade.startsWith("C")) return "bg-amber-100 dark:bg-amber-900/30"
-  if (grade.startsWith("D")) return "bg-orange-100 dark:bg-orange-900/30"
-  if (grade === "F") return "bg-red-100 dark:bg-red-900/30"
-  return "bg-muted"
+  if (grade.startsWith("A")) return "bg-emerald-500/15 border-emerald-500/20"
+  if (grade.startsWith("B")) return "bg-blue-500/15 border-blue-500/20"
+  if (grade.startsWith("C")) return "bg-amber-500/15 border-amber-500/20"
+  if (grade.startsWith("D")) return "bg-orange-500/15 border-orange-500/20"
+  if (grade === "F") return "bg-red-500/15 border-red-500/20"
+  return "bg-white/5 border-white/10"
 }
 
 export default async function ResearchHubPage() {
@@ -38,7 +40,6 @@ export default async function ResearchHubPage() {
     loadAllStreamingPlatforms(),
   ])
 
-  // Extract grade ranges
   const chatbotGrades = chatbotPlatforms
     .map((p) => p.chatbotData?.safetyTesting?.scorecard?.overallGrade)
     .filter((g): g is string => !!g)
@@ -46,199 +47,262 @@ export default async function ResearchHubPage() {
 
   const chatbotGradeRange =
     chatbotGrades.length > 0
-      ? `${chatbotGrades[chatbotGrades.length - 1]} - ${chatbotGrades[0]}`
+      ? `${chatbotGrades[chatbotGrades.length - 1]} – ${chatbotGrades[0]}`
       : "N/A"
   const streamingGradeRange =
     streamingGrades.length > 0
-      ? `${streamingGrades[streamingGrades.length - 1]} - ${streamingGrades[0]}`
+      ? `${streamingGrades[streamingGrades.length - 1]} – ${streamingGrades[0]}`
       : "N/A"
 
   const totalPlatforms = chatbotPlatforms.length + streamingPlatforms.length
 
   return (
-    <>
+    <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-background border-b border-border/40">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
-        <div className="relative mx-auto max-w-6xl px-4 py-20 sm:py-28 text-center">
-          <p className="text-sm font-medium uppercase tracking-widest text-blue-400 mb-4">
-            Independent Safety Research
-          </p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6">
-            Research Portal
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-slate-300 leading-relaxed">
-            Comprehensive, independent safety evaluations across {totalPlatforms} platforms.
-            We test how AI chatbots and streaming services protect children using
-            standardized methodologies and publish every result.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-8 text-sm text-slate-400">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-bold text-white">{totalPlatforms}</span>
-              <span>Platforms Tested</span>
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">
+        <div className="absolute inset-0">
+          <WaveTexture />
+        </div>
+        <div className="absolute top-10 right-10 opacity-5">
+          <PhosraBurst size={400} color="#ffffff" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-28">
+          <AnimatedSection direction="up">
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.08] border border-white/[0.12] mb-6">
+                <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
+                <span className="text-xs text-white/60">Independent Safety Research</span>
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-white leading-[1.1] mb-6">
+                Research{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-green to-emerald-300">
+                  Portal
+                </span>
+              </h1>
+              <p className="text-lg text-white/60 leading-relaxed max-w-2xl">
+                Comprehensive, independent safety evaluations across {totalPlatforms} platforms.
+                We test how AI chatbots and streaming services protect children using
+                standardized methodologies and publish every result.
+              </p>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-bold text-white">2</span>
-              <span>Research Verticals</span>
+          </AnimatedSection>
+
+          {/* Stats */}
+          <AnimatedSection direction="up" className="mt-14">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="rounded-lg px-4 py-3 text-center bg-white/[0.05] border border-white/[0.08]">
+                <div className="text-2xl sm:text-3xl font-display font-bold text-white">{totalPlatforms}</div>
+                <div className="text-xs text-white/50 mt-0.5">Platforms Tested</div>
+              </div>
+              <div className="rounded-lg px-4 py-3 text-center bg-white/[0.05] border border-white/[0.08]">
+                <div className="text-2xl sm:text-3xl font-display font-bold text-white">2</div>
+                <div className="text-xs text-white/50 mt-0.5">Research Verticals</div>
+              </div>
+              <div className="rounded-lg px-4 py-3 text-center bg-white/[0.05] border border-white/[0.08]">
+                <div className="text-2xl sm:text-3xl font-display font-bold text-white">40+</div>
+                <div className="text-xs text-white/50 mt-0.5">Test Prompts</div>
+              </div>
+              <div className="rounded-lg px-4 py-3 text-center bg-white/[0.05] border border-white/[0.08]">
+                <div className="text-2xl sm:text-3xl font-display font-bold text-white">100%</div>
+                <div className="text-xs text-white/50 mt-0.5">Transparent Results</div>
+              </div>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl font-bold text-white">100%</span>
-              <span>Transparent Results</span>
-            </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Research Verticals */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
-        <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 text-center">
-          Research Verticals
-        </h2>
-        <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">
-          Each vertical uses a specialized testing framework designed for its platform category.
-        </p>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* AI Chatbot Safety Card */}
-          <Link
-            href="/research/ai-chatbots"
-            className="group relative rounded-xl border border-border bg-card p-8 transition-all hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/5"
-          >
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10 text-blue-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-foreground group-hover:text-blue-500 transition-colors">
-                    AI Chatbot Safety
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {chatbotPlatforms.length} platforms tested
-                  </p>
-                </div>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-muted-foreground group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-              How do ChatGPT, Claude, Gemini, and other AI chatbots protect minors?
-              We test age verification, content safety, parental controls,
-              emotional safety, and more across 40 standardized test prompts.
+      <section className="bg-background">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+          <AnimatedSection direction="up">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-2">
+              Research Verticals
+            </h2>
+            <p className="text-muted-foreground mb-10 max-w-xl">
+              Each vertical uses a specialized testing framework designed for its platform category.
             </p>
+          </AnimatedSection>
 
-            <div className="flex items-center gap-4 mb-4">
-              <div className="text-sm text-muted-foreground">
-                Grade range:{" "}
-                <span className="font-semibold text-foreground">{chatbotGradeRange}</span>
-              </div>
-            </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* AI Chatbot Safety Card */}
+            <AnimatedSection direction="up" delay={0}>
+              <Link
+                href="/research/ai-chatbots"
+                className="group block h-full"
+              >
+                <div className="rounded-xl border border-border bg-card p-8 h-full transition-all hover:border-brand-green/30 hover:shadow-lg hover:shadow-brand-green/5 hover:-translate-y-1">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center">
+                        <Bot className="w-6 h-6 text-brand-green" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground group-hover:text-brand-green transition-colors">
+                          AI Chatbot Safety
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {chatbotPlatforms.length} platforms tested
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-green transition-colors" />
+                  </div>
 
-            {/* Grade badges */}
-            <div className="flex flex-wrap gap-2">
-              {chatbotPlatforms.slice(0, 8).map((p) => {
-                const grade = p.chatbotData?.safetyTesting?.scorecard?.overallGrade ?? "N/A"
-                return (
-                  <span
-                    key={p.platformId}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${gradeBg(grade)} ${gradeColor(grade)}`}
-                  >
-                    <span className="text-foreground/70">{p.platformName}</span>
-                    <span className="font-bold">{grade}</span>
-                  </span>
-                )
-              })}
-            </div>
-
-            <div className="mt-6 text-sm font-medium text-blue-500 group-hover:text-blue-400 transition-colors">
-              Explore AI Chatbot Research &rarr;
-            </div>
-          </Link>
-
-          {/* Streaming Content Safety Card */}
-          <Link
-            href="/research/streaming"
-            className="group relative rounded-xl border border-border bg-card p-8 transition-all hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/5"
-          >
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 text-purple-500">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-foreground group-hover:text-purple-500 transition-colors">
-                    Streaming Content Safety
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {streamingPlatforms.length} platforms tested
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                    How do ChatGPT, Claude, Gemini, and other AI chatbots protect minors?
+                    We test age verification, content safety, parental controls,
+                    emotional safety, and more across 40 standardized test prompts.
                   </p>
+
+                  <div className="text-sm text-muted-foreground mb-4">
+                    Grade range:{" "}
+                    <span className="font-semibold text-foreground">{chatbotGradeRange}</span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {chatbotPlatforms.slice(0, 8).map((p) => {
+                      const grade = p.chatbotData?.safetyTesting?.scorecard?.overallGrade ?? "N/A"
+                      return (
+                        <span
+                          key={p.platformId}
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${gradeBg(grade)} ${gradeColor(grade)}`}
+                        >
+                          <span className="text-foreground/70">{p.platformName}</span>
+                          <span className="font-bold">{grade}</span>
+                        </span>
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-muted-foreground group-hover:text-purple-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
+              </Link>
+            </AnimatedSection>
 
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-              Do Netflix, Peacock, and Prime Video effectively filter age-inappropriate content?
-              We evaluate profile controls, maturity filters, search restrictions,
-              and content access across 3 user profiles per platform.
+            {/* Streaming Content Safety Card */}
+            <AnimatedSection direction="up" delay={0.05}>
+              <Link
+                href="/research/streaming"
+                className="group block h-full"
+              >
+                <div className="rounded-xl border border-border bg-card p-8 h-full transition-all hover:border-brand-green/30 hover:shadow-lg hover:shadow-brand-green/5 hover:-translate-y-1">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center">
+                        <Tv className="w-6 h-6 text-brand-green" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground group-hover:text-brand-green transition-colors">
+                          Streaming Content Safety
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {streamingPlatforms.length} platforms tested
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-green transition-colors" />
+                  </div>
+
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                    Do Netflix, Peacock, and Prime Video effectively filter age-inappropriate content?
+                    We evaluate profile controls, maturity filters, search restrictions,
+                    and content access across 3 user profiles per platform.
+                  </p>
+
+                  <div className="text-sm text-muted-foreground mb-4">
+                    Grade range:{" "}
+                    <span className="font-semibold text-foreground">{streamingGradeRange}</span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {streamingPlatforms.map((p) => (
+                      <span
+                        key={p.platformId}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${gradeBg(p.overallGrade)} ${gradeColor(p.overallGrade)}`}
+                      >
+                        <span className="text-foreground/70">{p.platformName}</span>
+                        <span className="font-bold">{p.overallGrade}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
+      {/* Methodology & Tools */}
+      <section className="bg-muted/30 border-y border-border">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+          <AnimatedSection direction="up">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-2">
+              Methodology & Tools
+            </h2>
+            <p className="text-muted-foreground mb-10 max-w-xl">
+              Transparent frameworks, test libraries, and actionable safety controls.
             </p>
+          </AnimatedSection>
 
-            <div className="flex items-center gap-4 mb-4">
-              <div className="text-sm text-muted-foreground">
-                Grade range:{" "}
-                <span className="font-semibold text-foreground">{streamingGradeRange}</span>
-              </div>
-            </div>
-
-            {/* Grade badges */}
-            <div className="flex flex-wrap gap-2">
-              {streamingPlatforms.map((p) => (
-                <span
-                  key={p.platformId}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${gradeBg(p.overallGrade)} ${gradeColor(p.overallGrade)}`}
-                >
-                  <span className="text-foreground/70">{p.platformName}</span>
-                  <span className="font-bold">{p.overallGrade}</span>
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-6 text-sm font-medium text-purple-500 group-hover:text-purple-400 transition-colors">
-              Explore Streaming Research &rarr;
-            </div>
-          </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { label: "AI Testing Methodology", href: "/research/ai-chatbots/methodology", icon: Bot, description: "How we test chatbot safety" },
+              { label: "Streaming Methodology", href: "/research/streaming/methodology", icon: Tv, description: "Content filtering test framework" },
+              { label: "Compare Platforms", href: "/research/compare", icon: BarChart3, description: "Head-to-head safety comparisons" },
+            ].map((item, i) => {
+              const Icon = item.icon
+              return (
+                <AnimatedSection key={item.href} direction="up" delay={i * 0.05}>
+                  <Link href={item.href} className="group block h-full">
+                    <div className="rounded-xl border border-border bg-card p-6 h-full transition-all hover:border-brand-green/30 hover:shadow-lg hover:shadow-brand-green/5 hover:-translate-y-1">
+                      <div className="w-11 h-11 rounded-xl bg-brand-green/10 flex items-center justify-center mb-4">
+                        <Icon className="w-5 h-5 text-brand-green" />
+                      </div>
+                      <h3 className="text-base font-semibold text-foreground group-hover:text-brand-green transition-colors mb-1.5">
+                        {item.label}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {item.description}
+                      </p>
+                      <div className="mt-4 flex items-center gap-1 text-xs font-medium text-brand-green opacity-0 group-hover:opacity-100 transition-opacity">
+                        Explore <ArrowRight className="w-3 h-3" />
+                      </div>
+                    </div>
+                  </Link>
+                </AnimatedSection>
+              )
+            })}
+          </div>
         </div>
       </section>
 
       {/* Cross-Portal CTA */}
-      <section className="border-t border-border/40 bg-muted/30">
-        <div className="mx-auto max-w-6xl px-4 py-16 text-center">
-          <h2 className="text-2xl font-bold text-foreground mb-3">
-            Cross-Portal Comparison
-          </h2>
-          <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-            Compare safety practices across both AI chatbots and streaming platforms
-            to see which companies lead in child protection.
-          </p>
-          <Link
-            href="/research/compare"
-            className="inline-flex items-center gap-2 rounded-lg bg-foreground text-background px-6 py-3 text-sm font-medium transition-opacity hover:opacity-90"
-          >
-            View Cross-Portal Comparison
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+      <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+          <AnimatedSection direction="up">
+            <div className="text-center max-w-2xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/10 border border-brand-green/20 mb-6">
+                <span className="text-xs font-semibold text-brand-green">
+                  Cross-Portal
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
+                Compare Safety Across All Platforms
+              </h2>
+              <p className="text-white/60 mb-8">
+                See how AI chatbots and streaming platforms stack up side-by-side
+                in child protection practices.
+              </p>
+              <Link
+                href="/research/compare"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-green text-white font-medium hover:bg-brand-green/90 transition-colors"
+              >
+                View Comparison
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
-    </>
+    </div>
   )
 }

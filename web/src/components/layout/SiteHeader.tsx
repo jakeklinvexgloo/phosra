@@ -168,7 +168,8 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
                     onMouseLeave={closeMenu}
                     className="relative"
                   >
-                    <button
+                    <Link
+                      href={dropdown.href}
                       className={`flex items-center gap-1 px-3 py-1.5 text-[13px] font-medium rounded-full transition-colors whitespace-nowrap ${
                         isActive
                           ? "text-[#00D47E]"
@@ -181,7 +182,7 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
                       <ChevronDown
                         className={`w-2.5 h-2.5 opacity-40 transition-transform ${isOpen ? "rotate-180" : ""}`}
                       />
-                    </button>
+                    </Link>
                   </div>
                 )
               })}
