@@ -90,7 +90,7 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
           {/* Sliding active indicator */}
           {activeIndex >= 0 && (
             <div
-              className="absolute top-[3px] h-[30px] rounded-full bg-white/[0.1] border border-white/[0.06]"
+              className="absolute top-[2px] h-[30px] rounded-full bg-white/[0.1] border border-white/[0.06]"
               style={{
                 width: indicator.width,
                 transform: `translateX(${indicator.left}px)`,
