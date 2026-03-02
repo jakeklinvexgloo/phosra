@@ -118,7 +118,7 @@ export function HeroPromptBar({ onSubmit }: HeroPromptBarProps) {
   const showSuggestions = focused && suggestions.length > 0
 
   return (
-    <div ref={containerRef} className="relative max-w-lg w-full mt-6">
+    <div ref={containerRef} className="relative max-w-full sm:max-w-lg w-full mt-6">
       {/* Live Demo badge */}
       <div className="flex items-center gap-1.5 mb-2.5 ml-1">
         <span className="relative flex h-2 w-2">

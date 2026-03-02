@@ -73,7 +73,7 @@ export function LiquidGlassModal({ open, onClose, children }: LiquidGlassModalPr
                 stiffness: 400,
                 mass: 0.8,
               }}
-              className="relative w-full max-w-2xl max-h-[85vh] z-[10000] flex flex-col liquid-glass overflow-hidden"
+              className="relative w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl max-h-[85vh] z-[10000] flex flex-col liquid-glass overflow-hidden"
               onClick={(e) => e.stopPropagation()}
               aria-hidden={false}
             >

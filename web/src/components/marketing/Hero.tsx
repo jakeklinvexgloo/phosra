@@ -59,8 +59,9 @@ export function Hero() {
 
             {/* Headline with serif display + gradient */}
             <AnimatedSection delay={0.1}>
-              <h1 className="font-display text-[40px] sm:text-6xl lg:text-[56px] xl:text-[72px] text-white leading-[1.05] mb-6 tracking-tight">
+              <h1 className="font-display text-[26px] xs:text-[30px] sm:text-5xl md:text-6xl lg:text-[56px] xl:text-[72px] text-white leading-[1.1] mb-6 tracking-tight">
                 Define once,{" "}
+                <br className="sm:hidden" />
                 <span className="bg-gradient-to-r from-[#00D47E] to-[#26A8C9] bg-clip-text text-transparent">
                   protect everywhere
                 </span>

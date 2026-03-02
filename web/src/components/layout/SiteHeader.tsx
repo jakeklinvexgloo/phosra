@@ -48,11 +48,11 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
     return () => window.removeEventListener("scroll", handleScroll)
   }, [variantProp])
 
-  // Compute visual mode: dark (transparent hero not scrolled) or light (everything else)
-  const isDark = variantProp === "transparent" && !scrolled
-
   // Mobile menu
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  // Compute visual mode: dark (transparent hero not scrolled, or mobile nav open) or light (everything else)
+  const isDark = (variantProp === "transparent" && !scrolled) || mobileOpen
 
   // Dropdown state
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
