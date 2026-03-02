@@ -10,6 +10,8 @@ import { ComplianceSidebarTOC } from "@/components/marketing/compliance-page/Com
 import { StandardLawPage } from "@/components/marketing/compliance-page/StandardLawPage"
 import type { LawEntry } from "@/lib/compliance/types"
 import { getLawById } from "@/lib/compliance"
+import { MOVEMENTS_REGISTRY } from "@/lib/movements"
+import { PARENTAL_CONTROLS_REGISTRY } from "@/lib/parental-controls"
 
 function mapStageColor(
   status: LawEntry["status"]
@@ -35,6 +37,32 @@ function getRelatedLaws(law: LawEntry) {
     )
 }
 
+function getRelatedMovements(law: LawEntry) {
+  const lawCategories = new Set(law.ruleCategories)
+  return MOVEMENTS_REGISTRY
+    .filter((m) => m.rules.some((r) => lawCategories.has(r.category)))
+    .sort((a, b) => {
+      const aOverlap = a.rules.filter((r) => lawCategories.has(r.category)).length
+      const bOverlap = b.rules.filter((r) => lawCategories.has(r.category)).length
+      return bOverlap - aOverlap
+    })
+    .slice(0, 5)
+    .map((m) => ({ name: m.name, href: `/movements/${m.slug}` }))
+}
+
+function getRelatedParentalControls(law: LawEntry) {
+  const lawCategories = new Set(law.ruleCategories)
+  return PARENTAL_CONTROLS_REGISTRY
+    .filter((p) => p.capabilities.some((c) => lawCategories.has(c.category)))
+    .sort((a, b) => {
+      const aOverlap = a.capabilities.filter((c) => lawCategories.has(c.category)).length
+      const bOverlap = b.capabilities.filter((c) => lawCategories.has(c.category)).length
+      return bOverlap - aOverlap
+    })
+    .slice(0, 5)
+    .map((p) => ({ name: p.name, href: `/parental-controls/${p.slug}` }))
+}
+
 interface ComplianceLawTemplateProps {
   law: LawEntry
 }
@@ -50,6 +78,8 @@ const DETAILED_TOC = [
 export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
   const stageColor = mapStageColor(law.status)
   const relatedLaws = getRelatedLaws(law)
+  const relatedMovements = getRelatedMovements(law)
+  const relatedControls = getRelatedParentalControls(law)
 
   // Mode B: Standard template for laws without detailed page data
   if (!law.detailedPage) {
@@ -58,6 +88,8 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
         law={law}
         stageColor={stageColor}
         relatedLaws={relatedLaws}
+        relatedMovements={relatedMovements}
+        relatedControls={relatedControls}
       />
     )
   }
@@ -224,6 +256,52 @@ export function ComplianceLawTemplate({ law }: ComplianceLawTemplateProps) {
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground hover:border-brand-green/30 transition-colors"
                 >
                   {related.name}
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
+                </Link>
+              ))}
+            </div>
+          </AnimatedSection>
+        </section>
+      )}
+
+      {/* Related Community Standards */}
+      {relatedMovements.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 sm:px-8 pb-12 sm:pb-16">
+          <AnimatedSection initiallyVisible>
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+              Related Community Standards
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {relatedMovements.map((m) => (
+                <Link
+                  key={m.href}
+                  href={m.href}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground hover:border-brand-green/30 transition-colors"
+                >
+                  {m.name}
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
+                </Link>
+              ))}
+            </div>
+          </AnimatedSection>
+        </section>
+      )}
+
+      {/* Related Parental Controls */}
+      {relatedControls.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 sm:px-8 pb-12 sm:pb-16">
+          <AnimatedSection initiallyVisible>
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+              Related Parental Controls
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {relatedControls.map((c) => (
+                <Link
+                  key={c.href}
+                  href={c.href}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground hover:border-brand-green/30 transition-colors"
+                >
+                  {c.name}
                   <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
                 </Link>
               ))}

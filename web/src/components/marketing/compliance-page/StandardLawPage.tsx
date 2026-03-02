@@ -84,12 +84,16 @@ interface StandardLawPageProps {
   law: LawEntry
   stageColor: "enacted" | "passed" | "pending"
   relatedLaws: { id: string; name: string; href: string }[]
+  relatedMovements: { name: string; href: string }[]
+  relatedControls: { name: string; href: string }[]
 }
 
 export function StandardLawPage({
   law,
   stageColor,
   relatedLaws,
+  relatedMovements,
+  relatedControls,
 }: StandardLawPageProps) {
   return (
     <div>
@@ -321,6 +325,52 @@ export function StandardLawPage({
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground hover:border-brand-green/30 transition-colors"
                 >
                   {related.name}
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
+                </Link>
+              ))}
+            </div>
+          </AnimatedSection>
+        </section>
+      )}
+
+      {/* Related Community Standards */}
+      {relatedMovements.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 sm:px-8 pb-12 sm:pb-16">
+          <AnimatedSection initiallyVisible>
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+              Related Community Standards
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {relatedMovements.map((m) => (
+                <Link
+                  key={m.href}
+                  href={m.href}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground hover:border-brand-green/30 transition-colors"
+                >
+                  {m.name}
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
+                </Link>
+              ))}
+            </div>
+          </AnimatedSection>
+        </section>
+      )}
+
+      {/* Related Parental Controls */}
+      {relatedControls.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 sm:px-8 pb-12 sm:pb-16">
+          <AnimatedSection initiallyVisible>
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+              Related Parental Controls
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              {relatedControls.map((c) => (
+                <Link
+                  key={c.href}
+                  href={c.href}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-sm text-foreground hover:border-brand-green/30 transition-colors"
+                >
+                  {c.name}
                   <ArrowRight className="w-3.5 h-3.5 text-muted-foreground" />
                 </Link>
               ))}

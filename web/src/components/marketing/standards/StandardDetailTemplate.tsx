@@ -11,15 +11,45 @@ import {
   Clock,
   ExternalLink,
   Code2,
+  Scale,
+  Smartphone,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst, StandardIcon } from "@/components/marketing/shared"
 import { PhosraFeatureCard } from "@/components/marketing/compliance-page/PhosraFeatureCard"
 import { STATUS_META } from "@/lib/standards/types"
 import { generateFullStandardSnippet, generateRuleSnippet, getCategoryFeature } from "@/lib/standards/snippet-generator"
 import type { StandardEntry } from "@/lib/standards"
+import { LAW_REGISTRY } from "@/lib/compliance"
+import { PARENTAL_CONTROLS_REGISTRY } from "@/lib/parental-controls"
+
+function getRelatedLaws(standard: StandardEntry) {
+  const standardCategories = new Set(standard.rules.map(r => r.category))
+  return LAW_REGISTRY
+    .filter(law => law.ruleCategories.some(c => standardCategories.has(c)))
+    .sort((a, b) => {
+      const aOverlap = a.ruleCategories.filter(c => standardCategories.has(c)).length
+      const bOverlap = b.ruleCategories.filter(c => standardCategories.has(c)).length
+      return bOverlap - aOverlap
+    })
+    .slice(0, 6)
+}
+
+function getRelatedControls(standard: StandardEntry) {
+  const standardCategories = new Set(standard.rules.map(r => r.category))
+  return PARENTAL_CONTROLS_REGISTRY
+    .filter(control => control.capabilities.some(c => standardCategories.has(c.category)))
+    .sort((a, b) => {
+      const aOverlap = a.capabilities.filter(c => standardCategories.has(c.category)).length
+      const bOverlap = b.capabilities.filter(c => standardCategories.has(c.category)).length
+      return bOverlap - aOverlap
+    })
+    .slice(0, 6)
+}
 
 export function StandardDetailTemplate({ standard }: { standard: StandardEntry }) {
   const statusMeta = STATUS_META[standard.status]
+  const relatedLaws = getRelatedLaws(standard)
+  const relatedControls = getRelatedControls(standard)
 
   return (
     <div>
@@ -267,6 +297,109 @@ export function StandardDetailTemplate({ standard }: { standard: StandardEntry }
                 {tag.replace(/-/g, " ")}
               </span>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Related Legislation */}
+      {relatedLaws.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+          <AnimatedSection>
+            <div className="flex items-center gap-3 mb-2">
+              <Scale className="w-5 h-5 text-brand-green" />
+              <h2 className="text-xl sm:text-2xl font-display text-foreground">
+                Related Legislation
+              </h2>
+            </div>
+            <p className="text-sm text-muted-foreground mb-8">
+              Laws and regulations that share rule categories with {standard.name}.
+            </p>
+          </AnimatedSection>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {relatedLaws.map((law, i) => {
+              const overlap = law.ruleCategories.filter(c =>
+                standard.rules.some(r => r.category === c)
+              ).length
+              return (
+                <AnimatedSection key={law.id} delay={i * 0.05}>
+                  <Link
+                    href={`/compliance/${law.id}`}
+                    className="flex flex-col gap-3 p-5 rounded-xl border border-border bg-card hover:border-brand-green/30 hover:shadow-sm transition-all group"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-sm font-semibold text-foreground group-hover:text-brand-green transition-colors">
+                        {law.shortName}
+                      </h3>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-brand-green transition-colors flex-shrink-0 mt-0.5" />
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      {law.summary}
+                    </p>
+                    <div className="flex items-center gap-2 mt-auto">
+                      <span className="text-xs text-muted-foreground/70">
+                        {law.jurisdiction}
+                      </span>
+                      <span className="text-xs text-muted-foreground/40">|</span>
+                      <span className="text-xs text-brand-green/70">
+                        {overlap} shared {overlap === 1 ? "rule" : "rules"}
+                      </span>
+                    </div>
+                  </Link>
+                </AnimatedSection>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Related Parental Controls */}
+      {relatedControls.length > 0 && (
+        <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+          <AnimatedSection>
+            <div className="flex items-center gap-3 mb-2">
+              <Smartphone className="w-5 h-5 text-brand-green" />
+              <h2 className="text-xl sm:text-2xl font-display text-foreground">
+                Related Parental Controls
+              </h2>
+            </div>
+            <p className="text-sm text-muted-foreground mb-8">
+              Parental control tools that support capabilities aligned with {standard.name}.
+            </p>
+          </AnimatedSection>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {relatedControls.map((control, i) => {
+              const overlap = control.capabilities.filter(c =>
+                standard.rules.some(r => r.category === c.category)
+              ).length
+              return (
+                <AnimatedSection key={control.id} delay={i * 0.05}>
+                  <Link
+                    href={`/parental-controls/${control.slug}`}
+                    className="flex flex-col gap-3 p-5 rounded-xl border border-border bg-card hover:border-brand-green/30 hover:shadow-sm transition-all group"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{control.iconEmoji}</span>
+                        <h3 className="text-sm font-semibold text-foreground group-hover:text-brand-green transition-colors">
+                          {control.name}
+                        </h3>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-brand-green transition-colors flex-shrink-0 mt-0.5" />
+                    </div>
+                    <p className="text-xs text-muted-foreground line-clamp-2">
+                      {control.description}
+                    </p>
+                    <div className="flex items-center gap-2 mt-auto">
+                      <span className="text-xs text-brand-green/70">
+                        {overlap} matching {overlap === 1 ? "capability" : "capabilities"}
+                      </span>
+                    </div>
+                  </Link>
+                </AnimatedSection>
+              )
+            })}
           </div>
         </section>
       )}

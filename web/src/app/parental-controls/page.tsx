@@ -9,6 +9,9 @@ import {
   Sparkles,
   Smartphone,
   Cpu,
+  ChevronRight,
+  BookOpen,
+  Users,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import {
@@ -275,6 +278,47 @@ export default function ParentalControlsHubPage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Discover More */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12">
+        <AnimatedSection>
+          <h2 className="text-2xl font-display text-foreground text-center mb-3">Explore More</h2>
+          <p className="text-sm text-muted-foreground text-center mb-8 max-w-lg mx-auto">
+            Parental controls work best alongside compliance intelligence and community standards.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {[
+              {
+                href: "/compliance",
+                icon: BookOpen,
+                title: "Compliance Hub",
+                description: "Understand the laws that govern parental controls and child data protection.",
+              },
+              {
+                href: "/movements",
+                icon: Users,
+                title: "Community Standards",
+                description: "Discover community movements your family can join for collective protection.",
+              },
+            ].map((card) => (
+              <Link
+                key={card.href}
+                href={card.href}
+                className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-5 hover:border-brand-green/30 hover:shadow-[0_0_24px_-8px_rgba(0,212,126,0.12)] transition-all"
+              >
+                <div className="flex items-center justify-between">
+                  <card.icon className="w-5 h-5 text-brand-green" />
+                  <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-brand-green transition-colors" />
+                </div>
+                <h3 className="text-sm font-semibold text-foreground group-hover:text-brand-green transition-colors">
+                  {card.title}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{card.description}</p>
+              </Link>
+            ))}
+          </div>
+        </AnimatedSection>
       </section>
 
       {/* FAQ */}

@@ -9,6 +9,7 @@ import { DevSection } from "@/components/marketing/DevSection"
 import { Compliance } from "@/components/marketing/Compliance"
 import { PlatformIntegration } from "@/components/marketing/PlatformIntegration"
 import { Movements } from "@/components/marketing/Movements"
+import { ParentalControlsCallout } from "@/components/marketing/ParentalControlsCallout"
 import { CTASection } from "@/components/marketing/CTASection"
 import { Footer } from "@/components/marketing/Footer"
 import { AISafetyCallout } from "@/components/marketing/AISafetyCallout"
@@ -44,6 +45,7 @@ export default async function MarketingPage() {
       <HowItWorks />
       <PlatformIntegration />
       <Movements />
+      <ParentalControlsCallout />
       <DevSection />
       <CTASection />
       <Footer />

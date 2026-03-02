@@ -11,6 +11,8 @@ import {
   DollarSign,
   Cpu,
   Code2,
+  Scale,
+  Users,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import { CapabilityMatrix } from "./CapabilityMatrix"
@@ -24,6 +26,35 @@ import {
   generateCapabilitySnippet,
   getCategoryFeature,
 } from "@/lib/parental-controls/snippet-generator"
+import { LAW_REGISTRY } from "@/lib/compliance"
+import type { LawEntry } from "@/lib/compliance"
+import { JURISDICTION_META, STATUS_META } from "@/lib/compliance"
+import { MOVEMENTS_REGISTRY } from "@/lib/movements"
+import type { MovementEntry } from "@/lib/movements"
+
+function getRelatedLaws(control: ParentalControlEntry): LawEntry[] {
+  const controlCategories = new Set(control.capabilities.map((c) => c.category))
+  return LAW_REGISTRY
+    .filter((law) => law.ruleCategories.some((c) => controlCategories.has(c)))
+    .sort((a, b) => {
+      const aOverlap = a.ruleCategories.filter((c) => controlCategories.has(c)).length
+      const bOverlap = b.ruleCategories.filter((c) => controlCategories.has(c)).length
+      return bOverlap - aOverlap
+    })
+    .slice(0, 6)
+}
+
+function getRelatedStandards(control: ParentalControlEntry): MovementEntry[] {
+  const controlCategories = new Set(control.capabilities.map((c) => c.category))
+  return MOVEMENTS_REGISTRY
+    .filter((m) => m.rules.some((r) => controlCategories.has(r.category)))
+    .sort((a, b) => {
+      const aOverlap = a.rules.filter((r) => controlCategories.has(r.category)).length
+      const bOverlap = b.rules.filter((r) => controlCategories.has(r.category)).length
+      return bOverlap - aOverlap
+    })
+    .slice(0, 6)
+}
 
 export function ParentalControlDetailTemplate({ entry }: { entry: ParentalControlEntry }) {
   const categoryMeta = SOURCE_CATEGORY_META[entry.sourceCategory]
@@ -297,6 +328,126 @@ export function ParentalControlDetailTemplate({ entry }: { entry: ParentalContro
           </div>
         </section>
       )}
+
+      {/* Related Legislation */}
+      {(() => {
+        const relatedLaws = getRelatedLaws(entry)
+        if (relatedLaws.length === 0) return null
+        return (
+          <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+            <AnimatedSection>
+              <div className="flex items-center gap-3 mb-2">
+                <Scale className="w-5 h-5 text-brand-green" />
+                <h2 className="text-xl sm:text-2xl font-display text-foreground">
+                  Related Legislation
+                </h2>
+              </div>
+              <p className="text-sm text-muted-foreground mb-8">
+                Laws and regulations that share rule categories with {entry.name}.
+              </p>
+            </AnimatedSection>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {relatedLaws.map((law, i) => {
+                const statusMeta = STATUS_META[law.status]
+                const jurisdictionMeta = JURISDICTION_META[law.jurisdictionGroup]
+                const controlCategories = new Set(entry.capabilities.map((c) => c.category))
+                const overlap = law.ruleCategories.filter((c) => controlCategories.has(c)).length
+                return (
+                  <AnimatedSection key={law.id} delay={0.05 * i}>
+                    <Link
+                      href={`/compliance/${law.id}`}
+                      className="block plaid-card hover:border-brand-green/30 transition-colors h-full"
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h3 className="text-sm font-semibold text-foreground leading-tight">
+                          {law.shortName}
+                        </h3>
+                        <span className={`flex-shrink-0 inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${statusMeta.bgColor} ${statusMeta.textColor}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${statusMeta.dotColor}`} />
+                          {statusMeta.label}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
+                        {law.summary}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-muted-foreground">
+                          {jurisdictionMeta.label}
+                        </span>
+                        <span className="text-[10px] text-brand-green font-medium">
+                          {overlap} shared {overlap === 1 ? "category" : "categories"}
+                        </span>
+                      </div>
+                    </Link>
+                  </AnimatedSection>
+                )
+              })}
+            </div>
+          </section>
+        )
+      })()}
+
+      {/* Related Community Standards */}
+      {(() => {
+        const relatedStandards = getRelatedStandards(entry)
+        if (relatedStandards.length === 0) return null
+        return (
+          <section className="max-w-5xl mx-auto px-4 sm:px-8 py-12 sm:py-16">
+            <AnimatedSection>
+              <div className="flex items-center gap-3 mb-2">
+                <Users className="w-5 h-5 text-brand-green" />
+                <h2 className="text-xl sm:text-2xl font-display text-foreground">
+                  Related Community Standards
+                </h2>
+              </div>
+              <p className="text-sm text-muted-foreground mb-8">
+                Community movements and standards that align with {entry.name}&apos;s capabilities.
+              </p>
+            </AnimatedSection>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {relatedStandards.map((std, i) => {
+                const controlCategories = new Set(entry.capabilities.map((c) => c.category))
+                const overlap = std.rules.filter((r) => controlCategories.has(r.category)).length
+                return (
+                  <AnimatedSection key={std.id} delay={0.05 * i}>
+                    <Link
+                      href={`/standards/${std.slug}`}
+                      className="block plaid-card hover:border-brand-green/30 transition-colors h-full"
+                    >
+                      <div className="flex items-center gap-2.5 mb-2">
+                        {std.iconUrl ? (
+                          <img src={std.iconUrl} alt="" className="w-8 h-8 rounded-lg object-contain" />
+                        ) : (
+                          <span className="text-xl">{std.iconEmoji}</span>
+                        )}
+                        <div className="min-w-0">
+                          <h3 className="text-sm font-semibold text-foreground leading-tight truncate">
+                            {std.name}
+                          </h3>
+                          <p className="text-[10px] text-muted-foreground truncate">
+                            {std.organization}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
+                        {std.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-muted-foreground">
+                          {std.rules.length} rules
+                        </span>
+                        <span className="text-[10px] text-brand-green font-medium">
+                          {overlap} shared {overlap === 1 ? "category" : "categories"}
+                        </span>
+                      </div>
+                    </Link>
+                  </AnimatedSection>
+                )
+              })}
+            </div>
+          </section>
+        )
+      })()}
 
       {/* CTA */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">

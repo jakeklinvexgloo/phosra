@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react"
 import Link from "next/link"
-import { ArrowRight, BookOpen } from "lucide-react"
+import { ArrowRight, BookOpen, ChevronRight, Shield, Smartphone, Scale } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import { COPPACountdownBanner } from "@/components/marketing/compliance-hub/COPPACountdownBanner"
 import { ComplianceStats } from "@/components/marketing/compliance-hub/ComplianceStats"
@@ -260,6 +260,55 @@ export default function ComplianceHubPage() {
             </p>
           </div>
         )}
+      </section>
+
+      {/* Discover More */}
+      <section className="border-t border-border bg-muted/30">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+          <AnimatedSection>
+            <h2 className="text-2xl font-display text-foreground text-center mb-3">Explore More</h2>
+            <p className="text-sm text-muted-foreground text-center mb-8 max-w-lg mx-auto">
+              Compliance is one piece of the child safety puzzle. Explore related resources.
+            </p>
+            <div className="grid sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+              {[
+                {
+                  href: "/movements",
+                  icon: Shield,
+                  title: "Community Standards",
+                  description: "Explore 31 community movements that enforce child safety rules across platforms.",
+                },
+                {
+                  href: "/parental-controls",
+                  icon: Smartphone,
+                  title: "Parental Controls",
+                  description: "Compare 21+ parental control apps and their capabilities side by side.",
+                },
+                {
+                  href: "/research/ai-chatbots",
+                  icon: Scale,
+                  title: "AI Safety Research",
+                  description: "See how AI chatbot platforms handle child safety in independent testing.",
+                },
+              ].map((card) => (
+                <Link
+                  key={card.href}
+                  href={card.href}
+                  className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-5 hover:border-brand-green/30 hover:shadow-[0_0_24px_-8px_rgba(0,212,126,0.12)] transition-all"
+                >
+                  <div className="flex items-center justify-between">
+                    <card.icon className="w-5 h-5 text-brand-green" />
+                    <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-brand-green transition-colors" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-foreground group-hover:text-brand-green transition-colors">
+                    {card.title}
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{card.description}</p>
+                </Link>
+              ))}
+            </div>
+          </AnimatedSection>
+        </div>
       </section>
 
       {/* FAQ */}
