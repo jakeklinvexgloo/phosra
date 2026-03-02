@@ -41,5 +41,24 @@ export default function MovementDetailPage({
 }) {
   const movement = getMovementBySlug(params.slug)
   if (!movement) notFound()
-  return <MovementDetailTemplate movement={movement} />
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.phosra.com" },
+      { "@type": "ListItem", position: 2, name: "Movements", item: "https://www.phosra.com/movements" },
+      { "@type": "ListItem", position: 3, name: movement.name, item: `https://www.phosra.com/movements/${params.slug}` },
+    ],
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <MovementDetailTemplate movement={movement} />
+    </>
+  )
 }

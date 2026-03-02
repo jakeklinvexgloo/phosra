@@ -103,8 +103,25 @@ const COMPARISON = [
 export default function PricingPage() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  }
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       {/* Hero */}
       <div className="text-center py-16 sm:py-20 px-4">
         <h1 className="text-4xl sm:text-5xl font-display text-foreground mb-4">

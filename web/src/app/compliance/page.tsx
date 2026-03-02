@@ -20,10 +20,38 @@ import { JURISDICTION_META } from "@/lib/compliance/types"
 import { DISPLAY_GROUPS } from "@/lib/compliance/country-flags"
 import type { LawStatus, LawEntry } from "@/lib/compliance/index"
 
+const COMPLIANCE_FAQ = [
+  {
+    q: "How many child safety laws does Phosra track?",
+    a: "Phosra tracks over 60 child safety laws across federal, state, and international jurisdictions. New legislation is added as soon as it is introduced or updated.",
+  },
+  {
+    q: "What jurisdictions are covered?",
+    a: "We cover U.S. federal laws, individual U.S. state laws, EU regulations, UK legislation, Australian laws, and other international child safety frameworks.",
+  },
+  {
+    q: "How often is the compliance database updated?",
+    a: "Our compliance database is monitored weekly using automated scanners and reviewed by our team. Updates are published as soon as new laws are introduced or existing ones change status.",
+  },
+  {
+    q: "Does Phosra help with COPPA compliance?",
+    a: "Yes. Phosra maps your platform policies to COPPA and COPPA 2.0 requirements automatically, including verifiable parental consent, data minimization, and deletion obligations.",
+  },
+  {
+    q: "What platforms does Phosra cover?",
+    a: "Phosra covers social media, gaming, messaging, streaming, and educational platforms. Our rule categories apply to any platform where minors may interact online.",
+  },
+  {
+    q: "Is the compliance data available via API?",
+    a: "Yes. All compliance data is available through our REST API at /api/compliance/laws, with endpoints for individual laws, rule category mappings, and jurisdiction filtering.",
+  },
+]
+
 export default function ComplianceHubPage() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [stateFilter, setStateFilter] = useState<string | null>(null)
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
 
   const isSearchActive = searchQuery.trim().length > 0
   const usStates = useMemo(() => getUSStates(), [])
@@ -71,8 +99,59 @@ export default function ComplianceHubPage() {
     setStateFilter(null)
   }, [])
 
+  const complianceFaqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: COMPLIANCE_FAQ.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  }
+
+  const datasetJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: "Global Child Safety Legislation Database",
+    description: "Comprehensive database of 67+ child safety laws across US federal, US state, EU, UK, and international jurisdictions. Tracks law status, key provisions, platform applicability, and 45 rule categories.",
+    url: "https://www.phosra.com/compliance",
+    creator: {
+      "@type": "Organization",
+      name: "Phosra",
+    },
+    keywords: ["child safety", "COPPA", "KOSA", "legislation", "compliance", "parental controls", "age verification"],
+    temporalCoverage: "2023/..",
+    spatialCoverage: "Global",
+    variableMeasured: ["law status", "key provisions", "platform applicability", "rule categories"],
+  }
+
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Child Safety Compliance Hub",
+    description: "Browse and filter 67+ global child safety laws. Track COPPA, KOSA, EU Digital Services Act, and more.",
+    url: "https://www.phosra.com/compliance",
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: LAW_REGISTRY.length,
+      itemListElement: LAW_REGISTRY.slice(0, 10).map((law, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: law.shortName,
+        url: `https://www.phosra.com/compliance/${law.id}`,
+      })),
+    },
+  }
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([complianceFaqJsonLd, datasetJsonLd, collectionJsonLd]) }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">
         <div className="absolute inset-0">
@@ -181,6 +260,33 @@ export default function ComplianceHubPage() {
             </p>
           </div>
         )}
+      </section>
+
+      {/* FAQ */}
+      <section className="border-t border-border bg-muted/30">
+        <div className="max-w-2xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+          <h2 className="text-2xl font-display text-foreground text-center mb-8">Frequently Asked Questions</h2>
+          <div className="space-y-3">
+            {COMPLIANCE_FAQ.map((item, i) => (
+              <div key={i} className="border border-border rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setExpandedFaq(expandedFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
+                >
+                  {item.q}
+                  <span className="text-muted-foreground ml-4 flex-shrink-0">
+                    {expandedFaq === i ? "\u2212" : "+"}
+                  </span>
+                </button>
+                {expandedFaq === i && (
+                  <div className="px-5 pb-4 text-sm text-muted-foreground leading-relaxed">
+                    {item.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* CTA */}

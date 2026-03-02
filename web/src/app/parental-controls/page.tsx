@@ -21,11 +21,39 @@ import type { SourceCategory } from "@/lib/parental-controls/types"
 import { HUB_CARDS } from "@/lib/parental-controls/adapters/to-hub-page"
 import { ParentalControlCard } from "@/components/parental-controls/ParentalControlCard"
 
+const PARENTAL_FAQ = [
+  {
+    q: "How does Phosra unify parental controls?",
+    a: "Phosra connects to your existing parental control apps and built-in device controls through APIs and guided setup, then lets you manage all rules from a single dashboard.",
+  },
+  {
+    q: "Which parental control apps are supported?",
+    a: "Phosra supports major parental control apps like Bark, Qustodio, Net Nanny, and built-in controls from Apple, Google, Microsoft, and more. New integrations are added regularly.",
+  },
+  {
+    q: "Do I need technical knowledge to use Phosra?",
+    a: "No. Phosra is designed for parents with any level of technical experience. The guided setup walks you through connecting your apps and setting rules in plain language.",
+  },
+  {
+    q: "Can I set different rules for different children?",
+    a: "Yes. Phosra supports individual profiles for each child, so you can customize age-appropriate rules, screen time limits, and content filters per child.",
+  },
+  {
+    q: "How does Phosra work with built-in device controls?",
+    a: "Phosra translates your family rules into the native format each device understands, whether it is Apple Screen Time, Google Family Link, or Windows Family Safety.",
+  },
+  {
+    q: "Is Phosra free for families?",
+    a: "Yes. The Family plan is completely free and includes parental controls across up to 3 platform integrations. No credit card required.",
+  },
+]
+
 type TabKey = "all" | SourceCategory
 
 export default function ParentalControlsHubPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<TabKey>("all")
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
   const stats = useMemo(() => getParentalControlsStats(), [])
 
   const tabs: { key: TabKey; label: string; count: number }[] = useMemo(() => {
@@ -57,8 +85,52 @@ export default function ParentalControlsHubPage() {
     return results
   }, [searchQuery, activeTab])
 
+  const parentalFaqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: PARENTAL_FAQ.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  }
+
+  const howToJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to Unify Parental Controls with Phosra",
+    description: "Set up unified parental controls across all your apps and platforms in three simple steps.",
+    step: [
+      {
+        "@type": "HowToStep",
+        position: 1,
+        name: "Connect your apps",
+        text: "Connect your existing parental control tools to Phosra via API or guided setup — from monitoring apps to built-in device controls.",
+      },
+      {
+        "@type": "HowToStep",
+        position: 2,
+        name: "Define rules once",
+        text: "Set your family's rules in one place. Phosra translates them into the native format each app understands.",
+      },
+      {
+        "@type": "HowToStep",
+        position: 3,
+        name: "Enforce everywhere",
+        text: "Rules push to every connected app and platform automatically. One dashboard, total coverage.",
+      },
+    ],
+  }
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([parentalFaqJsonLd, howToJsonLd]) }}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628]">
         <div className="absolute inset-0">
@@ -200,6 +272,33 @@ export default function ParentalControlsHubPage() {
                   <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
                 </div>
               </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-8 py-16 sm:py-20">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl font-display text-foreground text-center mb-8">Frequently Asked Questions</h2>
+          <div className="space-y-3">
+            {PARENTAL_FAQ.map((item, i) => (
+              <div key={i} className="border border-border rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setExpandedFaq(expandedFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
+                >
+                  {item.q}
+                  <span className="text-muted-foreground ml-4 flex-shrink-0">
+                    {expandedFaq === i ? "\u2212" : "+"}
+                  </span>
+                </button>
+                {expandedFaq === i && (
+                  <div className="px-5 pb-4 text-sm text-muted-foreground leading-relaxed">
+                    {item.a}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
