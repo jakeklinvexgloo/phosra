@@ -1,7 +1,15 @@
-"use client"
-
+import type { Metadata } from "next"
 import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Footer } from "@/components/marketing/Footer"
+
+export const metadata: Metadata = {
+  title: "Platform Coverage — 320+ Services Mapped | Phosra",
+  description: "Explore 320+ platforms in the kids ecosystem — streaming, social media, gaming, DNS filtering, devices, and more.",
+  openGraph: {
+    title: "Platform Coverage — 320+ Services Mapped | Phosra",
+    description: "Explore 320+ platforms in the kids ecosystem — streaming, social media, gaming, DNS filtering, devices, and more.",
+  },
+}
 
 export default function PlatformsLayout({ children }: { children: React.ReactNode }) {
   return (

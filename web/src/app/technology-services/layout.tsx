@@ -1,7 +1,15 @@
-"use client"
-
+import type { Metadata } from "next"
 import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Footer } from "@/components/marketing/Footer"
+
+export const metadata: Metadata = {
+  title: "Technology Services — Enforcement Coverage | Phosra",
+  description: "Browse the technology services Phosra enforces across streaming, social media, gaming, DNS filtering, devices, and more.",
+  openGraph: {
+    title: "Technology Services — Enforcement Coverage | Phosra",
+    description: "Browse the technology services Phosra enforces across streaming, social media, gaming, DNS filtering, devices, and more.",
+  },
+}
 
 export default function TechnologyServicesLayout({ children }: { children: React.ReactNode }) {
   return (

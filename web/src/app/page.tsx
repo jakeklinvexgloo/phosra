@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Hero } from "@/components/marketing/Hero"
 import { Features } from "@/components/marketing/Features"
@@ -12,6 +13,15 @@ import { CTASection } from "@/components/marketing/CTASection"
 import { Footer } from "@/components/marketing/Footer"
 import { AISafetyCallout } from "@/components/marketing/AISafetyCallout"
 import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
+
+export const metadata: Metadata = {
+  title: "Phosra — Child Safety Compliance Platform",
+  description: "The infrastructure layer for child safety compliance. One API to enforce parental controls across 320+ platforms and track 67+ global regulations.",
+  openGraph: {
+    title: "Phosra — Child Safety Compliance Platform",
+    description: "The infrastructure layer for child safety compliance. One API to enforce parental controls across 320+ platforms and track 67+ global regulations.",
+  },
+}
 
 export default async function MarketingPage() {
   const allResearch = await loadAllChatbotResearch()

@@ -1,7 +1,15 @@
-"use client"
-
+import type { Metadata } from "next"
 import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Footer } from "@/components/marketing/Footer"
+
+export const metadata: Metadata = {
+  title: "Terms of Service | Phosra",
+  description: "Terms and conditions governing use of the Phosra child safety compliance platform, API, and related services.",
+  openGraph: {
+    title: "Terms of Service | Phosra",
+    description: "Terms and conditions governing use of the Phosra child safety compliance platform, API, and related services.",
+  },
+}
 
 export default function TermsLayout({ children }: { children: React.ReactNode }) {
   return (
