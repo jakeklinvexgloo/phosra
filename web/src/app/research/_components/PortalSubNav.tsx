@@ -71,7 +71,7 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
   )
 
   return (
-    <div className="sticky top-[60px] z-40 flex justify-center px-3 py-1.5 pointer-events-none">
+    <div className="sticky top-[60px] z-40 flex justify-center px-3 py-1.5 pointer-events-none -mb-12">
       <nav
         ref={navRef}
         aria-label="Portal sections"

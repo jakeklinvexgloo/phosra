@@ -638,7 +638,7 @@ export function PromptDetailClient({
 
       {/* ─── Hero Header ─── */}
       <motion.section variants={staggerItem} className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
-        <div className="max-w-5xl mx-auto px-6 lg:px-8 py-10">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 pt-[120px] pb-10">
           <Breadcrumbs
             items={[
               { label: "AI Safety", href: "/research/ai-chatbots" },

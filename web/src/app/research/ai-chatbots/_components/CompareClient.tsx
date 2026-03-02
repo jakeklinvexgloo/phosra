@@ -56,7 +56,7 @@ export function CompareClient({ platforms }: { platforms: PlatformComparison[] }
     <div>
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-[120px] pb-12">
           <h1 className="text-3xl font-display font-bold">Compare Platforms</h1>
           <p className="text-white/50 mt-2 text-sm">Select 2–4 platforms for side-by-side comparison</p>
         </div>

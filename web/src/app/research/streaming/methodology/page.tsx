@@ -38,7 +38,7 @@ const SCORE_COLORS: Record<number, string> = {
 
 export default function MethodologyPage() {
   return (
-    <div className="max-w-4xl mx-auto px-6 lg:px-8 py-12">
+    <div className="max-w-4xl mx-auto px-6 lg:px-8 pt-[120px] pb-12">
       {/* Hero */}
       <div className="mb-12">
         <h1 className="text-3xl font-display font-bold text-foreground tracking-tight">

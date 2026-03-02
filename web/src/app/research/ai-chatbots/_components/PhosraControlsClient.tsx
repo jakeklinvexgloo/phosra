@@ -55,7 +55,7 @@ export function PhosraControlsClient({ platforms }: { platforms: PlatformGap[] }
         <div className="absolute inset-0">
           <WaveTexture />
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-[132px] pb-16">
           <AnimatedSection direction="up">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/20 border border-brand-green/30 mb-4">

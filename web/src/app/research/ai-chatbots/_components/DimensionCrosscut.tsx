@@ -44,7 +44,7 @@ export function DimensionCrosscut({ dimensionId, title, description, platforms }
     <div>
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-[120px] pb-12">
           <Breadcrumbs
             items={[
               { label: "AI Safety", href: "/research/ai-chatbots" },

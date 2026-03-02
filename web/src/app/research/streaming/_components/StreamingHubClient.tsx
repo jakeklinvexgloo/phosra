@@ -132,7 +132,7 @@ export function StreamingHubClient({ platforms }: StreamingHubClientProps) {
           <PhosraBurst size={400} color="#ffffff" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-20 lg:py-28">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-[132px] pb-20 lg:pt-[156px] lg:pb-28">
           <AnimatedSection direction="up">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.08] border border-white/[0.12] mb-6">

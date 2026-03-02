@@ -13,7 +13,7 @@ export default function MethodologyPage() {
     <div>
       {/* Header */}
       <section className="bg-gradient-to-br from-[#0D1B2A] via-[#0F2035] to-[#0A1628] text-white">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8 py-12">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 pt-[120px] pb-12">
           <h1 className="text-3xl sm:text-4xl font-display font-bold">Research Methodology</h1>
           <p className="text-white/50 mt-2">
             Our testing framework, scoring rubric, and grading algorithm

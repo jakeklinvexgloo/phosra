@@ -99,7 +99,7 @@ export function CompareClient({ platforms, categories }: CompareClientProps) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-[120px] pb-12">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-display font-bold text-foreground tracking-tight">
