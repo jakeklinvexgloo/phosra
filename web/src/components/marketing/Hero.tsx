@@ -41,7 +41,7 @@ export function Hero() {
         <PhosraBurst size={700} color="#00D47E" opacity={0.06} animate />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-28 lg:pb-16 xl:pt-32 xl:pb-20 flex-1 flex flex-col justify-center">
+      <div className="relative w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-28 lg:pb-16 xl:pt-32 xl:pb-20 flex-1 flex flex-col justify-center">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-20 items-center">
           {/* Left — text */}
           <div>
@@ -69,7 +69,7 @@ export function Hero() {
             </AnimatedSection>
 
             <AnimatedSection delay={0.2}>
-              <p className="text-lg sm:text-xl text-white/50 leading-relaxed mb-10 max-w-lg">
+              <p className="text-[15px] sm:text-xl text-white/50 leading-relaxed mb-10 max-w-lg">
                 Kids use {PLATFORM_STATS.marketingTotal} apps and platforms {"\u2014"} each with different, fragmented parental controls. Phosra is an open specification and API that unifies them. Platforms adopt the spec; parents set rules once.
               </p>
             </AnimatedSection>
