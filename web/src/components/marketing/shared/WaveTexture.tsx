@@ -26,7 +26,6 @@ export function WaveTexture({
         viewBox="0 0 1440 800"
         preserveAspectRatio="none"
         className="absolute inset-0 w-full h-full"
-        style={{ willChange: "transform" }}
       >
         <defs>
           <linearGradient

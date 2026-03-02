@@ -536,7 +536,7 @@ export function HeroSandboxChat({ prompt, onClose, onTryAnother }: HeroSandboxCh
     <div className="flex flex-col h-full max-h-[85vh] relative">
       {/* Header */}
       <div className="flex items-center gap-2.5 px-5 py-3 border-b border-white/[0.06] flex-shrink-0">
-        <img src="/favicon.svg" alt="" className="w-4 h-4" />
+        <img src="/favicon.svg" alt="" className="w-4 h-4" width={16} height={16} />
         <span className="text-xs font-medium text-white/60">Phosra AI</span>
         <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-brand-green/10 text-brand-green border border-brand-green/20">
           LIVE

@@ -25,7 +25,6 @@ export function GradientMesh({
           radial-gradient(ellipse 60% 70% at 50% 80%, ${c3}20 0%, transparent 55%),
           radial-gradient(ellipse 50% 40% at 80% 70%, ${c4}15 0%, transparent 45%)
         `,
-        willChange: "transform",
       }}
     />
   )

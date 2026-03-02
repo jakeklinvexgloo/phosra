@@ -83,6 +83,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/products", "monthly", 0.6),
     entry("/resources", "monthly", 0.5),
 
+    // Explainers
+    entry("/explainers/what-is-coppa", "monthly", 0.8),
+    entry("/explainers/what-is-kosa", "monthly", 0.8),
+
+    // Glossary
+    entry("/glossary", "monthly", 0.7),
+
+    // Reports
+    entry("/reports/state-of-child-safety-2026", "yearly", 0.8),
+
     // Research hub + sub-pages
     entry("/research", "weekly", 0.8),
     entry("/research/ai-chatbots", "weekly", 0.9, today),

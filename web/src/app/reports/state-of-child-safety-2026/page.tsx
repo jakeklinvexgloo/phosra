@@ -26,6 +26,9 @@ export const metadata: Metadata = {
       "Comprehensive analysis of global child safety legislation, community standards, and parental controls. Covering 67+ laws across 25+ jurisdictions.",
     type: "article",
   },
+  alternates: {
+    canonical: "https://www.phosra.com/reports/state-of-child-safety-2026",
+  },
 }
 
 /* ── Computed Stats ────────────────────────────────────────────── */

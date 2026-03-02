@@ -40,6 +40,9 @@ export const metadata: Metadata = {
     description:
       "Everything you need to know about the Kids Online Safety Act — duty of care, platform requirements, and compliance.",
   },
+  alternates: {
+    canonical: "https://www.phosra.com/explainers/what-is-kosa",
+  },
 }
 
 /* ── FAQ data ──────────────────────────────────────────────────── */

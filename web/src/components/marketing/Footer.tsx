@@ -46,7 +46,7 @@ export function Footer() {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <img src="/logo-white.svg" alt="Phosra" className="h-5" />
+            <img src="/logo-white.svg" alt="Phosra" className="h-5" width={80} height={20} />
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08]">
               <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
               <span className="text-[11px] text-white/40">{PLATFORM_STATS.marketingTotal} platforms mapped</span>

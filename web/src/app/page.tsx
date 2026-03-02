@@ -1,19 +1,22 @@
 import type { Metadata } from "next"
+import dynamic from "next/dynamic"
 import { SiteHeader } from "@/components/layout/SiteHeader"
 import { Hero } from "@/components/marketing/Hero"
 import { Features } from "@/components/marketing/Features"
-import { Ecosystem } from "@/components/marketing/Ecosystem"
-import { Stats } from "@/components/marketing/Stats"
-import { HowItWorks } from "@/components/marketing/HowItWorks"
-import { DevSection } from "@/components/marketing/DevSection"
 import { Compliance } from "@/components/marketing/Compliance"
-import { PlatformIntegration } from "@/components/marketing/PlatformIntegration"
-import { Movements } from "@/components/marketing/Movements"
-import { ParentalControlsCallout } from "@/components/marketing/ParentalControlsCallout"
-import { CTASection } from "@/components/marketing/CTASection"
-import { Footer } from "@/components/marketing/Footer"
+import { Stats } from "@/components/marketing/Stats"
 import { AISafetyCallout } from "@/components/marketing/AISafetyCallout"
+import { ParentalControlsCallout } from "@/components/marketing/ParentalControlsCallout"
+import { Footer } from "@/components/marketing/Footer"
 import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
+
+/* Below-fold heavy components — lazy-loaded to reduce initial JS bundle */
+const Ecosystem = dynamic(() => import("@/components/marketing/Ecosystem").then(m => ({ default: m.Ecosystem })))
+const HowItWorks = dynamic(() => import("@/components/marketing/HowItWorks").then(m => ({ default: m.HowItWorks })))
+const DevSection = dynamic(() => import("@/components/marketing/DevSection").then(m => ({ default: m.DevSection })))
+const PlatformIntegration = dynamic(() => import("@/components/marketing/PlatformIntegration").then(m => ({ default: m.PlatformIntegration })))
+const Movements = dynamic(() => import("@/components/marketing/Movements").then(m => ({ default: m.Movements })))
+const CTASection = dynamic(() => import("@/components/marketing/CTASection").then(m => ({ default: m.CTASection })))
 
 export const metadata: Metadata = {
   title: "Phosra — Child Safety Compliance Platform",

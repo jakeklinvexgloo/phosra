@@ -41,6 +41,9 @@ export const metadata: Metadata = {
     description:
       "Everything you need to know about the Children's Online Privacy Protection Act — requirements, penalties, and compliance.",
   },
+  alternates: {
+    canonical: "https://www.phosra.com/explainers/what-is-coppa",
+  },
 }
 
 /* ── FAQ data ──────────────────────────────────────────────────── */

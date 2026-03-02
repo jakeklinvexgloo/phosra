@@ -28,6 +28,9 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       title: post.title,
       description: post.excerpt.slice(0, 160),
     },
+    alternates: {
+      canonical: `https://www.phosra.com/blog/${params.slug}`,
+    },
   }
 }
 

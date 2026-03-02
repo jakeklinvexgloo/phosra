@@ -383,7 +383,7 @@ function StepConnectVisual({ reduced }: { reduced: boolean }) {
           <div className="flex justify-center mb-6">
             <div className="relative">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-green/20 to-accent-teal/20 border border-brand-green/30 flex items-center justify-center">
-                <img src="/favicon.svg" alt="" className="w-7 h-7" />
+                <img src="/favicon.svg" alt="" className="w-7 h-7" width={28} height={28} />
               </div>
               {/* Pulse ring */}
               {!reduced && (

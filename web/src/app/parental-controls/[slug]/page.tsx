@@ -31,6 +31,9 @@ export function generateMetadata({
       title,
       description,
     },
+    alternates: {
+      canonical: `https://www.phosra.com/parental-controls/${params.slug}`,
+    },
   }
 }
 

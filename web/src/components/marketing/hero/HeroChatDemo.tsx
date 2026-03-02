@@ -443,7 +443,7 @@ function DemoHeader({
 }) {
   return (
     <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] shrink-0">
-      <img src="/favicon.svg" alt="" className="w-4 h-4" />
+      <img src="/favicon.svg" alt="" className="w-4 h-4" width={16} height={16} />
       <span className="text-xs font-medium text-white/60">Phosra AI</span>
 
       {/* Scenario tabs */}

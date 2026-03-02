@@ -132,6 +132,8 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
                 src={isDark ? "/logo-white.svg" : "/logo.svg"}
                 alt="Phosra"
                 className="h-5"
+                width={80}
+                height={20}
               />
             </Link>
 
