@@ -3,7 +3,7 @@ import { Footer } from "@/components/marketing/Footer"
 
 export default function ResearchLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#0D1B2A] flex flex-col">
+    <div className="dark min-h-screen bg-[#0D1B2A] flex flex-col">
       <SiteHeader variant="transparent" />
       <main className="flex-1">
         {children}
