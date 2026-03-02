@@ -77,9 +77,9 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
         aria-label="Portal sections"
         className={[
           "relative h-9 rounded-full pointer-events-auto",
-          "bg-background/75 backdrop-blur-[20px] saturate-[160%]",
-          "border border-border/40",
-          "shadow-[0_1px_3px_rgba(0,0,0,0.02),0_4px_16px_rgba(0,0,0,0.04)]",
+          "bg-[rgba(13,27,42,0.65)] backdrop-blur-[20px] saturate-[140%]",
+          "border border-white/[0.08]",
+          "shadow-[0_2px_8px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.15)]",
           "max-w-[calc(100vw-1.5rem)] overflow-hidden",
         ].join(" ")}
       >
@@ -90,7 +90,7 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
           {/* Sliding active indicator */}
           {activeIndex >= 0 && (
             <div
-              className="absolute top-1 h-7 rounded-full bg-foreground/[0.07] border border-foreground/[0.04]"
+              className="absolute top-1 h-7 rounded-full bg-white/[0.1] border border-white/[0.06]"
               style={{
                 width: indicator.width,
                 transform: `translateX(${indicator.left}px)`,
@@ -119,8 +119,8 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
                   "whitespace-nowrap transition-colors duration-150",
                   "min-h-[28px] flex items-center justify-center",
                   isActive
-                    ? "text-foreground font-semibold"
-                    : "text-muted-foreground hover:text-foreground/80",
+                    ? "text-white font-semibold"
+                    : "text-white/50 hover:text-white/80",
                 ].join(" ")}
               >
                 {tab.label}
