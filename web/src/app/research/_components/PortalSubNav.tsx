@@ -90,7 +90,7 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
           {/* Sliding active indicator */}
           {activeIndex >= 0 && (
             <div
-              className="absolute top-1 h-7 rounded-full bg-white/[0.1] border border-white/[0.06]"
+              className="absolute top-[3px] h-[30px] rounded-full bg-white/[0.1] border border-white/[0.06]"
               style={{
                 width: indicator.width,
                 transform: `translateX(${indicator.left}px)`,
@@ -114,10 +114,10 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
                 ref={setTabRef(tab.href)}
                 href={tab.href}
                 className={[
-                  "relative z-10 flex-shrink-0 px-3.5 py-1.5",
-                  "text-[13px] font-medium rounded-full",
+                  "relative z-10 flex-shrink-0 px-3.5",
+                  "text-[13px] leading-none font-medium rounded-full",
                   "whitespace-nowrap transition-colors duration-150",
-                  "min-h-[28px] flex items-center justify-center",
+                  "h-[30px] flex items-center justify-center",
                   isActive
                     ? "text-white font-semibold"
                     : "text-white/50 hover:text-white/80",
