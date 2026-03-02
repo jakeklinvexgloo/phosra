@@ -1,26 +1,41 @@
-"use client"
-
-import { useParams } from "next/navigation"
+import type { Metadata } from "next"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { AnimatedSection } from "@/components/marketing/shared"
-import { getBlogPost, getRecentPosts, BLOG_CATEGORY_CONFIG } from "@/lib/blog"
+import { getBlogPost, getRecentPosts, BLOG_POSTS, BLOG_CATEGORY_CONFIG } from "@/lib/blog"
 
-export default function BlogDetailPage() {
-  const params = useParams()
-  const slug = params.slug as string
-  const post = getBlogPost(slug)
+export function generateStaticParams() {
+  return BLOG_POSTS
+    .filter((post) => !post.hasCustomPage)
+    .map((post) => ({ slug: post.slug }))
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const post = getBlogPost(params.slug)
+  if (!post) return {}
+  return {
+    title: `${post.title} | Phosra Blog`,
+    description: post.excerpt.slice(0, 160),
+    openGraph: {
+      title: post.title,
+      description: post.excerpt.slice(0, 160),
+      type: "article",
+      publishedTime: post.date,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt.slice(0, 160),
+    },
+  }
+}
+
+export default function BlogDetailPage({ params }: { params: { slug: string } }) {
+  const post = getBlogPost(params.slug)
 
   if (!post) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 sm:px-8 py-20 text-center">
-        <h1 className="text-2xl font-display text-foreground mb-4">Not found</h1>
-        <p className="text-muted-foreground mb-8">This post doesn&apos;t exist.</p>
-        <Link href="/blog" className="text-brand-green hover:underline text-sm">
-          &larr; Back to Blog
-        </Link>
-      </div>
-    )
+    notFound()
   }
 
   // Posts with custom pages (like pcss-v1) are served by their own static route,
