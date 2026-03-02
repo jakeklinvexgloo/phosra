@@ -32,13 +32,21 @@ const publicPathPatterns = [
   /^\/api\/playground(.*)/,
   /^\/opengraph-image(.*)/,
   /^\/twitter-image(.*)/,
+  /^\/explainers(.*)/,
+  /^\/glossary(.*)/,
+  /^\/reports(.*)/,
+  /^\/research(.*)/,
+  /^\/coppa-deadline(.*)/,
+  /^\/press(.*)/,
+  /^\/ai-safety(.*)/,
+  /^\/resources(.*)/,
 ]
 
 function isPublicPath(pathname: string): boolean {
   return publicPathPatterns.some((pattern) => pattern.test(pathname))
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Sandbox mode bypass — skip auth for all dashboard routes
