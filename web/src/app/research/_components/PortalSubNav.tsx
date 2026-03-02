@@ -18,7 +18,7 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
   const pathname = usePathname()
   const navRef = useRef<HTMLDivElement>(null)
   const tabRefs = useRef<Map<string, HTMLAnchorElement>>(new Map())
-  const [indicator, setIndicator] = useState({ left: 0, width: 0 })
+  const [indicator, setIndicator] = useState({ left: 0, width: 0, top: 0, height: 0 })
   const [mounted, setMounted] = useState(false)
 
   const activeIndex = tabs.findIndex((tab) =>
@@ -39,6 +39,8 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
     setIndicator({
       left: tabRect.left - navRect.left,
       width: tabRect.width,
+      top: tabRect.top - navRect.top,
+      height: tabRect.height,
     })
   }, [activeIndex, tabs])
 
@@ -90,12 +92,14 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
           {/* Sliding active indicator */}
           {activeIndex >= 0 && (
             <div
-              className="absolute top-[2px] h-[30px] rounded-full bg-white/[0.1] border border-white/[0.06]"
+              className="absolute rounded-full bg-white/[0.1]"
               style={{
+                top: indicator.top,
+                height: indicator.height,
                 width: indicator.width,
                 transform: `translateX(${indicator.left}px)`,
                 transition: mounted
-                  ? "transform 300ms cubic-bezier(0.32, 0.72, 0, 1), width 300ms cubic-bezier(0.32, 0.72, 0, 1)"
+                  ? "transform 300ms cubic-bezier(0.32, 0.72, 0, 1), width 300ms cubic-bezier(0.32, 0.72, 0, 1), top 300ms cubic-bezier(0.32, 0.72, 0, 1), height 300ms cubic-bezier(0.32, 0.72, 0, 1)"
                   : "none",
               }}
             />
@@ -115,7 +119,7 @@ export function PortalSubNav({ tabs, basePath }: PortalSubNavProps) {
                 href={tab.href}
                 className={[
                   "relative z-10 flex-shrink-0 px-3.5",
-                  "text-[13px] leading-none font-medium rounded-full",
+                  "text-[13px] font-medium rounded-full",
                   "whitespace-nowrap transition-colors duration-150",
                   "h-[30px] flex items-center justify-center",
                   isActive
