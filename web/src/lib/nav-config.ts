@@ -28,6 +28,7 @@ import {
   Mail,
   Building2,
   TrendingUp,
+  Trophy,
   type LucideIcon,
 } from "lucide-react"
 
@@ -112,6 +113,7 @@ export const RESEARCH_DROPDOWN: NavDropdown = {
     {
       title: "Safety Studies",
       items: [
+        { label: "Safety Scorecard", href: "/research/scores", icon: Trophy, description: "11 platforms ranked A+ to F" },
         { label: "AI Chatbot Safety", href: "/research/ai-chatbots", icon: Bot, description: "8 platforms, 40 test prompts" },
         { label: "Streaming Safety", href: "/research/streaming", icon: Tv, description: "Content filtering across 3 platforms" },
         { label: "Compare Platforms", href: "/research/compare", icon: BarChart3, description: "Head-to-head safety comparisons" },
@@ -120,19 +122,19 @@ export const RESEARCH_DROPDOWN: NavDropdown = {
     {
       title: "Methodology",
       items: [
-        { label: "AI Testing Methodology", href: "/research/ai-chatbots/methodology", icon: Microscope, description: "How we test chatbot safety" },
-        { label: "Streaming Methodology", href: "/research/streaming/methodology", icon: ListChecks, description: "Content filtering test framework" },
-        { label: "Test Prompts Library", href: "/research/ai-chatbots/prompts", icon: FlaskConical, description: "40 safety prompts across 7 dimensions" },
+        { label: "Scoring Methodology", href: "/research/scores/methodology", icon: Microscope, description: "How we grade platform safety" },
+        { label: "Test Prompts Library", href: "/research/ai-chatbots/prompts", icon: FlaskConical, description: "40 safety prompts across 12 categories" },
+        { label: "Performance Heatmap", href: "/research/scores/heatmap", icon: ListChecks, description: "Visual safety matrix across all platforms" },
         { label: "Phosra Controls", href: "/research/ai-chatbots/phosra-controls", icon: ShieldAlert, description: "How Phosra applies research findings" },
       ],
     },
   ],
   featured: {
-    badge: "Latest Research",
-    title: "Streaming Content Safety Report",
-    description: "NEW: How 3 streaming platforms handle content filtering for minors.",
-    href: "/research/streaming",
-    cta: "Read report →",
+    badge: "New",
+    title: "Platform Safety Scorecard",
+    description: "The first independent child safety accountability index. 11 platforms, 21 categories, transparent grades.",
+    href: "/research/scores",
+    cta: "View scorecard →",
   },
 }
 
@@ -238,6 +240,7 @@ export const FOOTER_SECTIONS: FooterSection[] = [
     links: [
       { label: "Platforms", href: "/platforms" },
       { label: "Playground", href: "/developers/playground" },
+      { label: "Safety Scorecard", href: "/research/scores" },
       { label: "AI Safety Research", href: "/research/ai-chatbots" },
       { label: "Pricing", href: "/pricing" },
       { label: "Demo", href: "/demo" },
