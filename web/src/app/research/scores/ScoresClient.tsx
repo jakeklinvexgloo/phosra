@@ -1456,6 +1456,15 @@ export function ScoresClient({
                 <ul className="space-y-2">
                   <li>
                     <Link
+                      href="/research/scores/methodology"
+                      className="flex items-center gap-2 text-xs font-semibold text-brand-green hover:text-brand-green/80 transition-colors"
+                    >
+                      <ArrowRight className="w-3 h-3" />
+                      Full Scoring Methodology
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       href="/research/ai-chatbots/methodology"
                       className="flex items-center gap-2 text-xs text-white/50 hover:text-brand-green transition-colors"
                     >
