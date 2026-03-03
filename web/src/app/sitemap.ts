@@ -137,6 +137,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/research/scores/methodology", "monthly", 0.7),
     entry("/research/scores/heatmap", "monthly", 0.7),
     entry("/research/scores/categories", "monthly", 0.7),
+    entry("/research/scores/platforms", "monthly", 0.7),
   ]
 
   // --- Dynamic: Compliance law pages (67+) ---

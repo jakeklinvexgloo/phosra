@@ -1517,6 +1517,15 @@ export function ScoresClient({
                       Browse All 21 Test Categories
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      href="/research/scores/platforms"
+                      className="flex items-center gap-2 text-xs text-white/50 hover:text-brand-green transition-colors"
+                    >
+                      <ArrowRight className="w-3 h-3" />
+                      Browse All 11 Platforms
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </div>

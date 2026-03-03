@@ -464,6 +464,12 @@ export function PlatformProfileClient({ data }: { data: PlatformProfileData }) {
           >
             Browse Categories <ArrowRight className="w-3.5 h-3.5" />
           </Link>
+          <Link
+            href="/research/scores/platforms"
+            className="px-4 py-2 rounded-lg text-sm font-medium bg-white/[0.05] border border-white/[0.08] text-white/60 hover:text-white/80 transition inline-flex items-center gap-2"
+          >
+            All Platforms <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
       </div>
     </div>
