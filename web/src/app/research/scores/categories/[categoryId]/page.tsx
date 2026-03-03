@@ -133,10 +133,11 @@ export default async function CategoryLeaderboardPage({
     const platforms = await loadAllStreamingPlatforms()
     for (const p of platforms) {
       // Compute per-category average across profiles
+      // Streaming tests use testId (e.g. "PE-01") not category name
       const scores: number[] = []
       let testCount = 0
       for (const profile of p.profiles) {
-        const test = profile.tests.find((t) => t.category === categoryId)
+        const test = profile.tests.find((t) => t.testId === categoryId)
         if (test && test.score !== null) {
           scores.push(test.score)
           testCount++
