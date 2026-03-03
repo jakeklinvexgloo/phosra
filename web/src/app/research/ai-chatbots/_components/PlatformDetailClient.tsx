@@ -16,6 +16,11 @@ import {
   AlertTriangle,
   Zap,
   Clock,
+  Scale,
+  Target,
+  CheckCircle2,
+  XCircle,
+  Circle,
   type LucideIcon,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -423,16 +428,47 @@ const SECTIONS: SectionDef[] = [
   { id: "emotional-safety", label: "Emotional Safety", icon: Heart },
   { id: "academic-integrity", label: "Academic Integrity", icon: BookOpen },
   { id: "privacy-data", label: "Privacy & Data", icon: Database },
+  { id: "regulatory-exposure", label: "Regulatory Exposure", icon: Scale },
+  { id: "compliance-gap", label: "Compliance Gap", icon: Target },
   { id: "phosra-integration", label: "Phosra Integration", icon: Zap },
 ]
+
+// ── Regulatory & Compliance Types ───────────────────────────────────
+
+interface RegulatoryData {
+  exposureLevel: string
+  applicableLawCount: number
+  enactedCount: number
+  pendingCount: number
+  jurisdictionCount: number
+  topLaws: { id: string; shortName: string; status: string; jurisdiction: string }[]
+}
+
+interface ComplianceGapData {
+  coveragePercent: number
+  totalRequired: number
+  totalCovered: number
+  totalGaps: number
+  topGaps: { category: string; label: string }[]
+  entries: { ruleCategory: string; label: string; status: "covered" | "partial" | "gap" }[]
+}
+
+const EXPOSURE_LABELS: Record<string, { label: string; color: string; bg: string }> = {
+  "very-high": { label: "Very High", color: "text-red-500", bg: "bg-red-100 dark:bg-red-900/30" },
+  high: { label: "High", color: "text-orange-500", bg: "bg-orange-100 dark:bg-orange-900/30" },
+  medium: { label: "Medium", color: "text-amber-500", bg: "bg-amber-100 dark:bg-amber-900/30" },
+  low: { label: "Low", color: "text-emerald-500", bg: "bg-emerald-100 dark:bg-emerald-900/30" },
+}
 
 // ── Main Component ──────────────────────────────────────────────────
 
 interface PlatformDetailClientProps {
   data: PlatformResearchData
+  regulatory?: RegulatoryData
+  complianceGap?: ComplianceGapData
 }
 
-export function PlatformDetailClient({ data }: PlatformDetailClientProps) {
+export function PlatformDetailClient({ data, regulatory, complianceGap }: PlatformDetailClientProps) {
   const [activeSection, setActiveSection] = useState("safety-testing")
   const scorecard = data.chatbotData?.safetyTesting?.scorecard
 
@@ -457,6 +493,10 @@ export function PlatformDetailClient({ data }: PlatformDetailClientProps) {
         return !!data.chatbotData?.academicIntegrity
       case "privacy-data":
         return !!data.chatbotData?.privacyDataDetail
+      case "regulatory-exposure":
+        return !!regulatory
+      case "compliance-gap":
+        return !!complianceGap
       case "phosra-integration":
         return !!data.sectionData?.integrationGap
       default:
@@ -663,6 +703,154 @@ export function PlatformDetailClient({ data }: PlatformDetailClientProps) {
             riskBadge={getSectionBadge("privacy-data", data)}
           >
             <PrivacyDataSection data={data.chatbotData.privacyDataDetail} />
+          </SectionCard>
+        )}
+
+        {/* Regulatory Exposure */}
+        {regulatory && (
+          <SectionCard id="regulatory-exposure" title="Regulatory Exposure" icon={Scale}>
+            <div className="space-y-6">
+              {/* Summary row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
+                  <div className="text-xl font-bold">{regulatory.applicableLawCount}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">Applicable Laws</div>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
+                  <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{regulatory.enactedCount}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">Enacted</div>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
+                  <div className="text-xl font-bold text-amber-600 dark:text-amber-400">{regulatory.pendingCount}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">Pending</div>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
+                  <div className={`text-xl font-bold ${EXPOSURE_LABELS[regulatory.exposureLevel]?.color ?? "text-muted-foreground"}`}>
+                    {EXPOSURE_LABELS[regulatory.exposureLevel]?.label ?? regulatory.exposureLevel}
+                  </div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">Exposure Level</div>
+                </div>
+              </div>
+
+              {/* Key legislation */}
+              {regulatory.topLaws.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-3">Key Legislation</h4>
+                  <div className="space-y-2">
+                    {regulatory.topLaws.slice(0, 8).map((law) => (
+                      <Link
+                        key={law.id}
+                        href={`/compliance/${law.id}`}
+                        className="flex items-center justify-between p-2.5 rounded-lg border border-border hover:bg-muted/40 transition-colors group"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Scale className="w-3.5 h-3.5 text-muted-foreground" />
+                          <span className="text-sm font-medium group-hover:text-brand-green transition-colors">{law.shortName}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-muted-foreground">{law.jurisdiction}</span>
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                            law.status === "enacted" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" :
+                            "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                          }`}>
+                            {law.status}
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-2 text-center">
+                <Link
+                  href="/compliance"
+                  className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-brand-green transition-colors"
+                >
+                  View all {regulatory.applicableLawCount} applicable laws
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </div>
+          </SectionCard>
+        )}
+
+        {/* Compliance Gap */}
+        {complianceGap && (
+          <SectionCard id="compliance-gap" title="Compliance Gap Analysis" icon={Target}>
+            <div className="space-y-6">
+              {/* Coverage summary */}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
+                  <div className="text-xl font-bold">{complianceGap.coveragePercent}%</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">Coverage</div>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
+                  <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{complianceGap.totalCovered}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">Tested</div>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
+                  <div className="text-xl font-bold text-red-600 dark:text-red-400">{complianceGap.totalGaps}</div>
+                  <div className="text-[11px] text-muted-foreground mt-0.5">Gaps</div>
+                </div>
+              </div>
+
+              {/* Coverage bar */}
+              <div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                  <span>PCSS Rule Coverage</span>
+                  <span>{complianceGap.totalCovered} of {complianceGap.totalRequired} categories</span>
+                </div>
+                <div className="h-3 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                    style={{ width: `${complianceGap.coveragePercent}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Gap entries */}
+              <div>
+                <h4 className="text-sm font-semibold mb-3">Category Breakdown</h4>
+                <div className="space-y-1.5">
+                  {complianceGap.entries.map((entry) => (
+                    <div
+                      key={entry.ruleCategory}
+                      className="flex items-center justify-between py-1.5 px-2.5 rounded-md border border-border/50"
+                    >
+                      <div className="flex items-center gap-2">
+                        {entry.status === "covered" && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />}
+                        {entry.status === "partial" && <Circle className="w-3.5 h-3.5 text-amber-500" />}
+                        {entry.status === "gap" && <XCircle className="w-3.5 h-3.5 text-red-400" />}
+                        <span className="text-sm">{entry.label}</span>
+                      </div>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                        entry.status === "covered" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" :
+                        entry.status === "partial" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300" :
+                        "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                      }`}>
+                        {entry.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Top untested gaps */}
+              {complianceGap.topGaps.length > 0 && (
+                <div className="rounded-lg border border-red-200 dark:border-red-900/40 bg-red-50 dark:bg-red-950/20 p-4">
+                  <h4 className="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">Top Untested Requirements</h4>
+                  <div className="space-y-1.5">
+                    {complianceGap.topGaps.map((gap) => (
+                      <div key={gap.category} className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
+                        <XCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                        {gap.label}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </SectionCard>
         )}
 

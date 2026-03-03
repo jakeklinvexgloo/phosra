@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
-import { ArrowLeft, AlertTriangle, Calendar, FlaskConical, ChevronRight, Info, Users } from "lucide-react"
+import { ArrowLeft, ArrowRight, AlertTriangle, Calendar, FlaskConical, ChevronRight, Info, Users, Scale, Target, CheckCircle2, XCircle, Circle } from "lucide-react"
 import { gradeTextColor, gradeBgColor } from "@/lib/shared/grade-colors"
 import type {
   StreamingPlatformData,
@@ -85,13 +85,40 @@ function findTestScore(profile: StreamingProfileResult, testId: string): number 
 
 // ── Main Component ──────────────────────────────────────────────────
 
+interface RegulatoryData {
+  exposureLevel: string
+  applicableLawCount: number
+  enactedCount: number
+  pendingCount: number
+  jurisdictionCount: number
+  topLaws: { id: string; shortName: string; status: string; jurisdiction: string }[]
+}
+
+interface ComplianceGapData {
+  coveragePercent: number
+  totalRequired: number
+  totalCovered: number
+  totalGaps: number
+  topGaps: { category: string; label: string }[]
+  entries: { ruleCategory: string; label: string; status: "covered" | "partial" | "gap" }[]
+}
+
+const EXPOSURE_LABELS: Record<string, { label: string; color: string }> = {
+  "very-high": { label: "Very High", color: "text-red-500" },
+  high: { label: "High", color: "text-orange-500" },
+  medium: { label: "Medium", color: "text-amber-500" },
+  low: { label: "Low", color: "text-emerald-500" },
+}
+
 interface PlatformDetailClientProps {
   data: StreamingPlatformData
+  regulatory?: RegulatoryData
+  complianceGap?: ComplianceGapData
 }
 
 type TabId = "summary" | string
 
-export function PlatformDetailClient({ data }: PlatformDetailClientProps) {
+export function PlatformDetailClient({ data, regulatory, complianceGap }: PlatformDetailClientProps) {
   const [activeTab, setActiveTab] = useState<TabId>("summary")
 
   const tabs = useMemo(() => {
@@ -231,7 +258,7 @@ export function PlatformDetailClient({ data }: PlatformDetailClientProps) {
       {/* Tab content */}
       <div className="max-w-4xl mx-auto px-6 lg:px-8 py-10">
         {activeTab === "summary" ? (
-          <SummaryTab data={data} />
+          <SummaryTab data={data} regulatory={regulatory} complianceGap={complianceGap} />
         ) : activeProfile ? (
           <ProfileTab profile={activeProfile} platformId={data.platformId} />
         ) : null}
@@ -255,7 +282,7 @@ export function PlatformDetailClient({ data }: PlatformDetailClientProps) {
 
 // ── Summary Tab ─────────────────────────────────────────────────────
 
-function SummaryTab({ data }: { data: StreamingPlatformData }) {
+function SummaryTab({ data, regulatory, complianceGap }: { data: StreamingPlatformData; regulatory?: RegulatoryData; complianceGap?: ComplianceGapData }) {
   return (
     <div className="space-y-8">
       {/* Cross-profile comparison grid */}
@@ -351,6 +378,145 @@ function SummaryTab({ data }: { data: StreamingPlatformData }) {
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* Regulatory Exposure */}
+      {regulatory && (
+        <section>
+          <h2 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Scale className="w-5 h-5 text-muted-foreground" />
+            Regulatory Exposure
+          </h2>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="rounded-lg border border-border bg-card p-3 text-center">
+                <div className="text-xl font-bold">{regulatory.applicableLawCount}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Applicable Laws</div>
+              </div>
+              <div className="rounded-lg border border-border bg-card p-3 text-center">
+                <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{regulatory.enactedCount}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Enacted</div>
+              </div>
+              <div className="rounded-lg border border-border bg-card p-3 text-center">
+                <div className="text-xl font-bold text-amber-600 dark:text-amber-400">{regulatory.pendingCount}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Pending</div>
+              </div>
+              <div className="rounded-lg border border-border bg-card p-3 text-center">
+                <div className={`text-xl font-bold ${EXPOSURE_LABELS[regulatory.exposureLevel]?.color ?? "text-muted-foreground"}`}>
+                  {EXPOSURE_LABELS[regulatory.exposureLevel]?.label ?? regulatory.exposureLevel}
+                </div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Exposure Level</div>
+              </div>
+            </div>
+            {regulatory.topLaws.length > 0 && (
+              <div className="space-y-2">
+                {regulatory.topLaws.slice(0, 6).map((law) => (
+                  <Link
+                    key={law.id}
+                    href={`/compliance/${law.id}`}
+                    className="flex items-center justify-between p-2.5 rounded-lg border border-border hover:bg-muted/40 transition-colors group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Scale className="w-3.5 h-3.5 text-muted-foreground" />
+                      <span className="text-sm font-medium group-hover:text-brand-green transition-colors">{law.shortName}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-muted-foreground">{law.jurisdiction}</span>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                        law.status === "enacted" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" :
+                        "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                      }`}>
+                        {law.status}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Compliance Gap */}
+      {complianceGap && (
+        <section>
+          <h2 className="text-lg font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Target className="w-5 h-5 text-muted-foreground" />
+            Compliance Gap Analysis
+          </h2>
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-3">
+              <div className="rounded-lg border border-border bg-card p-3 text-center">
+                <div className="text-xl font-bold">{complianceGap.coveragePercent}%</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Coverage</div>
+              </div>
+              <div className="rounded-lg border border-border bg-card p-3 text-center">
+                <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">{complianceGap.totalCovered}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Tested</div>
+              </div>
+              <div className="rounded-lg border border-border bg-card p-3 text-center">
+                <div className="text-xl font-bold text-red-600 dark:text-red-400">{complianceGap.totalGaps}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">Gaps</div>
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                <span>PCSS Rule Coverage</span>
+                <span>{complianceGap.totalCovered} of {complianceGap.totalRequired} categories</span>
+              </div>
+              <div className="h-3 rounded-full bg-muted overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                  style={{ width: `${complianceGap.coveragePercent}%` }}
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              {complianceGap.entries.map((entry) => (
+                <div
+                  key={entry.ruleCategory}
+                  className="flex items-center justify-between py-1.5 px-2.5 rounded-md border border-border/50"
+                >
+                  <div className="flex items-center gap-2">
+                    {entry.status === "covered" && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />}
+                    {entry.status === "partial" && <Circle className="w-3.5 h-3.5 text-amber-500" />}
+                    {entry.status === "gap" && <XCircle className="w-3.5 h-3.5 text-red-400" />}
+                    <span className="text-sm">{entry.label}</span>
+                  </div>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
+                    entry.status === "covered" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" :
+                    entry.status === "partial" ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300" :
+                    "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                  }`}>
+                    {entry.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {complianceGap.topGaps.length > 0 && (
+              <div className="rounded-lg border border-red-200 dark:border-red-900/40 bg-red-50 dark:bg-red-950/20 p-4">
+                <h4 className="text-sm font-semibold text-red-700 dark:text-red-300 mb-2">Top Untested Requirements</h4>
+                <div className="space-y-1.5">
+                  {complianceGap.topGaps.map((gap) => (
+                    <div key={gap.category} className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
+                      <XCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                      {gap.label}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="text-center pt-2">
+              <Link
+                href="/research/scores"
+                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-brand-green transition-colors"
+              >
+                View full scorecard
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
           </div>
         </section>
       )}
