@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Bot, Tv, BarChart3 } from "lucide-react"
+import { ArrowRight, Bot, Tv, BarChart3, Trophy } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
 import { loadAllStreamingPlatforms } from "@/lib/streaming-research/loaders"
@@ -55,6 +55,7 @@ export default async function ResearchHubPage() {
       : "N/A"
 
   const totalPlatforms = chatbotPlatforms.length + streamingPlatforms.length
+  const totalSafetyTests = chatbotPlatforms.length * 40 + streamingPlatforms.length * 9
 
   return (
     <div>
@@ -100,8 +101,8 @@ export default async function ResearchHubPage() {
                 <div className="text-xs text-white/50 mt-0.5">Research Verticals</div>
               </div>
               <div className="rounded-lg px-4 py-3 text-center bg-white/[0.05] border border-white/[0.08]">
-                <div className="text-2xl sm:text-3xl font-display font-bold text-white">40+</div>
-                <div className="text-xs text-white/50 mt-0.5">Test Prompts</div>
+                <div className="text-2xl sm:text-3xl font-display font-bold text-white">{totalSafetyTests}+</div>
+                <div className="text-xs text-white/50 mt-0.5">Safety Tests</div>
               </div>
               <div className="rounded-lg px-4 py-3 text-center bg-white/[0.05] border border-white/[0.08]">
                 <div className="text-2xl sm:text-3xl font-display font-bold text-white">100%</div>
@@ -124,7 +125,7 @@ export default async function ResearchHubPage() {
             </p>
           </AnimatedSection>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* AI Chatbot Safety Card */}
             <AnimatedSection direction="up" delay={0}>
               <Link
@@ -227,6 +228,45 @@ export default async function ResearchHubPage() {
                 </div>
               </Link>
             </AnimatedSection>
+
+            {/* Platform Safety Scorecard Card */}
+            <AnimatedSection direction="up" delay={0.1}>
+              <Link href="/research/scores" className="group block h-full">
+                <div className="rounded-xl border border-border bg-card p-8 h-full transition-all hover:border-brand-green/30 hover:shadow-lg hover:shadow-brand-green/5 hover:-translate-y-1">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center">
+                        <Trophy className="w-6 h-6 text-brand-green" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-foreground group-hover:text-brand-green transition-colors">
+                          Platform Safety Scorecard
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {totalPlatforms} platforms ranked
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-green transition-colors" />
+                  </div>
+
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                    The first independent child safety accountability index. See how AI chatbots
+                    and streaming platforms rank in protecting children, with transparent scoring
+                    and published results.
+                  </p>
+
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium bg-emerald-500/15 border-emerald-500/20 text-emerald-400">
+                      <span className="font-bold">A+ - F</span>
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {totalPlatforms} platforms &middot; {totalSafetyTests}+ tests
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -243,10 +283,11 @@ export default async function ResearchHubPage() {
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
               { label: "AI Testing Methodology", href: "/research/ai-chatbots/methodology", icon: Bot, description: "How we test chatbot safety" },
               { label: "Streaming Methodology", href: "/research/streaming/methodology", icon: Tv, description: "Content filtering test framework" },
+              { label: "Safety Scorecard", href: "/research/scores", icon: Trophy, description: "All platforms ranked by safety" },
               { label: "Compare Platforms", href: "/research/compare", icon: BarChart3, description: "Head-to-head safety comparisons" },
             ].map((item, i) => {
               const Icon = item.icon
