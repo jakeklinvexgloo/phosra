@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect, useCallback } from "react"
 import Link from "next/link"
+import { useSearchParams, useRouter } from "next/navigation"
 import {
   ArrowRight,
   AlertTriangle,
@@ -19,6 +20,9 @@ import {
   CheckCircle2,
   XCircle,
   Circle,
+  Copy,
+  Check,
+  Share2,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import {
@@ -80,11 +84,37 @@ export function ScoresClient({
   testCategories,
   landscape,
 }: ScoresClientProps) {
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [filter, setFilter] = useState<FilterCategory>("all")
   const [sort, setSort] = useState<SortOption>("rank")
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
-  const [compareMode, setCompareMode] = useState(false)
-  const [compareIds, setCompareIds] = useState<Set<string>>(new Set())
+  const [copiedLink, setCopiedLink] = useState(false)
+
+  // Initialize compare state from URL ?compare= param
+  const [compareMode, setCompareMode] = useState(() => {
+    const param = searchParams.get("compare")
+    return !!param
+  })
+  const [compareIds, setCompareIds] = useState<Set<string>>(() => {
+    const param = searchParams.get("compare")
+    if (!param) return new Set<string>()
+    const ids = param.split(",").filter((id) =>
+      entries.some((e) => e.platformId === id)
+    )
+    return new Set(ids.slice(0, 4))
+  })
+
+  // Sync compareIds to URL
+  const updateUrl = useCallback((ids: Set<string>, mode: boolean) => {
+    const url = new URL(window.location.href)
+    if (mode && ids.size > 0) {
+      url.searchParams.set("compare", Array.from(ids).join(","))
+    } else {
+      url.searchParams.delete("compare")
+    }
+    router.replace(url.pathname + url.search, { scroll: false })
+  }, [router])
 
   const toggleCompare = (id: string) => {
     setCompareIds((prev) => {
@@ -94,8 +124,17 @@ export function ScoresClient({
       } else if (next.size < 4) {
         next.add(id)
       }
+      updateUrl(next, true)
       return next
     })
+  }
+
+  const copyCompareLink = async () => {
+    const url = new URL(window.location.href)
+    url.searchParams.set("compare", Array.from(compareIds).join(","))
+    await navigator.clipboard.writeText(url.toString())
+    setCopiedLink(true)
+    setTimeout(() => setCopiedLink(false), 2000)
   }
 
   const compareEntries = useMemo(
@@ -687,12 +726,30 @@ export function ScoresClient({
                   <h3 className="text-lg font-display font-bold text-white">
                     Platform Comparison
                   </h3>
-                  <button
-                    onClick={() => { setCompareMode(false); setCompareIds(new Set()) }}
-                    className="text-xs text-white/40 hover:text-white/60 transition-colors"
-                  >
-                    Clear comparison
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={copyCompareLink}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.06] border border-white/[0.1] text-white/60 hover:text-white hover:bg-white/[0.1] transition-all"
+                    >
+                      {copiedLink ? (
+                        <>
+                          <Check className="w-3 h-3 text-brand-green" />
+                          <span className="text-brand-green">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Share2 className="w-3 h-3" />
+                          Share link
+                        </>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => { setCompareMode(false); setCompareIds(new Set()); updateUrl(new Set(), false) }}
+                      className="text-xs text-white/40 hover:text-white/60 transition-colors"
+                    >
+                      Clear
+                    </button>
+                  </div>
                 </div>
 
                 {/* Comparison table */}

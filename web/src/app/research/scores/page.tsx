@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { Metadata } from "next"
 import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
 import { loadAllStreamingPlatforms } from "@/lib/streaming-research/loaders"
@@ -241,13 +242,15 @@ export default async function ScoresPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ScoresClient
-        entries={entries}
-        totalPlatforms={entries.length}
-        totalTests={totalTests}
-        testCategories={testCategories}
-        landscape={landscape}
-      />
+      <Suspense>
+        <ScoresClient
+          entries={entries}
+          totalPlatforms={entries.length}
+          totalTests={totalTests}
+          testCategories={testCategories}
+          landscape={landscape}
+        />
+      </Suspense>
     </>
   )
 }
