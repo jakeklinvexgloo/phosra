@@ -1064,7 +1064,16 @@ export function ScoresClient({
                 </div>
 
                 {/* Links to full reports */}
-                <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-white/[0.06]">
+                <div className="flex flex-wrap items-center justify-center gap-4 mt-6 pt-4 border-t border-white/[0.06]">
+                  {compareEntries.length === 2 && (
+                    <Link
+                      href={`/research/scores/vs/${[compareEntries[0].platformId, compareEntries[1].platformId].sort().join("-vs-")}`}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-brand-green/10 border border-brand-green/20 text-brand-green hover:bg-brand-green/20 transition-all"
+                    >
+                      Full Head-to-Head Comparison
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  )}
                   {compareEntries.map((e) => (
                     <Link
                       key={e.platformId}
@@ -1470,6 +1479,66 @@ export function ScoresClient({
                   </li>
                 </ul>
               </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Popular Comparisons */}
+      <section className="bg-[#0A1628] border-t border-white/[0.06]">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 py-14">
+          <AnimatedSection direction="up">
+            <div className="flex items-start gap-3 mb-6">
+              <Scale className="w-5 h-5 text-brand-green flex-shrink-0 mt-0.5" />
+              <div>
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-white">
+                  Head-to-Head Comparisons
+                </h2>
+                <p className="text-sm text-white/40 mt-1">
+                  Detailed side-by-side safety analysis between platforms
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[
+                ["claude", "chatgpt"],
+                ["claude", "gemini"],
+                ["chatgpt", "gemini"],
+                ["claude", "copilot"],
+                ["character_ai", "replika"],
+                ["netflix", "prime_video"],
+                ["chatgpt", "grok"],
+                ["copilot", "perplexity"],
+                ["netflix", "peacock"],
+              ].map(([a, b]) => {
+                const eA = entries.find((e) => e.platformId === a)
+                const eB = entries.find((e) => e.platformId === b)
+                if (!eA || !eB) return null
+                const slug = [a, b].sort().join("-vs-")
+                return (
+                  <Link
+                    key={slug}
+                    href={`/research/scores/vs/${slug}`}
+                    className="group flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-brand-green/30 hover:bg-white/[0.05] transition-all"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className={`text-lg font-black ${gradeTextColor(eA.overallGrade)}`}>{eA.overallGrade}</span>
+                      <span className="text-sm text-white/70 truncate">{eA.platformName}</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-white/20 flex-shrink-0">VS</span>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-sm text-white/70 truncate text-right">{eB.platformName}</span>
+                      <span className={`text-lg font-black ${gradeTextColor(eB.overallGrade)}`}>{eB.overallGrade}</span>
+                    </div>
+                    <ArrowRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-green flex-shrink-0 transition-colors" />
+                  </Link>
+                )
+              })}
+            </div>
+            <div className="text-center mt-4">
+              <p className="text-xs text-white/30">
+                55 total matchups available across all 11 platforms. Select any two platforms above to compare.
+              </p>
             </div>
           </AnimatedSection>
         </div>
