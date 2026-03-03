@@ -1526,6 +1526,15 @@ export function ScoresClient({
                       Browse All 11 Platforms
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      href="/research/scores/vs"
+                      className="flex items-center gap-2 text-xs text-white/50 hover:text-brand-green transition-colors"
+                    >
+                      <ArrowRight className="w-3 h-3" />
+                      All 55 Head-to-Head Comparisons
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -1585,9 +1594,12 @@ export function ScoresClient({
               })}
             </div>
             <div className="text-center mt-4">
-              <p className="text-xs text-white/30">
-                55 total matchups available across all 11 platforms. Select any two platforms above to compare.
-              </p>
+              <Link
+                href="/research/scores/vs"
+                className="text-xs text-white/30 hover:text-brand-green transition-colors"
+              >
+                55 total matchups available across all 11 platforms. View all comparisons →
+              </Link>
             </div>
           </AnimatedSection>
         </div>
