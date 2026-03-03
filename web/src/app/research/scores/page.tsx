@@ -1,6 +1,11 @@
 import { Metadata } from "next"
 import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
 import { loadAllStreamingPlatforms } from "@/lib/streaming-research/loaders"
+import {
+  computeAllExposures,
+  computeRegulatoryLandscape,
+  type RegulatoryExposure,
+} from "@/lib/platform-research/regulatory-exposure"
 import { ScoresClient } from "./ScoresClient"
 
 export const metadata: Metadata = {
@@ -29,6 +34,24 @@ export interface PlatformScoreEntry {
   testDate: string
   detailUrl: string
   topCategories: { name: string; grade: string; score: number }[]
+  regulatory: {
+    exposureLevel: string
+    applicableLawCount: number
+    enactedCount: number
+    pendingCount: number
+    requiredCategoryCount: number
+    jurisdictionCount: number
+    topLaws: { id: string; shortName: string; status: string; jurisdiction: string }[]
+  }
+}
+
+export interface RegulatoryLandscapeData {
+  totalLaws: number
+  enactedCount: number
+  pendingCount: number
+  totalRuleCategories: number
+  topCategories: { category: string; count: number }[]
+  jurisdictionBreakdown: { jurisdiction: string; count: number }[]
 }
 
 export default async function ScoresPage() {
@@ -68,6 +91,7 @@ export default async function ScoresPage() {
         grade: c.grade,
         score: c.numericalScore,
       })),
+      regulatory: { exposureLevel: "low", applicableLawCount: 0, enactedCount: 0, pendingCount: 0, requiredCategoryCount: 0, jurisdictionCount: 0, topLaws: [] },
     })
   }
 
@@ -108,8 +132,32 @@ export default async function ScoresPage() {
       testDate: p.testDate || "February 2026",
       detailUrl: `/research/streaming/${p.platformId}`,
       topCategories,
+      regulatory: { exposureLevel: "low", applicableLawCount: 0, enactedCount: 0, pendingCount: 0, requiredCategoryCount: 0, jurisdictionCount: 0, topLaws: [] },
     })
   }
+
+  // Compute regulatory exposure for all platforms
+  const platformIds = entries.map((e) => e.platformId)
+  const exposureMap = computeAllExposures(platformIds)
+
+  // Attach regulatory data to entries
+  for (const entry of entries) {
+    const exp = exposureMap.get(entry.platformId)
+    if (exp) {
+      entry.regulatory = {
+        exposureLevel: exp.exposureLevel,
+        applicableLawCount: exp.applicableLawCount,
+        enactedCount: exp.enactedCount,
+        pendingCount: exp.pendingCount,
+        requiredCategoryCount: exp.requiredCategoryCount,
+        jurisdictionCount: exp.jurisdictionCount,
+        topLaws: exp.topLaws,
+      }
+    }
+  }
+
+  // Compute regulatory landscape
+  const landscape = computeRegulatoryLandscape()
 
   // Sort by numerical score descending
   entries.sort((a, b) => b.numericalScore - a.numericalScore)
@@ -150,6 +198,7 @@ export default async function ScoresPage() {
         totalPlatforms={entries.length}
         totalTests={totalTests}
         testCategories={testCategories}
+        landscape={landscape}
       />
     </>
   )

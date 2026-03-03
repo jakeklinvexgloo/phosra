@@ -12,6 +12,9 @@ import {
   ChevronDown,
   ChevronUp,
   Info,
+  Scale,
+  Globe,
+  Bookmark,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import {
@@ -19,7 +22,7 @@ import {
   gradeBgColor,
   gradeBorderColor,
 } from "@/lib/shared/grade-colors"
-import type { PlatformScoreEntry } from "./page"
+import type { PlatformScoreEntry, RegulatoryLandscapeData } from "./page"
 
 function formatDate(raw: string): string {
   try {
@@ -39,6 +42,24 @@ interface ScoresClientProps {
   totalPlatforms: number
   totalTests: number
   testCategories: number
+  landscape: RegulatoryLandscapeData
+}
+
+const EXPOSURE_STYLES: Record<string, { label: string; color: string; bg: string; border: string }> = {
+  "very-high": { label: "Very High", color: "text-red-400", bg: "bg-red-500/15", border: "border-red-500/25" },
+  high: { label: "High", color: "text-orange-400", bg: "bg-orange-500/15", border: "border-orange-500/25" },
+  medium: { label: "Medium", color: "text-amber-400", bg: "bg-amber-500/15", border: "border-amber-500/25" },
+  low: { label: "Low", color: "text-emerald-400", bg: "bg-emerald-500/15", border: "border-emerald-500/25" },
+}
+
+const JURISDICTION_LABELS: Record<string, string> = {
+  "us-federal": "US Federal",
+  "us-state": "US State",
+  eu: "European Union",
+  uk: "United Kingdom",
+  "asia-pacific": "Asia-Pacific",
+  americas: "Americas",
+  "middle-east-africa": "Middle East & Africa",
 }
 
 function categoryBadgeClasses(category: "ai_chatbot" | "streaming"): string {
@@ -53,6 +74,7 @@ export function ScoresClient({
   totalPlatforms,
   totalTests,
   testCategories,
+  landscape,
 }: ScoresClientProps) {
   const [filter, setFilter] = useState<FilterCategory>("all")
   const [sort, setSort] = useState<SortOption>("rank")
@@ -292,6 +314,14 @@ export function ScoresClient({
                               </span>
                             </span>
                           )}
+                          {entry.regulatory.applicableLawCount > 0 && (() => {
+                            const style = EXPOSURE_STYLES[entry.regulatory.exposureLevel] ?? EXPOSURE_STYLES.low
+                            return (
+                              <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium ${style.bg} ${style.border} ${style.color} hidden sm:inline-flex`}>
+                                {entry.regulatory.applicableLawCount} laws
+                              </span>
+                            )
+                          })()}
                         </div>
                         <div className="flex items-center gap-3 text-xs text-white/40">
                           <span className="inline-flex items-center gap-1">
@@ -416,6 +446,76 @@ export function ScoresClient({
                                 </ul>
                               </div>
                             )}
+
+                          {/* Regulatory exposure */}
+                          {entry.regulatory.applicableLawCount > 0 && (() => {
+                            const style = EXPOSURE_STYLES[entry.regulatory.exposureLevel] ?? EXPOSURE_STYLES.low
+                            return (
+                              <div className="mb-4 rounded-lg bg-white/[0.03] border border-white/[0.08] p-4">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <Scale className="w-3.5 h-3.5 text-white/40" />
+                                  <span className="text-xs font-medium text-white/60">Regulatory Exposure</span>
+                                  <span className={`ml-auto inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${style.bg} ${style.border} ${style.color}`}>
+                                    {style.label}
+                                  </span>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-3 mb-3">
+                                  <div className="text-center">
+                                    <div className="text-lg font-display font-bold text-white">{entry.regulatory.applicableLawCount}</div>
+                                    <div className="text-[10px] text-white/40">Applicable Laws</div>
+                                  </div>
+                                  <div className="text-center">
+                                    <div className="text-lg font-display font-bold text-emerald-400">{entry.regulatory.enactedCount}</div>
+                                    <div className="text-[10px] text-white/40">Enacted</div>
+                                  </div>
+                                  <div className="text-center">
+                                    <div className="text-lg font-display font-bold text-amber-400">{entry.regulatory.pendingCount}</div>
+                                    <div className="text-[10px] text-white/40">Pending</div>
+                                  </div>
+                                </div>
+
+                                {entry.regulatory.topLaws.length > 0 && (
+                                  <div className="space-y-1.5">
+                                    <div className="text-[10px] text-white/30 uppercase tracking-wider">Key Legislation</div>
+                                    {entry.regulatory.topLaws.map((law) => (
+                                      <Link
+                                        key={law.id}
+                                        href={`/compliance/${law.id}`}
+                                        className="flex items-center justify-between gap-2 rounded-md px-2.5 py-1.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.05] transition-colors group"
+                                      >
+                                        <div className="flex items-center gap-2 min-w-0">
+                                          <Bookmark className="w-3 h-3 text-white/20 flex-shrink-0" />
+                                          <span className="text-xs text-white/60 group-hover:text-white/80 truncate">{law.shortName}</span>
+                                        </div>
+                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                          <span className="text-[10px] text-white/30">{law.jurisdiction}</span>
+                                          <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium ${
+                                            law.status === "enacted" || law.status === "passed"
+                                              ? "bg-emerald-500/15 text-emerald-400"
+                                              : law.status === "injunction"
+                                                ? "bg-red-500/15 text-red-400"
+                                                : "bg-amber-500/15 text-amber-400"
+                                          }`}>
+                                            {law.status}
+                                          </span>
+                                        </div>
+                                      </Link>
+                                    ))}
+                                  </div>
+                                )}
+
+                                <div className="flex items-center gap-1.5 mt-3">
+                                  <Link
+                                    href="/compliance"
+                                    className="text-[11px] text-white/40 hover:text-brand-green transition-colors"
+                                  >
+                                    View all {entry.regulatory.applicableLawCount} applicable laws →
+                                  </Link>
+                                </div>
+                              </div>
+                            )
+                          })()}
 
                           {/* View details link */}
                           <Link
@@ -639,8 +739,114 @@ export function ScoresClient({
         </div>
       </section>
 
-      {/* Methodology Note */}
+      {/* Regulatory Landscape */}
       <section className="bg-[#0D1B2A] border-t border-white/[0.06]">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 py-14">
+          <AnimatedSection direction="up">
+            <div className="flex items-start gap-3 mb-8">
+              <Scale className="w-5 h-5 text-brand-green flex-shrink-0 mt-0.5" />
+              <div>
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-white">
+                  Regulatory Landscape
+                </h2>
+                <p className="text-sm text-white/40 mt-1">
+                  Child safety legislation tracked across jurisdictions worldwide
+                </p>
+              </div>
+            </div>
+
+            {/* Summary stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+              <div className="rounded-lg px-4 py-3 text-center bg-white/[0.05] border border-white/[0.08]">
+                <div className="text-2xl font-display font-bold text-white">{landscape.totalLaws}</div>
+                <div className="text-[10px] text-white/40 mt-0.5">Total Laws Tracked</div>
+              </div>
+              <div className="rounded-lg px-4 py-3 text-center bg-emerald-500/10 border border-emerald-500/20">
+                <div className="text-2xl font-display font-bold text-emerald-400">{landscape.enactedCount}</div>
+                <div className="text-[10px] text-white/40 mt-0.5">Enacted / Passed</div>
+              </div>
+              <div className="rounded-lg px-4 py-3 text-center bg-amber-500/10 border border-amber-500/20">
+                <div className="text-2xl font-display font-bold text-amber-400">{landscape.pendingCount}</div>
+                <div className="text-[10px] text-white/40 mt-0.5">Pending / Proposed</div>
+              </div>
+              <div className="rounded-lg px-4 py-3 text-center bg-violet-500/10 border border-violet-500/20">
+                <div className="text-2xl font-display font-bold text-violet-400">{landscape.totalRuleCategories}</div>
+                <div className="text-[10px] text-white/40 mt-0.5">PCSS Rule Categories</div>
+              </div>
+            </div>
+
+            {/* Jurisdiction breakdown + Top categories side by side */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              {/* Jurisdictions */}
+              <div className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-5">
+                <div className="flex items-center gap-2 mb-4">
+                  <Globe className="w-4 h-4 text-white/40" />
+                  <h3 className="text-sm font-semibold text-white">By Jurisdiction</h3>
+                </div>
+                <div className="space-y-2">
+                  {landscape.jurisdictionBreakdown.slice(0, 7).map((j) => {
+                    const pct = landscape.totalLaws > 0 ? (j.count / landscape.totalLaws) * 100 : 0
+                    return (
+                      <div key={j.jurisdiction}>
+                        <div className="flex items-center justify-between text-xs mb-1">
+                          <span className="text-white/60">{JURISDICTION_LABELS[j.jurisdiction] ?? j.jurisdiction}</span>
+                          <span className="text-white/40">{j.count}</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-brand-green/50 transition-all duration-500"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Top rule categories */}
+              <div className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-5">
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield className="w-4 h-4 text-white/40" />
+                  <h3 className="text-sm font-semibold text-white">Top Rule Categories</h3>
+                </div>
+                <div className="space-y-2">
+                  {landscape.topCategories.slice(0, 7).map((cat) => {
+                    const pct = landscape.totalLaws > 0 ? (cat.count / landscape.totalLaws) * 100 : 0
+                    return (
+                      <div key={cat.category}>
+                        <div className="flex items-center justify-between text-xs mb-1">
+                          <span className="text-white/60">{cat.category.replace(/_/g, " ")}</span>
+                          <span className="text-white/40">{cat.count} laws</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-violet-500/50 transition-all duration-500"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <Link
+                href="/compliance"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white/[0.06] border border-white/[0.1] text-sm text-white/70 hover:text-white hover:bg-white/[0.1] transition-all"
+              >
+                Explore Full Compliance Hub
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Methodology Note */}
+      <section className="bg-[#0A1628] border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto px-6 lg:px-8 py-14">
           <AnimatedSection direction="up">
             <div className="flex items-start gap-3 mb-6">
