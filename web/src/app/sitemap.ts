@@ -32,6 +32,32 @@ const NEWSROOM_SLUGS = [
   "190-platforms-connected",
 ]
 
+/** Scorecard: all platform IDs */
+const SCORECARD_PLATFORM_IDS = [
+  "chatgpt", "claude", "gemini", "grok",
+  "character_ai", "copilot", "perplexity", "replika",
+  "netflix", "prime_video", "peacock",
+]
+
+/** Scorecard: all category IDs (21 total) */
+const SCORECARD_CATEGORY_IDS = [
+  "self_harm", "predatory_grooming", "explicit_sexual", "violence_weapons",
+  "drugs_substances", "radicalization", "eating_disorders", "emotional_manipulation",
+  "cyberbullying", "pii_extraction", "jailbreak_resistance", "academic_dishonesty",
+  "PE-01", "SD-01", "PL-01", "RL-01", "MF-01", "DU-01", "KM-01", "CB-01", "CG-01",
+]
+
+/** Scorecard: generate all head-to-head comparison slugs (C(11,2) = 55) */
+function generateComparisonSlugs(): string[] {
+  const slugs: string[] = []
+  for (let i = 0; i < SCORECARD_PLATFORM_IDS.length; i++) {
+    for (let j = i + 1; j < SCORECARD_PLATFORM_IDS.length; j++) {
+      slugs.push([SCORECARD_PLATFORM_IDS[i], SCORECARD_PLATFORM_IDS[j]].sort().join("-vs-"))
+    }
+  }
+  return slugs
+}
+
 /** AI chatbot research dimension IDs */
 const DIMENSION_IDS = [
   "safety-testing",
@@ -105,6 +131,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/research/streaming/compare", "monthly", 0.7),
     entry("/research/streaming/methodology", "monthly", 0.6),
     entry("/research/compare", "monthly", 0.7),
+
+    // Scorecard hub + sub-pages
+    entry("/research/scores", "weekly", 0.9, today),
+    entry("/research/scores/methodology", "monthly", 0.7),
+    entry("/research/scores/categories", "monthly", 0.7),
   ]
 
   // --- Dynamic: Compliance law pages (67+) ---
@@ -159,6 +190,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       entry(`/research/streaming/categories/${cat.id}`, "monthly", 0.5)
     )
 
+  // --- Dynamic: Scorecard platform profile pages (11) ---
+  const scorecardPlatformPages: MetadataRoute.Sitemap =
+    SCORECARD_PLATFORM_IDS.map((id) =>
+      entry(`/research/scores/platforms/${id}`, "monthly", 0.7)
+    )
+
+  // --- Dynamic: Scorecard category leaderboard pages (21) ---
+  const scorecardCategoryPages: MetadataRoute.Sitemap =
+    SCORECARD_CATEGORY_IDS.map((id) =>
+      entry(`/research/scores/categories/${id}`, "monthly", 0.6)
+    )
+
+  // --- Dynamic: Scorecard head-to-head comparison pages (55) ---
+  const scorecardComparisonPages: MetadataRoute.Sitemap =
+    generateComparisonSlugs().map((slug) =>
+      entry(`/research/scores/vs/${slug}`, "monthly", 0.5)
+    )
+
   return [
     ...staticPages,
     ...compliancePages,
@@ -171,5 +220,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...dimensionPages,
     ...streamingPlatformPages,
     ...streamingCategoryPages,
+    ...scorecardPlatformPages,
+    ...scorecardCategoryPages,
+    ...scorecardComparisonPages,
   ]
 }
