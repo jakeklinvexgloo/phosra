@@ -23,6 +23,8 @@ import {
   Copy,
   Check,
   Share2,
+  Code,
+  ExternalLink,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import {
@@ -75,6 +77,140 @@ function categoryBadgeClasses(category: "ai_chatbot" | "streaming"): string {
     return "bg-violet-500/15 border-violet-500/25 text-violet-300"
   }
   return "bg-sky-500/15 border-sky-500/25 text-sky-300"
+}
+
+function BadgeEmbed({ entries }: { entries: PlatformScoreEntry[] }) {
+  const [selectedPlatform, setSelectedPlatform] = useState(entries[0]?.platformId ?? "claude")
+  const [badgeStyle, setBadgeStyle] = useState<"flat" | "flat-square" | "plastic">("flat")
+  const [copiedType, setCopiedType] = useState<string | null>(null)
+
+  const badgeUrl = `https://www.phosra.com/api/research/badge/${selectedPlatform}?style=${badgeStyle}`
+  const linkUrl = `https://www.phosra.com/research/scores`
+
+  const htmlEmbed = `<a href="${linkUrl}"><img src="${badgeUrl}" alt="Phosra Safety Grade" /></a>`
+  const mdEmbed = `[![Phosra Safety Grade](${badgeUrl})](${linkUrl})`
+
+  const copyEmbed = useCallback((type: string, text: string) => {
+    navigator.clipboard.writeText(text)
+    setCopiedType(type)
+    setTimeout(() => setCopiedType(null), 2000)
+  }, [])
+
+  const selectedEntry = entries.find((e) => e.platformId === selectedPlatform)
+
+  return (
+    <div className="mt-6 space-y-6">
+      {/* Controls */}
+      <div className="flex flex-wrap items-center gap-3">
+        <select
+          value={selectedPlatform}
+          onChange={(e) => setSelectedPlatform(e.target.value)}
+          className="rounded-lg bg-white/[0.06] border border-white/[0.1] text-sm text-white/80 px-3 py-2 outline-none focus:border-brand-green/40 transition-colors"
+        >
+          {entries.map((e) => (
+            <option key={e.platformId} value={e.platformId} className="bg-[#0D1B2A]">
+              {e.platformName}
+            </option>
+          ))}
+        </select>
+
+        <div className="flex rounded-lg border border-white/[0.1] overflow-hidden">
+          {(["flat", "flat-square", "plastic"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setBadgeStyle(s)}
+              className={`px-3 py-1.5 text-xs transition-colors ${
+                badgeStyle === s
+                  ? "bg-white/[0.12] text-white font-medium"
+                  : "bg-white/[0.03] text-white/40 hover:text-white/60"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Badge Preview */}
+      <div className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-6">
+        <div className="text-xs text-white/30 mb-3">Preview</div>
+        <div className="flex items-center gap-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/api/research/badge/${selectedPlatform}?style=${badgeStyle}`}
+            alt={`${selectedEntry?.platformName ?? selectedPlatform} safety badge`}
+            className="h-5"
+          />
+          <a
+            href={`/api/research/badge/${selectedPlatform}?style=${badgeStyle}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-white/30 hover:text-white/50 flex items-center gap-1 transition-colors"
+          >
+            Open SVG
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+      </div>
+
+      {/* Embed Code */}
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-white/60">HTML</span>
+            <button
+              onClick={() => copyEmbed("html", htmlEmbed)}
+              className="flex items-center gap-1 text-xs text-white/30 hover:text-brand-green transition-colors"
+            >
+              {copiedType === "html" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+              {copiedType === "html" ? "Copied" : "Copy"}
+            </button>
+          </div>
+          <pre className="text-[11px] text-white/40 bg-black/20 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap break-all leading-relaxed">
+            {htmlEmbed}
+          </pre>
+        </div>
+        <div className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-white/60">Markdown</span>
+            <button
+              onClick={() => copyEmbed("md", mdEmbed)}
+              className="flex items-center gap-1 text-xs text-white/30 hover:text-brand-green transition-colors"
+            >
+              {copiedType === "md" ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+              {copiedType === "md" ? "Copied" : "Copy"}
+            </button>
+          </div>
+          <pre className="text-[11px] text-white/40 bg-black/20 rounded-lg p-3 overflow-x-auto whitespace-pre-wrap break-all leading-relaxed">
+            {mdEmbed}
+          </pre>
+        </div>
+      </div>
+
+      {/* All badges gallery */}
+      <div className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-5">
+        <div className="text-xs text-white/30 mb-4">All Platform Badges</div>
+        <div className="flex flex-wrap gap-3">
+          {entries.map((e) => (
+            <a
+              key={e.platformId}
+              href={`/api/research/badge/${e.platformId}?style=${badgeStyle}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/api/research/badge/${e.platformId}?style=${badgeStyle}`}
+                alt={`${e.platformName} safety badge`}
+                className="h-5"
+              />
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export function ScoresClient({
@@ -1326,6 +1462,27 @@ export function ScoresClient({
                 </ul>
               </div>
             </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Embeddable Badges */}
+      <section className="bg-[#0D1B2A] border-t border-white/[0.06]">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 py-14">
+          <AnimatedSection direction="up">
+            <div className="flex items-start gap-3 mb-2">
+              <Code className="w-5 h-5 text-brand-green flex-shrink-0 mt-0.5" />
+              <div>
+                <h2 className="text-xl sm:text-2xl font-display font-bold text-white">
+                  Embed Safety Badges
+                </h2>
+                <p className="text-sm text-white/40 mt-1">
+                  Add safety grade badges to articles, reports, and documentation
+                </p>
+              </div>
+            </div>
+
+            <BadgeEmbed entries={entries} />
           </AnimatedSection>
         </div>
       </section>
