@@ -1477,6 +1477,15 @@ export function ScoresClient({
                       Streaming Safety Portal
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      href="/research/scores/categories"
+                      className="flex items-center gap-2 text-xs text-white/50 hover:text-brand-green transition-colors"
+                    >
+                      <ArrowRight className="w-3 h-3" />
+                      Browse All 21 Test Categories
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </div>
