@@ -135,6 +135,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Scorecard hub + sub-pages
     entry("/research/scores", "weekly", 0.9, today),
     entry("/research/scores/methodology", "monthly", 0.7),
+    entry("/research/scores/heatmap", "monthly", 0.7),
     entry("/research/scores/categories", "monthly", 0.7),
   ]
 

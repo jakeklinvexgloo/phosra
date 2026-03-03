@@ -1501,6 +1501,15 @@ export function ScoresClient({
                   </li>
                   <li>
                     <Link
+                      href="/research/scores/heatmap"
+                      className="flex items-center gap-2 text-xs text-white/50 hover:text-brand-green transition-colors"
+                    >
+                      <ArrowRight className="w-3 h-3" />
+                      Performance Heatmap Matrix
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       href="/research/scores/categories"
                       className="flex items-center gap-2 text-xs text-white/50 hover:text-brand-green transition-colors"
                     >
