@@ -1535,6 +1535,15 @@ export function ScoresClient({
                       All 55 Head-to-Head Comparisons
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      href="/research/scores/api"
+                      className="flex items-center gap-2 text-xs text-white/50 hover:text-brand-green transition-colors"
+                    >
+                      <ArrowRight className="w-3 h-3" />
+                      Scorecard API Documentation
+                    </Link>
+                  </li>
                 </ul>
               </div>
             </div>
