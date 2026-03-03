@@ -530,9 +530,13 @@ export function ScoresClient({
                       {/* Platform info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-base sm:text-lg font-semibold text-white truncate">
+                          <Link
+                            href={`/research/scores/platforms/${entry.platformId}`}
+                            className="text-base sm:text-lg font-semibold text-white hover:text-[#00D47E] transition truncate"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             {entry.platformName}
-                          </h3>
+                          </Link>
                           <span
                             className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium ${categoryBadgeClasses(entry.category)}`}
                           >
@@ -837,14 +841,23 @@ export function ScoresClient({
                             </div>
                           )}
 
-                          {/* View details link */}
-                          <Link
-                            href={entry.detailUrl}
-                            className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-green hover:text-brand-green/80 transition-colors"
-                          >
-                            View Full Report
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </Link>
+                          {/* View details links */}
+                          <div className="flex items-center gap-4">
+                            <Link
+                              href={`/research/scores/platforms/${entry.platformId}`}
+                              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-green hover:text-brand-green/80 transition-colors"
+                            >
+                              Safety Report Card
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                            <Link
+                              href={entry.detailUrl}
+                              className="inline-flex items-center gap-1.5 text-sm font-medium text-white/50 hover:text-white/70 transition-colors"
+                            >
+                              Full {entry.categoryLabel} Report
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     )}
