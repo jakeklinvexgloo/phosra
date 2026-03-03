@@ -167,11 +167,28 @@ export default async function HeatmapPage() {
     group: c.group,
   }))
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: "Phosra Safety Performance Heatmap",
+    description: `Color-coded matrix of ${platforms.length} platforms across ${categories.length} child safety test categories.`,
+    creator: { "@type": "Organization", name: "Phosra" },
+    license: "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    dateModified: "2026-03-01",
+    variableMeasured: categories.map((c) => c.label),
+  }
+
   return (
-    <HeatmapClient
-      platforms={platforms}
-      categories={categories}
-      cells={cells}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <HeatmapClient
+        platforms={platforms}
+        categories={categories}
+        cells={cells}
+      />
+    </>
   )
 }

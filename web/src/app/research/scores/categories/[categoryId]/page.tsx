@@ -185,17 +185,36 @@ export default async function CategoryLeaderboardPage({
     portal: c.portal,
   }))
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${meta.label} Safety Rankings`,
+    description: meta.description,
+    numberOfItems: entries.length,
+    itemListElement: entries.map((e) => ({
+      "@type": "ListItem",
+      position: e.rank,
+      name: `${e.platformName} — ${e.grade} (${e.score}/100)`,
+    })),
+  }
+
   return (
-    <CategoryLeaderboardClient
-      categoryId={categoryId}
-      label={meta.label}
-      description={meta.description}
-      group={meta.group}
-      portal={meta.portal}
-      weight={meta.weight}
-      entries={entries}
-      relatedCategories={relatedCategories}
-      allCategories={allCategories}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <CategoryLeaderboardClient
+        categoryId={categoryId}
+        label={meta.label}
+        description={meta.description}
+        group={meta.group}
+        portal={meta.portal}
+        weight={meta.weight}
+        entries={entries}
+        relatedCategories={relatedCategories}
+        allCategories={allCategories}
+      />
+    </>
   )
 }

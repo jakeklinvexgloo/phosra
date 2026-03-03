@@ -361,5 +361,33 @@ export default async function PlatformProfilePage({
 
   if (!profileData) notFound()
 
-  return <PlatformProfileClient data={profileData} />
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Review",
+    itemReviewed: {
+      "@type": "SoftwareApplication",
+      name: profileData.platformName,
+      applicationCategory: profileData.category === "ai_chatbot" ? "AI Chatbot" : "Streaming Service",
+    },
+    author: { "@type": "Organization", name: "Phosra" },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: profileData.numericalScore,
+      bestRating: 100,
+      worstRating: 0,
+    },
+    name: `${profileData.platformName} Child Safety Report Card`,
+    description: `${profileData.platformName} scored ${profileData.overallGrade} (${profileData.numericalScore}/100) in Phosra's independent child safety testing across ${profileData.categoryScores.length} categories.`,
+    datePublished: "2026-03-01",
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PlatformProfileClient data={profileData} />
+    </>
+  )
 }
