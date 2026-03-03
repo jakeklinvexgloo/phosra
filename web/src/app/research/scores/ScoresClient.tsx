@@ -83,6 +83,25 @@ export function ScoresClient({
   const [filter, setFilter] = useState<FilterCategory>("all")
   const [sort, setSort] = useState<SortOption>("rank")
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
+  const [compareMode, setCompareMode] = useState(false)
+  const [compareIds, setCompareIds] = useState<Set<string>>(new Set())
+
+  const toggleCompare = (id: string) => {
+    setCompareIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else if (next.size < 4) {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  const compareEntries = useMemo(
+    () => entries.filter((e) => compareIds.has(e.platformId)),
+    [entries, compareIds]
+  )
 
   const filtered = useMemo(() => {
     let list = [...entries]
@@ -233,6 +252,20 @@ export function ScoresClient({
                 ))}
               </div>
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setCompareMode(!compareMode)
+                    if (compareMode) setCompareIds(new Set())
+                  }}
+                  className={[
+                    "px-3 py-1.5 rounded-md text-xs font-medium transition-all mr-2",
+                    compareMode
+                      ? "bg-brand-green/20 text-brand-green border border-brand-green/30"
+                      : "bg-white/[0.05] text-white/50 border border-white/[0.08] hover:text-white/70",
+                  ].join(" ")}
+                >
+                  {compareMode ? `Compare (${compareIds.size})` : "Compare"}
+                </button>
                 <span className="text-xs text-white/40 mr-1">Sort:</span>
                 {sortOptions.map((opt) => (
                   <button
@@ -274,6 +307,23 @@ export function ScoresClient({
                   >
                     {/* Main row */}
                     <div className="flex items-center gap-4 p-4 sm:p-5">
+                      {/* Compare checkbox */}
+                      {compareMode && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); toggleCompare(entry.platformId) }}
+                          className={[
+                            "flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all",
+                            compareIds.has(entry.platformId)
+                              ? "bg-brand-green border-brand-green"
+                              : "border-white/20 hover:border-white/40",
+                          ].join(" ")}
+                        >
+                          {compareIds.has(entry.platformId) && (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+                          )}
+                        </button>
+                      )}
+
                       {/* Rank */}
                       <div className="flex-shrink-0 w-10 sm:w-12 text-center">
                         {isFirst ? (
@@ -625,6 +675,214 @@ export function ScoresClient({
               <Shield className="w-10 h-10 mx-auto mb-3 opacity-50" />
               <p className="text-sm">
                 No platforms match the selected filter.
+              </p>
+            </div>
+          )}
+
+          {/* Comparison Panel */}
+          {compareMode && compareEntries.length >= 2 && (
+            <AnimatedSection direction="up" className="mt-8">
+              <div className="rounded-xl border border-brand-green/20 bg-brand-green/[0.03] p-5 sm:p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-display font-bold text-white">
+                    Platform Comparison
+                  </h3>
+                  <button
+                    onClick={() => { setCompareMode(false); setCompareIds(new Set()) }}
+                    className="text-xs text-white/40 hover:text-white/60 transition-colors"
+                  >
+                    Clear comparison
+                  </button>
+                </div>
+
+                {/* Comparison table */}
+                <div className="overflow-x-auto -mx-2">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-white/[0.08]">
+                        <th className="text-left text-xs text-white/40 font-normal pb-3 pr-4 pl-2 w-[140px]">Metric</th>
+                        {compareEntries.map((e) => (
+                          <th key={e.platformId} className="text-center text-xs font-semibold text-white pb-3 px-2">
+                            {e.platformName}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/[0.04]">
+                      {/* Grade */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Grade</td>
+                        {compareEntries.map((e) => (
+                          <td key={e.platformId} className="py-2.5 px-2 text-center">
+                            <span className={`inline-flex items-center justify-center w-10 h-10 rounded-lg font-display font-bold text-base ${gradeBgColor(e.overallGrade)} ${gradeBorderColor(e.overallGrade)} border ${gradeTextColor(e.overallGrade)}`}>
+                              {e.overallGrade}
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                      {/* Score */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Score</td>
+                        {compareEntries.map((e) => {
+                          const best = Math.max(...compareEntries.map((c) => c.numericalScore))
+                          const isBest = e.numericalScore === best
+                          return (
+                            <td key={e.platformId} className="py-2.5 px-2 text-center">
+                              <span className={`text-sm font-semibold ${isBest ? "text-brand-green" : "text-white/70"}`}>
+                                {e.numericalScore.toFixed(1)}
+                              </span>
+                              <span className="text-white/30 text-xs">/100</span>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                      {/* Rank */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Rank</td>
+                        {compareEntries.map((e) => (
+                          <td key={e.platformId} className="py-2.5 px-2 text-center text-sm text-white/60">
+                            #{e.rank}
+                          </td>
+                        ))}
+                      </tr>
+                      {/* Category */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Type</td>
+                        {compareEntries.map((e) => (
+                          <td key={e.platformId} className="py-2.5 px-2 text-center">
+                            <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium ${categoryBadgeClasses(e.category)}`}>
+                              {e.categoryLabel}
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                      {/* Tests */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Tests Run</td>
+                        {compareEntries.map((e) => (
+                          <td key={e.platformId} className="py-2.5 px-2 text-center text-sm text-white/60">
+                            {e.totalTests}
+                          </td>
+                        ))}
+                      </tr>
+                      {/* Critical Failures */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Critical Failures</td>
+                        {compareEntries.map((e) => {
+                          const worst = Math.max(...compareEntries.map((c) => c.criticalFailures))
+                          const isWorst = e.criticalFailures === worst && worst > 0
+                          return (
+                            <td key={e.platformId} className="py-2.5 px-2 text-center">
+                              <span className={`text-sm font-semibold ${isWorst ? "text-red-400" : e.criticalFailures === 0 ? "text-emerald-400" : "text-white/60"}`}>
+                                {e.criticalFailures}
+                              </span>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                      {/* Grade Capped */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Grade Capped</td>
+                        {compareEntries.map((e) => (
+                          <td key={e.platformId} className="py-2.5 px-2 text-center">
+                            {e.gradeCapped ? (
+                              <span className="text-orange-400 text-xs font-medium">Yes</span>
+                            ) : (
+                              <span className="text-emerald-400 text-xs font-medium">No</span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                      {/* Applicable Laws */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Applicable Laws</td>
+                        {compareEntries.map((e) => {
+                          const style = EXPOSURE_STYLES[e.regulatory.exposureLevel] ?? EXPOSURE_STYLES.low
+                          return (
+                            <td key={e.platformId} className="py-2.5 px-2 text-center">
+                              <span className={`text-sm font-semibold ${style.color}`}>{e.regulatory.applicableLawCount}</span>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                      {/* Regulatory Exposure */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Exposure Level</td>
+                        {compareEntries.map((e) => {
+                          const style = EXPOSURE_STYLES[e.regulatory.exposureLevel] ?? EXPOSURE_STYLES.low
+                          return (
+                            <td key={e.platformId} className="py-2.5 px-2 text-center">
+                              <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${style.bg} ${style.border} ${style.color}`}>
+                                {style.label}
+                              </span>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                      {/* Compliance Coverage */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Compliance Coverage</td>
+                        {compareEntries.map((e) => {
+                          const best = Math.max(...compareEntries.map((c) => c.complianceGap.coveragePercent))
+                          const isBest = e.complianceGap.coveragePercent === best
+                          return (
+                            <td key={e.platformId} className="py-2.5 px-2 text-center">
+                              <div className="flex flex-col items-center gap-1">
+                                <span className={`text-sm font-semibold ${isBest ? "text-brand-green" : "text-white/60"}`}>
+                                  {e.complianceGap.coveragePercent}%
+                                </span>
+                                <div className="w-16 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                                  <div
+                                    className={`h-full rounded-full transition-all ${isBest ? "bg-brand-green/70" : "bg-white/20"}`}
+                                    style={{ width: `${e.complianceGap.coveragePercent}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                      {/* Compliance Gaps */}
+                      <tr>
+                        <td className="py-2.5 pr-4 pl-2 text-xs text-white/50">Untested Gaps</td>
+                        {compareEntries.map((e) => {
+                          const fewest = Math.min(...compareEntries.map((c) => c.complianceGap.totalGaps))
+                          const isBest = e.complianceGap.totalGaps === fewest
+                          return (
+                            <td key={e.platformId} className="py-2.5 px-2 text-center">
+                              <span className={`text-sm font-semibold ${isBest ? "text-emerald-400" : "text-red-400/70"}`}>
+                                {e.complianceGap.totalGaps}
+                              </span>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Links to full reports */}
+                <div className="flex items-center justify-center gap-4 mt-6 pt-4 border-t border-white/[0.06]">
+                  {compareEntries.map((e) => (
+                    <Link
+                      key={e.platformId}
+                      href={e.detailUrl}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-green hover:text-brand-green/80 transition-colors"
+                    >
+                      {e.platformName} Report
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </AnimatedSection>
+          )}
+
+          {compareMode && compareEntries.length < 2 && (
+            <div className="mt-6 text-center py-8 rounded-xl border border-dashed border-white/[0.12] bg-white/[0.02]">
+              <Target className="w-8 h-8 mx-auto mb-2 text-white/20" />
+              <p className="text-sm text-white/40">
+                Select {compareEntries.length === 0 ? "2-4" : `${2 - compareEntries.length} more`} platforms to compare
               </p>
             </div>
           )}
