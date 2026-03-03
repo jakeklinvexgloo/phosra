@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     description:
       "Independent child safety rankings for 11 major platforms. Standardized testing, transparent methodology, published results.",
   },
+  alternates: {
+    types: {
+      "application/rss+xml": "/research/scores/feed.xml",
+    },
+  },
 }
 
 export interface PlatformScoreEntry {
