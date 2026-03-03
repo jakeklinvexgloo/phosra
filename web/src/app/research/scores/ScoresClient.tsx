@@ -25,6 +25,7 @@ import {
   Share2,
   Code,
   ExternalLink,
+  Download,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import {
@@ -441,6 +442,14 @@ export function ScoresClient({
                 >
                   {compareMode ? `Compare (${compareIds.size})` : "Compare"}
                 </button>
+                <a
+                  href="/api/research/scores/csv"
+                  download="phosra-safety-scorecard.csv"
+                  className="px-3 py-1.5 rounded-md text-xs font-medium bg-white/[0.05] text-white/50 border border-white/[0.08] hover:text-white/70 transition-all inline-flex items-center gap-1.5 mr-2"
+                >
+                  <Download className="w-3 h-3" />
+                  CSV
+                </a>
                 <span className="text-xs text-white/40 mr-1">Sort:</span>
                 {sortOptions.map((opt) => (
                   <button
