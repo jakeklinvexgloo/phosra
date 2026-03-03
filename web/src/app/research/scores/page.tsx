@@ -6,6 +6,7 @@ import {
   computeRegulatoryLandscape,
   type RegulatoryExposure,
 } from "@/lib/platform-research/regulatory-exposure"
+import { computeComplianceGap } from "@/lib/platform-research/compliance-gap"
 import { ScoresClient } from "./ScoresClient"
 
 export const metadata: Metadata = {
@@ -43,6 +44,14 @@ export interface PlatformScoreEntry {
     jurisdictionCount: number
     topLaws: { id: string; shortName: string; status: string; jurisdiction: string }[]
   }
+  complianceGap: {
+    coveragePercent: number
+    totalRequired: number
+    totalCovered: number
+    totalGaps: number
+    topGaps: { category: string; label: string }[]
+    entries: { ruleCategory: string; label: string; status: "covered" | "partial" | "gap" }[]
+  }
 }
 
 export interface RegulatoryLandscapeData {
@@ -72,6 +81,14 @@ export default async function ScoresPage() {
       .sort((a, b) => b.weight - a.weight)
       .slice(0, 5)
 
+    // Extract test categories and scores for compliance gap analysis
+    const chatbotTestCategories = (scorecard.categoryScores ?? []).map((c) => c.category)
+    const chatbotTestScores = new Map<string, number>()
+    for (const c of scorecard.categoryScores ?? []) {
+      chatbotTestScores.set(c.category, c.avgScore)
+    }
+    const gap = computeComplianceGap(p.platformId, "ai_chatbot", chatbotTestCategories, chatbotTestScores)
+
     entries.push({
       rank: 0, // will be assigned after sorting
       platformId: p.platformId,
@@ -92,6 +109,14 @@ export default async function ScoresPage() {
         score: c.numericalScore,
       })),
       regulatory: { exposureLevel: "low", applicableLawCount: 0, enactedCount: 0, pendingCount: 0, requiredCategoryCount: 0, jurisdictionCount: 0, topLaws: [] },
+      complianceGap: {
+        coveragePercent: gap.coveragePercent,
+        totalRequired: gap.totalRequired,
+        totalCovered: gap.totalCovered,
+        totalGaps: gap.totalGaps,
+        topGaps: gap.topGaps,
+        entries: gap.entries.map((e) => ({ ruleCategory: e.ruleCategory, label: e.label, status: e.status })),
+      },
     })
   }
 
@@ -115,6 +140,21 @@ export default async function ScoresPage() {
       score: profile.weightedScore,
     }))
 
+    // Extract unique streaming test categories and avg scores for compliance gap
+    const streamingTestCats = Array.from(
+      new Set(p.profiles.flatMap((pr) => pr.tests.map((t) => t.category)))
+    )
+    const streamingScoreMap = new Map<string, number>()
+    for (const cat of streamingTestCats) {
+      const scores = p.profiles
+        .flatMap((pr) => pr.tests.filter((t) => t.category === cat && t.score !== null))
+        .map((t) => t.score as number)
+      if (scores.length > 0) {
+        streamingScoreMap.set(cat, scores.reduce((a, b) => a + b, 0) / scores.length)
+      }
+    }
+    const sGap = computeComplianceGap(p.platformId, "streaming", streamingTestCats, streamingScoreMap)
+
     entries.push({
       rank: 0,
       platformId: p.platformId,
@@ -133,6 +173,14 @@ export default async function ScoresPage() {
       detailUrl: `/research/streaming/${p.platformId}`,
       topCategories,
       regulatory: { exposureLevel: "low", applicableLawCount: 0, enactedCount: 0, pendingCount: 0, requiredCategoryCount: 0, jurisdictionCount: 0, topLaws: [] },
+      complianceGap: {
+        coveragePercent: sGap.coveragePercent,
+        totalRequired: sGap.totalRequired,
+        totalCovered: sGap.totalCovered,
+        totalGaps: sGap.totalGaps,
+        topGaps: sGap.topGaps,
+        entries: sGap.entries.map((e) => ({ ruleCategory: e.ruleCategory, label: e.label, status: e.status })),
+      },
     })
   }
 

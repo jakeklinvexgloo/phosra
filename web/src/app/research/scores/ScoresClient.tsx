@@ -15,6 +15,10 @@ import {
   Scale,
   Globe,
   Bookmark,
+  Target,
+  CheckCircle2,
+  XCircle,
+  Circle,
 } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import {
@@ -516,6 +520,88 @@ export function ScoresClient({
                               </div>
                             )
                           })()}
+
+                          {/* Compliance gap analysis */}
+                          {entry.complianceGap.totalRequired > 0 && (
+                            <div className="mb-4 rounded-lg bg-white/[0.03] border border-white/[0.08] p-4">
+                              <div className="flex items-center gap-2 mb-3">
+                                <Target className="w-3.5 h-3.5 text-white/40" />
+                                <span className="text-xs font-medium text-white/60">Compliance Coverage</span>
+                                <span className={`ml-auto inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${
+                                  entry.complianceGap.coveragePercent >= 60
+                                    ? "bg-emerald-500/15 border-emerald-500/25 text-emerald-400"
+                                    : entry.complianceGap.coveragePercent >= 35
+                                      ? "bg-amber-500/15 border-amber-500/25 text-amber-400"
+                                      : "bg-red-500/15 border-red-500/25 text-red-400"
+                                }`}>
+                                  {entry.complianceGap.coveragePercent}% tested
+                                </span>
+                              </div>
+
+                              {/* Coverage bar */}
+                              <div className="mb-3">
+                                <div className="flex items-center justify-between text-[10px] text-white/40 mb-1">
+                                  <span>{entry.complianceGap.totalCovered} of {entry.complianceGap.totalRequired} required categories covered by testing</span>
+                                  <span>{entry.complianceGap.totalGaps} gaps</span>
+                                </div>
+                                <div className="h-2 rounded-full bg-white/[0.06] overflow-hidden flex">
+                                  {entry.complianceGap.entries.length > 0 && (() => {
+                                    const covered = entry.complianceGap.entries.filter((e) => e.status === "covered").length
+                                    const partial = entry.complianceGap.entries.filter((e) => e.status === "partial").length
+                                    const total = entry.complianceGap.entries.length
+                                    return (
+                                      <>
+                                        {covered > 0 && (
+                                          <div
+                                            className="h-full bg-emerald-500/70 transition-all"
+                                            style={{ width: `${(covered / total) * 100}%` }}
+                                          />
+                                        )}
+                                        {partial > 0 && (
+                                          <div
+                                            className="h-full bg-amber-500/70 transition-all"
+                                            style={{ width: `${(partial / total) * 100}%` }}
+                                          />
+                                        )}
+                                      </>
+                                    )
+                                  })()}
+                                </div>
+                                <div className="flex items-center gap-3 mt-1.5">
+                                  <span className="flex items-center gap-1 text-[10px] text-white/30">
+                                    <span className="w-2 h-2 rounded-sm bg-emerald-500/70" />
+                                    Covered
+                                  </span>
+                                  <span className="flex items-center gap-1 text-[10px] text-white/30">
+                                    <span className="w-2 h-2 rounded-sm bg-amber-500/70" />
+                                    Partial
+                                  </span>
+                                  <span className="flex items-center gap-1 text-[10px] text-white/30">
+                                    <span className="w-2 h-2 rounded-sm bg-white/[0.06]" />
+                                    Gap
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Top gaps */}
+                              {entry.complianceGap.topGaps.length > 0 && (
+                                <div>
+                                  <div className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5">Top Untested Requirements</div>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {entry.complianceGap.topGaps.map((gap) => (
+                                      <span
+                                        key={gap.category}
+                                        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] bg-red-500/8 border border-red-500/15 text-red-400/80"
+                                      >
+                                        <XCircle className="w-2.5 h-2.5" />
+                                        {gap.label}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
 
                           {/* View details link */}
                           <Link
