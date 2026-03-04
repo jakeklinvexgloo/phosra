@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight, Code, ExternalLink, Copy } from "lucide-react"
+import { ArrowLeft, ArrowRight, Code, ExternalLink } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Scorecard API — Platform Safety Scorecard — Phosra",
