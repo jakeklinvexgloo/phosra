@@ -431,19 +431,18 @@ export function CrossPortalClient({ platforms }: CrossPortalClientProps) {
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
-                  href="/research/ai-chatbots"
+                  href="/research/scores"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-green text-white font-medium hover:bg-brand-green/90 transition-colors"
                 >
-                  <Bot className="w-4 h-4" />
-                  AI Chatbot Safety
+                  <Trophy className="w-4 h-4" />
+                  Safety Scorecard
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  href="/research/streaming"
+                  href="/research/scores/vs"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/20 text-white font-medium hover:bg-white/5 transition-colors"
                 >
-                  <Monitor className="w-4 h-4" />
-                  Streaming Safety
+                  55 Head-to-Head Comparisons
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>

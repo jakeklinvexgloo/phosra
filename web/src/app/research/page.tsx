@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Bot, Tv, BarChart3, Trophy } from "lucide-react"
+import { ArrowRight, Bot, Tv, BarChart3, Trophy, Code, Scale } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import { loadAllChatbotResearch } from "@/lib/platform-research/loaders"
 import { loadAllStreamingPlatforms } from "@/lib/streaming-research/loaders"
@@ -285,10 +285,10 @@ export default async function ResearchHubPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
-              { label: "AI Testing Methodology", href: "/research/ai-chatbots/methodology", icon: Bot, description: "How we test chatbot safety" },
-              { label: "Streaming Methodology", href: "/research/streaming/methodology", icon: Tv, description: "Content filtering test framework" },
-              { label: "Safety Scorecard", href: "/research/scores", icon: Trophy, description: "All platforms ranked by safety" },
-              { label: "Compare Platforms", href: "/research/compare", icon: BarChart3, description: "Head-to-head safety comparisons" },
+              { label: "Safety Scorecard", href: "/research/scores", icon: Trophy, description: "11 platforms ranked A+ to F" },
+              { label: "Head-to-Head Comparisons", href: "/research/scores/vs", icon: Scale, description: "55 side-by-side matchups" },
+              { label: "Scorecard API", href: "/research/scores/api", icon: Code, description: "Free public REST API" },
+              { label: "Compare Platforms", href: "/research/compare", icon: BarChart3, description: "Cross-portal safety comparison" },
             ].map((item, i) => {
               const Icon = item.icon
               return (
