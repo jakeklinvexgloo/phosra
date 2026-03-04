@@ -1,13 +1,22 @@
 "use client"
 
-import { useState, FormEvent } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, Suspense, FormEvent } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useStytch, useStytchSession } from "@stytch/nextjs"
 import { Terminal, ChevronRight, Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react"
 import { PLATFORM_STATS } from "@/lib/platforms"
 
-export default function LoginPage() {
+export default function LoginPageWrapper() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F8F8F8]" />}>
+      <LoginPage />
+    </Suspense>
+  )
+}
+
+function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const stytch = useStytch()
   const { session } = useStytchSession()
 
@@ -18,8 +27,20 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // If user is already signed in, redirect to dashboard
+  // Persist the "from" param so we know to deep-link back after auth
+  const fromBrowser = searchParams.get("from") === "phosra-browser"
+  useEffect(() => {
+    if (fromBrowser) {
+      sessionStorage.setItem("phosra-login-from", "phosra-browser")
+    }
+  }, [fromBrowser])
+
+  // If user is already signed in, redirect to dashboard (or deep-link back)
   if (session) {
+    const storedFrom = typeof window !== "undefined" ? sessionStorage.getItem("phosra-login-from") : null
+    if (storedFrom === "phosra-browser") {
+      // handled by callback page redirect — just go to dashboard
+    }
     router.push("/dashboard")
     return null
   }
@@ -42,6 +63,16 @@ export default function LoginPage() {
           password,
           session_duration_minutes: 60 * 24 * 7,
         })
+      }
+      // If launched from Phosra Browser, deep-link the JWT back
+      const storedFrom = sessionStorage.getItem("phosra-login-from")
+      if (storedFrom === "phosra-browser") {
+        sessionStorage.removeItem("phosra-login-from")
+        const jwt = stytch.session.getTokens()?.session_jwt
+        if (jwt) {
+          window.location.href = `phosra-browser://auth?token=${encodeURIComponent(jwt)}`
+          return
+        }
       }
       router.push("/dashboard")
     } catch (err: any) {

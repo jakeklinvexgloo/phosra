@@ -45,6 +45,16 @@ function CallbackHandler() {
             session_duration_minutes: 60 * 24 * 7,
           })
         }
+        // If launched from Phosra Browser, deep-link the JWT back
+        const storedFrom = typeof window !== "undefined" ? sessionStorage.getItem("phosra-login-from") : null
+        if (storedFrom === "phosra-browser") {
+          sessionStorage.removeItem("phosra-login-from")
+          const jwt = stytch.session.getTokens()?.session_jwt
+          if (jwt) {
+            window.location.href = `phosra-browser://auth?token=${encodeURIComponent(jwt)}`
+            return
+          }
+        }
         // SDK sets cookies automatically — redirect to return_to or dashboard
         const returnTo = searchParams.get("return_to")
         router.replace(returnTo && returnTo.startsWith("/") ? returnTo : "/dashboard")
