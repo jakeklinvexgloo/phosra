@@ -31,18 +31,16 @@ const handler = async (req: Request) => {
   })
 
   // On first message, pre-populate the Klinvex Family (children + platforms, no policies)
+  // Fire-and-forget — don't await so the AI starts thinking immediately.
+  // Hero pre-warms this on page load; for the playground it runs in parallel.
   const isFirstMessage = uiMessages.length <= 1
   if (isFirstMessage) {
-    try {
-      const setupUrl = new URL("/api/playground/setup", req.url)
-      await fetch(setupUrl.toString(), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId }),
-      })
-    } catch {
-      // setup failure shouldn't block chat
-    }
+    const setupUrl = new URL("/api/playground/setup", req.url)
+    fetch(setupUrl.toString(), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionId }),
+    }).catch(() => {})
   }
 
   // Collect HTTP captures — the frontend reads these from the tool results
