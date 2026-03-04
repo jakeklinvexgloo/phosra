@@ -8,7 +8,7 @@ import { ExternalLink, RotateCcw, Loader2, CheckCircle2, XCircle, AlertCircle, A
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { useHeroSession } from "./useHeroSession"
+import type { HeroSession } from "./useHeroSession"
 import type { ToolCallInfo } from "@/lib/playground/types"
 import { type EntityMap, extractEntities, summarizeToolCall, annotateInput, formatPlatformId, PLATFORM_DISPLAY_NAMES } from "@/lib/playground/entity-registry"
 
@@ -16,6 +16,7 @@ interface HeroSandboxChatProps {
   prompt: string
   onClose: () => void
   onTryAnother: () => void
+  session: HeroSession
 }
 
 /* ── Entity type badge colors (dark theme) ──────────────────────── */
@@ -419,8 +420,8 @@ function formatCategory(category: string): string {
 
 /* ── Main Component ─────────────────────────────────────────────── */
 
-export function HeroSandboxChat({ prompt, onClose, onTryAnother }: HeroSandboxChatProps) {
-  const { sessionId, isReady, error: sessionError, reset } = useHeroSession()
+export function HeroSandboxChat({ prompt, onClose, onTryAnother, session }: HeroSandboxChatProps) {
+  const { sessionId, isReady, error: sessionError, reset } = session
   const scrollRef = useRef<HTMLDivElement>(null)
   const replyInputRef = useRef<HTMLInputElement>(null)
   const hasSentRef = useRef(false)

@@ -11,6 +11,7 @@ import { HeroChatDemo } from "./hero/HeroChatDemo"
 import { HeroPromptBar } from "./hero/HeroPromptBar"
 import { LiquidGlassModal } from "./hero/LiquidGlassModal"
 import { HeroSandboxChat } from "./hero/HeroSandboxChat"
+import { useHeroSession } from "./hero/useHeroSession"
 import { PLATFORM_STATS } from "@/lib/platforms"
 
 const PLATFORM_NAMES = [
@@ -23,6 +24,8 @@ const PLATFORM_NAMES = [
 
 export function Hero() {
   const [modalPrompt, setModalPrompt] = useState<string | null>(null)
+  // Pre-warm sandbox session on page load so it's ready when the user clicks
+  const heroSession = useHeroSession()
 
   const handleCloseModal = useCallback(() => setModalPrompt(null), [])
   const handleTryAnother = useCallback(() => {
@@ -137,6 +140,7 @@ export function Hero() {
             prompt={modalPrompt}
             onClose={handleCloseModal}
             onTryAnother={handleTryAnother}
+            session={heroSession}
           />
         )}
       </LiquidGlassModal>

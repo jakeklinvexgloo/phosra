@@ -10,6 +10,8 @@ import { useState, useEffect, useCallback, useRef } from "react"
  * - Provides a sandbox token for useChat() transport
  * - Resets session data on cleanup
  */
+export type HeroSession = ReturnType<typeof useHeroSession>
+
 export function useHeroSession() {
   const [sessionId] = useState(
     () => `hero-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
