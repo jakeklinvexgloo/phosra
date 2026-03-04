@@ -69,19 +69,40 @@ export function CTASection() {
                   Ready to get started?
                 </h3>
                 <p className="text-white/40 text-sm mb-8">
-                  Create a free account — no credit card required.
+                  Free for families. Pay only when you build.
                 </p>
 
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link
-                    href="/login"
-                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-3.5 bg-brand-green text-foreground text-sm font-semibold rounded-lg transition-all hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)]"
-                  >
-                    Create Free Account
-                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </Link>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* Families path */}
+                  <div className="flex flex-col gap-1.5 flex-1">
+                    <span className="text-[11px] font-medium text-white/40 uppercase tracking-widest text-center">For Families</span>
+                    <Link
+                      href="/login"
+                      className="inline-flex items-center justify-center px-5 py-3 bg-brand-green text-foreground text-sm font-semibold rounded-lg transition-all hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)]"
+                    >
+                      Create Free Account
+                      <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </Link>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="hidden sm:flex items-end pb-1 text-white/20 text-xs font-medium">or</div>
+
+                  {/* Developers path */}
+                  <div className="flex flex-col gap-1.5 flex-1">
+                    <span className="text-[11px] font-medium text-white/40 uppercase tracking-widest text-center">For Developers</span>
+                    <Link
+                      href="/developers"
+                      className="inline-flex items-center justify-center px-5 py-3 border border-white/20 text-white text-sm font-semibold rounded-lg transition-all hover:border-brand-green/60 hover:bg-brand-green/10"
+                    >
+                      Get API Keys
+                      <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Social proof line */}

@@ -136,6 +136,19 @@ export function Ecosystem() {
           <p className="text-center text-xs text-muted-foreground/50 mt-6">
             Platform support varies by integration tier and availability. Logos represent ecosystem coverage, not endorsement.
           </p>
+
+          {/* Secondary CTA — parental controls directory */}
+          <div className="text-center mt-8">
+            <a
+              href="/parental-controls"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-green hover:text-brand-green/80 transition-colors"
+            >
+              Compare 21+ parental control apps
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M2.5 7h9M8 3.5 11.5 7 8 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
+          </div>
         </div>
 
       </div>
