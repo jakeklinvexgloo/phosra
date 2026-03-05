@@ -64,13 +64,15 @@ function LoginPage() {
           session_duration_minutes: 60 * 24 * 7,
         })
       }
-      // If launched from Phosra Browser, deep-link the JWT back
+      // If launched from Phosra Browser, deep-link the session token back
       const storedFrom = sessionStorage.getItem("phosra-login-from")
       if (storedFrom === "phosra-browser") {
         sessionStorage.removeItem("phosra-login-from")
-        const jwt = stytch.session.getTokens()?.session_jwt
-        if (jwt) {
-          window.location.href = `phosra-browser://auth?token=${encodeURIComponent(jwt)}`
+        const tokens = stytch.session.getTokens()
+        if (tokens?.session_token) {
+          const params = new URLSearchParams({ session_token: tokens.session_token })
+          if (email) params.set("email", email)
+          window.location.href = `phosra-browser://auth?${params.toString()}`
           return
         }
       }
