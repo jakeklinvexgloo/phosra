@@ -35,18 +35,44 @@ function LoginPage() {
     }
   }, [fromBrowser])
 
-  // If user is already signed in, deep-link back to Phosra Browser or go to dashboard
-  if (session) {
-    if (fromBrowser || (typeof window !== "undefined" && sessionStorage.getItem("phosra-login-from") === "phosra-browser")) {
-      sessionStorage.removeItem("phosra-login-from")
-      const tokens = stytch.session.getTokens()
-      if (tokens?.session_token) {
-        const params = new URLSearchParams({ session_token: tokens.session_token })
-        window.location.href = `phosra-browser://auth?${params.toString()}`
-        return null
+  // If user is already signed in, deep-link back to Phosra Browser or go to dashboard.
+  // Use useEffect because stytch.session.getTokens() may not be ready on the first render.
+  const [redirecting, setRedirecting] = useState(false)
+  useEffect(() => {
+    if (!session) return
+
+    const wantsBrowser = fromBrowser || sessionStorage.getItem("phosra-login-from") === "phosra-browser"
+
+    if (wantsBrowser) {
+      // Try immediately, then retry after 500ms (Stytch SDK may need time to hydrate tokens)
+      const attemptDeepLink = () => {
+        const tokens = stytch.session.getTokens()
+        if (tokens?.session_token) {
+          sessionStorage.removeItem("phosra-login-from")
+          setRedirecting(true)
+          const params = new URLSearchParams({ session_token: tokens.session_token })
+          if (email) params.set("email", email)
+          window.location.href = `phosra-browser://auth?${params.toString()}`
+          return true
+        }
+        return false
       }
+
+      if (!attemptDeepLink()) {
+        const timer = setTimeout(() => {
+          if (!attemptDeepLink()) {
+            // Give up after second attempt — redirect to dashboard
+            router.push("/dashboard")
+          }
+        }, 800)
+        return () => clearTimeout(timer)
+      }
+    } else {
+      router.push("/dashboard")
     }
-    router.push("/dashboard")
+  }, [session, fromBrowser, stytch, router, email])
+
+  if (redirecting || (session && !fromBrowser && sessionStorage.getItem("phosra-login-from") !== "phosra-browser")) {
     return null
   }
 
