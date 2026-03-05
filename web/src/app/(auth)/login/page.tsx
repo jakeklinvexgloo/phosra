@@ -35,11 +35,16 @@ function LoginPage() {
     }
   }, [fromBrowser])
 
-  // If user is already signed in, redirect to dashboard (or deep-link back)
+  // If user is already signed in, deep-link back to Phosra Browser or go to dashboard
   if (session) {
-    const storedFrom = typeof window !== "undefined" ? sessionStorage.getItem("phosra-login-from") : null
-    if (storedFrom === "phosra-browser") {
-      // handled by callback page redirect — just go to dashboard
+    if (fromBrowser || (typeof window !== "undefined" && sessionStorage.getItem("phosra-login-from") === "phosra-browser")) {
+      sessionStorage.removeItem("phosra-login-from")
+      const tokens = stytch.session.getTokens()
+      if (tokens?.session_token) {
+        const params = new URLSearchParams({ session_token: tokens.session_token })
+        window.location.href = `phosra-browser://auth?${params.toString()}`
+        return null
+      }
     }
     router.push("/dashboard")
     return null
