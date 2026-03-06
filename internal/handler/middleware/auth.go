@@ -84,7 +84,7 @@ func StytchAuth(projectID string, userRepo repository.UserRepository) func(http.
 				return
 			}
 
-			// Just-in-time user creation for new Stytch users
+			// Just-in-time user creation (or account linking) for Stytch users
 			if user == nil {
 				// Extract email from JWT claims if available
 				email := ""
@@ -98,20 +98,39 @@ func StytchAuth(projectID string, userRepo repository.UserRepository) func(http.
 					}
 				}
 
-				now := time.Now()
-				user = &domain.User{
-					ID:             uuid.New(),
-					ExternalAuthID: stytchUserID,
-					Email:          email,
-					Name:           "",
-					CreatedAt:      now,
-					UpdatedAt:      now,
+				// Check if a pre-created user exists for this email (e.g. from family invite).
+				// If so, link the existing account to this Stytch identity instead of creating a duplicate.
+				if email != "" {
+					user, _ = userRepo.GetByEmail(r.Context(), email)
 				}
-				if createErr := userRepo.Create(r.Context(), user); createErr != nil {
-					httputil.Error(w, http.StatusInternalServerError, "failed to create user")
-					return
+
+				if user != nil {
+					// Link pre-created account to the real Stytch identity
+					user.ExternalAuthID = stytchUserID
+					user.UpdatedAt = time.Now()
+					if updateErr := userRepo.Update(r.Context(), user); updateErr != nil {
+						log.Error().Err(updateErr).Str("email", email).Msg("auth: failed to link pre-created user to Stytch")
+						httputil.Error(w, http.StatusInternalServerError, "failed to link user account")
+						return
+					}
+					log.Info().Str("stytch_user_id", stytchUserID).Str("email", email).Msg("linked pre-created user to Stytch identity")
+				} else {
+					// Brand-new user — JIT creation
+					now := time.Now()
+					user = &domain.User{
+						ID:             uuid.New(),
+						ExternalAuthID: stytchUserID,
+						Email:          email,
+						Name:           "",
+						CreatedAt:      now,
+						UpdatedAt:      now,
+					}
+					if createErr := userRepo.Create(r.Context(), user); createErr != nil {
+						httputil.Error(w, http.StatusInternalServerError, "failed to create user")
+						return
+					}
+					log.Info().Str("stytch_user_id", stytchUserID).Str("email", email).Msg("created local user from Stytch JWT")
 				}
-				log.Info().Str("stytch_user_id", stytchUserID).Str("email", email).Msg("created local user from Stytch JWT")
 			}
 
 			ctx := context.WithValue(r.Context(), UserIDKey, user.ID)

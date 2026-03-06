@@ -20,10 +20,15 @@ var (
 type FamilyService struct {
 	families repository.FamilyRepository
 	members  repository.FamilyMemberRepository
+	users    repository.UserRepository
 }
 
-func NewFamilyService(families repository.FamilyRepository, members repository.FamilyMemberRepository) *FamilyService {
-	return &FamilyService{families: families, members: members}
+func NewFamilyService(families repository.FamilyRepository, members repository.FamilyMemberRepository, users ...repository.UserRepository) *FamilyService {
+	s := &FamilyService{families: families, members: members}
+	if len(users) > 0 {
+		s.users = users[0]
+	}
+	return s
 }
 
 func (s *FamilyService) Create(ctx context.Context, userID uuid.UUID, name string) (*domain.Family, error) {
@@ -109,11 +114,96 @@ func (s *FamilyService) AddMember(ctx context.Context, familyID, actorID, userID
 	return s.members.Add(ctx, member)
 }
 
+func (s *FamilyService) AddMemberByEmail(ctx context.Context, familyID, actorID uuid.UUID, email string, role domain.FamilyRole, displayName string) (*domain.FamilyMember, error) {
+	if s.users == nil {
+		return nil, fmt.Errorf("user repository not configured")
+	}
+	if err := s.checkParentRole(ctx, familyID, actorID); err != nil {
+		return nil, err
+	}
+	if role == domain.RoleOwner {
+		return nil, ErrInsufficientRole
+	}
+	user, err := s.users.GetByEmail(ctx, email)
+	if err != nil {
+		return nil, fmt.Errorf("lookup user: %w", err)
+	}
+	if user == nil {
+		// Auto-create a placeholder account so the family member can later
+		// sign in via email code (OTP). The ExternalAuthID placeholder is
+		// unique and will be replaced on first Stytch login (see auth middleware).
+		user = &domain.User{
+			ID:             uuid.New(),
+			ExternalAuthID: "family-invite:" + uuid.New().String(),
+			Email:          email,
+			Name:           displayName,
+			IsAdmin:        false,
+		}
+		if err := s.users.Create(ctx, user); err != nil {
+			return nil, fmt.Errorf("create user for family invite: %w", err)
+		}
+	}
+	member := &domain.FamilyMember{
+		ID:          uuid.New(),
+		FamilyID:    familyID,
+		UserID:      user.ID,
+		Role:        role,
+		JoinedAt:    time.Now(),
+		Email:       user.Email,
+		Name:        user.Name,
+		DisplayName: displayName,
+	}
+	if err := s.members.Add(ctx, member); err != nil {
+		return nil, fmt.Errorf("add member: %w", err)
+	}
+	return member, nil
+}
+
 func (s *FamilyService) RemoveMember(ctx context.Context, familyID, actorID, userID uuid.UUID) error {
 	if err := s.checkParentRole(ctx, familyID, actorID); err != nil {
 		return err
 	}
 	return s.members.Remove(ctx, familyID, userID)
+}
+
+func (s *FamilyService) UpdateMember(ctx context.Context, familyID, memberID, actorID uuid.UUID, displayName string, role domain.FamilyRole) (*domain.FamilyMember, error) {
+	if err := s.checkParentRole(ctx, familyID, actorID); err != nil {
+		return nil, err
+	}
+
+	// Look up the target member to validate they exist and check role constraints
+	members, err := s.members.ListByFamily(ctx, familyID)
+	if err != nil {
+		return nil, fmt.Errorf("list members: %w", err)
+	}
+
+	var target *domain.FamilyMember
+	for i := range members {
+		if members[i].ID == memberID {
+			target = &members[i]
+			break
+		}
+	}
+	if target == nil {
+		return nil, ErrNotFamilyMember
+	}
+
+	// Cannot change owner's role
+	if target.Role == domain.RoleOwner && role != domain.RoleOwner {
+		return nil, ErrInsufficientRole
+	}
+	// Cannot promote to owner
+	if role == domain.RoleOwner && target.Role != domain.RoleOwner {
+		return nil, ErrInsufficientRole
+	}
+
+	target.DisplayName = displayName
+	target.Role = role
+
+	if err := s.members.Update(ctx, target); err != nil {
+		return nil, fmt.Errorf("update member: %w", err)
+	}
+	return target, nil
 }
 
 func (s *FamilyService) ListMembers(ctx context.Context, familyID, userID uuid.UUID) ([]domain.FamilyMember, error) {
