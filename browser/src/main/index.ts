@@ -187,10 +187,11 @@ app.whenReady().then(() => {
   const profileSession = session.fromPartition(`persist:${profileName}`, { cache: true });
   profileSession.protocol.handle('phosra', phosraHandler);
 
-  // Fix: Ensure requests to phosra.com include proper Origin header.
+  // Fix: Ensure requests from Electron include proper Origin header.
   // Without this, Electron sends null Origin which Stytch SDK rejects.
+  // Must target Stytch API servers (where the SDK sends requests) AND phosra.com.
   profileSession.webRequest.onBeforeSendHeaders(
-    { urls: ['https://*.phosra.com/*', 'https://phosra.com/*'] },
+    { urls: ['https://*.stytch.com/*', 'https://*.phosra.com/*', 'https://phosra.com/*'] },
     (details, callback) => {
       const headers = { ...details.requestHeaders };
       if (!headers['Origin'] && !headers['origin']) {
