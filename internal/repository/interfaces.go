@@ -294,6 +294,7 @@ type CSMReviewRepository interface {
 	GetBySlug(ctx context.Context, slug string) (*domain.CSMReview, error)
 	UpsertBatch(ctx context.Context, reviews []domain.CSMReview) error
 	SearchByTitle(ctx context.Context, query string, limit int) ([]domain.CSMReview, error)
+	ListByFamilyViewingHistory(ctx context.Context, familyID uuid.UUID) ([]domain.CSMReview, error)
 }
 
 type ViewingHistoryRepository interface {

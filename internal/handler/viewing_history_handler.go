@@ -288,6 +288,27 @@ func (h *ViewingHistoryHandler) LinkCSM(w http.ResponseWriter, r *http.Request) 
 	})
 }
 
+// GetCSMReviewsByFamily returns all CSM reviews linked to any child's viewing history in a family.
+// GET /api/v1/csm/reviews/by-family/{familyId}
+func (h *ViewingHistoryHandler) GetCSMReviewsByFamily(w http.ResponseWriter, r *http.Request) {
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
+		return
+	}
+
+	reviews, err := h.csmRepo.ListByFamilyViewingHistory(r.Context(), familyID)
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to list CSM reviews")
+		return
+	}
+	if reviews == nil {
+		reviews = []domain.CSMReview{}
+	}
+
+	httputil.JSON(w, http.StatusOK, reviews)
+}
+
 // GetAnalytics returns viewing analytics for a child.
 // GET /api/v1/viewing-analytics/{childId}
 func (h *ViewingHistoryHandler) GetAnalytics(w http.ResponseWriter, r *http.Request) {
