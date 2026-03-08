@@ -14,7 +14,8 @@
     "package": "npm run build && electron-builder",
     "mcp": "node dist/mcp/transport.js",
     "agent:debug": "node scripts/agent-debug.mjs",
-    "start:debug": "electron . --agent-debug"
+    "start:debug": "electron . --agent-debug",
+    "tag": "node -e \"require('fs').writeFileSync('build-tag.txt', process.argv[1])\" --"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",

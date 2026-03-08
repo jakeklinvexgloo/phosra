@@ -1,3 +1,5 @@
+declare const __BUILD_LABEL__: string;
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { TabBar } from './components/TabBar';
 import { NavigationButtons } from './components/NavigationButtons';
@@ -146,9 +148,16 @@ export default function App() {
           onCloseTab={closeTab}
           onCreateTab={createTab}
         />
-        {/* Phosra burst mark */}
-        <div className="flex-shrink-0 pl-1 pr-1" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}>
+        {/* Phosra burst mark + build label */}
+        <div className="flex-shrink-0 pl-1 pr-1 flex items-center gap-1.5" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}>
           <PhosraMark />
+          <span
+            className="text-[9px] text-chrome-text-secondary/40 font-mono select-text whitespace-nowrap"
+            title={typeof __BUILD_LABEL__ !== 'undefined' ? __BUILD_LABEL__ : ''}
+            style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
+          >
+            {typeof __BUILD_LABEL__ !== 'undefined' ? __BUILD_LABEL__ : 'dev'}
+          </span>
         </div>
       </div>
 

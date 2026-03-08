@@ -4,6 +4,7 @@ import electron from 'vite-plugin-electron';
 import electronRenderer from 'vite-plugin-electron-renderer';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
+import { execSync } from 'child_process';
 
 // Load .env from browser/ directory for build-time injection
 function loadDotEnv(): Record<string, string> {
@@ -24,6 +25,23 @@ function loadDotEnv(): Record<string, string> {
 
 const dotenv = loadDotEnv();
 
+// Build label: git short hash + date + optional tag from BUILD_TAG env or build-tag.txt
+function generateBuildLabel(): string {
+  let gitHash = 'unknown';
+  try { gitHash = execSync('git rev-parse --short=7 HEAD', { cwd: __dirname }).toString().trim(); } catch {}
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  // Read optional human-readable tag (e.g. "prime-video-autofill-fix")
+  let tag = process.env.BUILD_TAG || '';
+  if (!tag) {
+    try { tag = readFileSync(resolve(__dirname, 'build-tag.txt'), 'utf-8').trim(); } catch {}
+  }
+  // Format: 0.1.0-20260308-a1b2c3d (prime-video-autofill-fix)
+  const base = `0.1.0-${date}-${gitHash}`;
+  return tag ? `${base} (${tag})` : base;
+}
+
+const BUILD_LABEL = generateBuildLabel();
+
 export default defineConfig({
   plugins: [
     react(),
@@ -37,6 +55,7 @@ export default defineConfig({
           define: {
             '__STYTCH_PROJECT_ID__': JSON.stringify(dotenv.STYTCH_PROJECT_ID || ''),
             '__STYTCH_SECRET__': JSON.stringify(dotenv.STYTCH_SECRET || ''),
+            '__BUILD_LABEL__': JSON.stringify(BUILD_LABEL),
           },
           build: {
             outDir: resolve(__dirname, 'dist/main'),
@@ -108,6 +127,9 @@ export default defineConfig({
         family: resolve(__dirname, 'src/family/index.html'),
       },
     },
+  },
+  define: {
+    '__BUILD_LABEL__': JSON.stringify(BUILD_LABEL),
   },
   resolve: {
     alias: {
