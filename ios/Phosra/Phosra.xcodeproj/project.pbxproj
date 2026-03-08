@@ -1,0 +1,676 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		11BB8B9130BB7392D3E11777 /* ChildEntityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = C507FA13C44471B52167A434 /* ChildEntityQuery.swift */; };
+		1AB34F1D02302A27518BFF0F /* PolicyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733BE60B712CF62A3B29003F /* PolicyListView.swift */; };
+		1C20473880AA30E020B330A9 /* PhosraShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA1240F8849D601000BC5AC /* PhosraShortcuts.swift */; };
+		236DC804B95E5812C6A854E3 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F6F5E7025D09142A425258 /* RootView.swift */; };
+		2539401C4C59DCF9CAB346A7 /* ResumeInternetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE8E8CC5CCF40860463B8F7 /* ResumeInternetIntent.swift */; };
+		26B7628B5B835BC64BA5226B /* CheckScreenTimeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDCF1459FC902D183C8A6EC /* CheckScreenTimeIntent.swift */; };
+		2DAACC5BC8134C6E11A5CD99 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD670A9E3EA0ECDC7C8CA636 /* MainTabView.swift */; };
+		3001F19336A26B4BA44D9542 /* ExtendTimeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A676119C47A1E4D822081E36 /* ExtendTimeIntent.swift */; };
+		3174E5FC51BFF79722603881 /* CheckPoliciesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB62EE01907946FFC159440 /* CheckPoliciesIntent.swift */; };
+		3E2B88962C9D73E9ED815EF6 /* FamilyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BA8972AAE21A20EDA6BE28 /* FamilyView.swift */; };
+		3E9518D35E7B9A54F094604A /* FamilySummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8DBD80F26354AC397FA55A4 /* FamilySummaryView.swift */; };
+		4125BF7A3E1F871B6B63599C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DFCF003966CE8AA02A8250 /* AppDelegate.swift */; };
+		41D93151D4BC4C10DB440415 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B02095B7533F74779AFA21E2 /* Assets.xcassets */; };
+		4BA63BD95B0555E4861D87A8 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F591864D9809CF962994D7 /* KeychainManager.swift */; };
+		5185DEBB5972701C6CC1397B /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B4E81BA6FAC6C5DB677669 /* AnyCodable.swift */; };
+		5456806220E310328746C6AE /* AddChildConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62208CB19D456A0427BDEE5 /* AddChildConfirmationView.swift */; };
+		584B2450CCC27AF424F1823E /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD696DFEBE1D7A244574DD22 /* AuthManager.swift */; };
+		5C8F727BCFCFD1E8BAAE5C63 /* PauseInternetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914466F5C5796915BB6D14A2 /* PauseInternetIntent.swift */; };
+		5D334933F47C8986230522A7 /* PhosraBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58E74D4A9EBD1615886CF3E /* PhosraBrand.swift */; };
+		67A086657D04A98B8B37CFC2 /* PhosraWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 9F8D89F579D0054C2E97FF76 /* PhosraWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		70C4C94CA1CBFD65ED2D1B6B /* FamilyStatusWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6BF204FB91220EC91A724C6 /* FamilyStatusWidget.swift */; };
+		72D0BA63D069939B396FED33 /* CheckFamilyIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22DB4810E054DE034EEE7F2 /* CheckFamilyIntent.swift */; };
+		875BD729AA61C2EB60675714 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBCC3D4EC2306708D8DA447 /* LoginView.swift */; };
+		88C6D4FD0CC82067CBF625D1 /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B728DE6DD03DF84D7486CAD /* PushManager.swift */; };
+		955DEDB75F040A3A7D6FBBCC /* AddChildResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06DFABF4162514D7A78B977F /* AddChildResultView.swift */; };
+		99CC3241136E9CDCEAE7FEF2 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFC81FF245F7D6D8B201AA4 /* SettingsView.swift */; };
+		9AE40E7E37412F701A1C0419 /* PhosraWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E020B5BADE807B6FE0D5B9C /* PhosraWebView.swift */; };
+		9C1B4436C6F0A9C2F0249F6E /* TimePeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D56061306EE135A9466A471 /* TimePeriod.swift */; };
+		A1E4AAECCA029A304ED7C5B9 /* FamilyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5469948ADFF76E6F836FF /* FamilyEntity.swift */; };
+		A5D87E6EA940FA9E6D8DBFA1 /* PhosraAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F964650DD2A6E0838810BC9 /* PhosraAPIClient.swift */; };
+		B70D93F73AB10FE2344E50A7 /* StrictnessLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF86958EB77E8841453D0715 /* StrictnessLevel.swift */; };
+		B906743B6B836628268E9623 /* BlockAppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62D5102B874597ED3481609 /* BlockAppIntent.swift */; };
+		C443C597CD781D6B49A5796E /* PhosraWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DFB3E65A5CC2FF727B02798 /* PhosraWidgetBundle.swift */; };
+		D09F8BE969E84AF1FE50A697 /* ChildEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F25D3FEF026A1F71DA2173C /* ChildEntity.swift */; };
+		D6DFF14271A763A278124942 /* BedtimeRoutineIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927C3F8E3B22DB427D832107 /* BedtimeRoutineIntent.swift */; };
+		D9A2395FDEB77D5086FC34B4 /* QuickActionWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5937897D7489E869772B7E79 /* QuickActionWidget.swift */; };
+		DFA2367DF5A8D0C5018B735B /* AddChildIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A0298D56FE3ABD77360B3A /* AddChildIntent.swift */; };
+		E517E4796F9D697C7E2D6419 /* WidgetKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937A31462EAAE1A3AD18A97A /* WidgetKeychain.swift */; };
+		E78A6CDA30A4600E109A1B79 /* APIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A058A10E910F34F91F3EF8C9 /* APIModels.swift */; };
+		F651F1A09FB307474FE0E795 /* ScreenTimeSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB6ECB91CE2D084A4BC2884 /* ScreenTimeSummaryView.swift */; };
+		F7977839D0595A84C1D4FE58 /* SetBedtimeIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A84AB1CE384A7914B31F646 /* SetBedtimeIntent.swift */; };
+		FB01AFF347548AE0ECB37C1C /* PhosraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B149104D49ED6DBC4BED60E9 /* PhosraApp.swift */; };
+		FF51A0F57CED8806440BBC70 /* PhosraSnippetHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61DB8187DAF441E0EEC4D7A /* PhosraSnippetHeader.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		41C02888784AD0166A9E6376 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7B9861E0D5C8B5C8D8FF8C3C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D36C3AA7DF63BE3A7885CF7F;
+			remoteInfo = PhosraWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C4F0CD26AFD6D8AE1D5E79F7 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				67A086657D04A98B8B37CFC2 /* PhosraWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		06DFABF4162514D7A78B977F /* AddChildResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddChildResultView.swift; sourceTree = "<group>"; };
+		0C39EA86C9D5D60AF7C3F24A /* PhosraWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhosraWidgets.entitlements; sourceTree = "<group>"; };
+		1A01A7E938AD69D0C7BB64FE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1EDCF1459FC902D183C8A6EC /* CheckScreenTimeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckScreenTimeIntent.swift; sourceTree = "<group>"; };
+		2DE8E8CC5CCF40860463B8F7 /* ResumeInternetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResumeInternetIntent.swift; sourceTree = "<group>"; };
+		2DFB3E65A5CC2FF727B02798 /* PhosraWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhosraWidgetBundle.swift; sourceTree = "<group>"; };
+		34B4E81BA6FAC6C5DB677669 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
+		3F25D3FEF026A1F71DA2173C /* ChildEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildEntity.swift; sourceTree = "<group>"; };
+		40F6F5E7025D09142A425258 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		45BA8972AAE21A20EDA6BE28 /* FamilyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyView.swift; sourceTree = "<group>"; };
+		4D56061306EE135A9466A471 /* TimePeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePeriod.swift; sourceTree = "<group>"; };
+		5937897D7489E869772B7E79 /* QuickActionWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionWidget.swift; sourceTree = "<group>"; };
+		5E020B5BADE807B6FE0D5B9C /* PhosraWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhosraWebView.swift; sourceTree = "<group>"; };
+		5F964650DD2A6E0838810BC9 /* PhosraAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhosraAPIClient.swift; sourceTree = "<group>"; };
+		67BD8C4712CA522901AE893A /* Phosra.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Phosra.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A84AB1CE384A7914B31F646 /* SetBedtimeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetBedtimeIntent.swift; sourceTree = "<group>"; };
+		6B204385FC2C8AC7E38BF7D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6DA1240F8849D601000BC5AC /* PhosraShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhosraShortcuts.swift; sourceTree = "<group>"; };
+		733BE60B712CF62A3B29003F /* PolicyListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyListView.swift; sourceTree = "<group>"; };
+		77F591864D9809CF962994D7 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		89A0298D56FE3ABD77360B3A /* AddChildIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddChildIntent.swift; sourceTree = "<group>"; };
+		914466F5C5796915BB6D14A2 /* PauseInternetIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseInternetIntent.swift; sourceTree = "<group>"; };
+		927C3F8E3B22DB427D832107 /* BedtimeRoutineIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedtimeRoutineIntent.swift; sourceTree = "<group>"; };
+		937A31462EAAE1A3AD18A97A /* WidgetKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetKeychain.swift; sourceTree = "<group>"; };
+		9B728DE6DD03DF84D7486CAD /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
+		9DBCC3D4EC2306708D8DA447 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		9EFC81FF245F7D6D8B201AA4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		9F8D89F579D0054C2E97FF76 /* PhosraWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = PhosraWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A058A10E910F34F91F3EF8C9 /* APIModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModels.swift; sourceTree = "<group>"; };
+		A58E74D4A9EBD1615886CF3E /* PhosraBrand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhosraBrand.swift; sourceTree = "<group>"; };
+		A62208CB19D456A0427BDEE5 /* AddChildConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddChildConfirmationView.swift; sourceTree = "<group>"; };
+		A676119C47A1E4D822081E36 /* ExtendTimeIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtendTimeIntent.swift; sourceTree = "<group>"; };
+		AD670A9E3EA0ECDC7C8CA636 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		AFB6ECB91CE2D084A4BC2884 /* ScreenTimeSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTimeSummaryView.swift; sourceTree = "<group>"; };
+		B02095B7533F74779AFA21E2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B149104D49ED6DBC4BED60E9 /* PhosraApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhosraApp.swift; sourceTree = "<group>"; };
+		B22DB4810E054DE034EEE7F2 /* CheckFamilyIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckFamilyIntent.swift; sourceTree = "<group>"; };
+		BF86958EB77E8841453D0715 /* StrictnessLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrictnessLevel.swift; sourceTree = "<group>"; };
+		C507FA13C44471B52167A434 /* ChildEntityQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildEntityQuery.swift; sourceTree = "<group>"; };
+		C6BF204FB91220EC91A724C6 /* FamilyStatusWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyStatusWidget.swift; sourceTree = "<group>"; };
+		C80ECD957446928A2E24560F /* Phosra.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Phosra.entitlements; sourceTree = "<group>"; };
+		D61DB8187DAF441E0EEC4D7A /* PhosraSnippetHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhosraSnippetHeader.swift; sourceTree = "<group>"; };
+		D62D5102B874597ED3481609 /* BlockAppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockAppIntent.swift; sourceTree = "<group>"; };
+		E8DBD80F26354AC397FA55A4 /* FamilySummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilySummaryView.swift; sourceTree = "<group>"; };
+		ECF5469948ADFF76E6F836FF /* FamilyEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FamilyEntity.swift; sourceTree = "<group>"; };
+		EFB62EE01907946FFC159440 /* CheckPoliciesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckPoliciesIntent.swift; sourceTree = "<group>"; };
+		F1DFCF003966CE8AA02A8250 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FD696DFEBE1D7A244574DD22 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		03FADD3C9D412F1590D4C7B3 /* Brand */ = {
+			isa = PBXGroup;
+			children = (
+				A58E74D4A9EBD1615886CF3E /* PhosraBrand.swift */,
+			);
+			path = Brand;
+			sourceTree = "<group>";
+		};
+		067D8B7FCC401E421BC3E5F5 /* Push */ = {
+			isa = PBXGroup;
+			children = (
+				9B728DE6DD03DF84D7486CAD /* PushManager.swift */,
+			);
+			path = Push;
+			sourceTree = "<group>";
+		};
+		2569E9C7CCC5C3C3A207FD15 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				34B4E81BA6FAC6C5DB677669 /* AnyCodable.swift */,
+				A058A10E910F34F91F3EF8C9 /* APIModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		26775458F03056637ABCB59D = {
+			isa = PBXGroup;
+			children = (
+				7004196985C9101602015034 /* PhosraWidgets */,
+				5C9CBA70437740AB78778851 /* Sources */,
+				DE7273FF171EA5D34E86DBB9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		37C2100E250B799CEBD48F32 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				45BA8972AAE21A20EDA6BE28 /* FamilyView.swift */,
+				9DBCC3D4EC2306708D8DA447 /* LoginView.swift */,
+				AD670A9E3EA0ECDC7C8CA636 /* MainTabView.swift */,
+				5E020B5BADE807B6FE0D5B9C /* PhosraWebView.swift */,
+				9EFC81FF245F7D6D8B201AA4 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3E251A63769529B960ED866C /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F1DFCF003966CE8AA02A8250 /* AppDelegate.swift */,
+				B149104D49ED6DBC4BED60E9 /* PhosraApp.swift */,
+				40F6F5E7025D09142A425258 /* RootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		5C9CBA70437740AB78778851 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				B02095B7533F74779AFA21E2 /* Assets.xcassets */,
+				6B204385FC2C8AC7E38BF7D5 /* Info.plist */,
+				C80ECD957446928A2E24560F /* Phosra.entitlements */,
+				67FB68E33D61975040D06D86 /* API */,
+				3E251A63769529B960ED866C /* App */,
+				6D1D03380E57C3F36F07A92B /* Auth */,
+				03FADD3C9D412F1590D4C7B3 /* Brand */,
+				EF95E5C7A026F6220253F268 /* Intents */,
+				2569E9C7CCC5C3C3A207FD15 /* Models */,
+				067D8B7FCC401E421BC3E5F5 /* Push */,
+				37C2100E250B799CEBD48F32 /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		5FD81B37C1D12043536DED58 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				3F25D3FEF026A1F71DA2173C /* ChildEntity.swift */,
+				C507FA13C44471B52167A434 /* ChildEntityQuery.swift */,
+				ECF5469948ADFF76E6F836FF /* FamilyEntity.swift */,
+				BF86958EB77E8841453D0715 /* StrictnessLevel.swift */,
+				4D56061306EE135A9466A471 /* TimePeriod.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		67FB68E33D61975040D06D86 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				5F964650DD2A6E0838810BC9 /* PhosraAPIClient.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		6D1D03380E57C3F36F07A92B /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				FD696DFEBE1D7A244574DD22 /* AuthManager.swift */,
+				77F591864D9809CF962994D7 /* KeychainManager.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		7004196985C9101602015034 /* PhosraWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				C6BF204FB91220EC91A724C6 /* FamilyStatusWidget.swift */,
+				1A01A7E938AD69D0C7BB64FE /* Info.plist */,
+				2DFB3E65A5CC2FF727B02798 /* PhosraWidgetBundle.swift */,
+				0C39EA86C9D5D60AF7C3F24A /* PhosraWidgets.entitlements */,
+				5937897D7489E869772B7E79 /* QuickActionWidget.swift */,
+				937A31462EAAE1A3AD18A97A /* WidgetKeychain.swift */,
+			);
+			path = PhosraWidgets;
+			sourceTree = "<group>";
+		};
+		94F31165E3D9FA24062BAD7E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A62208CB19D456A0427BDEE5 /* AddChildConfirmationView.swift */,
+				06DFABF4162514D7A78B977F /* AddChildResultView.swift */,
+				E8DBD80F26354AC397FA55A4 /* FamilySummaryView.swift */,
+				D61DB8187DAF441E0EEC4D7A /* PhosraSnippetHeader.swift */,
+				733BE60B712CF62A3B29003F /* PolicyListView.swift */,
+				AFB6ECB91CE2D084A4BC2884 /* ScreenTimeSummaryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		DE7273FF171EA5D34E86DBB9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				67BD8C4712CA522901AE893A /* Phosra.app */,
+				9F8D89F579D0054C2E97FF76 /* PhosraWidgets.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EF95E5C7A026F6220253F268 /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				89A0298D56FE3ABD77360B3A /* AddChildIntent.swift */,
+				927C3F8E3B22DB427D832107 /* BedtimeRoutineIntent.swift */,
+				D62D5102B874597ED3481609 /* BlockAppIntent.swift */,
+				B22DB4810E054DE034EEE7F2 /* CheckFamilyIntent.swift */,
+				EFB62EE01907946FFC159440 /* CheckPoliciesIntent.swift */,
+				1EDCF1459FC902D183C8A6EC /* CheckScreenTimeIntent.swift */,
+				A676119C47A1E4D822081E36 /* ExtendTimeIntent.swift */,
+				914466F5C5796915BB6D14A2 /* PauseInternetIntent.swift */,
+				6DA1240F8849D601000BC5AC /* PhosraShortcuts.swift */,
+				2DE8E8CC5CCF40860463B8F7 /* ResumeInternetIntent.swift */,
+				6A84AB1CE384A7914B31F646 /* SetBedtimeIntent.swift */,
+				5FD81B37C1D12043536DED58 /* Entities */,
+				94F31165E3D9FA24062BAD7E /* Views */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1A4D0129F47006844E8F481C /* Phosra */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 85996D3AF54C67D474669389 /* Build configuration list for PBXNativeTarget "Phosra" */;
+			buildPhases = (
+				485DEEB21D00A40EC6F6A0FA /* Sources */,
+				013CA7FD856D186B3A8029AB /* Resources */,
+				C4F0CD26AFD6D8AE1D5E79F7 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A4CFD69E70ABE05289D63142 /* PBXTargetDependency */,
+			);
+			name = Phosra;
+			packageProductDependencies = (
+			);
+			productName = Phosra;
+			productReference = 67BD8C4712CA522901AE893A /* Phosra.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D36C3AA7DF63BE3A7885CF7F /* PhosraWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E39F7E1E10D7D2E0BBA6C04A /* Build configuration list for PBXNativeTarget "PhosraWidgets" */;
+			buildPhases = (
+				916364AC66A17B9283E20504 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PhosraWidgets;
+			packageProductDependencies = (
+			);
+			productName = PhosraWidgets;
+			productReference = 9F8D89F579D0054C2E97FF76 /* PhosraWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7B9861E0D5C8B5C8D8FF8C3C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					1A4D0129F47006844E8F481C = {
+						DevelopmentTeam = UANQHU972G;
+						ProvisioningStyle = Automatic;
+					};
+					D36C3AA7DF63BE3A7885CF7F = {
+						DevelopmentTeam = UANQHU972G;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = EAF2B5641C9FD6DCF2AE3B16 /* Build configuration list for PBXProject "Phosra" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 26775458F03056637ABCB59D;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = DE7273FF171EA5D34E86DBB9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1A4D0129F47006844E8F481C /* Phosra */,
+				D36C3AA7DF63BE3A7885CF7F /* PhosraWidgets */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		013CA7FD856D186B3A8029AB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41D93151D4BC4C10DB440415 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		485DEEB21D00A40EC6F6A0FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E78A6CDA30A4600E109A1B79 /* APIModels.swift in Sources */,
+				5456806220E310328746C6AE /* AddChildConfirmationView.swift in Sources */,
+				DFA2367DF5A8D0C5018B735B /* AddChildIntent.swift in Sources */,
+				955DEDB75F040A3A7D6FBBCC /* AddChildResultView.swift in Sources */,
+				5185DEBB5972701C6CC1397B /* AnyCodable.swift in Sources */,
+				4125BF7A3E1F871B6B63599C /* AppDelegate.swift in Sources */,
+				584B2450CCC27AF424F1823E /* AuthManager.swift in Sources */,
+				D6DFF14271A763A278124942 /* BedtimeRoutineIntent.swift in Sources */,
+				B906743B6B836628268E9623 /* BlockAppIntent.swift in Sources */,
+				72D0BA63D069939B396FED33 /* CheckFamilyIntent.swift in Sources */,
+				3174E5FC51BFF79722603881 /* CheckPoliciesIntent.swift in Sources */,
+				26B7628B5B835BC64BA5226B /* CheckScreenTimeIntent.swift in Sources */,
+				D09F8BE969E84AF1FE50A697 /* ChildEntity.swift in Sources */,
+				11BB8B9130BB7392D3E11777 /* ChildEntityQuery.swift in Sources */,
+				3001F19336A26B4BA44D9542 /* ExtendTimeIntent.swift in Sources */,
+				A1E4AAECCA029A304ED7C5B9 /* FamilyEntity.swift in Sources */,
+				3E9518D35E7B9A54F094604A /* FamilySummaryView.swift in Sources */,
+				3E2B88962C9D73E9ED815EF6 /* FamilyView.swift in Sources */,
+				4BA63BD95B0555E4861D87A8 /* KeychainManager.swift in Sources */,
+				875BD729AA61C2EB60675714 /* LoginView.swift in Sources */,
+				2DAACC5BC8134C6E11A5CD99 /* MainTabView.swift in Sources */,
+				5C8F727BCFCFD1E8BAAE5C63 /* PauseInternetIntent.swift in Sources */,
+				A5D87E6EA940FA9E6D8DBFA1 /* PhosraAPIClient.swift in Sources */,
+				FB01AFF347548AE0ECB37C1C /* PhosraApp.swift in Sources */,
+				5D334933F47C8986230522A7 /* PhosraBrand.swift in Sources */,
+				1C20473880AA30E020B330A9 /* PhosraShortcuts.swift in Sources */,
+				FF51A0F57CED8806440BBC70 /* PhosraSnippetHeader.swift in Sources */,
+				9AE40E7E37412F701A1C0419 /* PhosraWebView.swift in Sources */,
+				1AB34F1D02302A27518BFF0F /* PolicyListView.swift in Sources */,
+				88C6D4FD0CC82067CBF625D1 /* PushManager.swift in Sources */,
+				2539401C4C59DCF9CAB346A7 /* ResumeInternetIntent.swift in Sources */,
+				236DC804B95E5812C6A854E3 /* RootView.swift in Sources */,
+				F651F1A09FB307474FE0E795 /* ScreenTimeSummaryView.swift in Sources */,
+				F7977839D0595A84C1D4FE58 /* SetBedtimeIntent.swift in Sources */,
+				99CC3241136E9CDCEAE7FEF2 /* SettingsView.swift in Sources */,
+				B70D93F73AB10FE2344E50A7 /* StrictnessLevel.swift in Sources */,
+				9C1B4436C6F0A9C2F0249F6E /* TimePeriod.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		916364AC66A17B9283E20504 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70C4C94CA1CBFD65ED2D1B6B /* FamilyStatusWidget.swift in Sources */,
+				C443C597CD781D6B49A5796E /* PhosraWidgetBundle.swift in Sources */,
+				D9A2395FDEB77D5086FC34B4 /* QuickActionWidget.swift in Sources */,
+				E517E4796F9D697C7E2D6419 /* WidgetKeychain.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A4CFD69E70ABE05289D63142 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D36C3AA7DF63BE3A7885CF7F /* PhosraWidgets */;
+			targetProxy = 41C02888784AD0166A9E6376 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		205C3F02819E56A04E451C0F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = PhosraWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.phosra.app.dev.widgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2269894BA1D6A73E1E93FA10 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = UANQHU972G;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OUTPUT_FORMAT = XML;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		36A7F04FFA25ADEA342F9783 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = PhosraWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.phosra.app.dev.widgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3DC5AC396AE7CE63546C75BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.phosra.app.dev;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D867203B92DA9243EBFF6547 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.phosra.app.dev;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FCE7F909C7806ADD05AE134A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				APP_SHORTCUTS_ENABLE_FLEXIBLE_MATCHING = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = UANQHU972G;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OUTPUT_FORMAT = XML;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		85996D3AF54C67D474669389 /* Build configuration list for PBXNativeTarget "Phosra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DC5AC396AE7CE63546C75BC /* Debug */,
+				D867203B92DA9243EBFF6547 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E39F7E1E10D7D2E0BBA6C04A /* Build configuration list for PBXNativeTarget "PhosraWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36A7F04FFA25ADEA342F9783 /* Debug */,
+				205C3F02819E56A04E451C0F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EAF2B5641C9FD6DCF2AE3B16 /* Build configuration list for PBXProject "Phosra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2269894BA1D6A73E1E93FA10 /* Debug */,
+				FCE7F909C7806ADD05AE134A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7B9861E0D5C8B5C8D8FF8C3C /* Project object */;
+}

@@ -34,63 +34,103 @@ function LoginPage() {
   const [otpSent, setOtpSent] = useState(false)
 
   // Persist the "from" param so we know to deep-link back after auth
-  const fromBrowser = searchParams.get("from") === "phosra-browser"
+  const fromParam = searchParams.get("from")
+  const fromBrowser = fromParam === "phosra-browser"
+  const fromApp = fromParam === "phosra-app"
   useEffect(() => {
     if (fromBrowser) {
       sessionStorage.setItem("phosra-login-from", "phosra-browser")
+    } else if (fromApp) {
+      sessionStorage.setItem("phosra-login-from", "phosra-app")
     }
-  }, [fromBrowser])
+  }, [fromBrowser, fromApp])
 
-  // If user is already signed in, deep-link back to Phosra Browser or go to dashboard.
-  // Use useEffect because stytch.session.getTokens() may not be ready on the first render.
+  // If user is already signed in, build a deep-link URL or redirect to dashboard.
   const [redirecting, setRedirecting] = useState(false)
+  const [deepLinkURL, setDeepLinkURL] = useState<string | null>(null)
+
   useEffect(() => {
     if (!session) return
 
-    const wantsBrowser = fromBrowser || sessionStorage.getItem("phosra-login-from") === "phosra-browser"
+    const storedFrom = sessionStorage.getItem("phosra-login-from")
+    const wantsBrowser = fromBrowser || storedFrom === "phosra-browser"
+    const wantsApp = fromApp || storedFrom === "phosra-app"
 
-    if (wantsBrowser) {
-      // Try immediately, then retry after 500ms (Stytch SDK may need time to hydrate tokens)
-      const attemptDeepLink = () => {
+    if (wantsBrowser || wantsApp) {
+      const scheme = wantsApp ? "phosra-app" : "phosra-browser"
+
+      // Retry up to 5 times to get tokens, then show manual button
+      let attempt = 0
+      const maxAttempts = 5
+
+      const tryDeepLink = () => {
+        attempt++
         const tokens = stytch.session.getTokens()
         if (tokens?.session_token) {
           sessionStorage.removeItem("phosra-login-from")
-          setRedirecting(true)
           const params = new URLSearchParams({ session_token: tokens.session_token })
           if (email) params.set("email", email)
-          window.location.href = `phosra-browser://auth?${params.toString()}`
-          return true
+          const url = `${scheme}://auth?${params.toString()}`
+          setDeepLinkURL(url)
+          // Try automatic redirect — Safari may block this for custom schemes
+          window.location.href = url
+          return
         }
-        return false
+        if (attempt < maxAttempts) {
+          setTimeout(tryDeepLink, attempt * 500)
+        }
+        // If all attempts fail, deepLinkURL stays null and we show the login form
       }
 
-      if (!attemptDeepLink()) {
-        const timer = setTimeout(() => {
-          if (!attemptDeepLink()) {
-            // Give up after second attempt — redirect to dashboard
-            router.push("/dashboard")
-          }
-        }, 800)
-        return () => clearTimeout(timer)
-      }
+      tryDeepLink()
     } else {
       router.push("/dashboard")
     }
-  }, [session, fromBrowser, stytch, router, email])
+  }, [session, fromBrowser, fromApp, stytch, router, email])
 
-  if (redirecting || (session && !fromBrowser && sessionStorage.getItem("phosra-login-from") !== "phosra-browser")) {
+  // Show a "Return to Phosra" button when already logged in and deep-link is ready
+  const storedLoginFrom = typeof window !== "undefined" ? sessionStorage.getItem("phosra-login-from") : null
+  const wantsNativeApp = fromApp || storedLoginFrom === "phosra-app" || fromBrowser || storedLoginFrom === "phosra-browser"
+
+  if (session && wantsNativeApp) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8F8F8] px-8 gap-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Signed In</h1>
+          <p className="text-gray-500">Tap below to return to the Phosra app.</p>
+        </div>
+        {deepLinkURL ? (
+          <a
+            href={deepLinkURL}
+            className="w-full max-w-sm flex items-center justify-center gap-2 bg-black text-white font-semibold py-4 px-6 rounded-2xl text-lg"
+          >
+            Open Phosra App
+          </a>
+        ) : (
+          <div className="flex items-center gap-2 text-gray-400">
+            <Loader2 className="animate-spin w-5 h-5" />
+            <span>Preparing session...</span>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  if (redirecting || (session && !wantsNativeApp)) {
     return null
   }
 
-  const deepLinkOrRedirect = () => {
+  const deepLinkOrRedirect = (authSessionToken?: string) => {
     const storedFrom = sessionStorage.getItem("phosra-login-from")
-    if (storedFrom === "phosra-browser") {
-      sessionStorage.removeItem("phosra-login-from")
-      const tokens = stytch.session.getTokens()
-      if (tokens?.session_token) {
-        const params = new URLSearchParams({ session_token: tokens.session_token })
+    if (storedFrom === "phosra-browser" || storedFrom === "phosra-app") {
+      const scheme = storedFrom === "phosra-app" ? "phosra-app" : "phosra-browser"
+      // Use the token from the auth response first, fall back to SDK
+      const token = authSessionToken || stytch.session.getTokens()?.session_token
+      if (token) {
+        sessionStorage.removeItem("phosra-login-from")
+        const params = new URLSearchParams({ session_token: token })
         if (email) params.set("email", email)
-        window.location.href = `phosra-browser://auth?${params.toString()}`
+        window.location.href = `${scheme}://auth?${params.toString()}`
         return
       }
     }
@@ -103,20 +143,21 @@ function LoginPage() {
     setLoading(true)
 
     try {
+      let resp: any
       if (isSignUp) {
-        await stytch.passwords.create({
+        resp = await stytch.passwords.create({
           email,
           password,
           session_duration_minutes: 60 * 24 * 7,
         })
       } else {
-        await stytch.passwords.authenticate({
+        resp = await stytch.passwords.authenticate({
           email,
           password,
           session_duration_minutes: 60 * 24 * 7,
         })
       }
-      deepLinkOrRedirect()
+      deepLinkOrRedirect(resp?.session_token)
     } catch (err: any) {
       setError(
         err?.message || (isSignUp ? "Failed to create account" : "Invalid email or password")
@@ -150,10 +191,10 @@ function LoginPage() {
     setLoading(true)
 
     try {
-      await stytch.otps.authenticate(otpCode, otpMethodId, {
+      const otpResp = await stytch.otps.authenticate(otpCode, otpMethodId, {
         session_duration_minutes: 60 * 24 * 7,
       })
-      deepLinkOrRedirect()
+      deepLinkOrRedirect((otpResp as any)?.session_token)
     } catch (err: any) {
       setError(err?.message || "Invalid or expired code")
     } finally {

@@ -1,0 +1,12 @@
+{
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Models/APIModels.swift" : {
+    "abi-baseline-json" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra.abi.json",
+    "const-values" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary.swiftconstvalues",
+    "dependencies" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary.d",
+    "diagnostics" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary.dia",
+    "objc-header" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-Swift.h",
+    "swiftdoc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra.swiftdoc",
+    "swiftmodule" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra.swiftmodule",
+    "swiftsourceinfo" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra.swiftsourceinfo"
+  }
+}

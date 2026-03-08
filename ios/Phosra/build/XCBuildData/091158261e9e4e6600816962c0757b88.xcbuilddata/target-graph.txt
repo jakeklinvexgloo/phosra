@@ -1,0 +1,4 @@
+Target dependency graph (2 targets)
+Target 'Phosra' in project 'Phosra'
+➜ Explicit dependency on target 'PhosraWidgets' in project 'Phosra'
+Target 'PhosraWidgets' in project 'Phosra' (no dependencies)

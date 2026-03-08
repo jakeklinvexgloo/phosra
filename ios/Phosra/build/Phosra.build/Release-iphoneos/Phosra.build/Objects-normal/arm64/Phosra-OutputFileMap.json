@@ -1,0 +1,186 @@
+{
+  "" : {
+    "const-values" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary.swiftconstvalues",
+    "dependencies" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary.d",
+    "diagnostics" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary.dia",
+    "emit-module-dependencies" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary-emit-module.dia",
+    "pch" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/Phosra-primary.swiftdeps"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/API/PhosraAPIClient.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraAPIClient.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraAPIClient.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraAPIClient.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/App/AppDelegate.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AppDelegate.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AppDelegate.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AppDelegate.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/App/PhosraApp.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraApp.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraApp.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraApp.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/App/RootView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/RootView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/RootView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/RootView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Auth/AuthManager.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AuthManager.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AuthManager.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AuthManager.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Auth/KeychainManager.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/KeychainManager.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/KeychainManager.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/KeychainManager.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/AddChildIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/BedtimeRoutineIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/BedtimeRoutineIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/BedtimeRoutineIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/BedtimeRoutineIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/BlockAppIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/BlockAppIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/BlockAppIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/BlockAppIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/CheckFamilyIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckFamilyIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckFamilyIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckFamilyIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/CheckPoliciesIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckPoliciesIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckPoliciesIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckPoliciesIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/CheckScreenTimeIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckScreenTimeIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckScreenTimeIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/CheckScreenTimeIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Entities/ChildEntity.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ChildEntity.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ChildEntity.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ChildEntity.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Entities/ChildEntityQuery.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ChildEntityQuery.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ChildEntityQuery.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ChildEntityQuery.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Entities/FamilyEntity.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilyEntity.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilyEntity.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilyEntity.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Entities/StrictnessLevel.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/StrictnessLevel.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/StrictnessLevel.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/StrictnessLevel.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Entities/TimePeriod.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/TimePeriod.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/TimePeriod.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/TimePeriod.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/ExtendTimeIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ExtendTimeIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ExtendTimeIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ExtendTimeIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/PauseInternetIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PauseInternetIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PauseInternetIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PauseInternetIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/PhosraShortcuts.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraShortcuts.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraShortcuts.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraShortcuts.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/ResumeInternetIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ResumeInternetIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ResumeInternetIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ResumeInternetIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/SetBedtimeIntent.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/SetBedtimeIntent.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/SetBedtimeIntent.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/SetBedtimeIntent.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Views/AddChildConfirmationView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildConfirmationView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildConfirmationView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildConfirmationView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Views/AddChildResultView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildResultView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildResultView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AddChildResultView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Views/FamilySummaryView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilySummaryView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilySummaryView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilySummaryView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Views/PolicyListView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PolicyListView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PolicyListView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PolicyListView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Intents/Views/ScreenTimeSummaryView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ScreenTimeSummaryView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ScreenTimeSummaryView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/ScreenTimeSummaryView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Models/APIModels.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/APIModels.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/APIModels.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/APIModels.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Models/AnyCodable.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AnyCodable.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AnyCodable.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/AnyCodable.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Push/PushManager.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PushManager.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PushManager.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PushManager.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Views/FamilyView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilyView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilyView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/FamilyView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Views/LoginView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/LoginView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/LoginView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/LoginView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Views/MainTabView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/MainTabView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/MainTabView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/MainTabView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Views/PhosraWebView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraWebView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraWebView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/PhosraWebView.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/Sources/Views/SettingsView.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/SettingsView.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/SettingsView.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/Phosra.build/Objects-normal/arm64/SettingsView.o"
+  }
+}

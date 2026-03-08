@@ -1,0 +1,31 @@
+{
+  "" : {
+    "const-values" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgets-primary.swiftconstvalues",
+    "dependencies" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgets-primary.d",
+    "diagnostics" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgets-primary.dia",
+    "emit-module-dependencies" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgets-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgets-primary-emit-module.dia",
+    "pch" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgets-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgets-primary.swiftdeps"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/PhosraWidgets/FamilyStatusWidget.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/FamilyStatusWidget.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/FamilyStatusWidget.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/FamilyStatusWidget.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/PhosraWidgets/PhosraWidgetBundle.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgetBundle.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgetBundle.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/PhosraWidgetBundle.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/PhosraWidgets/QuickActionWidget.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/QuickActionWidget.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/QuickActionWidget.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/QuickActionWidget.o"
+  },
+  "/Users/jakeklinvex/phosra/ios/Phosra/PhosraWidgets/WidgetKeychain.swift" : {
+    "index-unit-output-path" : "/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/WidgetKeychain.o",
+    "llvm-bc" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/WidgetKeychain.bc",
+    "object" : "/Users/jakeklinvex/phosra/ios/Phosra/build/Phosra.build/Release-iphoneos/PhosraWidgets.build/Objects-normal/arm64/WidgetKeychain.o"
+  }
+}

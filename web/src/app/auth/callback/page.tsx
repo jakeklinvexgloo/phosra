@@ -32,27 +32,30 @@ function CallbackHandler() {
 
     const authenticate = async () => {
       try {
+        let authResp: any
         if (tokenType === "oauth") {
-          await stytch.oauth.authenticate(token, {
+          authResp = await stytch.oauth.authenticate(token, {
             session_duration_minutes: 60 * 24 * 7,
           })
         } else if (tokenType === "magic_links") {
-          await stytch.magicLinks.authenticate(token, {
+          authResp = await stytch.magicLinks.authenticate(token, {
             session_duration_minutes: 60 * 24 * 7,
           })
         } else {
-          await stytch.oauth.authenticate(token, {
+          authResp = await stytch.oauth.authenticate(token, {
             session_duration_minutes: 60 * 24 * 7,
           })
         }
-        // If launched from Phosra Browser, deep-link the session token back
+        // If launched from Phosra Browser or App, deep-link the session token back
         const storedFrom = typeof window !== "undefined" ? sessionStorage.getItem("phosra-login-from") : null
-        if (storedFrom === "phosra-browser") {
+        if (storedFrom === "phosra-browser" || storedFrom === "phosra-app") {
+          const scheme = storedFrom === "phosra-app" ? "phosra-app" : "phosra-browser"
           sessionStorage.removeItem("phosra-login-from")
-          const tokens = stytch.session.getTokens()
-          if (tokens?.session_token) {
-            const params = new URLSearchParams({ session_token: tokens.session_token })
-            window.location.href = `phosra-browser://auth?${params.toString()}`
+          // Use the token from the auth response first, fall back to SDK
+          const sessionToken = authResp?.session_token || stytch.session.getTokens()?.session_token
+          if (sessionToken) {
+            const params = new URLSearchParams({ session_token: sessionToken })
+            window.location.href = `${scheme}://auth?${params.toString()}`
             return
           }
         }
