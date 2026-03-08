@@ -1,0 +1,114 @@
+{
+  "platform": "max",
+  "platform_name": "Max (HBO Max)",
+  "research_date": "2026-03-01",
+
+  "max_to_phosra": {
+    "Little Kids": "all_ages",
+    "Big Kids": "ages_7_plus",
+    "Pre-teens": "ages_10_plus",
+    "Teens": "ages_13_plus",
+    "All Ratings (Adult default)": "adults_only"
+  },
+
+  "phosra_to_max": {
+    "all_ages": "Little Kids",
+    "ages_7_plus": "Big Kids",
+    "ages_10_plus": "Pre-teens",
+    "ages_13_plus": "Teens",
+    "adults_only": "All Ratings (Adult default)"
+  },
+
+  "max_tiers": {
+    "Little Kids": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": [],
+      "tv_ratings": ["TV-Y"],
+      "description": "Content designed for the youngest viewers. Simple animated stories, educational programming. Sesame Street, preschool content.",
+      "age_range": "2-6",
+      "is_kids_profile": true
+    },
+    "Big Kids": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y7", "TV-Y7-FV", "TV-G"],
+      "description": "May include mild fantasy or comedic violence. Little or no strong language or sexual content. Cartoon Network originals, Looney Tunes, animated features.",
+      "age_range": "6-9",
+      "is_kids_profile": true
+    },
+    "Pre-teens": {
+      "phosra_tier": "ages_10_plus",
+      "mpaa_ratings": ["G", "PG"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"],
+      "description": "May contain mild language, suggestive dialogue, sexual situations, and/or moderate violence. Default setting for new Kids profiles.",
+      "age_range": "9-12",
+      "is_kids_profile": true
+    },
+    "Teens": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14"],
+      "description": "May contain coarse language, suggestive dialogue, sexual situations, and/or intense violence. Highest Kids tier -- still excludes R, NC-17, and TV-MA.",
+      "age_range": "13-17",
+      "is_kids_profile": true
+    },
+    "All Ratings (Adult default)": {
+      "phosra_tier": "adults_only",
+      "mpaa_ratings": ["G", "PG", "PG-13", "R", "NC-17", "NR"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "No content restrictions. All content visible including HBO Originals with mature themes (Game of Thrones, Euphoria, Succession, The Last of Us, True Detective). Includes unrated content.",
+      "age_range": "18+",
+      "is_kids_profile": false
+    }
+  },
+
+  "content_descriptors": {
+    "supported": [
+      "violence",
+      "language",
+      "sexual content",
+      "nudity",
+      "substances",
+      "mature themes",
+      "fantasy violence",
+      "crude humor",
+      "suggestive dialogue"
+    ],
+    "notes": "Max displays content descriptors on title detail pages but does not allow independent filtering by individual descriptors. Filtering is exclusively tier-based (Little Kids through All Ratings). HBO Originals are known for heavy use of violence, nudity, and language descriptors. TV series display the highest episode rating in the series. No per-title blocking is available."
+  },
+
+  "rating_systems_coverage": {
+    "MPAA": {
+      "supported": true,
+      "ratings": ["G", "PG", "PG-13", "R", "NC-17", "NR"],
+      "notes": "Full MPAA coverage for films. NR (Not Rated) content treated as All Ratings tier by default."
+    },
+    "TV_Parental_Guidelines": {
+      "supported": true,
+      "ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "notes": "Full TV rating coverage for series. HBO Originals are predominantly TV-MA. Series show the highest episode rating."
+    },
+    "ESRB": {
+      "supported": false,
+      "notes": "Not applicable. Max has no gaming component."
+    },
+    "PEGI": {
+      "supported": false,
+      "notes": "Not applicable to Max content."
+    },
+    "Common_Sense_Media": {
+      "supported": false,
+      "notes": "Common Sense Media provides independent age ratings for Max content but these are not integrated into Max's own rating/filtering system. Max does not display CSM ratings."
+    }
+  },
+
+  "platform_specific_notes": {
+    "kid_proof_exit": "Max offers a 'Kid-Proof Exit' feature that requires the 4-digit Parent Code to leave a Kids profile. This prevents children from switching to adult profiles to access HBO content like Game of Thrones or Euphoria.",
+    "parent_code_vs_profile_pin": "Max has TWO distinct PIN systems: (1) Parent Code -- account-wide, used for Kid-Proof Exit and Kids profile management; (2) Profile PIN -- per-Adult-profile, used to lock individual Adult profiles from unauthorized access.",
+    "content_mix_concern": "Max's content library spans from Sesame Street and Cartoon Network to Game of Thrones and Euphoria. This extreme range makes robust parental controls critical. The Kids profile experience is well-separated from adult content.",
+    "default_rating": "New Kids profiles default to the Pre-teens rating level (TV-PG/PG). Parents must actively lower this to Little Kids or Big Kids for younger children.",
+    "kids_content_exodus_2025": "Warner Bros. Discovery is actively reducing kids content. Dozens of Cartoon Network shows removed in 2025. HBO Family channel shut down August 2025. Only 11 Cartoon Network shows remain. Sesame Street licensed through 2027 but new episodes deal not renewed.",
+    "rebrand_instability": "Platform has undergone HBO Max -> Max (May 2023) -> HBO Max (July 2025) rebranding. Each cycle changes URLs, UI structure, and potentially API endpoints.",
+    "no_per_title_blocking": "Unlike Netflix, Max does NOT offer per-title blocking. Content filtering is exclusively tier-based."
+  }
+}

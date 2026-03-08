@@ -6,17 +6,19 @@ import "time"
 
 // GmailMessage represents a single Gmail message.
 type GmailMessage struct {
-	ID            string   `json:"id"`
-	ThreadID      string   `json:"thread_id"`
-	From          string   `json:"from"`
-	To            []string `json:"to"`
-	Subject       string   `json:"subject"`
-	Snippet       string   `json:"snippet"`
-	BodyHTML      string   `json:"body_html,omitempty"`
-	BodyText      string   `json:"body_text,omitempty"`
-	Date          string   `json:"date"`
-	LabelIDs      []string `json:"labels"`
-	HasAttachments bool    `json:"has_attachments"`
+	ID             string   `json:"id"`
+	ThreadID       string   `json:"thread_id"`
+	From           string   `json:"from"`
+	To             []string `json:"to"`
+	Cc             []string `json:"cc,omitempty"`
+	Subject        string   `json:"subject"`
+	Snippet        string   `json:"snippet"`
+	BodyHTML       string   `json:"body_html,omitempty"`
+	BodyText       string   `json:"body_text,omitempty"`
+	Date           string   `json:"date"`
+	InternalDate   string   `json:"internal_date,omitempty"`
+	LabelIDs       []string `json:"labels"`
+	HasAttachments bool     `json:"has_attachments"`
 }
 
 // GmailListResponse wraps a page of Gmail messages.

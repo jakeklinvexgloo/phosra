@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "phosra-browser": {
+      "command": "node",
+      "args": ["browser/dist/mcp/transport.js"],
+      "env": {
+        "PHOSRA_CDP_PORT": "9222"
+      }
+    }
+  }
+}

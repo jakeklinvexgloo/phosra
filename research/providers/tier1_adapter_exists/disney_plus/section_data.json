@@ -1,0 +1,260 @@
+{
+  "profileStructure": {
+    "accountLabel": "Disney+ Account",
+    "accountDescription": "Premium Subscription",
+    "accountMeta": "Max 7 profiles \u00b7 4 simultaneous streams",
+    "accountBorderColor": "#0063E5",
+    "accountLabelColor": "#60a5fa",
+    "hierarchyDescription": "Disney+ Account \u2192 Profiles \u2192 Settings hierarchy",
+    "profiles": [
+      { "name": "Parent", "maturity": "18+ (TV-MA)", "type": "standard", "pinEnabled": true },
+      { "name": "Teen", "maturity": "14+ (TV-14)", "type": "standard", "pinEnabled": false },
+      { "name": "Older Kid", "maturity": "9+ (TV-PG)", "type": "standard", "pinEnabled": false },
+      { "name": "Young Kid", "maturity": "Junior Mode", "type": "kids", "pinEnabled": false },
+      { "name": "Toddler", "maturity": "Junior Mode", "type": "kids", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Display Name", "configurable": true },
+      { "setting": "Avatar Image", "configurable": true },
+      { "setting": "Language Preference", "configurable": true },
+      { "setting": "Content Rating Level", "configurable": true },
+      { "setting": "Junior Mode", "configurable": true },
+      { "setting": "Kid-Proof Exit", "configurable": true },
+      { "setting": "Autoplay Next Episode", "configurable": true },
+      { "setting": "Autoplay Previews (Background Video)", "configurable": true },
+      { "setting": "Profile PIN (4-digit)", "configurable": true },
+      { "setting": "Restrict Profile Creation", "configurable": true }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Disney+ Basic (With Ads)", "streams": "2", "resolution": "1080p" },
+      { "plan": "Disney+ Premium (No Ads)", "streams": "4", "resolution": "4K UHD + Dolby Vision + Dolby Atmos" },
+      { "plan": "Disney Bundle Duo Basic (Disney+ & Hulu, With Ads)", "streams": "2", "resolution": "1080p" },
+      { "plan": "Disney Bundle Duo Premium (Disney+ & Hulu, No Ads)", "streams": "4", "resolution": "4K UHD" },
+      { "plan": "Disney Bundle Trio Basic (Disney+, Hulu, ESPN+, With Ads)", "streams": "2", "resolution": "1080p" },
+      { "plan": "Disney Bundle Trio Premium (Disney+, Hulu, ESPN+, No Ads)", "streams": "4", "resolution": "4K UHD" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "BAMTech private REST/GraphQL API, OAuth device grant flow, and bamgrid.com infrastructure",
+    "apiArchitecture": {
+      "title": "BAMTech Private API (REST + GraphQL)",
+      "description": "Disney+ is built on BAMTech (Disney Streaming) infrastructure, originally spun off from MLB Advanced Media. The primary API uses a combination of REST endpoints and GraphQL served from disney.api.edge.bamgrid.com. Authentication flows through a device registration system at global.edge.bamgrid.com, which issues OAuth 2.0 Bearer tokens used for all subsequent requests. Two independent community reverse-engineering projects (jonbarrow/disneyplus-client in Node.js, pam-param-pam/Disney-Plus-api-wrapper in Python) have successfully implemented authentication, profile listing, and content metadata retrieval against these private endpoints.",
+      "codeExample": {
+        "comment": "// BAMTech OAuth device grant flow",
+        "method": "POST",
+        "endpoint": "https://global.edge.bamgrid.com/token",
+        "exampleComment": "// Step 1: Device grant, Step 2: Token exchange, Step 3: Login with credentials",
+        "exampleCode": "{ \"grant_type\": \"urn:ietf:params:oauth:grant-type:token-exchange\", \"subject_token\": \"<device_grant_token>\", \"subject_token_type\": \"urn:bamtech:params:oauth:token-type:device\" }"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "https://global.edge.bamgrid.com/devices", "purpose": "Device registration and SDK configuration", "auth": "API Key (x-bamsdk-client-id)" },
+      { "endpoint": "https://global.edge.bamgrid.com/token", "purpose": "OAuth token exchange (device grant, login, refresh)", "auth": "Device Token + Credentials" },
+      { "endpoint": "https://disney.api.edge.bamgrid.com/v1/public/graphql", "purpose": "Primary GraphQL gateway for profile, content, and account operations", "auth": "Bearer Access Token (JWT)" },
+      { "endpoint": "https://search-api-disney.bamgrid.com/svc/search/v2/graphql", "purpose": "Content search and discovery", "auth": "Bearer Access Token" },
+      { "endpoint": "https://disney.content.edge.bamgrid.com/svc/content/*/version/*", "purpose": "Content metadata and catalog data", "auth": "Bearer Access Token" },
+      { "endpoint": "https://bam-sdk-configs.bamgrid.com/bam-sdk/v5.0/*/browser/versionBundle.json", "purpose": "SDK configuration and version bundles", "auth": "None (public)" }
+    ],
+    "authDetails": [
+      { "label": "Primary Auth", "value": "Bearer Access Token (JWT)", "description": "JWT access token obtained via device grant flow at global.edge.bamgrid.com/token. Short-lived (~30 min TTL) with refresh token rotation." },
+      { "label": "Device Registration", "value": "Device Assertion Token", "description": "Device must be registered via /devices endpoint before token exchange. Returns device assertion used in OAuth flow." },
+      { "label": "API Key", "value": "x-bamsdk-client-id", "description": "Client-specific API key embedded in the web application bundle. Required for initial device registration." },
+      { "label": "Profile Context", "value": "activeProfileId in query variables", "description": "GraphQL queries scoped to active profile via profile ID parameter in query variables." },
+      { "label": "Refresh Token", "value": "OAuth 2.0 Refresh Token", "description": "Long-lived refresh token used to obtain new access tokens without re-authentication. Stored by community clients for session persistence." }
+    ],
+    "rateLimitNotes": [
+      "JWT access tokens have short TTL (~30 minutes) requiring frequent refresh via refresh token",
+      "BAMTech infrastructure uses AWS-based WAF and CDN edge protection via Akamai",
+      "Device fingerprinting via SDK configuration and device assertion tokens",
+      "Paid sharing crackdown monitors device links and IP addresses for household enforcement",
+      "No explicit rate limiting documented, but aggressive token rotation acts as implicit throttle",
+      "Two independent community API clients have operated without reported blocking",
+      "Disney has historically enforced ToS against scraping services (e.g., Disney Dining reservation scrapers)"
+    ],
+    "harCaptureCount": "GraphQL gateway consolidates most operations into single endpoint; 6 key endpoint categories identified"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Disney Terms of Use \u2014 Section 2.B.x Automated Access Prohibition",
+      "description": "Disney Terms of Use Section 2.B.x explicitly prohibits accessing, monitoring, or copying Disney Products using robots, spiders, scripts, or other automated means. Section 2.B.v prohibits reverse engineering. Disney paid a $10M COPPA settlement in December 2025, indicating heightened regulatory sensitivity. Paid sharing crackdown infrastructure actively monitors for out-of-household access. Account suspension or termination is possible if automation is detected."
+    },
+    "overallRisk": {
+      "level": "Medium-High",
+      "description": "BAMTech infrastructure uses AWS WAF protections. Paid sharing crackdown adds IP-based detection. COPPA settlement creates heightened sensitivity to child data access. Disney has enforcement precedent against scrapers."
+    },
+    "detectionVectors": [
+      { "vector": "Device assertion validation", "risk": "Medium", "mitigation": "Register a persistent device assertion and reuse across sessions to avoid new-device triggers" },
+      { "vector": "JWT token anomalies", "risk": "Low", "mitigation": "Follow standard refresh token rotation flow; do not reuse expired tokens" },
+      { "vector": "Headless browser detection", "risk": "Medium", "mitigation": "Use Playwright stealth plugin for all browser-automated write operations" },
+      { "vector": "Request pattern analysis", "risk": "Low", "mitigation": "Add human-like delays (3-8s) between operations; avoid rapid sequential mutations" },
+      { "vector": "Household/IP monitoring (paid sharing)", "risk": "High", "mitigation": "Server-based access from non-household IPs may trigger sharing verification. Consider residential proxy or browser extension approach." },
+      { "vector": "GraphQL query fingerprinting", "risk": "Low", "mitigation": "Mirror exact query structures from production web client; avoid custom queries" }
+    ],
+    "mitigationsChecklist": [
+      "Register persistent device assertion and cache across sessions",
+      "Implement proper JWT refresh token rotation with standard timing",
+      "Use Playwright stealth mode for all browser-automated write operations",
+      "Cache API read responses to minimize request frequency",
+      "Add human-like random delays (3-8s) between navigation and mutation steps",
+      "Mirror exact API request structures from the production web/mobile client",
+      "Monitor for authentication failures and implement exponential backoff",
+      "Batch parental control changes into single authenticated sessions",
+      "Mitigate household detection by minimizing server-side access frequency"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Disney+",
+    "stats": [
+      { "label": "Native", "value": 7, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 4, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 9, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 25, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Screen Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Disney+ Gap",
+        "gap": "Disney+ has ZERO native screen time limits. No way for parents to restrict daily or weekly viewing hours within the app.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra monitors viewing activity via API polling. When the daily limit is reached, the child's profile is locked by setting a Phosra-managed PIN via Playwright automation."
+      },
+      {
+        "icon": "Bell",
+        "title": "Activity Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Disney+ Gap",
+        "gap": "Disney+ sends no real-time alerts to parents. Parents must manually switch to the child's profile and browse Continue Watching to see what was viewed.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra polls Continue Watching data and pushes real-time notifications to parents when new content appears or viewing patterns change."
+      },
+      {
+        "icon": "Moon",
+        "title": "Bedtime Mode",
+        "ruleCategory": "bedtime_schedule",
+        "gapLabel": "Disney+ Gap",
+        "gap": "Disney+ has no scheduling or time-of-day restrictions. Children can watch content at any hour without limits.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra locks and unlocks profiles on a parent-defined schedule via cron-triggered Playwright automation. Profile PIN is toggled to enforce bedtime windows."
+      },
+      {
+        "icon": "BarChart",
+        "title": "Usage Reports",
+        "ruleCategory": "screen_time_report",
+        "gapLabel": "Disney+ Gap",
+        "gap": "Disney+ provides no parental dashboard or usage analytics. Continue Watching exists but has no duration data, no timestamps, no aggregation, and no export capability.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra aggregates Continue Watching data into weekly/monthly reports with activity estimates and content breakdowns delivered to parents."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Read Layer", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Write Layer", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Session Manager", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Screen Time Enforcer", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "Disney+ email", "purpose": "Login", "sensitivity": "High", "encryption": "AES-256", "retention": "Until disconnected" },
+      { "name": "Disney+ password", "purpose": "Login + settings password gate", "sensitivity": "Critical", "encryption": "AES-256 + per-user key", "retention": "Until disconnected" },
+      { "name": "Access token (JWT)", "purpose": "API reads + profile operations", "sensitivity": "High", "encryption": "AES-256", "retention": "~30 min (auto-refresh)" },
+      { "name": "Refresh token", "purpose": "Token rotation without re-login", "sensitivity": "High", "encryption": "AES-256", "retention": "Until revoked or disconnected" },
+      { "name": "Device assertion", "purpose": "Device identity for OAuth flow", "sensitivity": "Medium", "encryption": "AES-256", "retention": "Persistent across sessions" },
+      { "name": "Profile IDs", "purpose": "Child profile mapping", "sensitivity": "Low", "encryption": "Standard", "retention": "Until disconnected" },
+      { "name": "Phosra-managed PINs", "purpose": "Screen time lock/unlock", "sensitivity": "Medium", "encryption": "AES-256 + vault", "retention": "Active enforcement only" }
+    ],
+    "platformBgColor": "rgba(0,99,229,0.05)",
+    "platformIconLetter": "D+",
+    "platformIconBg": "#0063E5",
+    "apiDescription": "BAMTech Private API (reads) + Playwright (writes)",
+    "adapterName": "Disney+ Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track viewing activity",
+        "detail": "Poll Continue Watching data every 30 min via BAMTech API using cached JWT access tokens with automatic refresh",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "detect",
+        "icon": "Gauge",
+        "title": "Detect",
+        "description": "Estimate activity against daily limit",
+        "detail": "Detect new titles appearing in Continue Watching and estimate activity level vs parent-set limit (note: no duration data available from Disney+)",
+        "color": "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
+        "dotColor": "bg-amber-500",
+        "headerBg": "bg-amber-500/10"
+      },
+      {
+        "id": "lock",
+        "icon": "Lock",
+        "title": "Lock",
+        "description": "Restrict profile access",
+        "detail": "Set a Phosra-managed PIN on the child's profile via Playwright automation, requiring account password for changes",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent",
+        "detail": "Push real-time notification to parent via Phosra app with activity summary and lock confirmation",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Timer",
+        "title": "~30 min polling delay",
+        "description": "Viewing activity is polled, not streamed in real-time. Children may overshoot the limit by up to 30 minutes before the profile is locked."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No public Disney+ API",
+        "description": "All write operations require Playwright browser automation. JWT access tokens expire every ~30 minutes and must be refreshed via the OAuth flow."
+      },
+      {
+        "icon": "Lock",
+        "title": "Account password required for PIN changes",
+        "description": "Disney+ requires the account password (not just a PIN) to add or modify a profile PIN, adding complexity to automated lock/unlock cycles but providing no MFA challenge."
+      },
+      {
+        "icon": "Wifi",
+        "title": "Household detection risk",
+        "description": "Disney+ paid sharing crackdown monitors IP addresses. Phosra server access from non-household IPs may trigger sharing verification prompts."
+      }
+    ],
+    "loopLabel": "Repeats daily until parent adjusts limits"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "authenticate", "approach": "Private API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Use BAMTech device grant flow: register device, exchange credentials for JWT. Cache refresh token for session persistence." },
+      { "name": "listProfiles", "approach": "Private API", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Query account profiles via API. Returns profile IDs, names, maturity settings, and Junior Mode status." },
+      { "name": "getProfileSettings", "approach": "Private API + Playwright", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low-Medium", "risk": "Low", "recommendation": "API for basic metadata (rating, Junior Mode, PIN status). Playwright scrape for full settings (autoplay, Kid-Proof Exit)." },
+      { "name": "setContentRestrictions", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Playwright to navigate profile edit UI and adjust content rating. Requires account password. Simpler than Netflix MFA." },
+      { "name": "setTitleRestrictions", "approach": "Not Supported", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "N/A", "risk": "N/A", "recommendation": "Disney+ does not offer per-title blocking. Return UnsupportedOperationError." },
+      { "name": "setProfilePIN", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Playwright to set/change profile PIN. Requires account password. Primary mechanism for screen time enforcement." },
+      { "name": "getWatchHistory", "approach": "Private API + Playwright", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Medium", "risk": "Low", "recommendation": "API + Playwright scrape of Continue Watching. No duration data. Significantly less data than Netflix." },
+      { "name": "lockProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Set Phosra-managed PIN on child profile via Playwright. Requires account password. Primary screen time enforcement." },
+      { "name": "createKidsProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low", "recommendation": "Playwright to create profile with Junior Mode enabled. Verify profile count (max 7). May require account password if profile creation is restricted." },
+      { "name": "supportsNativeScreenTime", "approach": "Static", "approachColor": "bg-muted text-muted-foreground", "complexity": "None", "risk": "None", "recommendation": "Returns false. Disney+ has zero native screen time features." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Foundation", "components": "Session Manager (2-3d), Read Layer via API (1-2d)", "minDays": 3, "maxDays": 5, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "Write Layer via Playwright (3-4d), Household Mitigation (1-2d), Testing (2-3d)", "minDays": 6, "maxDays": 9, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Intelligence", "components": "Screen Time Enforcer (2-3d)", "minDays": 2, "maxDays": 3, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "11-17 days",
+    "maxTotal": 17
+  }
+}

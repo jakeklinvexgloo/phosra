@@ -49,11 +49,14 @@ const (
 
 // FamilyMember links a user to a family with a role.
 type FamilyMember struct {
-	ID       uuid.UUID  `json:"id"`
-	FamilyID uuid.UUID  `json:"family_id"`
-	UserID   uuid.UUID  `json:"user_id"`
-	Role     FamilyRole `json:"role"`
-	JoinedAt time.Time  `json:"joined_at"`
+	ID          uuid.UUID  `json:"id"`
+	FamilyID    uuid.UUID  `json:"family_id"`
+	UserID      uuid.UUID  `json:"user_id"`
+	Role        FamilyRole `json:"role"`
+	JoinedAt    time.Time  `json:"joined_at"`
+	Email       string     `json:"email,omitempty"`
+	Name        string     `json:"name,omitempty"`
+	DisplayName string     `json:"display_name,omitempty"`
 }
 
 // Child represents a child within a family.
@@ -571,4 +574,15 @@ type DeviceReport struct {
 	Payload    json.RawMessage `json:"payload"`
 	ReportedAt time.Time       `json:"reported_at"`
 	CreatedAt  time.Time       `json:"created_at"`
+}
+
+// ConfigAgentState persists a config agent wizard's in-progress state
+// so the user can resume across app restarts.
+type ConfigAgentState struct {
+	ID        uuid.UUID       `json:"id"`
+	UserID    uuid.UUID       `json:"user_id"`
+	Platform  string          `json:"platform"`
+	State     json.RawMessage `json:"state"`
+	CreatedAt time.Time       `json:"created_at"`
+	UpdatedAt time.Time       `json:"updated_at"`
 }

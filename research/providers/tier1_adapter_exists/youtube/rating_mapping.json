@@ -1,0 +1,185 @@
+{
+  "platform": "youtube",
+  "platform_name": "YouTube / YouTube Kids",
+  "research_date": "2026-03-01",
+
+  "youtube_to_phosra": {
+    "YouTube Kids: Preschool": "all_ages",
+    "YouTube Kids: Younger": "all_ages",
+    "YouTube Kids: Older": "ages_7_plus",
+    "YouTube Kids: Approved Content Only": "all_ages",
+    "Supervised: Explore": "ages_7_plus",
+    "Supervised: Explore More": "ages_13_plus",
+    "Supervised: Most of YouTube": "ages_13_plus",
+    "Restricted Mode ON": "ages_13_plus",
+    "Restricted Mode OFF": "adults_only",
+    "Age-Gated (18+)": "adults_only"
+  },
+
+  "phosra_to_youtube": {
+    "all_ages": "YouTube Kids: Preschool or Younger (or Approved Content Only for strictest control)",
+    "ages_7_plus": "YouTube Kids: Older or Supervised: Explore",
+    "ages_13_plus": "Supervised: Explore More + Restricted Mode ON",
+    "adults_only": "Supervised: Most of YouTube or unrestricted YouTube"
+  },
+
+  "youtube_kids_tiers": {
+    "Preschool": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y", "TV-G"],
+      "description": "Content for youngest viewers (ages 4 and under). Designed to promote creativity, playfulness, learning, and exploration.",
+      "age_range": "0-4",
+      "is_kids_profile": true,
+      "content_examples": ["nursery rhymes", "cartoons", "read-alongs", "circle time", "arts and crafts", "yoga", "toys and play"]
+    },
+    "Younger": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-G"],
+      "description": "Wider variety for early elementary (ages 5-8). Meets widening interests of younger kids. Includes all Preschool content plus expanded categories.",
+      "age_range": "5-8",
+      "is_kids_profile": true,
+      "content_examples": ["gaming", "covers of top 40 songs", "family vloggers", "cartoons", "DIY", "learning", "how-tos"]
+    },
+    "Older": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G", "PG"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"],
+      "description": "More grown-up filtered content (ages 9-12). For older kids ready for content excluded from Younger and Preschool. Includes all Younger and Preschool content.",
+      "age_range": "9-12",
+      "is_kids_profile": true,
+      "content_examples": ["music", "gaming", "vlogs", "comedy", "sports"]
+    },
+    "Approved Content Only": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["varies_by_parent_selection"],
+      "tv_ratings": ["varies_by_parent_selection"],
+      "description": "Parent manually approves every collection, channel, and video. Most restrictive option. Only hand-picked content is available to the child.",
+      "age_range": "any",
+      "is_kids_profile": true,
+      "content_examples": ["parent-selected only"]
+    }
+  },
+
+  "supervised_account_tiers": {
+    "Explore": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G", "PG"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG"],
+      "description": "Content generally suitable for ages 9+. Vlogs, tutorials, gaming, music, news, educational content, DIY, arts and crafts, dance. Does not include live streams.",
+      "age_range": "9+",
+      "is_kids_profile": false
+    },
+    "Explore More": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14"],
+      "description": "Broader range for ages 13+. Everything in Explore plus live streams, content with some mature themes including sexual education topics, non-explicit accounts of sexual experiences, and educational videos on sexual and gender identity.",
+      "age_range": "13+",
+      "is_kids_profile": false
+    },
+    "Most of YouTube": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13", "R"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "Nearly all YouTube content except videos marked as 18+ and other videos that may not be appropriate for supervised experiences. For older teens.",
+      "age_range": "15+",
+      "is_kids_profile": false
+    }
+  },
+
+  "restricted_mode": {
+    "ON": {
+      "phosra_tier": "ages_13_plus",
+      "description": "Binary filter that hides potentially mature content using automated signals (video metadata, title, language, age restrictions) and human reviewers. Also hides all comments. Not 100% accurate.",
+      "dns_enforcement": {
+        "strict": "restrict.youtube.com",
+        "moderate": "restrictmoderate.youtube.com",
+        "how": "Set DNS CNAME record for youtube.com and www.youtube.com to the appropriate hostname"
+      }
+    },
+    "OFF": {
+      "phosra_tier": "adults_only",
+      "description": "No content filtering. All YouTube content visible including age-gated content (if account age is verified 18+). Comments, live chat, and all features available."
+    }
+  },
+
+  "age_gated_content": {
+    "threshold": "18+",
+    "verification_methods": [
+      "date_of_birth_on_google_account",
+      "government_id_upload",
+      "ai_age_estimation_2025"
+    ],
+    "ai_age_estimation": {
+      "launched": "August 2025",
+      "method": "Uses viewing patterns, account age, content preferences, and other signals to estimate user age regardless of stated birthday",
+      "consequence": "Users estimated under 18 get automatic teen protections: disabled personalized ads, content safeguards, default-on wellbeing tools",
+      "appeal": "Users incorrectly flagged can verify with government-issued ID (drivers license, state ID, passport)"
+    },
+    "description": "Videos deemed inappropriate for viewers under 18. Requires signed-in account with verified age. YouTube AI age estimation (2025) may automatically restrict access for estimated minors."
+  },
+
+  "content_descriptors": {
+    "supported": false,
+    "notes": "YouTube does not expose content descriptors (violence, language, nudity) as individually filterable categories. Content filtering is tier-based only (YouTube Kids levels, supervised account levels, or Restricted Mode on/off). YouTube uses automated classification, creator self-designation (Made for Kids), and community guidelines enforcement for content categorization."
+  },
+
+  "api_content_signals": {
+    "safeSearch": {
+      "values": ["none", "moderate", "strict"],
+      "api_method": "search.list",
+      "description": "YouTube Data API v3 search parameter. 'strict' excludes all restricted content from search results. 'moderate' is the default and filters some content. 'none' returns everything.",
+      "quota_cost": "100 units per search request"
+    },
+    "madeForKids": {
+      "type": "boolean",
+      "api_path": "videos.list -> items[].status.madeForKids",
+      "description": "COPPA compliance flag. Set by creator or YouTube's automated system. Required since 2019 FTC settlement. Videos marked madeForKids disable personalized ads, comments, notifications, live chat, and more."
+    },
+    "contentRating": {
+      "type": "object",
+      "api_path": "videos.list -> items[].contentDetails.contentRating",
+      "description": "Country-specific content ratings. Includes mpaatRating (MPAA for trailers), bbfcRating (UK), fskRating (Germany), and many others. Most user-generated content will NOT have these ratings.",
+      "key_properties": {
+        "ytRating": "YouTube's own age restriction: 'ytAgeRestricted' when video is age-gated to 18+",
+        "mpaatRating": "MPAA rating for movie trailers (mpaatG, mpaatPg, mpaatPg13, mpaatR, mpaatNc17)"
+      }
+    }
+  },
+
+  "rating_systems_coverage": {
+    "MPAA": {
+      "supported": "partial",
+      "ratings": ["G", "PG", "PG-13", "R", "NC-17"],
+      "notes": "Only available for professionally rated content (movie trailers, licensed films) via contentDetails.contentRating.mpaatRating. Most YouTube content (user-generated) has no MPAA rating."
+    },
+    "TV_Parental_Guidelines": {
+      "supported": false,
+      "notes": "Not applicable. YouTube content is not TV-rated. No TV ratings in the API."
+    },
+    "ESRB": {
+      "supported": false,
+      "notes": "Not applicable."
+    },
+    "PEGI": {
+      "supported": false,
+      "notes": "Not applicable."
+    },
+    "Common_Sense_Media": {
+      "supported": "external",
+      "notes": "Common Sense Media independently rates some YouTube channels and content. YouTube does not integrate CSM ratings into its filtering. Phosra could cross-reference CSM data externally."
+    },
+    "YouTube_Self_Rating": {
+      "supported": true,
+      "ratings": ["Made for Kids", "Not Made for Kids", "Age-Restricted (18+)"],
+      "notes": "YouTube's native content classification system. Uploaders must self-declare Made for Kids status (COPPA requirement since 2019). YouTube may override with automated classification."
+    },
+    "Google_Family_Link_Levels": {
+      "supported": true,
+      "ratings": ["YouTube Kids Only", "Explore (9+)", "Explore More (13+)", "Most of YouTube"],
+      "notes": "Google Family Link provides tiered supervision for children's YouTube access. These are the parental control tiers, not content ratings per se."
+    }
+  }
+}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option 2: Full-Width Frosted Bar</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; }
+
+  /* ── NAV (edge-to-edge bar) ── */
+  .nav-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; padding: 0 32px;
+    transition: all 0.3s ease;
+  }
+  .nav-bar.transparent {
+    background: transparent;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-bar.solid {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .nav-left { display: flex; align-items: center; gap: 40px; }
+  .nav-links { display: flex; align-items: center; gap: 2px; }
+
+  .nav-link {
+    padding: 8px 16px; font-size: 14px; font-weight: 500;
+    border-radius: 6px; cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 5px;
+    position: relative;
+  }
+  .transparent .nav-link { color: rgba(255,255,255,0.7); }
+  .transparent .nav-link:hover { color: #fff; }
+  .solid .nav-link { color: #64748b; }
+  .solid .nav-link:hover { color: #0f172a; }
+
+  /* Active dot indicator under link */
+  .nav-link.active::after {
+    content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px; border-radius: 50%; background: #00D47E;
+  }
+
+  .nav-link svg { width: 10px; height: 10px; opacity: 0.4; }
+
+  .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .transparent .logo { color: #fff; }
+  .solid .logo { color: #0f172a; }
+
+  /* Green dot before logo */
+  .logo::before {
+    content: ''; display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; background: #00D47E; margin-right: 8px; vertical-align: middle;
+  }
+
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .btn-ghost {
+    padding: 8px 16px; font-size: 14px; font-weight: 500;
+    border: none; background: none; cursor: pointer;
+  }
+  .transparent .btn-ghost { color: rgba(255,255,255,0.7); }
+  .solid .btn-ghost { color: #64748b; }
+
+  .btn-primary {
+    padding: 8px 20px; font-size: 14px; font-weight: 600;
+    border: none; border-radius: 6px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-bar.transparent .btn-primary { background: #fff; color: #0f172a; }
+  .nav-bar.solid .btn-primary { background: #0f172a; color: #fff; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+
+  /* ── DROPDOWN ── */
+  .dropdown-panel {
+    position: fixed; top: 64px; left: 0; right: 0; z-index: 49;
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+    padding: 0;
+    display: none;
+  }
+  .dropdown-panel.show { display: block; animation: fadeSlide 0.2s ease-out; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dropdown-inner { max-width: 1200px; margin: 0 auto; padding: 32px 40px; }
+
+  .dropdown-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
+
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: #94a3b8; margin-bottom: 20px;
+    padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;
+  }
+  .dropdown-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 0; cursor: pointer; transition: all 0.15s;
+    border-radius: 8px; padding: 10px 12px; margin: 0 -12px;
+  }
+  .dropdown-item:hover { background: #f8fafc; }
+  .dropdown-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon-green { background: rgba(0,212,126,0.08); }
+  .icon-blue { background: rgba(59,130,246,0.08); }
+  .icon-amber { background: rgba(245,158,11,0.08); }
+  .dropdown-icon svg { width: 20px; height: 20px; }
+  .icon-green svg { color: #00D47E; }
+  .icon-blue svg { color: #3b82f6; }
+  .icon-amber svg { color: #f59e0b; }
+  .dropdown-label { font-size: 14px; font-weight: 600; color: #0f172a; }
+  .dropdown-desc { font-size: 13px; color: #94a3b8; margin-top: 1px; }
+
+  .see-all {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: #00D47E;
+    margin-top: 16px; cursor: pointer; padding: 8px 0;
+  }
+  .see-all:hover { text-decoration: underline; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0D1B2A 0%, #162235 40%, #0A2F2F 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 120px 40px 80px;
+  }
+  .hero-content { max-width: 680px; text-align: center; }
+  .hero h1 { font-size: 52px; font-weight: 700; color: #fff; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 20px; }
+  .hero p { font-size: 18px; color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 36px; }
+  .hero-cta { display: flex; gap: 12px; justify-content: center; }
+  .hero-btn {
+    padding: 12px 28px; font-size: 15px; font-weight: 600;
+    border-radius: 8px; cursor: pointer; border: none; transition: all 0.2s;
+  }
+  .hero-btn.primary { background: #00D47E; color: #0f172a; }
+  .hero-btn.secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.12); }
+
+  /* ── LIGHT SECTION ── */
+  .light-section {
+    min-height: 100vh; background: #fff;
+    padding: 120px 40px 80px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .light-section h2 { font-size: 40px; font-weight: 700; color: #0f172a; letter-spacing: -1px; margin-bottom: 16px; }
+  .light-section p { font-size: 16px; color: #64748b; max-width: 500px; text-align: center; }
+  .section-label { font-size: 14px; font-weight: 500; color: #64748b; text-align: center; margin-bottom: 40px; padding: 8px 16px; background: #f1f5f9; border-radius: 999px; display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <div class="nav-bar transparent" id="nav-hero">
+    <div class="nav-left">
+      <div class="logo">phosra</div>
+      <div class="nav-links">
+        <div class="nav-link" onmouseenter="showDropdown('dd2')" onmouseleave="hideDropdown('dd2')">Products <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="nav-link">Research <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="nav-link">Compliance <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="nav-link">Resources <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="nav-link">Pricing</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-primary">Get a demo</button>
+    </div>
+  </div>
+
+  <div class="dropdown-panel" id="dd2" onmouseenter="showDropdown('dd2')" onmouseleave="hideDropdown('dd2')">
+    <div class="dropdown-inner">
+      <div class="dropdown-cols">
+        <div>
+          <div class="section-title">For Families</div>
+          <div class="dropdown-item">
+            <div class="dropdown-icon icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <div><div class="dropdown-label">Parental Controls</div><div class="dropdown-desc">100+ safety solutions</div></div>
+          </div>
+          <div class="dropdown-item">
+            <div class="dropdown-icon icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <div><div class="dropdown-label">Platform Directory</div><div class="dropdown-desc">320+ platforms mapped</div></div>
+          </div>
+          <div class="dropdown-item">
+            <div class="dropdown-icon icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+            <div><div class="dropdown-label">Interactive Demo</div><div class="dropdown-desc">Try the dashboard</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-title">For Platforms</div>
+          <div class="dropdown-item">
+            <div class="dropdown-icon icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+            <div><div class="dropdown-label">Developer Portal</div><div class="dropdown-desc">API docs & SDKs</div></div>
+          </div>
+          <div class="dropdown-item">
+            <div class="dropdown-icon icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+            <div><div class="dropdown-label">API Playground</div><div class="dropdown-desc">Test calls live</div></div>
+          </div>
+          <div class="dropdown-item">
+            <div class="dropdown-icon icon-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></div>
+            <div><div class="dropdown-label">Technology Services</div><div class="dropdown-desc">Integration guides</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-title">Tools</div>
+          <div class="dropdown-item">
+            <div class="dropdown-icon icon-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div><div class="dropdown-label">PCSS Checker</div><div class="dropdown-desc">Test compliance score</div></div>
+          </div>
+          <div class="dropdown-item">
+            <div class="dropdown-icon icon-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+            <div><div class="dropdown-label">Pricing</div><div class="dropdown-desc">Plans & API tiers</div></div>
+          </div>
+          <div class="see-all">See all products →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <h1>The safety infrastructure for the internet</h1>
+    <p>Phosra maps 320+ platforms to child safety compliance requirements worldwide.</p>
+    <div class="hero-cta">
+      <button class="hero-btn primary">Get a demo</button>
+      <button class="hero-btn secondary">View documentation</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ INNER PAGE ═══════════ -->
+<div class="light-section">
+  <div class="nav-bar solid" style="position:fixed;top:0;">
+    <div class="nav-left">
+      <div class="logo">phosra</div>
+      <div class="nav-links">
+        <div class="nav-link">Products <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="nav-link active">Research <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="nav-link">Compliance <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="nav-link">Resources <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <div class="nav-link">Pricing</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-primary">Get a demo</button>
+    </div>
+  </div>
+
+  <div class="section-label">↑ Full-width frosted bar with underline dot on active item. Dark CTA button.</div>
+  <h2>AI Chatbot Safety Research</h2>
+  <p>How 8 AI platforms grade on child safety across 40 real-world test prompts.</p>
+</div>
+
+<script>
+  let dt;
+  function showDropdown(id) { clearTimeout(dt); document.getElementById(id).classList.add('show'); }
+  function hideDropdown(id) { dt = setTimeout(() => document.getElementById(id).classList.remove('show'), 200); }
+</script>
+</body>
+</html>

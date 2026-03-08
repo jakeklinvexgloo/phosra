@@ -1,0 +1,31 @@
+name: Gmail History Import
+
+on:
+  schedule:
+    - cron: "0 */4 * * *" # Every 4 hours
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install pg
+        working-directory: scripts/workers
+
+      - name: Run Gmail history import
+        env:
+          API_URL: https://phosra-api.fly.dev
+          WORKER_API_KEY: ${{ secrets.WORKER_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: node scripts/workers/gmail-history-import.mjs

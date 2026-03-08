@@ -1,0 +1,125 @@
+{
+  "platform": "hulu",
+  "platform_name": "Hulu",
+  "research_date": "2026-03-01",
+
+  "hulu_to_phosra": {
+    "Kids Profile": "all_ages",
+    "Under 13 Standard": "ages_7_plus",
+    "Under 17 Standard": "ages_13_plus",
+    "Adult Standard (17+)": "adults_only"
+  },
+
+  "phosra_to_hulu": {
+    "all_ages": "Kids Profile",
+    "ages_7_plus": "Under 13 Standard (birthdate-based, not parent-configurable)",
+    "ages_13_plus": "Under 17 Standard (birthdate-based, not parent-configurable)",
+    "adults_only": "Adult Standard (17+)"
+  },
+
+  "hulu_tiers": {
+    "Kids Profile": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG"],
+      "description": "Restricted to Kids Hub content only. Simplified UI. No access to Live TV, account settings, or mature content. One-size-fits-all for ages 2-12 with no further granularity. A preschooler sees the same content catalog as an 11-year-old.",
+      "age_range": "2-12",
+      "is_kids_profile": true,
+      "configurable": false,
+      "notes": "Only option is Kids toggle at profile creation. Cannot further restrict to TV-Y only (preschool) or expand to PG-13. Unlike Netflix (Little Kids vs Older Kids), Hulu has a single Kids tier."
+    },
+    "Under 13 Standard": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G", "PG"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG"],
+      "description": "Standard profile with birthdate indicating under 13. R-rated and TV-MA content automatically blocked. User sees standard UI but with restricted content catalog. Has access to search and full navigation unlike Kids profile.",
+      "age_range": "0-12",
+      "is_kids_profile": false,
+      "configurable": false,
+      "notes": "Determined by birthdate at profile creation. Cannot be changed by parent without contacting Hulu support to modify birth year. Similar rating access to Kids profile but with standard (non-restricted) UI."
+    },
+    "Under 17 Standard": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14"],
+      "description": "Standard profile with birthdate indicating 13-16. R-rated and TV-MA content blocked. Note: reports indicate 17-year-old profiles CAN access TV-MA content, so the exact cutoff may be 17 rather than 18.",
+      "age_range": "13-16",
+      "is_kids_profile": false,
+      "configurable": false,
+      "notes": "Birthdate-based restriction. Hulu does not clearly document the exact age-to-rating mapping. Testing has shown inconsistencies (e.g., 17-year-old profiles accessing TV-MA). The PIN (if enabled) is required to access this profile."
+    },
+    "Adult Standard (17+)": {
+      "phosra_tier": "adults_only",
+      "mpaa_ratings": ["G", "PG", "PG-13", "R", "NC-17", "NR"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "Full content access. No restrictions. Includes FX on Hulu mature content, add-on channel content (STARZ, Max), and full Live TV channel access (if subscribed). PIN required to access if PIN protection is enabled.",
+      "age_range": "17+",
+      "is_kids_profile": false,
+      "configurable": false,
+      "notes": "Default for profiles with birthdate indicating 17 or older. The only protection is account-wide PIN which gates access to all non-Kids profiles."
+    }
+  },
+
+  "content_descriptors": {
+    "supported": [],
+    "notes": "Hulu does not expose content descriptors (violence, language, nudity, etc.) as filterable categories. Content ratings (MPAA, TV) are the only filtering mechanism, and they are not configurable by the parent -- determined solely by profile type (Kids) or birthdate (Standard). Unlike Netflix which displays descriptors on title pages, Hulu's descriptor display is inconsistent."
+  },
+
+  "fx_on_hulu": {
+    "description": "FX on Hulu is a branded content hub featuring original series from FX Networks. The majority of FX content is rated TV-MA and includes graphic violence, explicit language, sexual content, and drug use.",
+    "notable_series": ["The Bear", "Shogun", "American Horror Story", "What We Do in the Shadows", "Fargo"],
+    "default_rating": "TV-MA",
+    "parental_concern": "high",
+    "filtering": "Blocked on Kids profiles and under-17 standard profiles. No separate toggle to block FX content specifically."
+  },
+
+  "live_tv_ratings": {
+    "description": "Hulu + Live TV subscribers have access to 95+ live channels. Live broadcasts carry standard TV Parental Guidelines ratings.",
+    "filtering_behavior": "Kids profiles block ALL live TV access. Non-Kids profiles have unrestricted live TV access regardless of age-based restrictions. This is a significant gap.",
+    "channels_with_mature_content": ["FX (live)", "FXX", "Comedy Central", "Bravo", "E!", "Late-night broadcast network programming"]
+  },
+
+  "ad_content_gap": {
+    "description": "On ad-supported Hulu plans, advertisements are NOT filtered by profile maturity rating. A child watching a TV-PG show can see ad trailers for TV-MA horror movies or adult dramas. These ads cannot be skipped immediately.",
+    "affected_plans": ["Hulu (With Ads) - $11.99/mo", "Hulu + Live TV (With Ads) - $89.99/mo"],
+    "mitigation": "Subscribe to ad-free plan ($18.99/mo or $99.99/mo with Live TV)"
+  },
+
+  "rating_systems_coverage": {
+    "MPAA": {
+      "supported": true,
+      "ratings": ["G", "PG", "PG-13", "R", "NC-17", "NR"],
+      "notes": "Full MPAA coverage for films. Includes NR (Not Rated) for unrated content. Applied automatically based on profile type/birthdate."
+    },
+    "TV_Parental_Guidelines": {
+      "supported": true,
+      "ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "notes": "Full TV rating coverage for on-demand series. Live TV broadcasts carry these ratings but filtering is limited for non-Kids profiles."
+    },
+    "ESRB": {
+      "supported": false,
+      "notes": "No gaming content on Hulu. Not applicable."
+    },
+    "PEGI": {
+      "supported": false,
+      "notes": "Not applicable. Hulu is US-only (separate service in Japan)."
+    },
+    "Common_Sense_Media": {
+      "supported": false,
+      "notes": "Hulu does not display or integrate Common Sense Media ratings."
+    }
+  },
+
+  "key_limitations": [
+    "Binary maturity model: Kids profile or birthdate-based Standard. No configurable maturity slider.",
+    "Birthdate-based restrictions cannot be changed by parent (requires Hulu support for birth year changes).",
+    "No per-title blocking capability of any kind.",
+    "Ads on ad-supported plans are NOT filtered by profile maturity.",
+    "Kids profile is one-size-fits-all: a 3-year-old sees the same content as an 11-year-old.",
+    "Exact age-to-rating mapping is undocumented and has reported inconsistencies.",
+    "Kids profiles block Live TV entirely (safe but limiting).",
+    "Non-Kids profiles have unrestricted Live TV access regardless of age setting.",
+    "Account-wide PIN (not per-profile) is a single point of failure.",
+    "Hulu standalone app shutting down in 2026; migrating to Disney+."
+  ]
+}

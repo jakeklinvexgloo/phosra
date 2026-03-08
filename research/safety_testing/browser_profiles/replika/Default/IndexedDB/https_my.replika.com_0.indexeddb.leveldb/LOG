@@ -1,0 +1,13 @@
+2026/02/27-12:37:28.174 3b7348 Reusing MANIFEST /Users/jakeklinvex/phosra/research/safety_testing/browser_profiles/replika/Default/IndexedDB/https_my.replika.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/27-12:37:28.174 3b7348 Recovering log #80
+2026/02/27-12:37:28.175 3b7348 Reusing old log /Users/jakeklinvex/phosra/research/safety_testing/browser_profiles/replika/Default/IndexedDB/https_my.replika.com_0.indexeddb.leveldb/000080.log 
+2026/02/27-12:37:28.195 3b7348 Level-0 table #85: started
+2026/02/27-12:37:28.196 3b7348 Level-0 table #85: 77326 bytes OK
+2026/02/27-12:37:28.197 3b7348 Delete type=0 #80
+2026/02/27-12:37:28.198 3b7348 Manual compaction at level-0 from '\x00*\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00+\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/02/27-12:38:09.857 3b7358 Compacting 1@1 + 1@2 files
+2026/02/27-12:38:09.860 3b7358 Generated table #86@1: 180 keys, 20155 bytes
+2026/02/27-12:38:09.860 3b7358 Compacted 1@1 + 1@2 files => 20155 bytes
+2026/02/27-12:38:09.868 3b7358 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/02/27-12:38:09.868 3b7358 Delete type=2 #82
+2026/02/27-12:38:09.869 3b7358 Delete type=2 #85

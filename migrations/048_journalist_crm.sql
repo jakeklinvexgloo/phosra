@@ -6,7 +6,7 @@
 --   1. Journalists have fundamentally different fields (publication, beat, sub-beats,
 --      recent articles, pitch angles) that don't map to the generic outreach schema.
 --   2. The relationship pipeline is different: journalist relationships track
---      pitch → follow-up → coverage, not contact → conversation → partnership.
+--      pitch -> follow-up -> coverage, not contact -> conversation -> partnership.
 --   3. The linkage between press releases and journalists is a many-to-many with
 --      rich metadata (embargo, exclusivity, pitch status) that would be awkward
 --      to model through generic activities.
@@ -19,7 +19,7 @@
 -- 1. JOURNALIST PROFILES
 -- ═══════════════════════════════════════════════════════════════════
 
-CREATE TABLE admin_journalists (
+CREATE TABLE IF NOT EXISTS admin_journalists (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
     -- Identity
@@ -70,18 +70,18 @@ CREATE TABLE admin_journalists (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_journalists_publication ON admin_journalists(publication);
-CREATE INDEX idx_journalists_beat ON admin_journalists(beat);
-CREATE INDEX idx_journalists_tier ON admin_journalists(tier);
-CREATE INDEX idx_journalists_status ON admin_journalists(relationship_status);
-CREATE INDEX idx_journalists_followup ON admin_journalists(next_followup_at) WHERE next_followup_at IS NOT NULL;
-CREATE INDEX idx_journalists_sub_beats ON admin_journalists USING GIN(sub_beats);
+CREATE INDEX IF NOT EXISTS idx_journalists_publication ON admin_journalists(publication);
+CREATE INDEX IF NOT EXISTS idx_journalists_beat ON admin_journalists(beat);
+CREATE INDEX IF NOT EXISTS idx_journalists_tier ON admin_journalists(tier);
+CREATE INDEX IF NOT EXISTS idx_journalists_status ON admin_journalists(relationship_status);
+CREATE INDEX IF NOT EXISTS idx_journalists_followup ON admin_journalists(next_followup_at) WHERE next_followup_at IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_journalists_sub_beats ON admin_journalists USING GIN(sub_beats);
 
 -- ═══════════════════════════════════════════════════════════════════
--- 2. PRESS RELEASE ↔ JOURNALIST PITCHES (many-to-many linkage)
+-- 2. PRESS RELEASE <-> JOURNALIST PITCHES (many-to-many linkage)
 -- ═══════════════════════════════════════════════════════════════════
 
-CREATE TABLE admin_journalist_pitches (
+CREATE TABLE IF NOT EXISTS admin_journalist_pitches (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
     -- Foreign keys
@@ -136,17 +136,17 @@ CREATE TABLE admin_journalist_pitches (
     UNIQUE (journalist_id, press_release_id)
 );
 
-CREATE INDEX idx_pitches_journalist ON admin_journalist_pitches(journalist_id);
-CREATE INDEX idx_pitches_release ON admin_journalist_pitches(press_release_id);
-CREATE INDEX idx_pitches_status ON admin_journalist_pitches(pitch_status);
-CREATE INDEX idx_pitches_followup ON admin_journalist_pitches(next_follow_up_at)
+CREATE INDEX IF NOT EXISTS idx_pitches_journalist ON admin_journalist_pitches(journalist_id);
+CREATE INDEX IF NOT EXISTS idx_pitches_release ON admin_journalist_pitches(press_release_id);
+CREATE INDEX IF NOT EXISTS idx_pitches_status ON admin_journalist_pitches(pitch_status);
+CREATE INDEX IF NOT EXISTS idx_pitches_followup ON admin_journalist_pitches(next_follow_up_at)
     WHERE next_follow_up_at IS NOT NULL AND pitch_status NOT IN ('covered', 'declined', 'no_response');
 
 -- ═══════════════════════════════════════════════════════════════════
 -- 3. COVERAGE TRACKING
 -- ═══════════════════════════════════════════════════════════════════
 
-CREATE TABLE admin_press_coverage (
+CREATE TABLE IF NOT EXISTS admin_press_coverage (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
     -- Links
@@ -181,21 +181,28 @@ CREATE TABLE admin_press_coverage (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_coverage_journalist ON admin_press_coverage(journalist_id);
-CREATE INDEX idx_coverage_release ON admin_press_coverage(press_release_id);
-CREATE INDEX idx_coverage_published ON admin_press_coverage(published_at DESC);
-CREATE INDEX idx_coverage_tone ON admin_press_coverage(tone);
+CREATE INDEX IF NOT EXISTS idx_coverage_journalist ON admin_press_coverage(journalist_id);
+CREATE INDEX IF NOT EXISTS idx_coverage_release ON admin_press_coverage(press_release_id);
+CREATE INDEX IF NOT EXISTS idx_coverage_published ON admin_press_coverage(published_at DESC);
+CREATE INDEX IF NOT EXISTS idx_coverage_tone ON admin_press_coverage(tone);
 
--- Add FK from pitches → coverage now that coverage table exists
-ALTER TABLE admin_journalist_pitches
-    ADD CONSTRAINT fk_pitches_coverage
-    FOREIGN KEY (coverage_id) REFERENCES admin_press_coverage(id) ON DELETE SET NULL;
+-- Add FK from pitches -> coverage now that coverage table exists
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE constraint_name = 'fk_pitches_coverage'
+    ) THEN
+        ALTER TABLE admin_journalist_pitches
+            ADD CONSTRAINT fk_pitches_coverage
+            FOREIGN KEY (coverage_id) REFERENCES admin_press_coverage(id) ON DELETE SET NULL;
+    END IF;
+END $$;
 
 -- ═══════════════════════════════════════════════════════════════════
 -- 4. JOURNALIST ACTIVITY LOG
 -- ═══════════════════════════════════════════════════════════════════
 
-CREATE TABLE admin_journalist_activities (
+CREATE TABLE IF NOT EXISTS admin_journalist_activities (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     journalist_id UUID NOT NULL REFERENCES admin_journalists(id) ON DELETE CASCADE,
     pitch_id UUID REFERENCES admin_journalist_pitches(id) ON DELETE SET NULL,
@@ -214,5 +221,5 @@ CREATE TABLE admin_journalist_activities (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_journalist_activities_journalist ON admin_journalist_activities(journalist_id, created_at DESC);
-CREATE INDEX idx_journalist_activities_pitch ON admin_journalist_activities(pitch_id) WHERE pitch_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_journalist_activities_journalist ON admin_journalist_activities(journalist_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_journalist_activities_pitch ON admin_journalist_activities(pitch_id) WHERE pitch_id IS NOT NULL;

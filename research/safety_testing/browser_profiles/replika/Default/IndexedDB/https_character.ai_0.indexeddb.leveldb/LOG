@@ -1,0 +1,15 @@
+2026/02/27-12:11:48.027 39c171 Reusing MANIFEST /Users/jakeklinvex/.cache/chrome-devtools-mcp/chrome-profile/Default/IndexedDB/https_character.ai_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/27-12:11:48.027 39c171 Recovering log #135
+2026/02/27-12:11:48.027 39c171 Reusing old log /Users/jakeklinvex/.cache/chrome-devtools-mcp/chrome-profile/Default/IndexedDB/https_character.ai_0.indexeddb.leveldb/000135.log 
+2026/02/27-12:11:48.040 39c182 Manual compaction at level-0 from '\x00>\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00?\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/02/27-12:12:32.048 39c173 Compacting 1@1 + 1@2 files
+2026/02/27-12:12:32.058 39c173 Generated table #138@1: 144 keys, 5158 bytes
+2026/02/27-12:12:32.058 39c173 Compacted 1@1 + 1@2 files => 5158 bytes
+2026/02/27-12:12:32.061 39c173 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/02/27-12:12:32.062 39c173 Delete type=2 #136
+2026/02/27-12:12:32.062 39c173 Delete type=2 #133
+2026/02/27-12:14:01.232 39c173 Manual compaction at level-0 from '\x00?\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00@\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/02/27-12:14:23.060 39c182 Level-0 table #140: started
+2026/02/27-12:14:23.062 39c182 Level-0 table #140: 14729 bytes OK
+2026/02/27-12:14:23.064 39c182 Delete type=0 #135
+2026/02/27-12:14:23.064 39c171 Manual compaction at level-0 from '\x00@\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00A\x00\x00\x00' @ 0 : 0; will stop at (end)

@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -35,7 +36,8 @@ func (c *Client) ListMessages(ctx context.Context, query string, maxResults int,
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("gmail list messages: HTTP %d", resp.StatusCode)
+		body, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("gmail list messages: HTTP %d: %s", resp.StatusCode, string(body))
 	}
 
 	var listResp struct {
@@ -175,7 +177,7 @@ func (c *Client) SearchMessages(ctx context.Context, query string, maxResults in
 
 // getMessageMetadata fetches a single message with metadata format (no body).
 func (c *Client) getMessageMetadata(ctx context.Context, messageID string) (*GmailMessage, error) {
-	resp, err := c.doAuthenticatedRequest(ctx, http.MethodGet, gmailBase+"/messages/"+messageID+"?format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Subject&metadataHeaders=Date", nil)
+	resp, err := c.doAuthenticatedRequest(ctx, http.MethodGet, gmailBase+"/messages/"+messageID+"?format=metadata&metadataHeaders=From&metadataHeaders=To&metadataHeaders=Cc&metadataHeaders=Subject&metadataHeaders=Date", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -242,15 +244,25 @@ func parseMetadataMessage(raw *gmailRawMessage) *GmailMessage {
 		to[i] = strings.TrimSpace(to[i])
 	}
 
+	var cc []string
+	if ccHeader := getHeader(raw, "Cc"); ccHeader != "" {
+		cc = strings.Split(ccHeader, ",")
+		for i := range cc {
+			cc[i] = strings.TrimSpace(cc[i])
+		}
+	}
+
 	return &GmailMessage{
-		ID:       raw.ID,
-		ThreadID: raw.ThreadID,
-		From:     from,
-		To:       to,
-		Subject:  getHeader(raw, "Subject"),
-		Snippet:  raw.Snippet,
-		Date:     getHeader(raw, "Date"),
-		LabelIDs: raw.LabelIDs,
+		ID:           raw.ID,
+		ThreadID:     raw.ThreadID,
+		From:         from,
+		To:           to,
+		Cc:           cc,
+		Subject:      getHeader(raw, "Subject"),
+		Snippet:      raw.Snippet,
+		Date:         getHeader(raw, "Date"),
+		InternalDate: raw.InternalDate,
+		LabelIDs:     raw.LabelIDs,
 	}
 }
 

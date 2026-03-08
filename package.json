@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "phosra-browser": "file:../browser/phosra-browser"
+  }
+}

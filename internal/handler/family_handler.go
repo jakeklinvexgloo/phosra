@@ -115,14 +115,28 @@ func (h *FamilyHandler) AddMember(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req struct {
-		UserID string `json:"user_id"`
-		Role   string `json:"role"`
+		UserID      string `json:"user_id"`
+		Email       string `json:"email"`
+		Role        string `json:"role"`
+		DisplayName string `json:"display_name"`
 	}
 	if err := httputil.DecodeJSON(r, &req); err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid request body")
 		return
 	}
 
+	// Email-based addition
+	if req.Email != "" {
+		member, err := h.families.AddMemberByEmail(r.Context(), familyID, userID, req.Email, domain.FamilyRole(req.Role), req.DisplayName)
+		if err != nil {
+			handleServiceError(w, err)
+			return
+		}
+		httputil.JSON(w, http.StatusOK, member)
+		return
+	}
+
+	// Legacy user_id-based addition
 	memberUserID, err := uuid.Parse(req.UserID)
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid user ID")
@@ -134,6 +148,36 @@ func (h *FamilyHandler) AddMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	httputil.JSON(w, http.StatusOK, map[string]string{"status": "member added"})
+}
+
+func (h *FamilyHandler) UpdateMember(w http.ResponseWriter, r *http.Request) {
+	userID := middleware.GetUserID(r.Context())
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
+		return
+	}
+	memberID, err := uuid.Parse(chi.URLParam(r, "memberID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid member ID")
+		return
+	}
+
+	var req struct {
+		DisplayName string `json:"display_name"`
+		Role        string `json:"role"`
+	}
+	if err := httputil.DecodeJSON(r, &req); err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	member, err := h.families.UpdateMember(r.Context(), familyID, memberID, userID, req.DisplayName, domain.FamilyRole(req.Role))
+	if err != nil {
+		handleServiceError(w, err)
+		return
+	}
+	httputil.JSON(w, http.StatusOK, member)
 }
 
 func (h *FamilyHandler) RemoveMember(w http.ResponseWriter, r *http.Request) {

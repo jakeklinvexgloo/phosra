@@ -132,3 +132,77 @@ func (h *EnforcementHandler) RetryJob(w http.ResponseWriter, r *http.Request) {
 	}
 	httputil.JSON(w, http.StatusAccepted, job)
 }
+
+func (h *EnforcementHandler) EmergencyPause(w http.ResponseWriter, r *http.Request) {
+	userID := middleware.GetUserID(r.Context())
+	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
+		return
+	}
+
+	resp, err := h.enforcement.EmergencyPause(r.Context(), userID, childID)
+	if err != nil {
+		handleServiceError(w, err)
+		return
+	}
+	httputil.JSON(w, http.StatusOK, resp)
+}
+
+func (h *EnforcementHandler) EmergencyResume(w http.ResponseWriter, r *http.Request) {
+	userID := middleware.GetUserID(r.Context())
+	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
+		return
+	}
+
+	resp, err := h.enforcement.EmergencyResume(r.Context(), userID, childID)
+	if err != nil {
+		handleServiceError(w, err)
+		return
+	}
+	httputil.JSON(w, http.StatusOK, resp)
+}
+
+func (h *EnforcementHandler) ActivateRoutine(w http.ResponseWriter, r *http.Request) {
+	userID := middleware.GetUserID(r.Context())
+	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
+		return
+	}
+	routineName := chi.URLParam(r, "routineName")
+	if routineName == "" {
+		httputil.Error(w, http.StatusBadRequest, "routine name is required")
+		return
+	}
+
+	resp, err := h.enforcement.ActivateRoutine(r.Context(), userID, childID, routineName)
+	if err != nil {
+		handleServiceError(w, err)
+		return
+	}
+	httputil.JSON(w, http.StatusOK, resp)
+}
+
+func (h *EnforcementHandler) DeactivateRoutine(w http.ResponseWriter, r *http.Request) {
+	userID := middleware.GetUserID(r.Context())
+	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
+		return
+	}
+	routineName := chi.URLParam(r, "routineName")
+	if routineName == "" {
+		httputil.Error(w, http.StatusBadRequest, "routine name is required")
+		return
+	}
+
+	resp, err := h.enforcement.DeactivateRoutine(r.Context(), userID, childID, routineName)
+	if err != nil {
+		handleServiceError(w, err)
+		return
+	}
+	httputil.JSON(w, http.StatusOK, resp)
+}

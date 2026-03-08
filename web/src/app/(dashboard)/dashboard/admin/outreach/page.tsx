@@ -164,6 +164,23 @@ export default function OutreachPage() {
     return { all: pendingEmails.length, jake, alex }
   }, [pendingEmails])
 
+  // ── Computed: filtered activities by persona ─────────────────
+  const filteredActivities = useMemo(() => {
+    if (personaFilter === "all") return recentActivities
+    if (personaFilter === "jake") {
+      return recentActivities.filter((a) => a.activity_type === "history_import")
+    }
+    // alex: show non-history-import activities
+    return recentActivities.filter((a) => a.activity_type !== "history_import")
+  }, [recentActivities, personaFilter])
+
+  // ── Computed: activity feed title based on persona ───────────
+  const activityFeedTitle = useMemo(() => {
+    if (personaFilter === "jake") return "Jake's Email History"
+    if (personaFilter === "alex") return "Alex's Activity"
+    return "All Activity"
+  }, [personaFilter])
+
   // ── Reconnect handler for DisconnectionBanner ──────────────
   const handleReconnect = useCallback(async (accountKey: string) => {
     try {
@@ -334,9 +351,10 @@ export default function OutreachPage() {
       />
 
       <AlexActivityFeed
-        activities={recentActivities}
+        activities={filteredActivities}
         open={feedOpen}
         onToggle={() => setFeedOpen((v) => !v)}
+        title={activityFeedTitle}
       />
 
       <ActiveConversations

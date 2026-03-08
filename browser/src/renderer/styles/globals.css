@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------
+   Theme tokens: light (default) / dark (via .dark on <html>)
+   ------------------------------------------------------------------ */
+
+:root {
+  --chrome-bg: #F2F2F7;
+  --chrome-surface: #FFFFFF;
+  --chrome-surface-2: #E5E5EA;
+  --chrome-hover: #D1D1D6;
+  --chrome-active: #C7C7CC;
+  --chrome-border: #C6C6C8;
+  --chrome-border-subtle: rgba(0, 0, 0, 0.06);
+  --chrome-text: #1C1C1E;
+  --chrome-text-secondary: #8E8E93;
+  --chrome-accent: #4F6EF7;
+  --chrome-accent-hover: #3B5AE0;
+  --chrome-glow: rgba(79, 110, 247, 0.12);
+
+  --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.22);
+}
+
+.dark {
+  --chrome-bg: #0E1117;
+  --chrome-surface: #1A1F2C;
+  --chrome-surface-2: #252B3B;
+  --chrome-hover: #2E3547;
+  --chrome-active: #363E54;
+  --chrome-border: #2A3040;
+  --chrome-border-subtle: rgba(255, 255, 255, 0.06);
+  --chrome-text: #E5E5EA;
+  --chrome-text-secondary: #8E8E93;
+  --chrome-accent: #6C8CFF;
+  --chrome-accent-hover: #8AA3FF;
+  --chrome-glow: rgba(108, 140, 255, 0.15);
+
+  --scrollbar-thumb: rgba(255, 255, 255, 0.08);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.15);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--chrome-bg);
+  -webkit-app-region: drag;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Make interactive elements non-draggable */
+button,
+input,
+select,
+a {
+  -webkit-app-region: no-drag;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Glass utility */
+@layer utilities {
+  .glass {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+  .glass-subtle {
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

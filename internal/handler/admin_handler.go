@@ -34,10 +34,11 @@ type AdminHandler struct {
 	googleManager  *google.GoogleClientManager
 	googleRepo     *postgres.AdminGoogleRepo
 	personaRepo    *postgres.AdminPersonaRepo
+	gmailSync      *postgres.AdminGmailSyncRepo
 	workerAPIKey   string
 }
 
-func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, news *postgres.AdminNewsRepo, alerts *postgres.AdminAlertsRepo, googleClient *google.Client, googleManager *google.GoogleClientManager, googleRepo *postgres.AdminGoogleRepo, personaRepo *postgres.AdminPersonaRepo, workerAPIKey string) *AdminHandler {
+func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.AdminWorkerRepo, news *postgres.AdminNewsRepo, alerts *postgres.AdminAlertsRepo, googleClient *google.Client, googleManager *google.GoogleClientManager, googleRepo *postgres.AdminGoogleRepo, personaRepo *postgres.AdminPersonaRepo, gmailSync *postgres.AdminGmailSyncRepo, workerAPIKey string) *AdminHandler {
 	var googleOutreach *google.Client
 	if googleManager != nil {
 		googleOutreach = googleManager.GetClient("outreach")
@@ -46,7 +47,7 @@ func NewAdminHandler(outreach *postgres.AdminOutreachRepo, workers *postgres.Adm
 		outreach: outreach, workers: workers, news: news, alerts: alerts,
 		google: googleClient, googleOutreach: googleOutreach,
 		googleManager: googleManager, googleRepo: googleRepo, personaRepo: personaRepo,
-		workerAPIKey: workerAPIKey,
+		gmailSync: gmailSync, workerAPIKey: workerAPIKey,
 	}
 }
 
@@ -281,6 +282,7 @@ var workerScripts = map[string]string{
 	"outreach-sequencer":   "scripts/workers/outreach-sequencer.mjs",
 	"reply-scanner":        "scripts/workers/reply-scanner.mjs",
 	"meeting-booker":       "scripts/workers/meeting-booker.mjs",
+	"gmail-history-import": "scripts/workers/gmail-history-import.mjs",
 }
 
 func (h *AdminHandler) TriggerWorker(w http.ResponseWriter, r *http.Request) {

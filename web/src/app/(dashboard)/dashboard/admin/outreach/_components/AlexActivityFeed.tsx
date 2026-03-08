@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, Mail, MessageSquare, Phone, Calendar, FileText, Send, Brain, MailOpen } from "lucide-react"
+import { ChevronRight, Mail, MessageSquare, Phone, Calendar, FileText, Send, Brain, MailOpen, History } from "lucide-react"
 import type { OutreachActivityWithContact, OutreachActivityType } from "@/lib/admin/types"
 
 function timeAgo(d: string): string {
@@ -35,6 +35,7 @@ const ACTIVITY_ICONS: Record<OutreachActivityType, typeof Mail> = {
   intent_classified: Brain,
   meeting_proposed: Calendar,
   email_received: MailOpen,
+  history_import: History,
 }
 
 const ACTIVITY_DESCRIPTIONS: Record<OutreachActivityType, string> = {
@@ -47,15 +48,17 @@ const ACTIVITY_DESCRIPTIONS: Record<OutreachActivityType, string> = {
   intent_classified: "Classified intent for",
   meeting_proposed: "Proposed meeting with",
   email_received: "Received reply from",
+  history_import: "Emailed",
 }
 
 interface AlexActivityFeedProps {
   activities: OutreachActivityWithContact[]
   open: boolean
   onToggle: () => void
+  title?: string
 }
 
-export function AlexActivityFeed({ activities, open, onToggle }: AlexActivityFeedProps) {
+export function AlexActivityFeed({ activities, open, onToggle, title = "Activity" }: AlexActivityFeedProps) {
   // Group activities by date
   const grouped = activities.reduce<Record<string, OutreachActivityWithContact[]>>((acc, a) => {
     const label = dateLabel(a.created_at)
@@ -72,7 +75,7 @@ export function AlexActivityFeed({ activities, open, onToggle }: AlexActivityFee
       >
         <div className="flex items-center gap-2">
           <ChevronRight className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-90" : ""}`} />
-          <span className="text-sm font-semibold">Alex&apos;s Activity</span>
+          <span className="text-sm font-semibold">{title}</span>
           {activities.length > 0 && (
             <span className="text-xs bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 px-2 py-0.5 rounded-full tabular-nums">
               {activities.length}
@@ -102,7 +105,7 @@ export function AlexActivityFeed({ activities, open, onToggle }: AlexActivityFee
                           <div className="flex-1 min-w-0">
                             <p className="text-sm">
                               <span className="text-muted-foreground">{desc}</span>{" "}
-                              <span className="font-medium">{a.contact_name}</span>
+                              <span className="font-medium">{a.contact_name || a.contact_email || "Unknown"}</span>
                               {a.contact_org && (
                                 <span className="text-muted-foreground"> at {a.contact_org}</span>
                               )}

@@ -3,7 +3,7 @@
 export type OutreachContactType = "advocacy" | "tech_company" | "legislator" | "academic" | "investor" | "think_tank" | "other"
 export type OutreachStatus = "not_contacted" | "draft_ready" | "reached_out" | "in_conversation" | "partnership" | "declined"
 export type EmailStatus = "none" | "draft_ready" | "emailed" | "awaiting_reply" | "replied" | "bounced"
-export type OutreachActivityType = "email_sent" | "linkedin_message" | "call" | "meeting" | "note" | "auto_followup_sent" | "intent_classified" | "meeting_proposed" | "email_received"
+export type OutreachActivityType = "email_sent" | "linkedin_message" | "call" | "meeting" | "note" | "auto_followup_sent" | "intent_classified" | "meeting_proposed" | "email_received" | "history_import"
 
 export interface OutreachContact {
   id: string
@@ -106,6 +106,7 @@ export interface AutopilotStats {
 export interface OutreachActivityWithContact extends OutreachActivity {
   contact_name: string
   contact_org: string
+  contact_email?: string
 }
 
 export interface OutreachActivitySummary {

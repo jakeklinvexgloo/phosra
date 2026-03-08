@@ -1,0 +1,252 @@
+{
+  "profileStructure": {
+    "accountLabel": "Hulu Account",
+    "accountDescription": "Hulu (No Ads) Subscription",
+    "accountMeta": "Max 7 profiles (1 primary + 6 additional) \u00b7 2 simultaneous streams",
+    "accountBorderColor": "#1CE783",
+    "accountLabelColor": "#4ade80",
+    "hierarchyDescription": "Hulu Account \u2192 Profiles \u2192 Settings hierarchy. Hulu standalone app shutting down in 2026; content migrating to Disney+ app.",
+    "profiles": [
+      { "name": "Account Holder", "maturity": "Adult (17+)", "type": "standard", "pinEnabled": true },
+      { "name": "Partner", "maturity": "Adult (17+)", "type": "standard", "pinEnabled": false },
+      { "name": "Teen (age 15)", "maturity": "Under 17 (birthdate-based)", "type": "standard", "pinEnabled": false },
+      { "name": "Kiddo", "maturity": "Kids Profile", "type": "kids", "pinEnabled": false },
+      { "name": "Little One", "maturity": "Kids Profile", "type": "kids", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Display Name", "configurable": true },
+      { "setting": "Avatar Image", "configurable": true },
+      { "setting": "Kids Profile Toggle", "configurable": true },
+      { "setting": "Date of Birth (age-based restrictions)", "configurable": false },
+      { "setting": "Autoplay Next Episode (per-profile, per-device)", "configurable": true },
+      { "setting": "PIN Protection (account-wide)", "configurable": true },
+      { "setting": "Maturity Rating Level (configurable slider)", "configurable": false },
+      { "setting": "Per-Title Blocking", "configurable": false },
+      { "setting": "Live TV Content Filtering", "configurable": false },
+      { "setting": "Ad Content Filtering", "configurable": false }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Hulu (With Ads)", "streams": "2", "resolution": "1080p" },
+      { "plan": "Hulu (No Ads)", "streams": "2", "resolution": "1080p" },
+      { "plan": "Hulu + Live TV (With Ads)", "streams": "2", "resolution": "1080p" },
+      { "plan": "Hulu + Live TV (No Ads)", "streams": "2", "resolution": "1080p" },
+      { "plan": "Unlimited Screens Add-on (Live TV only)", "streams": "Unlimited (home WiFi) + 3 mobile", "resolution": "1080p" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Internal REST API (undocumented), Node.js/React web stack, AWS infrastructure",
+    "apiArchitecture": {
+      "title": "Internal REST API (Undocumented)",
+      "description": "Hulu's web app (built on Node.js/React/Next.js) communicates with backend microservices via REST-style API calls. Unlike Netflix (which has a well-studied Falcor/Shakti API surface) or Peacock (GraphQL via AWS AppSync), Hulu's internal API has minimal public documentation or community reverse-engineering. The backend runs on a hybrid AWS + on-premise architecture via their 'Donki' PaaS system. As Hulu transitions into Disney+, the API surface is migrating to Disney's unified streaming backend (BAM Tech / Disney Streaming Services), making current endpoints a moving target.",
+      "codeExample": {
+        "comment": "// Hulu authentication endpoint (inferred from web app behavior)",
+        "method": "POST",
+        "endpoint": "auth.hulu.com/web/login",
+        "exampleComment": "// Profile listing endpoint (inferred, not confirmed)",
+        "exampleCode": "GET home.hulu.com/v*/users/self/profiles\nAuthorization: Bearer <session_token>"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "auth.hulu.com/web/login", "purpose": "Account authentication (email/password)", "auth": "None (produces session)" },
+      { "endpoint": "home.hulu.com/v*/users/self/profiles", "purpose": "Profile management (list, create, edit)", "auth": "Session cookie / Bearer token" },
+      { "endpoint": "home.hulu.com/v*/users/self/watch_history", "purpose": "Watch history per profile", "auth": "Session cookie" },
+      { "endpoint": "discover.hulu.com/content/v*/search", "purpose": "Content search and discovery", "auth": "Session cookie" },
+      { "endpoint": "guide.hulu.com/v*/channels", "purpose": "Live TV channel guide (Live TV plan only)", "auth": "Session cookie" }
+    ],
+    "authDetails": [
+      { "label": "Primary Auth", "value": "Session cookies / JWT token", "description": "Set at login via auth.hulu.com. Exact TTL unknown; likely days to weeks." },
+      { "label": "Device Fingerprint", "value": "Device ID + browser fingerprint", "description": "Used for household sharing detection (crackdown active since March 2024)." },
+      { "label": "PIN Protection", "value": "4-digit numeric PIN (account-wide)", "description": "Required to access non-Kids profiles when enabled. Password needed to change PIN." },
+      { "label": "No MFA", "value": "N/A", "description": "Hulu does not offer native 2FA/MFA. No email verification, no SMS codes for settings changes." }
+    ],
+    "rateLimitNotes": [
+      "No explicit rate limiting documentation; standard AWS WAF likely in place",
+      "Household sharing detection active since March 2024 via IP analysis",
+      "No known CAPTCHA challenges during normal browsing sessions",
+      "Session cookies have unknown TTL; aggressive refresh may be needed",
+      "Hulu standalone app being phased out in 2026 -- API surface is a moving target"
+    ],
+    "harCaptureCount": "Internal APIs undocumented; HAR capture recommended for adapter development"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Hulu Subscriber Agreement -- Automated Access Prohibition",
+      "description": "Hulu's Subscriber Agreement explicitly prohibits accessing services using robots, spiders, scripts, or other automated means, including for AI tools, data mining, or web scraping. Violations may result in account limitation or termination 'at Hulu's sole discretion.' As a Disney subsidiary, Hulu benefits from Disney's substantial legal and enforcement resources."
+    },
+    "overallRisk": {
+      "level": "Medium-High",
+      "description": "Higher than Netflix due to active household sharing detection and Disney's enforcement infrastructure. No MFA makes writes simpler but account suspension risk is elevated."
+    },
+    "detectionVectors": [
+      { "vector": "Headless browser detection", "risk": "Medium", "mitigation": "Use Playwright stealth plugin (playwright-extra) to mask automation signals" },
+      { "vector": "Household sharing detection (IP-based)", "risk": "High", "mitigation": "Run automation from user's home network or residential proxy. Hulu actively monitors since March 2024." },
+      { "vector": "Device fingerprinting", "risk": "Medium", "mitigation": "Maintain consistent browser profile and device ID across sessions" },
+      { "vector": "AWS WAF / bot detection", "risk": "Low-Medium", "mitigation": "Standard stealth mode, human-like timing, jitter between actions" },
+      { "vector": "Login from new device/IP", "risk": "Medium", "mitigation": "Minimize re-authentication; cache session cookies aggressively" },
+      { "vector": "Rapid profile/settings changes", "risk": "Low", "mitigation": "Batch changes; add random delays between operations" }
+    ],
+    "mitigationsChecklist": [
+      "Enable Playwright stealth mode for all browser sessions",
+      "Run automation from consistent IP matching user's household location",
+      "Cache session cookies aggressively to minimize login frequency",
+      "Maintain persistent browser profile and device fingerprint",
+      "Add human-like random delays (2-8s) between navigation steps",
+      "Implement retry logic with exponential backoff",
+      "Monitor for account suspension signals and alert user immediately",
+      "Plan for Hulu app shutdown -- transition to Disney+ adapter"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Hulu",
+    "stats": [
+      { "label": "Native", "value": 5, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 4, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 11, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 25, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Screen Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Hulu Gap",
+        "gap": "Hulu has ZERO screen time controls. No native way for parents to restrict daily viewing hours. No 'are you still watching?' prompt. Children can watch indefinitely.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra enforces schedule-based profile access via PIN toggle. Enable PIN at bedtime, disable in morning. Device-level controls recommended for time-based limits since Hulu lacks timestamp data in watch history."
+      },
+      {
+        "icon": "Bell",
+        "title": "Activity Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Hulu Gap",
+        "gap": "Hulu sends no parent alerts. Parents have zero real-time visibility into what their child watches, including exposure to FX on Hulu mature content or unfiltered ads.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra polls watch history via Playwright and notifies parents of new titles watched. Cannot provide real-time alerts but can send periodic summaries."
+      },
+      {
+        "icon": "Moon",
+        "title": "Bedtime Mode",
+        "ruleCategory": "bedtime_schedule",
+        "gapLabel": "Hulu Gap",
+        "gap": "Hulu has no time-of-day restrictions. Children can watch on-demand or live TV content at any hour without restriction.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra toggles PIN protection on schedule to block non-Kids profile access during bedtime hours. Note: this is an account-wide lock affecting all non-Kids profiles."
+      },
+      {
+        "icon": "Shield",
+        "title": "Ad Content Protection",
+        "ruleCategory": "content_rating_filter",
+        "gapLabel": "Hulu Gap",
+        "gap": "On ad-supported plans, advertisements are NOT filtered by profile maturity. A child can see TV-MA ad trailers while watching a TV-PG show. This gap does not exist on Netflix, Disney+, or Apple TV+.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra recommends families with young children subscribe to the ad-free tier. For ad-supported subscribers, Phosra prominently documents this risk and suggests device-level ad blocking where possible."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Read Layer (Playwright)", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Write Layer (Playwright)", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Session Manager", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Schedule Enforcer", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "Hulu email", "purpose": "Login", "sensitivity": "High", "encryption": "AES-256", "retention": "Until disconnected" },
+      { "name": "Hulu password", "purpose": "Login + PIN changes", "sensitivity": "Critical", "encryption": "AES-256 + per-user key", "retention": "Until disconnected" },
+      { "name": "Session cookies", "purpose": "Browser context reuse", "sensitivity": "High", "encryption": "AES-256", "retention": "Unknown TTL (refresh proactively)" },
+      { "name": "Profile names/IDs", "purpose": "Profile mapping", "sensitivity": "Low", "encryption": "Standard", "retention": "Until disconnected" },
+      { "name": "Account PIN", "purpose": "PIN management", "sensitivity": "High", "encryption": "AES-256 + vault", "retention": "Active enforcement only" }
+    ],
+    "platformBgColor": "rgba(28,231,131,0.05)",
+    "platformIconLetter": "h",
+    "platformIconBg": "#1CE783",
+    "apiDescription": "Playwright-only (no documented API surface)",
+    "adapterName": "Hulu Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track viewing activity",
+        "detail": "Scrape watch history via Playwright every 4-6 hours. Extract title names and progress indicators. No timestamps or duration data available.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "detect",
+        "icon": "Gauge",
+        "title": "Detect",
+        "description": "Check for new viewing activity",
+        "detail": "Compare current watch history against last known state. Detect new titles watched. Cannot calculate duration or timing due to missing timestamp data.",
+        "color": "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
+        "dotColor": "bg-amber-500",
+        "headerBg": "bg-amber-500/10"
+      },
+      {
+        "id": "lock",
+        "icon": "Lock",
+        "title": "Lock",
+        "description": "Restrict profile access (schedule-based)",
+        "detail": "Toggle PIN protection on via Playwright at scheduled times (e.g., bedtime). This locks ALL non-Kids profiles, not just the target child's profile.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent",
+        "detail": "Push notification to parent via Phosra app with list of new titles watched, profile lock status, and any detected concerns.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Timer",
+        "title": "No timestamp data in watch history",
+        "description": "Hulu's watch history shows titles and progress but no dates, times, or session durations. Phosra cannot calculate daily watch time or determine when viewing occurred."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "Account-wide PIN (not per-profile)",
+        "description": "Locking one child's profile via PIN toggle locks ALL non-Kids profiles on the account. This affects parents and other family members, making it a blunt enforcement tool."
+      },
+      {
+        "icon": "Tv",
+        "title": "Unfiltered ads on ad-supported plans",
+        "description": "Ad content bypasses profile maturity restrictions. A child on a Kids profile can still see TV-MA ad trailers. No Phosra workaround exists for this gap."
+      },
+      {
+        "icon": "Layers",
+        "title": "Hulu app shutting down in 2026",
+        "description": "The standalone Hulu app is being phased out. All content migrating to Disney+. Any Hulu-specific adapter has a limited remaining lifespan."
+      }
+    ],
+    "loopLabel": "Repeats on schedule until parent adjusts settings"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "authenticate", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low-Medium", "risk": "Medium", "recommendation": "Use stealth mode. Cache session cookies. Household detection is the primary risk -- run from user's network if possible." },
+      { "name": "listProfiles", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low", "risk": "Low", "recommendation": "Scrape profile picker page. Investigate internal REST endpoint via HAR for more reliable path." },
+      { "name": "getProfileSettings", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low", "risk": "Low", "recommendation": "Scrape profile edit page. Limited data: Kids toggle, autoplay, PIN status. No configurable maturity level." },
+      { "name": "setContentRestrictions", "approach": "Not Supported", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "N/A", "risk": "N/A", "recommendation": "Binary Kids/Standard model. No configurable maturity slider. Cannot change birthdate-based restrictions." },
+      { "name": "setTitleRestrictions", "approach": "Not Supported", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "N/A", "risk": "N/A", "recommendation": "Hulu does not support per-title blocking. Feature does not exist." },
+      { "name": "setProfilePIN", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low-Medium", "recommendation": "Toggle PIN via Parental Controls page. Password re-entry required. Account-wide scope." },
+      { "name": "getWatchHistory", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low", "recommendation": "Scrape History page. Titles and progress only -- no timestamps or duration. Severely limited value." },
+      { "name": "lockProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Toggle PIN protection. WARNING: account-wide -- locks ALL non-Kids profiles." },
+      { "name": "createKidsProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low", "risk": "Low", "recommendation": "Add Profile flow with Kids toggle. No PIN required for Kids profile creation. Max 7 profiles total." },
+      { "name": "supportsNativeScreenTime", "approach": "Static", "approachColor": "bg-muted text-muted-foreground", "complexity": "None", "risk": "None", "recommendation": "Returns false. Hulu has zero native screen time features." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Foundation", "components": "Session Manager (2-3d), Read Layer (2-3d)", "minDays": 4, "maxDays": 6, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "Write Layer (1-2d), Testing (2-3d)", "minDays": 3, "maxDays": 5, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Monitoring", "components": "Schedule Enforcer (1-2d), History Poller (1d)", "minDays": 2, "maxDays": 3, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "9-14 days",
+    "maxTotal": 14
+  }
+}

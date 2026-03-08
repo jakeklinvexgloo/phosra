@@ -59,7 +59,10 @@ type Handlers struct {
 	Admin      *handler.AdminHandler
 	AdminPitch *handler.AdminPitchHandler
 	Developer  *handler.DeveloperHandler
-	Source     *handler.SourceHandler
+	Source              *handler.SourceHandler
+	BrowserEnforcement *handler.BrowserEnforcementHandler
+	ConfigAgent        *handler.ConfigAgentHandler
+	ViewingHistory     *handler.ViewingHistoryHandler
 }
 
 func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.DeviceAuthenticator, rateLimitRPS int, opts ...Option) http.Handler {
@@ -172,6 +175,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 					// Members
 					r.Get("/members", h.Family.ListMembers)
 					r.Post("/members", h.Family.AddMember)
+					r.Put("/members/{memberID}", h.Family.UpdateMember)
 					r.Delete("/members/{memberID}", h.Family.RemoveMember)
 
 					// Children under family
@@ -218,6 +222,14 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 				// Enforcement for child
 				r.Post("/enforce", h.Enforcement.TriggerChildEnforcement)
 				r.Get("/enforcement/jobs", h.Enforcement.ListChildJobs)
+
+				// Emergency pause/resume
+				r.Post("/emergency-pause", h.Enforcement.EmergencyPause)
+				r.Post("/emergency-resume", h.Enforcement.EmergencyResume)
+
+				// Routines
+				r.Post("/routines/{routineName}/activate", h.Enforcement.ActivateRoutine)
+				r.Post("/routines/{routineName}/deactivate", h.Enforcement.DeactivateRoutine)
 
 				// Sources under child
 				r.Get("/sources", h.Source.ListByChild)
@@ -297,6 +309,47 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 				r.Delete("/", h.Webhook.Delete)
 				r.Post("/test", h.Webhook.Test)
 				r.Get("/deliveries", h.Webhook.ListDeliveries)
+			})
+		})
+
+		// Viewing History & CSM
+		r.Route("/viewing-history", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/sync", h.ViewingHistory.SyncHistory)
+			r.Post("/link-csm", h.ViewingHistory.LinkCSM)
+			r.Get("/{childId}", h.ViewingHistory.GetChildHistory)
+			r.Delete("/{childId}", h.ViewingHistory.DeleteChildHistory)
+		})
+		r.Route("/csm", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Get("/review/{slug}", h.ViewingHistory.GetCSMReview)
+			r.Post("/reviews/bulk", h.ViewingHistory.BulkUpsertReviews)
+		})
+		r.Group(func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Get("/viewing-analytics/{childId}", h.ViewingHistory.GetAnalytics)
+		})
+
+		// Config Agent State
+		r.Route("/config-agent/state", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Route("/{platform}", func(r chi.Router) {
+				r.Get("/", h.ConfigAgent.GetState)
+				r.Put("/", h.ConfigAgent.SaveState)
+				r.Delete("/", h.ConfigAgent.DeleteState)
+			})
+		})
+
+		// Browser Enforcement
+		r.Route("/enforce", func(r chi.Router) {
+			r.Use(authMiddleware)
+
+			r.Post("/", h.BrowserEnforcement.CreateJob)
+			r.Get("/history", h.BrowserEnforcement.ListJobs)
+			r.Route("/{jobId}", func(r chi.Router) {
+				r.Get("/", h.BrowserEnforcement.GetJob)
+				r.Get("/audit", h.BrowserEnforcement.GetJobAuditLog)
+				r.Delete("/", h.BrowserEnforcement.CancelJob)
 			})
 		})
 
@@ -453,9 +506,20 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Get("/outreach/sent-today", h.Admin.WorkerCountSentToday)
 
 			// Contact management
+			r.Post("/outreach/contacts/upsert-by-email", h.Admin.WorkerUpsertContactByEmail)
 			r.Get("/outreach/{contactID}", h.Admin.WorkerGetContact)
 			r.Patch("/outreach/{contactID}", h.Admin.WorkerUpdateContact)
 			r.Post("/outreach/{contactID}/activity", h.Admin.WorkerCreateActivity)
+
+			// Gmail sync state
+			r.Get("/gmail/sync-state/{accountKey}", h.Admin.WorkerGetSyncState)
+			r.Put("/gmail/sync-state/{accountKey}", h.Admin.WorkerSetSyncState)
+
+			// Activity dedup check
+			r.Get("/outreach/activity-exists/{gmailMessageID}", h.Admin.WorkerCheckActivityExists)
+
+			// Google accounts listing
+			r.Get("/google/accounts", h.Admin.WorkerListGoogleAccounts)
 
 			// Config
 			r.Get("/outreach/config", h.Admin.WorkerGetConfig)

@@ -1,0 +1,260 @@
+{
+  "profileStructure": {
+    "accountLabel": "Paramount+ Account",
+    "accountDescription": "Premium Subscription",
+    "accountMeta": "Max 6 profiles \u00b7 3 simultaneous streams",
+    "accountBorderColor": "#0064FF",
+    "accountLabelColor": "#60a5fa",
+    "hierarchyDescription": "Paramount+ Account \u2192 Account-Wide Parental Controls \u2192 Profiles \u2192 Per-Profile Kids/Standard Type",
+    "profiles": [
+      { "name": "Account Owner", "maturity": "Adult", "type": "standard", "pinEnabled": true },
+      { "name": "Partner", "maturity": "Adult", "type": "standard", "pinEnabled": false },
+      { "name": "Teen", "maturity": "Teens (via slider)", "type": "standard", "pinEnabled": false },
+      { "name": "Older Kid", "maturity": "Older Kids", "type": "kids", "pinEnabled": false },
+      { "name": "Younger Kid", "maturity": "All Kids", "type": "kids", "pinEnabled": false },
+      { "name": "Guest", "maturity": "Adult", "type": "standard", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Display Name", "configurable": true },
+      { "setting": "Avatar Image", "configurable": true },
+      { "setting": "Kids Mode Toggle", "configurable": true },
+      { "setting": "Kids Age Tier (Younger/Older)", "configurable": true },
+      { "setting": "Content Restriction Level (account-wide)", "configurable": true },
+      { "setting": "Parental Controls PIN (4-digit, account-wide)", "configurable": true },
+      { "setting": "PIN Required for Profile Switching", "configurable": true },
+      { "setting": "PIN Required to Watch Restricted Content", "configurable": true },
+      { "setting": "PIN Required for Live TV", "configurable": true },
+      { "setting": "Autoplay Next Episode (device-specific)", "configurable": true },
+      { "setting": "Per-Title Blocking", "configurable": false }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Essential (with Ads)", "streams": "3", "resolution": "1080p" },
+      { "plan": "Premium (no Ads)", "streams": "3", "resolution": "4K UHD + Dolby Vision" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Google Cloud Platform infrastructure with standard web application architecture",
+    "apiArchitecture": {
+      "title": "Standard Web Application (GCP/GKE)",
+      "description": "Paramount+ runs on Google Cloud Platform with Google Kubernetes Engine (GKE) as the orchestration layer. The platform uses a standard web application architecture with server-rendered pages for account management and API calls for content delivery. Video manifests are served through legacy thePlatform/MPX infrastructure (link.theplatform.com). Multi-CDN strategy uses CloudFront, Akamai, Fastly, and Google Edge. No public API is available. The SlyGuy Kodi addon has reverse-engineered content playback APIs but not account management endpoints.",
+      "codeExample": {
+        "comment": "// Web-based account settings (no documented API)",
+        "method": "GET",
+        "endpoint": "www.paramountplus.com/account/",
+        "exampleComment": "// Parental controls are managed through the web UI only",
+        "exampleCode": "// No API endpoint known for parental control management.\n// All settings changes require Playwright browser automation.\n// Video delivery uses link.theplatform.com/* for manifests."
+      }
+    },
+    "endpoints": [
+      { "endpoint": "www.paramountplus.com/account/", "purpose": "Account settings and parental controls (web UI)", "auth": "Session Cookie" },
+      { "endpoint": "www.paramountplus.com/account/parental-controls/", "purpose": "Parental controls configuration page", "auth": "Session Cookie + Password" },
+      { "endpoint": "link.theplatform.com/*", "purpose": "Video manifest/playback delivery (legacy thePlatform MPX)", "auth": "Session Token" },
+      { "endpoint": "*.cbsivideo.com/*", "purpose": "Video streaming delivery", "auth": "CDN Token" },
+      { "endpoint": "www.paramountplus.com/shows/*", "purpose": "Content catalog and metadata (public)", "auth": "None" },
+      { "endpoint": "www.paramountplus.com/brands/*", "purpose": "Brand hub pages (Nickelodeon, CBS, MTV, etc.)", "auth": "None" },
+      { "endpoint": "*.pplusstatic.com/*", "purpose": "Static assets (images, CSS, JS)", "auth": "None" }
+    ],
+    "authDetails": [
+      { "label": "Primary Auth", "value": "Session Cookies", "description": "Standard cookie-based sessions set at login. No proprietary protocol (no MSL, no Falcor)." },
+      { "label": "Cloud Protection", "value": "Google Cloud Armor WAF", "description": "Web Application Firewall providing bot detection, DDoS protection, and request filtering." },
+      { "label": "Video Delivery", "value": "thePlatform MPX tokens", "description": "Legacy Comcast Technology Solutions infrastructure for video manifest delivery. Used by SlyGuy Kodi addon." },
+      { "label": "CDN Auth", "value": "Multi-CDN token rotation", "description": "CloudFront, Akamai, Fastly, and Google Edge CDN with signed URLs for video streams." }
+    ],
+    "rateLimitNotes": [
+      "Google Cloud Armor WAF handles request filtering and bot detection",
+      "No aggressive anti-automation measures documented (less hostile than Netflix)",
+      "CAPTCHA may appear on login under suspicious conditions",
+      "Session cookies last for an estimated 1-4 weeks before re-authentication required",
+      "Multi-CDN architecture distributes load across CloudFront, Akamai, Fastly, and Google Edge",
+      "SlyGuy Kodi addon operates successfully, suggesting moderate anti-bot enforcement"
+    ],
+    "harCaptureCount": "7 key endpoint patterns identified via research"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Paramount+ Terms of Use -- Automated Access",
+      "description": "Paramount+ Terms of Use explicitly prohibit use of 'any robot, bot, scraper, site search/retrieval application, proxy, VPN or other manual or automatic device, method, system or process to access, retrieve, index, data mine, or in any way reproduce or circumvent the navigational structure or presentation of the Service.' No public API or partner program exists for third-party parental control integration."
+    },
+    "overallRisk": {
+      "level": "Medium",
+      "description": "comparable to Peacock -- manageable with stealth browser automation and rate limiting. Google Cloud Armor is less aggressive than Netflix's custom detection stack."
+    },
+    "detectionVectors": [
+      { "vector": "Headless browser detection", "risk": "Medium", "mitigation": "Use Playwright stealth plugin (playwright-extra) to mask automation signals" },
+      { "vector": "Google Cloud Armor WAF", "risk": "Medium", "mitigation": "Respect rate limits; use consistent browser fingerprint; avoid rapid sequential requests" },
+      { "vector": "CAPTCHA on login", "risk": "Low", "mitigation": "Monitor for CAPTCHA challenges; implement solver or user-assisted flow if needed" },
+      { "vector": "Login from new device/IP", "risk": "Low-Medium", "mitigation": "Maintain persistent browser profile and cookies across sessions" },
+      { "vector": "Unusual navigation patterns", "risk": "Low", "mitigation": "Randomize delays between actions; follow natural page flow" },
+      { "vector": "Multiple rapid setting changes", "risk": "Low", "mitigation": "Batch changes in single sessions; add jitter between actions" }
+    ],
+    "mitigationsChecklist": [
+      "Enable Playwright stealth mode for all browser sessions",
+      "Cache session cookies aggressively to minimize login frequency",
+      "Implement exponential backoff on retry logic",
+      "Add human-like random delays (2-8s) between navigation steps",
+      "Maintain persistent browser profiles to avoid new-device triggers",
+      "Monitor for CAPTCHA or challenge responses and alert on detection",
+      "Batch parental control changes into single password-verified sessions",
+      "Track Paramount+ platform migration timeline (Skydance merger) for potential breaking changes"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Paramount+",
+    "stats": [
+      { "label": "Native", "value": 6, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 4, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 10, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 25, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Clock",
+        "title": "Screen Time Limits",
+        "ruleCategory": "screen_time_limit",
+        "gapLabel": "Paramount+ Gap",
+        "gap": "Paramount+ has ZERO screen time controls. No native way for parents to restrict daily viewing hours, despite hosting extensive Nickelodeon kids content alongside TV-MA Showtime originals.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra monitors Continue Watching data via periodic Playwright scrapes. When the daily limit is reached, the child's profile access is restricted by changing the account-wide parental controls PIN to a Phosra-managed value. NOTE: This affects all profiles on the account, not just the target child."
+      },
+      {
+        "icon": "Bell",
+        "title": "Activity Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Paramount+ Gap",
+        "gap": "Paramount+ sends no parent alerts. Parents have no visibility into what their child watches. No real-time notifications, no weekly reports, no email summaries.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra periodically scrapes Continue Watching data and pushes notifications to parents when new content appears or unusual viewing patterns are detected."
+      },
+      {
+        "icon": "Moon",
+        "title": "Bedtime Mode",
+        "ruleCategory": "bedtime_schedule",
+        "gapLabel": "Paramount+ Gap",
+        "gap": "Paramount+ has no time-of-day restrictions. Children can watch Nickelodeon content, live CBS sports, or attempt to access Showtime content at any hour.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra locks and unlocks profile access on a parent-defined schedule via cron-triggered PIN changes. Profile access is toggled to enforce bedtime windows. NOTE: Account-wide PIN change affects all users."
+      },
+      {
+        "icon": "Shield",
+        "title": "Per-Title Blocking",
+        "ruleCategory": "title_restriction",
+        "gapLabel": "Paramount+ Gap",
+        "gap": "Paramount+ does NOT support per-title blocking. Parents cannot block specific shows like South Park while allowing other content at the same rating level. The only mechanism is the account-wide rating slider.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "No direct workaround available. Phosra can alert parents about specific content their child has watched and recommend adjusting the rating slider, but cannot selectively block individual titles."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Read Layer (Playwright)", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Write Layer (Playwright)", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Session Manager", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "Screen Time Enforcer (Limited)", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "Paramount+ email", "purpose": "Login", "sensitivity": "High", "encryption": "AES-256", "retention": "Until disconnected" },
+      { "name": "Paramount+ password", "purpose": "Login + parental control changes", "sensitivity": "Critical", "encryption": "AES-256 + per-user key", "retention": "Until disconnected" },
+      { "name": "Session cookies", "purpose": "Browser session reuse", "sensitivity": "High", "encryption": "AES-256", "retention": "1-4 weeks (auto-refresh)" },
+      { "name": "Profile names/IDs", "purpose": "Profile mapping", "sensitivity": "Low", "encryption": "Standard", "retention": "Until disconnected" },
+      { "name": "Account PIN", "purpose": "Content access + profile switching", "sensitivity": "High", "encryption": "AES-256 + vault", "retention": "Until disconnected" },
+      { "name": "Phosra-managed PINs", "purpose": "Screen time lock/unlock", "sensitivity": "Medium", "encryption": "AES-256 + vault", "retention": "Active enforcement only" }
+    ],
+    "platformBgColor": "rgba(0,100,255,0.05)",
+    "platformIconLetter": "P+",
+    "platformIconBg": "#0064FF",
+    "apiDescription": "Playwright-only (no known API for account management)",
+    "adapterName": "Paramount+ Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor",
+        "description": "Track viewing activity",
+        "detail": "Scrape Continue Watching carousel via Playwright every 30-60 min. Extract title names and progress indicators per profile.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "detect",
+        "icon": "Gauge",
+        "title": "Detect",
+        "description": "Check for new viewing activity",
+        "detail": "Compare current Continue Watching state against previous snapshot. New entries or progress changes indicate active viewing. NOTE: No timestamps or durations available -- detection is based on state changes only.",
+        "color": "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
+        "dotColor": "bg-amber-500",
+        "headerBg": "bg-amber-500/10"
+      },
+      {
+        "id": "lock",
+        "icon": "Lock",
+        "title": "Lock",
+        "description": "Restrict profile access",
+        "detail": "Change account-wide parental controls PIN to a Phosra-generated value via Playwright automation of web settings. CAUTION: This affects ALL users on the account, not just the target child.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent",
+        "detail": "Push notification to parent via Phosra app with viewing summary and lock confirmation. Include list of titles watched and any content rating concerns.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Timer",
+        "title": "30-60 min polling delay",
+        "description": "Continue Watching data is scraped via Playwright, not queried via API. Polling interval is 30-60 minutes. Children may overshoot limits significantly before detection."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No Paramount+ API",
+        "description": "All operations (reads AND writes) require Playwright browser automation. No internal API for account settings has been documented. Higher resource cost per operation than Netflix (which has Shakti API for reads)."
+      },
+      {
+        "icon": "Users",
+        "title": "Account-wide PIN affects all users",
+        "description": "The parental controls PIN is account-wide. Changing it to lock one child's access also locks out other family members from PIN-gated content and profile switching."
+      },
+      {
+        "icon": "Tv",
+        "title": "Live TV is all-or-nothing",
+        "description": "The Live TV PIN lock is a binary toggle. There is no per-channel or per-rating granularity. Blocking a child from watching live CBS News also blocks live NFL games."
+      },
+      {
+        "icon": "Ban",
+        "title": "No per-title blocking",
+        "description": "Paramount+ does not support blocking individual titles. South Park (TV-MA) and PAW Patrol (TV-Y) can only be separated by rating tier, not individually."
+      }
+    ],
+    "loopLabel": "Repeats daily until parent adjusts limits"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "authenticate", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low-Medium", "risk": "Medium", "recommendation": "Use stealth mode. Cache session cookies. No MFA handling needed (simpler than Netflix)." },
+      { "name": "listProfiles", "approach": "Playwright Scrape", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low", "risk": "Low", "recommendation": "Scrape profile picker page. Extract names, types, and Kids tier." },
+      { "name": "getProfileSettings", "approach": "Playwright Scrape", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low-Medium", "risk": "Low", "recommendation": "Scrape account settings page. Read parental controls state, rating slider, live TV lock." },
+      { "name": "setContentRestrictions", "approach": "Playwright + Password", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Playwright via web settings. Requires password entry. Account-wide slider (4 tiers + live TV toggle)." },
+      { "name": "setTitleRestrictions", "approach": "Not Supported", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "N/A", "risk": "N/A", "recommendation": "Paramount+ does not support per-title blocking. Return UnsupportedOperationError." },
+      { "name": "setProfilePIN", "approach": "Playwright + Password", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Low-Medium", "recommendation": "Playwright via web account settings. PIN is 4-digit numeric, account-wide. Password required for changes." },
+      { "name": "getWatchHistory", "approach": "Playwright Scrape", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low", "recommendation": "Scrape Continue Watching carousel. Data is very sparse: title + progress only. No dates, no durations." },
+      { "name": "lockProfile", "approach": "Playwright + Password", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "High", "recommendation": "Change account-wide PIN. Store original PIN for restore. CAUTION: Affects ALL users. Recommend device-level controls instead." },
+      { "name": "createKidsProfile", "approach": "Playwright", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Low-Medium", "risk": "Low", "recommendation": "Playwright with Kids Mode toggle + age tier selection. Verify profile count < 6 before attempting." },
+      { "name": "supportsNativeScreenTime", "approach": "Static", "approachColor": "bg-muted text-muted-foreground", "complexity": "None", "risk": "None", "recommendation": "Returns false. Paramount+ has zero native screen time features. Autoplay OFF by default on Kids profiles." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Foundation", "components": "Session Manager (1-2d), Read Layer (2-3d)", "minDays": 3, "maxDays": 5, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Enforcement", "components": "Write Layer (2-3d), Testing (2-3d)", "minDays": 4, "maxDays": 6, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Intelligence", "components": "Screen Time Enforcer (1d)", "minDays": 1, "maxDays": 1, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "8-12 days",
+    "maxTotal": 12
+  }
+}

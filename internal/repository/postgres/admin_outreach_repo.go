@@ -130,16 +130,16 @@ func (r *AdminOutreachRepo) CreateActivity(ctx context.Context, a *domain.Outrea
 	}
 	a.CreatedAt = time.Now()
 	_, err := r.Pool.Exec(ctx,
-		`INSERT INTO admin_outreach_activities (id, contact_id, activity_type, subject, body, created_at)
-		 VALUES ($1, $2, $3, $4, $5, $6)`,
-		a.ID, a.ContactID, a.ActivityType, a.Subject, a.Body, a.CreatedAt,
+		`INSERT INTO admin_outreach_activities (id, contact_id, activity_type, subject, body, gmail_message_id, gmail_thread_id, created_at)
+		 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+		a.ID, a.ContactID, a.ActivityType, a.Subject, a.Body, a.GmailMessageID, a.GmailThreadID, a.CreatedAt,
 	)
 	return err
 }
 
 func (r *AdminOutreachRepo) ListActivities(ctx context.Context, contactID uuid.UUID) ([]domain.OutreachActivity, error) {
 	rows, err := r.Pool.Query(ctx,
-		`SELECT id, contact_id, activity_type, subject, body, intent_classification, confidence_score, created_at
+		`SELECT id, contact_id, activity_type, subject, body, intent_classification, confidence_score, gmail_message_id, gmail_thread_id, created_at
 		 FROM admin_outreach_activities WHERE contact_id = $1
 		 ORDER BY created_at DESC`, contactID,
 	)
@@ -151,7 +151,7 @@ func (r *AdminOutreachRepo) ListActivities(ctx context.Context, contactID uuid.U
 	var activities []domain.OutreachActivity
 	for rows.Next() {
 		var a domain.OutreachActivity
-		if err := rows.Scan(&a.ID, &a.ContactID, &a.ActivityType, &a.Subject, &a.Body, &a.IntentClassification, &a.ConfidenceScore, &a.CreatedAt); err != nil {
+		if err := rows.Scan(&a.ID, &a.ContactID, &a.ActivityType, &a.Subject, &a.Body, &a.IntentClassification, &a.ConfidenceScore, &a.GmailMessageID, &a.GmailThreadID, &a.CreatedAt); err != nil {
 			return nil, err
 		}
 		activities = append(activities, a)
@@ -184,8 +184,8 @@ func (r *AdminOutreachRepo) ListRecentActivities(ctx context.Context, limit int)
 	}
 	rows, err := r.Pool.Query(ctx,
 		`SELECT a.id, a.contact_id, a.activity_type, a.subject, a.body,
-		        a.intent_classification, a.confidence_score, a.created_at,
-		        c.name, c.org
+		        a.intent_classification, a.confidence_score, a.gmail_message_id, a.gmail_thread_id, a.created_at,
+		        c.name, c.org, c.email
 		 FROM admin_outreach_activities a
 		 JOIN admin_outreach_contacts c ON c.id = a.contact_id
 		 ORDER BY a.created_at DESC
@@ -201,8 +201,8 @@ func (r *AdminOutreachRepo) ListRecentActivities(ctx context.Context, limit int)
 		var a domain.OutreachActivityWithContact
 		if err := rows.Scan(
 			&a.ID, &a.ContactID, &a.ActivityType, &a.Subject, &a.Body,
-			&a.IntentClassification, &a.ConfidenceScore, &a.CreatedAt,
-			&a.ContactName, &a.ContactOrg,
+			&a.IntentClassification, &a.ConfidenceScore, &a.GmailMessageID, &a.GmailThreadID, &a.CreatedAt,
+			&a.ContactName, &a.ContactOrg, &a.ContactEmail,
 		); err != nil {
 			return nil, err
 		}
@@ -227,6 +227,40 @@ func (r *AdminOutreachRepo) ActivitySummary(ctx context.Context, since time.Time
 		return nil, err
 	}
 	return &s, nil
+}
+
+// GetByEmail looks up a contact by email (case-insensitive).
+func (r *AdminOutreachRepo) GetByEmail(ctx context.Context, email string) (*domain.OutreachContact, error) {
+	var c domain.OutreachContact
+	err := r.Pool.QueryRow(ctx,
+		`SELECT id, name, org, title, contact_type, email, linkedin_url, twitter_handle, phone,
+		 status, notes, relevance_score, tags, email_status, priority_tier,
+		 last_contact_at, next_followup_at, created_at, updated_at
+		 FROM admin_outreach_contacts WHERE LOWER(email) = LOWER($1) LIMIT 1`, email,
+	).Scan(
+		&c.ID, &c.Name, &c.Org, &c.Title, &c.ContactType, &c.Email,
+		&c.LinkedinURL, &c.TwitterHandle, &c.Phone, &c.Status, &c.Notes,
+		&c.RelevanceScore, &c.Tags, &c.EmailStatus, &c.PriorityTier,
+		&c.LastContactAt, &c.NextFollowupAt,
+		&c.CreatedAt, &c.UpdatedAt,
+	)
+	if err == pgx.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &c, nil
+}
+
+// ActivityExistsByGmailMessageID checks if an activity with the given Gmail message ID already exists.
+func (r *AdminOutreachRepo) ActivityExistsByGmailMessageID(ctx context.Context, gmailMessageID string) (bool, error) {
+	var exists bool
+	err := r.Pool.QueryRow(ctx,
+		`SELECT EXISTS(SELECT 1 FROM admin_outreach_activities WHERE gmail_message_id = $1)`,
+		gmailMessageID,
+	).Scan(&exists)
+	return exists, err
 }
 
 // placeholder returns a PostgreSQL placeholder like $1, $2, etc.

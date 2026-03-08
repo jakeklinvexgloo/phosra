@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -679,13 +680,19 @@ func (h *AdminHandler) WorkerSearchGmail(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	msgs, err := client.SearchMessages(r.Context(), query, 20)
+	maxResults := 50
+	if n, err := strconv.Atoi(r.URL.Query().Get("maxResults")); err == nil && n > 0 && n <= 100 {
+		maxResults = n
+	}
+	pageToken := r.URL.Query().Get("pageToken")
+
+	msgs, err := client.ListMessages(r.Context(), query, maxResults, pageToken)
 	if err != nil {
 		if errors.Is(err, google.ErrGoogleDisconnected) {
 			httputil.Error(w, http.StatusUnauthorized, "outreach Google disconnected")
 			return
 		}
-		httputil.Error(w, http.StatusInternalServerError, "failed to search Gmail")
+		httputil.Error(w, http.StatusInternalServerError, fmt.Sprintf("failed to search Gmail: %v", err))
 		return
 	}
 	httputil.JSON(w, http.StatusOK, msgs)
@@ -959,6 +966,8 @@ func (h *AdminHandler) WorkerCreateActivity(w http.ResponseWriter, r *http.Reque
 		Body                 string   `json:"body"`
 		IntentClassification *string  `json:"intent_classification,omitempty"`
 		ConfidenceScore      *float64 `json:"confidence_score,omitempty"`
+		GmailMessageID       *string  `json:"gmail_message_id,omitempty"`
+		GmailThreadID        *string  `json:"gmail_thread_id,omitempty"`
 	}
 	if err := httputil.DecodeJSON(r, &req); err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid request body")
@@ -972,6 +981,8 @@ func (h *AdminHandler) WorkerCreateActivity(w http.ResponseWriter, r *http.Reque
 		Body:                 req.Body,
 		IntentClassification: req.IntentClassification,
 		ConfidenceScore:      req.ConfidenceScore,
+		GmailMessageID:       req.GmailMessageID,
+		GmailThreadID:        req.GmailThreadID,
 	}
 	if err := h.outreach.CreateActivity(r.Context(), activity); err != nil {
 		httputil.Error(w, http.StatusInternalServerError, "failed to create activity")
@@ -1048,4 +1059,125 @@ func (h *AdminHandler) WorkerCountSentToday(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	httputil.JSON(w, http.StatusOK, map[string]int{"count": count})
+}
+
+// ── Gmail History Import Worker Endpoints ───────────────────────
+
+func (h *AdminHandler) WorkerUpsertContactByEmail(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Email        string `json:"email"`
+		Name         string `json:"name"`
+		Organization string `json:"organization"`
+		Title        string `json:"title"`
+	}
+	if err := httputil.DecodeJSON(r, &req); err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	if req.Email == "" {
+		httputil.Error(w, http.StatusBadRequest, "email is required")
+		return
+	}
+
+	existing, err := h.outreach.GetByEmail(r.Context(), req.Email)
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to look up contact")
+		return
+	}
+	if existing != nil {
+		httputil.JSON(w, http.StatusOK, existing)
+		return
+	}
+
+	email := req.Email
+	contact := &domain.OutreachContact{
+		Name:         req.Name,
+		Org:          req.Organization,
+		Title:        req.Title,
+		ContactType:  domain.ContactTypeOther,
+		Email:        &email,
+		Status:       domain.OutreachReachedOut,
+		EmailStatus:  domain.EmailEmailed,
+		PriorityTier: 3,
+	}
+	if err := h.outreach.Create(r.Context(), contact); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, fmt.Sprintf("failed to create contact: %v", err))
+		return
+	}
+	httputil.Created(w, contact)
+}
+
+func (h *AdminHandler) WorkerGetSyncState(w http.ResponseWriter, r *http.Request) {
+	accountKey := chi.URLParam(r, "accountKey")
+	if accountKey == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing account key")
+		return
+	}
+
+	state, err := h.gmailSync.Get(r.Context(), accountKey)
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to get sync state")
+		return
+	}
+	if state == nil {
+		httputil.JSON(w, http.StatusOK, domain.GmailSyncState{
+			AccountKey:         accountKey,
+			LastMessageEpochMs: 0,
+		})
+		return
+	}
+	httputil.JSON(w, http.StatusOK, state)
+}
+
+func (h *AdminHandler) WorkerSetSyncState(w http.ResponseWriter, r *http.Request) {
+	accountKey := chi.URLParam(r, "accountKey")
+	if accountKey == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing account key")
+		return
+	}
+
+	var state domain.GmailSyncState
+	if err := httputil.DecodeJSON(r, &state); err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	state.AccountKey = accountKey
+
+	if err := h.gmailSync.Upsert(r.Context(), &state); err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to upsert sync state")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, state)
+}
+
+func (h *AdminHandler) WorkerCheckActivityExists(w http.ResponseWriter, r *http.Request) {
+	gmailMessageID := chi.URLParam(r, "gmailMessageID")
+	if gmailMessageID == "" {
+		httputil.Error(w, http.StatusBadRequest, "missing Gmail message ID")
+		return
+	}
+
+	exists, err := h.outreach.ActivityExistsByGmailMessageID(r.Context(), gmailMessageID)
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to check activity existence")
+		return
+	}
+	httputil.JSON(w, http.StatusOK, map[string]bool{"exists": exists})
+}
+
+func (h *AdminHandler) WorkerListGoogleAccounts(w http.ResponseWriter, r *http.Request) {
+	if h.googleRepo == nil {
+		httputil.JSON(w, http.StatusOK, []string{})
+		return
+	}
+	dbAccounts, err := h.googleRepo.ListAllAccounts(r.Context())
+	if err != nil {
+		httputil.Error(w, http.StatusInternalServerError, "failed to list Google accounts")
+		return
+	}
+	keys := make([]string, 0, len(dbAccounts))
+	for _, a := range dbAccounts {
+		keys = append(keys, a.AccountKey)
+	}
+	httputil.JSON(w, http.StatusOK, keys)
 }

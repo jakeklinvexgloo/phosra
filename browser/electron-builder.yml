@@ -1,0 +1,39 @@
+appId: com.phosra.browser
+productName: Phosra Browser
+copyright: Copyright © 2026 Phosra Inc.
+
+directories:
+  output: release
+  buildResources: assets
+
+files:
+  - dist/**/*
+  - package.json
+  - "!node_modules/.cache"
+
+mac:
+  category: public.app-category.developer-tools
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  entitlements: entitlements.mac.plist
+  entitlementsInherit: entitlements.mac.plist
+  hardenedRuntime: true
+
+protocols:
+  - name: Phosra Browser
+    schemes:
+      - phosra-browser
+
+dmg:
+  artifactName: "${productName}-${version}-${arch}.dmg"
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+

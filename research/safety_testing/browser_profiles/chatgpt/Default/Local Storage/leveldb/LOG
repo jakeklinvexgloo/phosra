@@ -1,0 +1,53 @@
+2026/02/26-15:08:33.755 2c479c Creating DB /Users/jakeklinvex/phosra/research/safety_testing/browser_profiles/chatgpt/Default/Local Storage/leveldb since it was missing.
+2026/02/26-15:08:33.760 2c479c Reusing MANIFEST /Users/jakeklinvex/phosra/research/safety_testing/browser_profiles/chatgpt/Default/Local Storage/leveldb/MANIFEST-000001
+2026/02/26-15:14:35.491 2c47a2 Level-0 table #5: started
+2026/02/26-15:14:35.495 2c47a2 Level-0 table #5: 23270 bytes OK
+2026/02/26-15:14:35.504 2c47a2 Delete type=0 #3
+2026/02/26-15:16:35.491 2c47a2 Level-0 table #7: started
+2026/02/26-15:16:35.494 2c47a2 Level-0 table #7: 26722 bytes OK
+2026/02/26-15:16:35.502 2c47a2 Delete type=0 #4
+2026/02/26-15:17:35.491 2c47a2 Level-0 table #9: started
+2026/02/26-15:17:35.503 2c47a2 Level-0 table #9: 17254 bytes OK
+2026/02/26-15:17:35.510 2c47a2 Delete type=0 #6
+2026/02/26-15:18:35.492 2c47a2 Level-0 table #11: started
+2026/02/26-15:18:35.498 2c47a2 Level-0 table #11: 18765 bytes OK
+2026/02/26-15:18:35.502 2c47a2 Delete type=0 #8
+2026/02/26-15:19:35.490 2c47a2 Level-0 table #13: started
+2026/02/26-15:19:35.495 2c47a2 Level-0 table #13: 20194 bytes OK
+2026/02/26-15:19:35.500 2c47a2 Delete type=0 #10
+2026/02/26-15:20:35.492 2c47a2 Level-0 table #15: started
+2026/02/26-15:20:35.495 2c47a2 Level-0 table #15: 21714 bytes OK
+2026/02/26-15:20:35.498 2c47a2 Delete type=0 #12
+2026/02/26-15:20:35.498 2c47a2 Compacting 4@0 + 1@1 files
+2026/02/26-15:20:35.502 2c47a2 Generated table #16@0: 13 keys, 21748 bytes
+2026/02/26-15:20:35.502 2c47a2 Compacted 4@0 + 1@1 files => 21748 bytes
+2026/02/26-15:20:35.503 2c47a2 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/26-15:20:35.504 2c47a2 Delete type=2 #15
+2026/02/26-15:20:35.504 2c47a2 Delete type=2 #7
+2026/02/26-15:20:35.504 2c47a2 Delete type=2 #13
+2026/02/26-15:20:35.504 2c47a2 Delete type=2 #11
+2026/02/26-15:20:35.504 2c47a2 Delete type=2 #9
+2026/02/26-15:21:35.490 2c47a2 Level-0 table #18: started
+2026/02/26-15:21:35.496 2c47a2 Level-0 table #18: 22470 bytes OK
+2026/02/26-15:21:35.501 2c47a2 Delete type=0 #14
+2026/02/26-15:22:35.491 2c47a2 Level-0 table #20: started
+2026/02/26-15:22:35.499 2c47a2 Level-0 table #20: 24803 bytes OK
+2026/02/26-15:22:35.503 2c47a2 Delete type=0 #17
+2026/02/26-15:23:35.491 2c47a2 Level-0 table #22: started
+2026/02/26-15:23:35.493 2c47a2 Level-0 table #22: 26929 bytes OK
+2026/02/26-15:23:35.498 2c47a2 Delete type=0 #19
+2026/02/26-15:24:35.491 2c47a2 Level-0 table #24: started
+2026/02/26-15:24:35.493 2c47a2 Level-0 table #24: 29116 bytes OK
+2026/02/26-15:24:35.496 2c47a2 Delete type=0 #21
+2026/02/26-15:24:35.496 2c47a2 Compacting 4@0 + 1@1 files
+2026/02/26-15:24:35.500 2c47a2 Generated table #25@0: 13 keys, 29174 bytes
+2026/02/26-15:24:35.500 2c47a2 Compacted 4@0 + 1@1 files => 29174 bytes
+2026/02/26-15:24:35.501 2c47a2 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/26-15:24:35.502 2c47a2 Delete type=2 #16
+2026/02/26-15:24:35.502 2c47a2 Delete type=2 #20
+2026/02/26-15:24:35.502 2c47a2 Delete type=2 #22
+2026/02/26-15:24:35.502 2c47a2 Delete type=2 #18
+2026/02/26-15:24:35.502 2c47a2 Delete type=2 #24
+2026/02/26-15:24:45.360 2c47a2 Level-0 table #27: started
+2026/02/26-15:24:45.364 2c47a2 Level-0 table #27: 30205 bytes OK
+2026/02/26-15:24:45.365 2c47a2 Delete type=0 #23

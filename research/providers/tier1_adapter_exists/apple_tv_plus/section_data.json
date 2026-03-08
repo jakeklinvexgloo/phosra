@@ -1,0 +1,250 @@
+{
+  "profileStructure": {
+    "accountLabel": "Apple ID (Family Sharing)",
+    "accountDescription": "Apple One / Apple TV+ Subscription",
+    "accountMeta": "Up to 6 family members + 5 managed profiles per account \u00b7 6 simultaneous streams",
+    "accountBorderColor": "#1D1D1F",
+    "accountLabelColor": "#a1a1aa",
+    "hierarchyDescription": "Apple ID \u2192 Family Sharing Group \u2192 Per-member Apple ID \u2192 Screen Time settings + Managed Profiles \u2192 Apple TV+ access",
+    "profiles": [
+      { "name": "Family Organizer (Parent)", "maturity": "17+ (unrestricted)", "type": "standard", "pinEnabled": true },
+      { "name": "Parent/Guardian 2", "maturity": "17+ (unrestricted)", "type": "standard", "pinEnabled": false },
+      { "name": "Teen (13-17)", "maturity": "12+", "type": "standard", "pinEnabled": false },
+      { "name": "Child (under 13)", "maturity": "9+", "type": "kids", "pinEnabled": false },
+      { "name": "Managed Kid Profile", "maturity": "4+", "type": "kids", "pinEnabled": false }
+    ],
+    "settings": [
+      { "setting": "Content Restrictions (age-based tier: 4+, 9+, 12+, 17+)", "configurable": true },
+      { "setting": "Screen Time Limits (per-app daily limit)", "configurable": true },
+      { "setting": "Downtime Schedule (bedtime enforcement)", "configurable": true },
+      { "setting": "App Limits (Apple TV app)", "configurable": true },
+      { "setting": "Ask to Buy (purchase approval)", "configurable": true },
+      { "setting": "Web Parental Controls (tv.apple.com, separate system)", "configurable": true },
+      { "setting": "Web Passcode (4-digit, web only)", "configurable": true },
+      { "setting": "TV Show Rating Limit (web, independent from movies)", "configurable": true },
+      { "setting": "Movie Rating Limit (web, independent from TV shows)", "configurable": true },
+      { "setting": "Kid Profile Designation (managed profiles)", "configurable": true },
+      { "setting": "Autoplay Next Episode (device only, not web)", "configurable": true },
+      { "setting": "Per-Title Blocking", "configurable": false },
+      { "setting": "Detailed Viewing History", "configurable": false },
+      { "setting": "Communication Limits (within Apple TV+)", "configurable": false }
+    ],
+    "subscriptionTiers": [
+      { "plan": "Apple TV+ (Standalone)", "streams": "6", "resolution": "4K HDR Dolby Vision" },
+      { "plan": "Apple One Individual", "streams": "1 (personal)", "resolution": "4K HDR Dolby Vision" },
+      { "plan": "Apple One Family", "streams": "6 (Family Sharing)", "resolution": "4K HDR Dolby Vision" },
+      { "plan": "Apple One Premier", "streams": "6 (Family Sharing)", "resolution": "4K HDR Dolby Vision" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "Dual-path architecture: iOS Screen Time API (sanctioned) + web player automation (supplemental)",
+    "apiArchitecture": {
+      "title": "Apple Dual-Path Architecture",
+      "description": "Apple TV+ integration has two distinct paths. The SANCTIONED path uses Apple's Screen Time API (FamilyControls, ManagedSettings, DeviceActivity frameworks) available to iOS developers with an approved FamilyControls entitlement. This provides device-level app time limits, content restrictions, and usage monitoring. The UNSANCTIONED path uses Playwright browser automation on tv.apple.com for web-specific parental controls. The web player at tv.apple.com has its own independent parental controls system (4-digit passcode + rating restrictions) that does not sync with device-level Screen Time settings.",
+      "codeExample": {
+        "comment": "// iOS Screen Time API (sanctioned path) -- ManagedSettings framework",
+        "method": "SWIFT",
+        "endpoint": "import ManagedSettings; import FamilyControls",
+        "exampleComment": "// Block the Apple TV app via Screen Time API",
+        "exampleCode": "let store = ManagedSettingsStore()\nstore.application.blockedApplications.insert(appleTVAppToken)"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "Screen Time API (iOS native)", "purpose": "Device-level app blocking, time limits, content restrictions, usage monitoring", "auth": "FamilyControls entitlement + user authorization" },
+      { "endpoint": "https://tv.apple.com/settings", "purpose": "Web parental controls (4-digit passcode + rating restrictions)", "auth": "Apple ID session (cookies + 2FA)" },
+      { "endpoint": "https://tv.apple.com/api/uts/v3/", "purpose": "Universal Type System API -- content catalog, metadata, search results", "auth": "Session Token (media-user-token)" },
+      { "endpoint": "https://play.tv.apple.com/", "purpose": "Video playback and FairPlay DRM streaming", "auth": "Apple ID session + FairPlay DRM tokens" },
+      { "endpoint": "https://buy.tv.apple.com/account/web/auth", "purpose": "Apple ID web authentication for TV app", "auth": "Apple ID credentials + mandatory 2FA" },
+      { "endpoint": "https://amp-api.media.apple.com/", "purpose": "Apple Media Products API -- content catalog and metadata", "auth": "Bearer token (JWT)" },
+      { "endpoint": "https://uts-api.itunes.apple.com/uts/v3/", "purpose": "Content metadata, ratings, and availability (alternate endpoint)", "auth": "Session Token" }
+    ],
+    "authDetails": [
+      { "label": "Apple ID 2FA", "value": "Mandatory two-factor authentication", "description": "Every Apple ID requires 2FA. Web login sends a 6-digit code to a trusted device. Cannot be bypassed or automated without user interaction." },
+      { "label": "Session Token", "value": "media-user-token (MUT)", "description": "Opaque session token for web player API calls after successful Apple ID login. Tied to browser session." },
+      { "label": "FamilyControls Auth", "value": "iOS native authorization", "description": "One-time user authorization on iOS device for Screen Time API access. No credential storage needed. Sanctioned by Apple." },
+      { "label": "Web Passcode", "value": "4-digit numeric passcode", "description": "Protects web parental control settings at tv.apple.com. Separate from Screen Time passcode and Apple TV device restrictions passcode." },
+      { "label": "FairPlay DRM", "value": "Apple FairPlay Streaming", "description": "Content delivery protected by Apple's proprietary DRM. Prevents content interception outside Apple ecosystem." },
+      { "label": "Device Attestation", "value": "Proprietary device trust chain", "description": "Screen Time and Family Sharing APIs require genuine Apple device attestation. Cannot be replicated by third-party servers." }
+    ],
+    "rateLimitNotes": [
+      "Screen Time API (iOS) has no rate limiting concerns -- native Apple framework with direct OS access",
+      "Web player APIs enforce Apple ID 2FA on every new session/device -- cannot be automated without user interaction",
+      "Apple ID security flags unusual login patterns aggressively -- failed auth attempts can lock accounts",
+      "Device trust attestation makes server-side API impersonation infeasible for device-level controls",
+      "Screen Time settings sync via encrypted iCloud -- not interceptable or readable by third parties",
+      "Web session tokens (media-user-token) are short-lived and tied to the authenticated browser session"
+    ],
+    "harCaptureCount": "N/A -- no HAR capture performed; research based on documentation analysis and web searches"
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "Apple Media Services Terms -- Automated Access",
+      "description": "Apple's Terms of Service strictly prohibit automated access: 'You may not use any software, device, automated process, or any similar or equivalent manual process to scrape, copy, or perform measurement, analysis, or monitoring of, any portion of the Content or Services.' Additionally: 'You may access our Services only using Apple's software.' The iOS Screen Time API path is ToS-compliant when used with an approved FamilyControls entitlement. Web automation of tv.apple.com violates these terms."
+    },
+    "overallRisk": {
+      "level": "Medium-High (web) / Low (iOS Screen Time API)",
+      "description": "Apple ID suspension risk makes web automation dangerous (blast radius: entire Apple ecosystem). iOS Screen Time API is sanctioned and low-risk with proper entitlement."
+    },
+    "detectionVectors": [
+      { "vector": "Apple ID 2FA enforcement", "risk": "Critical", "mitigation": "Cannot be bypassed. Require user to manually provide 2FA code for web sessions. Prefer iOS Screen Time API path." },
+      { "vector": "Apple ID suspicious login detection", "risk": "High", "mitigation": "Minimize re-authentication. Cache web sessions. Use user's own network when possible." },
+      { "vector": "Device attestation for Screen Time", "risk": "High", "mitigation": "Use genuine iOS device via companion app. Screen Time API requires real device -- no emulation." },
+      { "vector": "Web session token expiration", "risk": "Medium", "mitigation": "Cache media-user-token for as long as valid. Detect expiration and prompt user for re-auth." },
+      { "vector": "Apple ID account lockout", "risk": "Critical", "mitigation": "Never retry failed auth automatically. Apple locks accounts after suspicious activity. User loses entire Apple ecosystem." },
+      { "vector": "FamilyControls entitlement rejection", "risk": "Medium", "mitigation": "Submit clear, well-documented application emphasizing child safety purpose. Apple has approved similar apps (Canopy, etc.)." }
+    ],
+    "mitigationsChecklist": [
+      "Prioritize iOS Screen Time API path (FamilyControls entitlement) as primary integration",
+      "Apply for FamilyControls entitlement early -- Apple review process takes 2-4 weeks",
+      "For web automation: require user to manually provide 2FA code (never attempt to automate 2FA)",
+      "Cache web sessions as long as possible to minimize re-authentication",
+      "Never retry failed Apple ID authentication automatically -- account lockout risk",
+      "Build iOS companion app with SwiftUI for FamilyControls authorization flow",
+      "Clearly communicate to parents that Apple ID credentials are high-sensitivity",
+      "Maintain device-level enforcement as primary strategy; web automation as supplemental only",
+      "Monitor Apple Developer News for Screen Time API updates and new capabilities"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "Apple TV+",
+    "stats": [
+      { "label": "Native", "value": 8, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 3, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 9, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 25, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Eye",
+        "title": "Viewing History Visibility",
+        "ruleCategory": "viewing_history_access",
+        "gapLabel": "Apple TV+ Gap",
+        "gap": "Apple TV+ provides no viewing history accessible to parents. Only a 'Continue Watching' row exists with no timestamps, no duration data, and no historical log. Screen Time shows aggregate app usage time only, not specific content watched.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra's iOS companion app uses DeviceActivity to track Apple TV app usage time. For web users, Phosra scrapes Continue Watching titles (limited data). Both are surfaced in the Phosra parental dashboard alongside data from other platforms."
+      },
+      {
+        "icon": "Bell",
+        "title": "Activity Alerts",
+        "ruleCategory": "parental_event_notification",
+        "gapLabel": "Apple TV+ Gap",
+        "gap": "Apple sends no real-time viewing alerts to parents. Screen Time weekly reports provide aggregate usage but no per-title viewing notifications or content-specific alerts.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra's iOS companion app uses DeviceActivity threshold alerts to notify parents when the child approaches or exceeds Apple TV app time limits. Phosra centralizes these alerts with notifications from other platforms."
+      },
+      {
+        "icon": "Shield",
+        "title": "Cross-Platform Content Policy",
+        "ruleCategory": "content_rating_filter",
+        "gapLabel": "Apple TV+ Gap",
+        "gap": "Apple TV+ has the most fragmented parental control landscape of any platform: web controls, tvOS device controls, and iOS Screen Time are three independent systems that do not sync. A child restricted on the web can watch unrestricted on an iPad if Screen Time is not configured.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra provides a single dashboard where parents define content policies once. Phosra translates the policy into specific instructions for each Apple control surface (web, Screen Time, tvOS) and uses the iOS companion app to enforce device-level restrictions automatically via ManagedSettings."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "iOS Companion App (Screen Time API)", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Web Read Layer (Playwright)", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "Web Write Layer (Playwright)", "color": "bg-red-500/20 text-red-700 dark:text-red-300 border-red-500/30" },
+      { "label": "Policy Translation Engine", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" }
+    ],
+    "credentials": [
+      { "name": "Apple ID email", "purpose": "Web login + family identification", "sensitivity": "High", "encryption": "AES-256", "retention": "Until disconnected" },
+      { "name": "Apple ID password", "purpose": "Web login authentication", "sensitivity": "Critical", "encryption": "AES-256 + per-user key", "retention": "Until disconnected (web path only)" },
+      { "name": "Apple ID 2FA code", "purpose": "Web session establishment", "sensitivity": "Ephemeral", "encryption": "Not stored", "retention": "Not stored -- provided on demand" },
+      { "name": "Web session cookies", "purpose": "Web scraping/automation", "sensitivity": "High", "encryption": "AES-256", "retention": "Until session expires" },
+      { "name": "Web parental controls passcode", "purpose": "Web PIN management", "sensitivity": "High", "encryption": "AES-256", "retention": "Until disconnected (web path only)" },
+      { "name": "FamilyControls auth token", "purpose": "iOS Screen Time API", "sensitivity": "Medium", "encryption": "iOS Keychain (on-device)", "retention": "Managed by iOS" },
+      { "name": "Child Apple ID mapping", "purpose": "Map Phosra child to Apple ID", "sensitivity": "Low", "encryption": "Standard", "retention": "Until disconnected" }
+    ],
+    "platformBgColor": "rgba(29,29,31,0.05)",
+    "platformIconLetter": "A",
+    "platformIconBg": "#1D1D1F",
+    "apiDescription": "Screen Time API (iOS, sanctioned) + Playwright (web, supplemental)",
+    "adapterName": "Apple TV+ Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "authorize",
+        "icon": "Shield",
+        "title": "Authorize",
+        "description": "Connect via Screen Time API",
+        "detail": "Parent installs Phosra iOS companion app and grants FamilyControls authorization. One-time setup. Phosra gains sanctioned access to set app limits, content restrictions, and monitor usage on the child's device.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "configure",
+        "icon": "Settings",
+        "title": "Configure",
+        "description": "Set content policy and time limits",
+        "detail": "Parent defines Apple TV+ policy in Phosra (rating tier, daily time limit, bedtime schedule). Phosra translates to ManagedSettings: sets content restriction level, App Limit for Apple TV app, and Downtime schedule.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Lock",
+        "title": "Enforce",
+        "description": "Apple TV app automatically restricted",
+        "detail": "Screen Time enforces the policy at the OS level. When daily time limit is reached, Apple TV app is blocked. During Downtime hours, Apple TV app is inaccessible. Content above the set rating tier is hidden.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      },
+      {
+        "id": "notify",
+        "icon": "Bell",
+        "title": "Notify",
+        "description": "Alert parent on threshold events",
+        "detail": "Phosra's iOS companion app receives DeviceActivity callbacks when time thresholds are approached or reached. Parent receives push notification via Phosra app with usage summary.",
+        "color": "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30",
+        "dotColor": "bg-purple-500",
+        "headerBg": "bg-purple-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Smartphone",
+        "title": "Requires Apple devices",
+        "description": "Screen Time API integration requires iOS/tvOS devices. Families accessing Apple TV+ via web (PC, Chromebook, Android) cannot use the sanctioned path and must rely on web automation or manual setup."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "No content-level visibility",
+        "description": "Screen Time reports total Apple TV app usage time but not specific titles watched. Phosra cannot tell parents WHAT the child watched, only HOW LONG they used the Apple TV app."
+      },
+      {
+        "icon": "Lock",
+        "title": "No per-title blocking",
+        "description": "Apple TV+ does not support blocking specific titles. Restrictions are rating-based only. A parent cannot block one specific TV-14 show while allowing others at the same rating."
+      }
+    ],
+    "loopLabel": "Repeats daily until parent adjusts limits"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "authenticate", "approach": "Dual Path", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "High (web) / Medium (iOS)", "risk": "Critical (web) / Low (iOS)", "recommendation": "iOS: FamilyControls one-time authorization. Web: Playwright login with user-provided 2FA code. Strongly prefer iOS path." },
+      { "name": "listProfiles", "approach": "Playwright (limited)", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "High", "risk": "Medium", "recommendation": "Web player is single-user per Apple ID. Map children to Family Sharing Apple IDs, not profiles. Limited utility." },
+      { "name": "getProfileSettings", "approach": "Playwright (web) / Screen Time API (iOS)", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Medium (web) / Low (iOS)", "recommendation": "iOS: Read restriction state via ManagedSettings. Web: Scrape tv.apple.com settings page (requires passcode entry)." },
+      { "name": "setContentRestrictions", "approach": "Screen Time API (iOS) / Playwright (web)", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low (iOS) / Medium (web)", "risk": "Low (iOS) / Medium (web)", "recommendation": "iOS: Direct ManagedSettings API call (sanctioned). Web: Playwright with passcode entry. iOS path is preferred." },
+      { "name": "setTitleRestrictions", "approach": "Not Supported", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "N/A", "risk": "N/A", "recommendation": "Apple TV+ does not support per-title blocking. Return UnsupportedOperationError." },
+      { "name": "setProfilePIN", "approach": "Playwright (web passcode)", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Medium", "recommendation": "Set/change the 4-digit web parental controls passcode via Playwright. Note: separate from Screen Time passcode and tvOS restrictions passcode." },
+      { "name": "getWatchHistory", "approach": "Playwright (limited) / DeviceActivity (iOS)", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Low-Medium", "recommendation": "Very sparse data. Web: scrape Continue Watching titles only. iOS: DeviceActivity provides app usage time (no titles). Set expectations accordingly." },
+      { "name": "lockProfile", "approach": "Screen Time API (iOS)", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "iOS: Block Apple TV app via ManagedSettings (sanctioned, immediate). Web: Set restrictions to 'Don't Allow' as blunt lock mechanism." },
+      { "name": "createKidsProfile", "approach": "Not Recommended", "approachColor": "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300", "complexity": "High", "risk": "High", "recommendation": "Do not automate. Guide parents through manual child Apple ID creation or managed profile setup. Involves identity verification and legal consent steps." },
+      { "name": "supportsNativeScreenTime", "approach": "Static", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "None", "risk": "None", "recommendation": "Returns TRUE (conditionally). Apple Screen Time provides native daily limits, Downtime scheduling, App Limits, and weekly usage reports. Best native screen time of any streaming platform -- but device-level only." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "iOS Foundation", "components": "FamilyControls entitlement (2-4 weeks Apple review), iOS companion app scaffold (5-7d)", "minDays": 5, "maxDays": 7, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P0", "label": "Screen Time Integration", "components": "ManagedSettings (3-5d), DeviceActivity (2-3d)", "minDays": 5, "maxDays": 8, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P1", "label": "Web Automation", "components": "Session Manager (3-4d), Read/Write layers (3-5d)", "minDays": 6, "maxDays": 9, "color": "text-blue-700 dark:text-blue-300", "barColor": "bg-blue-500", "hatchColor": "bg-blue-300 dark:bg-blue-700" },
+      { "priority": "P1", "label": "Testing & Hardening", "components": "Cross-device testing (3-4d)", "minDays": 3, "maxDays": 4, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "17-25 days + Apple entitlement approval (2-4 weeks)",
+    "maxTotal": 25
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "platform": "paramount_plus",
+  "platform_name": "Paramount+",
+  "research_date": "2026-03-01",
+
+  "paramount_plus_to_phosra": {
+    "All Kids": "all_ages",
+    "Older Kids": "ages_7_plus",
+    "Teens": "ages_13_plus",
+    "Adult": "adults_only"
+  },
+
+  "phosra_to_paramount_plus": {
+    "all_ages": "All Kids",
+    "ages_7_plus": "Older Kids",
+    "ages_13_plus": "Teens",
+    "adults_only": "Adult"
+  },
+
+  "paramount_plus_tiers": {
+    "All Kids": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y", "TV-G"],
+      "description": "Content for the youngest viewers. Restricted to TV-Y, TV-G, and G only. Includes Nickelodeon Jr. and preschool programming like Blue's Clues & You, PAW Patrol, and Peppa Pig. Simplified Kids UI with large icons, minimal text, and restricted navigation. Corresponds to 'Younger Kids' profile type.",
+      "age_range": "2-6",
+      "is_kids_profile": true,
+      "kids_profile_type": "younger_kids"
+    },
+    "Older Kids": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G", "PG"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"],
+      "description": "Content suitable for older children. Includes Nickelodeon programming like iCarly, SpongeBob, Drake & Josh, and family movies. May include mild fantasy violence or thematic elements. Corresponds to 'Older Kids' profile type.",
+      "age_range": "7-12",
+      "is_kids_profile": true,
+      "kids_profile_type": "older_kids"
+    },
+    "Teens": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14"],
+      "description": "Content suitable for teens. May include more intense violence, strong language, and suggestive content. Includes MTV reality shows and Comedy Central programming rated TV-14. Not available as a Kids profile type -- requires Standard profile with account-wide rating slider set to Teens.",
+      "age_range": "13-17",
+      "is_kids_profile": false,
+      "kids_profile_type": null
+    },
+    "Adult": {
+      "phosra_tier": "adults_only",
+      "mpaa_ratings": ["G", "PG", "PG-13", "R", "NC-17"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "No content restrictions. All content visible including Showtime originals, South Park (TV-MA), R-rated Paramount Pictures films, and explicit Comedy Central stand-up specials. Live CBS sports and news also unrestricted.",
+      "age_range": "18+",
+      "is_kids_profile": false,
+      "kids_profile_type": null
+    }
+  },
+
+  "content_descriptors": {
+    "supported": [],
+    "notes": "Paramount+ does not support content descriptor filtering. Content is filtered only by overall maturity rating tier (All Kids, Older Kids, Teens, Adult), not by individual descriptors such as violence, language, nudity, or sexual content. Standard TV and MPAA content descriptors may appear on title detail pages but cannot be used as filter criteria."
+  },
+
+  "rating_systems_coverage": {
+    "MPAA": {
+      "supported": true,
+      "ratings": ["G", "PG", "PG-13", "R", "NC-17"],
+      "notes": "Full MPAA coverage for Paramount Pictures films and other theatrical content."
+    },
+    "TV_Parental_Guidelines": {
+      "supported": true,
+      "ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "notes": "Full TV rating coverage for CBS, Nickelodeon, MTV, Comedy Central, BET, Showtime, and Smithsonian Channel series."
+    },
+    "ESRB": {
+      "supported": false,
+      "notes": "Paramount+ has no gaming content. Not applicable."
+    },
+    "PEGI": {
+      "supported": false,
+      "notes": "Not applicable to Paramount+ content."
+    },
+    "Common_Sense_Media": {
+      "supported": false,
+      "notes": "No CSM integration observed on Paramount+. Common Sense Media provides independent ratings but these are not surfaced in the Paramount+ UI or filtering system."
+    }
+  },
+
+  "live_tv_ratings": {
+    "notes": "Live CBS broadcasts, NFL on CBS, UFC, UEFA Champions League, and other sports content do not carry pre-assigned maturity ratings in the same way as on-demand content. Paramount+ offers a separate 'Require PIN for Live TV' toggle that blocks ALL live content behind the parental PIN, but there is no per-channel or per-rating granularity for live streams.",
+    "pin_lockable": true,
+    "per_channel_control": false
+  },
+
+  "showtime_content": {
+    "notes": "Premium tier includes full Showtime library with explicit content (TV-MA, R). Showtime originals are integrated into the main catalog and filtered by the same tier system. Parents should be aware that the Adult tier unlocks all Showtime content including graphic sexual content, violence, and language.",
+    "tier_required": "Premium",
+    "content_rating": "TV-MA / R"
+  },
+
+  "brand_content_mapping": {
+    "Nickelodeon": { "typical_ratings": ["TV-Y", "TV-Y7", "TV-G"], "tier": "All Kids / Older Kids" },
+    "Nick Jr.": { "typical_ratings": ["TV-Y"], "tier": "All Kids" },
+    "CBS": { "typical_ratings": ["TV-PG", "TV-14", "TV-MA"], "tier": "Teens / Adult" },
+    "MTV": { "typical_ratings": ["TV-14", "TV-MA"], "tier": "Teens / Adult" },
+    "Comedy Central": { "typical_ratings": ["TV-14", "TV-MA"], "tier": "Teens / Adult" },
+    "BET": { "typical_ratings": ["TV-14", "TV-MA"], "tier": "Teens / Adult" },
+    "Showtime": { "typical_ratings": ["TV-MA"], "tier": "Adult" },
+    "Paramount Pictures": { "typical_ratings": ["G", "PG", "PG-13", "R"], "tier": "Varies" },
+    "Smithsonian Channel": { "typical_ratings": ["TV-G", "TV-PG"], "tier": "Older Kids / Teens" }
+  },
+
+  "tiers": [
+    {
+      "tierName": "All Kids",
+      "tierLevel": 1,
+      "mpaa": ["G"],
+      "tv": ["TV-Y", "TV-G"],
+      "description": "Content for youngest viewers. Nickelodeon Jr. and preschool content only.",
+      "ageRange": "2-6"
+    },
+    {
+      "tierName": "Older Kids",
+      "tierLevel": 2,
+      "mpaa": ["G", "PG"],
+      "tv": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"],
+      "description": "Content for school-age children. Nickelodeon, family movies.",
+      "ageRange": "7-12"
+    },
+    {
+      "tierName": "Teens",
+      "tierLevel": 3,
+      "mpaa": ["G", "PG", "PG-13"],
+      "tv": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14"],
+      "description": "Content for teens. CBS dramas, MTV reality, PG-13 films.",
+      "ageRange": "13+"
+    },
+    {
+      "tierName": "Adult",
+      "tierLevel": 4,
+      "mpaa": ["G", "PG", "PG-13", "R", "NC-17"],
+      "tv": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "No restrictions. All content including Showtime, South Park, Comedy Central.",
+      "ageRange": "18+"
+    }
+  ],
+
+  "notes": "Paramount+ uses a hybrid parental control model. Kids profiles (Younger Kids / Older Kids) have fixed maturity ceilings. An account-wide rating slider provides additional gating for Standard profiles. There is no 'Teens' Kids profile option -- teen-level enforcement requires a Standard profile with the account-wide slider set to Teens. Per-title blocking is not available. Live TV has a separate binary PIN lock (all or nothing)."
+}

@@ -1,0 +1,187 @@
+{
+  "platform": "disney_plus",
+  "platform_name": "Disney+",
+  "research_date": "2026-03-01",
+
+  "disney_plus_to_phosra": {
+    "0+ / Junior Mode": "all_ages",
+    "6+": "all_ages",
+    "9+": "ages_7_plus",
+    "12+": "ages_7_plus",
+    "14+": "ages_13_plus",
+    "16+": "ages_16_plus",
+    "18+": "adults_only"
+  },
+
+  "phosra_to_disney_plus": {
+    "all_ages": "6+",
+    "ages_7_plus": "9+",
+    "ages_13_plus": "14+",
+    "ages_16_plus": "16+",
+    "adults_only": "18+"
+  },
+
+  "us_rating_mapping": {
+    "description": "In the US market, Disney+ uses standard MPAA and TV Parental Guidelines ratings. The maturity slider maps to these rating ceilings.",
+    "tiers": {
+      "TV-Y": {
+        "mpaa": [],
+        "tv": ["TV-Y"],
+        "international_equivalent": "0+",
+        "age_range": "2-6"
+      },
+      "TV-Y7 / TV-Y7-FV": {
+        "mpaa": [],
+        "tv": ["TV-Y", "TV-Y7", "TV-Y7-FV"],
+        "international_equivalent": "6+",
+        "age_range": "7+"
+      },
+      "G / TV-G": {
+        "mpaa": ["G"],
+        "tv": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G"],
+        "international_equivalent": "6+",
+        "age_range": "All ages"
+      },
+      "PG / TV-PG": {
+        "mpaa": ["G", "PG"],
+        "tv": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"],
+        "international_equivalent": "9+",
+        "age_range": "7+"
+      },
+      "PG-13 / TV-14": {
+        "mpaa": ["G", "PG", "PG-13"],
+        "tv": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14"],
+        "international_equivalent": "14+",
+        "age_range": "13+",
+        "notes": "Default content rating for adult profiles (18+ DOB)"
+      },
+      "R / TV-MA": {
+        "mpaa": ["G", "PG", "PG-13", "R"],
+        "tv": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+        "international_equivalent": "18+",
+        "age_range": "17+",
+        "notes": "Must be explicitly enabled with account password. Includes Deadpool, Logan, Daredevil, Punisher, etc."
+      }
+    }
+  },
+
+  "disney_plus_tiers": {
+    "0+ / Junior Mode": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y", "TV-G"],
+      "description": "Junior Mode: simplified, ad-free interface with only all-ages content. Kid-Proof Exit prevents profile switching. Autoplay and background video disabled.",
+      "age_range": "0-5",
+      "is_kids_profile": true
+    },
+    "6+": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G"],
+      "description": "Content suitable for children 6 and older. Includes animated content and soft live-action programming. Equivalent to hard TV-G / TV-Y7 for TV and soft PG for films.",
+      "age_range": "6-8",
+      "is_kids_profile": true
+    },
+    "9+": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G", "PG"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"],
+      "description": "Content suitable for children 9 and older. May include mild action, fantasy violence, and some thematic elements. Equivalent to soft TV-PG for TV and hard PG for films.",
+      "age_range": "9-11",
+      "is_kids_profile": true
+    },
+    "12+": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14"],
+      "description": "Content suitable for children 12 and older. May include moderate action violence, mild language, and some intense thematic elements. Equivalent to hard TV-PG / soft TV-14 for TV and soft PG-13 for films.",
+      "age_range": "12-13",
+      "is_kids_profile": false
+    },
+    "14+": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14"],
+      "description": "Content suitable for teens 14 and older. May include more intense violence, moderate language, and more complex thematic elements. Equivalent to hard TV-14 for TV and hard PG-13 for films. This is the default content rating for adult profiles.",
+      "age_range": "14-15",
+      "is_kids_profile": false,
+      "notes": "Default content rating for profiles with date of birth 18 or older"
+    },
+    "16+": {
+      "phosra_tier": "ages_16_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13", "R"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "Content suitable for older teens 16 and older. May include strong violence, stronger language, and mature thematic elements. Equivalent to soft TV-MA for TV and R for films. Includes much of the former Star/Hulu mature catalog.",
+      "age_range": "16-17",
+      "is_kids_profile": false
+    },
+    "18+": {
+      "phosra_tier": "adults_only",
+      "mpaa_ratings": ["G", "PG", "PG-13", "R", "NC-17"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "No content restrictions. All content visible including mature/adult content (Deadpool, Logan, Daredevil, The Bear, etc.). Equivalent to hard TV-MA for TV and NC-17 for films. Must be explicitly enabled with account password.",
+      "age_range": "18+",
+      "is_kids_profile": false,
+      "notes": "Must be explicitly enabled by account holder with password verification"
+    }
+  },
+
+  "content_descriptors": {
+    "supported": [
+      "violence",
+      "language",
+      "suggestive content",
+      "sexual content",
+      "graphic nudity",
+      "smoking",
+      "substances",
+      "drug material",
+      "nudity",
+      "fear",
+      "mature themes"
+    ],
+    "notes": "Disney+ shows content descriptors on title detail pages (e.g., 'strong violence and language throughout, sexual content and graphic nudity' for Deadpool) but does not allow filtering by individual descriptors. Filtering is tier-based only via the content rating setting. With the addition of former Hulu content, additional descriptors for stronger content are being surfaced."
+  },
+
+  "rating_systems_coverage": {
+    "MPAA": {
+      "supported": true,
+      "ratings": ["G", "PG", "PG-13", "R"],
+      "notes": "Full MPAA coverage for theatrical films. NC-17 content extremely limited. Since adding mature content in 2022, full range through R is well represented."
+    },
+    "TV_Parental_Guidelines": {
+      "supported": true,
+      "ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "notes": "Full TV rating coverage for series content. TV-MA content available since 2022 when Disney+ expanded beyond family-only content."
+    },
+    "ESRB": {
+      "supported": false,
+      "notes": "Disney+ does not include games. Not applicable."
+    },
+    "PEGI": {
+      "supported": false,
+      "notes": "Not applicable. International regions use the pan-European numeric rating system (0+, 6+, 9+, 12+, 14+, 16+, 18+) instead."
+    },
+    "Common_Sense_Media": {
+      "supported": false,
+      "notes": "Common Sense Media age ratings are not displayed within Disney+ but are available externally. Disney has historically partnered with Common Sense Media for family content guidance."
+    },
+    "Pan_European_Disney": {
+      "supported": true,
+      "ratings": ["0+", "6+", "9+", "12+", "14+", "16+", "18+"],
+      "notes": "Disney+ uses its own pan-European age rating system outside the US. This numeric system maps to local classification boards in each country and is the basis for the maturity rating slider across all regions."
+    }
+  },
+
+  "junior_mode": {
+    "description": "Junior Mode is a specialized kids profile with a simplified interface, all-ages content only, no ads (even on ad-supported plan), autoplay disabled, Background Video disabled, and Kid-Proof Exit support.",
+    "content_ceiling": "G / TV-G equivalent (all ages appropriate content only)",
+    "rating_adjustable": false,
+    "autoplay_default": false,
+    "ads_shown": false,
+    "kid_proof_exit": true,
+    "notes": "Junior Mode content rating cannot be adjusted. It is always locked to all-ages content. This is Disney+'s most restrictive and secure profile type for young children."
+  },
+
+  "notes": "Disney+ uses standard US MPAA and TV Parental Guidelines ratings in the US market, and a numeric pan-European age-based system (0+, 6+, 9+, 12+, 14+, 16+, 18+) in international markets. The platform has 7 configurable rating tiers in the international system and approximately 6 tiers using US ratings. The default for adult profiles (18+ DOB) is TV-14 / 14+, which is more restrictive than Netflix's default of 'All Maturity Ratings'. R/TV-MA content must be explicitly unlocked with the account password."
+}

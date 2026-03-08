@@ -1,0 +1,9 @@
+2026/02/27-11:31:24.148 39c171 Reusing MANIFEST /Users/jakeklinvex/.cache/chrome-devtools-mcp/chrome-profile/Default/IndexedDB/https_www.perplexity.ai_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/27-11:31:24.149 39c171 Recovering log #10
+2026/02/27-11:31:24.150 39c171 Reusing old log /Users/jakeklinvex/.cache/chrome-devtools-mcp/chrome-profile/Default/IndexedDB/https_www.perplexity.ai_0.indexeddb.leveldb/000010.log 
+2026/02/27-11:31:24.565 39c173 Compacting 1@1 + 1@2 files
+2026/02/27-11:31:24.573 39c173 Generated table #13@1: 1289 keys, 422009 bytes
+2026/02/27-11:31:24.574 39c173 Compacted 1@1 + 1@2 files => 422009 bytes
+2026/02/27-11:31:24.577 39c173 compacted to: files[ 0 0 1 0 0 0 0 ]
+2026/02/27-11:31:24.577 39c173 Delete type=2 #11
+2026/02/27-11:31:24.577 39c173 Delete type=2 #9

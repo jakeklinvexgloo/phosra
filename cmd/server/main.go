@@ -109,7 +109,18 @@ func main() {
 	adminNewsRepo := postgres.NewAdminNewsRepo(db)
 	adminAlertsRepo := postgres.NewAdminAlertsRepo(db)
 	adminGoogleRepo := postgres.NewAdminGoogleRepo(db)
+	adminGmailSyncRepo := postgres.NewAdminGmailSyncRepo(db)
 	adminPitchRepo := postgres.NewAdminPitchRepo(db)
+
+	// Browser enforcement repository
+	browserEnforcementRepo := postgres.NewBrowserEnforcementRepo(db)
+
+	// Config agent state repository
+	configAgentStateRepo := postgres.NewConfigAgentStateRepo(db)
+
+	// CSM & viewing history repositories
+	csmReviewRepo := postgres.NewCSMReviewRepo(db)
+	viewingHistoryRepo := postgres.NewViewingHistoryRepo(db)
 
 	// Source repository
 	sourceRepo := postgres.NewSourceRepo(db)
@@ -161,7 +172,7 @@ func main() {
 
 	// Services
 	authSvc := service.NewAuthService(userRepo)
-	familySvc := service.NewFamilyService(familyRepo, memberRepo)
+	familySvc := service.NewFamilyService(familyRepo, memberRepo, userRepo)
 	childSvc := service.NewChildService(childRepo, familyRepo, memberRepo, ratingRepo)
 	webhookSvc := service.NewWebhookService(webhookRepo, webhookDeliveryRepo, memberRepo)
 	policySvc := service.NewPolicyService(policyRepo, ruleRepo, childRepo, memberRepo, ratingRepo, webhookSvc, pushSvc)
@@ -233,10 +244,13 @@ func main() {
 		Feedback:    handler.NewFeedbackHandler(feedbackRepo),
 		Standard:    handler.NewStandardHandler(standardSvc),
 		Device:      handler.NewDeviceHandler(devicePolicySvc),
-		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googlePersonal, googleManager, adminGoogleRepo, adminPersonaRepo, cfg.WorkerAPIKey),
+		Admin:      handler.NewAdminHandler(adminOutreachRepo, adminWorkerRepo, adminNewsRepo, adminAlertsRepo, googlePersonal, googleManager, adminGoogleRepo, adminPersonaRepo, adminGmailSyncRepo, cfg.WorkerAPIKey),
 		AdminPitch: handler.NewAdminPitchHandler(adminPitchRepo, cfg.OpenAIAPIKey, service.NewTranscriptionService(cfg.AssemblyAIKey), service.NewEmotionService(cfg.HumeAIKey)),
-		Developer:  handler.NewDeveloperHandler(developerSvc),
-		Source:     handler.NewSourceHandler(sourceSvc),
+		Developer:          handler.NewDeveloperHandler(developerSvc),
+		Source:             handler.NewSourceHandler(sourceSvc),
+		BrowserEnforcement: handler.NewBrowserEnforcementHandler(browserEnforcementRepo, familyRepo),
+		ConfigAgent:        handler.NewConfigAgentHandler(configAgentStateRepo),
+		ViewingHistory:     handler.NewViewingHistoryHandler(viewingHistoryRepo, csmReviewRepo, childRepo, familyRepo),
 	}
 
 	// Router

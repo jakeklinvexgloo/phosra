@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option 1: Floating Pill (Plaid-Style)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; }
+
+  /* ── NAV ── */
+  .nav-container {
+    position: fixed; top: 16px; left: 16px; right: 16px; z-index: 50;
+    max-width: 1320px; margin: 0 auto;
+  }
+  .nav-pill {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px; padding: 0 24px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+  /* Hero variant (transparent) */
+  .nav-pill.transparent {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  /* Solid variant */
+  .nav-pill.solid {
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+  }
+
+  .nav-left { display: flex; align-items: center; gap: 32px; }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+
+  .nav-link {
+    padding: 8px 14px; font-size: 14px; font-weight: 500;
+    border-radius: 8px; cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .transparent .nav-link { color: rgba(255,255,255,0.7); }
+  .transparent .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .solid .nav-link { color: #64748b; }
+  .solid .nav-link:hover { color: #0f172a; background: rgba(0,0,0,0.04); }
+
+  .nav-link svg { width: 12px; height: 12px; opacity: 0.5; }
+
+  .logo { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+  .transparent .logo { color: #fff; }
+  .solid .logo { color: #0f172a; }
+
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .btn-ghost {
+    padding: 8px 16px; font-size: 14px; font-weight: 500;
+    border: none; background: none; cursor: pointer;
+  }
+  .transparent .btn-ghost { color: rgba(255,255,255,0.7); }
+  .solid .btn-ghost { color: #64748b; }
+
+  .btn-primary {
+    padding: 8px 20px; font-size: 14px; font-weight: 600;
+    border: none; border-radius: 8px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .transparent .btn-primary { background: #00D47E; color: #0f172a; }
+  .solid .btn-primary { background: #00D47E; color: #0f172a; }
+  .btn-primary:hover { box-shadow: 0 0 20px -4px rgba(0,212,126,0.5); }
+
+  /* ── DROPDOWN PANEL ── */
+  .dropdown-panel {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+    background: rgba(255,255,255,0.97); backdrop-filter: blur(20px);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    padding: 32px;
+    display: none;
+  }
+  .dropdown-panel.show { display: block; animation: dropIn 0.15s ease-out; }
+  @keyframes dropIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dropdown-grid {
+    display: grid; grid-template-columns: 1fr 1fr 280px; gap: 32px;
+  }
+  .section-title {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 16px;
+  }
+  .dropdown-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .dropdown-item:hover { background: rgba(0,0,0,0.03); }
+  .dropdown-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(0,212,126,0.08);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .dropdown-icon svg { width: 18px; height: 18px; color: #00D47E; }
+  .dropdown-label { font-size: 14px; font-weight: 500; color: #0f172a; }
+  .dropdown-desc { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+  .featured-card {
+    background: linear-gradient(135deg, #0D1B2A, #0A2F2F);
+    border-radius: 12px; padding: 24px; color: white;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .featured-badge {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; color: #00D47E; margin-bottom: 12px;
+  }
+  .featured-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .featured-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .featured-cta {
+    font-size: 13px; font-weight: 500; color: #00D47E; margin-top: 16px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0D1B2A 0%, #0A2F2F 50%, #0D1B2A 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 120px 40px 80px;
+  }
+  .hero-content { max-width: 700px; text-align: center; }
+  .hero h1 { font-size: 56px; font-weight: 700; color: #fff; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 20px; }
+  .hero p { font-size: 18px; color: rgba(255,255,255,0.5); line-height: 1.6; margin-bottom: 32px; }
+
+  /* ── LIGHT SECTION ── */
+  .light-section {
+    min-height: 100vh; background: #fafafa;
+    padding: 120px 40px 80px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .light-section h2 { font-size: 40px; font-weight: 700; color: #0f172a; letter-spacing: -1px; margin-bottom: 16px; }
+  .light-section p { font-size: 16px; color: #64748b; max-width: 500px; text-align: center; }
+
+  .section-label { font-size: 14px; font-weight: 500; color: #64748b; text-align: center; margin-bottom: 40px; padding: 8px 16px; background: #f1f5f9; border-radius: 999px; display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO PAGE (dark bg, transparent nav) ═══════════ -->
+<div class="hero" id="hero-section">
+  <div style="position:absolute;top:0;left:0;right:0;">
+    <div class="nav-container" style="position:relative;">
+      <div class="nav-pill transparent" id="nav1">
+        <div class="nav-left">
+          <div class="logo">phosra</div>
+          <div class="nav-links">
+            <div class="nav-link" onmouseenter="showDropdown('dd1')" onmouseleave="hideDropdown('dd1')">Products <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+            <div class="nav-link" onmouseenter="showDropdown('dd1')" onmouseleave="hideDropdown('dd1')">Research <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+            <div class="nav-link">Compliance <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+            <div class="nav-link">Resources <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+            <div class="nav-link">Pricing</div>
+          </div>
+        </div>
+        <div class="nav-right">
+          <button class="btn-ghost">Log in</button>
+          <button class="btn-primary">Get Started</button>
+        </div>
+      </div>
+      <!-- Sample dropdown -->
+      <div class="dropdown-panel" id="dd1" onmouseenter="showDropdown('dd1')" onmouseleave="hideDropdown('dd1')">
+        <div class="dropdown-grid">
+          <div>
+            <div class="section-title">For Families</div>
+            <div class="dropdown-item">
+              <div class="dropdown-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+              <div><div class="dropdown-label">Parental Controls</div><div class="dropdown-desc">100+ safety solutions</div></div>
+            </div>
+            <div class="dropdown-item">
+              <div class="dropdown-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <div><div class="dropdown-label">Platform Directory</div><div class="dropdown-desc">320+ platforms mapped</div></div>
+            </div>
+            <div class="dropdown-item">
+              <div class="dropdown-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+              <div><div class="dropdown-label">Interactive Demo</div><div class="dropdown-desc">Try the dashboard</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="section-title">For Platforms</div>
+            <div class="dropdown-item">
+              <div class="dropdown-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+              <div><div class="dropdown-label">Developer Portal</div><div class="dropdown-desc">API docs & SDKs</div></div>
+            </div>
+            <div class="dropdown-item">
+              <div class="dropdown-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/></svg></div>
+              <div><div class="dropdown-label">Technology Services</div><div class="dropdown-desc">Integration guides</div></div>
+            </div>
+            <div class="dropdown-item">
+              <div class="dropdown-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
+              <div><div class="dropdown-label">API Playground</div><div class="dropdown-desc">Test calls live</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="featured-card">
+              <div>
+                <div class="featured-badge">Latest Research</div>
+                <div class="featured-title">AI Chatbot Safety Report</div>
+                <div class="featured-desc">See how 8 AI platforms grade on child safety across 40 test prompts.</div>
+              </div>
+              <div class="featured-cta">View report →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <h1>The safety infrastructure for the internet</h1>
+    <p>Phosra maps 320+ platforms to child safety compliance requirements worldwide. One API for age verification, content filtering, and parental controls.</p>
+  </div>
+</div>
+
+<!-- ═══════════ INNER PAGE (light bg, solid nav) ═══════════ -->
+<div class="light-section">
+  <div style="position:fixed;top:16px;left:16px;right:16px;z-index:50;max-width:1320px;margin:0 auto;">
+    <div class="nav-pill solid">
+      <div class="nav-left">
+        <div class="logo">phosra</div>
+        <div class="nav-links">
+          <div class="nav-link">Products <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="nav-link">Research <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="nav-link">Compliance <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="nav-link">Resources <svg viewBox="0 0 12 12"><path d="M3 5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <div class="nav-link">Pricing</div>
+        </div>
+      </div>
+      <div class="nav-right">
+        <button class="btn-ghost">Log in</button>
+        <button class="btn-primary">Get Started</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">↑ Solid pill nav on light backgrounds (scroll down from hero above to see both)</div>
+  <h2>Compliance Hub</h2>
+  <p>78+ child safety laws tracked across 25+ jurisdictions worldwide, with real-time status monitoring.</p>
+</div>
+
+<script>
+  let dropdownTimeout;
+  function showDropdown(id) {
+    clearTimeout(dropdownTimeout);
+    document.getElementById(id).classList.add('show');
+  }
+  function hideDropdown(id) {
+    dropdownTimeout = setTimeout(() => {
+      document.getElementById(id).classList.remove('show');
+    }, 200);
+  }
+</script>
+</body>
+</html>

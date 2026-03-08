@@ -65,3 +65,4 @@ web/src/lib/developers/generated/
 research/safety_testing/results/
 !research/safety_testing/results/.gitkeep
 research/content_safety/results/*/screenshots/
+browser/release/

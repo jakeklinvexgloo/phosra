@@ -1,0 +1,10 @@
+2026/02/27-12:10:55.335 39c171 Reusing MANIFEST /Users/jakeklinvex/.cache/chrome-devtools-mcp/chrome-profile/Default/IndexedDB/https_character.ai_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/27-12:10:55.335 39c171 Recovering log #130
+2026/02/27-12:10:55.336 39c171 Reusing old log /Users/jakeklinvex/.cache/chrome-devtools-mcp/chrome-profile/Default/IndexedDB/https_character.ai_0.indexeddb.leveldb/000130.log 
+2026/02/27-12:10:55.336 39c171 Delete type=2 #129
+2026/02/27-12:10:55.336 39c171 Delete type=2 #126
+2026/02/27-12:10:55.348 39c182 Manual compaction at level-0 from '\x00<\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00=\x00\x00\x00' @ 0 : 0; will stop at (end)
+2026/02/27-12:10:57.776 39c171 Level-0 table #136: started
+2026/02/27-12:10:57.777 39c171 Level-0 table #136: 7111 bytes OK
+2026/02/27-12:10:57.779 39c171 Delete type=0 #130
+2026/02/27-12:10:57.779 39c171 Manual compaction at level-0 from '\x00;\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00<\x00\x00\x00' @ 0 : 0; will stop at (end)

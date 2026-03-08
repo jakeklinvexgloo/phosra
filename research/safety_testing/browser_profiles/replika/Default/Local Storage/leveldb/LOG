@@ -1,0 +1,106 @@
+2026/02/27-12:37:27.456 3b739c Reusing MANIFEST /Users/jakeklinvex/phosra/research/safety_testing/browser_profiles/replika/Default/Local Storage/leveldb/MANIFEST-000001
+2026/02/27-12:37:27.461 3b739c Recovering log #66
+2026/02/27-12:37:27.461 3b739c Level-0 table #69: started
+2026/02/27-12:37:27.469 3b739c Level-0 table #69: 27637 bytes OK
+2026/02/27-12:37:27.471 3b739c Delete type=0 #66
+2026/02/27-12:38:27.477 3b73a0 Level-0 table #72: started
+2026/02/27-12:38:27.481 3b73a0 Level-0 table #72: 34236 bytes OK
+2026/02/27-12:38:27.512 3b73a0 Delete type=0 #70
+2026/02/27-12:39:28.115 3b73a0 Level-0 table #74: started
+2026/02/27-12:39:28.118 3b73a0 Level-0 table #74: 27588 bytes OK
+2026/02/27-12:39:28.120 3b73a0 Delete type=0 #71
+2026/02/27-12:39:28.120 3b73a0 Compacting 4@0 + 1@1 files
+2026/02/27-12:39:28.123 3b73a0 Generated table #75@0: 96 keys, 40802 bytes
+2026/02/27-12:39:28.123 3b73a0 Compacted 4@0 + 1@1 files => 40802 bytes
+2026/02/27-12:39:28.125 3b73a0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/27-12:39:28.125 3b73a0 Delete type=2 #74
+2026/02/27-12:39:28.125 3b73a0 Delete type=2 #65
+2026/02/27-12:39:28.125 3b73a0 Delete type=2 #67
+2026/02/27-12:39:28.125 3b73a0 Delete type=2 #72
+2026/02/27-12:39:28.125 3b73a0 Delete type=2 #69
+2026/02/27-12:40:28.114 3b73a0 Level-0 table #77: started
+2026/02/27-12:40:28.119 3b73a0 Level-0 table #77: 27391 bytes OK
+2026/02/27-12:40:28.124 3b73a0 Delete type=0 #73
+2026/02/27-12:41:28.115 3b73a0 Level-0 table #79: started
+2026/02/27-12:41:28.118 3b73a0 Level-0 table #79: 34587 bytes OK
+2026/02/27-12:41:28.122 3b73a0 Delete type=0 #76
+2026/02/27-12:42:28.115 3b73a0 Level-0 table #81: started
+2026/02/27-12:42:28.120 3b73a0 Level-0 table #81: 27351 bytes OK
+2026/02/27-12:42:28.124 3b73a0 Delete type=0 #78
+2026/02/27-12:43:28.116 3b73a0 Level-0 table #83: started
+2026/02/27-12:43:28.120 3b73a0 Level-0 table #83: 27718 bytes OK
+2026/02/27-12:43:28.122 3b73a0 Delete type=0 #80
+2026/02/27-12:43:28.122 3b73a0 Compacting 4@0 + 1@1 files
+2026/02/27-12:43:28.126 3b73a0 Generated table #84@0: 96 keys, 41138 bytes
+2026/02/27-12:43:28.126 3b73a0 Compacted 4@0 + 1@1 files => 41138 bytes
+2026/02/27-12:43:28.128 3b73a0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/27-12:43:28.129 3b73a0 Delete type=2 #77
+2026/02/27-12:43:28.129 3b73a0 Delete type=2 #75
+2026/02/27-12:43:28.129 3b73a0 Delete type=2 #81
+2026/02/27-12:43:28.129 3b73a0 Delete type=2 #83
+2026/02/27-12:43:28.129 3b73a0 Delete type=2 #79
+2026/02/27-12:44:28.115 3b73a0 Level-0 table #86: started
+2026/02/27-12:44:28.119 3b73a0 Level-0 table #86: 27517 bytes OK
+2026/02/27-12:44:28.121 3b73a0 Delete type=0 #82
+2026/02/27-12:45:28.116 3b73a0 Level-0 table #88: started
+2026/02/27-12:45:28.119 3b73a0 Level-0 table #88: 23444 bytes OK
+2026/02/27-12:45:28.125 3b73a0 Delete type=0 #85
+2026/02/27-12:46:28.115 3b73a0 Level-0 table #90: started
+2026/02/27-12:46:28.117 3b73a0 Level-0 table #90: 23625 bytes OK
+2026/02/27-12:46:28.119 3b73a0 Delete type=0 #87
+2026/02/27-12:47:28.115 3b73a0 Level-0 table #92: started
+2026/02/27-12:47:28.117 3b73a0 Level-0 table #92: 23712 bytes OK
+2026/02/27-12:47:28.121 3b73a0 Delete type=0 #89
+2026/02/27-12:47:28.122 3b73a0 Compacting 4@0 + 1@1 files
+2026/02/27-12:47:28.125 3b73a0 Generated table #93@0: 96 keys, 37098 bytes
+2026/02/27-12:47:28.125 3b73a0 Compacted 4@0 + 1@1 files => 37098 bytes
+2026/02/27-12:47:28.127 3b73a0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/27-12:47:28.127 3b73a0 Delete type=2 #88
+2026/02/27-12:47:28.127 3b73a0 Delete type=2 #86
+2026/02/27-12:47:28.127 3b73a0 Delete type=2 #92
+2026/02/27-12:47:28.127 3b73a0 Delete type=2 #84
+2026/02/27-12:47:28.127 3b73a0 Delete type=2 #90
+2026/02/27-12:48:28.114 3b73a0 Level-0 table #95: started
+2026/02/27-12:48:28.126 3b73a0 Level-0 table #95: 23805 bytes OK
+2026/02/27-12:48:28.129 3b73a0 Delete type=0 #91
+2026/02/27-12:49:28.115 3b73a0 Level-0 table #97: started
+2026/02/27-12:49:28.117 3b73a0 Level-0 table #97: 23888 bytes OK
+2026/02/27-12:49:28.121 3b73a0 Delete type=0 #94
+2026/02/27-12:50:28.114 3b73a0 Level-0 table #99: started
+2026/02/27-12:50:28.116 3b73a0 Level-0 table #99: 23937 bytes OK
+2026/02/27-12:50:28.119 3b73a0 Delete type=0 #96
+2026/02/27-12:51:28.114 3b73a0 Level-0 table #101: started
+2026/02/27-12:51:28.121 3b73a0 Level-0 table #101: 24641 bytes OK
+2026/02/27-12:51:28.124 3b73a0 Delete type=0 #98
+2026/02/27-12:51:28.125 3b73a0 Compacting 4@0 + 1@1 files
+2026/02/27-12:51:28.128 3b73a0 Generated table #102@0: 96 keys, 37412 bytes
+2026/02/27-12:51:28.128 3b73a0 Compacted 4@0 + 1@1 files => 37412 bytes
+2026/02/27-12:51:28.129 3b73a0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/27-12:51:28.129 3b73a0 Delete type=2 #101
+2026/02/27-12:51:28.129 3b73a0 Delete type=2 #99
+2026/02/27-12:51:28.130 3b73a0 Delete type=2 #95
+2026/02/27-12:51:28.130 3b73a0 Delete type=2 #97
+2026/02/27-12:51:28.130 3b73a0 Delete type=2 #93
+2026/02/27-12:52:28.117 3b73a0 Level-0 table #104: started
+2026/02/27-12:52:28.120 3b73a0 Level-0 table #104: 23879 bytes OK
+2026/02/27-12:52:28.125 3b73a0 Delete type=0 #100
+2026/02/27-12:53:28.116 3b73a0 Level-0 table #106: started
+2026/02/27-12:53:28.120 3b73a0 Level-0 table #106: 23991 bytes OK
+2026/02/27-12:53:28.122 3b73a0 Delete type=0 #103
+2026/02/27-12:54:28.117 3b73a0 Level-0 table #108: started
+2026/02/27-12:54:28.121 3b73a0 Level-0 table #108: 24190 bytes OK
+2026/02/27-12:54:28.123 3b73a0 Delete type=0 #105
+2026/02/27-12:55:23.660 3b73a0 Level-0 table #110: started
+2026/02/27-12:55:23.664 3b73a0 Level-0 table #110: 24197 bytes OK
+2026/02/27-12:55:23.667 3b73a0 Delete type=0 #107
+2026/02/27-12:55:23.670 3b73a0 Compacting 4@0 + 1@1 files
+2026/02/27-12:55:23.673 3b73a0 Generated table #111@0: 96 keys, 37602 bytes
+2026/02/27-12:55:23.673 3b73a0 Compacted 4@0 + 1@1 files => 37602 bytes
+2026/02/27-12:55:23.674 3b73a0 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/02/27-12:55:23.675 3b73a0 Delete type=2 #102
+2026/02/27-12:55:23.675 3b73a0 Delete type=2 #110
+2026/02/27-12:55:23.675 3b73a0 Delete type=2 #104
+2026/02/27-12:55:23.675 3b73a0 Delete type=2 #106
+2026/02/27-12:55:23.675 3b73a0 Delete type=2 #108
+2026/02/27-12:55:23.723 3b739c Level-0 table #113: started
+2026/02/27-12:55:23.739 3b739c Level-0 table #113: 24044 bytes OK

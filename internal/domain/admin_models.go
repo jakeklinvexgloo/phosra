@@ -81,6 +81,7 @@ const (
 	ActivityIntentClassified OutreachActivityType = "intent_classified"
 	ActivityMeetingProposed  OutreachActivityType = "meeting_proposed"
 	ActivityEmailReceived    OutreachActivityType = "email_received"
+	ActivityHistoryImport   OutreachActivityType = "history_import"
 )
 
 // OutreachActivity records a single touchpoint with a contact.
@@ -92,6 +93,8 @@ type OutreachActivity struct {
 	Body                 string               `json:"body,omitempty"`
 	IntentClassification *string              `json:"intent_classification,omitempty"`
 	ConfidenceScore      *float64             `json:"confidence_score,omitempty"`
+	GmailMessageID       *string              `json:"gmail_message_id,omitempty"`
+	GmailThreadID        *string              `json:"gmail_thread_id,omitempty"`
 	CreatedAt            time.Time            `json:"created_at"`
 }
 
@@ -206,8 +209,9 @@ type AutopilotStats struct {
 // OutreachActivityWithContact is an activity joined with contact info.
 type OutreachActivityWithContact struct {
 	OutreachActivity
-	ContactName string `json:"contact_name"`
-	ContactOrg  string `json:"contact_org"`
+	ContactName  string  `json:"contact_name"`
+	ContactOrg   string  `json:"contact_org"`
+	ContactEmail *string `json:"contact_email,omitempty"`
 }
 
 // OutreachActivitySummary aggregates activity counts since a given timestamp.
@@ -330,4 +334,14 @@ type AdminWorkerStats struct {
 	Healthy int `json:"healthy"`
 	Failed  int `json:"failed"`
 	Idle    int `json:"idle"`
+}
+
+// GmailSyncState tracks history import progress per Google account.
+type GmailSyncState struct {
+	AccountKey         string    `json:"account_key"`
+	LastSyncedAt       time.Time `json:"last_synced_at"`
+	LastMessageEpochMs int64     `json:"last_message_epoch_ms"`
+	MessagesImported   int       `json:"messages_imported"`
+	ContactsCreated    int       `json:"contacts_created"`
+	UpdatedAt          time.Time `json:"updated_at"`
 }

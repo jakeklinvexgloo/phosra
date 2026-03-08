@@ -1,0 +1,131 @@
+{
+  "platform": "apple_tv_plus",
+  "platform_name": "Apple TV+",
+  "research_date": "2026-03-01",
+
+  "apple_tv_plus_to_phosra": {
+    "4+": "all_ages",
+    "9+": "ages_7_plus",
+    "12+": "ages_13_plus",
+    "17+": "adults_only"
+  },
+
+  "phosra_to_apple_tv_plus": {
+    "all_ages": {
+      "apple_age_tier": "4+",
+      "tv_max_rating": "TV-G",
+      "movie_max_rating": "G"
+    },
+    "ages_7_plus": {
+      "apple_age_tier": "9+",
+      "tv_max_rating": "TV-PG",
+      "movie_max_rating": "PG"
+    },
+    "ages_13_plus": {
+      "apple_age_tier": "12+",
+      "tv_max_rating": "TV-14",
+      "movie_max_rating": "PG-13"
+    },
+    "adults_only": {
+      "apple_age_tier": "17+",
+      "tv_max_rating": "TV-MA",
+      "movie_max_rating": "NC-17"
+    }
+  },
+
+  "platform_tiers": {
+    "4+": {
+      "phosra_tier": "all_ages",
+      "mpaa_ratings": ["G"],
+      "tv_ratings": ["TV-Y", "TV-G"],
+      "description": "Content suitable for ages 4 and up. Designed for young children with no objectionable material. Maps to Apple's age-based rating used in Screen Time and Family Sharing restrictions.",
+      "age_range": "4-8",
+      "is_kids_profile": true
+    },
+    "9+": {
+      "phosra_tier": "ages_7_plus",
+      "mpaa_ratings": ["G", "PG"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"],
+      "description": "Content suitable for ages 9 and up. May include mild or infrequent cartoon, fantasy, or realistic violence, and infrequent or mild mature, suggestive, or horror-themed content.",
+      "age_range": "9-11",
+      "is_kids_profile": true
+    },
+    "12+": {
+      "phosra_tier": "ages_13_plus",
+      "mpaa_ratings": ["G", "PG", "PG-13"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14"],
+      "description": "Content suitable for ages 12 and up. May include infrequent mild language, frequent or intense cartoon, fantasy, or realistic violence, and mild or infrequent mature or suggestive themes.",
+      "age_range": "12-16",
+      "is_kids_profile": false
+    },
+    "17+": {
+      "phosra_tier": "adults_only",
+      "mpaa_ratings": ["G", "PG", "PG-13", "R", "NC-17", "NR"],
+      "tv_ratings": ["TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "description": "No content restrictions. All content visible including mature and adult material. Unrestricted access equivalent to the default adult experience on Apple TV+.",
+      "age_range": "17+",
+      "is_kids_profile": false
+    }
+  },
+
+  "web_rating_options": {
+    "tv_shows": {
+      "options": ["TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14", "TV-MA", "Don't Allow TV Shows", "Allow All TV Shows"],
+      "notes": "Web parental controls at tv.apple.com allow TV show and movie ratings to be set independently. When a maximum rating is selected, all content above that rating is hidden."
+    },
+    "movies": {
+      "options": ["G", "PG", "PG-13", "R", "NC-17", "Don't Allow Movies", "Allow All Movies"],
+      "notes": "Movie ratings are configured separately from TV show ratings on the web. The 'Don't Allow' option blocks all movies regardless of rating."
+    }
+  },
+
+  "content_descriptors": {
+    "supported": [
+      "violence",
+      "sexual content",
+      "profanity",
+      "substance use",
+      "nudity",
+      "mature themes",
+      "frightening scenes"
+    ],
+    "notes": "Apple TV+ displays content descriptors (e.g., 'Violence, Language') on title detail pages. These align with Apple's App Store age-based rating system (4+, 9+, 12+, 17+). Filtering is age-tier-based only -- individual descriptor filtering is not supported. Apple uses the same 4-tier age rating system across the App Store, Apple TV+, and Screen Time."
+  },
+
+  "rating_systems_coverage": {
+    "MPAA": {
+      "supported": true,
+      "ratings": ["G", "PG", "PG-13", "R", "NR"],
+      "notes": "Apple TV+ shows MPA (formerly MPAA) ratings for films. NC-17 content is rare on the platform. NR (Not Rated) applies to some Apple Original documentaries."
+    },
+    "TV_Parental_Guidelines": {
+      "supported": true,
+      "ratings": ["TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14", "TV-MA"],
+      "notes": "Full TV rating coverage for series. Apple TV+ original series use standard TV Parental Guidelines ratings."
+    },
+    "ESRB": {
+      "supported": false,
+      "notes": "Apple TV+ does not host games. Apple Arcade is a separate service with its own age ratings managed via the App Store."
+    },
+    "PEGI": {
+      "supported": false,
+      "notes": "Not applicable to Apple TV+ streaming content. PEGI ratings apply to Apple Arcade games separately."
+    },
+    "Common_Sense_Media": {
+      "supported": "partial",
+      "notes": "Apple TV app displays Common Sense Media age recommendations on some titles as supplementary guidance, but these are not used for content filtering or restriction enforcement."
+    },
+    "Apple_Age_Rating": {
+      "supported": true,
+      "ratings": ["4+", "9+", "12+", "17+"],
+      "notes": "Apple's proprietary age-based rating system is the primary rating mechanism for Screen Time and Family Sharing. Used across Apple TV+, App Store, and Screen Time. Content restrictions in Family Sharing and Screen Time map directly to these tiers. The web player at tv.apple.com uses standard MPAA/TV Parental Guidelines ratings instead."
+    }
+  },
+
+  "platform_specific_notes": {
+    "dual_rating_systems": "Apple uses TWO rating systems for content restrictions: (1) Apple age tiers (4+, 9+, 12+, 17+) used by Screen Time and Family Sharing on devices, and (2) standard MPAA + TV Parental Guidelines ratings used by the web player at tv.apple.com. These do not sync with each other.",
+    "separate_tv_movie_ratings": "The web player at tv.apple.com allows TV show and movie rating restrictions to be set INDEPENDENTLY. This is different from Netflix which uses unified maturity tiers. Parents can set TV-PG for shows but PG-13 for movies, for example.",
+    "web_vs_device_independence": "Rating restrictions set on tv.apple.com (web) are INDEPENDENT from device-level restrictions (Screen Time / tvOS Restrictions). They do not sync.",
+    "international_ratings": "Apple TV+ supports country-specific rating systems internationally. This mapping covers US ratings only. Apple partners with local content rating bodies in each country."
+  }
+}

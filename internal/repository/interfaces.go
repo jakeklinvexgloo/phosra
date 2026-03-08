@@ -36,6 +36,7 @@ type FamilyRepository interface {
 type FamilyMemberRepository interface {
 	Add(ctx context.Context, member *domain.FamilyMember) error
 	Remove(ctx context.Context, familyID, userID uuid.UUID) error
+	Update(ctx context.Context, member *domain.FamilyMember) error
 	ListByFamily(ctx context.Context, familyID uuid.UUID) ([]domain.FamilyMember, error)
 	GetRole(ctx context.Context, familyID, userID uuid.UUID) (*domain.FamilyMember, error)
 }
@@ -281,4 +282,25 @@ type SourceRepository interface {
 	CreateInboundEvent(ctx context.Context, event *domain.SourceInboundEvent) (*domain.SourceInboundEvent, error)
 	ListUnprocessedEvents(ctx context.Context, sourceID uuid.UUID) ([]domain.SourceInboundEvent, error)
 	MarkEventProcessed(ctx context.Context, id uuid.UUID) error
+}
+
+type ConfigAgentStateRepository interface {
+	Upsert(ctx context.Context, s *domain.ConfigAgentState) error
+	Get(ctx context.Context, userID uuid.UUID, platform string) (*domain.ConfigAgentState, error)
+	Delete(ctx context.Context, userID uuid.UUID, platform string) error
+}
+
+type CSMReviewRepository interface {
+	GetBySlug(ctx context.Context, slug string) (*domain.CSMReview, error)
+	UpsertBatch(ctx context.Context, reviews []domain.CSMReview) error
+	SearchByTitle(ctx context.Context, query string, limit int) ([]domain.CSMReview, error)
+}
+
+type ViewingHistoryRepository interface {
+	UpsertBatch(ctx context.Context, entries []domain.ViewingHistoryEntry) error
+	ListByChild(ctx context.Context, childID uuid.UUID, limit, offset int) ([]domain.ViewingHistoryEntry, error)
+	ListByFamily(ctx context.Context, familyID uuid.UUID, limit, offset int) ([]domain.ViewingHistoryEntry, error)
+	DeleteByChild(ctx context.Context, childID uuid.UUID) error
+	GetAnalytics(ctx context.Context, childID uuid.UUID) (*domain.ViewingAnalytics, error)
+	LinkCSMReviews(ctx context.Context, userID uuid.UUID) (int, error)
 }

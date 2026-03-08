@@ -1,0 +1,250 @@
+{
+  "profileStructure": {
+    "accountLabel": "Google Account (Family Manager)",
+    "accountDescription": "YouTube Premium Family Plan",
+    "accountMeta": "Up to 6 family members · Supervised accounts via Family Link · YouTube Kids profiles",
+    "accountBorderColor": "#FF0000",
+    "accountLabelColor": "#ef4444",
+    "hierarchyDescription": "Google Account → Family Group → Supervised Child Accounts → YouTube / YouTube Kids access",
+    "profiles": [
+      { "name": "Parent (Family Manager)", "maturity": "Unrestricted", "type": "standard", "pinEnabled": false },
+      { "name": "Teen (Supervised, 13+)", "maturity": "Explore More + Restricted Mode", "type": "standard", "pinEnabled": false },
+      { "name": "Child (Supervised, 9-12)", "maturity": "Explore + YouTube Kids: Older", "type": "kids", "pinEnabled": true },
+      { "name": "Child (YouTube Kids, 5-8)", "maturity": "YouTube Kids: Younger", "type": "kids", "pinEnabled": true },
+      { "name": "Toddler (YouTube Kids, 0-4)", "maturity": "YouTube Kids: Preschool", "type": "kids", "pinEnabled": true }
+    ],
+    "settings": [
+      { "setting": "Restricted Mode (binary on/off)", "configurable": true },
+      { "setting": "Supervised Account Content Level (Explore / Explore More / Most of YouTube)", "configurable": true },
+      { "setting": "YouTube Kids Content Level (Preschool / Younger / Older / Approved Only)", "configurable": true },
+      { "setting": "YouTube Kids Search Toggle", "configurable": true },
+      { "setting": "YouTube Kids Timer", "configurable": true },
+      { "setting": "Autoplay Next Video", "configurable": true },
+      { "setting": "Shorts Timer (2hr to 0 min)", "configurable": true },
+      { "setting": "Take a Break Reminder (15-180 min)", "configurable": true },
+      { "setting": "Bedtime Reminder (custom start/end)", "configurable": true },
+      { "setting": "Watch History Pause/Clear", "configurable": true },
+      { "setting": "Comment Visibility (hidden in Restricted Mode)", "configurable": false }
+    ],
+    "subscriptionTiers": [
+      { "plan": "YouTube Free", "streams": "Unlimited", "resolution": "Up to 4K (with ads)" },
+      { "plan": "YouTube Premium Lite", "streams": "1 member", "resolution": "Ad-free videos (no YouTube Music)" },
+      { "plan": "YouTube Premium", "streams": "1 member", "resolution": "Ad-free, background play, downloads, YouTube Music" },
+      { "plan": "YouTube Premium Family", "streams": "Up to 6 members", "resolution": "All Premium features for family group" }
+    ]
+  },
+  "technicalRecon": {
+    "subtitle": "YouTube Data API v3 (public REST), Innertube API (internal), Google Family Link (internal)",
+    "apiArchitecture": {
+      "title": "YouTube Data API v3 (Public REST API)",
+      "description": "YouTube is unique among major streaming platforms in offering a fully documented, publicly available REST API (YouTube Data API v3) with OAuth 2.0 authentication. This API provides read access to videos, channels, playlists, search (with safeSearch filtering), activities, and subscriptions. The API uses a quota system with 10,000 units/day default. However, parental control features (Restricted Mode, YouTube Kids settings, Family Link supervision, screen time) are NOT exposed via the public API. YouTube also uses an internal 'Innertube' API for its web and mobile clients. Family Link controls use a separate Google-internal API with no public documentation.",
+      "codeExample": {
+        "comment": "// YouTube Data API v3 — public, OAuth-authenticated",
+        "method": "GET",
+        "endpoint": "https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,status&id={VIDEO_ID}&key={API_KEY}",
+        "exampleComment": "// Example: Fetch video metadata including content rating and madeForKids status",
+        "exampleCode": "{\n  \"items\": [{\n    \"snippet\": {\n      \"title\": \"Video Title\",\n      \"channelTitle\": \"Channel Name\",\n      \"categoryId\": \"22\"\n    },\n    \"contentDetails\": {\n      \"contentRating\": {\n        \"ytRating\": \"ytAgeRestricted\"\n      }\n    },\n    \"status\": {\n      \"madeForKids\": true\n    }\n  }]\n}"
+      }
+    },
+    "endpoints": [
+      { "endpoint": "GET /youtube/v3/videos", "purpose": "Video metadata, content ratings (ytRating, mpaatRating), madeForKids status", "auth": "API Key or OAuth 2.0" },
+      { "endpoint": "GET /youtube/v3/search", "purpose": "Search videos with safeSearch filter (none/moderate/strict). 100 quota units per request", "auth": "API Key or OAuth 2.0" },
+      { "endpoint": "GET /youtube/v3/channels", "purpose": "Channel info, statistics, content owner details", "auth": "API Key or OAuth 2.0" },
+      { "endpoint": "GET /youtube/v3/playlists", "purpose": "Playlist data. Watch History playlist (HL) deprecated since 2016", "auth": "OAuth 2.0" },
+      { "endpoint": "GET /youtube/v3/playlistItems", "purpose": "Playlist contents. Liked Videos (LL) accessible; Watch History (HL) returns empty", "auth": "OAuth 2.0" },
+      { "endpoint": "GET /youtube/v3/activities", "purpose": "User activity feed: uploads, likes, subscriptions, comments. NOT watch history", "auth": "OAuth 2.0" },
+      { "endpoint": "GET /youtube/v3/subscriptions", "purpose": "User's channel subscriptions (read/write with OAuth)", "auth": "OAuth 2.0" },
+      { "endpoint": "GET /youtube/v3/commentThreads", "purpose": "Video comment threads. Disabled on madeForKids content", "auth": "API Key or OAuth 2.0" },
+      { "endpoint": "GET https://www.youtube.com/oembed", "purpose": "oEmbed endpoint: video title, author, thumbnail, embed HTML. No auth required", "auth": "None" },
+      { "endpoint": "POST /youtubei/v1/browse (Innertube)", "purpose": "Internal: browsing, recommendations, home feed, watch history. Undocumented", "auth": "Session cookies + Innertube context" },
+      { "endpoint": "POST /youtubei/v1/player (Innertube)", "purpose": "Internal: video playback, stream URLs, content details. Undocumented", "auth": "Session cookies + Innertube context" }
+    ],
+    "authDetails": [
+      { "label": "Public API Key", "value": "YouTube Data API v3 Key", "description": "Free API key from Google Cloud Console. 10,000 quota units/day default. Read-only access to public video/channel/search data." },
+      { "label": "OAuth 2.0", "value": "Google OAuth with YouTube scopes", "description": "Standard Google OAuth 2.0 for user-specific data. Scopes: youtube.readonly, youtube, youtube.force-ssl. No credential storage needed — Phosra stores refresh token only." },
+      { "label": "Innertube Context", "value": "Client context + session cookies", "description": "Internal YouTube API requires client name/version context object plus Google session cookies (SID, HSID, SSID, APISID, SAPISID). Undocumented and unstable." },
+      { "label": "Family Link Auth", "value": "Parent Google Account session", "description": "Family Link controls require parent account authentication. No public API exists. Internal Google API is not documented." }
+    ],
+    "rateLimitNotes": [
+      "YouTube Data API v3: 10,000 quota units per day (free tier). Search = 100 units. Video details = 1 unit. Most reads = 1 unit.",
+      "Quota increases available via Google Cloud Console application (requires justification and review)",
+      "Innertube API: No documented rate limits but aggressive Google-grade bot detection (reCAPTCHA, behavioral analysis, device fingerprinting)",
+      "OAuth token refresh: automatic, no rate limit concerns for normal usage patterns",
+      "YouTube Data API v3 is the most accessible public API of any major streaming/video platform researched by Phosra"
+    ],
+    "harCaptureCount": "YouTube Data API v3 has 37+ documented resource types. 11 key endpoints identified for Phosra integration."
+  },
+  "riskAssessment": {
+    "tosWarning": {
+      "title": "YouTube API Services Terms of Service (Updated August 28, 2025)",
+      "description": "YouTube Data API v3 usage is governed by the YouTube API Services Terms of Service and Developer Policies. The public API is explicitly designed for third-party use, making read operations fully ToS-compliant and LOW risk. Parental controls (Restricted Mode, Family Link, YouTube Kids) are NOT exposed via the public API. Automating the YouTube web UI via Playwright violates Google ToS. Browser automation of Google services carries CRITICAL risk due to Google-grade bot detection."
+    },
+    "overallRisk": {
+      "level": "Low (API) / Critical (browser automation)",
+      "description": "Low risk for YouTube Data API v3 reads within quota. Critical risk for any Playwright automation of Google services. Do NOT automate Family Link or YouTube settings via browser."
+    },
+    "detectionVectors": [
+      { "vector": "API quota exhaustion", "risk": "Low", "mitigation": "Monitor quota usage via Google Cloud Console. Cache video metadata aggressively (videos rarely change ratings). Apply for increased quota before production launch." },
+      { "vector": "OAuth scope verification", "risk": "Low", "mitigation": "Request only standard YouTube scopes. Complete Google OAuth app verification for production deployment." },
+      { "vector": "Innertube bot detection", "risk": "Critical", "mitigation": "DO NOT use Innertube API for Phosra. Google has industry-leading bot detection. Use official Data API v3 only." },
+      { "vector": "Family Link automation detection", "risk": "Critical", "mitigation": "DO NOT automate Family Link via Playwright. Google Account suspension would affect ALL Google services. Pursue Google partnership for API access instead." },
+      { "vector": "DNS enforcement bypass via VPN", "risk": "Medium", "mitigation": "Document limitation for parents. Recommend additional device-level controls (iOS Screen Time, Android Digital Wellbeing) alongside DNS enforcement." }
+    ],
+    "mitigationsChecklist": [
+      "Use YouTube Data API v3 for ALL content reads — fully ToS-compliant",
+      "Implement Google OAuth 2.0 for user-specific data — no credential storage needed",
+      "Cache video metadata and content ratings to reduce API quota consumption",
+      "Apply for Google Cloud API quota increase before production launch",
+      "DO NOT use Playwright automation against any Google service (Family Link, YouTube settings)",
+      "Enforce Restricted Mode at DNS level (restrict.youtube.com) for network-level control",
+      "Build in-app guided walkthroughs for parents to configure Family Link and YouTube Kids settings manually",
+      "Pursue Google Family Safety partner program for potential Family Link API access",
+      "Complete Google OAuth app verification before production deployment"
+    ]
+  },
+  "integrationGap": {
+    "platformName": "YouTube",
+    "stats": [
+      { "label": "Native", "value": 10, "color": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+      { "label": "Phosra-Added", "value": 4, "color": "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700" },
+      { "label": "N/A", "value": 7, "color": "bg-muted text-muted-foreground" },
+      { "label": "Future", "value": 24, "color": "bg-muted/60 text-muted-foreground/70" }
+    ],
+    "gapOpportunities": [
+      {
+        "icon": "Search",
+        "title": "Content Intelligence Engine",
+        "ruleCategory": "content_rating_filter",
+        "gapLabel": "YouTube Gap",
+        "gap": "YouTube's content classification is binary (Made for Kids or not; age-gated or not; Restricted Mode on or off). There is no granular content safety scoring for parents.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra uses the YouTube Data API v3 to analyze video metadata, madeForKids flags, contentRating properties, channel history, and safeSearch classification. Builds a multi-signal content safety score that provides more granular assessment than YouTube's native binary filters."
+      },
+      {
+        "icon": "Shield",
+        "title": "Unified Cross-App Control",
+        "ruleCategory": "content_rating_filter",
+        "gapLabel": "YouTube Gap",
+        "gap": "YouTube's parental controls are fragmented across three separate products (YouTube Kids app, YouTube Restricted Mode, Google Family Link) with no unified dashboard. Parents must configure each independently.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra provides a single dashboard to monitor and guide configuration across YouTube Kids, main YouTube, and Family Link settings. One maturity level in Phosra maps to the appropriate YouTube control for each child's age group."
+      },
+      {
+        "icon": "Eye",
+        "title": "Cross-Platform Activity Monitoring",
+        "ruleCategory": "viewing_history_access",
+        "gapLabel": "YouTube Gap",
+        "gap": "YouTube watch history is per-account only. Family Center shows limited activity insights for teens. No unified parent dashboard for viewing across YouTube Kids and main YouTube. Watch history API deprecated since 2016.",
+        "solutionLabel": "Phosra Solution",
+        "solution": "Phosra aggregates YouTube activity signals (API activities, Liked Videos, subscriptions, Google Takeout imports) into a unified parent dashboard alongside Netflix, Peacock, and other platforms. Enriches raw activity data with content safety scoring."
+      }
+    ],
+    "adapterLayers": [
+      { "label": "Content Intelligence (Public API)", "color": "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30" },
+      { "label": "Activity Monitor (OAuth)", "color": "bg-teal-500/20 text-teal-700 dark:text-teal-300 border-teal-500/30" },
+      { "label": "Parental Guide (Human-in-Loop)", "color": "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30" },
+      { "label": "DNS Enforcement", "color": "bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-500/30" },
+      { "label": "OAuth Session Manager", "color": "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/30" }
+    ],
+    "credentials": [
+      { "name": "OAuth refresh token", "purpose": "YouTube Data API access (activities, subscriptions, liked videos)", "sensitivity": "High", "encryption": "AES-256", "retention": "Long-lived (until user revokes or token expires)" },
+      { "name": "OAuth access token", "purpose": "Short-lived API calls", "sensitivity": "Medium", "encryption": "In-memory only", "retention": "1-hour TTL (auto-refreshed from refresh token)" },
+      { "name": "YouTube API key", "purpose": "Public data reads (video metadata, search, channels)", "sensitivity": "Low", "encryption": "Environment config", "retention": "Permanent (rotatable via Google Cloud Console)" },
+      { "name": "Family member mapping", "purpose": "Google Account to Phosra child mapping", "sensitivity": "Low", "encryption": "Standard DB", "retention": "Until disconnected" },
+      { "name": "DNS configuration", "purpose": "restrict.youtube.com CNAME for Restricted Mode enforcement", "sensitivity": "Low", "encryption": "Router config", "retention": "Persistent until changed" }
+    ],
+    "platformBgColor": "rgba(255,0,0,0.05)",
+    "platformIconLetter": "Y",
+    "platformIconBg": "#FF0000",
+    "apiDescription": "YouTube Data API v3 (content reads) + DNS enforcement + guided parent setup",
+    "adapterName": "YouTube Adapter"
+  },
+  "enforcementFlow": {
+    "steps": [
+      {
+        "id": "analyze",
+        "icon": "Search",
+        "title": "Analyze Content",
+        "description": "Classify video safety via public API",
+        "detail": "Use YouTube Data API v3 to fetch video metadata, contentRating (ytAgeRestricted), madeForKids flag, channel info, and category. Apply Phosra content safety scoring algorithm. Search with safeSearch=strict for filtered results.",
+        "color": "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30",
+        "dotColor": "bg-blue-500",
+        "headerBg": "bg-blue-500/10"
+      },
+      {
+        "id": "monitor",
+        "icon": "Eye",
+        "title": "Monitor Activity",
+        "description": "Track child's YouTube engagement",
+        "detail": "Read child's YouTube activities (uploads, likes, subscriptions) via Data API v3 with OAuth. Analyze Liked Videos playlist for content preferences. Import Google Takeout data for historical watch analysis. Cross-reference against Phosra content safety scores.",
+        "color": "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+        "dotColor": "bg-emerald-500",
+        "headerBg": "bg-emerald-500/10"
+      },
+      {
+        "id": "enforce",
+        "icon": "Shield",
+        "title": "Enforce Restrictions",
+        "description": "Apply controls via DNS + guided parent actions",
+        "detail": "Enforce Restricted Mode at network level via DNS CNAME (restrict.youtube.com). Guide parents through Family Link configuration for content levels and screen time. Provide step-by-step YouTube Kids setup instructions. No browser automation of Google services.",
+        "color": "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30",
+        "dotColor": "bg-amber-500",
+        "headerBg": "bg-amber-500/10"
+      },
+      {
+        "id": "alert",
+        "icon": "Bell",
+        "title": "Alert Parent",
+        "description": "Notify on concerning activity",
+        "detail": "Push notification to parent via Phosra app when content safety analysis detects concerning subscriptions, liked videos, or activity patterns. Provide content context (video title, channel, safety score, madeForKids status). Include actionable recommendations.",
+        "color": "bg-red-500/10 text-red-700 dark:text-red-300 border-red-500/30",
+        "dotColor": "bg-red-500",
+        "headerBg": "bg-red-500/10"
+      }
+    ],
+    "limitations": [
+      {
+        "icon": "Key",
+        "title": "No API write access for parental controls",
+        "description": "YouTube Data API v3 is read-only for content data. Restricted Mode, YouTube Kids settings, Family Link controls, and screen time cannot be modified via any public API. Parents must configure these manually (guided by Phosra)."
+      },
+      {
+        "icon": "Clock",
+        "title": "Watch history API deprecated since 2016",
+        "description": "YouTube deprecated API access to watch history playlists in September 2016. Real-time watch history is not available via any API. Phosra uses activity signals (likes, subscriptions) and Google Takeout imports as alternatives."
+      },
+      {
+        "icon": "AlertTriangle",
+        "title": "Restricted Mode is imperfect",
+        "description": "Restricted Mode is a best-effort filter using automated signals and human reviewers. Some mature content may pass through, and some age-appropriate content may be incorrectly hidden. YouTube acknowledges it makes mistakes."
+      },
+      {
+        "icon": "Smartphone",
+        "title": "YouTube Kids is a separate app ecosystem",
+        "description": "YouTube Kids is completely separate from main YouTube. Settings, watch history, content catalogs, and APIs do not cross over. Phosra must treat them as distinct platforms."
+      }
+    ],
+    "loopLabel": "Continuous content analysis with real-time activity alerts"
+  },
+  "adapterRoadmap": {
+    "methods": [
+      { "name": "authenticate", "approach": "Google OAuth 2.0", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "Low", "risk": "Low", "recommendation": "Standard Google OAuth 2.0 flow. No credential storage — Phosra stores refresh token only. Fully ToS-compliant. Massive advantage over Netflix/Peacock." },
+      { "name": "listProfiles", "approach": "OAuth + Manual Mapping", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Low", "recommendation": "Use channels.list for account info. Parent manually maps children's Google Accounts in Phosra setup wizard. No API for Family Link supervised account listing." },
+      { "name": "getProfileSettings", "approach": "Not Possible (API)", "approachColor": "bg-muted text-muted-foreground", "complexity": "N/A", "risk": "N/A", "recommendation": "Family Link settings are not API-accessible. Parent reports current config to Phosra via settings sync UI. Do NOT automate Google services." },
+      { "name": "setContentRestrictions", "approach": "DNS + Guided Setup", "approachColor": "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300", "complexity": "Low", "risk": "Low", "recommendation": "DNS CNAME to restrict.youtube.com for Restricted Mode. In-app walkthrough for Family Link content level configuration." },
+      { "name": "setTitleRestrictions", "approach": "Not Supported", "approachColor": "bg-muted text-muted-foreground", "complexity": "N/A", "risk": "N/A", "recommendation": "YouTube does not support per-video blocking on main app. YouTube Kids 'Approved Content Only' is closest equivalent. Phosra content intelligence provides alerts instead of blocks." },
+      { "name": "setProfilePIN", "approach": "Not Supported", "approachColor": "bg-muted text-muted-foreground", "complexity": "N/A", "risk": "N/A", "recommendation": "YouTube uses Google Account auth, not per-profile PINs. YouTube Kids has parent passcode (not API-accessible). Return UnsupportedOperationError." },
+      { "name": "getWatchHistory", "approach": "API Activities + Takeout", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Medium", "risk": "Low", "recommendation": "Watch history API deprecated since 2016. Use activities.list for public activity signals + Liked Videos playlist + Google Takeout batch import for historical data." },
+      { "name": "lockProfile", "approach": "Device-Level", "approachColor": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300", "complexity": "Medium", "risk": "Low", "recommendation": "No YouTube-level profile locking. Enforce via device-level (iOS Screen Time, Android Digital Wellbeing) or DNS-level (block youtube.com during restricted hours)." },
+      { "name": "createKidsProfile", "approach": "Guided Setup", "approachColor": "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300", "complexity": "Low", "risk": "Low", "recommendation": "Walk parents through YouTube Kids profile creation and Family Link supervised account setup. No API for account creation." },
+      { "name": "supportsNativeScreenTime", "approach": "Static: true", "approachColor": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300", "complexity": "None", "risk": "None", "recommendation": "Returns true. YouTube has Take a Break, Bedtime, Shorts Timer, YouTube Kids Timer. Features exist but are not API-controllable. Guide parents to configure via Family Link/Family Center." }
+    ],
+    "timelinePhases": [
+      { "priority": "P0", "label": "Foundation", "components": "Google OAuth 2.0 (1-2d), Data API v3 Client (3-5d), Content Classification Engine (3-4d)", "minDays": 7, "maxDays": 11, "color": "text-red-700 dark:text-red-300", "barColor": "bg-red-500", "hatchColor": "bg-red-300 dark:bg-red-700" },
+      { "priority": "P1", "label": "Monitoring + Guides", "components": "Activity Monitor (2-3d), Parental Guide Wizard (3-5d), DNS Enforcement (2-3d), Settings Sync UI (2-3d), Testing (3-4d)", "minDays": 12, "maxDays": 18, "color": "text-amber-700 dark:text-amber-300", "barColor": "bg-amber-500", "hatchColor": "bg-amber-300 dark:bg-amber-700" },
+      { "priority": "P2", "label": "Advanced", "components": "Google Takeout Import (2-3d), Device Monitoring Integration (5-7d)", "minDays": 7, "maxDays": 10, "color": "text-emerald-700 dark:text-emerald-300", "barColor": "bg-emerald-500", "hatchColor": "bg-emerald-300 dark:bg-emerald-700" }
+    ],
+    "totalEstimate": "26-39 days",
+    "maxTotal": 39
+  }
+}
