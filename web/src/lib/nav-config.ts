@@ -218,6 +218,7 @@ export const NAV_ENTRIES: NavEntry[] = [
   { type: "dropdown", data: RESEARCH_DROPDOWN },
   { type: "dropdown", data: COMPLIANCE_DROPDOWN },
   { type: "dropdown", data: RESOURCES_DROPDOWN },
+  { type: "link", data: { label: "Playground", href: "/developers/playground" } },
   { type: "link", data: { label: "Pricing", href: "/pricing" } },
 ]
 
