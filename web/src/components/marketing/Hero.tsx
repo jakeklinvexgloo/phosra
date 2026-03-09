@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Code } from "lucide-react"
 import { WaveTexture } from "./shared/WaveTexture"
 import { GradientMesh } from "./shared/GradientMesh"
 import { PhosraBurst } from "./shared/PhosraBurst"
@@ -72,25 +72,43 @@ export function Hero() {
             </AnimatedSection>
 
             <AnimatedSection delay={0.2}>
-              <p className="text-[15px] sm:text-xl text-white/50 leading-relaxed mb-10 max-w-lg">
-                Kids use {PLATFORM_STATS.marketingTotal} apps and platforms {"\u2014"} each with different, fragmented parental controls. Phosra is an open specification and API that unifies them. Platforms adopt the spec; parents set rules once.
+              <p className="text-[15px] sm:text-xl text-white/50 leading-relaxed mb-4 max-w-lg">
+                Set rules once. They work everywhere your kids play.
+              </p>
+              <p className="text-[13px] sm:text-base text-white/35 leading-relaxed mb-10 max-w-lg">
+                Right now you&apos;re playing whack-a-mole {"\u2014"} configuring Netflix, Roblox, TikTok, and Discord one at a time, with settings that don&apos;t talk to each other. Phosra connects {PLATFORM_STATS.marketingTotal} platforms so one set of rules protects every screen.
               </p>
             </AnimatedSection>
 
             <AnimatedSection delay={0.3}>
-              <div className="flex flex-wrap gap-3 sm:gap-4">
+              <div className="flex flex-wrap items-start gap-3 sm:gap-4">
+                {/* Primary: parent path */}
                 <Link
                   href="/login"
-                  className="inline-flex items-center px-6 sm:px-8 py-3.5 sm:py-4 bg-brand-green text-foreground text-sm font-semibold rounded-sm hover:opacity-90 transition hover:shadow-[0_0_30px_-6px_rgba(0,212,126,0.4)]"
+                  className="inline-flex items-center px-7 sm:px-9 py-4 sm:py-4.5 bg-brand-green text-foreground text-sm font-bold rounded-lg hover:opacity-90 transition hover:shadow-[0_0_30px_-6px_rgba(0,212,126,0.4)]"
                 >
                   Get Started Free
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
+                {/* Secondary: developer path */}
                 <Link
                   href="/docs"
-                  className="inline-flex items-center px-6 sm:px-8 py-3.5 sm:py-4 border border-white/20 text-white text-sm font-semibold rounded-sm hover:bg-white/5 hover:border-white/30 transition"
+                  className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-3.5 border border-white/15 text-white/60 text-xs font-medium rounded-lg hover:bg-white/5 hover:border-white/25 hover:text-white/80 transition"
                 >
+                  <Code className="w-3.5 h-3.5 mr-1.5 opacity-50" />
                   Read the Docs
                 </Link>
+              </div>
+
+              {/* Compatibility callout — kills the #1 objection */}
+              <div className="mt-5 flex items-center gap-2 flex-wrap">
+                <span className="text-[11px] text-white/30 font-medium">Works with</span>
+                {["Bark", "Qustodio", "Screen Time", "Net Nanny"].map((name) => (
+                  <span key={name} className="text-[11px] text-white/45 font-medium px-2.5 py-1 rounded-full border border-white/[0.08] bg-white/[0.03]">
+                    {name}
+                  </span>
+                ))}
+                <span className="text-[11px] text-white/25">+ {PLATFORM_STATS.marketingTotal} more</span>
               </div>
             </AnimatedSection>
 
