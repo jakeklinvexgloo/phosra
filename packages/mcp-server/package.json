@@ -11,6 +11,15 @@
     ".": "./dist/server.js",
     "./tools": "./dist/tools.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jakeklinvexgloo/phosra.git",
+    "directory": "packages/mcp-server"
+  },
+  "homepage": "https://www.phosra.com/docs/mcp",
+  "bugs": {
+    "url": "https://github.com/jakeklinvexgloo/phosra/issues"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
@@ -27,5 +36,5 @@
   "files": [
     "dist"
   ],
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

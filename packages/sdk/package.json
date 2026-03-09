@@ -15,6 +15,15 @@
     "dist",
     "README.md"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jakeklinvexgloo/phosra.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://www.phosra.com/docs/sdk",
+  "bugs": {
+    "url": "https://github.com/jakeklinvexgloo/phosra/issues"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

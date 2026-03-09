@@ -1,4 +1,7 @@
 // swift-tools-version: 5.9
+// The PhosraSDK Swift package.
+// Install via SPM: https://github.com/jakeklinvexgloo/phosra-ios-sdk.git
+
 import PackageDescription
 
 let package = Package(
