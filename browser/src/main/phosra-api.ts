@@ -157,6 +157,14 @@ export class PhosraApiClient {
     return this.post<{ linked: number }>('/viewing-history/link-csm', {});
   }
 
+  async getChildViewingHistory(childId: string, limit = 5000): Promise<any[]> {
+    return this.get<any[]>(`/viewing-history/${childId}?limit=${limit}`);
+  }
+
+  async getCSMReviewsByFamily(familyId: string): Promise<any[]> {
+    return this.get<any[]>(`/csm/reviews/by-family/${familyId}`);
+  }
+
   // -----------------------------------------------------------------------
   // Config Agent State
   // -----------------------------------------------------------------------

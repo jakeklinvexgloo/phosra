@@ -662,9 +662,77 @@ export function registerIpcHandlers(
     }
   });
 
-  ipcMain.handle('netflix:load-activity', () => {
-    const saved = activityStore.load();
-    return { success: true, data: saved };
+  ipcMain.handle('netflix:load-activity', async () => {
+    try {
+      const saved = activityStore.load();
+      if (saved && saved.length > 0) {
+        return { success: true, data: saved };
+      }
+
+      // Local data is empty — try fetching from server
+      if (!apiClient) {
+        return { success: true, data: saved };
+      }
+
+      console.log('[netflix:load-activity] Local cache empty, fetching from server...');
+
+      const families = await apiClient.listFamilies();
+      if (!families || families.length === 0) {
+        return { success: true, data: null };
+      }
+      const familyId = families[0].id;
+      const children = await apiClient.listChildren(familyId);
+      if (!children || children.length === 0) {
+        return { success: true, data: null };
+      }
+
+      const activities: import('./netflix-activity').ChildActivity[] = [];
+
+      for (const child of children) {
+        try {
+          const rows = await apiClient.getChildViewingHistory(child.id);
+          if (!rows || rows.length === 0) continue;
+
+          // Group rows by netflix_profile
+          const byProfile = new Map<string, typeof rows>();
+          for (const row of rows) {
+            const key = row.netflix_profile || 'unknown';
+            if (!byProfile.has(key)) byProfile.set(key, []);
+            byProfile.get(key)!.push(row);
+          }
+
+          for (const [profileGuid, profileRows] of byProfile) {
+            const entries = profileRows.map((row: any) => ({
+              title: row.title || '',
+              date: formatServerDateToLocal(row.watched_date),
+              seriesTitle: row.series_title || undefined,
+            }));
+
+            activities.push({
+              childName: child.name,
+              childId: child.id,
+              profileName: profileGuid,
+              profileGuid,
+              avatarUrl: '',
+              entries,
+              fetchedAt: new Date().toISOString(),
+            });
+          }
+        } catch (err) {
+          console.error(`[netflix:load-activity] Failed to fetch history for child ${child.name}:`, err);
+        }
+      }
+
+      if (activities.length > 0) {
+        activityStore.save(activities);
+        console.log(`[netflix:load-activity] Fetched ${activities.length} profiles from server, saved locally`);
+      }
+
+      return { success: true, data: activities.length > 0 ? activities : null };
+    } catch (err) {
+      console.error('[netflix:load-activity] Server fallback failed:', err);
+      return { success: true, data: null };
+    }
   });
 
   // Re-sync all persisted activity to backend using profile-child map
@@ -745,13 +813,77 @@ export function registerIpcHandlers(
     }
   });
 
-  ipcMain.handle('csm:get-cached', () => {
+  ipcMain.handle('csm:get-cached', async () => {
     try {
       const service = ensureCSMService();
-      return { success: true, data: service.getCachedReviews() };
+      const localReviews = service.getCachedReviews();
+
+      if (localReviews && localReviews.length > 0) {
+        return { success: true, data: localReviews };
+      }
+
+      // Local cache is empty — try fetching from server
+      if (!apiClient) {
+        return { success: true, data: localReviews };
+      }
+
+      console.log('[csm:get-cached] Local cache empty, fetching from server...');
+
+      const families = await apiClient.listFamilies();
+      if (!families || families.length === 0) {
+        return { success: true, data: [] };
+      }
+      const familyId = families[0].id;
+
+      const serverReviews = await apiClient.getCSMReviewsByFamily(familyId);
+      if (!serverReviews || serverReviews.length === 0) {
+        return { success: true, data: [] };
+      }
+
+      // Transform server snake_case to local CSMCachedReview format
+      const transformed: import('./csm-cache').CSMCachedReview[] = serverReviews.map((r: any) => ({
+        csmSlug: r.csm_slug || '',
+        csmUrl: r.csm_url || '',
+        csmMediaType: r.csm_media_type || '',
+        title: r.title || '',
+        ageRating: r.age_rating || '',
+        ageRangeMin: r.age_range_min ?? 0,
+        qualityStars: r.quality_stars ?? 0,
+        isFamilyFriendly: r.is_family_friendly ?? false,
+        reviewSummary: r.review_summary || '',
+        reviewBody: r.review_body || '',
+        parentSummary: r.parent_summary || '',
+        ageExplanation: r.age_explanation || '',
+        descriptors: Array.isArray(r.descriptors_json)
+          ? r.descriptors_json.map((d: any) => ({
+              category: d.category || '',
+              level: d.level || '',
+              numericLevel: d.numericLevel ?? d.numeric_level ?? 0,
+              description: d.description || '',
+            }))
+          : [],
+        positiveContent: Array.isArray(r.positive_content)
+          ? r.positive_content.map((p: any) => ({
+              category: p.category || '',
+              description: p.description || '',
+            }))
+          : [],
+        scrapedAt: r.created_at || new Date().toISOString(),
+      }));
+
+      // Persist to local CSM cache so subsequent loads are fast
+      // We access the cache through the service's internal cache by setting each review
+      const { CSMCache } = await import('./csm-cache');
+      const localCache = new CSMCache(profileManager.getDefaultProfilePath());
+      for (const review of transformed) {
+        localCache.set(review);
+      }
+
+      console.log(`[csm:get-cached] Fetched ${transformed.length} reviews from server, saved locally`);
+      return { success: true, data: transformed };
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      return { success: false, error: message };
+      console.error('[csm:get-cached] Server fallback failed:', err);
+      return { success: true, data: [] };
     }
   });
 
@@ -794,6 +926,22 @@ export function registerIpcHandlers(
 // -------------------------------------------------------------------
 // Helpers
 // -------------------------------------------------------------------
+
+/**
+ * Convert a server date (YYYY-MM-DD) to Netflix's local display format (M/D/YY).
+ * Returns empty string if unparseable.
+ */
+function formatServerDateToLocal(dateStr: string | null): string {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  const day = parseInt(parts[2], 10);
+  if (isNaN(year) || isNaN(month) || isNaN(day)) return dateStr;
+  const shortYear = year % 100;
+  return `${month}/${day}/${shortYear}`;
+}
 
 /**
  * Parse Netflix's date format (e.g. "3/5/26", "12/25/25") to ISO date string.

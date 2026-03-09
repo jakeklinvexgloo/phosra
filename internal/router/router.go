@@ -325,6 +325,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Use(authMiddleware)
 			r.Get("/review/{slug}", h.ViewingHistory.GetCSMReview)
 			r.Post("/reviews/bulk", h.ViewingHistory.BulkUpsertReviews)
+			r.Get("/reviews/by-family/{familyId}", h.ViewingHistory.GetCSMReviewsByFamily)
 		})
 		r.Group(func(r chi.Router) {
 			r.Use(authMiddleware)

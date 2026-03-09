@@ -152,6 +152,37 @@ func (r *CSMReviewRepo) SearchByTitle(ctx context.Context, query string, limit i
 	return results, rows.Err()
 }
 
+func (r *CSMReviewRepo) ListByFamilyViewingHistory(ctx context.Context, familyID uuid.UUID) ([]domain.CSMReview, error) {
+	rows, err := r.Pool.Query(ctx,
+		`SELECT DISTINCT cr.id, cr.csm_slug, cr.csm_url, cr.csm_media_type, cr.title, cr.age_rating,
+		        cr.age_range_min, cr.quality_stars, cr.is_family_friendly,
+		        cr.review_summary, cr.review_body, cr.parent_summary, cr.age_explanation,
+		        cr.descriptors_json, cr.positive_content, cr.date_published, cr.scraped_at, cr.updated_at
+		 FROM csm_reviews cr
+		 JOIN viewing_history vh ON vh.csm_review_id = cr.id
+		 WHERE vh.family_id = $1`, familyID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []domain.CSMReview
+	for rows.Next() {
+		var rev domain.CSMReview
+		if err := rows.Scan(
+			&rev.ID, &rev.CSMSlug, &rev.CSMURL, &rev.CSMMediaType, &rev.Title, &rev.AgeRating,
+			&rev.AgeRangeMin, &rev.QualityStars, &rev.IsFamilyFriendly,
+			&rev.ReviewSummary, &rev.ReviewBody, &rev.ParentSummary, &rev.AgeExplanation,
+			&rev.DescriptorsJSON, &rev.PositiveContent, &rev.DatePublished, &rev.ScrapedAt, &rev.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		results = append(results, rev)
+	}
+	return results, rows.Err()
+}
+
 // populateDescriptors upserts normalized descriptor rows from descriptors_json.
 // Best-effort: failures here don't block the main upsert.
 func (r *CSMReviewRepo) populateDescriptors(ctx context.Context, reviews []domain.CSMReview) {
