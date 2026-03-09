@@ -112,8 +112,22 @@ export function Hero() {
               </div>
             </AnimatedSection>
 
+            {/* Founder social proof */}
+            <AnimatedSection delay={0.35}>
+              <div className="mt-8 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-green/30 to-accent-teal/30 border border-white/[0.1] flex items-center justify-center text-white/70 text-xs font-semibold flex-shrink-0">
+                  JK
+                </div>
+                <p className="text-[12px] sm:text-[13px] text-white/40 leading-snug">
+                  <span className="text-white/60 font-medium">Built by parents of 5.</span>{" "}
+                  Jake &amp; Susannah Klinvex founded 3 companies (all acquired{" "}{"\u2014"}{" "}Mastercard, Fidelity, Gloo IPO). They built Phosra because they needed it themselves.{" "}
+                  <Link href="/about" className="text-brand-green/60 hover:text-brand-green transition-colors">Read our story &rarr;</Link>
+                </p>
+              </div>
+            </AnimatedSection>
+
             {/* Prompt bar */}
-            <AnimatedSection delay={0.4}>
+            <AnimatedSection delay={0.45}>
               <HeroPromptBar onSubmit={setModalPrompt} />
             </AnimatedSection>
           </div>
