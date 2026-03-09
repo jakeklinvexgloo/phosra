@@ -75,13 +75,18 @@ export function Hero() {
               <p className="text-[15px] sm:text-xl text-white/50 leading-relaxed mb-4 max-w-lg">
                 Set rules once. They work everywhere your kids play.
               </p>
-              <p className="text-[13px] sm:text-base text-white/35 leading-relaxed mb-10 max-w-lg">
+              <p className="text-[13px] sm:text-base text-white/35 leading-relaxed mb-6 max-w-lg">
                 Right now you&apos;re playing whack-a-mole {"\u2014"} configuring Netflix, Roblox, TikTok, and Discord one at a time, with settings that don&apos;t talk to each other. Phosra connects {PLATFORM_STATS.marketingTotal} platforms so one set of rules protects every screen.
               </p>
             </AnimatedSection>
 
-            <AnimatedSection delay={0.3}>
-              <div className="flex flex-wrap items-start gap-3 sm:gap-4">
+            {/* AI Prompt bar — above the fold, the best thing on the site */}
+            <AnimatedSection delay={0.25}>
+              <HeroPromptBar onSubmit={setModalPrompt} />
+            </AnimatedSection>
+
+            <AnimatedSection delay={0.35}>
+              <div className="flex flex-wrap items-start gap-3 sm:gap-4 mt-6">
                 {/* Primary: parent path */}
                 <Link
                   href="/login"
@@ -101,7 +106,7 @@ export function Hero() {
               </div>
 
               {/* Compatibility callout — kills the #1 objection */}
-              <div className="mt-5 flex items-center gap-2 flex-wrap">
+              <div className="mt-4 flex items-center gap-2 flex-wrap">
                 <span className="text-[11px] text-white/30 font-medium">Works with</span>
                 {["Bark", "Qustodio", "Screen Time", "Net Nanny"].map((name) => (
                   <span key={name} className="text-[11px] text-white/45 font-medium px-2.5 py-1 rounded-full border border-white/[0.08] bg-white/[0.03]">
@@ -113,8 +118,8 @@ export function Hero() {
             </AnimatedSection>
 
             {/* Founder social proof */}
-            <AnimatedSection delay={0.35}>
-              <div className="mt-8 flex items-center gap-3">
+            <AnimatedSection delay={0.4}>
+              <div className="mt-6 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-green/30 to-accent-teal/30 border border-white/[0.1] flex items-center justify-center text-white/70 text-xs font-semibold flex-shrink-0">
                   JK
                 </div>
@@ -124,11 +129,6 @@ export function Hero() {
                   <Link href="/about" className="text-brand-green/60 hover:text-brand-green transition-colors">Read our story &rarr;</Link>
                 </p>
               </div>
-            </AnimatedSection>
-
-            {/* Prompt bar */}
-            <AnimatedSection delay={0.45}>
-              <HeroPromptBar onSubmit={setModalPrompt} />
             </AnimatedSection>
           </div>
 
