@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
+	"github.com/guardiangate/api/internal/domain"
 	"github.com/guardiangate/api/internal/handler/middleware"
 	"github.com/guardiangate/api/internal/service"
 	"github.com/guardiangate/api/pkg/httputil"
@@ -42,7 +43,15 @@ func (h *WebhookHandler) Create(w http.ResponseWriter, r *http.Request) {
 		handleServiceError(w, err)
 		return
 	}
-	httputil.Created(w, webhook)
+	// Return the signing secret on creation — the Webhook.Secret field is
+	// json:"-" so it's never leaked on subsequent GET calls.
+	httputil.Created(w, struct {
+		*domain.Webhook
+		SigningSecret string `json:"signing_secret"`
+	}{
+		Webhook:       webhook,
+		SigningSecret: webhook.Secret,
+	})
 }
 
 func (h *WebhookHandler) Get(w http.ResponseWriter, r *http.Request) {
