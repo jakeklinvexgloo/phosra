@@ -270,7 +270,7 @@ func main() {
 		routerOpts = append(routerOpts, router.WithWorkerAPIKey(cfg.WorkerAPIKey))
 		log.Info().Msg("Worker API key configured")
 	}
-	r := router.New(handlers, userRepo, devicePolicySvc, cfg.RateLimitRPS, routerOpts...)
+	r := router.New(handlers, userRepo, devicePolicySvc, developerRepo, cfg.RateLimitRPS, routerOpts...)
 
 	// Server
 	// Note: WriteTimeout set to 0 to support long-running WebSocket connections

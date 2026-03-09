@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/guardiangate/api/internal/domain"
 	"github.com/guardiangate/api/internal/handler"
 	"github.com/guardiangate/api/internal/handler/middleware"
 	"github.com/guardiangate/api/internal/repository"
@@ -65,7 +66,7 @@ type Handlers struct {
 	ViewingHistory     *handler.ViewingHistoryHandler
 }
 
-func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.DeviceAuthenticator, rateLimitRPS int, opts ...Option) http.Handler {
+func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.DeviceAuthenticator, devKeyAuth middleware.DeveloperKeyAuthenticator, rateLimitRPS int, opts ...Option) http.Handler {
 	o := &options{}
 	for _, opt := range opts {
 		opt(o)
@@ -532,6 +533,100 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Get("/device/policy", h.Device.GetPolicy)
 			r.Post("/device/report", h.Device.IngestReport)
 			r.Post("/device/ack", h.Device.AckVersion)
+		})
+
+		// Developer API key routes (Bearer phosra_* or X-Api-Key)
+		r.Route("/developer", func(r chi.Router) {
+			r.Use(middleware.DeveloperKeyAuth(devKeyAuth))
+			r.Use(middleware.DeveloperRateLimit(devKeyAuth))
+
+			// Families
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeReadFamilies))
+				r.Get("/families", h.Family.List)
+				r.Get("/families/{familyID}", h.Family.Get)
+			})
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeWriteFamilies))
+				r.Post("/families", h.Family.Create)
+				r.Put("/families/{familyID}", h.Family.Update)
+			})
+
+			// Children
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeReadFamilies))
+				r.Get("/families/{familyID}/children", h.Child.List)
+				r.Get("/children/{childID}", h.Child.Get)
+			})
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeWriteFamilies))
+				r.Post("/families/{familyID}/children", h.Child.Create)
+				r.Put("/children/{childID}", h.Child.Update)
+			})
+
+			// Policies
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeReadPolicies))
+				r.Get("/children/{childID}/policies", h.Policy.List)
+				r.Get("/policies/{policyID}", h.Policy.Get)
+				r.Get("/policies/{policyID}/rules", h.Policy.ListRules)
+			})
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeWritePolicies))
+				r.Post("/children/{childID}/policies", h.Policy.Create)
+				r.Put("/policies/{policyID}", h.Policy.Update)
+				r.Post("/policies/{policyID}/rules", h.Policy.CreateRule)
+				r.Put("/policies/{policyID}/rules/bulk", h.Policy.BulkUpsertRules)
+			})
+
+			// Enforcement
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeReadEnforcement))
+				r.Get("/enforcement/jobs/{jobID}", h.Enforcement.GetJob)
+				r.Get("/enforcement/jobs/{jobID}/results", h.Enforcement.GetJobResults)
+				r.Get("/children/{childID}/enforcement/jobs", h.Enforcement.ListChildJobs)
+			})
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeWriteEnforcement))
+				r.Post("/children/{childID}/enforce", h.Enforcement.TriggerChildEnforcement)
+			})
+
+			// Ratings (read-only)
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeReadRatings))
+				r.Get("/ratings/systems", h.Rating.GetSystems)
+				r.Get("/ratings/systems/{systemID}", h.Rating.GetBySystem)
+				r.Get("/ratings/by-age", h.Rating.GetByAge)
+			})
+
+			// Platforms (read-only)
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeReadPlatforms))
+				r.Get("/platforms", h.Platform.List)
+				r.Get("/platforms/{platformID}", h.Platform.Get)
+			})
+
+			// Compliance
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeWriteCompliance))
+				r.Post("/compliance", h.Platform.VerifyCompliance)
+			})
+
+			// Devices
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeDeviceManage))
+				r.Post("/children/{childID}/devices", h.Device.RegisterDevice)
+				r.Get("/children/{childID}/devices", h.Device.ListDevices)
+			})
+
+			// Webhooks
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.RequireScopes(domain.ScopeWebhookManage))
+				r.Post("/webhooks", h.Webhook.Create)
+				r.Get("/webhooks/{webhookID}", h.Webhook.Get)
+				r.Put("/webhooks/{webhookID}", h.Webhook.Update)
+				r.Delete("/webhooks/{webhookID}", h.Webhook.Delete)
+			})
 		})
 	})
 

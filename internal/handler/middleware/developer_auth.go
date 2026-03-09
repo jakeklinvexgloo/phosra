@@ -22,10 +22,11 @@ const (
 )
 
 // DeveloperKeyAuthenticator is the interface the middleware needs to look up and
-// update developer API keys.
+// update developer API keys, and fetch org-level settings (e.g. rate limits).
 type DeveloperKeyAuthenticator interface {
 	GetKeyByHash(ctx context.Context, hash string) (*domain.DeveloperAPIKey, error)
 	UpdateKeyLastUsed(ctx context.Context, id uuid.UUID, ip string) error
+	GetOrg(ctx context.Context, id uuid.UUID) (*domain.DeveloperOrg, error)
 }
 
 // DeveloperKeyAuth validates requests using Bearer phosra_live_* / phosra_test_*
