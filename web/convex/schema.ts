@@ -121,4 +121,107 @@ export default defineSchema({
   })
     .index("by_family", ["familyId"])
     .index("by_child", ["childId"]),
+
+  // ── Streaming platform connections per family ────────────────
+  streamingAccounts: defineTable({
+    familyId: v.string(),
+    platform: v.union(
+      v.literal("netflix"), v.literal("peacock"), v.literal("disney_plus"),
+      v.literal("prime_video"), v.literal("apple_tv"), v.literal("hulu")
+    ),
+    // Credentials stored encrypted — NEVER plaintext
+    credentialRef: v.string(),  // reference to encrypted store, not actual creds
+    childProfileName: v.optional(v.string()),
+    lastAuditAt: v.optional(v.number()),
+    lastAuditScore: v.optional(v.number()),
+    connected: v.boolean(),
+  })
+    .index("by_family", ["familyId"])
+    .index("by_family_platform", ["familyId", "platform"]),
+
+  // ── Content metadata cache (from TMDB/CSM) ──────────────────
+  contentMetadata: defineTable({
+    tmdbId: v.optional(v.string()),
+    imdbId: v.optional(v.string()),
+    title: v.string(),
+    contentType: v.union(v.literal("movie"), v.literal("tv_show"), v.literal("episode")),
+    mpaaRating: v.optional(v.string()),
+    tvRating: v.optional(v.string()),
+    commonSenseAge: v.optional(v.number()),
+    commonSenseScore: v.optional(v.number()),
+    genres: v.array(v.string()),
+    violenceScore: v.optional(v.number()),
+    sexualityScore: v.optional(v.number()),
+    languageScore: v.optional(v.number()),
+    substanceScore: v.optional(v.number()),
+    educationalValue: v.optional(v.number()),
+    description: v.optional(v.string()),
+    cachedAt: v.number(),
+    platforms: v.array(v.string()),
+  })
+    .index("by_tmdb", ["tmdbId"])
+    .index("by_title", ["title"]),
+
+  // ── Per-child content policy (natural language → structured) ─
+  contentPolicies: defineTable({
+    childId: v.string(),
+    familyId: v.string(),
+    ageYears: v.number(),
+    naturalLanguagePolicy: v.string(),
+    structuredPolicy: v.object({
+      maxMpaaRating: v.string(),
+      maxTvRating: v.string(),
+      maxCommonSenseAge: v.number(),
+      maxViolenceScore: v.number(),
+      maxSexualityScore: v.number(),
+      maxLanguageScore: v.number(),
+      maxSubstanceScore: v.number(),
+      requireEducational: v.boolean(),
+      blockedGenres: v.array(v.string()),
+      allowedGenres: v.array(v.string()),
+      notes: v.string(),
+    }),
+    agentInterpretation: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_child", ["childId"])
+    .index("by_family", ["familyId"]),
+
+  // ── Audit results — what's accessible in child's streaming profile
+  streamingAudits: defineTable({
+    familyId: v.string(),
+    childId: v.string(),
+    accountId: v.id("streamingAccounts"),
+    auditedAt: v.number(),
+    totalTitlesChecked: v.number(),
+    flaggedTitles: v.array(v.object({
+      title: v.string(),
+      reason: v.string(),
+      severity: v.union(v.literal("info"), v.literal("warning"), v.literal("concern")),
+      contentId: v.optional(v.string()),
+    })),
+    overallScore: v.number(),
+    recommendedActions: v.array(v.string()),
+    agentReport: v.string(),
+  })
+    .index("by_family", ["familyId"])
+    .index("by_child", ["childId"])
+    .index("by_account", ["accountId"]),
+
+  // ── Watch history (from platform monitoring) ─────────────────
+  watchHistory: defineTable({
+    childId: v.string(),
+    familyId: v.string(),
+    platform: v.string(),
+    contentTitle: v.string(),
+    contentId: v.optional(v.string()),
+    watchedAt: v.number(),
+    durationMinutes: v.optional(v.number()),
+    policyCompliant: v.optional(v.boolean()),
+    flaggedAt: v.optional(v.number()),
+  })
+    .index("by_child", ["childId"])
+    .index("by_child_platform", ["childId", "platform"])
+    .index("by_family", ["familyId"]),
 });
