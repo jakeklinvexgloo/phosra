@@ -1,9 +1,53 @@
 /**
  * Family dashboard preload script (phosra://family).
  *
- * Runs in the family page WebContentsView with `contextIsolation: true`.
- * Exposes a `phosraFamily` API on the window object via contextBridge,
- * providing the full Family panel IPC surface for the family dashboard UI.
+ * @module family-preload
+ *
+ * Runs in the family page WebContentsView with `contextIsolation: true` and
+ * `nodeIntegration: false`. This means the renderer has NO direct access to
+ * Node.js or Electron APIs — every capability must be explicitly exposed
+ * through {@link contextBridge.exposeInMainWorld}.
+ *
+ * ## Security scope
+ *
+ * - Only IPC channels listed below are reachable from the renderer.
+ * - All calls use `ipcRenderer.invoke()` (request/response) or
+ *   `ipcRenderer.on()` (push from main), never `ipcRenderer.send()`.
+ * - Credential passwords are **never** exposed; `credentials:list` returns
+ *   metadata only (service ID, username, login URL).
+ * - Auth tokens are managed entirely in the main process; the renderer only
+ *   sees opaque status objects via `auth:status`.
+ *
+ * ## Exposed channels (window.phosraFamily)
+ *
+ * | Group               | Channel                       | Direction       |
+ * |---------------------|-------------------------------|-----------------|
+ * | Auth                | `auth:status`                 | invoke          |
+ * | Auth                | `auth:logout`                 | invoke          |
+ * | Auth                | `auth:status-changed`         | on (push)       |
+ * | Family CRUD         | `family:list`                 | invoke          |
+ * | Family CRUD         | `family:children`             | invoke          |
+ * | Family CRUD         | `family:members`              | invoke          |
+ * | Family CRUD         | `family:add-child`            | invoke          |
+ * | Family CRUD         | `family:update-child`         | invoke          |
+ * | Family CRUD         | `family:add-member`           | invoke          |
+ * | Family CRUD         | `family:update-member`        | invoke          |
+ * | Family CRUD         | `family:remove-member`        | invoke          |
+ * | Family CRUD         | `family:quick-setup`          | invoke          |
+ * | Netflix Activity    | `netflix:load-mappings`       | invoke          |
+ * | Netflix Activity    | `netflix:load-activity`       | invoke          |
+ * | Netflix Activity    | `netflix:fetch-activity`      | invoke          |
+ * | CSM Enrichment      | `csm:enrich-titles`          | invoke          |
+ * | CSM Enrichment      | `csm:get-cached`             | invoke          |
+ * | CSM Enrichment      | `csm:get-cache-stats`        | invoke          |
+ * | CSM Enrichment      | `csm:get-shallow-reviews`    | invoke          |
+ * | CSM Enrichment      | `csm:rescrape-shallow`       | invoke          |
+ * | CSM Enrichment      | `csm:enrichment-update`      | on (push)       |
+ * | CSM Enrichment      | `csm:enrichment-complete`    | on (push)       |
+ * | Profile Mapping     | `profile-child-map:save`      | invoke          |
+ * | Profile Mapping     | `profile-child-map:load`      | invoke          |
+ * | Credentials         | `credentials:list`            | invoke          |
+ * | Navigation          | `tab:navigate`                | invoke          |
  */
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';

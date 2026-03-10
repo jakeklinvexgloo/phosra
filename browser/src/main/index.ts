@@ -20,7 +20,7 @@ import { ProfileManager } from './profile-manager';
 import { WindowManager } from './window-manager';
 import { registerIpcHandlers } from './ipc-handlers';
 import { buildApplicationMenu } from './menu';
-import { getRemoteDebuggingPort } from './cdp-bridge';
+import { getRemoteDebuggingPort, initCdpAuthToken } from './cdp-bridge';
 import { CredentialManager } from './credential-manager';
 import { AuthManager } from './auth-manager';
 import { PhosraApiClient } from './phosra-api';
@@ -115,6 +115,9 @@ let apiClient: PhosraApiClient | null = null;
 const CHROME_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36';
 
 app.whenReady().then(() => {
+  // Generate and persist CDP auth token before anything connects
+  initCdpAuthToken();
+
   // Override the default session user agent to hide Electron
   session.defaultSession.setUserAgent(CHROME_UA);
 
