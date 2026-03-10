@@ -273,7 +273,7 @@ func (h *AdminPitchHandler) ListSessions(w http.ResponseWriter, r *http.Request)
 
 // GetSession returns a single pitch session with metrics.
 func (h *AdminPitchHandler) GetSession(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "sessionID"))
+	id, err := uuid.Parse(chi.URLParam(r, "sessionId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid session ID")
 		return
@@ -301,7 +301,7 @@ func (h *AdminPitchHandler) GetSession(w http.ResponseWriter, r *http.Request) {
 
 // DeleteSession removes a pitch session.
 func (h *AdminPitchHandler) DeleteSession(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "sessionID"))
+	id, err := uuid.Parse(chi.URLParam(r, "sessionId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid session ID")
 		return
@@ -318,7 +318,7 @@ func (h *AdminPitchHandler) DeleteSession(w http.ResponseWriter, r *http.Request
 
 // EndSession marks a session as ended and triggers the feedback pipeline.
 func (h *AdminPitchHandler) EndSession(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "sessionID"))
+	id, err := uuid.Parse(chi.URLParam(r, "sessionId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid session ID")
 		return
@@ -355,7 +355,7 @@ func (h *AdminPitchHandler) EndSession(w http.ResponseWriter, r *http.Request) {
 
 // UploadRecording accepts a multipart file upload for a session recording.
 func (h *AdminPitchHandler) UploadRecording(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "sessionID"))
+	id, err := uuid.Parse(chi.URLParam(r, "sessionId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid session ID")
 		return
@@ -428,7 +428,7 @@ func (h *AdminPitchHandler) UploadRecording(w http.ResponseWriter, r *http.Reque
 
 // StreamRecording serves a recording file with support for Range requests (video seeking).
 func (h *AdminPitchHandler) StreamRecording(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "sessionID"))
+	id, err := uuid.Parse(chi.URLParam(r, "sessionId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid session ID")
 		return
@@ -595,7 +595,7 @@ func (h *AdminPitchHandler) runEmotionAnalysis(sessionID uuid.UUID, recordingPat
 // HandleRealtimeWS establishes a bidirectional WebSocket relay between
 // the browser and OpenAI's Realtime API.
 func (h *AdminPitchHandler) HandleRealtimeWS(w http.ResponseWriter, r *http.Request) {
-	sessionID, err := uuid.Parse(chi.URLParam(r, "sessionID"))
+	sessionID, err := uuid.Parse(chi.URLParam(r, "sessionId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid session ID")
 		return

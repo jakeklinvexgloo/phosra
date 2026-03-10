@@ -54,12 +54,13 @@ func (h *BrowserEnforcementHandler) CreateJob(w http.ResponseWriter, r *http.Req
 		httputil.Error(w, http.StatusBadRequest, "platform_id is required")
 		return
 	}
-	if req.ChildName == "" {
-		httputil.Error(w, http.StatusBadRequest, "child_name is required")
+	if req.ChildID == "" {
+		httputil.Error(w, http.StatusBadRequest, "child_id is required")
 		return
 	}
-	if req.ChildAge < 0 || req.ChildAge > 17 {
-		httputil.Error(w, http.StatusBadRequest, "child_age must be between 0 and 17")
+	childID, err := uuid.Parse(req.ChildID)
+	if err != nil {
+		httputil.Error(w, http.StatusBadRequest, "invalid child_id")
 		return
 	}
 
@@ -68,8 +69,10 @@ func (h *BrowserEnforcementHandler) CreateJob(w http.ResponseWriter, r *http.Req
 		rules = json.RawMessage("[]")
 	}
 
+	// child_name and child_age are metadata-only; policy resolution uses child_id.
 	job := &domain.BrowserEnforcementJob{
 		FamilyID:   familyID,
+		ChildID:    childID,
 		ChildName:  req.ChildName,
 		ChildAge:   req.ChildAge,
 		PlatformID: req.PlatformID,

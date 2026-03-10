@@ -120,20 +120,20 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 		r.Group(func(r chi.Router) {
 			// Public rating lookups
 			r.Get("/ratings/systems", h.Rating.GetSystems)
-			r.Get("/ratings/systems/{systemID}", h.Rating.GetBySystem)
+			r.Get("/ratings/systems/{systemId}", h.Rating.GetBySystem)
 			r.Get("/ratings/by-age", h.Rating.GetByAge)
-			r.Get("/ratings/{ratingID}/convert", h.Rating.Convert)
-			r.Get("/ratings/systems/{systemID}/descriptors", h.Rating.GetDescriptors)
+			r.Get("/ratings/{ratingId}/convert", h.Rating.Convert)
+			r.Get("/ratings/systems/{systemId}/descriptors", h.Rating.GetDescriptors)
 
 			// Public platform listing
 			r.Get("/platforms", h.Platform.List)
-			r.Get("/platforms/{platformID}", h.Platform.Get)
+			r.Get("/platforms/{platformId}", h.Platform.Get)
 			r.Get("/platforms/by-category", h.Platform.ListByCategory)
 			r.Get("/platforms/by-capability", h.Platform.ListByCapability)
 
 			// OAuth callbacks
-			r.Get("/platforms/{platformID}/oauth/authorize", h.Platform.OAuthAuthorize)
-			r.Get("/platforms/{platformID}/oauth/callback", h.Platform.OAuthCallback)
+			r.Get("/platforms/{platformId}/oauth/authorize", h.Platform.OAuthAuthorize)
+			r.Get("/platforms/{platformId}/oauth/callback", h.Platform.OAuthCallback)
 
 			// UI Feedback (public: reviewers submit without auth)
 			r.Post("/feedback", h.Feedback.Create)
@@ -146,7 +146,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Get("/movements/{slug}", h.Standard.GetBySlug)
 
 			// Public platform mappings (Apple bundle IDs, age ratings, etc.)
-			r.Get("/platform-mappings/{platformID}", h.Device.GetMappings)
+			r.Get("/platform-mappings/{platformId}", h.Device.GetMappings)
 
 			// Inbound webhooks from source integrations (verified by webhook secret, no auth)
 			r.Post("/webhooks/inbound/{sourceSlug}", h.Source.InboundWebhook)
@@ -168,7 +168,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 				r.Get("/", h.Family.List)
 				r.Post("/", h.Family.Create)
 
-				r.Route("/{familyID}", func(r chi.Router) {
+				r.Route("/{familyId}", func(r chi.Router) {
 					r.Get("/", h.Family.Get)
 					r.Put("/", h.Family.Update)
 					r.Delete("/", h.Family.Delete)
@@ -176,8 +176,8 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 					// Members
 					r.Get("/members", h.Family.ListMembers)
 					r.Post("/members", h.Family.AddMember)
-					r.Put("/members/{memberID}", h.Family.UpdateMember)
-					r.Delete("/members/{memberID}", h.Family.RemoveMember)
+					r.Put("/members/{memberId}", h.Family.UpdateMember)
+					r.Delete("/members/{memberId}", h.Family.RemoveMember)
 
 					// Children under family
 					r.Get("/children", h.Child.List)
@@ -198,7 +198,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			})
 
 			// Children (direct access)
-			r.Route("/children/{childID}", func(r chi.Router) {
+			r.Route("/children/{childId}", func(r chi.Router) {
 				r.Get("/", h.Child.Get)
 				r.Put("/", h.Child.Update)
 				r.Delete("/", h.Child.Delete)
@@ -215,10 +215,10 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 				// Community standards/movements under child
 				r.Get("/standards", h.Standard.ListByChild)
 				r.Post("/standards", h.Standard.Adopt)
-				r.Delete("/standards/{standardID}", h.Standard.Unadopt)
+				r.Delete("/standards/{standardId}", h.Standard.Unadopt)
 				r.Get("/movements", h.Standard.ListByChild)
 				r.Post("/movements", h.Standard.Adopt)
-				r.Delete("/movements/{standardID}", h.Standard.Unadopt)
+				r.Delete("/movements/{standardId}", h.Standard.Unadopt)
 
 				// Enforcement for child
 				r.Post("/enforce", h.Enforcement.TriggerChildEnforcement)
@@ -237,13 +237,13 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			})
 
 			// Device direct access (parent-auth)
-			r.Route("/devices/{deviceID}", func(r chi.Router) {
+			r.Route("/devices/{deviceId}", func(r chi.Router) {
 				r.Put("/", h.Device.UpdateDevice)
 				r.Delete("/", h.Device.RevokeDevice)
 			})
 
 			// Policies (direct access)
-			r.Route("/policies/{policyID}", func(r chi.Router) {
+			r.Route("/policies/{policyId}", func(r chi.Router) {
 				r.Get("/", h.Policy.Get)
 				r.Put("/", h.Policy.Update)
 				r.Delete("/", h.Policy.Delete)
@@ -258,21 +258,21 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			})
 
 			// Rules (direct access)
-			r.Route("/rules/{ruleID}", func(r chi.Router) {
+			r.Route("/rules/{ruleId}", func(r chi.Router) {
 				r.Put("/", h.Policy.UpdateRule)
 				r.Delete("/", h.Policy.DeleteRule)
 			})
 
 			// Compliance
 			r.Post("/compliance", h.Platform.VerifyCompliance)
-			r.Route("/compliance/{linkID}", func(r chi.Router) {
+			r.Route("/compliance/{linkId}", func(r chi.Router) {
 				r.Delete("/", h.Platform.RevokeCertification)
 				r.Post("/verify", h.Platform.VerifyLink)
 				r.Post("/enforce", h.Enforcement.TriggerLinkEnforcement)
 			})
 
 			// Enforcement jobs
-			r.Route("/enforcement/jobs/{jobID}", func(r chi.Router) {
+			r.Route("/enforcement/jobs/{jobId}", func(r chi.Router) {
 				r.Get("/", h.Enforcement.GetJob)
 				r.Get("/results", h.Enforcement.GetJobResults)
 				r.Post("/retry", h.Enforcement.RetryJob)
@@ -282,7 +282,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Route("/sources", func(r chi.Router) {
 				r.Get("/available", h.Source.ListAvailable)
 				r.Post("/", h.Source.ConnectSource)
-				r.Route("/{sourceID}", func(r chi.Router) {
+				r.Route("/{sourceId}", func(r chi.Router) {
 					r.Get("/", h.Source.GetSource)
 					r.Delete("/", h.Source.DisconnectSource)
 					r.Post("/sync", h.Source.SyncSource)
@@ -290,7 +290,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 					r.Get("/guide/{category}", h.Source.GetGuidedSteps)
 					r.Route("/jobs", func(r chi.Router) {
 						r.Get("/", h.Source.ListSyncJobs)
-						r.Route("/{jobID}", func(r chi.Router) {
+						r.Route("/{jobId}", func(r chi.Router) {
 							r.Get("/", h.Source.GetSyncJob)
 							r.Get("/results", h.Source.GetSyncResults)
 							r.Post("/retry", h.Source.RetrySyncJob)
@@ -300,11 +300,11 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			})
 
 			// UI Feedback (protected: only owner can change status)
-			r.Patch("/feedback/{feedbackID}/status", h.Feedback.UpdateStatus)
+			r.Patch("/feedback/{feedbackId}/status", h.Feedback.UpdateStatus)
 
 			// Webhooks
 			r.Post("/webhooks", h.Webhook.Create)
-			r.Route("/webhooks/{webhookID}", func(r chi.Router) {
+			r.Route("/webhooks/{webhookId}", func(r chi.Router) {
 				r.Get("/", h.Webhook.Get)
 				r.Put("/", h.Webhook.Update)
 				r.Delete("/", h.Webhook.Delete)
@@ -361,15 +361,15 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 			r.Post("/orgs", h.Developer.CreateOrg)
 			r.Get("/orgs", h.Developer.ListOrgs)
-			r.Route("/orgs/{orgID}", func(r chi.Router) {
+			r.Route("/orgs/{orgId}", func(r chi.Router) {
 				r.Get("/", h.Developer.GetOrg)
 				r.Put("/", h.Developer.UpdateOrg)
 				r.Delete("/", h.Developer.DeleteOrg)
 				r.Get("/members", h.Developer.ListMembers)
 				r.Post("/keys", h.Developer.CreateKey)
 				r.Get("/keys", h.Developer.ListKeys)
-				r.Delete("/keys/{keyID}", h.Developer.RevokeKey)
-				r.Post("/keys/{keyID}/regenerate", h.Developer.RegenerateKey)
+				r.Delete("/keys/{keyId}", h.Developer.RevokeKey)
+				r.Post("/keys/{keyId}/regenerate", h.Developer.RegenerateKey)
 				r.Get("/usage", h.Developer.GetUsage)
 			})
 		})
@@ -383,7 +383,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 			// Outreach CRM
 			r.Get("/outreach", h.Admin.ListOutreach)
-			r.Route("/outreach/{contactID}", func(r chi.Router) {
+			r.Route("/outreach/{contactId}", func(r chi.Router) {
 				r.Get("/", h.Admin.GetOutreachContact)
 				r.Patch("/", h.Admin.UpdateOutreach)
 				r.Post("/activity", h.Admin.CreateOutreachActivity)
@@ -391,18 +391,18 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 			// Workers
 			r.Get("/workers", h.Admin.ListWorkers)
-			r.Get("/workers/{workerID}/runs", h.Admin.ListWorkerRuns)
-			r.Post("/workers/{workerID}/trigger", h.Admin.TriggerWorker)
+			r.Get("/workers/{workerId}/runs", h.Admin.ListWorkerRuns)
+			r.Post("/workers/{workerId}/trigger", h.Admin.TriggerWorker)
 
 			// News
 			r.Get("/news", h.Admin.ListNews)
-			r.Post("/news/{newsID}/read", h.Admin.MarkNewsRead)
-			r.Post("/news/{newsID}/save", h.Admin.ToggleNewsSaved)
-			r.Delete("/news/{newsID}", h.Admin.DeleteNewsItem)
+			r.Post("/news/{newsId}/read", h.Admin.MarkNewsRead)
+			r.Post("/news/{newsId}/save", h.Admin.ToggleNewsSaved)
+			r.Delete("/news/{newsId}", h.Admin.DeleteNewsItem)
 
 			// Compliance Alerts
 			r.Get("/alerts", h.Admin.ListAlerts)
-			r.Patch("/alerts/{alertID}", h.Admin.UpdateAlertStatus)
+			r.Patch("/alerts/{alertId}", h.Admin.UpdateAlertStatus)
 
 			// Google OAuth
 			r.Get("/google/auth-url", h.Admin.GetGoogleAuthURL)
@@ -412,8 +412,8 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 			// Gmail
 			r.Get("/gmail/messages", h.Admin.ListGmailMessages)
-			r.Get("/gmail/messages/{messageID}", h.Admin.GetGmailMessage)
-			r.Get("/gmail/threads/{threadID}", h.Admin.GetGmailThread)
+			r.Get("/gmail/messages/{messageId}", h.Admin.GetGmailMessage)
+			r.Get("/gmail/threads/{threadId}", h.Admin.GetGmailThread)
 			r.Post("/gmail/send", h.Admin.SendGmailMessage)
 			r.Get("/gmail/search", h.Admin.SearchGmail)
 
@@ -426,7 +426,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			// Google Calendar
 			r.Get("/calendar/events", h.Admin.ListCalendarEvents)
 			r.Post("/calendar/events", h.Admin.CreateCalendarEvent)
-			r.Delete("/calendar/events/{eventID}", h.Admin.DeleteCalendarEvent)
+			r.Delete("/calendar/events/{eventId}", h.Admin.DeleteCalendarEvent)
 
 			// Autopilot Config
 			r.Get("/outreach/autopilot/config", h.Admin.GetAutopilotConfig)
@@ -440,19 +440,19 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 			// Sequences
 			r.Get("/outreach/sequences", h.Admin.ListSequences)
-			r.Post("/outreach/{contactID}/sequence", h.Admin.StartSequence)
-			r.Post("/outreach/sequences/{sequenceID}/pause", h.Admin.PauseSequence)
-			r.Post("/outreach/sequences/{sequenceID}/resume", h.Admin.ResumeSequence)
-			r.Post("/outreach/sequences/{sequenceID}/cancel", h.Admin.CancelSequence)
+			r.Post("/outreach/{contactId}/sequence", h.Admin.StartSequence)
+			r.Post("/outreach/sequences/{sequenceId}/pause", h.Admin.PauseSequence)
+			r.Post("/outreach/sequences/{sequenceId}/resume", h.Admin.ResumeSequence)
+			r.Post("/outreach/sequences/{sequenceId}/cancel", h.Admin.CancelSequence)
 			r.Post("/outreach/sequences/bulk-start", h.Admin.BulkStartSequences)
 
 			// Pending Emails
 			r.Get("/outreach/pending-emails", h.Admin.ListPendingEmails)
-			r.Post("/outreach/pending-emails/{emailID}/approve", h.Admin.ApprovePendingEmail)
-			r.Post("/outreach/pending-emails/{emailID}/queue", h.Admin.QueuePendingEmail)
-			r.Post("/outreach/pending-emails/{emailID}/send", h.Admin.SendQueuedEmail)
-			r.Post("/outreach/pending-emails/{emailID}/reject", h.Admin.RejectPendingEmail)
-			r.Put("/outreach/pending-emails/{emailID}", h.Admin.EditPendingEmail)
+			r.Post("/outreach/pending-emails/{emailId}/approve", h.Admin.ApprovePendingEmail)
+			r.Post("/outreach/pending-emails/{emailId}/queue", h.Admin.QueuePendingEmail)
+			r.Post("/outreach/pending-emails/{emailId}/send", h.Admin.SendQueuedEmail)
+			r.Post("/outreach/pending-emails/{emailId}/reject", h.Admin.RejectPendingEmail)
+			r.Put("/outreach/pending-emails/{emailId}", h.Admin.EditPendingEmail)
 
 			// Outreach Google OAuth (legacy single-account)
 			r.Get("/outreach/google/auth-url", h.Admin.GetOutreachGoogleAuthURL)
@@ -475,7 +475,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Route("/pitch", func(r chi.Router) {
 				r.Post("/sessions", h.AdminPitch.CreateSession)
 				r.Get("/sessions", h.AdminPitch.ListSessions)
-				r.Route("/sessions/{sessionID}", func(r chi.Router) {
+				r.Route("/sessions/{sessionId}", func(r chi.Router) {
 					r.Get("/", h.AdminPitch.GetSession)
 					r.Delete("/", h.AdminPitch.DeleteSession)
 					r.Get("/ws", h.AdminPitch.HandleRealtimeWS)
@@ -493,7 +493,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			// Gmail (via outreach account)
 			r.Post("/gmail/send", h.Admin.WorkerSendGmail)
 			r.Get("/gmail/search", h.Admin.WorkerSearchGmail)
-			r.Get("/gmail/messages/{messageID}", h.Admin.WorkerGetGmailMessage)
+			r.Get("/gmail/messages/{messageId}", h.Admin.WorkerGetGmailMessage)
 
 			// Calendar (via outreach account)
 			r.Get("/calendar/events", h.Admin.WorkerListCalendarEvents)
@@ -501,7 +501,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 			// Sequences
 			r.Get("/outreach/sequences/active", h.Admin.WorkerListActiveSequences)
-			r.Post("/outreach/sequences/{sequenceID}/advance", h.Admin.WorkerAdvanceSequence)
+			r.Post("/outreach/sequences/{sequenceId}/advance", h.Admin.WorkerAdvanceSequence)
 
 			// Pending emails
 			r.Post("/outreach/pending-emails", h.Admin.WorkerCreatePendingEmail)
@@ -509,16 +509,16 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 
 			// Contact management
 			r.Post("/outreach/contacts/upsert-by-email", h.Admin.WorkerUpsertContactByEmail)
-			r.Get("/outreach/{contactID}", h.Admin.WorkerGetContact)
-			r.Patch("/outreach/{contactID}", h.Admin.WorkerUpdateContact)
-			r.Post("/outreach/{contactID}/activity", h.Admin.WorkerCreateActivity)
+			r.Get("/outreach/{contactId}", h.Admin.WorkerGetContact)
+			r.Patch("/outreach/{contactId}", h.Admin.WorkerUpdateContact)
+			r.Post("/outreach/{contactId}/activity", h.Admin.WorkerCreateActivity)
 
 			// Gmail sync state
 			r.Get("/gmail/sync-state/{accountKey}", h.Admin.WorkerGetSyncState)
 			r.Put("/gmail/sync-state/{accountKey}", h.Admin.WorkerSetSyncState)
 
 			// Activity dedup check
-			r.Get("/outreach/activity-exists/{gmailMessageID}", h.Admin.WorkerCheckActivityExists)
+			r.Get("/outreach/activity-exists/{gmailMessageId}", h.Admin.WorkerCheckActivityExists)
 
 			// Google accounts listing
 			r.Get("/google/accounts", h.Admin.WorkerListGoogleAccounts)
@@ -545,58 +545,58 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeReadFamilies))
 				r.Get("/families", h.Family.List)
-				r.Get("/families/{familyID}", h.Family.Get)
+				r.Get("/families/{familyId}", h.Family.Get)
 			})
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeWriteFamilies))
 				r.Post("/families", h.Family.Create)
-				r.Put("/families/{familyID}", h.Family.Update)
+				r.Put("/families/{familyId}", h.Family.Update)
 			})
 
 			// Children
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeReadFamilies))
-				r.Get("/families/{familyID}/children", h.Child.List)
-				r.Get("/children/{childID}", h.Child.Get)
+				r.Get("/families/{familyId}/children", h.Child.List)
+				r.Get("/children/{childId}", h.Child.Get)
 			})
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeWriteFamilies))
-				r.Post("/families/{familyID}/children", h.Child.Create)
-				r.Put("/children/{childID}", h.Child.Update)
+				r.Post("/families/{familyId}/children", h.Child.Create)
+				r.Put("/children/{childId}", h.Child.Update)
 			})
 
 			// Policies
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeReadPolicies))
-				r.Get("/children/{childID}/policies", h.Policy.List)
-				r.Get("/policies/{policyID}", h.Policy.Get)
-				r.Get("/policies/{policyID}/rules", h.Policy.ListRules)
+				r.Get("/children/{childId}/policies", h.Policy.List)
+				r.Get("/policies/{policyId}", h.Policy.Get)
+				r.Get("/policies/{policyId}/rules", h.Policy.ListRules)
 			})
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeWritePolicies))
-				r.Post("/children/{childID}/policies", h.Policy.Create)
-				r.Put("/policies/{policyID}", h.Policy.Update)
-				r.Post("/policies/{policyID}/rules", h.Policy.CreateRule)
-				r.Put("/policies/{policyID}/rules/bulk", h.Policy.BulkUpsertRules)
+				r.Post("/children/{childId}/policies", h.Policy.Create)
+				r.Put("/policies/{policyId}", h.Policy.Update)
+				r.Post("/policies/{policyId}/rules", h.Policy.CreateRule)
+				r.Put("/policies/{policyId}/rules/bulk", h.Policy.BulkUpsertRules)
 			})
 
 			// Enforcement
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeReadEnforcement))
-				r.Get("/enforcement/jobs/{jobID}", h.Enforcement.GetJob)
-				r.Get("/enforcement/jobs/{jobID}/results", h.Enforcement.GetJobResults)
-				r.Get("/children/{childID}/enforcement/jobs", h.Enforcement.ListChildJobs)
+				r.Get("/enforcement/jobs/{jobId}", h.Enforcement.GetJob)
+				r.Get("/enforcement/jobs/{jobId}/results", h.Enforcement.GetJobResults)
+				r.Get("/children/{childId}/enforcement/jobs", h.Enforcement.ListChildJobs)
 			})
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeWriteEnforcement))
-				r.Post("/children/{childID}/enforce", h.Enforcement.TriggerChildEnforcement)
+				r.Post("/children/{childId}/enforce", h.Enforcement.TriggerChildEnforcement)
 			})
 
 			// Ratings (read-only)
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeReadRatings))
 				r.Get("/ratings/systems", h.Rating.GetSystems)
-				r.Get("/ratings/systems/{systemID}", h.Rating.GetBySystem)
+				r.Get("/ratings/systems/{systemId}", h.Rating.GetBySystem)
 				r.Get("/ratings/by-age", h.Rating.GetByAge)
 			})
 
@@ -604,7 +604,7 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeReadPlatforms))
 				r.Get("/platforms", h.Platform.List)
-				r.Get("/platforms/{platformID}", h.Platform.Get)
+				r.Get("/platforms/{platformId}", h.Platform.Get)
 			})
 
 			// Compliance
@@ -616,17 +616,17 @@ func New(h Handlers, userRepo repository.UserRepository, deviceAuth middleware.D
 			// Devices
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeDeviceManage))
-				r.Post("/children/{childID}/devices", h.Device.RegisterDevice)
-				r.Get("/children/{childID}/devices", h.Device.ListDevices)
+				r.Post("/children/{childId}/devices", h.Device.RegisterDevice)
+				r.Get("/children/{childId}/devices", h.Device.ListDevices)
 			})
 
 			// Webhooks
 			r.Group(func(r chi.Router) {
 				r.Use(middleware.RequireScopes(domain.ScopeWebhookManage))
 				r.Post("/webhooks", h.Webhook.Create)
-				r.Get("/webhooks/{webhookID}", h.Webhook.Get)
-				r.Put("/webhooks/{webhookID}", h.Webhook.Update)
-				r.Delete("/webhooks/{webhookID}", h.Webhook.Delete)
+				r.Get("/webhooks/{webhookId}", h.Webhook.Get)
+				r.Put("/webhooks/{webhookId}", h.Webhook.Update)
+				r.Delete("/webhooks/{webhookId}", h.Webhook.Delete)
 			})
 		})
 	})

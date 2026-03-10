@@ -25,7 +25,7 @@ func NewDeviceHandler(dp *service.DevicePolicyService) *DeviceHandler {
 
 func (h *DeviceHandler) RegisterDevice(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -47,7 +47,7 @@ func (h *DeviceHandler) RegisterDevice(w http.ResponseWriter, r *http.Request) {
 
 func (h *DeviceHandler) ListDevices(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -63,7 +63,7 @@ func (h *DeviceHandler) ListDevices(w http.ResponseWriter, r *http.Request) {
 
 func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	deviceID, err := uuid.Parse(chi.URLParam(r, "deviceID"))
+	deviceID, err := uuid.Parse(chi.URLParam(r, "deviceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid device ID")
 		return
@@ -85,7 +85,7 @@ func (h *DeviceHandler) UpdateDevice(w http.ResponseWriter, r *http.Request) {
 
 func (h *DeviceHandler) RevokeDevice(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	deviceID, err := uuid.Parse(chi.URLParam(r, "deviceID"))
+	deviceID, err := uuid.Parse(chi.URLParam(r, "deviceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid device ID")
 		return
@@ -174,7 +174,7 @@ func (h *DeviceHandler) AckVersion(w http.ResponseWriter, r *http.Request) {
 // ── Public endpoint ─────────────────────────────────────────────
 
 func (h *DeviceHandler) GetMappings(w http.ResponseWriter, r *http.Request) {
-	platformID := chi.URLParam(r, "platformID")
+	platformID := chi.URLParam(r, "platformId")
 	switch platformID {
 	case "apple":
 		httputil.JSON(w, http.StatusOK, appleProvider.GetPlatformMappings())

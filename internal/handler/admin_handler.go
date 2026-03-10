@@ -134,7 +134,7 @@ func (h *AdminHandler) ListOutreach(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) GetOutreachContact(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "contactID"))
+	id, err := uuid.Parse(chi.URLParam(r, "contactId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid contact ID")
 		return
@@ -162,7 +162,7 @@ func (h *AdminHandler) GetOutreachContact(w http.ResponseWriter, r *http.Request
 }
 
 func (h *AdminHandler) UpdateOutreach(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "contactID"))
+	id, err := uuid.Parse(chi.URLParam(r, "contactId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid contact ID")
 		return
@@ -218,7 +218,7 @@ func (h *AdminHandler) UpdateOutreach(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) CreateOutreachActivity(w http.ResponseWriter, r *http.Request) {
-	contactID, err := uuid.Parse(chi.URLParam(r, "contactID"))
+	contactID, err := uuid.Parse(chi.URLParam(r, "contactId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid contact ID")
 		return
@@ -259,7 +259,7 @@ func (h *AdminHandler) ListWorkers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) ListWorkerRuns(w http.ResponseWriter, r *http.Request) {
-	workerID := chi.URLParam(r, "workerID")
+	workerID := chi.URLParam(r, "workerId")
 	runs, err := h.workers.ListRuns(r.Context(), workerID, 20)
 	if err != nil {
 		httputil.Error(w, http.StatusInternalServerError, "failed to list worker runs")
@@ -286,7 +286,7 @@ var workerScripts = map[string]string{
 }
 
 func (h *AdminHandler) TriggerWorker(w http.ResponseWriter, r *http.Request) {
-	workerID := chi.URLParam(r, "workerID")
+	workerID := chi.URLParam(r, "workerId")
 
 	scriptPath, ok := workerScripts[workerID]
 	if !ok {
@@ -399,7 +399,7 @@ func (h *AdminHandler) ListNews(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) MarkNewsRead(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "newsID"))
+	id, err := uuid.Parse(chi.URLParam(r, "newsId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid news item ID")
 		return
@@ -412,7 +412,7 @@ func (h *AdminHandler) MarkNewsRead(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) ToggleNewsSaved(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "newsID"))
+	id, err := uuid.Parse(chi.URLParam(r, "newsId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid news item ID")
 		return
@@ -425,7 +425,7 @@ func (h *AdminHandler) ToggleNewsSaved(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) DeleteNewsItem(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "newsID"))
+	id, err := uuid.Parse(chi.URLParam(r, "newsId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid news item ID")
 		return
@@ -453,7 +453,7 @@ func (h *AdminHandler) ListAlerts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) UpdateAlertStatus(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "alertID"))
+	id, err := uuid.Parse(chi.URLParam(r, "alertId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid alert ID")
 		return
@@ -596,7 +596,7 @@ func (h *AdminHandler) GetGmailMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	messageID := chi.URLParam(r, "messageID")
+	messageID := chi.URLParam(r, "messageId")
 	if messageID == "" {
 		httputil.Error(w, http.StatusBadRequest, "missing message ID")
 		return
@@ -620,7 +620,7 @@ func (h *AdminHandler) GetGmailThread(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	threadID := chi.URLParam(r, "threadID")
+	threadID := chi.URLParam(r, "threadId")
 	if threadID == "" {
 		httputil.Error(w, http.StatusBadRequest, "missing thread ID")
 		return
@@ -1050,7 +1050,7 @@ func (h *AdminHandler) DeleteCalendarEvent(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	eventID := chi.URLParam(r, "eventID")
+	eventID := chi.URLParam(r, "eventId")
 	if eventID == "" {
 		httputil.Error(w, http.StatusBadRequest, "missing event ID")
 		return

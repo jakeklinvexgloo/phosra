@@ -47,7 +47,7 @@ func (h *StandardHandler) GetBySlug(w http.ResponseWriter, r *http.Request) {
 // Adopt adopts a standard for a child (protected).
 func (h *StandardHandler) Adopt(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -72,12 +72,12 @@ func (h *StandardHandler) Adopt(w http.ResponseWriter, r *http.Request) {
 // Unadopt removes a standard from a child (protected).
 func (h *StandardHandler) Unadopt(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
 	}
-	standardID, err := uuid.Parse(chi.URLParam(r, "standardID"))
+	standardID, err := uuid.Parse(chi.URLParam(r, "standardId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid standard ID")
 		return
@@ -93,7 +93,7 @@ func (h *StandardHandler) Unadopt(w http.ResponseWriter, r *http.Request) {
 // ListByChild returns all standards adopted by a child (protected).
 func (h *StandardHandler) ListByChild(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return

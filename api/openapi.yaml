@@ -1309,97 +1309,10 @@ components:
 
 paths:
   # ── Auth ──────────────────────────────────────────────────────────
-
-  /auth/register:
-    post:
-      summary: Register a new account
-      tags: [Auth]
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [email, password, name]
-              properties:
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-                  minLength: 8
-                name:
-                  type: string
-      responses:
-        "201":
-          description: Account created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  user:
-                    $ref: "#/components/schemas/User"
-                  tokens:
-                    $ref: "#/components/schemas/TokenPair"
-        "409":
-          description: Email already registered
-
-  /auth/login:
-    post:
-      summary: Login
-      tags: [Auth]
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [email, password]
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-      responses:
-        "200":
-          description: Login successful
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  user:
-                    $ref: "#/components/schemas/User"
-                  tokens:
-                    $ref: "#/components/schemas/TokenPair"
-        "401":
-          description: Invalid credentials
-
-  /auth/refresh:
-    post:
-      summary: Refresh access token
-      tags: [Auth]
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [refresh_token]
-              properties:
-                refresh_token:
-                  type: string
-      responses:
-        "200":
-          description: Token refreshed
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenPair"
+  # NOTE: Authentication (register, login, refresh) is handled entirely
+  # client-side via Stytch. The backend only validates Stytch JWTs in
+  # the StytchAuth middleware. No /auth/register, /auth/login, or
+  # /auth/refresh endpoints exist on this server.
 
   /auth/logout:
     post:

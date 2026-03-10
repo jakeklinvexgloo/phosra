@@ -313,7 +313,8 @@ const (
 	EnforcementPartial    EnforcementStatus = "partial"
 )
 
-// EnforcementJob represents a policy enforcement operation.
+// Deprecated: EnforcementJob represents a legacy policy enforcement operation.
+// Use BrowserEnforcementJob for all new enforcement workflows.
 type EnforcementJob struct {
 	ID           uuid.UUID         `json:"id"`
 	ChildID      uuid.UUID         `json:"child_id"`

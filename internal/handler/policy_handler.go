@@ -22,7 +22,7 @@ func NewPolicyHandler(policies *service.PolicyService) *PolicyHandler {
 
 func (h *PolicyHandler) Create(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -46,7 +46,7 @@ func (h *PolicyHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) Get(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return
@@ -62,7 +62,7 @@ func (h *PolicyHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) Update(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return
@@ -87,7 +87,7 @@ func (h *PolicyHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return
@@ -102,7 +102,7 @@ func (h *PolicyHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) List(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -118,7 +118,7 @@ func (h *PolicyHandler) List(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) Activate(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return
@@ -134,7 +134,7 @@ func (h *PolicyHandler) Activate(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) Pause(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return
@@ -150,7 +150,7 @@ func (h *PolicyHandler) Pause(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) GenerateFromAge(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return
@@ -168,7 +168,7 @@ func (h *PolicyHandler) GenerateFromAge(w http.ResponseWriter, r *http.Request) 
 
 func (h *PolicyHandler) CreateRule(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return
@@ -194,7 +194,7 @@ func (h *PolicyHandler) CreateRule(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) UpdateRule(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	ruleID, err := uuid.Parse(chi.URLParam(r, "ruleID"))
+	ruleID, err := uuid.Parse(chi.URLParam(r, "ruleId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid rule ID")
 		return
@@ -219,7 +219,7 @@ func (h *PolicyHandler) UpdateRule(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) DeleteRule(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	ruleID, err := uuid.Parse(chi.URLParam(r, "ruleID"))
+	ruleID, err := uuid.Parse(chi.URLParam(r, "ruleId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid rule ID")
 		return
@@ -234,7 +234,7 @@ func (h *PolicyHandler) DeleteRule(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) ListRules(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return
@@ -250,7 +250,7 @@ func (h *PolicyHandler) ListRules(w http.ResponseWriter, r *http.Request) {
 
 func (h *PolicyHandler) BulkUpsertRules(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	policyID, err := uuid.Parse(chi.URLParam(r, "policyID"))
+	policyID, err := uuid.Parse(chi.URLParam(r, "policyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid policy ID")
 		return

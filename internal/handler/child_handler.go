@@ -22,7 +22,7 @@ func NewChildHandler(children *service.ChildService) *ChildHandler {
 
 func (h *ChildHandler) Create(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -62,7 +62,7 @@ func (h *ChildHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (h *ChildHandler) Get(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -78,7 +78,7 @@ func (h *ChildHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 func (h *ChildHandler) Update(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -109,7 +109,7 @@ func (h *ChildHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 func (h *ChildHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -124,7 +124,7 @@ func (h *ChildHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
 func (h *ChildHandler) List(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -140,7 +140,7 @@ func (h *ChildHandler) List(w http.ResponseWriter, r *http.Request) {
 
 func (h *ChildHandler) GetAgeRatings(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return

@@ -20,7 +20,7 @@ func NewReportHandler(reports *service.ReportService) *ReportHandler {
 
 func (h *ReportHandler) FamilyOverview(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return

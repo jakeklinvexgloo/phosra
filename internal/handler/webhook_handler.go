@@ -56,7 +56,7 @@ func (h *WebhookHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (h *WebhookHandler) Get(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookID"))
+	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid webhook ID")
 		return
@@ -72,7 +72,7 @@ func (h *WebhookHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 func (h *WebhookHandler) Update(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookID"))
+	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid webhook ID")
 		return
@@ -98,7 +98,7 @@ func (h *WebhookHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 func (h *WebhookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookID"))
+	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid webhook ID")
 		return
@@ -113,7 +113,7 @@ func (h *WebhookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
 func (h *WebhookHandler) ListByFamily(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -129,7 +129,7 @@ func (h *WebhookHandler) ListByFamily(w http.ResponseWriter, r *http.Request) {
 
 func (h *WebhookHandler) Test(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookID"))
+	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid webhook ID")
 		return
@@ -145,7 +145,7 @@ func (h *WebhookHandler) Test(w http.ResponseWriter, r *http.Request) {
 
 func (h *WebhookHandler) ListDeliveries(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookID"))
+	webhookID, err := uuid.Parse(chi.URLParam(r, "webhookId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid webhook ID")
 		return

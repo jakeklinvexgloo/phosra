@@ -122,7 +122,8 @@ type Source struct {
 	UpdatedAt      time.Time       `json:"updated_at"`
 }
 
-// SourceSyncJob represents a single sync operation for a source.
+// Deprecated: SourceSyncJob represents a legacy sync operation for a source adapter.
+// Use BrowserEnforcementJob for all new enforcement workflows.
 type SourceSyncJob struct {
 	ID           uuid.UUID       `json:"id"`
 	SourceID     uuid.UUID       `json:"source_id"`

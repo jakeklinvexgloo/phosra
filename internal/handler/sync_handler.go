@@ -11,6 +11,9 @@ import (
 	"github.com/guardiangate/api/pkg/httputil"
 )
 
+// Deprecated: EnforcementHandler is the legacy enforcement API. New integrations
+// should use BrowserEnforcementHandler (POST /api/v1/enforce) which is the
+// canonical enforcement path with browser-based policy resolution.
 type EnforcementHandler struct {
 	enforcement *service.EnforcementService
 }
@@ -21,7 +24,7 @@ func NewEnforcementHandler(enforcement *service.EnforcementService) *Enforcement
 
 func (h *EnforcementHandler) TriggerChildEnforcement(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -48,7 +51,7 @@ func (h *EnforcementHandler) TriggerChildEnforcement(w http.ResponseWriter, r *h
 
 func (h *EnforcementHandler) TriggerLinkEnforcement(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	linkID, err := uuid.Parse(chi.URLParam(r, "linkID"))
+	linkID, err := uuid.Parse(chi.URLParam(r, "linkId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid compliance link ID")
 		return
@@ -64,7 +67,7 @@ func (h *EnforcementHandler) TriggerLinkEnforcement(w http.ResponseWriter, r *ht
 
 func (h *EnforcementHandler) GetJob(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	jobID, err := uuid.Parse(chi.URLParam(r, "jobID"))
+	jobID, err := uuid.Parse(chi.URLParam(r, "jobId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid job ID")
 		return
@@ -80,7 +83,7 @@ func (h *EnforcementHandler) GetJob(w http.ResponseWriter, r *http.Request) {
 
 func (h *EnforcementHandler) GetJobResults(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	jobID, err := uuid.Parse(chi.URLParam(r, "jobID"))
+	jobID, err := uuid.Parse(chi.URLParam(r, "jobId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid job ID")
 		return
@@ -96,7 +99,7 @@ func (h *EnforcementHandler) GetJobResults(w http.ResponseWriter, r *http.Reques
 
 func (h *EnforcementHandler) ListChildJobs(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -119,7 +122,7 @@ func (h *EnforcementHandler) ListChildJobs(w http.ResponseWriter, r *http.Reques
 
 func (h *EnforcementHandler) RetryJob(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	jobID, err := uuid.Parse(chi.URLParam(r, "jobID"))
+	jobID, err := uuid.Parse(chi.URLParam(r, "jobId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid job ID")
 		return
@@ -135,7 +138,7 @@ func (h *EnforcementHandler) RetryJob(w http.ResponseWriter, r *http.Request) {
 
 func (h *EnforcementHandler) EmergencyPause(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -151,7 +154,7 @@ func (h *EnforcementHandler) EmergencyPause(w http.ResponseWriter, r *http.Reque
 
 func (h *EnforcementHandler) EmergencyResume(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -167,7 +170,7 @@ func (h *EnforcementHandler) EmergencyResume(w http.ResponseWriter, r *http.Requ
 
 func (h *EnforcementHandler) ActivateRoutine(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -188,7 +191,7 @@ func (h *EnforcementHandler) ActivateRoutine(w http.ResponseWriter, r *http.Requ
 
 func (h *EnforcementHandler) DeactivateRoutine(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return

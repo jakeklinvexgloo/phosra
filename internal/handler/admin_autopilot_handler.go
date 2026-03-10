@@ -109,7 +109,7 @@ func (h *AdminHandler) ListSequences(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) StartSequence(w http.ResponseWriter, r *http.Request) {
-	contactID, err := uuid.Parse(chi.URLParam(r, "contactID"))
+	contactID, err := uuid.Parse(chi.URLParam(r, "contactId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid contact ID")
 		return
@@ -160,7 +160,7 @@ func (h *AdminHandler) CancelSequence(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) updateSequenceStatus(w http.ResponseWriter, r *http.Request, status domain.SequenceStatus) {
-	id, err := uuid.Parse(chi.URLParam(r, "sequenceID"))
+	id, err := uuid.Parse(chi.URLParam(r, "sequenceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid sequence ID")
 		return
@@ -247,7 +247,7 @@ func (h *AdminHandler) ListPendingEmails(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *AdminHandler) ApprovePendingEmail(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "emailID"))
+	id, err := uuid.Parse(chi.URLParam(r, "emailId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid email ID")
 		return
@@ -356,7 +356,7 @@ func (h *AdminHandler) ApprovePendingEmail(w http.ResponseWriter, r *http.Reques
 }
 
 func (h *AdminHandler) QueuePendingEmail(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "emailID"))
+	id, err := uuid.Parse(chi.URLParam(r, "emailId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid email ID")
 		return
@@ -381,7 +381,7 @@ func (h *AdminHandler) QueuePendingEmail(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *AdminHandler) SendQueuedEmail(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "emailID"))
+	id, err := uuid.Parse(chi.URLParam(r, "emailId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid email ID")
 		return
@@ -485,7 +485,7 @@ func (h *AdminHandler) SendQueuedEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) RejectPendingEmail(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "emailID"))
+	id, err := uuid.Parse(chi.URLParam(r, "emailId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid email ID")
 		return
@@ -506,7 +506,7 @@ func (h *AdminHandler) RejectPendingEmail(w http.ResponseWriter, r *http.Request
 }
 
 func (h *AdminHandler) EditPendingEmail(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "emailID"))
+	id, err := uuid.Parse(chi.URLParam(r, "emailId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid email ID")
 		return
@@ -712,7 +712,7 @@ func (h *AdminHandler) WorkerGetGmailMessage(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	messageID := chi.URLParam(r, "messageID")
+	messageID := chi.URLParam(r, "messageId")
 	if messageID == "" {
 		httputil.Error(w, http.StatusBadRequest, "missing message ID")
 		return
@@ -829,7 +829,7 @@ func (h *AdminHandler) WorkerListActiveSequences(w http.ResponseWriter, r *http.
 }
 
 func (h *AdminHandler) WorkerAdvanceSequence(w http.ResponseWriter, r *http.Request) {
-	id, err := uuid.Parse(chi.URLParam(r, "sequenceID"))
+	id, err := uuid.Parse(chi.URLParam(r, "sequenceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid sequence ID")
 		return
@@ -890,7 +890,7 @@ func (h *AdminHandler) WorkerCreatePendingEmail(w http.ResponseWriter, r *http.R
 }
 
 func (h *AdminHandler) WorkerUpdateContact(w http.ResponseWriter, r *http.Request) {
-	contactID, err := uuid.Parse(chi.URLParam(r, "contactID"))
+	contactID, err := uuid.Parse(chi.URLParam(r, "contactId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid contact ID")
 		return
@@ -954,7 +954,7 @@ func (h *AdminHandler) WorkerUpdateContact(w http.ResponseWriter, r *http.Reques
 }
 
 func (h *AdminHandler) WorkerCreateActivity(w http.ResponseWriter, r *http.Request) {
-	contactID, err := uuid.Parse(chi.URLParam(r, "contactID"))
+	contactID, err := uuid.Parse(chi.URLParam(r, "contactId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid contact ID")
 		return
@@ -1001,7 +1001,7 @@ func (h *AdminHandler) WorkerGetConfig(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AdminHandler) WorkerGetContact(w http.ResponseWriter, r *http.Request) {
-	contactID, err := uuid.Parse(chi.URLParam(r, "contactID"))
+	contactID, err := uuid.Parse(chi.URLParam(r, "contactId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid contact ID")
 		return
@@ -1151,7 +1151,7 @@ func (h *AdminHandler) WorkerSetSyncState(w http.ResponseWriter, r *http.Request
 }
 
 func (h *AdminHandler) WorkerCheckActivityExists(w http.ResponseWriter, r *http.Request) {
-	gmailMessageID := chi.URLParam(r, "gmailMessageID")
+	gmailMessageID := chi.URLParam(r, "gmailMessageId")
 	if gmailMessageID == "" {
 		httputil.Error(w, http.StatusBadRequest, "missing Gmail message ID")
 		return

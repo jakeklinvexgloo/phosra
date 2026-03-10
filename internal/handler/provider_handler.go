@@ -31,7 +31,7 @@ func (h *PlatformHandler) List(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *PlatformHandler) Get(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "platformID")
+	id := chi.URLParam(r, "platformId")
 	p, err := h.platforms.GetByID(r.Context(), id)
 	if err != nil {
 		handleServiceError(w, err)
@@ -96,7 +96,7 @@ func (h *PlatformHandler) VerifyCompliance(w http.ResponseWriter, r *http.Reques
 
 func (h *PlatformHandler) RevokeCertification(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	linkID, err := uuid.Parse(chi.URLParam(r, "linkID"))
+	linkID, err := uuid.Parse(chi.URLParam(r, "linkId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid compliance link ID")
 		return
@@ -111,7 +111,7 @@ func (h *PlatformHandler) RevokeCertification(w http.ResponseWriter, r *http.Req
 
 func (h *PlatformHandler) VerifyLink(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	linkID, err := uuid.Parse(chi.URLParam(r, "linkID"))
+	linkID, err := uuid.Parse(chi.URLParam(r, "linkId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid compliance link ID")
 		return
@@ -126,7 +126,7 @@ func (h *PlatformHandler) VerifyLink(w http.ResponseWriter, r *http.Request) {
 
 func (h *PlatformHandler) ListComplianceLinks(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -141,7 +141,7 @@ func (h *PlatformHandler) ListComplianceLinks(w http.ResponseWriter, r *http.Req
 }
 
 func (h *PlatformHandler) OAuthAuthorize(w http.ResponseWriter, r *http.Request) {
-	platformID := chi.URLParam(r, "platformID")
+	platformID := chi.URLParam(r, "platformId")
 	oauth, ok := h.registry.GetOAuth(platformID)
 	if !ok {
 		httputil.Error(w, http.StatusBadRequest, "platform does not support OAuth")
@@ -155,7 +155,7 @@ func (h *PlatformHandler) OAuthAuthorize(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *PlatformHandler) OAuthCallback(w http.ResponseWriter, r *http.Request) {
-	platformID := chi.URLParam(r, "platformID")
+	platformID := chi.URLParam(r, "platformId")
 	oauth, ok := h.registry.GetOAuth(platformID)
 	if !ok {
 		httputil.Error(w, http.StatusBadRequest, "platform does not support OAuth")

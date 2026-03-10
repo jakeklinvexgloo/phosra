@@ -22,7 +22,7 @@ const (
 type BrowserEnforcementJob struct {
 	ID              uuid.UUID                   `json:"id" db:"id"`
 	FamilyID        uuid.UUID                   `json:"family_id" db:"family_id"`
-	ChildID         *uuid.UUID                  `json:"child_id,omitempty" db:"child_id"`
+	ChildID         uuid.UUID                   `json:"child_id" db:"child_id"`
 	ChildName       string                      `json:"child_name" db:"child_name"`
 	ChildAge        int                         `json:"child_age" db:"child_age"`
 	PlatformID      string                      `json:"platform_id" db:"platform_id"`
@@ -40,10 +40,13 @@ type BrowserEnforcementJob struct {
 }
 
 // CreateBrowserEnforcementJobRequest is the API request to create a browser enforcement job.
+// child_id is required. child_name and child_age are metadata-only (informational,
+// not used for policy resolution — the child's profile is the source of truth).
 type CreateBrowserEnforcementJobRequest struct {
 	PlatformID string          `json:"platform_id"`
-	ChildName  string          `json:"child_name"`
-	ChildAge   int             `json:"child_age"`
+	ChildID    string          `json:"child_id"`
+	ChildName  string          `json:"child_name,omitempty"`
+	ChildAge   int             `json:"child_age,omitempty"`
 	Rules      json.RawMessage `json:"rules,omitempty"`
 }
 

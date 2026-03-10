@@ -28,7 +28,7 @@ func (h *RatingHandler) GetSystems(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *RatingHandler) GetBySystem(w http.ResponseWriter, r *http.Request) {
-	systemID := chi.URLParam(r, "systemID")
+	systemID := chi.URLParam(r, "systemId")
 	ratings, err := h.ratings.GetRatingsBySystem(r.Context(), systemID)
 	if err != nil {
 		httputil.Error(w, http.StatusInternalServerError, "failed to get ratings")
@@ -54,7 +54,7 @@ func (h *RatingHandler) GetByAge(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *RatingHandler) Convert(w http.ResponseWriter, r *http.Request) {
-	ratingIDStr := chi.URLParam(r, "ratingID")
+	ratingIDStr := chi.URLParam(r, "ratingId")
 	ratingID, err := uuid.Parse(ratingIDStr)
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid rating ID")
@@ -70,7 +70,7 @@ func (h *RatingHandler) Convert(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *RatingHandler) GetDescriptors(w http.ResponseWriter, r *http.Request) {
-	systemID := chi.URLParam(r, "systemID")
+	systemID := chi.URLParam(r, "systemId")
 	descriptors, err := h.ratings.GetDescriptors(r.Context(), systemID)
 	if err != nil {
 		httputil.Error(w, http.StatusInternalServerError, "failed to get descriptors")

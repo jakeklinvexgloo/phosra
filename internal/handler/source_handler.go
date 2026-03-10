@@ -58,7 +58,7 @@ func (h *SourceHandler) ConnectSource(w http.ResponseWriter, r *http.Request) {
 
 // GetSource handles GET /sources/{sourceID} — get source details.
 func (h *SourceHandler) GetSource(w http.ResponseWriter, r *http.Request) {
-	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceID"))
+	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid source ID")
 		return
@@ -74,7 +74,7 @@ func (h *SourceHandler) GetSource(w http.ResponseWriter, r *http.Request) {
 
 // ListByChild handles GET /children/{childID}/sources — list sources for a child.
 func (h *SourceHandler) ListByChild(w http.ResponseWriter, r *http.Request) {
-	childID, err := uuid.Parse(chi.URLParam(r, "childID"))
+	childID, err := uuid.Parse(chi.URLParam(r, "childId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid child ID")
 		return
@@ -90,7 +90,7 @@ func (h *SourceHandler) ListByChild(w http.ResponseWriter, r *http.Request) {
 
 // ListByFamily handles GET /families/{familyID}/sources — list sources for a family.
 func (h *SourceHandler) ListByFamily(w http.ResponseWriter, r *http.Request) {
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -106,7 +106,7 @@ func (h *SourceHandler) ListByFamily(w http.ResponseWriter, r *http.Request) {
 
 // SyncSource handles POST /sources/{sourceID}/sync — push all rules to source.
 func (h *SourceHandler) SyncSource(w http.ResponseWriter, r *http.Request) {
-	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceID"))
+	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid source ID")
 		return
@@ -122,7 +122,7 @@ func (h *SourceHandler) SyncSource(w http.ResponseWriter, r *http.Request) {
 
 // PushRule handles POST /sources/{sourceID}/rules — push a single rule.
 func (h *SourceHandler) PushRule(w http.ResponseWriter, r *http.Request) {
-	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceID"))
+	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid source ID")
 		return
@@ -151,7 +151,7 @@ func (h *SourceHandler) PushRule(w http.ResponseWriter, r *http.Request) {
 
 // GetGuidedSteps handles GET /sources/{sourceID}/guide/{category} — get guided setup steps.
 func (h *SourceHandler) GetGuidedSteps(w http.ResponseWriter, r *http.Request) {
-	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceID"))
+	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid source ID")
 		return
@@ -171,9 +171,10 @@ func (h *SourceHandler) GetGuidedSteps(w http.ResponseWriter, r *http.Request) {
 	httputil.JSON(w, http.StatusOK, steps)
 }
 
-// ListSyncJobs handles GET /sources/{sourceID}/jobs — list sync jobs.
+// Deprecated: ListSyncJobs handles GET /sources/{sourceID}/jobs — list sync jobs.
+// Source-adapter sync jobs are superseded by BrowserEnforcementHandler (POST /api/v1/enforce).
 func (h *SourceHandler) ListSyncJobs(w http.ResponseWriter, r *http.Request) {
-	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceID"))
+	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid source ID")
 		return
@@ -194,9 +195,10 @@ func (h *SourceHandler) ListSyncJobs(w http.ResponseWriter, r *http.Request) {
 	httputil.JSON(w, http.StatusOK, jobs)
 }
 
-// GetSyncJob handles GET /sources/{sourceID}/jobs/{jobID} — get sync job details.
+// Deprecated: GetSyncJob handles GET /sources/{sourceID}/jobs/{jobID} — get sync job details.
+// Use BrowserEnforcementHandler.GetJob (GET /api/v1/enforce/{jobId}) instead.
 func (h *SourceHandler) GetSyncJob(w http.ResponseWriter, r *http.Request) {
-	jobID, err := uuid.Parse(chi.URLParam(r, "jobID"))
+	jobID, err := uuid.Parse(chi.URLParam(r, "jobId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid job ID")
 		return
@@ -210,9 +212,10 @@ func (h *SourceHandler) GetSyncJob(w http.ResponseWriter, r *http.Request) {
 	httputil.JSON(w, http.StatusOK, job)
 }
 
-// GetSyncResults handles GET /sources/{sourceID}/jobs/{jobID}/results — get per-rule results.
+// Deprecated: GetSyncResults handles GET /sources/{sourceID}/jobs/{jobID}/results — get per-rule results.
+// Use BrowserEnforcementHandler.GetJobAuditLog (GET /api/v1/enforce/{jobId}/audit) instead.
 func (h *SourceHandler) GetSyncResults(w http.ResponseWriter, r *http.Request) {
-	jobID, err := uuid.Parse(chi.URLParam(r, "jobID"))
+	jobID, err := uuid.Parse(chi.URLParam(r, "jobId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid job ID")
 		return
@@ -226,9 +229,10 @@ func (h *SourceHandler) GetSyncResults(w http.ResponseWriter, r *http.Request) {
 	httputil.JSON(w, http.StatusOK, results)
 }
 
-// RetrySyncJob handles POST /sources/{sourceID}/jobs/{jobID}/retry — retry a failed sync.
+// Deprecated: RetrySyncJob handles POST /sources/{sourceID}/jobs/{jobID}/retry — retry a failed sync.
+// Use BrowserEnforcementHandler for new enforcement workflows.
 func (h *SourceHandler) RetrySyncJob(w http.ResponseWriter, r *http.Request) {
-	jobID, err := uuid.Parse(chi.URLParam(r, "jobID"))
+	jobID, err := uuid.Parse(chi.URLParam(r, "jobId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid job ID")
 		return
@@ -244,7 +248,7 @@ func (h *SourceHandler) RetrySyncJob(w http.ResponseWriter, r *http.Request) {
 
 // DisconnectSource handles DELETE /sources/{sourceID} — disconnect a source.
 func (h *SourceHandler) DisconnectSource(w http.ResponseWriter, r *http.Request) {
-	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceID"))
+	sourceID, err := uuid.Parse(chi.URLParam(r, "sourceId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid source ID")
 		return

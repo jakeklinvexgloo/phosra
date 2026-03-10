@@ -86,7 +86,7 @@ type updateStatusRequest struct {
 }
 
 func (h *FeedbackHandler) UpdateStatus(w http.ResponseWriter, r *http.Request) {
-	idStr := chi.URLParam(r, "feedbackID")
+	idStr := chi.URLParam(r, "feedbackId")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid feedback ID")

@@ -43,7 +43,7 @@ func (h *FamilyHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 func (h *FamilyHandler) Get(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -59,7 +59,7 @@ func (h *FamilyHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 func (h *FamilyHandler) Update(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -83,7 +83,7 @@ func (h *FamilyHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 func (h *FamilyHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -108,7 +108,7 @@ func (h *FamilyHandler) List(w http.ResponseWriter, r *http.Request) {
 
 func (h *FamilyHandler) AddMember(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
@@ -152,12 +152,12 @@ func (h *FamilyHandler) AddMember(w http.ResponseWriter, r *http.Request) {
 
 func (h *FamilyHandler) UpdateMember(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
 	}
-	memberID, err := uuid.Parse(chi.URLParam(r, "memberID"))
+	memberID, err := uuid.Parse(chi.URLParam(r, "memberId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid member ID")
 		return
@@ -182,12 +182,12 @@ func (h *FamilyHandler) UpdateMember(w http.ResponseWriter, r *http.Request) {
 
 func (h *FamilyHandler) RemoveMember(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
 	}
-	memberID, err := uuid.Parse(chi.URLParam(r, "memberID"))
+	memberID, err := uuid.Parse(chi.URLParam(r, "memberId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid member ID")
 		return
@@ -202,7 +202,7 @@ func (h *FamilyHandler) RemoveMember(w http.ResponseWriter, r *http.Request) {
 
 func (h *FamilyHandler) ListMembers(w http.ResponseWriter, r *http.Request) {
 	userID := middleware.GetUserID(r.Context())
-	familyID, err := uuid.Parse(chi.URLParam(r, "familyID"))
+	familyID, err := uuid.Parse(chi.URLParam(r, "familyId"))
 	if err != nil {
 		httputil.Error(w, http.StatusBadRequest, "invalid family ID")
 		return
