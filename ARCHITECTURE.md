@@ -104,7 +104,7 @@ All compliance UI surfaces derive from `law-registry.ts`. To add a new law, add 
 | C3 | Python SDK shown in marketing but doesn't exist | 🔧 In progress | Web |
 | C4 | Sandbox mode grants admin to all users in production | ⬜ Not started | API |
 | C5 | Browser enforcement bypasses policy engine | ⬜ Not started | API + Browser |
-| C6 | API base URL inconsistent across layers | ⬜ Not started | All |
+| C6 | API base URL inconsistent across layers | ✅ Done | All |
 
 ### 🟡 Important — Incoherent but Not Immediately Broken
 
@@ -112,7 +112,7 @@ All compliance UI surfaces derive from `law-registry.ts`. To add a new law, add 
 |---|---|---|---|
 | I1 | Web uses hand-rolled `api.ts` instead of `@phosra/sdk` | ⬜ Not started | Web + Packages |
 | I2 | `tools.ts` duplicated in web playground and MCP server | 🔧 In progress | Web + Packages |
-| I3 | ~40% of API routes undocumented in OpenAPI spec | ⬜ Not started | API |
+| I3 | ~40% of API routes undocumented in OpenAPI spec | 🔧 In progress | API |
 | I4 | Three parallel enforcement architectures, all live | ⬜ Not started | API |
 | I5 | Admin ops co-deployed with customer product | ⬜ Not started | Web |
 | I6 | No monorepo workspace linking | ⬜ Not started | Root |
@@ -143,7 +143,7 @@ All compliance UI surfaces derive from `law-registry.ts`. To add a new law, add 
 | Three enforcement architectures | ❌ | — | — | — |
 | api.ts vs @phosra/sdk fork | — | — | ❌ | ❌ unused |
 | tools.ts duplication | — | — | ❌ | ❌ dupe |
-| API URL inconsistency | ❌ | ❌ | ❌ | ❌ |
+| API URL inconsistency | ✅ | ✅ | ✅ | ✅ |
 | 40% routes undocumented | ❌ | — | — | — |
 | Admin co-deployed with product | — | — | ❌ | — |
 | No monorepo workspace linking | — | — | ❌ | ❌ |
