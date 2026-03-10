@@ -7,6 +7,8 @@
 
 import type { ToolDefinition } from "./types.js";
 
+export type { ToolDefinition };
+
 const str = (desc: string) => ({ type: "string" as const, description: desc });
 const int = (desc: string) => ({ type: "integer" as const, description: desc });
 
@@ -767,6 +769,18 @@ export const TOOLS: ToolDefinition[] = [
     http: { method: "DELETE", path: "/sources/{source_id}" },
   },
 ];
+
+/**
+ * Build an Anthropic-compatible tool list from definitions.
+ * Strips the `http` metadata, returning only name + description + input_schema.
+ */
+export function toAnthropicTools() {
+  return TOOLS.map((t) => ({
+    name: t.name,
+    description: t.description,
+    input_schema: t.input_schema,
+  }));
+}
 
 /**
  * Resolve a tool path with parameter substitution.

@@ -68,7 +68,9 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "twilio": "^5.12.2",
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.2",
+    "@phosra/sdk": "*",
+    "@phosra/mcp": "*"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
