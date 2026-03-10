@@ -187,7 +187,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "Phosra\u2019s registry now maps over 320 platforms spanning streaming, social media, gaming, education, communication, and web browsing \u2014 including YouTube, Netflix, TikTok, Instagram, Roblox, Minecraft, Discord, and Snapchat. Each platform that adopts the Phosra Child Safety Spec gets instant interoperability with parental control providers and compliance tooling.",
+        text: "Phosra\u2019s registry now maps over 229 platforms spanning streaming, social media, gaming, education, communication, and web browsing \u2014 including YouTube, Netflix, TikTok, Instagram, Roblox, Minecraft, Discord, and Snapchat. Each platform that adopts the Phosra Child Safety Spec gets instant interoperability with parental control providers and compliance tooling.",
       },
       {
         type: "paragraph",
@@ -197,7 +197,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: "community-standards-enforcement",
-    title: "31 Community Standards, 50,000 Families: Making Pledges Enforceable",
+    title: "31 Community Standards: Making Pledges Enforceable",
     date: "2025-02-08",
     category: "product",
     excerpt:
@@ -218,7 +218,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "Phosra now supports 31 community standards that collectively reach over 50,000 families and 2,000 schools. Each standard is mapped to specific PCSS rules, so adoption means automatic enforcement across all connected platforms. Explore the full standards library at phosra.com/standards.",
+        text: "Phosra now supports 31 community standards, each mapped to specific PCSS rules for automatic enforcement across all connected platforms. Explore the full standards library at phosra.com/standards.",
       },
     ],
   },
