@@ -82,7 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 url: "https://www.phosra.com",
                 logo: "https://www.phosra.com/logo.svg",
                 description:
-                  "Child safety compliance infrastructure for technology platforms. Track 67+ global child safety laws and enforce parental controls across 320+ platforms.",
+                  "Child safety compliance infrastructure for technology platforms. Track 67+ global child safety laws and enforce parental controls across 229+ platforms.",
                 foundingDate: "2025",
                 founders: [
                   { "@type": "Person", name: "Jake Klinvex" },

@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ArrowRight, ExternalLink, Newspaper, FileText, Palette, Mail } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
+import { PLATFORM_STATS } from "@/lib/platforms/stats"
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -36,7 +37,7 @@ const KEY_FACTS = [
   { label: "Focus", value: "Child safety compliance infrastructure" },
   { label: "Laws Tracked", value: "67" },
   { label: "Rule Categories", value: "45" },
-  { label: "Platforms Mapped", value: "320+" },
+  { label: "Platforms Mapped", value: `${PLATFORM_STATS.total}+` },
 ]
 
 /* ------------------------------------------------------------------ */

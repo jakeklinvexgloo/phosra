@@ -175,11 +175,11 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: "190-platforms-connected",
-    title: "Phosra Maps 320+ Platforms in the Kids\u2019 Ecosystem",
+    title: "Phosra Maps 229+ Platforms in the Kids\u2019 Ecosystem",
     date: "2025-02-10",
     category: "milestone",
     excerpt:
-      "Phosra\u2019s platform registry now maps 320+ services kids use daily \u2014 from streaming and social media to gaming and education \u2014 defining the spec each can adopt for interoperable parental controls.",
+      "Phosra\u2019s platform registry now maps 229+ services kids use daily \u2014 from streaming and social media to gaming and education \u2014 defining the spec each can adopt for interoperable parental controls.",
     content: [
       {
         type: "paragraph",
@@ -258,7 +258,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "Today we\u2019re launching Phosra to fix this. Phosra is an open specification and API that covers 320+ platforms in the kids\u2019 ecosystem. When platforms adopt the spec, parents set rules once and enforcement works everywhere. Parental control providers can plug into Phosra to extend their reach across the entire ecosystem.",
+        text: "Today we\u2019re launching Phosra to fix this. Phosra is an open specification and API that covers 229+ platforms in the kids\u2019 ecosystem. When platforms adopt the spec, parents set rules once and enforcement works everywhere. Parental control providers can plug into Phosra to extend their reach across the entire ecosystem.",
       },
       {
         type: "quote",

@@ -65,7 +65,7 @@ const TYPOGRAPHY = [
     className: "font-sans",
     specimens: [
       { size: "text-lg", label: "18px", text: "Parents set rules once, and those rules enforce across every platform their children use." },
-      { size: "text-sm", label: "14px", text: "Phosra maps 78 child safety laws to enforcement actions across 320+ platforms in the kids' ecosystem." },
+      { size: "text-sm", label: "14px", text: "Phosra maps 78 child safety laws to enforcement actions across 229+ platforms in the kids' ecosystem." },
     ],
   },
   {

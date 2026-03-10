@@ -19,19 +19,6 @@ const CODE_SNIPPETS = {
     "strictness": "recommended"
   }'`,
 
-  python: `import phosra
-
-client = phosra.Client(api_key="$API_KEY")
-
-result = client.setup.quick(
-    family_name="The Smiths",
-    child_name="Emma",
-    child_birth_date="2017-03-15",
-    strictness="recommended"
-)
-
-print(f"{result.rules_generated} rules enforced")`,
-
   node: `import Phosra from "@phosra/sdk";
 
 const client = new Phosra({ apiKey: "$API_KEY" });
@@ -59,12 +46,12 @@ console.log(\`\${result.rulesGenerated} rules enforced\`);`,
 }`,
 }
 
-type LangTab = "curl" | "python" | "node"
+type LangTab = "curl" | "node"
 
 const LANG_TABS: { key: LangTab; label: string }[] = [
   { key: "curl", label: "cURL" },
-  { key: "python", label: "Python" },
   { key: "node", label: "Node.js" },
+  // Python SDK — coming soon
 ]
 
 const METRICS = [
@@ -130,10 +117,10 @@ function highlightLine(line: string, lang: LangTab | "response"): React.ReactNod
     return tokens
   }
 
-  // Generic highlighting for curl/python/node
+  // Generic highlighting for curl/node
   let m: RegExpMatchArray | null
   while (rest.length > 0) {
-    if ((m = rest.match(/^(import|from|const|let|await|new|print|console)\b/))) {
+    if ((m = rest.match(/^(import|from|const|let|await|new|console)\b/))) {
       push(m[0], "text-purple-400")
       rest = rest.slice(m[0].length)
     } else if ((m = rest.match(/^(curl|-X|-H|-d)\b/))) {
@@ -148,10 +135,6 @@ function highlightLine(line: string, lang: LangTab | "response"): React.ReactNod
     } else if ((m = rest.match(/^("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)/))) {
       push(m[0], "text-emerald-400")
       rest = rest.slice(m[0].length)
-    } else if ((m = rest.match(/^f"/))) {
-      // Python f-string start
-      push('f"', "text-emerald-400")
-      rest = rest.slice(2)
     } else if ((m = rest.match(/^\d+/))) {
       push(m[0], "text-amber-400")
       rest = rest.slice(m[0].length)
@@ -313,7 +296,7 @@ export function DevSection() {
 
           // Step 4: Pause 3.5s, then cycle to next language
           timerRef.current = setTimeout(() => {
-            const langs: LangTab[] = ["curl", "python", "node"]
+            const langs: LangTab[] = ["curl", "node"]
             const nextIdx = (langs.indexOf(langRef.current) + 1) % langs.length
             langRef.current = langs[nextIdx]
             stepRef.current = "idle"

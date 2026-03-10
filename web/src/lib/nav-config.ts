@@ -82,7 +82,7 @@ export const PRODUCTS_DROPDOWN: NavDropdown = {
       title: "For Families",
       items: [
         { label: "Parental Controls", href: "/parental-controls", icon: Shield, description: "100+ safety solutions for every platform" },
-        { label: "Platform Directory", href: "/platforms", icon: Monitor, description: "320+ platforms with safety ratings" },
+        { label: "Platform Directory", href: "/platforms", icon: Monitor, description: "229+ platforms with safety ratings" },
         { label: "Interactive Demo", href: "/demo", icon: PlayCircle, description: "Try the Phosra dashboard" },
         { label: "PCSS Compliance Checker", href: "/check", icon: ShieldCheck, description: "Test any platform's compliance score" },
       ],
@@ -91,7 +91,7 @@ export const PRODUCTS_DROPDOWN: NavDropdown = {
       title: "For Platforms",
       items: [
         { label: "Developer Portal", href: "/developers", icon: Code, description: "API docs, SDKs, and playground" },
-        { label: "Technology Services", href: "/technology-services", icon: Puzzle, description: "320+ services with integration guides" },
+        { label: "Technology Services", href: "/technology-services", icon: Puzzle, description: "229+ services with integration guides" },
         { label: "API Playground", href: "/developers/playground", icon: Terminal, description: "Test API calls live" },
       ],
     },

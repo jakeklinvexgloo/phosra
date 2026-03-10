@@ -14,10 +14,10 @@ const CTASection = dynamic(() => import("@/components/marketing/CTASection").the
 
 export const metadata: Metadata = {
   title: "Phosra — Child Safety Compliance Platform",
-  description: "The infrastructure layer for child safety compliance. One API to enforce parental controls across 320+ platforms and track 67+ global regulations.",
+  description: "The infrastructure layer for child safety compliance. One API to enforce parental controls across 229+ platforms and track 67+ global regulations.",
   openGraph: {
     title: "Phosra — Child Safety Compliance Platform",
-    description: "The infrastructure layer for child safety compliance. One API to enforce parental controls across 320+ platforms and track 67+ global regulations.",
+    description: "The infrastructure layer for child safety compliance. One API to enforce parental controls across 229+ platforms and track 67+ global regulations.",
   },
 }
 

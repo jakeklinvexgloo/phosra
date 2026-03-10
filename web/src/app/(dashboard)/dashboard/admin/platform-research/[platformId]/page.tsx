@@ -1,3 +1,4 @@
+// TODO: Extract to separate internal deployment — not customer-facing
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft, FlaskConical, FileSearch, Shield } from "lucide-react"

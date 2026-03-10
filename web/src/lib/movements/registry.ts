@@ -1,5 +1,9 @@
 import type { MovementEntry } from "./types"
 
+// TODO: adoptionCount and schoolCount are hardcoded placeholder values.
+// Replace with real-time data from API (e.g. GET /api/movements/:id/stats)
+// once adoption tracking is implemented on the backend.
+
 export const MOVEMENTS_REGISTRY: MovementEntry[] = [
   /* ──────────────────────────────────────────────────────────────────
    * ❶  FLAGSHIP MOVEMENTS (existing)
@@ -26,8 +30,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["mental-health", "phone-free", "schools", "social-media"],
     minAge: 0,
     maxAge: 16,
-    adoptionCount: 2847,
-    schoolCount: 142,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "wait-until-8th",
@@ -52,8 +56,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["smartphone-delay", "pledge", "community", "grassroots"],
     minAge: 0,
     maxAge: 14,
-    adoptionCount: 4213,
-    schoolCount: 287,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "screen-smart-family",
@@ -78,8 +82,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["balanced", "recommended", "phosra", "best-practice"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 6502,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "screen-free-schools",
@@ -103,8 +107,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["schools", "education", "phone-free", "focus"],
     minAge: 5,
     maxAge: 18,
-    adoptionCount: 0,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -133,8 +137,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["uk", "grassroots", "smartphone-delay", "community", "pledge"],
     minAge: 0,
     maxAge: 16,
-    adoptionCount: 1893,
-    schoolCount: 64,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "the-balance-project",
@@ -159,8 +163,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["balanced", "family", "screen-time", "habits", "wellness"],
     minAge: 3,
     maxAge: 17,
-    adoptionCount: 1247,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -190,8 +194,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["advertising", "privacy", "commercial-free", "advocacy", "manipulative-design"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 3156,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "common-sense-media",
@@ -216,8 +220,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["ratings", "media-literacy", "digital-citizenship", "content-filtering", "education"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 5421,
-    schoolCount: 312,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "parents-together",
@@ -242,8 +246,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["advocacy", "tech-accountability", "privacy", "algorithm", "parent-network"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 2834,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "protect-young-eyes",
@@ -269,8 +273,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["education", "device-safety", "monitoring", "web-filtering", "schools"],
     minAge: 3,
     maxAge: 17,
-    adoptionCount: 1876,
-    schoolCount: 198,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -298,8 +302,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["clinical", "pediatrics", "screen-time", "research-backed", "health"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 4187,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "who-screen-time-guidelines",
@@ -323,8 +327,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["clinical", "who", "early-years", "health", "international", "research-backed"],
     minAge: 0,
     maxAge: 5,
-    adoptionCount: 2341,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "children-and-screens",
@@ -349,8 +353,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["research", "neuroscience", "child-development", "evidence-based", "academic"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 1453,
-    schoolCount: 47,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -380,8 +384,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["humane-design", "attention", "tech-accountability", "algorithm", "mental-health"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 2198,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "design-it-for-us",
@@ -407,8 +411,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["youth-led", "platform-design", "advocacy", "privacy", "social-media"],
     minAge: 10,
     maxAge: 17,
-    adoptionCount: 987,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "log-off-movement",
@@ -433,8 +437,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["youth-led", "digital-wellbeing", "social-media", "habits", "mental-health"],
     minAge: 12,
     maxAge: 17,
-    adoptionCount: 634,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -464,8 +468,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["uk", "international", "digital-rights", "legislation", "privacy", "age-appropriate-design"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 1567,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "molly-rose-foundation",
@@ -490,8 +494,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["uk", "online-safety", "mental-health", "harmful-content", "advocacy", "legislation"],
     minAge: 10,
     maxAge: 17,
-    adoptionCount: 1234,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "australian-esafety",
@@ -516,8 +520,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["australia", "government", "age-verification", "international", "regulation"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 1098,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "eu-better-internet-kids",
@@ -543,8 +547,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["eu", "international", "gdpr", "digital-services-act", "regulation", "age-appropriate-design"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 876,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -573,8 +577,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["schools", "phone-free", "education", "legislation", "focus"],
     minAge: 5,
     maxAge: 18,
-    adoptionCount: 1654,
-    schoolCount: 432,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "away-for-the-day",
@@ -598,8 +602,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["schools", "phone-free", "research-backed", "academic", "education"],
     minAge: 5,
     maxAge: 18,
-    adoptionCount: 1123,
-    schoolCount: 356,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -629,8 +633,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["exploitation-prevention", "csam", "safety", "technology", "child-protection"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 2456,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "ncose-standard",
@@ -655,8 +659,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["exploitation-prevention", "accountability", "content-filtering", "advocacy"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 743,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -685,8 +689,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["outdoor", "nature", "screen-time", "physical-activity", "wellness", "family"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 1876,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
   {
     id: "children-nature-network",
@@ -710,8 +714,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["outdoor", "nature", "wellness", "research-backed", "child-development"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 567,
-    schoolCount: 23,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -740,8 +744,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["independence", "resilience", "free-range", "age-adaptive", "balanced"],
     minAge: 5,
     maxAge: 17,
-    adoptionCount: 1345,
-    schoolCount: 89,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -769,8 +773,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["canada", "media-literacy", "education", "digital-citizenship", "critical-thinking"],
     minAge: 3,
     maxAge: 17,
-    adoptionCount: 892,
-    schoolCount: 156,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -801,8 +805,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["legal", "advocacy", "maximum-protection", "social-media", "platform-accountability"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 456,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -831,8 +835,8 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["government", "mental-health", "social-media", "advisory", "us", "official"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 3678,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 
   /* ──────────────────────────────────────────────────────────────────
@@ -860,7 +864,7 @@ export const MOVEMENTS_REGISTRY: MovementEntry[] = [
     tags: ["event", "awareness", "screen-free", "annual", "community", "unplugging"],
     minAge: 0,
     maxAge: 17,
-    adoptionCount: 0,
-    schoolCount: 0,
+    adoptionCount: 0, // TODO: fetch from API
+    schoolCount: 0, // TODO: fetch from API
   },
 ]

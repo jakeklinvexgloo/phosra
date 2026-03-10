@@ -1,3 +1,9 @@
+// TODO: Extract to separate internal deployment - see synthesis plan
+// All admin/* routes (command center, outreach, fundraise, platform-research,
+// workers, contacts, calendar, gmail, journalists, news, press, compliance-alerts,
+// provider-sandbox) should be moved to a dedicated internal admin app to reduce
+// attack surface and keep the customer-facing app lean.
+
 "use client"
 
 import { useEffect, useRef, useState } from "react"

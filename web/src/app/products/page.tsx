@@ -3,6 +3,7 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { AnimatedSection, WaveTexture, PhosraBurst } from "@/components/marketing/shared"
 import { PRODUCTS_DROPDOWN } from "@/lib/nav-config"
+import { PLATFORM_STATS } from "@/lib/platforms/stats"
 
 export const metadata: Metadata = {
   title: "Products — Phosra",
@@ -46,7 +47,7 @@ export default function ProductsPage() {
           {/* Stats */}
           <AnimatedSection direction="up" className="mt-14">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <StatCard value="320+" label="Platforms Mapped" />
+              <StatCard value={`${PLATFORM_STATS.total}+`} label="Platforms Mapped" />
               <StatCard value="100+" label="Safety Solutions" />
               <StatCard value="45" label="Rule Categories" />
               <StatCard value="78+" label="Laws Tracked" />

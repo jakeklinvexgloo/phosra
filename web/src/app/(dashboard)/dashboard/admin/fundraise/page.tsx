@@ -1,3 +1,4 @@
+// TODO: Extract to separate internal deployment — not customer-facing
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
