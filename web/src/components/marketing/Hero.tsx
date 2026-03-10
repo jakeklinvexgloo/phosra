@@ -45,7 +45,7 @@ export function Hero() {
       </div>
 
       <div className="relative w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-28 lg:pb-16 xl:pt-32 xl:pb-20 flex-1 flex flex-col justify-center">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-20 items-start">
           {/* Left — text */}
           <div>
             {/* Announcement badge */}
@@ -133,7 +133,7 @@ export function Hero() {
           </div>
 
           {/* Right / below — animated split demo */}
-          <div className="mt-8 lg:mt-0">
+          <div className="mt-8 lg:mt-0 lg:pt-12">
             <HeroChatDemo />
           </div>
         </div>
