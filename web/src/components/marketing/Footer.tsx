@@ -53,7 +53,15 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
+            {/* Legal links */}
+            <div className="flex items-center gap-3 text-xs text-white/30">
+              <Link href="/legal/privacy" className="hover:text-white/50 transition-colors">Privacy</Link>
+              <span className="text-white/10">|</span>
+              <Link href="/legal/terms" className="hover:text-white/50 transition-colors">Terms</Link>
+              <span className="text-white/10">|</span>
+              <Link href="/legal/dpa" className="hover:text-white/50 transition-colors">DPA</Link>
+            </div>
             {/* Social links */}
             <div className="flex items-center gap-3">
               {SOCIAL_LINKS.map((social) => (

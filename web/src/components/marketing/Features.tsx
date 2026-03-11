@@ -12,18 +12,18 @@ const USE_CASES = [
   {
     badge: "Screen Time",
     badgeColor: "bg-accent-teal/15 text-accent-teal border-accent-teal/20",
-    title: "Set limits once.",
-    titleAccent: "Enforce everywhere.",
+    title: "Your policy controls screen time",
+    titleAccent: "across every device.",
     description:
-      "Define daily app usage limits, bedtimes, and downtime windows. Phosra pushes time-based rules to every connected device — iOS, Android, Fire tablets, and DNS-level blocking.",
+      "Define daily app usage limits, bedtimes, and downtime windows. Your policy pushes time-based rules to every connected device — iOS, Android, Fire tablets, and DNS-level blocking — via a single API call.",
     mockup: "screentime" as const,
     reverse: false,
   },
   {
     badge: "Content Filtering",
     badgeColor: "bg-accent-purple/15 text-accent-purple border-accent-purple/20",
-    title: "Age-appropriate content.",
-    titleAccent: "Every platform.",
+    title: "Your policy maps age-appropriate content",
+    titleAccent: "across every platform.",
     description:
       "Automatic age-to-rating mapping across MPAA, TV Parental, ESRB, PEGI, and CSM systems. One child profile generates tailored rules for Netflix, YouTube, gaming, and web filtering.",
     mockup: "content" as const,
@@ -32,10 +32,10 @@ const USE_CASES = [
   {
     badge: "Enforcement",
     badgeColor: "bg-accent-cyan/15 text-accent-cyan border-accent-cyan/20",
-    title: "Real-time compliance.",
-    titleAccent: "Zero guesswork.",
+    title: "Your policy enforces compliance",
+    titleAccent: "in real time.",
     description:
-      "Monitor enforcement across platforms and track compliance with child safety legislation in real-time. See which laws each platform satisfies — KOSA, COPPA, EU DSA — and get notified when enforcement fails.",
+      "Monitor enforcement across platforms and track compliance with child safety legislation. See which laws each platform satisfies — KOSA, COPPA, EU DSA — and get notified when enforcement fails.",
     mockup: "enforcement" as const,
     reverse: false,
   },
@@ -128,21 +128,21 @@ function getFeatureBullets(type: "screentime" | "content" | "enforcement"): stri
   switch (type) {
     case "screentime":
       return [
-        "Daily limits, bedtimes, and downtime windows",
+        "Daily limits, bedtimes, and downtime windows — via API",
         "Per-app and per-category time budgets",
-        "Automatic scheduling across all devices",
+        "Automatic scheduling across all connected devices",
       ]
     case "content":
       return [
-        "5 rating systems mapped automatically",
+        "5 rating systems mapped automatically — via API",
         "Per-platform content restrictions",
         "Safe search and explicit content blocking",
       ]
     case "enforcement":
       return [
-        `Covers ${PLATFORM_STATS.liveCount}+ live platforms in the kids\u2019 ecosystem`,
+        `Covers ${PLATFORM_STATS.liveCount}+ live platforms — via API`,
         "Legislative compliance tracking (KOSA, COPPA, EU DSA)",
-        "Instant failure alerts with automatic retry",
+        "Webhook-driven failure alerts with automatic retry",
       ]
   }
 }

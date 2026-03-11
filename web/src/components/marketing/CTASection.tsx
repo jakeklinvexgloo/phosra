@@ -13,7 +13,7 @@ const TRUST_BADGES = [
 
 export function CTASection() {
   return (
-    <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A]">
+    <section id="cta" className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A]">
       {/* Background textures */}
       <WaveTexture
         colorStart="#00D47E"
@@ -117,11 +117,20 @@ export function CTASection() {
                 </div>
 
                 {/* Social proof line */}
-                <div className="mt-6 pt-6 border-t border-white/[0.06] flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
-                  <p className="text-xs text-white/40">
-                    Supporting {movementCount} child safety initiatives worldwide
-                  </p>
+                <div className="mt-6 pt-6 border-t border-white/[0.06] space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+                    <p className="text-xs text-white/40">
+                      Supporting {movementCount} child safety initiatives worldwide
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 text-[10px] text-white/25">
+                    <Link href="/legal/privacy" className="hover:text-white/40 transition-colors">Privacy Policy</Link>
+                    <span>|</span>
+                    <Link href="/legal/terms" className="hover:text-white/40 transition-colors">Terms of Service</Link>
+                    <span>|</span>
+                    <Link href="/legal/dpa" className="hover:text-white/40 transition-colors">DPA</Link>
+                  </div>
                 </div>
               </div>
             </div>

@@ -13,13 +13,13 @@ const STEPS = [
     title: "Define",
     description:
       "Create a family, add your children, set age. Phosra generates rules automatically based on age-appropriate defaults and legislative requirements.",
-    detail: "24 rules generated in <100ms",
+    detail: "24 rules generated in ~100ms typical",
   },
   {
     number: "02",
     title: "Connect",
     description:
-      "Link your platforms — DNS filters, mobile devices, browsers, and more. One credential per platform, verified and encrypted with AES-256-GCM.",
+      "Link your platforms via OAuth or API keys — no passwords stored. DNS filters, mobile devices, browsers, and more. Each connection is verified and encrypted with AES-256-GCM.",
     detail: `${PLATFORM_STATS.liveCount}+ live platforms connected`,
   },
   {
@@ -27,7 +27,7 @@ const STEPS = [
     title: "Enforce",
     description:
       "Push rules to every connected platform with one API call. Monitor compliance in real-time and get notified when enforcement fails.",
-    detail: "Real-time sync & monitoring",
+    detail: "Webhook-driven sync & monitoring",
   },
 ]
 

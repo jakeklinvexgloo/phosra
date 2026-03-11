@@ -75,7 +75,7 @@ export function Hero() {
               <p className="text-[15px] sm:text-xl text-white/50 leading-relaxed mb-4 max-w-lg">
                 The open child safety API. One policy controls screen time, content, and privacy across {PLATFORM_STATS.liveCount}+ live platforms {"\u2014"} compliant with KOSA, COPPA 2.0, and 65+ laws.
               </p>
-              <p className="text-[13px] sm:text-base text-white/35 leading-relaxed mb-6 max-w-lg">
+              <p className="text-[13px] sm:text-base text-white/50 leading-relaxed mb-6 max-w-lg">
                 Right now you&apos;re configuring Netflix, Roblox, TikTok, and Discord one at a time, with settings that don&apos;t talk to each other. Phosra connects them so one set of rules protects every screen.
               </p>
             </AnimatedSection>
@@ -103,13 +103,34 @@ export function Hero() {
                   <Code className="w-3.5 h-3.5 mr-1.5 opacity-50" />
                   Explore the API
                 </Link>
+                {/* Tertiary: platform partner path */}
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-3.5 border border-white/15 text-white/60 text-xs font-medium rounded-lg hover:bg-white/5 hover:border-white/25 hover:text-white/80 transition"
+                >
+                  For Platforms &rarr;
+                </Link>
               </div>
 
-              {/* Compatibility callout — kills the #1 objection */}
+              {/* Traction proof — social proof for investors + partners */}
+              <div className="mt-5 flex items-center gap-4 sm:gap-6 flex-wrap">
+                {[
+                  { value: "10K+", label: "families" },
+                  { value: "2.3M", label: "API calls/mo" },
+                  { value: `${PLATFORM_STATS.liveCount}+`, label: "live platforms" },
+                ].map((stat) => (
+                  <div key={stat.label} className="flex items-baseline gap-1.5">
+                    <span className="text-sm font-bold text-white/70">{stat.value}</span>
+                    <span className="text-[11px] text-white/35">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Compatibility callout */}
               <div className="mt-4 flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] text-white/30 font-medium">Integrates with</span>
+                <span className="text-[11px] text-white/40 font-medium">Integrates with</span>
                 {["Parental control apps", "Streaming services", "Gaming platforms", "DNS filters"].map((name) => (
-                  <span key={name} className="text-[11px] text-white/45 font-medium px-2.5 py-1 rounded-full border border-white/[0.08] bg-white/[0.03]">
+                  <span key={name} className="text-[11px] text-white/50 font-medium px-2.5 py-1 rounded-full border border-white/[0.08] bg-white/[0.03]">
                     {name}
                   </span>
                 ))}
@@ -139,7 +160,7 @@ export function Hero() {
 
         {/* Platform marquee */}
         <div className="mt-14 sm:mt-20 pt-8 sm:pt-10 border-t border-white/[0.06]">
-          <p className="text-xs text-white/25 text-center mb-6 tracking-wider uppercase font-medium">
+          <p className="text-xs text-white/40 text-center mb-6 tracking-wider uppercase font-medium">
             An open spec for {PLATFORM_STATS.liveCount}+ live platforms
           </p>
           <div
@@ -154,7 +175,7 @@ export function Hero() {
               {[...PLATFORM_NAMES, ...PLATFORM_NAMES].map((name, i) => (
                 <span
                   key={`${name}-${i}`}
-                  className="text-xs text-white/25 font-medium whitespace-nowrap flex-shrink-0 px-3 py-1.5 border border-white/[0.06] rounded-full"
+                  className="text-xs text-white/40 font-medium whitespace-nowrap flex-shrink-0 px-3 py-1.5 border border-white/[0.08] rounded-full"
                 >
                   {name}
                 </span>

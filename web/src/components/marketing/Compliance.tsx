@@ -103,6 +103,13 @@ export function Compliance() {
             You don&apos;t need to know the laws. We do.
           </p>
 
+          {/* Updated weekly badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-brand-green/20 bg-brand-green/[0.06] mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+            <span className="text-xs font-medium text-brand-green/80">Updated weekly</span>
+            <span className="text-[10px] text-white/30">Last scan: {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+          </div>
+
           <LawCounter
             totalLaws={stats.totalLaws}
             jurisdictions={stats.totalJurisdictions}

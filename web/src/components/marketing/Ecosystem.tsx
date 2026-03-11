@@ -83,15 +83,13 @@ export function Ecosystem() {
             </h2>
 
             <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl mx-auto">
-              Connect the apps parents trust to every platform their kids use.{" "}
+              Your parental control app or custom integration connects as a{" "}
+              <span className="text-foreground font-medium">source</span>
+              . Phosra enforces your rules across{" "}
               <span className="text-foreground font-medium">
-                <Counter value={SOURCE_COUNT} suffix="+" /> sources
-              </span>{" "}
-              flow through Phosra to{" "}
-              <span className="text-foreground font-medium">
-                <Counter value={TARGET_COUNT} suffix="+" /> enforcement targets
+                <Counter value={TARGET_COUNT} suffix="+" /> platforms
               </span>
-              .
+              {" "}— streaming, gaming, devices, and more.
             </p>
           </div>
         </AnimatedSection>

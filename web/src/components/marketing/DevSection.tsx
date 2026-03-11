@@ -55,7 +55,7 @@ const LANG_TABS: { key: LangTab; label: string }[] = [
 ]
 
 const METRICS = [
-  { value: "< 100ms", label: "p50 latency" },
+  { value: "~100ms", label: "p50 typical" },
   { value: "99.9%", label: "uptime" },
   { value: "45", label: "safety categories" },
 ]
@@ -381,12 +381,24 @@ export function DevSection() {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        {/* Skip link for non-developers */}
+        <div className="text-center mb-6 lg:mb-0 lg:hidden">
+          <a href="#cta" className="text-xs text-white/40 hover:text-white/60 transition-colors">
+            Not a developer? Skip to get started &darr;
+          </a>
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-20 items-center">
           {/* Left — text */}
           <AnimatedSection direction="left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-6">
-              <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
-              <span className="text-xs font-medium text-white/70">For Developers</span>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+                <span className="text-xs font-medium text-white/70">For Developers</span>
+              </div>
+              <a href="#cta" className="hidden lg:inline text-[11px] text-white/30 hover:text-white/50 transition-colors">
+                Not a developer? &darr;
+              </a>
             </div>
 
             <h2 className="font-display text-3xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-white leading-[1.15] mb-6">
@@ -396,8 +408,14 @@ export function DevSection() {
               </span>
             </h2>
 
-            <p className="text-white/60 text-base sm:text-lg leading-relaxed mb-10 max-w-sm sm:max-w-lg">
+            <p className="text-white/60 text-base sm:text-lg leading-relaxed mb-4 max-w-sm sm:max-w-lg">
               Quick Setup creates a family, adds a child, generates 24 age-appropriate rules, and pushes them to every connected platform &mdash; across streaming, devices, DNS filters, and more &mdash; all in a single request.
+            </p>
+            <p className="text-white/40 text-sm leading-relaxed mb-10 max-w-sm sm:max-w-lg">
+              SDKs available for TypeScript, Swift, and Kotlin.{" "}
+              <Link href="/developers" className="text-brand-green/70 hover:text-brand-green transition-colors">
+                View the OpenAPI spec &rarr;
+              </Link>
             </p>
 
             <div className="flex flex-wrap gap-4">

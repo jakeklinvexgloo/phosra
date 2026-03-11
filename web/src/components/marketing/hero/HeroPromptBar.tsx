@@ -10,9 +10,10 @@ interface HeroPromptBarProps {
 }
 
 const EXAMPLE_CHIPS = [
-  { label: "COPPA 2.0 compliant", prompt: "Make us COPPA 2.0 compliant" },
-  { label: "Netflix for my 7-yr-old", prompt: "Set up Netflix for my 7-year-old" },
-  { label: "Follow Four Norms", prompt: "Follow the Four Norms for all my kids" },
+  { label: "Set up Netflix for my 8-yr-old", prompt: "Set up Netflix for my 8-year-old" },
+  { label: "Make us KOSA compliant", prompt: "Make us KOSA compliant" },
+  { label: "Block TikTok until age 13", prompt: "No social media until age 13" },
+  { label: "Enforce across all platforms", prompt: "Push safety rules to every connected platform" },
 ]
 
 export function HeroPromptBar({ onSubmit }: HeroPromptBarProps) {
