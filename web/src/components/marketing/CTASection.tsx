@@ -8,7 +8,7 @@ const { total: movementCount } = getMovementsStats()
 
 const TRUST_BADGES = [
   { icon: "🔒", label: "AES-256 Encrypted" },
-  { icon: "✓", label: "COPPA Aligned" },
+  { icon: "🛡️", label: "Privacy by Design" },
 ]
 
 export function CTASection() {
@@ -36,12 +36,12 @@ export function CTASection() {
             <h2 className="font-display text-4xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-white leading-[1.15] mb-6">
               Start protecting{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
-                every child
+                your family
               </span>{" "}
               today
             </h2>
             <p className="text-white/50 text-lg leading-relaxed mb-8 max-w-lg">
-              Free for families. Pay only when you build. Get started in under five minutes.
+              Free for families. Usage-based API pricing at scale. Get started in under five minutes.
             </p>
 
             {/* Trust badges */}
@@ -80,15 +80,12 @@ export function CTASection() {
                       href="/login"
                       className="inline-flex items-center justify-center px-5 py-3 bg-brand-green text-foreground text-sm font-semibold rounded-lg transition-all hover:shadow-[0_0_28px_-4px_rgba(0,212,126,0.5)]"
                     >
-                      Create Free Account
+                      Start Free
                       <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </Link>
                   </div>
-
-                  {/* Divider */}
-                  <div className="hidden sm:flex items-end pb-1 text-white/20 text-xs font-medium">or</div>
 
                   {/* Developers path */}
                   <div className="flex flex-col gap-1.5 flex-1">
@@ -103,13 +100,27 @@ export function CTASection() {
                       </svg>
                     </Link>
                   </div>
+
+                  {/* Partners path */}
+                  <div className="flex flex-col gap-1.5 flex-1">
+                    <span className="text-[11px] font-medium text-white/40 uppercase tracking-widest text-center">For Platforms</span>
+                    <Link
+                      href="/contact"
+                      className="inline-flex items-center justify-center px-5 py-3 border border-white/20 text-white text-sm font-semibold rounded-lg transition-all hover:border-accent-teal/60 hover:bg-accent-teal/10"
+                    >
+                      Partner With Us
+                      <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Social proof line */}
                 <div className="mt-6 pt-6 border-t border-white/[0.06] flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
                   <p className="text-xs text-white/40">
-                    Supporting families across {movementCount} community movements
+                    Supporting {movementCount} child safety initiatives worldwide
                   </p>
                 </div>
               </div>

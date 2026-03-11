@@ -20,7 +20,7 @@ const STEPS = [
     title: "Connect",
     description:
       "Link your platforms — DNS filters, mobile devices, browsers, and more. One credential per platform, verified and encrypted with AES-256-GCM.",
-    detail: `${PLATFORM_STATS.marketingTotal} platforms in the ecosystem`,
+    detail: `${PLATFORM_STATS.liveCount}+ live platforms connected`,
   },
   {
     number: "03",

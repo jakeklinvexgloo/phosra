@@ -66,7 +66,7 @@ export function Compliance() {
 
   const STAT_STRIP = useMemo(() => [
     { value: stats.totalCategories, suffix: "", label: "Rule categories", description: "Covering every aspect of child digital safety" },
-    { value: PLATFORM_STATS.total, suffix: "+", label: "Platform integrations", description: "YouTube, TikTok, Roblox, and more — all connected" },
+    { value: PLATFORM_STATS.liveCount, suffix: "+", label: "Live integrations", description: "YouTube, TikTok, Roblox, and more — all connected" },
     { value: 5, suffix: "", label: "Rating systems", description: "MPAA, TV, ESRB, PEGI, CSM — mapped automatically" },
     { value: stats.totalLaws, suffix: "+", label: "Compliance laws", description: "KOSA, COPPA 2.0, EU DSA, and more — built in" },
   ], [stats])
@@ -94,11 +94,13 @@ export function Compliance() {
         {/* Header */}
         <AnimatedSection className="text-center mb-10 sm:mb-14">
           <h2 className="font-display text-4xl sm:text-5xl text-white leading-tight mb-5">
-            Built for the laws that protect children
+            Always compliant. Automatically updated.
           </h2>
-          <p className="text-white/50 text-lg max-w-2xl mx-auto mb-8">
-            Phosra maps every rule category to specific legislative
-            requirements across 25+ jurisdictions worldwide.
+          <p className="text-white/50 text-lg max-w-2xl mx-auto mb-4">
+            {stats.totalLaws}+ child safety laws across {stats.totalJurisdictions}+ jurisdictions {"\u2014"} tracked, mapped to rule categories, and enforced. Updated weekly as legislation evolves.
+          </p>
+          <p className="text-white/40 text-base max-w-xl mx-auto mb-8">
+            You don&apos;t need to know the laws. We do.
           </p>
 
           <LawCounter

@@ -78,7 +78,7 @@ export function Ecosystem() {
             <h2 className="font-display text-4xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-foreground leading-[1.15] mb-5">
               One API.{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
-                {TOTAL_COUNT}+ platforms.
+                {TOTAL_COUNT}+ platforms in the ecosystem.
               </span>
             </h2>
 
@@ -134,7 +134,7 @@ export function Ecosystem() {
 
           <CategoryGrid categories={ENFORCEMENT_TARGETS} marqueeTargets={MARQUEE_TARGETS} />
           <p className="text-center text-xs text-muted-foreground/50 mt-6">
-            Platform support varies by integration tier and availability. Logos represent ecosystem coverage, not endorsement.
+            Platform support varies by integration tier and availability. Logos represent ecosystem coverage, not endorsement. Integration tiers: live, partial, and planned.
           </p>
 
           {/* Secondary CTA — parental controls directory */}

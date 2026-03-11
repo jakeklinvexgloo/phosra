@@ -73,10 +73,10 @@ export function Hero() {
 
             <AnimatedSection delay={0.2}>
               <p className="text-[15px] sm:text-xl text-white/50 leading-relaxed mb-4 max-w-lg">
-                Set rules once. They work everywhere your kids play.
+                The open child safety API. One policy controls screen time, content, and privacy across {PLATFORM_STATS.liveCount}+ live platforms {"\u2014"} compliant with KOSA, COPPA 2.0, and 65+ laws.
               </p>
               <p className="text-[13px] sm:text-base text-white/35 leading-relaxed mb-6 max-w-lg">
-                Right now you&apos;re playing whack-a-mole {"\u2014"} configuring Netflix, Roblox, TikTok, and Discord one at a time, with settings that don&apos;t talk to each other. Phosra connects {PLATFORM_STATS.marketingTotal} platforms so one set of rules protects every screen.
+                Right now you&apos;re configuring Netflix, Roblox, TikTok, and Discord one at a time, with settings that don&apos;t talk to each other. Phosra connects them so one set of rules protects every screen.
               </p>
             </AnimatedSection>
 
@@ -92,28 +92,27 @@ export function Hero() {
                   href="/login"
                   className="inline-flex items-center px-7 sm:px-9 py-4 sm:py-4.5 bg-brand-green text-foreground text-sm font-bold rounded-lg hover:opacity-90 transition hover:shadow-[0_0_30px_-6px_rgba(0,212,126,0.4)]"
                 >
-                  Get Started Free
+                  Try for Families
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
                 {/* Secondary: developer path */}
                 <Link
-                  href="/docs"
+                  href="/developers"
                   className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-3.5 border border-white/15 text-white/60 text-xs font-medium rounded-lg hover:bg-white/5 hover:border-white/25 hover:text-white/80 transition"
                 >
                   <Code className="w-3.5 h-3.5 mr-1.5 opacity-50" />
-                  Read the Docs
+                  Explore the API
                 </Link>
               </div>
 
               {/* Compatibility callout — kills the #1 objection */}
               <div className="mt-4 flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] text-white/30 font-medium">Works with</span>
-                {["Bark", "Qustodio", "Screen Time", "Net Nanny"].map((name) => (
+                <span className="text-[11px] text-white/30 font-medium">Integrates with</span>
+                {["Parental control apps", "Streaming services", "Gaming platforms", "DNS filters"].map((name) => (
                   <span key={name} className="text-[11px] text-white/45 font-medium px-2.5 py-1 rounded-full border border-white/[0.08] bg-white/[0.03]">
                     {name}
                   </span>
                 ))}
-                <span className="text-[11px] text-white/25">+ {PLATFORM_STATS.marketingTotal} more</span>
               </div>
             </AnimatedSection>
 
@@ -141,7 +140,7 @@ export function Hero() {
         {/* Platform marquee */}
         <div className="mt-14 sm:mt-20 pt-8 sm:pt-10 border-t border-white/[0.06]">
           <p className="text-xs text-white/25 text-center mb-6 tracking-wider uppercase font-medium">
-            An open spec for {PLATFORM_STATS.marketingTotal} platforms
+            An open spec for {PLATFORM_STATS.liveCount}+ live platforms
           </p>
           <div
             className="relative overflow-hidden"

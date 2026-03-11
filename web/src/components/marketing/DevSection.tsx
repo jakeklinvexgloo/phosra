@@ -15,7 +15,7 @@ const CODE_SNIPPETS = {
   -d '{
     "family_name": "The Smiths",
     "child_name": "Emma",
-    "child_birth_date": "2017-03-15",
+    "birth_date": "2017-03-15",
     "strictness": "recommended"
   }'`,
 
@@ -26,7 +26,7 @@ const client = new Phosra({ apiKey: "$API_KEY" });
 const result = await client.setup.quick({
   familyName: "The Smiths",
   childName: "Emma",
-  childBirthDate: "2017-03-15",
+  birthDate: "2017-03-15",
   strictness: "recommended",
 });
 
@@ -34,7 +34,7 @@ console.log(\`\${result.rulesGenerated} rules enforced\`);`,
 
   response: `// 200 OK — 24 rules generated across 4 platform categories
 {
-  "family_id": "fam_8x2kP4nL",
+  "family_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "child": { "name": "Emma", "age": 8 },
   "rules_generated": 24,
   "enforcement": [
@@ -390,7 +390,7 @@ export function DevSection() {
             </div>
 
             <h2 className="font-display text-3xl sm:text-5xl lg:text-[42px] xl:text-[52px] text-white leading-[1.15] mb-6">
-              {PLATFORM_STATS.marketingTotal} platforms.{" "}
+              {PLATFORM_STATS.liveCount}+ live platforms.{" "}
               <span className="bg-gradient-to-r from-brand-green to-accent-teal bg-clip-text text-transparent">
                 One open spec.
               </span>
@@ -414,7 +414,7 @@ export function DevSection() {
                 href="/dashboard/docs"
                 className="inline-flex items-center px-7 py-3.5 border border-white/20 text-white text-sm font-semibold rounded-sm hover:bg-white/5 hover:border-white/30 transition-all"
               >
-                Read the Docs
+                View API Docs
               </Link>
             </div>
           </AnimatedSection>
