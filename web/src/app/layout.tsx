@@ -43,9 +43,13 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 }
 
+const isStaging = process.env.VERCEL_ENV === "preview" ||
+  process.env.NEXT_PUBLIC_APP_ENV === "staging";
+const appName = isStaging ? "STAGING Phosra - Child Safety Spec" : "Phosra - Child Safety Spec";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.phosra.com"),
-  title: "Phosra - Child Safety Spec",
+  title: appName,
   description: "The authoritative child safety specification for regulated technology platforms.",
   icons: {
     icon: "/favicon.svg",
