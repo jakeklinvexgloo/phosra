@@ -23,6 +23,12 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true,
   },
+  env: {
+    NEXT_PUBLIC_BUILD_TIME: new Date().toISOString(),
+    NEXT_PUBLIC_BUILD_ENV: process.env.VERCEL_ENV ?? "development",
+    NEXT_PUBLIC_BUILD_SHA: process.env.VERCEL_GIT_COMMIT_SHA ?? "",
+    NEXT_PUBLIC_BUILD_BRANCH: process.env.VERCEL_GIT_COMMIT_REF ?? "",
+  },
   async redirects() {
     return [
       {

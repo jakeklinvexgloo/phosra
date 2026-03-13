@@ -4,6 +4,7 @@ import StytchProvider from "@/components/StytchProvider"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import localFont from "next/font/local"
 import { JetBrains_Mono } from "next/font/google"
+import { BuildInfo } from "@/components/build-info"
 import "./globals.css"
 
 const generalSans = localFont({
@@ -120,6 +121,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* <FeedbackOverlay /> */}
           </ThemeProvider>
         </StytchProvider>
+        <BuildInfo />
       </body>
     </html>
   )
