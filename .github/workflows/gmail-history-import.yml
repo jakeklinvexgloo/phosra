@@ -25,7 +25,7 @@ jobs:
 
       - name: Run Gmail history import
         env:
-          API_URL: https://phosra-api.fly.dev
+          API_URL: https://api.phosra.com
           WORKER_API_KEY: ${{ secrets.WORKER_API_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: node scripts/workers/gmail-history-import.mjs

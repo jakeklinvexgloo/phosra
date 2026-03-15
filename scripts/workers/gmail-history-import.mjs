@@ -7,7 +7,7 @@
  * into the outreach CRM, creating contacts and activity records.
  *
  * Environment:
- *   API_URL      — Backend API URL (default: https://phosra-api.fly.dev)
+ *   API_URL      — Backend API URL (default: https://api.phosra.com)
  *   WORKER_API_KEY — Shared secret for worker API auth (X-Worker-Key header)
  *   DATABASE_URL — Postgres connection string (for run record)
  *   MAX_PAGES    — Max pagination pages per account (default: 20)
@@ -18,11 +18,9 @@
 
 import pg from "pg"
 
-const API_URL = process.env.API_URL || "https://phosra-api.fly.dev"
+const API_URL = process.env.API_URL || "https://api.phosra.com"
 const WORKER_KEY = process.env.WORKER_API_KEY || ""
-const DATABASE_URL =
-  process.env.DATABASE_URL ||
-  "postgres://guardiangate:guardiangate_dev@localhost:5432/guardiangate"
+const DATABASE_URL = process.env.DATABASE_URL || ""
 const MAX_PAGES = parseInt(process.env.MAX_PAGES || "20", 10)
 const DELAY_MS = parseInt(process.env.DELAY_MS || "500", 10)
 const SKIP_DOMAINS = (process.env.SKIP_DOMAINS || "phosra.com,guardiangate.com")
@@ -73,12 +71,18 @@ function sleep(ms) {
 }
 
 async function main() {
-  const pool = new pg.Pool({ connectionString: DATABASE_URL })
+  const pool = DATABASE_URL
+    ? new pg.Pool({ connectionString: DATABASE_URL })
+    : null
   const runId = process.env.RUN_ID || crypto.randomUUID()
   const hasExistingRun = !!process.env.RUN_ID
 
+  if (!pool) {
+    console.warn("DATABASE_URL not set — run tracking will be skipped")
+  }
+
   try {
-    if (!hasExistingRun) {
+    if (pool && !hasExistingRun) {
       await pool.query(
         `INSERT INTO admin_worker_runs (id, worker_id, status, trigger_type, started_at)
          VALUES ($1, 'gmail-history-import', 'running', $2, NOW())`,
@@ -96,10 +100,12 @@ async function main() {
 
     if (accountKeys.length === 0) {
       const summary = "No connected Google accounts found."
-      await pool.query(
-        `UPDATE admin_worker_runs SET status = 'completed', completed_at = NOW(), output_summary = $1, items_processed = 0 WHERE id = $2`,
-        [summary, runId]
-      )
+      if (pool) {
+        await pool.query(
+          `UPDATE admin_worker_runs SET status = 'completed', completed_at = NOW(), output_summary = $1, items_processed = 0 WHERE id = $2`,
+          [summary, runId]
+        )
+      }
       console.log(summary)
       return
     }
@@ -263,23 +269,27 @@ async function main() {
     }
 
     const summary = `Processed ${totals.accounts_processed} accounts: ${totals.messages_imported} messages imported, ${totals.contacts_created} contacts created, ${totals.messages_skipped} skipped, ${totals.errors} errors.`
-    await pool.query(
-      `UPDATE admin_worker_runs SET status = 'completed', completed_at = NOW(), output_summary = $1, items_processed = $2 WHERE id = $3`,
-      [summary, totals.messages_imported, runId]
-    )
+    if (pool) {
+      await pool.query(
+        `UPDATE admin_worker_runs SET status = 'completed', completed_at = NOW(), output_summary = $1, items_processed = $2 WHERE id = $3`,
+        [summary, totals.messages_imported, runId]
+      )
+    }
 
     console.log(summary)
   } catch (err) {
     console.error("Worker failed:", err.message)
-    await pool
-      .query(
-        `UPDATE admin_worker_runs SET status = 'failed', completed_at = NOW(), error_message = $1 WHERE id = $2`,
-        [err.message, runId]
-      )
-      .catch(() => {})
+    if (pool) {
+      await pool
+        .query(
+          `UPDATE admin_worker_runs SET status = 'failed', completed_at = NOW(), error_message = $1 WHERE id = $2`,
+          [err.message, runId]
+        )
+        .catch(() => {})
+    }
     process.exit(1)
   } finally {
-    await pool.end()
+    if (pool) await pool.end()
   }
 }
 
