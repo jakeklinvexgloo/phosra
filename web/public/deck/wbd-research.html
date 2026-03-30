@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protecting Every Screen — Phosra × Warner Bros. Discovery</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #12100E;
+    --amber: #F5A623;
+    --purple: #9B7FD4;
+    --card: rgba(255,255,255,0.03);
+    --card-border: rgba(255,255,255,0.06);
+    --text: #F5F0EB;
+    --text-secondary: #8A8580;
+    --green: #4CAF6A;
+    --red: #E05555;
+    --red-dim: rgba(224,85,85,0.7);
+    --amber-dim: rgba(245,166,35,0.7);
+    --green-dim: rgba(76,175,106,0.7);
+    --transition-speed: 500ms;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Film grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* Slide container */
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .slide.exiting {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+
+  .slide-inner {
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  /* Typography */
+  h1, h2, h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  h1 { font-size: 3.2rem; margin-bottom: 0.4em; }
+  h2 { font-size: 2.2rem; margin-bottom: 0.6em; }
+  h3 { font-size: 1.4rem; margin-bottom: 0.4em; }
+
+  .subtitle {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .amber { color: var(--amber); }
+  .purple { color: var(--purple); }
+  .green { color: var(--green); }
+  .red { color: var(--red); }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+
+  /* Centered text slide */
+  .centered-content {
+    text-align: center;
+  }
+
+  /* Separator */
+  .sep {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    margin: 24px auto;
+  }
+
+  /* Phosra logo text */
+  .logo-corner {
+    position: fixed;
+    bottom: 18px;
+    left: 28px;
+    font-size: 0.7rem;
+    color: rgba(138,133,128,0.25);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    z-index: 100;
+    font-family: system-ui, sans-serif;
+  }
+
+  /* ---- Slide 2: Why Phosra Exists (Personal) ---- */
+  .personal-name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 4.2rem;
+    color: #FFF8F0;
+    font-weight: normal;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.15em;
+    line-height: 1.1;
+  }
+
+  .personal-confession {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    max-width: 640px;
+    margin: 0 auto 2rem;
+    line-height: 1.5;
+  }
+
+  .personal-pain {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    opacity: 0.85;
+  }
+
+  .personal-bottom {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    color: var(--amber);
+    opacity: 0.8;
+    max-width: 580px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* ---- Slide 3: Open Banking Parallel ---- */
+  .parallel-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 24px 0;
+  }
+
+  .parallel-col {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px 28px 24px;
+  }
+
+  .parallel-col-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    color: var(--amber);
+    margin-bottom: 14px;
+  }
+
+  .parallel-col-body {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  .parallel-bottom {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: 20px;
+    padding: 18px 24px;
+    background: var(--card);
+    border: 1px solid rgba(245,166,35,0.15);
+    border-radius: 14px;
+  }
+
+  .parallel-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  }
+
+  .parallel-arrow .arrow-label {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 0.85rem;
+    color: var(--purple);
+    font-style: italic;
+  }
+
+  /* ---- Slide 4: What Phosra Is ---- */
+  .steps-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin: 24px 0 28px;
+  }
+
+  .step-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    text-align: center;
+  }
+
+  .step-num {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2rem;
+    color: var(--amber);
+    opacity: 0.5;
+    margin-bottom: 10px;
+  }
+
+  .step-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .step-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .platform-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .platform-tag {
+    font-size: 0.68rem;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: rgba(155,127,212,0.08);
+    border: 1px solid rgba(155,127,212,0.15);
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
+    font-family: system-ui, sans-serif;
+  }
+
+  /* ---- Ecosystem Map ---- */
+  .ecosystem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .eco-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    position: relative;
+  }
+
+  .eco-card.wide {
+    grid-column: 1 / -1;
+  }
+
+  .eco-card .eco-name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    color: var(--text);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eco-card .eco-type {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+  }
+
+  .eco-card .eco-detail {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .status-dot.active { background: var(--green); }
+  .status-dot.transitioning { background: var(--amber); }
+  .status-dot.discontinued { background: var(--red); }
+
+  .eco-note {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 16px;
+    padding-left: 16px;
+    border-left: 2px solid rgba(245,166,35,0.3);
+    line-height: 1.5;
+  }
+
+  /* ---- Feature grids ---- */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
+  .feature-item.wide {
+    grid-column: 1 / -1;
+  }
+
+  .feature-icon {
+    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1.4;
+    width: 20px;
+    text-align: center;
+  }
+
+  .feature-icon.check { color: var(--green); }
+  .feature-icon.cross { color: var(--red); }
+  .feature-icon.warn { color: var(--amber); }
+
+  .feature-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .ptc-quote {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--amber);
+    margin-top: 12px;
+    text-align: right;
+    opacity: 0.7;
+  }
+
+  /* ---- API & Compliance Surface Area ---- */
+  .surface-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 14px 0 16px;
+  }
+
+  .surface-col-header {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.1rem;
+    color: var(--amber);
+    margin-bottom: 10px;
+  }
+
+  .surface-col-header span {
+    font-size: 1.8rem;
+    font-weight: normal;
+  }
+
+  .rule-domain {
+    margin-bottom: 8px;
+  }
+
+  .rule-domain-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--purple);
+    margin-bottom: 3px;
+    font-weight: 600;
+  }
+
+  .rule-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .rule-pill {
+    font-size: 0.58rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(245,166,35,0.08);
+    border: 1px solid rgba(245,166,35,0.15);
+    color: var(--text-secondary);
+    line-height: 1.3;
+    white-space: nowrap;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  }
+
+  .api-group {
+    margin-bottom: 5px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .api-group-name {
+    color: var(--text);
+    font-weight: 500;
+    min-width: 80px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.65rem;
+  }
+
+  .api-group-count {
+    color: var(--amber);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 0.75rem;
+    opacity: 0.8;
+    margin-right: 2px;
+    min-width: 16px;
+  }
+
+  .api-group-endpoints {
+    color: rgba(138,133,128,0.7);
+    font-size: 0.6rem;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  }
+
+  .surface-stat-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 24px;
+    background: var(--card);
+    border: 1px solid rgba(245,166,35,0.15);
+    border-radius: 14px;
+    margin-top: 4px;
+  }
+
+  .surface-stat-main {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .surface-stat-main .stat-num {
+    color: var(--amber);
+    font-size: 1.6rem;
+  }
+
+  .surface-stat-detail {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
+  /* ---- Cross-Platform Flow ---- */
+  .flow-header {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.3rem;
+    color: var(--amber);
+    text-align: center;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .flow-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+  }
+
+  .flow-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+
+  .flow-card.wide {
+    grid-column: 1 / -1;
+  }
+
+  .flow-platform {
+    font-size: 0.82rem;
+    color: var(--purple);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  .flow-rule {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
+  /* ---- Timeline ---- */
+  .timeline {
+    position: relative;
+    margin: 16px 0;
+    padding-left: 24px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(180deg, var(--amber), var(--purple), rgba(155,127,212,0.2));
+  }
+
+  .tl-item {
+    position: relative;
+    padding: 8px 0 8px 20px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 14px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    border: 1px solid var(--bg);
+  }
+
+  .tl-item.future::before {
+    background: var(--purple);
+  }
+
+  .tl-year {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--amber);
+    font-size: 0.85rem;
+    margin-right: 8px;
+    font-weight: normal;
+  }
+
+  .tl-item.future .tl-year {
+    color: var(--purple);
+  }
+
+  .tl-item strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .tl-takeaway {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--amber);
+    margin-top: 16px;
+    padding: 14px 20px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    line-height: 1.55;
+  }
+
+  /* ---- Comparison Table ---- */
+  .comp-table-wrap {
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+
+  .comp-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.88rem;
+  }
+
+  .comp-table th, .comp-table td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .comp-table th {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: normal;
+    font-size: 1rem;
+    color: var(--text);
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .comp-table th:first-child,
+  .comp-table td:first-child {
+    text-align: left;
+    padding-left: 20px;
+    color: var(--text);
+    font-weight: 500;
+    min-width: 170px;
+  }
+
+  .comp-table td {
+    color: var(--text-secondary);
+  }
+
+  .comp-table tbody tr {
+    background: var(--card);
+  }
+
+  .comp-table tbody tr:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .comp-table thead th:nth-child(2) {
+    color: var(--amber);
+  }
+
+  .comp-check { color: var(--green); font-size: 1.1rem; }
+  .comp-cross { color: var(--red); font-size: 1.1rem; opacity: 0.7; }
+  .comp-partial { color: var(--amber); font-size: 0.8rem; }
+
+  .comp-note {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-top: 12px;
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  /* ---- Findings ---- */
+  .findings-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+    counter-reset: finding;
+  }
+
+  .findings-list li {
+    counter-increment: finding;
+    position: relative;
+    padding: 14px 20px 14px 52px;
+    margin-bottom: 10px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .findings-list li::before {
+    content: counter(finding);
+    position: absolute;
+    left: 18px;
+    top: 14px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.1rem;
+    color: var(--amber);
+    opacity: 0.5;
+  }
+
+  .findings-list li strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ---- Questions / Next Steps ---- */
+  .question-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+
+  .question-list li {
+    padding: 12px 0 12px 28px;
+    position: relative;
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .question-list li::before {
+    content: '?';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.2rem;
+    color: var(--purple);
+    font-style: normal;
+    opacity: 0.6;
+  }
+
+  .contact-line {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-top: 2.5rem;
+    letter-spacing: 0.04em;
+  }
+
+  .contact-line a {
+    color: var(--amber);
+    text-decoration: none;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amber), var(--purple));
+    transition: width var(--transition-speed) ease;
+    z-index: 100;
+  }
+
+  /* Slide number */
+  .slide-number {
+    position: fixed;
+    bottom: 16px;
+    right: 28px;
+    font-size: 0.75rem;
+    color: rgba(138,133,128,0.4);
+    z-index: 100;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Responsive */
+  @media (max-width: 1000px) {
+    .slide { padding: 40px 36px; }
+    h1 { font-size: 2.4rem; }
+    h2 { font-size: 1.7rem; }
+    .ecosystem-grid { grid-template-columns: 1fr; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .flow-grid { grid-template-columns: 1fr; }
+    .surface-cols { grid-template-columns: 1fr; }
+    .parallel-cols { grid-template-columns: 1fr; }
+    .steps-row { grid-template-columns: 1fr; }
+    .comp-table { font-size: 0.8rem; }
+    .personal-name { font-size: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- Slide 1: Title -->
+  <div class="slide active" data-slide="0">
+    <div class="slide-inner centered-content">
+      <h1 style="font-size: 3rem; line-height: 1.15;">Protecting Every Screen</h1>
+      <p style="font-family: Georgia, 'Times New Roman', serif; font-size: 1.3rem; color: var(--text-secondary); margin-top: 0.3em; line-height: 1.4;">
+        A Research Conversation with Warner Bros. Discovery
+      </p>
+      <div class="sep" style="margin-top: 2.5rem;"></div>
+      <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem; letter-spacing: 0.06em;">March 2026</p>
+    </div>
+  </div>
+
+  <!-- Slide 2: Why Phosra Exists (Personal) -->
+  <div class="slide" data-slide="1">
+    <div class="slide-inner centered-content">
+      <div class="personal-name">Ramsay is 7.</div>
+      <div class="personal-confession">I want to say "protect him everywhere" &mdash; and I can't.</div>
+      <div class="personal-pain">
+        Every platform is a walled garden. Every screen requires separate setup. Every app has different controls, different ratings, different gaps.
+      </div>
+      <div class="personal-bottom">
+        No parent should need to become a compliance expert to keep their kids safe.
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: The Open Banking Parallel -->
+  <div class="slide" data-slide="2">
+    <div class="slide-inner">
+      <h2>We've seen this before.</h2>
+      <div class="parallel-cols">
+        <div class="parallel-col">
+          <div class="parallel-col-title">Banking before Open Banking</div>
+          <div class="parallel-col-body">
+            Every bank had its own API (or none). Fintechs couldn't innovate. Consumers were locked in. Regulators couldn't see across institutions.
+          </div>
+        </div>
+        <div class="parallel-col">
+          <div class="parallel-col-title">Streaming &amp; parental controls today</div>
+          <div class="parallel-col-body">
+            Every platform has its own controls (or minimal ones). No third-party integration. Parents can't manage holistically. Regulators can't verify compliance.
+          </div>
+        </div>
+      </div>
+      <div class="parallel-bottom">
+        Open Banking created unified API standards. Fintechs exploded. Consumers won. The same transformation needs to happen for child safety.
+      </div>
+      <div class="parallel-arrow">
+        <span>PSD2 / Open Banking &rarr; unified fintech APIs</span>
+        <span style="color: var(--amber); font-size: 1.2rem; margin: 0 4px;">&harr;</span>
+        <span>KOSA / COPPA / Ofcom &rarr; unified parental control APIs<span class="arrow-label"> ?</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: What Phosra Is -->
+  <div class="slide" data-slide="3">
+    <div class="slide-inner centered-content">
+      <h2>What Phosra Is</h2>
+      <div class="steps-row">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-title">Parents define rules once</div>
+          <div class="step-desc">One set of age-appropriate protections for each child</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-title">Phosra translates to each platform</div>
+          <div class="step-desc">45 rule categories mapped to 30+ platforms</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-title">Every screen protected</div>
+          <div class="step-desc">Streaming, gaming, web, devices, social</div>
+        </div>
+      </div>
+      <div style="margin-top: 10px;">
+        <p style="font-family: Georgia, 'Times New Roman', serif; font-size: 1.4rem; color: var(--amber); margin-bottom: 20px; opacity: 0.85;">Define once, protect everywhere.</p>
+        <div class="platform-row">
+          <span class="platform-tag">Max</span>
+          <span class="platform-tag">Netflix</span>
+          <span class="platform-tag">Disney+</span>
+          <span class="platform-tag">YouTube</span>
+          <span class="platform-tag">Prime Video</span>
+          <span class="platform-tag">Apple TV+</span>
+          <span class="platform-tag">Android</span>
+          <span class="platform-tag">iOS</span>
+          <span class="platform-tag">NextDNS</span>
+          <span class="platform-tag">Xbox</span>
+          <span class="platform-tag">PlayStation</span>
+          <span class="platform-tag">Nintendo</span>
+          <span class="platform-tag">Roblox</span>
+          <span class="platform-tag">TikTok</span>
+          <span class="platform-tag">Instagram</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: The Compliance Surface Area (API/rules slide) -->
+  <div class="slide" data-slide="4">
+    <div class="slide-inner">
+      <h2>The API &amp; Compliance Surface Area</h2>
+      <div class="surface-cols">
+        <!-- Left column: 45 Rule Categories -->
+        <div>
+          <div class="surface-col-header"><span>45</span> Rule Categories</div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Content (5)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">content_rating</span>
+              <span class="rule-pill">content_block_title</span>
+              <span class="rule-pill">content_allow_title</span>
+              <span class="rule-pill">content_allowlist_mode</span>
+              <span class="rule-pill">content_descriptor_block</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Time (4)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">time_daily_limit</span>
+              <span class="rule-pill">time_scheduled_hours</span>
+              <span class="rule-pill">time_per_app_limit</span>
+              <span class="rule-pill">time_downtime</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Purchases (3)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">purchase_approval</span>
+              <span class="rule-pill">purchase_spending_cap</span>
+              <span class="rule-pill">purchase_block_iap</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Social (3)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">social_contacts</span>
+              <span class="rule-pill">social_chat_control</span>
+              <span class="rule-pill">social_multiplayer</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Web (5)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">web_safesearch</span>
+              <span class="rule-pill">web_category_block</span>
+              <span class="rule-pill">web_custom_allowlist</span>
+              <span class="rule-pill">web_custom_blocklist</span>
+              <span class="rule-pill">web_filter_level</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Privacy (4)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">privacy_location</span>
+              <span class="rule-pill">privacy_profile_visibility</span>
+              <span class="rule-pill">privacy_data_sharing</span>
+              <span class="rule-pill">privacy_account_creation</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Monitoring (2)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">monitoring_activity</span>
+              <span class="rule-pill">monitoring_alerts</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Platform Behavior (5)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">algo_feed_control</span>
+              <span class="rule-pill">addictive_design_control</span>
+              <span class="rule-pill">notification_curfew</span>
+              <span class="rule-pill">usage_timer_notification</span>
+              <span class="rule-pill">targeted_ad_block</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Safety (3)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">dm_restriction</span>
+              <span class="rule-pill">age_gate</span>
+              <span class="rule-pill">csam_reporting</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Data Rights (3)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">data_deletion_request</span>
+              <span class="rule-pill">geolocation_opt_in</span>
+              <span class="rule-pill">commercial_data_ban</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Compliance (5)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">library_filter_compliance</span>
+              <span class="rule-pill">ai_minor_interaction</span>
+              <span class="rule-pill">social_media_min_age</span>
+              <span class="rule-pill">image_rights_minor</span>
+              <span class="rule-pill">algorithmic_audit</span>
+            </div>
+          </div>
+
+          <div class="rule-domain">
+            <div class="rule-domain-label">Parental (3)</div>
+            <div class="rule-pills">
+              <span class="rule-pill">parental_consent_gate</span>
+              <span class="rule-pill">parental_event_notification</span>
+              <span class="rule-pill">screen_time_report</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column: 42 API Endpoints -->
+        <div>
+          <div class="surface-col-header"><span>42</span> API Endpoints</div>
+
+          <div class="api-group">
+            <span class="api-group-count">1</span>
+            <span class="api-group-name">Auth</span>
+            <span class="api-group-endpoints">get_current_user</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">1</span>
+            <span class="api-group-name">Quick Setup</span>
+            <span class="api-group-endpoints">quick_setup</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">4</span>
+            <span class="api-group-name">Families</span>
+            <span class="api-group-endpoints">list, create, get, update, delete</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">2</span>
+            <span class="api-group-name">Members</span>
+            <span class="api-group-endpoints">list, add, remove</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">5</span>
+            <span class="api-group-name">Children</span>
+            <span class="api-group-endpoints">list, create, get, update, delete, age_ratings</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">7</span>
+            <span class="api-group-name">Policies</span>
+            <span class="api-group-endpoints">list, create, get, update, delete, activate, pause, generate_from_age</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">5</span>
+            <span class="api-group-name">Rules</span>
+            <span class="api-group-endpoints">list, create, bulk_upsert, update, delete</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">4</span>
+            <span class="api-group-name">Platforms</span>
+            <span class="api-group-endpoints">list, get, by_category, by_capability</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">4</span>
+            <span class="api-group-name">Compliance</span>
+            <span class="api-group-endpoints">list_links, connect, disconnect, verify</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">5</span>
+            <span class="api-group-name">Enforcement</span>
+            <span class="api-group-endpoints">trigger, list_jobs, get_job, get_results, retry</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">3</span>
+            <span class="api-group-name">Ratings</span>
+            <span class="api-group-endpoints">list_systems, get_for_age, convert</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">1</span>
+            <span class="api-group-name">Reports</span>
+            <span class="api-group-endpoints">family_overview</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">3</span>
+            <span class="api-group-name">Webhooks</span>
+            <span class="api-group-endpoints">list, create, test</span>
+          </div>
+          <div class="api-group">
+            <span class="api-group-count">8</span>
+            <span class="api-group-name">Sources</span>
+            <span class="api-group-endpoints">list_available, connect, get, list_child, sync, push_rule, guided_steps, list_jobs, get_results, disconnect</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom stat bar -->
+      <div class="surface-stat-bar">
+        <div class="surface-stat-main">
+          <span class="stat-num">45</span> rule categories &times; <span class="stat-num">30+</span> platforms = <span class="stat-num">1,350+</span> enforcement touchpoints per child
+        </div>
+        <div class="surface-stat-detail">
+          Each touchpoint requires: API auth, rule translation, platform-specific config, verification, and compliance logging
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: The Streaming Landscape Today (Competitor Comparison) -->
+  <div class="slide" data-slide="5">
+    <div class="slide-inner">
+      <h2>The Streaming Landscape Today</h2>
+      <div class="comp-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Max</th>
+              <th>Netflix</th>
+              <th>Disney+</th>
+              <th>Prime Video</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Per-title blocking</td>
+              <td><span class="comp-cross">&#10007;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-cross">&#10007;</span></td>
+              <td><span class="comp-cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Viewing history</td>
+              <td><span class="comp-cross">&#10007;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-partial">Limited</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Screen time limits</td>
+              <td><span class="comp-cross">&#10007;</span></td>
+              <td><span class="comp-cross">&#10007;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Profile PIN</td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Kid-Proof Exit</td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-cross">&#10007;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-cross">&#10007;</span></td>
+            </tr>
+            <tr>
+              <td>Dedicated Kids UI</td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Content ratings</td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td>Time limits</td>
+              <td><span class="comp-cross">&#10007;</span></td>
+              <td><span class="comp-cross">&#10007;</span></td>
+              <td><span class="comp-check">&#10003;</span></td>
+              <td><span class="comp-cross">&#10007;</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="comp-note">No platform does everything. Together they create an inconsistent patchwork.</div>
+    </div>
+  </div>
+
+  <!-- Slide 7: The WBD Kids Ecosystem -->
+  <div class="slide" data-slide="6">
+    <div class="slide-inner">
+      <h2>The WBD Kids Ecosystem</h2>
+      <div class="ecosystem-grid">
+        <div class="eco-card">
+          <div class="eco-name"><span class="status-dot active"></span> MAX</div>
+          <div class="eco-type">Streaming</div>
+          <div class="eco-detail">5 profiles, 4 maturity tiers, 2 PIN systems</div>
+        </div>
+        <div class="eco-card">
+          <div class="eco-name"><span class="status-dot active"></span> Cartoon Network</div>
+          <div class="eco-type">Linear + App</div>
+          <div class="eco-detail">TV-Y to TV-PG, app via TV Everywhere auth</div>
+        </div>
+        <div class="eco-card">
+          <div class="eco-name"><span class="status-dot transitioning"></span> Cartoonito</div>
+          <div class="eco-type">Preschool</div>
+          <div class="eco-detail">Ages 2-6, UK standalone channel, US block on CN, section on Max</div>
+        </div>
+        <div class="eco-card">
+          <div class="eco-name"><span class="status-dot discontinued"></span> Boomerang</div>
+          <div class="eco-type">Streaming (discontinued)</div>
+          <div class="eco-detail">Streaming shut down Sep 2024, linear continues, content migrated to Max</div>
+        </div>
+        <div class="eco-card wide">
+          <div class="eco-name"><span class="status-dot active"></span> Boing</div>
+          <div class="eco-type">Spain, Italy</div>
+          <div class="eco-detail">Free-to-air JV with Mediaset, local regulatory compliance</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 24px; margin-top: 12px; font-size: 0.78rem; color: var(--text-secondary); opacity: 0.6;">
+        <span><span class="status-dot active" style="width: 6px; height: 6px; vertical-align: middle;"></span> Active</span>
+        <span><span class="status-dot transitioning" style="width: 6px; height: 6px; vertical-align: middle;"></span> Transitioning</span>
+        <span><span class="status-dot discontinued" style="width: 6px; height: 6px; vertical-align: middle;"></span> Discontinued</span>
+      </div>
+      <div class="eco-note">CN website redirects to Max since Aug 2024</div>
+    </div>
+  </div>
+
+  <!-- Slide 8: Max Controls — What Works -->
+  <div class="slide" data-slide="7">
+    <div class="slide-inner">
+      <h2>Max Parental Controls <span style="color: var(--text-secondary); font-size: 0.6em;">&mdash; What Works</span></h2>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="feature-icon check">&#10003;</div>
+          <div class="feature-text"><strong>Dual PIN system</strong> &mdash; Parent Code + Profile PIN</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">&#10003;</div>
+          <div class="feature-text"><strong>4 maturity tiers</strong> &mdash; Little Kids, Older Kids, Teens, Adults</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">&#10003;</div>
+          <div class="feature-text"><strong>Kid-Proof Exit</strong> mode &mdash; prevents navigation out of Kids profile</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">&#10003;</div>
+          <div class="feature-text"><strong>Birthdate-locked Kids Mode</strong> &mdash; under-18 cannot disable</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">&#10003;</div>
+          <div class="feature-text"><strong>Character-based browsing</strong> in Kids UI</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon check">&#10003;</div>
+          <div class="feature-text"><strong>3 autoplay controls</strong> &mdash; granular playback settings</div>
+        </div>
+        <div class="feature-item wide">
+          <div class="feature-icon check">&#10003;</div>
+          <div class="feature-text"><strong>Account password required</strong> for PIN changes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9: Max Controls — Known Gaps -->
+  <div class="slide" data-slide="8">
+    <div class="slide-inner">
+      <h2>Max Parental Controls <span style="color: var(--text-secondary); font-size: 0.6em;">&mdash; Known Gaps</span></h2>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="feature-icon cross">&#10007;</div>
+          <div class="feature-text"><strong>No per-title blocking</strong> &mdash; Netflix has this, Max does not</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon cross">&#10007;</div>
+          <div class="feature-text"><strong>No viewing history page</strong> &mdash; only Continue Watching (90-day expiry, clearable)</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon cross">&#10007;</div>
+          <div class="feature-text"><strong>No screen time limits</strong> &mdash; no built-in usage controls</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon warn">&#9888;</div>
+          <div class="feature-text"><strong>Profile creation ungated</strong> &mdash; anyone can create Adult profile</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon warn">&#9888;</div>
+          <div class="feature-text"><strong>TV devices open to last-used profile</strong> &mdash; no profile picker on launch</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon warn">&#9888;</div>
+          <div class="feature-text"><strong>"Kids & Family" section</strong> includes PG-13/TV-14 content</div>
+        </div>
+      </div>
+      <div class="ptc-quote">PTC: "More holes than Swiss cheese"</div>
+    </div>
+  </div>
+
+  <!-- Slide 10: Cross-Platform Compliance Challenge -->
+  <div class="slide" data-slide="9">
+    <div class="slide-inner">
+      <h2>Cross-Platform Compliance Challenge</h2>
+      <div class="flow-header">"Same show, 7 different regulatory frameworks"</div>
+      <div class="flow-grid">
+        <div class="flow-card">
+          <div class="flow-platform">CN Linear (US)</div>
+          <div class="flow-rule">FCC / TV Parental Guidelines &mdash; content advisory labels</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-platform">CN Linear (UK)</div>
+          <div class="flow-rule">Ofcom watershed &mdash; 9pm cutoff for stronger material</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-platform">Max Streaming (US)</div>
+          <div class="flow-rule">COPPA + self-regulation &mdash; profile-level maturity gating</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-platform">Max Streaming (EU)</div>
+          <div class="flow-rule">AVMSD + Kijkwijzer &mdash; age rating + platform duties</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-platform">Boing Spain</div>
+          <div class="flow-rule">CNMC time slots &mdash; enhanced protection hours</div>
+        </div>
+        <div class="flow-card">
+          <div class="flow-platform">Boing Italy</div>
+          <div class="flow-rule">AGCOM code &mdash; minors' protection classification</div>
+        </div>
+        <div class="flow-card wide">
+          <div class="flow-platform">YouTube</div>
+          <div class="flow-rule">"Made for Kids" designation &mdash; disables personalized ads, comments, notifications</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 11: Content Migration Reality -->
+  <div class="slide" data-slide="10">
+    <div class="slide-inner">
+      <h2>Content Migration Reality</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <span class="tl-year">2024</span> CN website shuts down &mdash; redirects to Max
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">2024</span> <strong>Boomerang streaming</strong> shuts down &mdash; content migrated to Max
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">2024</span> <strong>Sesame Street</strong> new originals deal ends
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">2025</span> CN shows <strong>removed from Max</strong> &mdash; licensed to Tubi, MeTV
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">2025</span> <strong>Looney Tunes</strong> classic shorts (500+) leave Max &mdash; move to Tubi
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">2025</span> Cartoonito US block effectively ended
+        </div>
+        <div class="tl-item future">
+          <span class="tl-year">2026</span> <strong>Max launches in UK/Ireland</strong> via Sky partnership
+        </div>
+        <div class="tl-item future">
+          <span class="tl-year">2026</span> WBD corporate split planned &mdash; linear vs streaming entities
+        </div>
+      </div>
+      <div class="tl-takeaway">
+        Content compliance must now track which version of a show is approved for which platform across multiple companies
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 12: Key Findings -->
+  <div class="slide" data-slide="11">
+    <div class="slide-inner">
+      <h2>Key Findings</h2>
+      <ol class="findings-list">
+        <li><strong>Max has strong baseline controls</strong> (dual PIN, maturity tiers) but critical gaps in monitoring and per-title blocking</li>
+        <li><strong>Content fragmentation</strong> across Max, Tubi, YouTube creates a multi-platform compliance tracking challenge</li>
+        <li><strong>UK launch (Mar 2026)</strong> adds Ofcom + OSA + ICO requirements on top of existing COPPA/AVMSD obligations</li>
+        <li><strong>No third-party parental control app</strong> integrates with Max APIs &mdash; all operate at device/OS level only</li>
+        <li><strong>Editorial compliance work</strong> (content correctly rated) is undermined when platform controls don't match</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Slide 13: Where We Go From Here -->
+  <div class="slide" data-slide="12">
+    <div class="slide-inner">
+      <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1.5rem;">Ideas for next steps:</p>
+      <h2>Where We Go From Here</h2>
+      <ul class="question-list">
+        <li><strong>Peer Workshop</strong> &mdash; We'd love to set up a working session with 4-5 of your peers across editorial compliance, product, and engineering to map the gaps together</li>
+        <li><strong>Workflow Deep Dive</strong> &mdash; Walk us through the compliance workflows you wish were easier &mdash; we're happy to tackle those directly</li>
+        <li><strong>Follow-up Ideas</strong> &mdash; We'll send over concrete thoughts on ways to improve things, both for the job and for your own family</li>
+        <li><strong>Standards Alignment</strong> &mdash; Let's think through what it would take to get your group on board with cross-platform enforcement standards</li>
+      </ul>
+      <div class="sep" style="margin-top: 2.5rem;"></div>
+      <p class="contact-line">
+        <a href="mailto:jake.k.klinvex@phosra.com">jake.k.klinvex@phosra.com</a> &nbsp;&middot;&nbsp; phosra.com
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Logo corner -->
+<div class="logo-corner">Phosra</div>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Slide number -->
+<div class="slide-number" id="slideNumber">1 / 13</div>
+
+<script>
+(function() {
+  const deck = document.getElementById('deck');
+  const slides = deck.querySelectorAll('.slide');
+  const progressBar = document.getElementById('progressBar');
+  const slideNumber = document.getElementById('slideNumber');
+  const total = slides.length;
+  let current = 0;
+  let transitioning = false;
+
+  function goTo(index) {
+    if (index < 0 || index >= total || index === current || transitioning) return;
+    transitioning = true;
+
+    const prev = slides[current];
+    const next = slides[index];
+    const goingForward = index > current;
+
+    prev.classList.remove('active');
+    prev.classList.add('exiting');
+
+    if (!goingForward) {
+      next.style.transform = 'translateY(-18px)';
+    } else {
+      next.style.transform = 'translateY(18px)';
+    }
+    next.style.opacity = '0';
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        next.classList.add('active');
+        next.style.transform = '';
+        next.style.opacity = '';
+      });
+    });
+
+    current = index;
+    updateUI();
+
+    setTimeout(() => {
+      prev.classList.remove('exiting');
+      prev.style.transform = '';
+      transitioning = false;
+    }, 500);
+  }
+
+  function updateUI() {
+    const pct = ((current + 1) / total) * 100;
+    progressBar.style.width = pct + '%';
+    slideNumber.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      next();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      prev();
+    }
+  });
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0) next(); else prev();
+    }
+  }, { passive: true });
+
+  updateUI();
+})();
+</script>
+
+</body>
+</html>
