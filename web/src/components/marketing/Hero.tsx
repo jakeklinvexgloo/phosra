@@ -132,15 +132,6 @@ export function Hero() {
             </h1>
           </AnimatedSection>
 
-          <AnimatedSection delay={0.3}>
-            <p
-              className="font-display italic text-white/45 max-w-[640px] mx-auto leading-relaxed"
-              style={{ fontSize: "clamp(1rem, 2vw, 1.2rem)" }}
-            >
-              Parents set the rules. Control apps enforce them. Platforms comply. Regulators verify. Phosra connects all four.
-            </p>
-          </AnimatedSection>
-
           <AnimatedSection delay={0.4}>
             <PersonaToggle active={persona} onChange={handlePersonaChange} />
           </AnimatedSection>
