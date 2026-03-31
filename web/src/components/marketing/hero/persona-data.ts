@@ -77,7 +77,7 @@ export const PERSONA_CTA: Record<PersonaKey, { primary: string; primaryHref: str
   },
   "parental-controls": {
     primary: "Become a PCSS Partner",
-    primaryHref: "/partners",
+    primaryHref: "/contact",
     ghost: "View Integration Docs",
     ghostHref: "/docs",
   },
@@ -85,13 +85,13 @@ export const PERSONA_CTA: Record<PersonaKey, { primary: string; primaryHref: str
     primary: "Get API Keys",
     primaryHref: "/docs",
     ghost: "Read the Spec",
-    ghostHref: "/spec",
+    ghostHref: "/developers",
   },
   regulator: {
     primary: "Read the PCSS Spec",
-    primaryHref: "/spec",
+    primaryHref: "/developers",
     ghost: "Partner With Us",
-    ghostHref: "/partners",
+    ghostHref: "/contact",
   },
 }
 
