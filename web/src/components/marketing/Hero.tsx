@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { AnimatedSection } from "./shared/AnimatedSection"
-import { ParentDemoA4 } from "./hero/ParentDemoA4"
+import { HeroChatDemo } from "./hero/HeroChatDemo"
 import { HeroPromptBar } from "./hero/HeroPromptBar"
 import { LiquidGlassModal } from "./hero/LiquidGlassModal"
 import { HeroSandboxChat } from "./hero/HeroSandboxChat"
@@ -170,7 +170,11 @@ export function Hero() {
                   {PERSONA_SOLUTION_TEXT[persona]}
                 </p>
 
-                {persona === "parent" && <ParentDemoA4 isActive={persona === "parent"} />}
+                {persona === "parent" && (
+                  <div className="w-full max-w-[560px] mx-auto mb-8 text-left [&>div]:max-w-none [&>div]:mx-0 [&>div]:lg\:ml-0">
+                    <HeroChatDemo />
+                  </div>
+                )}
                 {persona === "parental-controls" && (
                   <ParentalControlsDemoPanel isActive={persona === "parental-controls"} />
                 )}
