@@ -107,7 +107,7 @@ export function RegulatorPipelineDemoPanel({ isActive }: { isActive: boolean }) 
       accentB={accent.b}
       fixedHeight={420}
     >
-      <div className="flex flex-col gap-3 items-center">
+      <div className="flex flex-col gap-1.5 items-center">
         <AnimatePresence mode="popLayout">
           {PIPELINE.map((item, i) => {
             if (!visibleItems.includes(i)) return null
@@ -119,7 +119,7 @@ export function RegulatorPipelineDemoPanel({ isActive }: { isActive: boolean }) 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
-                  className="text-center text-[#7B5CB8]/40 text-sm"
+                  className="text-center text-[#7B5CB8]/40 text-xs py-0.5"
                 >
                   &#8595;
                 </motion.div>
@@ -133,29 +133,29 @@ export function RegulatorPipelineDemoPanel({ isActive }: { isActive: boolean }) 
             return (
               <motion.div
                 key={`stage-${i}`}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
-                className={`flex items-start gap-3 w-full px-4 py-2.5 rounded-[10px] border transition-colors duration-500 ${
+                className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-lg border transition-colors duration-500 ${
                   isLit
                     ? "border-[#7B5CB8]/30 bg-[#7B5CB8]/[0.06]"
                     : "border-white/[0.06] bg-white/[0.03]"
                 }`}
               >
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base bg-[#7B5CB8]/10 flex-shrink-0">
+                <div className="w-7 h-7 rounded-md flex items-center justify-center text-sm bg-[#7B5CB8]/10 flex-shrink-0">
                   {stage.icon}
                 </div>
-                <div>
-                  <div className="font-sans text-[13px] font-medium text-white/70">{stage.label}</div>
+                <div className="min-w-0">
+                  <div className="font-sans text-[12px] font-medium text-white/70 leading-tight">{stage.label}</div>
                   {stage.detail && (
-                    <div className="font-mono text-[10.5px] text-white/35 mt-0.5">{stage.detail}</div>
+                    <div className="font-mono text-[10px] text-white/35">{stage.detail}</div>
                   )}
                   {stage.chips && (
-                    <div className="flex flex-wrap gap-1 mt-1">
+                    <div className="flex flex-wrap gap-1 mt-0.5">
                       {stage.chips.map((chip, ci) => (
                         <span
                           key={ci}
-                          className={`px-2 py-0.5 rounded font-mono text-[10px] bg-[#7B5CB8]/10 border border-[#7B5CB8]/15 text-white/50 transition-opacity duration-300 ${
+                          className={`px-1.5 py-px rounded font-mono text-[9px] bg-[#7B5CB8]/10 border border-[#7B5CB8]/15 text-white/50 transition-opacity duration-300 ${
                             chipIndices.includes(ci) ? "opacity-100" : "opacity-0"
                           }`}
                         >
@@ -175,9 +175,9 @@ export function RegulatorPipelineDemoPanel({ isActive }: { isActive: boolean }) 
           initial={false}
           animate={{ opacity: showResult ? 1 : 0 }}
           transition={{ duration: 0.4 }}
-          className="text-center font-mono text-[11.5px] text-[#7B5CB8] px-2.5 py-2.5 rounded-lg bg-[#7B5CB8]/[0.06] border border-[#7B5CB8]/15 w-full"
+          className="text-center font-mono text-[11px] text-[#7B5CB8] px-2.5 py-2 rounded-lg bg-[#7B5CB8]/[0.06] border border-[#7B5CB8]/15 w-full"
         >
-          23 rules enforced across 12 platforms &middot; Propagation: 2.4 seconds
+          23 rules enforced across 12 platforms &middot; 2.4s
         </motion.div>
       </div>
     </DemoCard>
