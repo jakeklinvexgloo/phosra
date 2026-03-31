@@ -10,6 +10,9 @@ import { MegaMenuPanel, MegaMenuContent } from "./mega-menu"
 import { MobileNav } from "./MobileNav"
 import { NAV_ENTRIES, isDropdownActive } from "@/lib/nav-config"
 import type { NavDropdown } from "@/lib/nav-config"
+import { LiquidGlassModal } from "@/components/marketing/hero/LiquidGlassModal"
+import { HeroSandboxChat } from "@/components/marketing/hero/HeroSandboxChat"
+import { useHeroSession } from "@/components/marketing/hero/useHeroSession"
 
 /* ── Typewriter prompts ─────────────────────────────────────────────── */
 const CYCLING_PROMPTS = [
@@ -127,6 +130,8 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
   const [typewriterText, setTypewriterText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
   const promptInputRef = useRef<HTMLInputElement>(null)
+  const [modalPrompt, setModalPrompt] = useState<string | null>(null)
+  const heroSession = useHeroSession()
 
   // Typewriter effect
   useEffect(() => {
@@ -156,13 +161,10 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
 
   const handlePromptSubmit = (text: string) => {
     if (!text.trim()) return
-    window.dispatchEvent(
-      new CustomEvent("phosra-playground-prompt", { detail: text.trim() })
-    )
+    setModalPrompt(text.trim())
     setPromptValue("")
     setPromptFocused(false)
     promptInputRef.current?.blur()
-    router.push("/developers/playground")
   }
 
   const handleFormSubmit = (e: FormEvent) => {
@@ -474,6 +476,18 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
         displayName={displayName}
         onSignOut={handleSignOut}
       />
+
+      {/* AI Chat Modal */}
+      <LiquidGlassModal open={!!modalPrompt} onClose={() => setModalPrompt(null)}>
+        {modalPrompt && (
+          <HeroSandboxChat
+            prompt={modalPrompt}
+            onClose={() => setModalPrompt(null)}
+            onTryAnother={() => setModalPrompt(null)}
+            session={heroSession}
+          />
+        )}
+      </LiquidGlassModal>
     </>
   )
 }
