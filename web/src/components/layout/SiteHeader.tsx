@@ -1,15 +1,30 @@
 "use client"
 
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, FormEvent } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { Menu, X, ChevronDown, Search, LogOut, LayoutDashboard } from "lucide-react"
+import { Menu, X, ChevronDown, Search, LogOut, LayoutDashboard, ArrowRight } from "lucide-react"
 import { useStytchUser, useStytch } from "@stytch/nextjs"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { MegaMenuPanel, MegaMenuContent } from "./mega-menu"
 import { MobileNav } from "./MobileNav"
 import { NAV_ENTRIES, isDropdownActive } from "@/lib/nav-config"
 import type { NavDropdown } from "@/lib/nav-config"
+
+/* ── Typewriter prompts ─────────────────────────────────────────────── */
+const CYCLING_PROMPTS = [
+  "Check if my app complies with COPPA...",
+  "What age-gating do I need for the UK?",
+  "Scan my privacy policy for COPPA gaps...",
+  "How does KOSA affect social platforms?",
+  "Generate a parental consent flow...",
+]
+
+const QUICK_CHIPS = [
+  "Protect kids on streaming",
+  "Implement 4 Norms",
+  "Set 1 hour screen limit for all kids",
+]
 
 interface SiteHeaderProps {
   /** "transparent" for homepage hero; defaults to solid/light */
@@ -104,11 +119,62 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
     }
   }
 
+  /* ── Prompt strip state ───────────────────────────────────────────── */
+  const showPromptStrip = variantProp === "transparent" && !scrolled
+  const [promptValue, setPromptValue] = useState("")
+  const [promptFocused, setPromptFocused] = useState(false)
+  const [typewriterIndex, setTypewriterIndex] = useState(0)
+  const [typewriterText, setTypewriterText] = useState("")
+  const [isDeleting, setIsDeleting] = useState(false)
+  const promptInputRef = useRef<HTMLInputElement>(null)
+
+  // Typewriter effect
+  useEffect(() => {
+    if (promptFocused || promptValue) return
+    const target = CYCLING_PROMPTS[typewriterIndex]
+    const speed = isDeleting ? 30 : 55
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        if (typewriterText.length < target.length) {
+          setTypewriterText(target.slice(0, typewriterText.length + 1))
+        } else {
+          setTimeout(() => setIsDeleting(true), 1800)
+        }
+      } else {
+        if (typewriterText.length > 0) {
+          setTypewriterText(typewriterText.slice(0, -1))
+        } else {
+          setIsDeleting(false)
+          setTypewriterIndex((i) => (i + 1) % CYCLING_PROMPTS.length)
+        }
+      }
+    }, speed)
+
+    return () => clearTimeout(timeout)
+  }, [typewriterText, isDeleting, typewriterIndex, promptFocused, promptValue])
+
+  const handlePromptSubmit = (text: string) => {
+    if (!text.trim()) return
+    window.dispatchEvent(
+      new CustomEvent("phosra-playground-prompt", { detail: text.trim() })
+    )
+    setPromptValue("")
+    setPromptFocused(false)
+    promptInputRef.current?.blur()
+    router.push("/developers/playground")
+  }
+
+  const handleFormSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    handlePromptSubmit(promptValue)
+  }
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50">
         {/* Centered pill container */}
-        <div className="flex justify-center pt-3 px-4">
+        <div className="flex justify-center pt-3 px-4 relative z-20">
           <div
             ref={navContainerRef}
             className={`relative flex items-center h-12 px-1.5 rounded-full transition-all duration-300 ${
@@ -314,6 +380,88 @@ export function SiteHeader({ variant: variantProp, onSearchClick }: SiteHeaderPr
                 </MegaMenuPanel>
               )
             })}
+          </div>
+        </div>
+
+        {/* ── Prompt sub-strip (homepage only, not scrolled) ──────────── */}
+        <div
+          className={`relative z-10 flex justify-center px-4 transition-all duration-300 ${
+            showPromptStrip
+              ? "opacity-100 translate-y-0 pointer-events-auto mt-2"
+              : "opacity-0 -translate-y-2 pointer-events-none mt-0 h-0 overflow-hidden"
+          }`}
+        >
+          <div className="relative flex items-center h-[44px] w-full max-w-[640px] rounded-full bg-[rgba(13,27,42,0.35)] backdrop-blur-[20px] saturate-[140%] border border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.04)] px-3 gap-2.5">
+            {/* TRY API badge */}
+            <div className="hidden sm:flex items-center gap-1.5 shrink-0">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00D47E] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00D47E]" />
+              </span>
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-white/60">
+                Try API
+              </span>
+            </div>
+
+            {/* Thin separator */}
+            <div className="hidden sm:block w-px h-5 bg-white/[0.1] shrink-0" />
+
+            {/* Prompt input */}
+            <form onSubmit={handleFormSubmit} className="flex-1 flex items-center min-w-0">
+              <div className="relative flex-1 min-w-0">
+                <input
+                  ref={promptInputRef}
+                  type="text"
+                  value={promptValue}
+                  onChange={(e) => setPromptValue(e.target.value)}
+                  onFocus={() => setPromptFocused(true)}
+                  onBlur={() => {
+                    setTimeout(() => setPromptFocused(false), 200)
+                  }}
+                  className="w-full bg-transparent text-[13px] text-white/90 placeholder-transparent outline-none caret-[#00D47E]"
+                  placeholder="Ask Phosra anything..."
+                />
+                {!promptValue && !promptFocused && (
+                  <span className="absolute inset-0 flex items-center text-[13px] text-white/35 pointer-events-none truncate">
+                    {typewriterText}
+                    <span className="animate-pulse ml-px">|</span>
+                  </span>
+                )}
+              </div>
+
+              {/* Submit arrow */}
+              <button
+                type="submit"
+                disabled={!promptValue.trim()}
+                className="shrink-0 w-7 h-7 rounded-full bg-[#00D47E] flex items-center justify-center transition-all hover:shadow-[0_0_14px_-2px_rgba(0,212,126,0.5)] hover:scale-105 disabled:opacity-30 disabled:hover:shadow-none disabled:hover:scale-100"
+              >
+                <ArrowRight className="w-3.5 h-3.5 text-slate-900" />
+              </button>
+            </form>
+          </div>
+
+          {/* Quick-prompt chips (fade in on focus) */}
+          <div
+            className={`absolute top-full left-1/2 -translate-x-1/2 flex items-center gap-2 mt-2 transition-all duration-300 ease-out ${
+              promptFocused
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-95 pointer-events-none"
+            }`}
+          >
+            {QUICK_CHIPS.map((chip, i) => (
+              <button
+                key={chip}
+                type="button"
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  handlePromptSubmit(chip)
+                }}
+                className="px-3 py-1.5 rounded-full text-[12px] font-medium text-white/70 bg-[rgba(13,27,42,0.45)] backdrop-blur-[16px] border border-white/[0.08] hover:bg-[rgba(13,27,42,0.6)] hover:text-white/90 transition-all whitespace-nowrap"
+                style={{ transitionDelay: `${i * 50}ms` }}
+              >
+                {chip}
+              </button>
+            ))}
           </div>
         </div>
       </header>

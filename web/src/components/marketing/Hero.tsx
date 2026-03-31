@@ -1,171 +1,224 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import Link from "next/link"
-import { ArrowRight, Code } from "lucide-react"
-import { WaveTexture } from "./shared/WaveTexture"
-import { GradientMesh } from "./shared/GradientMesh"
-import { PhosraBurst } from "./shared/PhosraBurst"
+import { motion, AnimatePresence } from "framer-motion"
 import { AnimatedSection } from "./shared/AnimatedSection"
 import { HeroChatDemo } from "./hero/HeroChatDemo"
 import { HeroPromptBar } from "./hero/HeroPromptBar"
 import { LiquidGlassModal } from "./hero/LiquidGlassModal"
 import { HeroSandboxChat } from "./hero/HeroSandboxChat"
 import { useHeroSession } from "./hero/useHeroSession"
-import { PLATFORM_STATS } from "@/lib/platforms"
+import { HeroBackground } from "./hero/HeroBackground"
+import { PersonaToggle } from "./hero/PersonaToggle"
+import { ParentalControlsDemoPanel } from "./hero/ParentalControlsDemoPanel"
+import { PlatformApiDemoPanel } from "./hero/PlatformApiDemoPanel"
+import { RegulatorPipelineDemoPanel } from "./hero/RegulatorPipelineDemoPanel"
+import { HeroMarquee } from "./hero/HeroMarquee"
+import {
+  type PersonaKey,
+  PERSONA_ACCENTS,
+  PERSONA_PROBLEM_TEXT,
+  PERSONA_SOLUTION_TEXT,
+  PERSONA_CTA,
+} from "./hero/persona-data"
 
-const PLATFORM_NAMES = [
-  "Bark", "Qustodio", "Aura", "Net Nanny", "Norton Family",
-  "NextDNS", "CleanBrowsing", "Android", "Microsoft", "Apple",
-  "YouTube", "Netflix", "Roblox", "TikTok", "Instagram",
-  "Discord", "Snapchat", "Twitch", "Spotify", "Steam",
-  "Disney+", "Fortnite", "ChatGPT", "Minecraft", "PlayStation",
+const PERSONA_ORDER: PersonaKey[] = [
+  "parent",
+  "parental-controls",
+  "platform",
+  "regulator",
 ]
+const ROTATION_INTERVAL = 8000
+
+function getPersonaFromHash(): PersonaKey | null {
+  if (typeof window === "undefined") return null
+  const hash = window.location.hash.replace("#", "")
+  if (PERSONA_ORDER.includes(hash as PersonaKey)) return hash as PersonaKey
+  return null
+}
 
 export function Hero() {
+  const [persona, setPersona] = useState<PersonaKey>("parent")
+  const [pinned, setPinned] = useState(false)
   const [modalPrompt, setModalPrompt] = useState<string | null>(null)
-  // Pre-warm sandbox session on page load so it's ready when the user clicks
   const heroSession = useHeroSession()
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const handleCloseModal = useCallback(() => setModalPrompt(null), [])
-  const handleTryAnother = useCallback(() => {
-    setModalPrompt(null)
-    // Focus returns to prompt bar naturally since modal unmounts
+  // On mount: check URL hash for deep-linked persona
+  useEffect(() => {
+    const hashPersona = getPersonaFromHash()
+    if (hashPersona) {
+      setPersona(hashPersona)
+      setPinned(true)
+    }
+
+    const onHashChange = () => {
+      const p = getPersonaFromHash()
+      if (p) {
+        setPersona(p)
+        setPinned(true)
+      }
+    }
+    window.addEventListener("hashchange", onHashChange)
+    return () => window.removeEventListener("hashchange", onHashChange)
   }, [])
 
+  // Auto-rotation: cycles tabs every 8s unless pinned
+  useEffect(() => {
+    if (pinned) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+        timerRef.current = null
+      }
+      return
+    }
+
+    timerRef.current = setInterval(() => {
+      setPersona((prev) => {
+        const idx = PERSONA_ORDER.indexOf(prev)
+        const next = PERSONA_ORDER[(idx + 1) % PERSONA_ORDER.length]
+        window.history.replaceState(null, "", `#${next}`)
+        return next
+      })
+    }, ROTATION_INTERVAL)
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [pinned])
+
+  // Manual tab click: pin and update URL
+  const handlePersonaChange = useCallback((p: PersonaKey) => {
+    setPersona(p)
+    setPinned(true)
+    window.history.replaceState(null, "", `#${p}`)
+  }, [])
+
+  const handleCloseModal = useCallback(() => setModalPrompt(null), [])
+  const handleTryAnother = useCallback(() => setModalPrompt(null), [])
+
+  const accent = PERSONA_ACCENTS[persona]
+  const cta = PERSONA_CTA[persona]
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#0D1B2A] via-[#0A2F2F] to-[#0D1B2A] min-h-dvh flex flex-col">
-      {/* Layered background textures */}
-      <WaveTexture colorStart="#00D47E" colorEnd="#26A8C9" opacity={0.12} />
-      <GradientMesh colors={["#00D47E", "#26A8C9", "#7B5CB8"]} />
+    <section className="relative overflow-hidden min-h-dvh flex flex-col">
+      <HeroBackground persona={persona} />
 
-      {/* Brand illustration — Phosra burst behind right column */}
-      <div className="absolute right-[-5%] top-[-10%] lg:right-[5%] lg:top-[-5%]">
-        <PhosraBurst size={700} color="#00D47E" opacity={0.06} animate />
-      </div>
-
-      <div className="relative w-full max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-28 lg:pb-16 xl:pt-32 xl:pb-20 flex-1 flex flex-col justify-center">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-20 items-center">
-          {/* Left — text */}
-          <div>
-            {/* Announcement badge */}
-            <AnimatedSection delay={0}>
-              <Link
-                href="/research/ai-chatbots"
-                className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/[0.06] border border-white/[0.08] mb-8 group hover:bg-white/[0.1] hover:border-white/[0.15] transition-all"
-              >
-                <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
-                <span className="text-xs text-white/60 font-medium group-hover:text-white/80 transition-colors">New: AI Safety Research — 8 chatbots tested</span>
-                <ArrowRight className="w-3 h-3 text-white/40 group-hover:text-white/70 group-hover:translate-x-0.5 transition-all" />
-              </Link>
-            </AnimatedSection>
-
-            {/* Headline with serif display + gradient */}
-            <AnimatedSection delay={0.1}>
-              <h1 className="font-display text-[26px] xs:text-[30px] sm:text-5xl md:text-6xl lg:text-[56px] xl:text-[72px] text-white leading-[1.1] mb-6 tracking-tight">
-                Define once,{" "}
-                <br className="sm:hidden" />
-                <span className="bg-gradient-to-r from-[#00D47E] to-[#26A8C9] bg-clip-text text-transparent">
-                  protect everywhere
-                </span>
-              </h1>
-            </AnimatedSection>
-
-            <AnimatedSection delay={0.2}>
-              <p className="text-[15px] sm:text-xl text-white/50 leading-relaxed mb-4 max-w-lg">
-                Set rules once. They work everywhere your kids play.
-              </p>
-              <p className="text-[13px] sm:text-base text-white/35 leading-relaxed mb-6 max-w-lg">
-                Right now you&apos;re playing whack-a-mole {"\u2014"} configuring Netflix, Roblox, TikTok, and Discord one at a time, with settings that don&apos;t talk to each other. Phosra connects {PLATFORM_STATS.marketingTotal} platforms so one set of rules protects every screen.
-              </p>
-            </AnimatedSection>
-
-            {/* AI Prompt bar — above the fold, the best thing on the site */}
-            <AnimatedSection delay={0.25}>
-              <HeroPromptBar onSubmit={setModalPrompt} />
-            </AnimatedSection>
-
-            <AnimatedSection delay={0.35}>
-              <div className="flex flex-wrap items-start gap-3 sm:gap-4 mt-6">
-                {/* Primary: parent path */}
-                <Link
-                  href="/login"
-                  className="inline-flex items-center px-7 sm:px-9 py-4 sm:py-4.5 bg-brand-green text-foreground text-sm font-bold rounded-lg hover:opacity-90 transition hover:shadow-[0_0_30px_-6px_rgba(0,212,126,0.4)]"
-                >
-                  Get Started Free
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
-                {/* Secondary: developer path */}
-                <Link
-                  href="/docs"
-                  className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-3.5 border border-white/15 text-white/60 text-xs font-medium rounded-lg hover:bg-white/5 hover:border-white/25 hover:text-white/80 transition"
-                >
-                  <Code className="w-3.5 h-3.5 mr-1.5 opacity-50" />
-                  Read the Docs
-                </Link>
-              </div>
-
-              {/* Compatibility callout — kills the #1 objection */}
-              <div className="mt-4 flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] text-white/30 font-medium">Works with</span>
-                {["Bark", "Qustodio", "Screen Time", "Net Nanny"].map((name) => (
-                  <span key={name} className="text-[11px] text-white/45 font-medium px-2.5 py-1 rounded-full border border-white/[0.08] bg-white/[0.03]">
-                    {name}
-                  </span>
-                ))}
-                <span className="text-[11px] text-white/25">+ {PLATFORM_STATS.marketingTotal} more</span>
-              </div>
-            </AnimatedSection>
-
-            {/* Founder social proof */}
-            <AnimatedSection delay={0.4}>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-green/30 to-accent-teal/30 border border-white/[0.1] flex items-center justify-center text-white/70 text-xs font-semibold flex-shrink-0">
-                  JK
-                </div>
-                <p className="text-[12px] sm:text-[13px] text-white/40 leading-snug">
-                  <span className="text-white/60 font-medium">Built by parents of 5.</span>{" "}
-                  Jake &amp; Susannah Klinvex founded 3 companies (all acquired{" "}{"\u2014"}{" "}Mastercard, Fidelity, Gloo IPO). They built Phosra because they needed it themselves.{" "}
-                  <Link href="/about" className="text-brand-green/60 hover:text-brand-green transition-colors">Read our story &rarr;</Link>
-                </p>
-              </div>
-            </AnimatedSection>
-          </div>
-
-          {/* Right / below — animated split demo */}
-          <div className="mt-8 lg:mt-0">
-            <HeroChatDemo />
-          </div>
-        </div>
-
-        {/* Platform marquee */}
-        <div className="mt-14 sm:mt-20 pt-8 sm:pt-10 border-t border-white/[0.06]">
-          <p className="text-xs text-white/25 text-center mb-6 tracking-wider uppercase font-medium">
-            An open spec for {PLATFORM_STATS.marketingTotal} platforms
-          </p>
-          <div
-            className="relative overflow-hidden"
-            style={{
-              maskImage: "linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)",
-              WebkitMaskImage: "linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)",
-            }}
-          >
-
-            <div className="flex animate-scroll gap-6">
-              {[...PLATFORM_NAMES, ...PLATFORM_NAMES].map((name, i) => (
-                <span
-                  key={`${name}-${i}`}
-                  className="text-xs text-white/25 font-medium whitespace-nowrap flex-shrink-0 px-3 py-1.5 border border-white/[0.06] rounded-full"
-                >
-                  {name}
-                </span>
-              ))}
+      <div className="relative z-[1] w-full max-w-[900px] mx-auto px-5 sm:px-6 flex-1 flex flex-col">
+        <div className="text-center" style={{ paddingTop: "clamp(72px, 10vh, 120px)" }}>
+          <AnimatedSection delay={0.1}>
+            <div
+              className="font-mono text-[11px] font-medium tracking-[0.2em] uppercase mb-5 transition-colors duration-700"
+              style={{ color: `rgba(${accent.r}, ${accent.g}, ${accent.b}, 0.9)` }}
+            >
+              The child safety protocol
             </div>
-          </div>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.2}>
+            <h1
+              className="font-display font-bold leading-[1.12] tracking-tighter text-white max-w-[880px] mx-auto mb-5"
+              style={{
+                fontSize: "clamp(2.2rem, 4.8vw, 4rem)",
+                textWrap: "balance",
+                background: "linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.85) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              One protocol. Four&nbsp;missions. Every&nbsp;child&nbsp;protected.
+            </h1>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.3}>
+            <p
+              className="font-display italic text-white/45 max-w-[640px] mx-auto leading-relaxed"
+              style={{ fontSize: "clamp(1rem, 2vw, 1.2rem)" }}
+            >
+              Parents set the rules. Control apps enforce them. Platforms comply. Regulators verify. Phosra connects all four.
+            </p>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.4}>
+            <PersonaToggle active={persona} onChange={handlePersonaChange} />
+          </AnimatedSection>
         </div>
+
+        <AnimatedSection delay={0.5}>
+          <div className="text-center relative" style={{ minHeight: "520px" }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={persona}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.4 }}
+                className="flex flex-col items-center"
+              >
+                <p
+                  className="font-display italic text-white/40 max-w-[580px] mx-auto mb-3 leading-relaxed"
+                  style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)" }}
+                >
+                  {PERSONA_PROBLEM_TEXT[persona]}
+                </p>
+                <p
+                  className="font-display font-bold text-white mb-8 tracking-tight leading-[1.2]"
+                  style={{ fontSize: "clamp(1.3rem, 3vw, 1.8rem)" }}
+                >
+                  {PERSONA_SOLUTION_TEXT[persona]}
+                </p>
+
+                {persona === "parent" && (
+                  <div className="w-full max-w-[560px] mx-auto mb-8 text-left [&>div]:max-w-none [&>div]:mx-0 [&>div]:lg\:ml-0">
+                    <HeroChatDemo />
+                  </div>
+                )}
+                {persona === "parental-controls" && (
+                  <ParentalControlsDemoPanel isActive={persona === "parental-controls"} />
+                )}
+                {persona === "platform" && (
+                  <PlatformApiDemoPanel isActive={persona === "platform"} />
+                )}
+                {persona === "regulator" && (
+                  <RegulatorPipelineDemoPanel isActive={persona === "regulator"} />
+                )}
+
+                {persona === "parent" && (
+                  <div className="w-full max-w-[560px] mx-auto mb-6">
+                    <HeroPromptBar onSubmit={setModalPrompt} />
+                  </div>
+                )}
+
+                <div className="flex gap-3.5 justify-center flex-wrap mb-6">
+                  <Link
+                    href={cta.primaryHref}
+                    className="inline-flex items-center gap-2 px-7 py-3.5 border-none rounded-[10px] font-sans text-[15px] font-semibold transition-all duration-300 hover:-translate-y-px"
+                    style={{
+                      background: accent.color,
+                      color: persona === "regulator" ? "#fff" : "#0D1B2A",
+                      boxShadow: `0 8px 24px rgba(${accent.r}, ${accent.g}, ${accent.b}, 0.2)`,
+                    }}
+                  >
+                    {cta.primary}
+                  </Link>
+                  <Link
+                    href={cta.ghostHref}
+                    className="inline-flex items-center gap-2 px-7 py-3.5 border border-white/15 rounded-[10px] bg-transparent font-sans text-[15px] font-medium text-white/70 transition-all duration-300 hover:border-white/30 hover:bg-white/[0.04] hover:-translate-y-px"
+                  >
+                    {cta.ghost}
+                  </Link>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </AnimatedSection>
+
+        <HeroMarquee persona={persona} />
+        <div className="pb-16 sm:pb-20" />
       </div>
 
-      {/* Liquid glass modal with live AI chat */}
       <LiquidGlassModal open={!!modalPrompt} onClose={handleCloseModal}>
         {modalPrompt && (
           <HeroSandboxChat
